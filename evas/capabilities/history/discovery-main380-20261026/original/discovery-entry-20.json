@@ -1,0 +1,84 @@
+{
+  "start": "evas/validation/support",
+  "pattern": "test_*.py",
+  "scope": "discovery-only",
+  "rows": [
+    {
+      "id": "test_checker.Calibration.test_good_and_bad_outputs_for_every_card",
+      "source_file": "evas/validation/support/test_checker.py",
+      "method_source_file": "evas/validation/support/test_checker.py",
+      "source_line": 34,
+      "module": "test_checker",
+      "generated": false,
+      "method_source_sha256": "7331c8f06a045bce299e67a1fa8cfe4e15f05ab18c2af4b5c3354683b675c7a3"
+    },
+    {
+      "id": "test_checker.Calibration.test_hand_calculated_anchors",
+      "source_file": "evas/validation/support/test_checker.py",
+      "method_source_file": "evas/validation/support/test_checker.py",
+      "source_line": 19,
+      "module": "test_checker",
+      "generated": false,
+      "method_source_sha256": "14620042c9a987f244e0e5c99ebd0952d24e73c344a7df16b0105408394874fd"
+    },
+    {
+      "id": "test_checker.Calibration.test_predeclared_boundaries_remain_ungraded",
+      "source_file": "evas/validation/support/test_checker.py",
+      "method_source_file": "evas/validation/support/test_checker.py",
+      "source_line": 52,
+      "module": "test_checker",
+      "generated": false,
+      "method_source_sha256": "e47ebcbc95f3719d27368031aac1a664a6d31211a990eb68f8bdea04da886f62"
+    }
+  ],
+  "failed_import_ids": [],
+  "loader_errors": [],
+  "method_count": 3,
+  "generated_count": 0,
+  "read_paths": [
+    "evas/validation/support/__pycache__/checker.cpython-314.pyc",
+    "evas/validation/support/__pycache__/test_checker.cpython-314.pyc",
+    "evas/validation/support/cases-v1.json",
+    "evas/validation/support/checker.py",
+    "evas/validation/support/test_checker.py"
+  ],
+  "blocked": [],
+  "imported_project_modules": [
+    "evas/validation/support/checker.py",
+    "evas/validation/support/test_checker.py"
+  ],
+  "returncode": 0,
+  "stderr": "",
+  "static_import_review": [
+    {
+      "path": "evas/validation/support/test_checker.py",
+      "git_blob": "2d0717ad513bc7912f88b967872b945dc90809b7",
+      "top_level_calls": [
+        "json.loads(Path(__file__).with_name('cases-v1.json').read_text())",
+        "Path(__file__).with_name('cases-v1.json').read_text()",
+        "Path(__file__).with_name('cases-v1.json')",
+        "Path(__file__)"
+      ]
+    }
+  ],
+  "origin": "ci",
+  "loaded_source_identities": [
+    {
+      "path": "evas/validation/support/cases-v1.json",
+      "git_blob": "db54906317bdf828a20e078edf85827494372ddc",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/support/checker.py",
+      "git_blob": "9cfe1ae6745c7ca0e5fd700e29522ae207db8359",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/support/test_checker.py",
+      "git_blob": "2d0717ad513bc7912f88b967872b945dc90809b7",
+      "matches_main": true
+    }
+  ],
+  "source_identity_mismatches": [],
+  "collection_issues": []
+}

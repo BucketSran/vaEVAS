@@ -1,0 +1,158 @@
+{
+  "program": {
+    "nodes": [
+      "0",
+      "u",
+      "y"
+    ],
+    "contributions": [
+      {
+        "branch": {
+          "instance": "dut",
+          "local_positive": "r",
+          "local_negative": "y",
+          "kind": "voltage"
+        },
+        "positive": 0,
+        "negative": 2,
+        "rhs": {
+          "op": "multiply",
+          "left": {
+            "constant": -1.0,
+            "terms": [],
+            "op": "affine"
+          },
+          "right": {
+            "operator": 0,
+            "op": "operator"
+          }
+        },
+        "origin": {
+          "source": "bound.va",
+          "line": 2,
+          "column": 97,
+          "instance": "dut",
+          "expansion": []
+        }
+      }
+    ],
+    "states": [],
+    "events": [],
+    "operators": [
+      {
+        "input": {
+          "base": {
+            "constant": 0.0,
+            "terms": [
+              {
+                "node": 0,
+                "coefficient": -1.0
+              },
+              {
+                "node": 2,
+                "coefficient": 1.0
+              }
+            ],
+            "op": "affine"
+          },
+          "exponent": 2,
+          "op": "power"
+        },
+        "ic": 1.0,
+        "origin": {
+          "source": "bound.va",
+          "line": 2,
+          "column": 105,
+          "instance": "dut",
+          "expansion": []
+        },
+        "reset": null,
+        "kind": "idt"
+      }
+    ],
+    "schema_version": 33,
+    "step_bounds": [
+      {
+        "value": {
+          "value": {
+            "constant": 0.01,
+            "terms": [],
+            "op": "affine"
+          },
+          "kind": "argument",
+          "origin": {
+            "source": "bound.va",
+            "line": 2,
+            "column": 78,
+            "instance": "dut",
+            "expansion": []
+          },
+          "op": "real_boundary"
+        },
+        "active": {
+          "constant": 1.0,
+          "terms": [],
+          "op": "affine"
+        },
+        "origin": {
+          "source": "bound.va",
+          "line": 2,
+          "column": 78,
+          "instance": "dut",
+          "expansion": []
+        }
+      }
+    ],
+    "procedures": [
+      {
+        "procedure_id": 0,
+        "instance": "dut",
+        "body": [
+          {
+            "expanded_statement_ordinal": 0,
+            "action": {
+              "step_bound": 0,
+              "kind": "step_bound_capture"
+            }
+          },
+          {
+            "expanded_statement_ordinal": 1,
+            "action": {
+              "contribution": 0,
+              "kind": "contribution_capture"
+            }
+          }
+        ]
+      }
+    ],
+    "real_bindings": []
+  },
+  "driven": [
+    "u"
+  ],
+  "samples": [],
+  "transient": {
+    "pwl": [
+      [
+        [
+          0,
+          0
+        ],
+        [
+          0.5,
+          0
+        ]
+      ]
+    ],
+    "output_times": [
+      0,
+      0.5
+    ],
+    "stop": 0.5,
+    "max_step": 0.5
+  },
+  "tolerances": {
+    "absolute": 1e-08,
+    "relative": 0
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "accepted": true,
+  "completed_at": "2026-10-25T13:28:17.544171+00:00",
+  "scope": "All3257 Python unittest methods source/contract/oracle/assertion audit with targeted calibration; no complete numerical qualification",
+  "main_commit": "15eb7216f7071edb7eda7a9b0c56b7e8933c4c79",
+  "ci_run": 40192400498,
+  "counts": {
+    "methods": 3257,
+    "modules": 332,
+    "definition_positions": 3246,
+    "generated_methods": 12,
+    "no_defect_found": 2785,
+    "evidence_gap": 95,
+    "mixed": 359,
+    "test_defect": 18,
+    "problem_methods": 377,
+    "passing_problem_methods": 32,
+    "finding_groups": 86
+  },
+  "independent_reviews": {
+    "standards-review.json": "05d56023acc3b46f0cec0199e55376caa3908b2a2ef41e503f7a8ebd4b60510f",
+    "final-spec-review.json": "c21ea94996cae0d3801c890899b3f2caab7e4dcc3706eda16ba9e4c709d084ae"
+  },
+  "reviewed_artifacts": {
+    "scope.json": "6a2312779cf6a43f5d1f152faf5ee792f93483f7d3cba54212726009672e4f10",
+    "inventory.json": "621e08225044ac3add852515d5c82360c0cbdd5e3247893ee69969d5d7dcd3e9",
+    "prepare.py": "74f20a4230734c59d2889b362293bb6d52de26a9b74729c0a6702ec9a079c127",
+    "consolidate.py": "dbbb3a6232af1fe616313299327a2c9256346d7dd8fdac4b8a59f3c484abce34",
+    "audit.json": "0df596c67689c55fcd5dd0db00cfc2f2d852f4eef7ae0125df12c4017976b402",
+    "summary.json": "0f97f53982ff2eece1e07a3647d9bf2f3f94178335dd9b99623d1eb936c19348",
+    "methods.tsv": "2cb8a8c3d7a4a11cbfcc12fc32490606a7119616c3abd634b2e8232592920928",
+    "verification.json": "13f2b9574538beb1babe8e518f092566e698564f06564d7719582c562754f640",
+    "README.md": "26ea438a287ace95105cf8ad0e6bc99f03e5e839413551288ec5ae596b62c53f",
+    "review-1.json": "181e25ba8acfcdce4a78609a92dc2aff10cf7623172f01ff9db4aec2c0277199",
+    "review-2.json": "a47e3abd667147ad02e11b72f095c664274586f3f286c967db4c61453690c0ee",
+    "review-3.json": "88ea2438efa494a75526d99a4eae35e30a849dce8cd8090a09ba526ee41a75ac",
+    "review-4.json": "fa1523e84356f058f3788a1daa813e52f8cc8f2395f94b5bee3fe21eeb786c69",
+    "review-5.json": "34e25e4d14f1e60e6f8051ba348bf075294a249a6539a2df7f151d0e0e59d0ff",
+    "review-6.json": "dd744d8106c11fe2508c0d8e9d42f638a6d73506225b91faa265ebc0dafc4d1f"
+  },
+  "sources_and_original_tests_changed": false,
+  "full_suite_new_execution": false,
+  "spectre": "pending by explicit user instruction",
+  "publication": "local-only; no new commit, PR or merge",
+  "post_review_change": "README status line only, explicitly permitted by both reviewers",
+  "workspace_visibility": "PASS13worktrees0errors",
+  "final_report_sha256": "5032b2844daa2e0ea00bede7d1cd827e41b3ebffb21bf16d449121c41e1985a8",
+  "post_review_delta_verified": true
+}

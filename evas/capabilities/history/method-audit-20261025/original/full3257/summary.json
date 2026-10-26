@@ -1,0 +1,3233 @@
+{
+  "scope": {
+    "source_root": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night",
+    "main_commit": "15eb7216f7071edb7eda7a9b0c56b7e8933c4c79",
+    "source_commit": "566c36a9366419c970ec008ef27f7bdd3d82e9f6",
+    "ci_head": "66aaa8476eb45a7a11a4f1857547f30a2e2b12b3",
+    "ci_run": "40192400498",
+    "source_identity": "production and test files identical between main, checkout and CI candidate; full tree main equals checkout",
+    "method_count": 3257,
+    "counts": {
+      "passed": 2617,
+      "error": 214,
+      "failed": 423,
+      "expected_failure": 3
+    },
+    "module_count": 332,
+    "purpose": "Audit every method contract, oracle and assertion, including passed and expected-failure methods; no implementation/test changes; no new simulation qualification",
+    "spectre": "pending by user instruction",
+    "source_modules": {
+      "evas/tests/test_absdelay.py": "dd1198c024fe5deb4bd54b40f84652c645b8e73b8a647a7bed1babc0d9e6a4e5",
+      "evas/tests/test_absdelay_accuracy.py": "d3810c45c40b38bafc5d44988f87bc5fa6138df28b39deb1ba164502c9d22493",
+      "evas/tests/test_absdelay_cascade.py": "a6848d46717b31fec2f0fffcabb0c2b8c3158a02676e1e26db28ab18a2c3c519",
+      "evas/tests/test_accuracy.py": "38a0bf9513fab8d61ed395b049fc00127bcd7378002ebde368a0241211f3dd93",
+      "evas/tests/test_active_initial_output.py": "2256096b3c4de7fe424e0a955aa672ccc5eb2f440e302340de2ca08c5bb28190",
+      "evas/tests/test_affine.py": "d0f7a2df8c81139e3eaaeba7699827843163080e7c5ce0d39d9ce123558a2e9e",
+      "evas/tests/test_al4_lifecycle.py": "c67bbbdc3d04953c2a2247a13a1fdab083e111fc7fb7033135a95e5ccfbc92ee",
+      "evas/tests/test_analog_conditions.py": "5e80d35ac71cb45d3a649d5d66311ade9533c707679893d8090994b481cce36e",
+      "evas/tests/test_analytic_sources.py": "bd94fa50dee8850bf86189f4ca566c1d9ab5083733818c0df2900e27b08cb6bd",
+      "evas/tests/test_ansi_ports.py": "7417ff9b8238b4b773608142872e03fc9d82093876d0a32f0cb1c9b0d407bbe7",
+      "evas/tests/test_auxiliary_continuous_roots.py": "f5fab0075a4a301e040520c2ff54e7c8046a91bd83d21a894c512d9db697a529",
+      "evas/tests/test_bound_step.py": "1ff7d706256e24fd7a3276e6c743517e38b70c6ad1260d6ba6210ef8d51b0330",
+      "evas/tests/test_boundary_portability.py": "bdbe994e17e92a50d78eab9341296fe2de9207946827ee03b0ea492731600ce3",
+      "evas/tests/test_bounded_event_closure.py": "fe6921e8802d535ca8fe7db078c7d3e8bc7e1d394d1b0e85acc6082c61b6f4b3",
+      "evas/tests/test_branch_local_closure.py": "93f4d52511208ac45d1b3d5c82ee87a57fef740588116a85cb18b50e573fd357",
+      "evas/tests/test_case_statements.py": "c6fb2d4c4e41884c27360bd9d2a01b0c6d500010a52394eaff2f03112fc37bc0",
+      "evas/tests/test_causal_batch_transition_provider.py": "3252bf7c81f61663c78eb864ee6db9eea2f5472116ed2f80c3c2677b6b50add3",
+      "evas/tests/test_causal_event_math.py": "4801ec19f01e585376beb0e2ab71c6171c9d384dc5aa52a72447d11c33caebd8",
+      "evas/tests/test_causal_parameter_identity.py": "953ecf4840f5c7a340dd512ce5314598fbb2eb27376b865f06de15d168fc927b",
+      "evas/tests/test_certificate_cache.py": "c99bcf7dea030755c01d34df2d14ba8826b8f885745480f5d317ac9ba5c51862",
+      "evas/tests/test_checked_source_facts.py": "974f16a65705731a4845ed27e420c41942b38842aeba1d0c52d01f76cd87a90b",
+      "evas/tests/test_citation_index.py": "7b62417a6d0ec77a751d0fe67a92c22a838df3731897be9d85fdc992f81815cd",
+      "evas/tests/test_closed_math_context.py": "b52b10464be078b67967602c1c6f2ecde2ec2200f4a7142954984f8ba46c956d",
+      "evas/tests/test_compact_physical_select.py": "b693a0f412890c851191382141bbf7929686c929e6c18357484f37c337e3d62d",
+      "evas/tests/test_compile_admission.py": "acc83a412ba00034df34eed32810191d0627602e08e3149ac3ba0c02489ac711",
+      "evas/tests/test_condition_sharing.py": "09d56a17f131df3f2322f495041655c776b00c60643de96cb0d7c6cfa2851fc5",
+      "evas/tests/test_conditional_history_mesh.py": "062072e83ad1c24e71da6ed2bd83e50f3b6128642609a3d42bf77d3e3020719c",
+      "evas/tests/test_constant_initial_power.py": "3828652eb502732bbf8668cd59ce6c8b7faf8592711373978b3057d42eed0dde",
+      "evas/tests/test_constant_input_identity.py": "78a613cfd47da344c318a72e7295787399337a45891f7ce26d9f10384820ecb7",
+      "evas/tests/test_continuous_dynamics.py": "159c7598e164f829e394864a8206ad9f58470cf69e2e780618c02b443845c512",
+      "evas/tests/test_contracts.py": "d31088d1f387e54d22c4ffe8023a1dd19069d117b7b6df1e602931b9a969f03b",
+      "evas/tests/test_contribution_occurrences.py": "b16a71d71766e89a1f97d245560b4d87cb2810c4ac91760797a52fdd4768b648",
+      "evas/tests/test_cross_right_limit.py": "678597388cb60cb7baf1674a726cf15ec694d3cfc98f25f0cbd15fa5c0d7007f",
+      "evas/tests/test_dc_factor.py": "01e7b7defe5355f67b9823e0b362d002bc428e3b3d7d512ff55ea0c8da06e333",
+      "evas/tests/test_dc_held_ramp_contract.py": "1d5fa7227f887ed89f69022aad6cf453cf1033b2253bd49b4b790b1688b57e72",
+      "evas/tests/test_dead_system_calls.py": "3a69415993364ffb8e1e6625772674a7958f3fded518e8e8fb7ff32170a91e94",
+      "evas/tests/test_deadline_origin_contract.py": "5af89104df4ec7a17036a2ccc4b75a2c00f2eb9887e59bf1165d0dc278f4c558",
+      "evas/tests/test_decision_raw_reuse.py": "efeb548da838a22ac80d6f00ff4f290e4ba50f1396ccda257c82f4cb33ecae9e",
+      "evas/tests/test_declaration_initializers.py": "4f7dfc96505c29dd7010690860e5bb7f120253c1a5711b4a8cef659e22ab8ed5",
+      "evas/tests/test_default_transition_directive.py": "40f89059ac4cc3aa88e9b4b7aaceca541cede723d5339684b01c740426e31476",
+      "evas/tests/test_deferred_rdist.py": "326742fc00de3692715da1827b8a076513d09af573906c09ed51d17ff49a7184",
+      "evas/tests/test_diagnostic_consumers.py": "9464b7b84f95dd683a71bfb51ee3e5562b09a7be2a97bfc19ec4bef281100e48",
+      "evas/tests/test_diagnostic_sources.py": "07c061efa9dbe7c200d9713e00dfd96640da13506ca58716f9325828973eddf4",
+      "evas/tests/test_diagnostics.py": "dc4bb6a926c18de30b73de7dbd5cb94577c41fd6ab660e4e4acd64864cf014ee",
+      "evas/tests/test_directed_triangle_endpoint.py": "b0fd71ce6db4ed6cc19b485a165a952095570811eb452ff381717b982878dc18",
+      "evas/tests/test_display.py": "cf70167b2e21746f8e04f9acaa9cd8dfe385b4b9fbf42f8c2b4d18bcc07b6b24",
+      "evas/tests/test_display_node_declarations.py": "4fb290abf769e1bbe85b843eebbf1cb5552d0d352350dcc32e99eb83e1c36c71",
+      "evas/tests/test_dynamic_closure.py": "c62a9098c01fa01c59e48aee039c30960f7c610c0e93a9ab0834f2f8182690b9",
+      "evas/tests/test_dynamic_cross.py": "436a1cbdc71b53e368f875c4e09f9bbd08727e387ca1da8d6d2173855e6f36f5",
+      "evas/tests/test_dynamic_timer.py": "acdbb396d20b55f8b2c76c08e84a512798dae8626f0628f84da80c6a115335fa",
+      "evas/tests/test_event_accuracy.py": "2ff6574cbfa3d52bc4ad935f0b1ae1e7248fcaae13746a8cb079284c3b683256",
+      "evas/tests/test_event_body_input_aliases.py": "a7cfa0c081e03285264e6f1be468440d9d924dc86a6b27ab377f16e11b903535",
+      "evas/tests/test_event_body_loops.py": "fffccbe7e8d3bbca3d2b20d2fc4af95a70a3c7061dc50ed05e3da8d0b51874f5",
+      "evas/tests/test_event_branch_agreement.py": "28be979965028bb9de5845b49d7193d151588dc0c3f4db2568a9c3dac6b53030",
+      "evas/tests/test_event_conditions.py": "75fa6a11584686ad875cbdd2f36a3d9844a35ea91c1cd429496d36a0ff20a5a4",
+      "evas/tests/test_event_floor_ranges.py": "6439b87ba697c05fb98965670d6e83d78566ddf2c78d47b30f4e3da59515de1e",
+      "evas/tests/test_event_function_consumer.py": "bedab1b8f73bba6e56d50b6b1d61e09362c6bad2d50b24f253473361b6b76008",
+      "evas/tests/test_event_history_continuation.py": "2833425af0cc62c142c170728fe2abc5f9a0a5d9e9d3567e2d20fc85020ed9b0",
+      "evas/tests/test_event_horizons.py": "de42bcda12d4bf2b86ad2b75a05cb801fde90f4cdd08d4e752a3b9e3cb84feaa",
+      "evas/tests/test_event_or.py": "ae1f91bb4c5e71fe1931570cf3783ba4f428d59d3d64e081daf01a1ddfb642d7",
+      "evas/tests/test_event_ordinary_scratch.py": "6496bbcf24d2bc1b987921d79d8d3a3420279b97fc0090dd948387b2bd45577e",
+      "evas/tests/test_event_parameter_specialization.py": "b8919de3aa278bc4bf399342ed99856247ed3ec0be3d62025aa2a72e971569ec",
+      "evas/tests/test_event_predicate_structure.py": "b7c8a5ef20644991364ac4672bcc68dae55f000cd219b17e8e94dfa0530a5b1d",
+      "evas/tests/test_event_relocalization.py": "120e103e2d9f3ef2aab3cde0ed2b34153a0c313989b6cf2f2ab98377a8fe68e7",
+      "evas/tests/test_event_runtime_loops.py": "289ea76631bc706d84108bc8eef8ee88b7a2d618125075eeebfe0b9b235ff372",
+      "evas/tests/test_event_singleton_exact.py": "6e3b492b3f1821e8bda38524d35e76e79dd1ecfa4534a1d94ed8294d953bd20b",
+      "evas/tests/test_event_statistics.py": "597c805dc03d1a0bd012ae2ba06ac1c4d4017493cce2de59cb06a97a8a512cd6",
+      "evas/tests/test_event_time.py": "4a2680f67f5ad605134f62e800cfe8f29508c0ab83ebebb8ee92b52ac74a18d9",
+      "evas/tests/test_event_value_precision.py": "695ca116137d9d14ee88a66d6e7c1ea24ef9b4a1016184694c058947cdf8d901",
+      "evas/tests/test_event_window_sampling.py": "5658de30608258af0ff36e034e627d2054ada7970cb21ac80b8fdccadf0759bb",
+      "evas/tests/test_event_writers.py": "495735b72cb14bea264ab0841f6db0c5b49e328ccab52d20baa9d1c6c10b4513",
+      "evas/tests/test_events.py": "92fcedc82777297fe2858a049496184e6e18e141cd531560d1c1731789395ab8",
+      "evas/tests/test_exact_affine_history_phase.py": "a59fb93d0a88777df7dfedb3a955306244ce53d5aa50592ade995a2696f8c0be",
+      "evas/tests/test_exact_predicate_endpoints.py": "7dde5fed9ab45af34a994b97402d1a5c84997a16a6aa25930e075286284c17c4",
+      "evas/tests/test_exact_transition_deadlines.py": "196a19014925dd7745f9487a8c3e0064453ecaf2f5849454455c84136e4e2670",
+      "evas/tests/test_filter_budget.py": "f22bc4f790904572abab6b62a12ea3590e94332bfda2317230bd83b8cef834c8",
+      "evas/tests/test_filter_direct.py": "b90192cdabdda1b810ccb9546455b6cc997abd78a5879e7a451b7d851354423a",
+      "evas/tests/test_filter_precision.py": "2c5a5e37e486b996e5adeb482f1a12f07a5d405a168b928684570065d7660dc1",
+      "evas/tests/test_finite_floor.py": "480c260460efe32dbc398707b4572cce1762cd2acdab30d8b10ff7f1632ac45e",
+      "evas/tests/test_floor_rn_contract.py": "fd381140945407334c5ac1ca744ec2efc2a046b5eeb41deb3aae93baed6df300",
+      "evas/tests/test_floor_syntax.py": "f5440788459a618d2cc71aa0cb707c8c7d803000db94e3152dfc543bf0ded1f5",
+      "evas/tests/test_floor_work_accounting.py": "f75b72e6f856bac2e4e020261d8ff81710de7b12ce20b56abea8a39c0b3ad2ca",
+      "evas/tests/test_forcing_history_bridge.py": "de484e22afb9d6a60c0933ab135ba67e7cc2ef59a7c4f9308fc52ae4eb2486b5",
+      "evas/tests/test_frontend_closure.py": "9de4f95a5423c3a026bdf79fe5ed4cfac3afb850db6a8133092b16fe2c82836b",
+      "evas/tests/test_frontend_diagnostics.py": "22bfcdb95bdc08d439429b67e2a55deb82164c6dc6f51cea824b62d9ee365e35",
+      "evas/tests/test_frontend_limits.py": "228a8fc79801d279a5dd719d832b4e23469f2ca9ab26fc5b5dd5e4129863ff66",
+      "evas/tests/test_function_branches.py": "e63a703fe699a637d3ea69fefb3d96a1fe286b40d8b45f55b946ad015418e799",
+      "evas/tests/test_function_compatibility_dag.py": "deb9aea5defee87080bb814102bd8763d432cc01a2eee5e83527f8188475a1a7",
+      "evas/tests/test_function_math.py": "f28bd967dfc53d7224abe262a55420cd14c88ae469db39ffa0c282d9eb1b4035",
+      "evas/tests/test_gap_integration.py": "9d412df3aeb6b4af7f12010a593a3e09ecb281c3c9bfc48974a33c325e9487c2",
+      "evas/tests/test_generated_transient.py": "0313814883d721b804383b6ca14fb34868066214f36ebebe6b42547e7d9a65c0",
+      "evas/tests/test_group_discrete_sample_contract.py": "a9f3002a0e92131b24b5ac43439781f1e8f539609dd71fe37ca101f0381e6736",
+      "evas/tests/test_group_event_calendar.py": "f225738d907a81f296addac7ba3fd0fc6f09faca645b69734086491ea1365d06",
+      "evas/tests/test_group_math_sampled_domain.py": "f228bef0097ad14f7ba480805565c36c133e9a15aff91f7f3a4d4ea6f7473a43",
+      "evas/tests/test_group_module_attributes.py": "58fc0350551306c70bc64ba624ad6cdc6f08daf5095fb114e9e81c4d15d3b02f",
+      "evas/tests/test_held_alias_probe.py": "83e277ac284cf6abd753f242b1deb3d8a822768e91357a9951900b2d3abb7b1c",
+      "evas/tests/test_held_integer_targets.py": "6e6a8af79dde76f8f34935b5e91bd08e3b63692d6e7a8738df52cc18650e9868",
+      "evas/tests/test_held_power2_history_compat.py": "36b1adb826d3e96fc2d8628069efb4d0eebf44fe491f66cf1f6fba128c51751e",
+      "evas/tests/test_held_power2_targets.py": "34a691583d7872b7e537d74c8ed6a6fb051666cfc373f7e25ddca9129b18dd51",
+      "evas/tests/test_held_source_queries.py": "745aefba378dbb750ae441ec6ea9f3700ad10503008af96110e81236ea920ad4",
+      "evas/tests/test_held_target_parameters.py": "84c3dc4051cfb7ac37727feecd5040a4bd7387f895edd82ed9a3819c0f5bfe74",
+      "evas/tests/test_held_time_provenance.py": "a90c4c579703309b4f68dee9ccf504a12dcc32e14a7424e595c73a35ebd70a4e",
+      "evas/tests/test_held_timer_provenance.py": "add9c011b11a0dc9bb5e44cb1cfeb8dbfb8c8796796dccdce43983d31754a030",
+      "evas/tests/test_held_transition_targets.py": "b23c978958f08261f28a84aaf89ee645acefccc400fa6e07b75288be8280d260",
+      "evas/tests/test_hierarchy.py": "a3b2fe26d029e4872fbe2ceb50213f7398701255d9e7158ce7cef2e0c44c6ad6",
+      "evas/tests/test_history_consumer.py": "caa3c1d6fbe4b0ca4c215100f143fe67196b8ddb106367e66e57b6ed38841222",
+      "evas/tests/test_history_consumer_freshness.py": "6d423c40beae045217eeb8a2d474530a04f575d94b62a03d6cc644c933f09494",
+      "evas/tests/test_history_forcing.py": "25561dfce4540bce78e255980a4c06bd61473becf1301e20ffffc18a6aa5622f",
+      "evas/tests/test_history_forcing_binding.py": "c499f120a38a78f9ad08aecb8f4ad1a41dcfcb7e3661743dd4f4c780aa452fba",
+      "evas/tests/test_history_forcing_point.py": "dddb0b3e485c07e552d7ba9103ab34986b5b8b48b19ce8509a491115dbe12885",
+      "evas/tests/test_history_forcing_shaped.py": "521da040d8d6866050f72f5dbe4bc0c5ac76195e1f20921a6a00f9d60f6a0402",
+      "evas/tests/test_history_migration_contract.py": "c52c7c5ff24a5040733850c0b599f5963073948e5848ae5b281e6ad9b7b60032",
+      "evas/tests/test_history_owner_contract.py": "c94f08238d14d45a237705e9861c52d5bcf6236084c8d3078b209462c90a2d18",
+      "evas/tests/test_history_projection.py": "cd53583d5902c23102a594ec427cfcabd117d549353bee84fb7ac06ecd2845b4",
+      "evas/tests/test_history_relocalization.py": "a9099e57f15155d934eb8e5637a49397792d12374b767236ab1c0ae37e915eb9",
+      "evas/tests/test_identity.py": "2be060cfcaa5da21769cb752fd86d77460b390b4601e54a8cd2a413dd7739e2c",
+      "evas/tests/test_idt.py": "9c92d7106a167c08da928ad8c64fbc95d33bdfc57b6dc6df7bcc297e96ba459e",
+      "evas/tests/test_idt_accuracy.py": "3eaf3f0097abf3bc830f36660b68bbd038decdb3e9ce44d9941ee3dcdd920983",
+      "evas/tests/test_idt_pulse_reset.py": "d30d0c19fb8a95f55143d99b917fa7790ee3a548bcdb4aba56350867fb76aaac",
+      "evas/tests/test_immutable_declarations.py": "73a919f28e07844cdf34bb3c6ef23b4ef8e67ec5265c5921825ff08c07b2e3b5",
+      "evas/tests/test_implicit_dynamics.py": "56a15f5b5dd5583af409b60bc728783f7b39c1b60b892e64624a3b9ce6793459",
+      "evas/tests/test_implicit_event_restart.py": "ce845ef1301e87bfb0949ea443a7ed507ddbf5a38fc877eb3a4a1d2d6582793f",
+      "evas/tests/test_implicit_filters.py": "ae91c8ee72102461d7e96376bc2bd90788ed476172bfa6f73dd8cf070d37e51b",
+      "evas/tests/test_implicit_step_bounds.py": "24882daf9c3c4cdfe707d79f5fe4a42ebd6cbf4d6ff013f3e1cb29f1a3731f59",
+      "evas/tests/test_independent_driver_condition.py": "a86d22aaf5e106d3bcf6c31dffe9ea42897dedb2b7c905b49badf82b5129bd35",
+      "evas/tests/test_initial_advisory_contract.py": "93a2ce6e6e6458b85e269bde02ac1b6da7da84d2ea05fe221de80b8890c6aa5b",
+      "evas/tests/test_initial_bootstrap_contract.py": "8a4e895c1d34a567cc8b244f5c3e9029c5ee110941e84c66fa3675954af5bf86",
+      "evas/tests/test_initial_compact_compat.py": "50f6a34c3a6941a06ff4c147be37f487c746c93202585cfd94f7b66f76a189be",
+      "evas/tests/test_initial_cross.py": "863e33f0df5218ac793fc46ee14f2a08f30ea65ed17490f54298681adf171947",
+      "evas/tests/test_initial_display_transition.py": "ed4ea56e70b34bb79d1e90300eaba3eeac249f90c869f3600ce7e172590134b3",
+      "evas/tests/test_initial_events.py": "219ee9c8ea39e7a4ee8adf7aa92ef5f77b1a357d168106e95f5ea78fe1b1936c",
+      "evas/tests/test_initial_node_dependencies.py": "6951848decba401328c4b4a91fd73b565a450999a3267c887c0195d89da16b07",
+      "evas/tests/test_initial_observer_horizon.py": "93c822e406f0b8eeed8b010c8fe56b071d5aaeab641c9b8670f8df7d46168266",
+      "evas/tests/test_initial_ordinary_alias.py": "37895c88e926224439d0f39f0adde6ce60bfbaee870e2972a6178dba8f75788e",
+      "evas/tests/test_initial_ordinary_alias_admission.py": "919e1eceb658d1a02fe88a0026474d60c723298fcc3d57ebd1a4378f8f8d6d99",
+      "evas/tests/test_initial_power.py": "7195f3353d402b74e4fa0aa88c312803811e7eda65b8ed65f8c34584e2a418d5",
+      "evas/tests/test_initial_sampling_closure.py": "596c3ce0010b7fb65172277c145e30d780e927ba261ef7c4974308f869ba822e",
+      "evas/tests/test_initial_seed_invariance.py": "d900d2b0144123b3f3b166000d9f0c6f2c20c1b88e45ce3448397ada21f47a04",
+      "evas/tests/test_initial_selected_interval.py": "4e6744a59158a5b0a0edcd952fcf945bfb50c6ef22eb7a759321fa730e9afcfc",
+      "evas/tests/test_initial_source_sequence_contract.py": "49d639c7907f19ba4d9499a07b2a6724f6e7f868c54ba54f0982af4663a5ae51",
+      "evas/tests/test_initial_static_loops.py": "47df593d33a4d87f32aab69b3c5388091367ff11ee14c107f8bdb09f0bc51d2a",
+      "evas/tests/test_initial_union_contract.py": "47b77b818bd0b9530243292aee3de2064c3d712338cf59f7f1c9242c7542b5ee",
+      "evas/tests/test_initialized_event_composition.py": "ea05b43f904cafb38845ec8798a1f1002edd8e7580ab64d9b9ca5a3a587690f6",
+      "evas/tests/test_input_clamp.py": "53375b7d3866c2e0cb4afc7dc44f18a6356827ff4328c6c78a3f9ea1fedb9e64",
+      "evas/tests/test_input_initialization.py": "64acad59f6b03dd97ed98279f60bad6e0740ba0632c0ac5952f9d6f88476f033",
+      "evas/tests/test_input_rational_closure.py": "a27f99351828fb877ec7bf086a567007e1379f156923c4ab92eeb3ac1ed6778d",
+      "evas/tests/test_integer_bitops.py": "9dea6563700cf0e7a3ae4b7eab40ccffcd84b527154f124a8cd585fac42429db",
+      "evas/tests/test_integer_functions.py": "96e4cc780646b7d948bee8a6bedd9abdea9b20ce5f1f44d1b5b5c66b50479e84",
+      "evas/tests/test_integer_invariants.py": "fe54771244d5918faa99d5a001ed698e0666bba7f5211447ed16c868416db5c8",
+      "evas/tests/test_integer_loops.py": "d7644cbebd9b1d8dd75b72675caa8408d8aae33b2cd68280a08601a2d4bf0095",
+      "evas/tests/test_integer_math_closure.py": "a278b8413a7d1b19108fe6ba5903c65b7d18476bc0fd277206ccadef074a6572",
+      "evas/tests/test_integer_prefix.py": "3f51da4504832c6ced15652d54f11c560a8f84dd81b2bbc478064cb02061fcb0",
+      "evas/tests/test_integer_proof_owner.py": "10d5cd5c479e7e6826cfc6e83c1a980d9713c3c0fb1cdbf7912a61a7ab8be31c",
+      "evas/tests/test_integer_round.py": "b351cffc2f52db732f9541f2d170ee59aefc5507fac15f6bb993a5b419612652",
+      "evas/tests/test_integer_table_composition.py": "856157cc8bad3166f7fac712fca76936503fefb2fa3c317c6ea0eb14196e23bb",
+      "evas/tests/test_interval.py": "3a46b00fc4045175078931f4bbb573b46b139c1ed086556c430484d33ee04d69",
+      "evas/tests/test_ir33_history_inputs.py": "2be0d8d943bda2992eab4a4c53818c8e306ce6ec5e9e6b15a6477dc7a1954b74",
+      "evas/tests/test_ir33_phase_inputs.py": "765ec83fc6a8c012cb869b925879bff99d8cd1d40bed86734f082688d47e6dde",
+      "evas/tests/test_ir_cache.py": "47e694674e4795ef754174413b2463813d66bb02ba454ce45593839262148935",
+      "evas/tests/test_kernel_selection.py": "256f86c24ad1ec64f0d4ad9a9138d950370f3be69da6207944f6b9bcd712949b",
+      "evas/tests/test_laplace.py": "f857d521d85de6346c95a4efeda6e57f19440c792624e10676e5e308ff95a3e1",
+      "evas/tests/test_laplace_np.py": "44715d95d1163261939b64c758710a8913de1d7970d031129b6b461a9dcbf936",
+      "evas/tests/test_legacy_chain_bounds.py": "559ec4056f1005a283916e555e63df692f3df17f8c8bd2303ae97d57d95e46ab",
+      "evas/tests/test_legacy_chain_precision.py": "e8d148d32122c0fe4cfb5116fb247981bd8aa135a8907608a9e5a3a4b67f403d",
+      "evas/tests/test_lifecycle_closure.py": "b16ceac47edf8dc95e57e22cca1d74c9d593362ab53f5db3e1964328a4ac7ce8",
+      "evas/tests/test_lint.py": "e51a7a81b9ddbfae9109f9f4b7315465994fe5ec32513d87c24243a30213dd90",
+      "evas/tests/test_live_transition_coefficient.py": "9923f953a8876ed6cf891ff1e8f6c8e834d14e741cb0b0680186d9f5c03541ed",
+      "evas/tests/test_live_transition_filter.py": "1509d3e59cb6928982b38a2da694b9d5a35ad4e3b63d48809e69b43f7869fac5",
+      "evas/tests/test_local_state.py": "5d72eb984d8ae4dd7302724938d1a507b576603c8c076e1b4a34b5560ddf83c5",
+      "evas/tests/test_long_sequence_accuracy.py": "b946c7995ff7cf3a394cb04ea612f77dd17a6e8e6bebf9555f7408f69c1bf1b3",
+      "evas/tests/test_loop_event_time.py": "aa972ecef0dd3a15f79a8b764d62eddf16908ca3a808e53e012796745f9cc1db",
+      "evas/tests/test_loop_function_identity.py": "4d814991cc5057c57483b92c44999d6eb59ecc2bdc206e1262c0b475ea4cc18a",
+      "evas/tests/test_loop_histories.py": "45cc0d0b043e8f6fb5b04e0b85937612631d901adc49e4c619d29092ed25d5ab",
+      "evas/tests/test_manifest.py": "7c2a0f98271c1bae81b8a5beb2fa62e755a99e7a7bfde7cdc6fb8833d4cfca86",
+      "evas/tests/test_memoryless_identity.py": "82c439f93b6ec50549622d0f603f06fbec1ee375e32794d870d0eec3ccb207ea",
+      "evas/tests/test_migrate.py": "03024b63f4f5697f05e0c4eae2bf13d006ffaffec5e896c9381c0918104f879c",
+      "evas/tests/test_mixed_dynamics.py": "0a7dd9ff69eeb96fdb6aab91eb2033f8cb2e09f7d221856b193fcb44fefc1236",
+      "evas/tests/test_n09_causal_state_readout.py": "8d68de397ba22eb81a7da127ff6d9da8b3e7401d3c591308596faf63c68b6497",
+      "evas/tests/test_native_audit.py": "7ab1b3ea368233075a1d6c78339ffb990e2db56c6b28ff7786839fcce5ec1178",
+      "evas/tests/test_native_event_floor.py": "465d2d5811bb9548b12d8a6ad71f7729a61917fe505107cf16b1e546b7000a5b",
+      "evas/tests/test_native_held_bits29.py": "584907ec17551fc474597073847ccded7b7998272e14ad188a809ddd9aa9e141",
+      "evas/tests/test_native_integer28.py": "17543b63e3b9979ec3258fe25ce36af15fcf26c8733835679a8fcfdfa3361336",
+      "evas/tests/test_native_integer_events.py": "2335f46d43913a8ec05eb2de577c8c4812581d2a5c0ba5e815fb47841f323371",
+      "evas/tests/test_native_source_floor_prefix.py": "9cefca427ce86bb43df3bb0530c8590eda05698cbe9802e9b7f33d2fd93aafb2",
+      "evas/tests/test_nested_predicate_cuts.py": "9a0b329fc5bfe974ab123ce7f870618c3adeae615c60213fb31aafd546760eab",
+      "evas/tests/test_night_semantic_variants.py": "97c66b5f6b905534f47845b08f520b5b1f5f1ef6b1616359971d845afef43e6f",
+      "evas/tests/test_nonlinear.py": "5c0915cd8db2232f4bfa74103c95e6ff307007d087ec03089e1470507b01d803",
+      "evas/tests/test_nonlinear_transient.py": "67f864be30fd64b0c327c708dd52933e7beef32ff4ae49b7183acb91bea6c177",
+      "evas/tests/test_observation_evidence.py": "c713cfab686ad53753898c6513934d3548dfc118a834862eb55d2be83e7b7a78",
+      "evas/tests/test_observation_evidence_helper.py": "795b270b5077799cf751a9756154c25119030fdc73c81bd390a6b4ed0d7261c7",
+      "evas/tests/test_operator_defaults.py": "a0e1a9fd67049a353a336d9553b3ffaaa8012561f58e4b18fb909ec75d81f773",
+      "evas/tests/test_ordinary_boundary_certificates.py": "122c18ffb4f22af35be2bb22e7ac34ef83b153d4e4b733cd604dfe736a797c5f",
+      "evas/tests/test_ordinary_event_prefix.py": "84871131b40a398c1952ce34be865398f60dc2e765bbba9ffb1218ee918fb024",
+      "evas/tests/test_ordinary_held_state.py": "f1d0e09832ec305f372a1b8e1dada962884d0b043a6a293294011854f3f65088",
+      "evas/tests/test_ordinary_integer_current_alias.py": "d5ea116be2ad426666369b38aa5857dbe242a331135d15883482da935c966496",
+      "evas/tests/test_ordinary_integer_event_prefix.py": "1460af76f99f677d6ef0cb8cb221833031bda8392461020de91b5dd63b9defe4",
+      "evas/tests/test_ordinary_integer_prefix_freshness.py": "343528d1c1a17f06f09ccb36f4a9e0d31f29bf0caffd2634bbe54f22763681fc",
+      "evas/tests/test_original079_contract.py": "48e18ad698925db66a209dbd8c9d40b704e75467f6f96dca180626f742498e7b",
+      "evas/tests/test_original390_contract.py": "32a6df185c7c860431e567b1487ae657eb03dee167b3a0784da39c05d392bcc5",
+      "evas/tests/test_original391_contract.py": "92a2c8d965208ff8f1fafd256f592971f726caa8641702a9a3bb2a09aa4ec59a",
+      "evas/tests/test_original_source_consumers.py": "94539cbe92146496c64cbef6daf99c1b874c218d21c8406d65a6e7e5b36c1c06",
+      "evas/tests/test_paper_case_inputs.py": "69ae664190e40d530a94163b3a5d26b33a99888d78af6a3a71bafafda3111dd3",
+      "evas/tests/test_paper_scenarios.py": "aa7dec7c9e0f10df6e32a56d8a9c36517a847bfe0edf127a2953169f3411fa37",
+      "evas/tests/test_parallel.py": "53462356b6fb4109745a882c5378a8c11165db30120e99f8f103d2997e3adeb8",
+      "evas/tests/test_parameter_constraints.py": "9953e50b7227afec437f1c6ab81970c04944c0032bd1185d4961161e9c5325a4",
+      "evas/tests/test_passive_events.py": "c45c3c15d6e5710af59ecf804603c76ea49761e9fa38b8ef8c0bd0bfa9b8a23f",
+      "evas/tests/test_passive_history_phase.py": "0d61fe7ebbf7eeee2a2dd0c2fcf8d078fc8e3605dd2cce97d8dde31c8ca33cad",
+      "evas/tests/test_phase.py": "337be6dc4fbd187b1a869128a0a6411ce79fa3ed8dd3f209294885cf97d464c2",
+      "evas/tests/test_physical_point_bundle.py": "44c9c0fe120012719a6dea8d6ab07da5a6707edc38750cf605c076ddcfbbf8e5",
+      "evas/tests/test_polynomial_derivatives.py": "b53725de1136b3221fbd09c9eb691e94775a3df95a3229124378c1160890ec33",
+      "evas/tests/test_portability_coverage.py": "73e6370e5b17d009abd7f9b19fa04807ff5c3ca0890c9f7accc21246223b1368",
+      "evas/tests/test_positive_clamped_divisor.py": "0fd104c7dcf019fc6a96c6ec9080799acb978fe3a71a47a81f790aa654f98563",
+      "evas/tests/test_precision_breadth_composition.py": "3d408a18989d9749cd751d440292a9ba585693d6a973f0033dde5ee3bcdd3dc6",
+      "evas/tests/test_precision_breadth_core.py": "5f1c420a722aa0e7081592a2ea935d34bd414f24f9b5512c33e213cd3e91aabe",
+      "evas/tests/test_precision_breadth_foundation.py": "41ca1f5e33984ec476598cfe29bd2c9cb9e8dd863097f64ff531a473f8559c54",
+      "evas/tests/test_precision_breadth_runner.py": "db374db02f68b28b9ae8bb6ea3fc3c7c210e700bfe31bb139a77b2cd1c1c359d",
+      "evas/tests/test_precision_chain.py": "7a3cbe098707357b83a383f65529e13e1b8e56ef1b46281e8183d2b058f40100",
+      "evas/tests/test_preprocessor.py": "147eaa14042e91c7e42dfd98272b5a5340d861c0ce454d3006eb85f7c24c5ae3",
+      "evas/tests/test_procedure_runtime.py": "0a378a27f87eaad0608c75d032f654e8c33dc0d6958936613b46d92ead108751",
+      "evas/tests/test_program_real_facts.py": "3580448e52d18bf175185e05c352dfb5084a722eb397a73c19c3388b6f06e3ec",
+      "evas/tests/test_program_real_ir.py": "4eec0fbd29fd5738b80ac91d02203444599a86bdab4179075ec712fc35726a02",
+      "evas/tests/test_program_real_leaf_reuse.py": "be281d39320d723d834d9375920405a09b0e3b07543490e98dae6705474eb845",
+      "evas/tests/test_program_real_validation.py": "f0999f8499114a95ee316162f120841c9e9f6486d75b118997924dbda7679e9c",
+      "evas/tests/test_program_rn_cell_boundaries.py": "bee514928f607517beee333b47449875ccdf19da33716e1bf448d01823d07f43",
+      "evas/tests/test_proven_deadline_order.py": "02bbe660097e8bb8fc7e26c76dd5c7b1b9bac433c8a2e2bd43375f7e1ba62e58",
+      "evas/tests/test_proven_lineage_point_query.py": "c6d3f81d35784076c7957a3ecf17d308cd215cc52595620c213089a4bb81c003",
+      "evas/tests/test_query.py": "8e8c351a91fc388785f184107672643a82bb7a550ac5039bf7272a04d1a63130",
+      "evas/tests/test_r01_event_arrays.py": "178784a7838c88af4c5892175bd12998e03f32054872b75f5640d0907b6c5fb3",
+      "evas/tests/test_r01_event_conditions.py": "a0b904bd2e3c2c7915a6e9da78e642136fe13197680cb229f2d76241fcd75e69",
+      "evas/tests/test_r01_event_select.py": "fc4bb109a18d78b124781893ecfb4d8ff9eaf338c57c62a6a33546781650f960",
+      "evas/tests/test_r01_language.py": "a7da3125e2e74c074cabf705b1c20a3b528c297376187f6baf53cb74b84d6582",
+      "evas/tests/test_r01_runtime_frontend.py": "5db32186a4854f1f7a4191265dfc421689f55ad0aa8cb60068eafaa7a489ee81",
+      "evas/tests/test_r01_runtime_select.py": "6b782f2aa739352ae1699bcfbb7c8b5224ad249d1ae03f2c81bbf62eaedab696",
+      "evas/tests/test_rational_predicate_closure.py": "383d65b8d7c0262ce945ed18b9025a1f8986bcf9c1d812e6de94e053bac0c190",
+      "evas/tests/test_rational_transition_freshness.py": "532b06004cb77ba81f68c44d9da0b3a4f3d57dc42ab547ba7e1fa274167b6efa",
+      "evas/tests/test_raw_event_owners.py": "7a2078195db97e412ff52682f496d05e283e2ac11d0a1998c87b9ca1629d55a5",
+      "evas/tests/test_readout_decision_outputs.py": "37d8116843c1e44400f2cc0572a8a97060959b334296b6d8a49fa1b4b0c892e6",
+      "evas/tests/test_real_argument_lookup.py": "4638bee338700c99d9e1bcc30acf4a8a88259951a8dd328ff8ed28f6cd955e49",
+      "evas/tests/test_real_call.py": "206a9a873b3d1d4fe260e5a691c846837fa6eb7bd096ad282644694b8507fc1d",
+      "evas/tests/test_real_call_argument_snapshots.py": "0d6219234c523f6f8d246f7471f2478b916c24f72746ace64e5b244c124a8762",
+      "evas/tests/test_refinement.py": "fca0148ed69bf522459d401b3434e249b4b5ee942eb290d7d1177a12100de022",
+      "evas/tests/test_rejection_contracts.py": "466ac7a3291250597df26f70bc3d99fe3343d5e7c47d1e50737a6226ade565e2",
+      "evas/tests/test_repeated_predicate_cuts.py": "d09789840ca69d53eacd87afec80d00db20ea871b11c901a7cd8356cb82330cb",
+      "evas/tests/test_result_outputs.py": "e748ef8d05e1e6d26eadd059e8afa46194e2e4c5d21a1413ab48059997c0d00f",
+      "evas/tests/test_reuse.py": "ee865955a6bd63f3281057e02335d14d4a12055aaa7909979d7bf4c66a6ad1a8",
+      "evas/tests/test_root_recovery.py": "abf46b22dd275e12e9422ba204cdefee5433b2914e3f6a1cfcda06350c23eb4e",
+      "evas/tests/test_root_window_history.py": "1039c35e7d82902bc3a2e4ee5a2c9ed6e4408557396b013cc44888a82ab1760e",
+      "evas/tests/test_root_witness_neighbors.py": "1de35835fef2c67ee0cf94a76c4da2ae25c64bdc604448e07b7fa0bd15de0284",
+      "evas/tests/test_runtime_contracts.py": "0deb23141e6fa2b18604304223f81193bdf004837d240569e4a71600e61fe2d8",
+      "evas/tests/test_sample_edge_filter.py": "c7165c165c70e00ec930a2996a1f599d617f92124d97c6dd5f8c83bacfa53eaa",
+      "evas/tests/test_sample_state_precision.py": "aaacf4d53ead732955630e32f78b4abc86e794e7d38ef07c11e467b32f353211",
+      "evas/tests/test_sampled_integral_strobe.py": "35ec6afaf5eb7b9ea346ed7e286f5bf5232a0bce538fe2a7e3ceff196c5f19e2",
+      "evas/tests/test_sampled_predicate_roles.py": "fb8924345a6bf4ff7d883defe908271c0294a71e29d3886c83a217a0930e1888",
+      "evas/tests/test_sampled_predicate_settlement.py": "dd5eeb19656e9d680a07d23005249e496c68e8a07402f7bdee2760b7149710c3",
+      "evas/tests/test_scs.py": "50fa2b947888ea7d84e3ccd9275d0a272eac9d37b9a549bc476c505605d5bd99",
+      "evas/tests/test_scs_bsource.py": "f42f18e909efade5e95e6065deb9f72d59b781e86a3a4274e5d5c96e98072c85",
+      "evas/tests/test_scs_closure.py": "5f4a80e6db83f415ecb06dbd73e507cabaa50e597d8cd20040ca73c059de5e12",
+      "evas/tests/test_scs_driven_nodes.py": "b55924a19f60498fe9c9ec09f0b7fad1c1c9ae88ca5b233fe4d5d99215e43409",
+      "evas/tests/test_scs_native_source_contract.py": "f7d9b0fb5f6df8ad80e1df44292e45fddf4b8bf2d69e42489cddddc86bba80bc",
+      "evas/tests/test_scs_pulse_delay.py": "63c6f86cb87694e04b8591da7a12d779d9f1157922f32a31219436a3e71a579f",
+      "evas/tests/test_scs_save.py": "71e14eade325a7ccb62630e9e60a2ab4c302c5e364283da6ba88df19c94d177e",
+      "evas/tests/test_scs_vectors.py": "132af8a967f7f2976bc7e96aa134383d5eb1d9662ba09c96fe3e100b8cd98612",
+      "evas/tests/test_scs_zero_current.py": "6301f00d25bfe650d01f1c5814d541593c5a4fe3be1153d599682c4d6f6135a6",
+      "evas/tests/test_selected_ln.py": "31bc60964d2ca8edb51384afecb339b6e4d54aa392b1af436a5efd9d962a7ef6",
+      "evas/tests/test_selected_quotient_comparison.py": "0d6d807f95b034a1d2c4cf613267d70549b2b63dba39b5df4eeadc9f0fad862c",
+      "evas/tests/test_semantic_invariants.py": "74dd4921eddd561fb7ce4a1033ed52a13501b701cf6b54c8e54659a9f9ab9537",
+      "evas/tests/test_settled_integer_reads.py": "a04f4971a925994a091cda828e38e19e0d6837a628133fa4a5e127d9f7b6579e",
+      "evas/tests/test_settlement.py": "0f41566d20db71c8df2f68562a11a4326d6e3b093efcb784dbc813b77af19fc9",
+      "evas/tests/test_shaped_range_oracle_freshness.py": "4bcf3f01f440a3b634137366c910c8bc5b5e9a2dcd46cc45d8f18b20d76fa0bd",
+      "evas/tests/test_shaped_source_selected_slew.py": "19b852cc4cdbe74123693acfbbc1b1a5d160a2c65a8c66883b08fba666401347",
+      "evas/tests/test_shared_counter.py": "3fade24617fad1d00c0795526c80a934d3b973a89cb4f522ad2ec37ea7e93195",
+      "evas/tests/test_shared_source_relevance.py": "434b0b2e79978431bc43de40df6bb5036e49c213c9d02883dbe41ec3e96307e7",
+      "evas/tests/test_slew.py": "c436cf6fdb345bfd0e29ce96e920bca77e95e19f112c702da41813563469fa90",
+      "evas/tests/test_slew_accuracy.py": "a9d56c6b269c2167f8a83bcac21efb569f362c0b3c98d666e6fdd08f7e7618e8",
+      "evas/tests/test_slew_cascade.py": "e3be92838f606c76b9a35baf82cafaa7656f791bc64c21fb5513c3c49cfda7b1",
+      "evas/tests/test_source_argument_frontier.py": "ae80ea79e916c819f0a33f2f83c3114ff2e47265a879ca8afc9b4dae4c5670ed",
+      "evas/tests/test_source_audit_reuse.py": "595f0af19ab0622d79adc546234e4c41178c51c13489d6ffe55043bf163094d0",
+      "evas/tests/test_source_factor.py": "a8729f30b23e965bdc5d8efacd37a18dab192182bf34c4f72a0d9cb94f045ddf",
+      "evas/tests/test_source_floor_event.py": "f2b7fd989191e0f8c736a9db29efb1a36df4561ac673ba990ad7e729dbf7f89a",
+      "evas/tests/test_source_math.py": "6046d9972325d51df1ccecda1be3dc3b7216a605c7cb1f2eddec2573473f432d",
+      "evas/tests/test_source_polynomial_forcing.py": "41ee071a17ecde79e5e814c76d18042b5c932036ae77c3a9ef4c7a4fe5a8558e",
+      "evas/tests/test_source_polynomial_guards.py": "e5d089d241ab8fc482404b212c0f3a55c2f8a7929570b9aabb4d67602062fbf8",
+      "evas/tests/test_source_qualification_work.py": "23acab97e0f2217c4ac074cd48d45fb77f6d6639d06965e3afdcc584d97b21b7",
+      "evas/tests/test_source_queries.py": "86708a9760e288906bef0d7edde969e0cd4ea2ce2f95d16f53b6e3315e3d1d74",
+      "evas/tests/test_source_rational_guards.py": "c467473712b0208caef02b401a672eebdb64091838f6c39df4ace4a7bfa5179e",
+      "evas/tests/test_source_rn_observation.py": "43b2b9eeb08534411ced38c9ed2c633ffedc62916e69a30845fb91a2f528655f",
+      "evas/tests/test_source_root_windows.py": "27f016410e01069b8a58b2db5cb0331d96e9baad1059d0d90ea1f70ba5029005",
+      "evas/tests/test_source_selected_slew.py": "00cc53c4f71991bb8cab298d93d38b5bb92642eca01e1d7a911b9f7b10f9b67f",
+      "evas/tests/test_source_shape.py": "23a7a773fa137fd450c03ea77a1225982252a14898f0a71ae5255edde5461fb9",
+      "evas/tests/test_source_slew_dc.py": "95b30dbb04b504817cb6267b67694073712711e25858270ce75367bffef6c791",
+      "evas/tests/test_source_state_predicates.py": "8f8dbc1fe639a58b59d4eac62ea2748ce5c69a3476b04f27b18b483732f8a9d9",
+      "evas/tests/test_source_structure.py": "fc86f92731a5a918ba4af0a9350eae4c3d227663d574592b6432f2a3f6f74452",
+      "evas/tests/test_source_uncertainty.py": "c2c7188ea6084a10334abd6b42d894c3401efa7afc7fa42150e2335c9d0cef21",
+      "evas/tests/test_sparse.py": "325f90fb7e25997e65fb3184a4e93384650ca194cef46dc96d6ae4ddff6514da",
+      "evas/tests/test_sparse_transient.py": "f0e2a96f223cce8d72d536cac7c0afd240df2603a53821ea952b81f81135e5c6",
+      "evas/tests/test_standard_constants.py": "acbe58589108163f488df1025075ddaae7133c3b7e5b613bdb226a34be56ce57",
+      "evas/tests/test_stateless_expressions.py": "8d6e23fa090e7b6b1e3140d8cbd2d6c0d0d3106a6dbb6f01c4e453f3d26ccef5",
+      "evas/tests/test_statement_audit_lease.py": "9c4aaf16fad6ead41085194f6738e2fe7ddbe00661341b84d929430c446f4521",
+      "evas/tests/test_static_loop_integer_type.py": "e2eb35534f231577ccefa37ef85e6dc289174e83276fa2f8d096c6022405c3ad",
+      "evas/tests/test_static_loops.py": "9b1e9d685a529c8f5c03b48ab4d7a4be6d8c578c7040e25af04c1456cea01a31",
+      "evas/tests/test_strobe.py": "a76b54b0e89d7a53ea0db32bd0127cba51b0ab06c0d38f23da6fd9655dc0e5b7",
+      "evas/tests/test_tanh_waveform.py": "9666dff1a83bf33ca7fb1694400440f1e016d231f5516a895979d383f7ddea9c",
+      "evas/tests/test_timed_boundary_diagnostics.py": "4b91ecfff78b0a08fb9b684ca538de4a885021757a9b2bd13439ea0ff2bdfa81",
+      "evas/tests/test_timed_composition.py": "e5de78900ec8dc846a70f53e6b355a6074313f12f21ecbe69dae59f0f96d995c",
+      "evas/tests/test_timer.py": "5ccba6be29e04cf396110474697bccadaf747b66021717b49bde589a5e633f6d",
+      "evas/tests/test_timer_at_transition_ramp_end.py": "c46a6533fedd87ae6df334dfb90b255d1bf81fac9e757dfb973fbe875d1ae0e7",
+      "evas/tests/test_timer_closure.py": "391b46cd9298ec3a8c2589403f46fba751d36e97feb1e286ebe6b00eb30903d6",
+      "evas/tests/test_timer_history_order.py": "28333e554d6d3a2386d984aaaaee6beebc9167e7c84e4248e9a08bd9e54c0a41",
+      "evas/tests/test_timer_ordering.py": "990c5cbc13de98989b12726866c63ba78e046d6c99c518cac56da0179cdb80c1",
+      "evas/tests/test_transient_accuracy_control.py": "a044d0e9d9f27410817c4d4cf4f2b897cd556bd25b0b070d80f263192f6390fe",
+      "evas/tests/test_transition.py": "ca074e0a83a42f8ae28472ef56ebeca0b1632a44355917b54d950a124ceac83d",
+      "evas/tests/test_transition_accuracy.py": "f69329a574226832643111c66a8b1fab26f00ea6738782a22b1268a7b1d0151f",
+      "evas/tests/test_transition_bootstrap_bounds.py": "e85d5a5d83e2b3aaa26d359db09a565842039ec43cf54fed3658c6e90a64cd78",
+      "evas/tests/test_transition_dc_target.py": "82b8ffc0c9e66290cb7c34e6b43bc51adb3008c9f281a954791343398777b63b",
+      "evas/tests/test_transition_defaults.py": "45e19ab0d469baf7006c0a054c042eed4e0a8a397c6b135403df25ddf73ed176",
+      "evas/tests/test_transition_endpoint_history.py": "6552a6751c9ccd1498c11e4f690b1f58ba70209bcf9f2fcee58deaff33756612",
+      "evas/tests/test_transition_event_conditions.py": "18492d195dce23c7c06b22596198fc6ba3b224150699237763ca0fc3ffece0a0",
+      "evas/tests/test_transition_initialization.py": "b1cfcdc7f65979b594fc9d29461ad094deecc59b19e3cf06d20d390112a52cef",
+      "evas/tests/test_transition_integral.py": "ab554147b4e12e13a43d9f1ab1bc832ab95b20df09fb3ee8c2aeb981cb50a18d",
+      "evas/tests/test_transition_integral_precision.py": "1e04c108548b9543453f8493b38113b6673e176f385a0e965c0db926a5f1c3e5",
+      "evas/tests/test_transition_point_proof.py": "66547a4a19275bdf46098b846c83290d0a49c763a9fb56a80e408980ad7faa9e",
+      "evas/tests/test_transition_rational_levels.py": "41bda2561539eec16484756ff7ea3c75d3fbcc23f7b5976b8478f2a0e7907245",
+      "evas/tests/test_unary_functions.py": "b00a95f92a2b53d4d1602c4c4a57df10cc9ebb63a466aef07a058e8a0b12ca2e",
+      "evas/tests/test_unused_internal_nodes.py": "1044f17863619b201530b417616162499fc2722f2849a8693f8679849cefeb78",
+      "evas/tests/test_user_functions.py": "74394a4fa200dae4f934f748abfe9095c790baddd5fa5018aa5f369633c91425",
+      "evas/tests/test_variable_arrays.py": "39224a71f92f82a88c662a186f0d8862b0249cb01b333637b9f66e017c38e2ed",
+      "evas/tests/test_variable_zero_timer_transition.py": "c812d06857d7e21c70a974806241e5d35f985886732dbd626a6d940a3d0f771c",
+      "evas/tests/test_vector_ports.py": "c8e466851e9932b95b221f08fc67e7150c1c56d9dffe987596e6adf8c9809f7e",
+      "evas/tests/test_while_loops.py": "6a752a11dd30bac9fd1a119c002386430b98e518e3bca9170facaa42218a9af9",
+      "evas/tests/test_xspice.py": "636c3dd0e96bb4d22f0bca6fd9175aa66da045ef534482827b5ac17776210d75",
+      "evas/tests/test_xspice_startup.py": "08dd8ea9ec961886ac3bab8bb024b452365ae17722001f1b63a37c100de58e27",
+      "evas/tests/test_zero_timer.py": "26dd1e6ccb7e123cee1a7dbc2eb0da43297231a0c4e2e56baddacad6ea5ccac3"
+    },
+    "lanes": [
+      {
+        "lane": 1,
+        "methods": 539,
+        "modules": 56,
+        "source_chars": 462895
+      },
+      {
+        "lane": 2,
+        "methods": 517,
+        "modules": 55,
+        "source_chars": 461941
+      },
+      {
+        "lane": 3,
+        "methods": 529,
+        "modules": 56,
+        "source_chars": 462861
+      },
+      {
+        "lane": 4,
+        "methods": 548,
+        "modules": 55,
+        "source_chars": 461987
+      },
+      {
+        "lane": 5,
+        "methods": 565,
+        "modules": 55,
+        "source_chars": 462092
+      },
+      {
+        "lane": 6,
+        "methods": 559,
+        "modules": 55,
+        "source_chars": 462082
+      }
+    ]
+  },
+  "audit_kind": "full method source/contract/oracle/assertion audit; targeted probes; not full calibration or simulator qualification",
+  "verdict_counts": {
+    "no_defect_found": 2785,
+    "evidence_gap": 95,
+    "mixed": 359,
+    "test_defect": 18
+  },
+  "outcome_by_verdict": {
+    "error": {
+      "no_defect_found": 138,
+      "evidence_gap": 25,
+      "test_defect": 3,
+      "mixed": 48
+    },
+    "expected_failure": {
+      "no_defect_found": 2,
+      "mixed": 1
+    },
+    "failed": {
+      "evidence_gap": 62,
+      "mixed": 281,
+      "test_defect": 12,
+      "no_defect_found": 68
+    },
+    "passed": {
+      "no_defect_found": 2577,
+      "evidence_gap": 8,
+      "mixed": 29,
+      "test_defect": 3
+    }
+  },
+  "role_counts": {
+    "behavior": 1369,
+    "mixed": 774,
+    "rejection": 489,
+    "metamorphic": 32,
+    "internal_contract": 322,
+    "checker": 271
+  },
+  "finding_count": 86,
+  "reviews": [
+    {
+      "lane": 1,
+      "sha256": "181e25ba8acfcdce4a78609a92dc2aff10cf7623172f01ff9db4aec2c0277199",
+      "methods": 539,
+      "limits": [
+        "Static per-method source, fixture, helper and contract audit only. CI outcome and previous failing-method audit are not proof of method correctness.",
+        "No suite, build, Spectre, external writes or fault-injection calibration was performed.",
+        "Every assigned method received a manual source/expected-answer assessment, including all supplied subcases; evidence_gap rows identify unresolved semantics or admission questions, not merely absent runtime execution.",
+        "Public solve/transient helpers validate requested row count, finite voltages, exact query times and state-vector shape through runtime.py/protocol.py. Local zip loops were not flagged solely for lacking their own length assertions.",
+        "Reviewed-file SHA256 identifies the files inspected, including selected sections of large mathematical/production files; it does not claim every line of those production files was audited.",
+        "All48 prior test_expectation_error method leads were reconciled. Prior CI was not rerun, and a prior first failing obligation was not treated as whole-method evidence.",
+        "Workspace check was run read-only and passed with13 worktrees/0 errors. Only review-1.json and lane1 probe/build files under this run directory were written.",
+        "Final Spec correction withdrew L1-F11 after checking actual operator boundaries. Four exact fixtures compile to bare physical Select time guards; program RN is not inferred across absent boundaries. The structural probe is the only added compiler execution; no simulator/build was run.",
+        "Related RN-preimage evidence_gap rows for the bare physical equality/source-guard operators were also removed after six additional compiler-only boundary probes. This correction does not remove actual program RN from event-body sampling or stored-state operations."
+      ],
+      "reviewed_files": [
+        {
+          "path": "evas/tests/test_accuracy.py",
+          "sha256": "38a0bf9513fab8d61ed395b049fc00127bcd7378002ebde368a0241211f3dd93"
+        },
+        {
+          "path": "evas/tests/test_case_statements.py",
+          "sha256": "c6fb2d4c4e41884c27360bd9d2a01b0c6d500010a52394eaff2f03112fc37bc0"
+        },
+        {
+          "path": "evas/tests/test_causal_parameter_identity.py",
+          "sha256": "953ecf4840f5c7a340dd512ce5314598fbb2eb27376b865f06de15d168fc927b"
+        },
+        {
+          "path": "evas/tests/test_checked_source_facts.py",
+          "sha256": "974f16a65705731a4845ed27e420c41942b38842aeba1d0c52d01f76cd87a90b"
+        },
+        {
+          "path": "evas/tests/test_compact_physical_select.py",
+          "sha256": "b693a0f412890c851191382141bbf7929686c929e6c18357484f37c337e3d62d"
+        },
+        {
+          "path": "evas/tests/test_conditional_history_mesh.py",
+          "sha256": "062072e83ad1c24e71da6ed2bd83e50f3b6128642609a3d42bf77d3e3020719c"
+        },
+        {
+          "path": "evas/tests/test_constant_input_identity.py",
+          "sha256": "78a613cfd47da344c318a72e7295787399337a45891f7ce26d9f10384820ecb7"
+        },
+        {
+          "path": "evas/tests/test_deadline_origin_contract.py",
+          "sha256": "5af89104df4ec7a17036a2ccc4b75a2c00f2eb9887e59bf1165d0dc278f4c558"
+        },
+        {
+          "path": "evas/tests/test_diagnostic_sources.py",
+          "sha256": "07c061efa9dbe7c200d9713e00dfd96640da13506ca58716f9325828973eddf4"
+        },
+        {
+          "path": "evas/tests/test_display_node_declarations.py",
+          "sha256": "4fb290abf769e1bbe85b843eebbf1cb5552d0d352350dcc32e99eb83e1c36c71"
+        },
+        {
+          "path": "evas/tests/test_event_accuracy.py",
+          "sha256": "2ff6574cbfa3d52bc4ad935f0b1ae1e7248fcaae13746a8cb079284c3b683256"
+        },
+        {
+          "path": "evas/tests/test_event_branch_agreement.py",
+          "sha256": "28be979965028bb9de5845b49d7193d151588dc0c3f4db2568a9c3dac6b53030"
+        },
+        {
+          "path": "evas/tests/test_event_parameter_specialization.py",
+          "sha256": "b8919de3aa278bc4bf399342ed99856247ed3ec0be3d62025aa2a72e971569ec"
+        },
+        {
+          "path": "evas/tests/test_events.py",
+          "sha256": "92fcedc82777297fe2858a049496184e6e18e141cd531560d1c1731789395ab8"
+        },
+        {
+          "path": "evas/tests/test_filter_precision.py",
+          "sha256": "2c5a5e37e486b996e5adeb482f1a12f07a5d405a168b928684570065d7660dc1"
+        },
+        {
+          "path": "evas/tests/test_floor_work_accounting.py",
+          "sha256": "f75b72e6f856bac2e4e020261d8ff81710de7b12ce20b56abea8a39c0b3ad2ca"
+        },
+        {
+          "path": "evas/tests/test_frontend_diagnostics.py",
+          "sha256": "22bfcdb95bdc08d439429b67e2a55deb82164c6dc6f51cea824b62d9ee365e35"
+        },
+        {
+          "path": "evas/tests/test_function_branches.py",
+          "sha256": "e63a703fe699a637d3ea69fefb3d96a1fe286b40d8b45f55b946ad015418e799"
+        },
+        {
+          "path": "evas/tests/test_function_math.py",
+          "sha256": "f28bd967dfc53d7224abe262a55420cd14c88ae469db39ffa0c282d9eb1b4035"
+        },
+        {
+          "path": "evas/tests/test_group_module_attributes.py",
+          "sha256": "58fc0350551306c70bc64ba624ad6cdc6f08daf5095fb114e9e81c4d15d3b02f"
+        },
+        {
+          "path": "evas/tests/test_history_forcing_binding.py",
+          "sha256": "c499f120a38a78f9ad08aecb8f4ad1a41dcfcb7e3661743dd4f4c780aa452fba"
+        },
+        {
+          "path": "evas/tests/test_history_migration_contract.py",
+          "sha256": "c52c7c5ff24a5040733850c0b599f5963073948e5848ae5b281e6ad9b7b60032"
+        },
+        {
+          "path": "evas/tests/test_history_projection.py",
+          "sha256": "cd53583d5902c23102a594ec427cfcabd117d549353bee84fb7ac06ecd2845b4"
+        },
+        {
+          "path": "evas/tests/test_history_relocalization.py",
+          "sha256": "a9099e57f15155d934eb8e5637a49397792d12374b767236ab1c0ae37e915eb9"
+        },
+        {
+          "path": "evas/tests/test_idt_accuracy.py",
+          "sha256": "3eaf3f0097abf3bc830f36660b68bbd038decdb3e9ce44d9941ee3dcdd920983"
+        },
+        {
+          "path": "evas/tests/test_implicit_event_restart.py",
+          "sha256": "ce845ef1301e87bfb0949ea443a7ed507ddbf5a38fc877eb3a4a1d2d6582793f"
+        },
+        {
+          "path": "evas/tests/test_implicit_filters.py",
+          "sha256": "ae91c8ee72102461d7e96376bc2bd90788ed476172bfa6f73dd8cf070d37e51b"
+        },
+        {
+          "path": "evas/tests/test_implicit_step_bounds.py",
+          "sha256": "24882daf9c3c4cdfe707d79f5fe4a42ebd6cbf4d6ff013f3e1cb29f1a3731f59"
+        },
+        {
+          "path": "evas/tests/test_initial_compact_compat.py",
+          "sha256": "50f6a34c3a6941a06ff4c147be37f487c746c93202585cfd94f7b66f76a189be"
+        },
+        {
+          "path": "evas/tests/test_initial_ordinary_alias_admission.py",
+          "sha256": "919e1eceb658d1a02fe88a0026474d60c723298fcc3d57ebd1a4378f8f8d6d99"
+        },
+        {
+          "path": "evas/tests/test_initial_seed_invariance.py",
+          "sha256": "d900d2b0144123b3f3b166000d9f0c6f2c20c1b88e45ce3448397ada21f47a04"
+        },
+        {
+          "path": "evas/tests/test_initial_union_contract.py",
+          "sha256": "47b77b818bd0b9530243292aee3de2064c3d712338cf59f7f1c9242c7542b5ee"
+        },
+        {
+          "path": "evas/tests/test_laplace.py",
+          "sha256": "f857d521d85de6346c95a4efeda6e57f19440c792624e10676e5e308ff95a3e1"
+        },
+        {
+          "path": "evas/tests/test_lint.py",
+          "sha256": "e51a7a81b9ddbfae9109f9f4b7315465994fe5ec32513d87c24243a30213dd90"
+        },
+        {
+          "path": "evas/tests/test_live_transition_coefficient.py",
+          "sha256": "9923f953a8876ed6cf891ff1e8f6c8e834d14e741cb0b0680186d9f5c03541ed"
+        },
+        {
+          "path": "evas/tests/test_local_state.py",
+          "sha256": "5d72eb984d8ae4dd7302724938d1a507b576603c8c076e1b4a34b5560ddf83c5"
+        },
+        {
+          "path": "evas/tests/test_long_sequence_accuracy.py",
+          "sha256": "b946c7995ff7cf3a394cb04ea612f77dd17a6e8e6bebf9555f7408f69c1bf1b3"
+        },
+        {
+          "path": "evas/tests/test_native_integer28.py",
+          "sha256": "17543b63e3b9979ec3258fe25ce36af15fcf26c8733835679a8fcfdfa3361336"
+        },
+        {
+          "path": "evas/tests/test_night_semantic_variants.py",
+          "sha256": "97c66b5f6b905534f47845b08f520b5b1f5f1ef6b1616359971d845afef43e6f"
+        },
+        {
+          "path": "evas/tests/test_ordinary_held_state.py",
+          "sha256": "f1d0e09832ec305f372a1b8e1dada962884d0b043a6a293294011854f3f65088"
+        },
+        {
+          "path": "evas/tests/test_ordinary_integer_current_alias.py",
+          "sha256": "d5ea116be2ad426666369b38aa5857dbe242a331135d15883482da935c966496"
+        },
+        {
+          "path": "evas/tests/test_original079_contract.py",
+          "sha256": "48e18ad698925db66a209dbd8c9d40b704e75467f6f96dca180626f742498e7b"
+        },
+        {
+          "path": "evas/tests/test_program_real_ir.py",
+          "sha256": "4eec0fbd29fd5738b80ac91d02203444599a86bdab4179075ec712fc35726a02"
+        },
+        {
+          "path": "evas/tests/test_program_real_leaf_reuse.py",
+          "sha256": "be281d39320d723d834d9375920405a09b0e3b07543490e98dae6705474eb845"
+        },
+        {
+          "path": "evas/tests/test_program_rn_cell_boundaries.py",
+          "sha256": "bee514928f607517beee333b47449875ccdf19da33716e1bf448d01823d07f43"
+        },
+        {
+          "path": "evas/tests/test_r01_language.py",
+          "sha256": "a7da3125e2e74c074cabf705b1c20a3b528c297376187f6baf53cb74b84d6582"
+        },
+        {
+          "path": "evas/tests/test_root_witness_neighbors.py",
+          "sha256": "1de35835fef2c67ee0cf94a76c4da2ae25c64bdc604448e07b7fa0bd15de0284"
+        },
+        {
+          "path": "evas/tests/test_scs_pulse_delay.py",
+          "sha256": "63c6f86cb87694e04b8591da7a12d779d9f1157922f32a31219436a3e71a579f"
+        },
+        {
+          "path": "evas/tests/test_selected_quotient_comparison.py",
+          "sha256": "0d6d807f95b034a1d2c4cf613267d70549b2b63dba39b5df4eeadc9f0fad862c"
+        },
+        {
+          "path": "evas/tests/test_source_argument_frontier.py",
+          "sha256": "ae80ea79e916c819f0a33f2f83c3114ff2e47265a879ca8afc9b4dae4c5670ed"
+        },
+        {
+          "path": "evas/tests/test_source_root_windows.py",
+          "sha256": "27f016410e01069b8a58b2db5cb0331d96e9baad1059d0d90ea1f70ba5029005"
+        },
+        {
+          "path": "evas/tests/test_timer.py",
+          "sha256": "5ccba6be29e04cf396110474697bccadaf747b66021717b49bde589a5e633f6d"
+        },
+        {
+          "path": "evas/tests/test_timer_history_order.py",
+          "sha256": "28333e554d6d3a2386d984aaaaee6beebc9167e7c84e4248e9a08bd9e54c0a41"
+        },
+        {
+          "path": "evas/tests/test_transient_accuracy_control.py",
+          "sha256": "a044d0e9d9f27410817c4d4cf4f2b897cd556bd25b0b070d80f263192f6390fe"
+        },
+        {
+          "path": "evas/tests/test_xspice.py",
+          "sha256": "636c3dd0e96bb4d22f0bca6fd9175aa66da045ef534482827b5ac17776210d75"
+        },
+        {
+          "path": "evas/tests/test_xspice_startup.py",
+          "sha256": "08dd8ea9ec961886ac3bab8bb024b452365ae17722001f1b63a37c100de58e27"
+        },
+        {
+          "path": "evas/docs/math/events.md",
+          "sha256": "406eefbe57d72d1a1bbdd567b3be71fd6bb57bfcf8b495c52a9eee0368a2f38d"
+        },
+        {
+          "path": "evas/docs/math/operators.md",
+          "sha256": "7c3748e1ddbaa4181b6510470dd0dbbc08fcd092ce1f49b3448f4070d456a7f7"
+        },
+        {
+          "path": "evas/docs/math/continuous.md",
+          "sha256": "73109f222c2832fd938628238535ada81f553879723e7fb204cc487086622847"
+        },
+        {
+          "path": "evas/docs/development/DECISIONS.md",
+          "sha256": "7e0e35aebc23226ad769e805972c27037a157d947a1dd44eb97da36efaf0c7b3"
+        },
+        {
+          "path": "docs/contributing/validation.md",
+          "sha256": "aff8954d2918f72cbdf083a327821c6a56c5b3c4cbd9aa8cd0c2bc491e28e588"
+        },
+        {
+          "path": "evas/tests/test_affine.py",
+          "sha256": "d0f7a2df8c81139e3eaaeba7699827843163080e7c5ce0d39d9ce123558a2e9e"
+        },
+        {
+          "path": "evas/tests/test_continuous_dynamics.py",
+          "sha256": "159c7598e164f829e394864a8206ad9f58470cf69e2e780618c02b443845c512"
+        },
+        {
+          "path": "evas/tests/test_idt.py",
+          "sha256": "9c92d7106a167c08da928ad8c64fbc95d33bdfc57b6dc6df7bcc297e96ba459e"
+        },
+        {
+          "path": "evas/tests/history_migration_contract.py",
+          "sha256": "77c123b50ecadbeaa08d15a4bd43ce7cb91173ad490805de93cf1244f73ff467"
+        },
+        {
+          "path": "evas/tests/long_sequence_oracle.py",
+          "sha256": "23de088165a28f42df488ea0fbeea4d50c20c19896f0e55b89c63027a7af7d23"
+        },
+        {
+          "path": "evas/tests/initial_record_contract.py",
+          "sha256": "59393a03b3e31ea53cf3029778bef97db48b09f050f9a11cdb16548d3c8937b5"
+        },
+        {
+          "path": "evas/tests/initial_named_batches_contract.py",
+          "sha256": "8515d57dffdc0d8cee39b70e0f71d1e60f962c8db1c75e10cd8193443a68c94f"
+        },
+        {
+          "path": "evas/tests/initial_source_sequence_contract.py",
+          "sha256": "396c572ac9087078cddcc9efdf8cd46bbe146ec79eaae65293bf566ca2999864"
+        },
+        {
+          "path": "evas/tests/initial_union_contract.py",
+          "sha256": "396e4e7de149e5058fbfeb11c7fb3439f53566c230cebdfac597fe65622cae38"
+        },
+        {
+          "path": "evas/tests/initial_advisory_contract.py",
+          "sha256": "2f0a7a9963fa4e3f718b1a499a6aa4b28c39745635fadf571122785d22ead69f"
+        },
+        {
+          "path": "evas/tests/test_positive_clamped_divisor.py",
+          "sha256": "0fd104c7dcf019fc6a96c6ec9080799acb978fe3a71a47a81f790aa654f98563"
+        },
+        {
+          "path": "evas/tests/test_rational_predicate_closure.py",
+          "sha256": "383d65b8d7c0262ce945ed18b9025a1f8986bcf9c1d812e6de94e053bac0c190"
+        },
+        {
+          "path": "evas/tests/test_held_power2_history_compat.py",
+          "sha256": "36b1adb826d3e96fc2d8628069efb4d0eebf44fe491f66cf1f6fba128c51751e"
+        },
+        {
+          "path": "evas/tests/test_held_power2_targets.py",
+          "sha256": "34a691583d7872b7e537d74c8ed6a6fb051666cfc373f7e25ddca9129b18dd51"
+        },
+        {
+          "path": "evas/tests/test_native_integer_events.py",
+          "sha256": "2335f46d43913a8ec05eb2de577c8c4812581d2a5c0ba5e815fb47841f323371"
+        },
+        {
+          "path": "evas/tests/test_event_conditions.py",
+          "sha256": "75fa6a11584686ad875cbdd2f36a3d9844a35ea91c1cd429496d36a0ff20a5a4"
+        },
+        {
+          "path": "evas/tests/test_hierarchy.py",
+          "sha256": "a3b2fe26d029e4872fbe2ceb50213f7398701255d9e7158ce7cef2e0c44c6ad6"
+        },
+        {
+          "path": "evas/tests/test_user_functions.py",
+          "sha256": "74394a4fa200dae4f934f748abfe9095c790baddd5fa5018aa5f369633c91425"
+        },
+        {
+          "path": "evas/validation/cases/case_statements/dut.va",
+          "sha256": "e36142af3426a9e0ba93a71ecf1d101e5e48c103b7c56b38840e4c7cfcdd662f"
+        },
+        {
+          "path": "evas/validation/cases/case_statements/expected.json",
+          "sha256": "5b8087434de9e5994a9a7e866e42f838814f7a9a1aded6fb6a1e40dfa66a374a"
+        },
+        {
+          "path": "evas/validation/cases/case_statements/table.json",
+          "sha256": "4839fe24ec25696843c018e8bcc2d90bb50967d1243bf493876bb2d4d20e449a"
+        },
+        {
+          "path": "evas/validation/cases/case_statements/table.scs",
+          "sha256": "83fff26bc83d94a2786c3b77be7bbe09cb66ad2d2d0c1a64e34d0c8a2bf5196d"
+        },
+        {
+          "path": "evas/validation/cases/function_branches/dut.va",
+          "sha256": "a66cba63ad0c9fcaecbd92c03bf0ec64ced1b304aaa10559e1e16b297bff6de0"
+        },
+        {
+          "path": "evas/tests/fixtures/projected_history.va",
+          "sha256": "14b1b7ca355ffe2c50a83b4809de424c490584e626426552f3e40d6c8cea5028"
+        },
+        {
+          "path": "evas/tests/fixtures/implicit-event-restart/dut.va",
+          "sha256": "da81ea1776a0acbabcd9c1a97e8ad3e7df0ae0caa74072ccfd148f39eaa76ce3"
+        },
+        {
+          "path": "evas/validation/cases/local_state/dut.va",
+          "sha256": "20a90b472398a4f7df56d36f6b960ed98cc59985c0c3f426e8e03dc42cf1b782"
+        },
+        {
+          "path": "evas/validation/cases/local_state/manifest.json",
+          "sha256": "5942775cf19b39fe9cfe074d45ee25995e538d1074417a86ae69033de57f444d"
+        },
+        {
+          "path": "evas/tests/fixtures/ordinary114_current_mux.va",
+          "sha256": "c69e68df3f28e9c8e5c02b919143ddb116cf78023fb2d3467612204cb8c6ce3c"
+        },
+        {
+          "path": "evas/tests/fixtures/live-transition/ramp.va",
+          "sha256": "d9b4285b00203fb448297e65347338f62541b8bcba87886697259c8a2531dce0"
+        },
+        {
+          "path": "evas/tests/fixtures/live-transition/filter.va",
+          "sha256": "23348e87af8653f17aa50dc6b33c666fe29dd5b2be74d2e3b030d3d06c598138"
+        },
+        {
+          "path": "evas/tests/fixtures/live-transition/filter-interrupt.va",
+          "sha256": "26e6da991d354b5bd996b0b1126e24556e135ca7068fab2dbcd45f2aaaf36a2e"
+        },
+        {
+          "path": "evas/tests/fixtures/live-transition/history.va",
+          "sha256": "648b259f139607aa1b951d4cf4780f7188d659da5be486bdc57641d173d1c361"
+        },
+        {
+          "path": "evas/tests/fixtures/live-transition/ramp-g1000.va",
+          "sha256": "9b2f16fa9890b3fa9a245cf55e60fddec49110b1032615dd05f395253bde296f"
+        },
+        {
+          "path": "evas/tests/fixtures/history_migration/history-native-source-inputs.json",
+          "sha256": "24d593cd9599fa5a83807d2df49c72f7de28a4182ef587946e3d3968cd5f6abd"
+        },
+        {
+          "path": "evas/examples/04-triangle-oscillator/sim.json",
+          "sha256": "3036d8f45c1a0ad3b356e121dc7b28212de60c9b8f856bcd199425112373b965"
+        },
+        {
+          "path": "evas/examples/04-triangle-oscillator/dut.va",
+          "sha256": "27e015ced23d7486bec8b1888b81294fd863f565d751652e24dc4a9bb1035eae"
+        },
+        {
+          "path": "evas/examples/xspice/sample_hold.va",
+          "sha256": "40eb8d5dade2dd5875b5dc175997ebe94263fdd85490c79330625bed4db1302e"
+        },
+        {
+          "path": "evas/examples/xspice/clock1800/zero_start.va",
+          "sha256": "3ce1578c950eb282f6544762940240d3f86eb401766b137b150add29aaa30c31"
+        },
+        {
+          "path": "evas/examples/xspice/clock1800/clock1800_standard.va",
+          "sha256": "88c0fa4b16614eae3d0d26ae04405f48dd4f62b2d23ad65b0c78826406869255"
+        },
+        {
+          "path": "evas/examples/xspice/aliases/affine_input_aliases.va",
+          "sha256": "6526d213406e75727cdf6343316c6c1509a0c33e1088ce02cbee1baa87e54a81"
+        },
+        {
+          "path": "evas/examples/xspice/aliases/selected_body_alias.va",
+          "sha256": "481d3bcd8b90cf2c985819d16675a5476f2b6d8bbc3a6fff5c2f468b2da18d6d"
+        },
+        {
+          "path": "evas/examples/xspice/aliases/direct_input_expressions.va",
+          "sha256": "4d37f8c931bc80a87c823074a43aa941768fd7378f8ef5c7d94cdb8f5776466f"
+        },
+        {
+          "path": "evas/examples/xspice/r53/two_bit_counter_marker.va",
+          "sha256": "bee2a7f44959b92ad3a171f18e29021b455bd51e8368fdb155db7b34c39267cc"
+        },
+        {
+          "path": "evas/examples/xspice/r53/multiphase_clock_generator_4ph.va",
+          "sha256": "3508f180b21f9c0a30ab6e9ec4e01424572f6737b6bd05fb5359a8696573a7c3"
+        },
+        {
+          "path": "evas/examples/xspice/r53/smooth_comparator_tanh.va",
+          "sha256": "0cb0a0383febae3f1c6ab6017ed6b5489f29fd10365f212ca4597855eecef452"
+        },
+        {
+          "path": "evas/docs/reference/xspice.md",
+          "sha256": "4f9e76f6b1e1cc34990658f6c2e73eae3dc5cac6a489c62cda26067b9c974df7"
+        },
+        {
+          "path": "evas/src/evas/instance_compiler.py",
+          "sha256": "dd55882996abc353a786103f67e44f1526bf61234c50032b2541dc3f53e7957d"
+        },
+        {
+          "path": "evas/src/evas/runtime.py",
+          "sha256": "acc896bb2054163a4741f84f38b6e542bb3d121a2965ba01e112fbcb4ed902ae"
+        },
+        {
+          "path": "evas/src/evas/protocol.py",
+          "sha256": "f18abfbc928069023f6f31c736e87ab823a0412d4b5d483e74f91c10f91d9cc6"
+        },
+        {
+          "path": "evas/src/evas/errors.py",
+          "sha256": "aa6541b872ccd06bc70092607b7afb745d44fb324c97ac8df0921bf00b8a552a"
+        },
+        {
+          "path": "evas/rust_core/src/procedure_plan.rs",
+          "sha256": "19bff45d8a64cf3c0e2a27ae585cd90d7ce2046c23eac2558bd8061fb05219dc"
+        },
+        {
+          "path": "evas/rust_core/src/procedure_operations.rs",
+          "sha256": "f72a12a0a75b896f531ca64b8bb2225c5f12a662c149c1a7223d434dd306941c"
+        },
+        {
+          "path": "benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/079-ramp-step-source/evaluator/solution/bound_step_period_guard_ref.va",
+          "sha256": "3d7776b27743e3fa8561a6163ef27e240f150800a3e5b4485ca0dd79b40e4c1b"
+        }
+      ],
+      "withdrawn_findings": [
+        {
+          "id": "L1-F11",
+          "priority": "P2",
+          "affected_ids": [
+            "test_source_root_windows.SourceRootWindows.test_101_timer_before_time_cut_preserves_both_transition_histories",
+            "test_source_root_windows.SourceRootWindows.test_changed_source_prefix_is_sampled_at_root_before_timer_update",
+            "test_source_root_windows.SourceRootWindows.test_sine_of_old_transition_prefix_recomputes_at_physical_root",
+            "test_source_root_windows.SourceRootWindows.test_sub_ulp_interrupted_source_pulse_remains_explicitly_unsupported"
+          ],
+          "evidence_refs": [
+            "evas/tests/test_source_root_windows.py:107",
+            "evas/tests/test_source_root_windows.py:163",
+            "evas/tests/test_source_root_windows.py:182",
+            "evas/tests/test_source_root_windows.py:215",
+            "evas/docs/math/operators.md:40",
+            "evas/docs/math/continuous.md:140",
+            "runs/pr-review-20261025/full3257/lane1-probes.json"
+          ],
+          "problem": "The expected histories use exact physical time in a program $abstime condition. At event104*binary64(500ps), time is only1/8ULP above binary64(52ns), so RN($abstime) equals the threshold and strict >52n remains false. The claimed old nonzero transition prefix and its sine sample/sub-ULP interruption are absent. Likewise a strict >120n program source cut uses an RN-cell boundary, not simply binary64(120n).",
+          "recommended_correction": "Derive source cuts from RN preimages with ties-to-even, then derive sampled old history and interrupted targets from that corrected source program. Retain the unmodified source and output budgets.",
+          "fault_injection_calibration": "Not performed; standalone arithmetic derivations are recorded separately where cited.",
+          "status": "withdrawn",
+          "withdrawal_reason": "Final independent Spec counterexample and lane1 structural probe show actual Transition operator input is bare Select(gt, Affine($abstime), threshold), without RealBoundary/RealBinary RN. The initial finding incorrectly applied the program-event RN boundary to this physical history expression. The physical clock root104*binary64(500ps) is strictly above exact binary64(52ns), so the old rising prefix exists. Only the event-body condition separately carries program RN. No sample-store defect is inferred without a separate concrete counterexample.",
+          "correction_evidence": "runs/pr-review-20261025/full3257/lane1-probe-operator-boundaries.json"
+        }
+      ],
+      "coordinator_corrections": []
+    },
+    {
+      "lane": 2,
+      "sha256": "a47e3abd667147ad02e11b72f095c664274586f3f286c967db4c61453690c0ee",
+      "methods": 517,
+      "limits": [
+        "Independent static Spec audit every517 assigned methods/55modules at566c36a9,outcome did not determine verdict. No generated methods assigned.",
+        "Full assigned modules and relevant helpers read in bounded batches;public runtime/protocol and cited math/ADR inspected. Hash of large file not claim every unreferenced line read.",
+        "Targeted public-kernel and compile/arithmetic probes,including10 precise diagnostic obligations and6+1 quotient compile controls, saved lane2-probe.json. No builds/fullsuite/Spectre/remote/source edits. Kernel SHA655a156529d857be8f5fcd467623a324cc463be5977b00aa6c2ea4a4592686d1 matches coordinator identity.",
+        "No local zip/all missing-length finding:runtime.py27/80,protocol.py188 validate count/finite shape before loops. Raw subprocess boundaries assessed separately.",
+        "Metamorphic-only equivalence/internal narrow contracts are not independent numerical qualification. no_defect_found not full calibration,support or release claim.",
+        "External METHOD_QUALIFICATION does not automatically qualify developer unit tests;project policy not proof of external LRM interpretation."
+      ],
+      "reviewed_files": [
+        {
+          "path": "docs/contributing/validation.md",
+          "sha256": "aff8954d2918f72cbdf083a327821c6a56c5b3c4cbd9aa8cd0c2bc491e28e588",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/docs/development/DECISIONS.md",
+          "sha256": "7e0e35aebc23226ad769e805972c27037a157d947a1dd44eb97da36efaf0c7b3",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/docs/math/continuous.md",
+          "sha256": "73109f222c2832fd938628238535ada81f553879723e7fb204cc487086622847",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/docs/math/events.md",
+          "sha256": "406eefbe57d72d1a1bbdd567b3be71fd6bb57bfcf8b495c52a9eee0368a2f38d",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/docs/math/operators.md",
+          "sha256": "7c3748e1ddbaa4181b6510470dd0dbbc08fcd092ce1f49b3448f4070d456a7f7",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/docs/math/solving.md",
+          "sha256": "a75ad666d9a53416051dcfc3a68f193a7a72e07a8f960bb5f7cfe66a2ccf7ed6",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/rust_core/src/raw_event_marker_request.json",
+          "sha256": "c626619d8539c0501166a692f7a6c8d11b57f09ccc67c1faf932e7d039a3e50f",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/rust_core/src/raw_event_owner_request.json",
+          "sha256": "2589ae0eda21e65facc72edb7748df2f3b6be45cbb65e4d58e650eebdee29e74",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/src/evas/lowering.py",
+          "sha256": "484d882514976a13ec2c515bac38a3f2898eb2cdb4022aef1375051bd9084ec4",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/src/evas/native_audit.py",
+          "sha256": "515cfcd776062a18568b134e4354b5b80314ac28fec124e5a82db97a15b8a1cc",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/src/evas/ordinary_held_state.py",
+          "sha256": "0cdedadc44b0cfd99abdfedc5de7f6b1b766f25e4a7be3aebcb30553e9cf3996",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/src/evas/procedural.py",
+          "sha256": "0aa7deec4f7ce30438af35a710af3b9bddcf24c3da5e64e45fb95e9c477b5217",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/src/evas/protocol.py",
+          "sha256": "f18abfbc928069023f6f31c736e87ab823a0412d4b5d483e74f91c10f91d9cc6",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/src/evas/query.py",
+          "sha256": "566473d5e39f1c4f3fe7d2ba1d441fc493f2ed85ec76055531c09a9fbb757ac9",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/src/evas/runtime.py",
+          "sha256": "acc896bb2054163a4741f84f38b6e542bb3d121a2965ba01e112fbcb4ed902ae",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/src/evas/source_queries.py",
+          "sha256": "8fd2bf7a21a7fb7883b8065b94ce93dddeae69f97beca42e2d7d856331d09582",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/floor_rn_contract.py",
+          "sha256": "56d6fb9b434bc8900eb3377245fbbc968ecc50d44ba0dc62d21ced86a027627c",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/initial_advisory_contract.py",
+          "sha256": "2f0a7a9963fa4e3f718b1a499a6aa4b28c39745635fadf571122785d22ead69f",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/initial_record_contract.py",
+          "sha256": "59393a03b3e31ea53cf3029778bef97db48b09f050f9a11cdb16548d3c8937b5",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/initial_source_sequence_contract.py",
+          "sha256": "396c572ac9087078cddcc9efdf8cd46bbe146ec79eaae65293bf566ca2999864",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_affine.py",
+          "sha256": "d0f7a2df8c81139e3eaaeba7699827843163080e7c5ce0d39d9ce123558a2e9e",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_auxiliary_continuous_roots.py",
+          "sha256": "f5fab0075a4a301e040520c2ff54e7c8046a91bd83d21a894c512d9db697a529",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_bounded_event_closure.py",
+          "sha256": "fe6921e8802d535ca8fe7db078c7d3e8bc7e1d394d1b0e85acc6082c61b6f4b3",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_closed_math_context.py",
+          "sha256": "b52b10464be078b67967602c1c6f2ecde2ec2200f4a7142954984f8ba46c956d",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_compile_admission.py",
+          "sha256": "acc83a412ba00034df34eed32810191d0627602e08e3149ac3ba0c02489ac711",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_continuous_dynamics.py",
+          "sha256": "159c7598e164f829e394864a8206ad9f58470cf69e2e780618c02b443845c512",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_dc_held_ramp_contract.py",
+          "sha256": "1d5fa7227f887ed89f69022aad6cf453cf1033b2253bd49b4b790b1688b57e72",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_diagnostics.py",
+          "sha256": "dc4bb6a926c18de30b73de7dbd5cb94577c41fd6ab660e4e4acd64864cf014ee",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_dynamic_timer.py",
+          "sha256": "acdbb396d20b55f8b2c76c08e84a512798dae8626f0628f84da80c6a115335fa",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_event_body_input_aliases.py",
+          "sha256": "a7cfa0c081e03285264e6f1be468440d9d924dc86a6b27ab377f16e11b903535",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_event_conditions.py",
+          "sha256": "75fa6a11584686ad875cbdd2f36a3d9844a35ea91c1cd429496d36a0ff20a5a4",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_event_singleton_exact.py",
+          "sha256": "6e3b492b3f1821e8bda38524d35e76e79dd1ecfa4534a1d94ed8294d953bd20b",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_exact_affine_history_phase.py",
+          "sha256": "a59fb93d0a88777df7dfedb3a955306244ce53d5aa50592ade995a2696f8c0be",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_exact_predicate_endpoints.py",
+          "sha256": "7dde5fed9ab45af34a994b97402d1a5c84997a16a6aa25930e075286284c17c4",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_exact_transition_deadlines.py",
+          "sha256": "196a19014925dd7745f9487a8c3e0064453ecaf2f5849454455c84136e4e2670",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_floor_rn_contract.py",
+          "sha256": "fd381140945407334c5ac1ca744ec2efc2a046b5eeb41deb3aae93baed6df300",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_frontend_limits.py",
+          "sha256": "228a8fc79801d279a5dd719d832b4e23469f2ca9ab26fc5b5dd5e4129863ff66",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_group_discrete_sample_contract.py",
+          "sha256": "a9f3002a0e92131b24b5ac43439781f1e8f539609dd71fe37ca101f0381e6736",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_group_event_calendar.py",
+          "sha256": "f225738d907a81f296addac7ba3fd0fc6f09faca645b69734086491ea1365d06",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_held_power2_history_compat.py",
+          "sha256": "36b1adb826d3e96fc2d8628069efb4d0eebf44fe491f66cf1f6fba128c51751e",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_held_power2_targets.py",
+          "sha256": "34a691583d7872b7e537d74c8ed6a6fb051666cfc373f7e25ddca9129b18dd51",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_held_source_queries.py",
+          "sha256": "745aefba378dbb750ae441ec6ea9f3700ad10503008af96110e81236ea920ad4",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_held_time_provenance.py",
+          "sha256": "a90c4c579703309b4f68dee9ccf504a12dcc32e14a7424e595c73a35ebd70a4e",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_history_consumer.py",
+          "sha256": "caa3c1d6fbe4b0ca4c215100f143fe67196b8ddb106367e66e57b6ed38841222",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_history_forcing.py",
+          "sha256": "25561dfce4540bce78e255980a4c06bd61473becf1301e20ffffc18a6aa5622f",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_history_forcing_point.py",
+          "sha256": "dddb0b3e485c07e552d7ba9103ab34986b5b8b48b19ce8509a491115dbe12885",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_history_owner_contract.py",
+          "sha256": "c94f08238d14d45a237705e9861c52d5bcf6236084c8d3078b209462c90a2d18",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_idt_pulse_reset.py",
+          "sha256": "d30d0c19fb8a95f55143d99b917fa7790ee3a548bcdb4aba56350867fb76aaac",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_implicit_dynamics.py",
+          "sha256": "56a15f5b5dd5583af409b60bc728783f7b39c1b60b892e64624a3b9ce6793459",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_initial_bootstrap_contract.py",
+          "sha256": "8a4e895c1d34a567cc8b244f5c3e9029c5ee110941e84c66fa3675954af5bf86",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_initial_seed_invariance.py",
+          "sha256": "d900d2b0144123b3f3b166000d9f0c6f2c20c1b88e45ce3448397ada21f47a04",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_initialized_event_composition.py",
+          "sha256": "ea05b43f904cafb38845ec8798a1f1002edd8e7580ab64d9b9ca5a3a587690f6",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_integer_bitops.py",
+          "sha256": "9dea6563700cf0e7a3ae4b7eab40ccffcd84b527154f124a8cd585fac42429db",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_ir33_history_inputs.py",
+          "sha256": "2be0d8d943bda2992eab4a4c53818c8e306ce6ec5e9e6b15a6477dc7a1954b74",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_ir33_phase_inputs.py",
+          "sha256": "765ec83fc6a8c012cb869b925879bff99d8cd1d40bed86734f082688d47e6dde",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_live_transition_filter.py",
+          "sha256": "1509d3e59cb6928982b38a2da694b9d5a35ad4e3b63d48809e69b43f7869fac5",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_native_held_bits29.py",
+          "sha256": "584907ec17551fc474597073847ccded7b7998272e14ad188a809ddd9aa9e141",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_native_integer_events.py",
+          "sha256": "2335f46d43913a8ec05eb2de577c8c4812581d2a5c0ba5e815fb47841f323371",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_nested_predicate_cuts.py",
+          "sha256": "9a0b329fc5bfe974ab123ce7f870618c3adeae615c60213fb31aafd546760eab",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_ordinary_event_prefix.py",
+          "sha256": "84871131b40a398c1952ce34be865398f60dc2e765bbba9ffb1218ee918fb024",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_ordinary_integer_event_prefix.py",
+          "sha256": "1460af76f99f677d6ef0cb8cb221833031bda8392461020de91b5dd63b9defe4",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_original390_contract.py",
+          "sha256": "32a6df185c7c860431e567b1487ae657eb03dee167b3a0784da39c05d392bcc5",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_precision_breadth_core.py",
+          "sha256": "5f1c420a722aa0e7081592a2ea935d34bd414f24f9b5512c33e213cd3e91aabe",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_precision_chain.py",
+          "sha256": "7a3cbe098707357b83a383f65529e13e1b8e56ef1b46281e8183d2b058f40100",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_query.py",
+          "sha256": "8e8c351a91fc388785f184107672643a82bb7a550ac5039bf7272a04d1a63130",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_r01_event_conditions.py",
+          "sha256": "a0b904bd2e3c2c7915a6e9da78e642136fe13197680cb229f2d76241fcd75e69",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_r01_runtime_select.py",
+          "sha256": "6b782f2aa739352ae1699bcfbb7c8b5224ad249d1ae03f2c81bbf62eaedab696",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_rational_predicate_closure.py",
+          "sha256": "383d65b8d7c0262ce945ed18b9025a1f8986bcf9c1d812e6de94e053bac0c190",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_raw_event_owners.py",
+          "sha256": "7a2078195db97e412ff52682f496d05e283e2ac11d0a1998c87b9ca1629d55a5",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_rejection_contracts.py",
+          "sha256": "466ac7a3291250597df26f70bc3d99fe3343d5e7c47d1e50737a6226ade565e2",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_sample_state_precision.py",
+          "sha256": "aaacf4d53ead732955630e32f78b4abc86e794e7d38ef07c11e467b32f353211",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_scs_zero_current.py",
+          "sha256": "6301f00d25bfe650d01f1c5814d541593c5a4fe3be1153d599682c4d6f6135a6",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_shared_source_relevance.py",
+          "sha256": "434b0b2e79978431bc43de40df6bb5036e49c213c9d02883dbe41ec3e96307e7",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_slew_cascade.py",
+          "sha256": "e3be92838f606c76b9a35baf82cafaa7656f791bc64c21fb5513c3c49cfda7b1",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_source_audit_reuse.py",
+          "sha256": "595f0af19ab0622d79adc546234e4c41178c51c13489d6ffe55043bf163094d0",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_source_structure.py",
+          "sha256": "fc86f92731a5a918ba4af0a9350eae4c3d227663d574592b6432f2a3f6f74452",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_static_loops.py",
+          "sha256": "9b1e9d685a529c8f5c03b48ab4d7a4be6d8c578c7040e25af04c1456cea01a31",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_timer.py",
+          "sha256": "5ccba6be29e04cf396110474697bccadaf747b66021717b49bde589a5e633f6d",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_timer_at_transition_ramp_end.py",
+          "sha256": "c46a6533fedd87ae6df334dfb90b255d1bf81fac9e757dfb973fbe875d1ae0e7",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_transition.py",
+          "sha256": "ca074e0a83a42f8ae28472ef56ebeca0b1632a44355917b54d950a124ceac83d",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_transition_accuracy.py",
+          "sha256": "f69329a574226832643111c66a8b1fab26f00ea6738782a22b1268a7b1d0151f",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_transition_endpoint_history.py",
+          "sha256": "6552a6751c9ccd1498c11e4f690b1f58ba70209bcf9f2fcee58deaff33756612",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/tests/test_transition_point_proof.py",
+          "sha256": "66547a4a19275bdf46098b846c83290d0a49c763a9fb56a80e408980ad7faa9e",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/validation/cases/d2_v7_01/dut.va",
+          "sha256": "d6cf5efeb16f6820a33f59ab97c975877b6f539e3dc8f57e1196eb1a803c456c",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/validation/cases/n_v1_02/dut.va",
+          "sha256": "24f8332769670f951fbe3eb2ca2727981d2bc65784152a99bc09c474b5277651",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/validation/event_acceptance/cases/E3-base/dut.va",
+          "sha256": "68b7a1153d422a44af222e40df152f23003c2274627bd9d812d2e4cb8449e123",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/validation/event_acceptance/cases/E5-base/dut.va",
+          "sha256": "683387a6e759b6f7b92d1332511191465f21bee045b82941fb44a23449550645",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/validation/paper/precision-v2.json",
+          "sha256": "a5e08c66388a01e1ae24f161d53125ae605914158fec5c58d0e1f94c4708f603",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        },
+        {
+          "path": "evas/validation/paper/precision_breadth.py",
+          "sha256": "299ae9a2bcdff8fa2d987ad54ce0a4a8ebaa9db015a6b686a23dba63c6f31ceb",
+          "read_scope": "Complete assigned module/helper,or cited relevant production/contract sections;hash identifies whole file."
+        }
+      ],
+      "withdrawn_findings": [],
+      "coordinator_corrections": []
+    },
+    {
+      "lane": 3,
+      "sha256": "88ea2438efa494a75526d99a4eae35e30a849dce8cd8090a09ba526ee41a75ac",
+      "methods": 529,
+      "limits": [
+        "Independent direct static Spec audit of all 529 assigned methods in 56 modules, all CI statuses assessed equally. No expected-failure methods were assigned in lane3.",
+        "no_defect_found only means no identified defect in each stated property under this static source/contract scope; it is not test qualification, complete checker calibration, runtime success or Spectre alignment.",
+        "No implementation/test/contract source edits, builds, full suite, remote actions, simulator runs or Spectre. Only lane3 output/probe files written in the assigned full3257 directory.",
+        "Compiler-structure probes and exact Fraction/RN arithmetic probes executed locally without invoking the kernel. Two counterfeit-response calibrations executed original unittest methods with process boundary mocked; both false passes retained.",
+        "Direct contribution Select/Binary uses physical equation contract; ordinary ProcedureConditional and stored/sampled real use RN boundaries. Findings deliberately do not propagate RN objections into direct physical equations.",
+        "Source/status and prior 691 failure classification were not used as whole-method certification. Initial-record and raw-owner findings use current IR33 contracts; original mathematical positives remain retained.",
+        "One unresolved proof-domain question remains in sampled_history_error_survives_later_event and is recorded evidence_gap, not blanket absence of rerun."
+      ],
+      "reviewed_files": [
+        {
+          "path": "evas/tests/test_absdelay_accuracy.py",
+          "sha256": "d3810c45c40b38bafc5d44988f87bc5fa6138df28b39deb1ba164502c9d22493",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_bound_step.py",
+          "sha256": "1ff7d706256e24fd7a3276e6c743517e38b70c6ad1260d6ba6210ef8d51b0330",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_branch_local_closure.py",
+          "sha256": "93f4d52511208ac45d1b3d5c82ee87a57fef740588116a85cb18b50e573fd357",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_causal_batch_transition_provider.py",
+          "sha256": "3252bf7c81f61663c78eb864ee6db9eea2f5472116ed2f80c3c2677b6b50add3",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_condition_sharing.py",
+          "sha256": "09d56a17f131df3f2322f495041655c776b00c60643de96cb0d7c6cfa2851fc5",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_contracts.py",
+          "sha256": "d31088d1f387e54d22c4ffe8023a1dd19069d117b7b6df1e602931b9a969f03b",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_decision_raw_reuse.py",
+          "sha256": "efeb548da838a22ac80d6f00ff4f290e4ba50f1396ccda257c82f4cb33ecae9e",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_display.py",
+          "sha256": "cf70167b2e21746f8e04f9acaa9cd8dfe385b4b9fbf42f8c2b4d18bcc07b6b24",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_event_function_consumer.py",
+          "sha256": "bedab1b8f73bba6e56d50b6b1d61e09362c6bad2d50b24f253473361b6b76008",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_event_horizons.py",
+          "sha256": "de42bcda12d4bf2b86ad2b75a05cb801fde90f4cdd08d4e752a3b9e3cb84feaa",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_event_or.py",
+          "sha256": "ae1f91bb4c5e71fe1931570cf3783ba4f428d59d3d64e081daf01a1ddfb642d7",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_event_runtime_loops.py",
+          "sha256": "289ea76631bc706d84108bc8eef8ee88b7a2d618125075eeebfe0b9b235ff372",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_event_statistics.py",
+          "sha256": "597c805dc03d1a0bd012ae2ba06ac1c4d4017493cce2de59cb06a97a8a512cd6",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_event_time.py",
+          "sha256": "4a2680f67f5ad605134f62e800cfe8f29508c0ab83ebebb8ee92b52ac74a18d9",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_event_window_sampling.py",
+          "sha256": "5658de30608258af0ff36e034e627d2054ada7970cb21ac80b8fdccadf0759bb",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_held_target_parameters.py",
+          "sha256": "84c3dc4051cfb7ac37727feecd5040a4bd7387f895edd82ed9a3819c0f5bfe74",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_hierarchy.py",
+          "sha256": "a3b2fe26d029e4872fbe2ceb50213f7398701255d9e7158ce7cef2e0c44c6ad6",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_history_consumer_freshness.py",
+          "sha256": "6d423c40beae045217eeb8a2d474530a04f575d94b62a03d6cc644c933f09494",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_idt.py",
+          "sha256": "9c92d7106a167c08da928ad8c64fbc95d33bdfc57b6dc6df7bcc297e96ba459e",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_initial_advisory_contract.py",
+          "sha256": "93a2ce6e6e6458b85e269bde02ac1b6da7da84d2ea05fe221de80b8890c6aa5b",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_initial_selected_interval.py",
+          "sha256": "4e6744a59158a5b0a0edcd952fcf945bfb50c6ef22eb7a759321fa730e9afcfc",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_initial_static_loops.py",
+          "sha256": "47df593d33a4d87f32aab69b3c5388091367ff11ee14c107f8bdb09f0bc51d2a",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_integer_prefix.py",
+          "sha256": "3f51da4504832c6ced15652d54f11c560a8f84dd81b2bbc478064cb02061fcb0",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_integer_proof_owner.py",
+          "sha256": "10d5cd5c479e7e6826cfc6e83c1a980d9713c3c0fb1cdbf7912a61a7ab8be31c",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_integer_table_composition.py",
+          "sha256": "856157cc8bad3166f7fac712fca76936503fefb2fa3c317c6ea0eb14196e23bb",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_interval.py",
+          "sha256": "3a46b00fc4045175078931f4bbb573b46b139c1ed086556c430484d33ee04d69",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_kernel_selection.py",
+          "sha256": "256f86c24ad1ec64f0d4ad9a9138d950370f3be69da6207944f6b9bcd712949b",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_loop_histories.py",
+          "sha256": "45cc0d0b043e8f6fb5b04e0b85937612631d901adc49e4c619d29092ed25d5ab",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_manifest.py",
+          "sha256": "7c2a0f98271c1bae81b8a5beb2fa62e755a99e7a7bfde7cdc6fb8833d4cfca86",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_mixed_dynamics.py",
+          "sha256": "0a7dd9ff69eeb96fdb6aab91eb2033f8cb2e09f7d221856b193fcb44fefc1236",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_native_audit.py",
+          "sha256": "7ab1b3ea368233075a1d6c78339ffb990e2db56c6b28ff7786839fcce5ec1178",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_operator_defaults.py",
+          "sha256": "a0e1a9fd67049a353a336d9553b3ffaaa8012561f58e4b18fb909ec75d81f773",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_ordinary_boundary_certificates.py",
+          "sha256": "122c18ffb4f22af35be2bb22e7ac34ef83b153d4e4b733cd604dfe736a797c5f",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_original391_contract.py",
+          "sha256": "92a2c8d965208ff8f1fafd256f592971f726caa8641702a9a3bb2a09aa4ec59a",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_polynomial_derivatives.py",
+          "sha256": "b53725de1136b3221fbd09c9eb691e94775a3df95a3229124378c1160890ec33",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_positive_clamped_divisor.py",
+          "sha256": "0fd104c7dcf019fc6a96c6ec9080799acb978fe3a71a47a81f790aa654f98563",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_program_real_facts.py",
+          "sha256": "3580448e52d18bf175185e05c352dfb5084a722eb397a73c19c3388b6f06e3ec",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_readout_decision_outputs.py",
+          "sha256": "37d8116843c1e44400f2cc0572a8a97060959b334296b6d8a49fa1b4b0c892e6",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_real_call.py",
+          "sha256": "206a9a873b3d1d4fe260e5a691c846837fa6eb7bd096ad282644694b8507fc1d",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_refinement.py",
+          "sha256": "fca0148ed69bf522459d401b3434e249b4b5ee942eb290d7d1177a12100de022",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_repeated_predicate_cuts.py",
+          "sha256": "d09789840ca69d53eacd87afec80d00db20ea871b11c901a7cd8356cb82330cb",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_root_window_history.py",
+          "sha256": "1039c35e7d82902bc3a2e4ee5a2c9ed6e4408557396b013cc44888a82ab1760e",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_runtime_contracts.py",
+          "sha256": "0deb23141e6fa2b18604304223f81193bdf004837d240569e4a71600e61fe2d8",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_sample_edge_filter.py",
+          "sha256": "c7165c165c70e00ec930a2996a1f599d617f92124d97c6dd5f8c83bacfa53eaa",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_scs_driven_nodes.py",
+          "sha256": "b55924a19f60498fe9c9ec09f0b7fad1c1c9ae88ca5b233fe4d5d99215e43409",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_scs_native_source_contract.py",
+          "sha256": "f7d9b0fb5f6df8ad80e1df44292e45fddf4b8bf2d69e42489cddddc86bba80bc",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_shaped_range_oracle_freshness.py",
+          "sha256": "4bcf3f01f440a3b634137366c910c8bc5b5e9a2dcd46cc45d8f18b20d76fa0bd",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_shared_counter.py",
+          "sha256": "3fade24617fad1d00c0795526c80a934d3b973a89cb4f522ad2ec37ea7e93195",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_slew.py",
+          "sha256": "c436cf6fdb345bfd0e29ce96e920bca77e95e19f112c702da41813563469fa90",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_stateless_expressions.py",
+          "sha256": "8d6e23fa090e7b6b1e3140d8cbd2d6c0d0d3106a6dbb6f01c4e453f3d26ccef5",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_strobe.py",
+          "sha256": "a76b54b0e89d7a53ea0db32bd0127cba51b0ab06c0d38f23da6fd9655dc0e5b7",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_transition.py",
+          "sha256": "ca074e0a83a42f8ae28472ef56ebeca0b1632a44355917b54d950a124ceac83d",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_transition_bootstrap_bounds.py",
+          "sha256": "e85d5a5d83e2b3aaa26d359db09a565842039ec43cf54fed3658c6e90a64cd78",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_transition_integral_precision.py",
+          "sha256": "1e04c108548b9543453f8493b38113b6673e176f385a0e965c0db926a5f1c3e5",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_while_loops.py",
+          "sha256": "6a752a11dd30bac9fd1a119c002386430b98e518e3bca9170facaa42218a9af9",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "evas/tests/test_zero_timer.py",
+          "sha256": "26dd1e6ccb7e123cee1a7dbc2eb0da43297231a0c4e2e56baddacad6ea5ccac3",
+          "read_scope": "complete assigned test module"
+        },
+        {
+          "path": "docs/contributing/validation.md",
+          "sha256": "aff8954d2918f72cbdf083a327821c6a56c5b3c4cbd9aa8cd0c2bc491e28e588",
+          "read_scope": "relevant helper/contract or boundary sections directly read"
+        },
+        {
+          "path": "evas/docs/math/events.md",
+          "sha256": "406eefbe57d72d1a1bbdd567b3be71fd6bb57bfcf8b495c52a9eee0368a2f38d",
+          "read_scope": "relevant helper/contract or boundary sections directly read"
+        },
+        {
+          "path": "evas/docs/development/DECISIONS.md",
+          "sha256": "7e0e35aebc23226ad769e805972c27037a157d947a1dd44eb97da36efaf0c7b3",
+          "read_scope": "relevant helper/contract or boundary sections directly read"
+        },
+        {
+          "path": "evas/docs/math/operators.md",
+          "sha256": "7c3748e1ddbaa4181b6510470dd0dbbc08fcd092ce1f49b3448f4070d456a7f7",
+          "read_scope": "relevant helper/contract or boundary sections directly read"
+        },
+        {
+          "path": "evas/validation/TIMED_OPERATOR_CONTRACTS.md",
+          "sha256": "552a7adfdc24d01d3896d32fcafe0b34ab7c9bd08fd2aba45ce98597c92ee82d",
+          "read_scope": "relevant helper/contract or boundary sections directly read"
+        },
+        {
+          "path": "evas/tests/test_affine.py",
+          "sha256": "d0f7a2df8c81139e3eaaeba7699827843163080e7c5ce0d39d9ce123558a2e9e",
+          "read_scope": "relevant helper/contract or boundary sections directly read"
+        },
+        {
+          "path": "evas/tests/test_continuous_dynamics.py",
+          "sha256": "159c7598e164f829e394864a8206ad9f58470cf69e2e780618c02b443845c512",
+          "read_scope": "relevant helper/contract or boundary sections directly read"
+        },
+        {
+          "path": "evas/tests/test_event_conditions.py",
+          "sha256": "75fa6a11584686ad875cbdd2f36a3d9844a35ea91c1cd429496d36a0ff20a5a4",
+          "read_scope": "relevant helper/contract or boundary sections directly read"
+        },
+        {
+          "path": "evas/tests/test_rational_predicate_closure.py",
+          "sha256": "383d65b8d7c0262ce945ed18b9025a1f8986bcf9c1d812e6de94e053bac0c190",
+          "read_scope": "relevant helper/contract or boundary sections directly read"
+        },
+        {
+          "path": "evas/tests/test_native_integer_events.py",
+          "sha256": "2335f46d43913a8ec05eb2de577c8c4812581d2a5c0ba5e815fb47841f323371",
+          "read_scope": "relevant helper/contract or boundary sections directly read"
+        },
+        {
+          "path": "evas/tests/statistics_rn_oracle.py",
+          "sha256": "33eee660aa72b25671c940e55f76387214abb32ae92013b4b61e816b3b3eec51",
+          "read_scope": "relevant helper/contract or boundary sections directly read"
+        },
+        {
+          "path": "evas/tests/initial_record_contract.py",
+          "sha256": "59393a03b3e31ea53cf3029778bef97db48b09f050f9a11cdb16548d3c8937b5",
+          "read_scope": "relevant helper/contract or boundary sections directly read"
+        },
+        {
+          "path": "evas/tests/initial_source_sequence_contract.py",
+          "sha256": "396c572ac9087078cddcc9efdf8cd46bbe146ec79eaae65293bf566ca2999864",
+          "read_scope": "relevant helper/contract or boundary sections directly read"
+        },
+        {
+          "path": "evas/tests/initial_union_contract.py",
+          "sha256": "396e4e7de149e5058fbfeb11c7fb3439f53566c230cebdfac597fe65622cae38",
+          "read_scope": "relevant helper/contract or boundary sections directly read"
+        },
+        {
+          "path": "evas/tests/initial_advisory_contract.py",
+          "sha256": "2f0a7a9963fa4e3f718b1a499a6aa4b28c39745635fadf571122785d22ead69f",
+          "read_scope": "relevant helper/contract or boundary sections directly read"
+        },
+        {
+          "path": "evas/tests/initial_named_batches_contract.py",
+          "sha256": "8515d57dffdc0d8cee39b70e0f71d1e60f962c8db1c75e10cd8193443a68c94f",
+          "read_scope": "relevant helper/contract or boundary sections directly read"
+        },
+        {
+          "path": "evas/tests/test_initial_source_sequence_contract.py",
+          "sha256": "49d639c7907f19ba4d9499a07b2a6724f6e7f868c54ba54f0982af4663a5ae51",
+          "read_scope": "relevant helper/contract or boundary sections directly read"
+        },
+        {
+          "path": "evas/tests/test_initial_union_contract.py",
+          "sha256": "47b77b818bd0b9530243292aee3de2064c3d712338cf59f7f1c9242c7542b5ee",
+          "read_scope": "relevant helper/contract or boundary sections directly read"
+        },
+        {
+          "path": "evas/tests/test_raw_event_owners.py",
+          "sha256": "7a2078195db97e412ff52682f496d05e283e2ac11d0a1998c87b9ca1629d55a5",
+          "read_scope": "relevant helper/contract or boundary sections directly read"
+        },
+        {
+          "path": "evas/tests/paper_case_inputs.py",
+          "sha256": "8ceb6be585699e460ec01fa7a4764fd3c19ace297ad7440a7262e45cab9ae942",
+          "read_scope": "relevant helper/contract or boundary sections directly read"
+        },
+        {
+          "path": "evas/tests/helpers/check_history_consumer_fixture.py",
+          "sha256": "a6a3620b9883e59e30e3aa5b2e7241f948bb4a12c5a8cdc75eb721fbb3e9a50d",
+          "read_scope": "relevant helper/contract or boundary sections directly read"
+        },
+        {
+          "path": "evas/tests/helpers/generate_shaped_range_oracle.py",
+          "sha256": "e2d98ff51879c5ba31b65d0877490499c6eba230b94d38f677603ba15a0bc654",
+          "read_scope": "relevant helper/contract or boundary sections directly read"
+        },
+        {
+          "path": "evas/tests/fixtures/l1a_expected.json",
+          "sha256": "af30d1f8d34296b4cec1e6cb2ef3f324da2963d5698633ae3f805e4d446a1d00",
+          "read_scope": "relevant helper/contract or boundary sections directly read"
+        },
+        {
+          "path": "evas/validation/sample_edge_filter/contract.py",
+          "sha256": "1e43fabddc8ac38da510ff3cf1d77d3c2c43dd10e3cbcd4176c2cd2cfd43da74",
+          "read_scope": "relevant helper/contract or boundary sections directly read"
+        },
+        {
+          "path": "evas/validation/paper/transition_integral_precision.py",
+          "sha256": "948de2fc83f80ba6c5866dc024e8d17e4b1244af63754dee0ea5b475a9084bbd",
+          "read_scope": "relevant helper/contract or boundary sections directly read"
+        },
+        {
+          "path": "evas/src/evas/ir.py",
+          "sha256": "9e240c36ce3fa233aa81d6d7a85409dc3043abf1a3f0e268ecd69b65dc8322f5",
+          "read_scope": "relevant helper/contract or boundary sections directly read"
+        },
+        {
+          "path": "evas/src/evas/protocol.py",
+          "sha256": "f18abfbc928069023f6f31c736e87ab823a0412d4b5d483e74f91c10f91d9cc6",
+          "read_scope": "relevant helper/contract or boundary sections directly read"
+        },
+        {
+          "path": "evas/src/evas/runtime.py",
+          "sha256": "acc896bb2054163a4741f84f38b6e542bb3d121a2965ba01e112fbcb4ed902ae",
+          "read_scope": "relevant helper/contract or boundary sections directly read"
+        },
+        {
+          "path": "evas/src/evas/instance_compiler.py",
+          "sha256": "dd55882996abc353a786103f67e44f1526bf61234c50032b2541dc3f53e7957d",
+          "read_scope": "relevant helper/contract or boundary sections directly read"
+        },
+        {
+          "path": "evas/src/evas/native_audit.py",
+          "sha256": "515cfcd776062a18568b134e4354b5b80314ac28fec124e5a82db97a15b8a1cc",
+          "read_scope": "relevant helper/contract or boundary sections directly read"
+        }
+      ],
+      "withdrawn_findings": [],
+      "coordinator_corrections": []
+    },
+    {
+      "lane": 4,
+      "sha256": "fa1523e84356f058f3788a1daa813e52f8cc8f2395f94b5bee3fe21eeb786c69",
+      "methods": 548,
+      "limits": [
+        "独立Spec静态审查覆盖548个assigned unittest方法、55个module，passing/failed/error/xfail未作为verdict依据；旧691审查未自动认证方法。",
+        "方法正文与本模块helpers/constants均读过；跨模块helper按实际读取列表和相关段落审查。refs中未列入reviewed_files的合同路径仅为navigation，未暗示其全部内容被读。",
+        "未运行full suite、build、Spectre或外部写入。lane4-arithmetic-probe.json为独立有理/RN推导和合成checker truth，无内核结果；source module未修改。",
+        "public solve/transient调用protocol.validate_response强制输出数量、grid与finite voltage/state；本lane没有把zip/all缺本地len单独认作空循环漏洞。raw subprocess及fixture checker则按各自接口审查。",
+        "no_defect_found只覆盖所述断言/输入；metamorphic同实现比对不等同数值绝对正确或whole-box数学资格；未进行新的fault-injection calibration。",
+        "部分初始、source RN、预算/源码布局迁移缺陷成族出现。强制特定保守拒绝的案例只在证明语义或API矛盾时列test_defect，否则保留明确evidence_gap。",
+        "最终独立Spec纠正：原直接连续物理Select不隐式经过RN；L4-F12撤回，算术probe中的RN邻值事实不可用来反驳这5个原fixture。L4-F16仍含显式RN边界，未随之撤回。"
+      ],
+      "reviewed_files": [
+        {
+          "path": "evas/tests/test_absdelay.py",
+          "sha256": "dd1198c024fe5deb4bd54b40f84652c645b8e73b8a647a7bed1babc0d9e6a4e5",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_active_initial_output.py",
+          "sha256": "2256096b3c4de7fe424e0a955aa672ccc5eb2f440e302340de2ca08c5bb28190",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_al4_lifecycle.py",
+          "sha256": "c67bbbdc3d04953c2a2247a13a1fdab083e111fc7fb7033135a95e5ccfbc92ee",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_analog_conditions.py",
+          "sha256": "5e80d35ac71cb45d3a649d5d66311ade9533c707679893d8090994b481cce36e",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_ansi_ports.py",
+          "sha256": "7417ff9b8238b4b773608142872e03fc9d82093876d0a32f0cb1c9b0d407bbe7",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_citation_index.py",
+          "sha256": "7b62417a6d0ec77a751d0fe67a92c22a838df3731897be9d85fdc992f81815cd",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_contribution_occurrences.py",
+          "sha256": "b16a71d71766e89a1f97d245560b4d87cb2810c4ac91760797a52fdd4768b648",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_cross_right_limit.py",
+          "sha256": "678597388cb60cb7baf1674a726cf15ec694d3cfc98f25f0cbd15fa5c0d7007f",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_declaration_initializers.py",
+          "sha256": "4f7dfc96505c29dd7010690860e5bb7f120253c1a5711b4a8cef659e22ab8ed5",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_event_ordinary_scratch.py",
+          "sha256": "6496bbcf24d2bc1b987921d79d8d3a3420279b97fc0090dd948387b2bd45577e",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_event_relocalization.py",
+          "sha256": "120e103e2d9f3ef2aab3cde0ed2b34153a0c313989b6cf2f2ab98377a8fe68e7",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_filter_direct.py",
+          "sha256": "b90192cdabdda1b810ccb9546455b6cc997abd78a5879e7a451b7d851354423a",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_finite_floor.py",
+          "sha256": "480c260460efe32dbc398707b4572cce1762cd2acdab30d8b10ff7f1632ac45e",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_floor_syntax.py",
+          "sha256": "f5440788459a618d2cc71aa0cb707c8c7d803000db94e3152dfc543bf0ded1f5",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_forcing_history_bridge.py",
+          "sha256": "de484e22afb9d6a60c0933ab135ba67e7cc2ef59a7c4f9308fc52ae4eb2486b5",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_frontend_closure.py",
+          "sha256": "9de4f95a5423c3a026bdf79fe5ed4cfac3afb850db6a8133092b16fe2c82836b",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_function_compatibility_dag.py",
+          "sha256": "deb9aea5defee87080bb814102bd8763d432cc01a2eee5e83527f8188475a1a7",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_generated_transient.py",
+          "sha256": "0313814883d721b804383b6ca14fb34868066214f36ebebe6b42547e7d9a65c0",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_group_math_sampled_domain.py",
+          "sha256": "f228bef0097ad14f7ba480805565c36c133e9a15aff91f7f3a4d4ea6f7473a43",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_held_timer_provenance.py",
+          "sha256": "add9c011b11a0dc9bb5e44cb1cfeb8dbfb8c8796796dccdce43983d31754a030",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_held_transition_targets.py",
+          "sha256": "b23c978958f08261f28a84aaf89ee645acefccc400fa6e07b75288be8280d260",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_identity.py",
+          "sha256": "2be060cfcaa5da21769cb752fd86d77460b390b4601e54a8cd2a413dd7739e2c",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_initial_display_transition.py",
+          "sha256": "ed4ea56e70b34bb79d1e90300eaba3eeac249f90c869f3600ce7e172590134b3",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_initial_observer_horizon.py",
+          "sha256": "93c822e406f0b8eeed8b010c8fe56b071d5aaeab641c9b8670f8df7d46168266",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_integer_functions.py",
+          "sha256": "96e4cc780646b7d948bee8a6bedd9abdea9b20ce5f1f44d1b5b5c66b50479e84",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_integer_invariants.py",
+          "sha256": "fe54771244d5918faa99d5a001ed698e0666bba7f5211447ed16c868416db5c8",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_integer_math_closure.py",
+          "sha256": "a278b8413a7d1b19108fe6ba5903c65b7d18476bc0fd277206ccadef074a6572",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_lifecycle_closure.py",
+          "sha256": "b16ceac47edf8dc95e57e22cca1d74c9d593362ab53f5db3e1964328a4ac7ce8",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_nonlinear.py",
+          "sha256": "5c0915cd8db2232f4bfa74103c95e6ff307007d087ec03089e1470507b01d803",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_ordinary_integer_prefix_freshness.py",
+          "sha256": "343528d1c1a17f06f09ccb36f4a9e0d31f29bf0caffd2634bbe54f22763681fc",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_passive_events.py",
+          "sha256": "c45c3c15d6e5710af59ecf804603c76ea49761e9fa38b8ef8c0bd0bfa9b8a23f",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_phase.py",
+          "sha256": "337be6dc4fbd187b1a869128a0a6411ce79fa3ed8dd3f209294885cf97d464c2",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_physical_point_bundle.py",
+          "sha256": "44c9c0fe120012719a6dea8d6ab07da5a6707edc38750cf605c076ddcfbbf8e5",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_precision_breadth_composition.py",
+          "sha256": "3d408a18989d9749cd751d440292a9ba585693d6a973f0033dde5ee3bcdd3dc6",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_procedure_runtime.py",
+          "sha256": "0a378a27f87eaad0608c75d032f654e8c33dc0d6958936613b46d92ead108751",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_r01_event_select.py",
+          "sha256": "fc4bb109a18d78b124781893ecfb4d8ff9eaf338c57c62a6a33546781650f960",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_result_outputs.py",
+          "sha256": "e748ef8d05e1e6d26eadd059e8afa46194e2e4c5d21a1413ab48059997c0d00f",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_sampled_predicate_roles.py",
+          "sha256": "fb8924345a6bf4ff7d883defe908271c0294a71e29d3886c83a217a0930e1888",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_scs.py",
+          "sha256": "50fa2b947888ea7d84e3ccd9275d0a272eac9d37b9a549bc476c505605d5bd99",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_scs_save.py",
+          "sha256": "71e14eade325a7ccb62630e9e60a2ab4c302c5e364283da6ba88df19c94d177e",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_selected_ln.py",
+          "sha256": "31bc60964d2ca8edb51384afecb339b6e4d54aa392b1af436a5efd9d962a7ef6",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_semantic_invariants.py",
+          "sha256": "74dd4921eddd561fb7ce4a1033ed52a13501b701cf6b54c8e54659a9f9ab9537",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_shaped_source_selected_slew.py",
+          "sha256": "19b852cc4cdbe74123693acfbbc1b1a5d160a2c65a8c66883b08fba666401347",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_source_factor.py",
+          "sha256": "a8729f30b23e965bdc5d8efacd37a18dab192182bf34c4f72a0d9cb94f045ddf",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_source_queries.py",
+          "sha256": "86708a9760e288906bef0d7edde969e0cd4ea2ce2f95d16f53b6e3315e3d1d74",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_source_rational_guards.py",
+          "sha256": "c467473712b0208caef02b401a672eebdb64091838f6c39df4ace4a7bfa5179e",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_source_selected_slew.py",
+          "sha256": "00cc53c4f71991bb8cab298d93d38b5bb92642eca01e1d7a911b9f7b10f9b67f",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_source_state_predicates.py",
+          "sha256": "8f8dbc1fe639a58b59d4eac62ea2748ce5c69a3476b04f27b18b483732f8a9d9",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_sparse.py",
+          "sha256": "325f90fb7e25997e65fb3184a4e93384650ca194cef46dc96d6ae4ddff6514da",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_timed_boundary_diagnostics.py",
+          "sha256": "4b91ecfff78b0a08fb9b684ca538de4a885021757a9b2bd13439ea0ff2bdfa81",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_timer_closure.py",
+          "sha256": "391b46cd9298ec3a8c2589403f46fba751d36e97feb1e286ebe6b00eb30903d6",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_timer_ordering.py",
+          "sha256": "990c5cbc13de98989b12726866c63ba78e046d6c99c518cac56da0179cdb80c1",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_transition_accuracy.py",
+          "sha256": "f69329a574226832643111c66a8b1fab26f00ea6738782a22b1268a7b1d0151f",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_transition_dc_target.py",
+          "sha256": "82b8ffc0c9e66290cb7c34e6b43bc51adb3008c9f281a954791343398777b63b",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "evas/tests/test_transition_defaults.py",
+          "sha256": "45e19ab0d469baf7006c0a054c042eed4e0a8a397c6b135403df25ddf73ed176",
+          "read_scope": "assigned module method bodies and all local helpers/constants"
+        },
+        {
+          "path": "docs/contributing/validation.md",
+          "sha256": "aff8954d2918f72cbdf083a327821c6a56c5b3c4cbd9aa8cd0c2bc491e28e588",
+          "read_scope": "relevant sections/functions inspected, not a whole-file implementation certification"
+        },
+        {
+          "path": "evas/docs/math/events.md",
+          "sha256": "406eefbe57d72d1a1bbdd567b3be71fd6bb57bfcf8b495c52a9eee0368a2f38d",
+          "read_scope": "relevant sections/functions inspected, not a whole-file implementation certification"
+        },
+        {
+          "path": "evas/docs/development/DECISIONS.md",
+          "sha256": "7e0e35aebc23226ad769e805972c27037a157d947a1dd44eb97da36efaf0c7b3",
+          "read_scope": "relevant sections/functions inspected, not a whole-file implementation certification"
+        },
+        {
+          "path": "evas/src/evas/runtime.py",
+          "sha256": "acc896bb2054163a4741f84f38b6e542bb3d121a2965ba01e112fbcb4ed902ae",
+          "read_scope": "relevant sections/functions inspected, not a whole-file implementation certification"
+        },
+        {
+          "path": "evas/src/evas/protocol.py",
+          "sha256": "f18abfbc928069023f6f31c736e87ab823a0412d4b5d483e74f91c10f91d9cc6",
+          "read_scope": "relevant sections/functions inspected, not a whole-file implementation certification"
+        },
+        {
+          "path": "evas/src/evas/source_queries.py",
+          "sha256": "8fd2bf7a21a7fb7883b8065b94ce93dddeae69f97beca42e2d7d856331d09582",
+          "read_scope": "relevant sections/functions inspected, not a whole-file implementation certification"
+        },
+        {
+          "path": "evas/src/evas/native_audit.py",
+          "sha256": "515cfcd776062a18568b134e4354b5b80314ac28fec124e5a82db97a15b8a1cc",
+          "read_scope": "relevant sections/functions inspected, not a whole-file implementation certification"
+        },
+        {
+          "path": "evas/src/evas/procedural.py",
+          "sha256": "0aa7deec4f7ce30438af35a710af3b9bddcf24c3da5e64e45fb95e9c477b5217",
+          "read_scope": "relevant sections/functions inspected, not a whole-file implementation certification"
+        },
+        {
+          "path": "evas/src/evas/instance_compiler.py",
+          "sha256": "dd55882996abc353a786103f67e44f1526bf61234c50032b2541dc3f53e7957d",
+          "read_scope": "relevant sections/functions inspected, not a whole-file implementation certification"
+        },
+        {
+          "path": "evas/tests/initial_record_contract.py",
+          "sha256": "59393a03b3e31ea53cf3029778bef97db48b09f050f9a11cdb16548d3c8937b5",
+          "read_scope": "relevant sections/functions inspected, not a whole-file implementation certification"
+        },
+        {
+          "path": "evas/tests/initial_source_sequence_contract.py",
+          "sha256": "396c572ac9087078cddcc9efdf8cd46bbe146ec79eaae65293bf566ca2999864",
+          "read_scope": "relevant sections/functions inspected, not a whole-file implementation certification"
+        },
+        {
+          "path": "evas/tests/initial_named_batches_contract.py",
+          "sha256": "8515d57dffdc0d8cee39b70e0f71d1e60f962c8db1c75e10cd8193443a68c94f",
+          "read_scope": "relevant sections/functions inspected, not a whole-file implementation certification"
+        },
+        {
+          "path": "evas/tests/floor_rn_contract.py",
+          "sha256": "56d6fb9b434bc8900eb3377245fbbc968ecc50d44ba0dc62d21ced86a027627c",
+          "read_scope": "relevant sections/functions inspected, not a whole-file implementation certification"
+        },
+        {
+          "path": "evas/tests/history_migration_contract.py",
+          "sha256": "77c123b50ecadbeaa08d15a4bd43ce7cb91173ad490805de93cf1244f73ff467",
+          "read_scope": "relevant sections/functions inspected, not a whole-file implementation certification"
+        },
+        {
+          "path": "evas/tests/test_continuous_dynamics.py",
+          "sha256": "159c7598e164f829e394864a8206ad9f58470cf69e2e780618c02b443845c512",
+          "read_scope": "relevant sections/functions inspected, not a whole-file implementation certification"
+        },
+        {
+          "path": "evas/tests/test_affine.py",
+          "sha256": "d0f7a2df8c81139e3eaaeba7699827843163080e7c5ce0d39d9ce123558a2e9e",
+          "read_scope": "relevant sections/functions inspected, not a whole-file implementation certification"
+        },
+        {
+          "path": "evas/tests/test_timer.py",
+          "sha256": "5ccba6be29e04cf396110474697bccadaf747b66021717b49bde589a5e633f6d",
+          "read_scope": "relevant sections/functions inspected, not a whole-file implementation certification"
+        },
+        {
+          "path": "evas/tests/fixtures/event_relocalization.va",
+          "sha256": "6d6e8697618ddf22f35c9141be898635d5c086a481201781fe13df4890e78538",
+          "read_scope": "relevant sections/functions inspected, not a whole-file implementation certification"
+        },
+        {
+          "path": "evas/validation/generated_transient.py",
+          "sha256": "3470cd1ed1b7dad60880fd31d1935adb71498a9c70b1526809224074d60adf3b",
+          "read_scope": "relevant sections/functions inspected, not a whole-file implementation certification"
+        },
+        {
+          "path": "evas/validation/paper/precision_breadth_composition.py",
+          "sha256": "62299a0b389f8a3b1b08e1f5cbdd44950724cc3ed4476e4884afa8a84325e6e2",
+          "read_scope": "relevant sections/functions inspected, not a whole-file implementation certification"
+        },
+        {
+          "path": "evas/docs/math/operators.md",
+          "sha256": "7c3748e1ddbaa4181b6510470dd0dbbc08fcd092ce1f49b3448f4070d456a7f7",
+          "read_scope": "relevant sections/functions inspected, not a whole-file implementation certification"
+        },
+        {
+          "path": "evas/docs/math/continuous.md",
+          "sha256": "73109f222c2832fd938628238535ada81f553879723e7fb204cc487086622847",
+          "read_scope": "relevant sections/functions inspected, not a whole-file implementation certification"
+        },
+        {
+          "path": "evas/docs/math/solving.md",
+          "sha256": "a75ad666d9a53416051dcfc3a68f193a7a72e07a8f960bb5f7cfe66a2ccf7ed6",
+          "read_scope": "relevant sections/functions inspected, not a whole-file implementation certification"
+        },
+        {
+          "path": "evas/validation/TIMED_OPERATOR_CONTRACTS.md",
+          "sha256": "552a7adfdc24d01d3896d32fcafe0b34ab7c9bd08fd2aba45ce98597c92ee82d",
+          "read_scope": "relevant sections/functions inspected, not a whole-file implementation certification"
+        },
+        {
+          "path": "evas/validation/citation_index.py",
+          "sha256": "234bdaa21d2e0f39cfd54cae3ad51c745e60785b791fd1a57b37cb9c834230ca",
+          "read_scope": "relevant sections/functions inspected, not a whole-file implementation certification"
+        },
+        {
+          "path": "evas/tests/helpers/check_ordinary_integer_prefix_fixture.py",
+          "sha256": "982e6cdcd4864f28da1eb5514d2b3d6dc6158be7b3727c9549abe2f199f3db0e",
+          "read_scope": "relevant sections/functions inspected, not a whole-file implementation certification"
+        },
+        {
+          "path": "evas/tests/test_contracts.py",
+          "sha256": "d31088d1f387e54d22c4ffe8023a1dd19069d117b7b6df1e602931b9a969f03b",
+          "read_scope": "relevant sections/functions inspected, not a whole-file implementation certification"
+        },
+        {
+          "path": "evas/validation/held_transition_targets/inputs/held-nested-select/dut.va",
+          "sha256": "3c536b8eb6526af4a7b63f3f4c44af71fa9c3648c8a77537ba26d0d881e75338",
+          "read_scope": "relevant sections/functions inspected, not a whole-file implementation certification"
+        },
+        {
+          "path": "evas/tests/fixtures/driven-sampled-predicate.va",
+          "sha256": "e1f84342f9ae8a3e7391539496847827da9d76d6bcd37e4670519b8d37edc7f6",
+          "read_scope": "relevant sections/functions inspected, not a whole-file implementation certification"
+        },
+        {
+          "path": "evas/rust_core/src/procedure_plan.rs",
+          "sha256": "19bff45d8a64cf3c0e2a27ae585cd90d7ce2046c23eac2558bd8061fb05219dc",
+          "read_scope": "correction: relevant resolve/condition/capture_operator and source-plan point-policy sections only"
+        },
+        {
+          "path": "evas/rust_core/src/transition_source_plan.rs",
+          "sha256": "fd12f631af24ed1a10a984b9473c82d01306cdcc1f005dc421b85a563c6c5c2e",
+          "read_scope": "correction: relevant resolve/condition/capture_operator and source-plan point-policy sections only"
+        }
+      ],
+      "withdrawn_findings": [
+        {
+          "id": "L4-F12",
+          "status": "withdrawn",
+          "affected_ids": [
+            "test_source_selected_slew.SourceSelectedSlew.test_adjacent_physical_roots_are_not_merged",
+            "test_source_selected_slew.SourceSelectedSlew.test_distinct_rational_roots_with_one_representative_reject",
+            "test_source_selected_slew.SourceSelectedSlew.test_isolated_target_point_is_not_a_fictitious_pulse",
+            "test_source_selected_slew.SourceSelectedSlew.test_simultaneous_predicates_preserve_a_third_boundary_point",
+            "test_source_selected_slew.SourceSelectedSlew.test_transition_third_boundary_point_remains_rejected"
+          ],
+          "reason": "撤回L4-F12：原source-selected slew/transition的operator输入为Select与bare Affine物理操作数，没有RealBoundary(sample)；procedure_plan.condition/capture_operator只resolve而不隐式插入RN。先前证明“相邻binary64之间没有RN(u)”数学事实正确，但错误套用于没有程序RN边界的连续物理u。operators.md:639明确要求以严格有理中点见证相邻切点开放区间，不能以没有binary64内部点把该区间当空。",
+          "replacement": "上述5行改为no_defect_found，按连续物理Select而非RN-image建立独立oracle。L4-F16的显式RealBinary divide/RealBoundary sample与此不同，保持独立。",
+          "evidence_refs": [
+            "evas/docs/math/operators.md:639",
+            "evas/rust_core/src/procedure_plan.rs:251",
+            "evas/rust_core/src/procedure_plan.rs:445",
+            "evas/rust_core/src/procedure_plan.rs:480",
+            "evas/rust_core/src/transition_source_plan.rs:1518"
+          ],
+          "related_gap_corrections": [
+            "test_source_selected_slew.SourceSelectedSlew.test_rational_root_window_survives_future_amplification",
+            "test_source_factor.SourceFactor.test_original_binary64_coefficient_and_nonthermometer_patterns_keep_real_box"
+          ]
+        }
+      ],
+      "coordinator_corrections": [
+        {
+          "method": "test_timer_ordering.TimerOrdering.test_exact_equal_writers_still_fail_same_batch_ownership",
+          "reviewer": "full_audit_final_spec",
+          "old_verdict": "mixed",
+          "new_verdict": "evidence_gap",
+          "reason": "Distinct period clocks lack proved same logical occurrence; no established test defect from exact-time equality alone.",
+          "refs": [
+            "evas/tests/test_timer_ordering.py:76",
+            "evas/docs/math/events.md:1474"
+          ]
+        }
+      ]
+    },
+    {
+      "lane": 5,
+      "sha256": "34e25e4d14f1e60e6f8051ba348bf075294a249a6539a2df7f151d0e0e59d0ff",
+      "methods": 565,
+      "limits": [
+        "Independent static source/fixture/helper/contract assessment of all565assigned methods across55modules, passing/failing/expectedFailure treated equally. no_defect_found means no identified defect in stated static scope, not complete calibration or implementation correctness.",
+        "No source/test/contract edits, fullsuite/build/Spectre/remote runs performed. Compile-only original fixture materializations and three bounded malformed raw requests against the matching existing kernel are saved in lane5-probe.json. Pure Python/Fraction RN probes include original operands and derivations.",
+        "Current public runtime validates solution count, finite voltages, requested time/state/evidence shapes. Local zip/all alone was not flagged as vacuous when these public guards establish completeness. Raw subprocess-only tests do not inherit those guards.",
+        "Every assigned method body was read with its module fixtures; actual assertions/expected expressions are recorded per method. Internal representation tests are labeled by their narrow contract; they are not waveform qualification. Shared-checker positive fixtures are labeled consistency evidence and their unresolved independent calibration is recorded.",
+        "Prior691failure audit entries were inspected for revalidation hints only, not used as wholemethod certification or verdict dispatch. Parent coordinator supplied matched-kernel independent-driver raw evidence; that external evidence is explicitly identified.",
+        "Some legacy negative tests may currently encounter earlier implementation rejection; a valid static oracle does not prove the named native mechanism executed. No broad negative or passing test was credited with wholetrajectory guarantees."
+      ],
+      "reviewed_files": [
+        {
+          "path": "evas/tests/test_absdelay_cascade.py",
+          "sha256": "a6848d46717b31fec2f0fffcabb0c2b8c3158a02676e1e26db28ab18a2c3c519",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_analytic_sources.py",
+          "sha256": "bd94fa50dee8850bf86189f4ca566c1d9ab5083733818c0df2900e27b08cb6bd",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_certificate_cache.py",
+          "sha256": "c99bcf7dea030755c01d34df2d14ba8826b8f885745480f5d317ac9ba5c51862",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_constant_initial_power.py",
+          "sha256": "3828652eb502732bbf8668cd59ce6c8b7faf8592711373978b3057d42eed0dde",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_dead_system_calls.py",
+          "sha256": "3a69415993364ffb8e1e6625772674a7958f3fded518e8e8fb7ff32170a91e94",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_diagnostic_consumers.py",
+          "sha256": "9464b7b84f95dd683a71bfb51ee3e5562b09a7be2a97bfc19ec4bef281100e48",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_directed_triangle_endpoint.py",
+          "sha256": "b0fd71ce6db4ed6cc19b485a165a952095570811eb452ff381717b982878dc18",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_dynamic_closure.py",
+          "sha256": "c62a9098c01fa01c59e48aee039c30960f7c610c0e93a9ab0834f2f8182690b9",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_dynamic_cross.py",
+          "sha256": "436a1cbdc71b53e368f875c4e09f9bbd08727e387ca1da8d6d2173855e6f36f5",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_event_predicate_structure.py",
+          "sha256": "b7c8a5ef20644991364ac4672bcc68dae55f000cd219b17e8e94dfa0530a5b1d",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_event_writers.py",
+          "sha256": "495735b72cb14bea264ab0841f6db0c5b49e328ccab52d20baa9d1c6c10b4513",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_gap_integration.py",
+          "sha256": "9d412df3aeb6b4af7f12010a593a3e09ecb281c3c9bfc48974a33c325e9487c2",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_held_alias_probe.py",
+          "sha256": "83e277ac284cf6abd753f242b1deb3d8a822768e91357a9951900b2d3abb7b1c",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_held_power2_targets.py",
+          "sha256": "34a691583d7872b7e537d74c8ed6a6fb051666cfc373f7e25ddca9129b18dd51",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_history_consumer.py",
+          "sha256": "caa3c1d6fbe4b0ca4c215100f143fe67196b8ddb106367e66e57b6ed38841222",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_immutable_declarations.py",
+          "sha256": "73a919f28e07844cdf34bb3c6ef23b4ef8e67ec5265c5921825ff08c07b2e3b5",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_independent_driver_condition.py",
+          "sha256": "a86d22aaf5e106d3bcf6c31dffe9ea42897dedb2b7c905b49badf82b5129bd35",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_initial_node_dependencies.py",
+          "sha256": "6951848decba401328c4b4a91fd73b565a450999a3267c887c0195d89da16b07",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_initial_ordinary_alias.py",
+          "sha256": "37895c88e926224439d0f39f0adde6ce60bfbaee870e2972a6178dba8f75788e",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_laplace_np.py",
+          "sha256": "44715d95d1163261939b64c758710a8913de1d7970d031129b6b461a9dcbf936",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_legacy_chain_precision.py",
+          "sha256": "e8d148d32122c0fe4cfb5116fb247981bd8aa135a8907608a9e5a3a4b67f403d",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_loop_function_identity.py",
+          "sha256": "4d814991cc5057c57483b92c44999d6eb59ecc2bdc206e1262c0b475ea4cc18a",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_memoryless_identity.py",
+          "sha256": "82c439f93b6ec50549622d0f603f06fbec1ee375e32794d870d0eec3ccb207ea",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_native_event_floor.py",
+          "sha256": "465d2d5811bb9548b12d8a6ad71f7729a61917fe505107cf16b1e546b7000a5b",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_native_integer_events.py",
+          "sha256": "2335f46d43913a8ec05eb2de577c8c4812581d2a5c0ba5e815fb47841f323371",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_observation_evidence.py",
+          "sha256": "c713cfab686ad53753898c6513934d3548dfc118a834862eb55d2be83e7b7a78",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_original_source_consumers.py",
+          "sha256": "94539cbe92146496c64cbef6daf99c1b874c218d21c8406d65a6e7e5b36c1c06",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_parallel.py",
+          "sha256": "53462356b6fb4109745a882c5378a8c11165db30120e99f8f103d2997e3adeb8",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_passive_history_phase.py",
+          "sha256": "0d61fe7ebbf7eeee2a2dd0c2fcf8d078fc8e3605dd2cce97d8dde31c8ca33cad",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_portability_coverage.py",
+          "sha256": "73e6370e5b17d009abd7f9b19fa04807ff5c3ca0890c9f7accc21246223b1368",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_program_real_validation.py",
+          "sha256": "f0999f8499114a95ee316162f120841c9e9f6486d75b118997924dbda7679e9c",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_proven_deadline_order.py",
+          "sha256": "02bbe660097e8bb8fc7e26c76dd5c7b1b9bac433c8a2e2bd43375f7e1ba62e58",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_r01_event_arrays.py",
+          "sha256": "178784a7838c88af4c5892175bd12998e03f32054872b75f5640d0907b6c5fb3",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_r01_runtime_frontend.py",
+          "sha256": "5db32186a4854f1f7a4191265dfc421689f55ad0aa8cb60068eafaa7a489ee81",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_real_argument_lookup.py",
+          "sha256": "4638bee338700c99d9e1bcc30acf4a8a88259951a8dd328ff8ed28f6cd955e49",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_real_call_argument_snapshots.py",
+          "sha256": "0d6219234c523f6f8d246f7471f2478b916c24f72746ace64e5b244c124a8762",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_reuse.py",
+          "sha256": "ee865955a6bd63f3281057e02335d14d4a12055aaa7909979d7bf4c66a6ad1a8",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_sampled_integral_strobe.py",
+          "sha256": "35ec6afaf5eb7b9ea346ed7e286f5bf5232a0bce538fe2a7e3ceff196c5f19e2",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_sampled_predicate_settlement.py",
+          "sha256": "dd5eeb19656e9d680a07d23005249e496c68e8a07402f7bdee2760b7149710c3",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_scs_vectors.py",
+          "sha256": "132af8a967f7f2976bc7e96aa134383d5eb1d9662ba09c96fe3e100b8cd98612",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_settled_integer_reads.py",
+          "sha256": "a04f4971a925994a091cda828e38e19e0d6837a628133fa4a5e127d9f7b6579e",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_settlement.py",
+          "sha256": "0f41566d20db71c8df2f68562a11a4326d6e3b093efcb784dbc813b77af19fc9",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_source_floor_event.py",
+          "sha256": "f2b7fd989191e0f8c736a9db29efb1a36df4561ac673ba990ad7e729dbf7f89a",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_source_polynomial_forcing.py",
+          "sha256": "41ee071a17ecde79e5e814c76d18042b5c932036ae77c3a9ef4c7a4fe5a8558e",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_source_polynomial_guards.py",
+          "sha256": "e5d089d241ab8fc482404b212c0f3a55c2f8a7929570b9aabb4d67602062fbf8",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_source_qualification_work.py",
+          "sha256": "23acab97e0f2217c4ac074cd48d45fb77f6d6639d06965e3afdcc584d97b21b7",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_source_rn_observation.py",
+          "sha256": "43b2b9eeb08534411ced38c9ed2c633ffedc62916e69a30845fb91a2f528655f",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_source_slew_dc.py",
+          "sha256": "95b30dbb04b504817cb6267b67694073712711e25858270ce75367bffef6c791",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_source_uncertainty.py",
+          "sha256": "c2c7188ea6084a10334abd6b42d894c3401efa7afc7fa42150e2335c9d0cef21",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_standard_constants.py",
+          "sha256": "acbe58589108163f488df1025075ddaae7133c3b7e5b613bdb226a34be56ce57",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_statement_audit_lease.py",
+          "sha256": "9c4aaf16fad6ead41085194f6738e2fe7ddbe00661341b84d929430c446f4521",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_timer_at_transition_ramp_end.py",
+          "sha256": "c46a6533fedd87ae6df334dfb90b255d1bf81fac9e757dfb973fbe875d1ae0e7",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_transition_event_conditions.py",
+          "sha256": "18492d195dce23c7c06b22596198fc6ba3b224150699237763ca0fc3ffece0a0",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_user_functions.py",
+          "sha256": "74394a4fa200dae4f934f748abfe9095c790baddd5fa5018aa5f369633c91425",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/test_vector_ports.py",
+          "sha256": "c8e466851e9932b95b221f08fc67e7150c1c56d9dffe987596e6adf8c9809f7e",
+          "read_scope": "full assigned module"
+        },
+        {
+          "path": "evas/tests/floor_rn_contract.py",
+          "sha256": "56d6fb9b434bc8900eb3377245fbbc968ecc50d44ba0dc62d21ced86a027627c",
+          "read_scope": "relevant sections/helpers shown in tool reads"
+        },
+        {
+          "path": "evas/tests/initial_record_contract.py",
+          "sha256": "59393a03b3e31ea53cf3029778bef97db48b09f050f9a11cdb16548d3c8937b5",
+          "read_scope": "relevant sections/helpers shown in tool reads"
+        },
+        {
+          "path": "evas/tests/test_continuous_dynamics.py",
+          "sha256": "159c7598e164f829e394864a8206ad9f58470cf69e2e780618c02b443845c512",
+          "read_scope": "relevant sections/helpers shown in tool reads"
+        },
+        {
+          "path": "evas/tests/test_affine.py",
+          "sha256": "d0f7a2df8c81139e3eaaeba7699827843163080e7c5ce0d39d9ce123558a2e9e",
+          "read_scope": "relevant sections/helpers shown in tool reads"
+        },
+        {
+          "path": "evas/tests/test_source_rational_guards.py",
+          "sha256": "c467473712b0208caef02b401a672eebdb64091838f6c39df4ace4a7bfa5179e",
+          "read_scope": "relevant sections/helpers shown in tool reads"
+        },
+        {
+          "path": "evas/tests/test_function_compatibility_dag.py",
+          "sha256": "deb9aea5defee87080bb814102bd8763d432cc01a2eee5e83527f8188475a1a7",
+          "read_scope": "relevant sections/helpers shown in tool reads"
+        },
+        {
+          "path": "evas/tests/fixtures/driven-sampled-predicate.va",
+          "sha256": "e1f84342f9ae8a3e7391539496847827da9d76d6bcd37e4670519b8d37edc7f6",
+          "read_scope": "relevant sections/helpers shown in tool reads"
+        },
+        {
+          "path": "evas/tests/fixtures/pure_function.va",
+          "sha256": "939fd9351df48cc5105d149e7d154718fd0316a21a4deb707d55f5b0c65648cf",
+          "read_scope": "relevant sections/helpers shown in tool reads"
+        },
+        {
+          "path": "benchmark/material/historyref/tasks/va07-triangle-repair/solution/dut.va",
+          "sha256": "27e015ced23d7486bec8b1888b81294fd863f565d751652e24dc4a9bb1035eae",
+          "read_scope": "relevant sections/helpers shown in tool reads"
+        },
+        {
+          "path": "evas/src/evas/runtime.py",
+          "sha256": "acc896bb2054163a4741f84f38b6e542bb3d121a2965ba01e112fbcb4ed902ae",
+          "read_scope": "relevant sections/helpers shown in tool reads"
+        },
+        {
+          "path": "evas/src/evas/protocol.py",
+          "sha256": "f18abfbc928069023f6f31c736e87ab823a0412d4b5d483e74f91c10f91d9cc6",
+          "read_scope": "relevant sections/helpers shown in tool reads"
+        },
+        {
+          "path": "evas/src/evas/program_real_validation.py",
+          "sha256": "b7f8ad313aa842c21a09124b9a9527b3efaa8ceea2b52c5d3aafac38ab146cc7",
+          "read_scope": "relevant sections/helpers shown in tool reads"
+        },
+        {
+          "path": "evas/src/evas/native_audit.py",
+          "sha256": "515cfcd776062a18568b134e4354b5b80314ac28fec124e5a82db97a15b8a1cc",
+          "read_scope": "relevant sections/helpers shown in tool reads"
+        },
+        {
+          "path": "evas/src/evas/memoryless_operators.py",
+          "sha256": "7eed7731461caf15f639935c6eae15153c89054a3feae73573352a15cfd8f81d",
+          "read_scope": "relevant sections/helpers shown in tool reads"
+        },
+        {
+          "path": "evas/validation/paper/legacy_chain_precision.py",
+          "sha256": "04e95ea8d017b170da6d16eb41d4e49724c24c32265cdbdccc83505f19699c6e",
+          "read_scope": "relevant sections/helpers shown in tool reads"
+        },
+        {
+          "path": "evas/docs/math/events.md",
+          "sha256": "406eefbe57d72d1a1bbdd567b3be71fd6bb57bfcf8b495c52a9eee0368a2f38d",
+          "read_scope": "relevant sections/helpers shown in tool reads"
+        },
+        {
+          "path": "evas/docs/math/operators.md",
+          "sha256": "7c3748e1ddbaa4181b6510470dd0dbbc08fcd092ce1f49b3448f4070d456a7f7",
+          "read_scope": "relevant sections/helpers shown in tool reads"
+        },
+        {
+          "path": "evas/validation/TIMED_OPERATOR_CONTRACTS.md",
+          "sha256": "552a7adfdc24d01d3896d32fcafe0b34ab7c9bd08fd2aba45ce98597c92ee82d",
+          "read_scope": "relevant sections/helpers shown in tool reads"
+        },
+        {
+          "path": "evas/docs/development/DECISIONS.md",
+          "sha256": "7e0e35aebc23226ad769e805972c27037a157d947a1dd44eb97da36efaf0c7b3",
+          "read_scope": "relevant sections/helpers shown in tool reads"
+        },
+        {
+          "path": "evas/docs/math/continuous.md",
+          "sha256": "73109f222c2832fd938628238535ada81f553879723e7fb204cc487086622847",
+          "read_scope": "relevant sections/helpers shown in tool reads"
+        },
+        {
+          "path": "evas/docs/reference/diagnostics.md",
+          "sha256": "9b6dd4b82c216b1965acdd4e177227d511671855a0233169f8e3c31c26a65bf5",
+          "read_scope": "relevant sections/helpers shown in tool reads"
+        },
+        {
+          "path": "docs/contributing/validation.md",
+          "sha256": "aff8954d2918f72cbdf083a327821c6a56c5b3c4cbd9aa8cd0c2bc491e28e588",
+          "read_scope": "relevant sections/helpers shown in tool reads"
+        },
+        {
+          "path": ".agents/skills/vaevas-review-pr/SKILL.md",
+          "sha256": "4a6dd9587c60f1d4614ff02b0f5184d26ca6f9af27e3892b842374825e206109",
+          "read_scope": "relevant sections/helpers shown in tool reads"
+        },
+        {
+          "path": "experiments/backends/support/legacy_chain_run.py",
+          "sha256": "0dcffab11aeb8f47f9fd6013935ba4631b81cec7343b8aec96b1c34a3e1c578a",
+          "read_scope": "relevant fixture/card/helper sections"
+        },
+        {
+          "path": "experiments/backends/event-alignment/vco-controls/original--tight/dut.va",
+          "sha256": "17c3096782b23880e161b4109bcca14dcbfccca768d6d6b3a56720171314a2f7",
+          "read_scope": "relevant fixture/card/helper sections"
+        },
+        {
+          "path": "evas/tests/test_timer.py",
+          "sha256": "5ccba6be29e04cf396110474697bccadaf747b66021717b49bde589a5e633f6d",
+          "read_scope": "relevant fixture/card/helper sections"
+        }
+      ],
+      "withdrawn_findings": [
+        {
+          "id": "L5-F02",
+          "status": "withdrawn",
+          "reason": "虽然 due=$abstime+0.1 的程序 RN 值不同于旧 Fraction(1,3)+Fraction(.1)，RN 值恰是旧精确和的向上相邻 binary64；前一 binary64 严格小于旧精确和。因此不存在位于 [旧 due, 新 due) 的 binary64 查询点，两个计数相位 oracle 在全部可表示查询点上一致。时间差为1/108086391056891904，小于1e-17。atan(3t)/3 的导数至多1，expm1 在[0,.75]的导数小于e，故 seen 样本差小于3e-17，远低于1e-8断言。两个正例不能仅因旧表达式未显式 RN 就判错。exact_callback 的初始化记录数量问题另见L5-F01，混合历史拒绝的精确锚点前提仍保留为证据缺口。",
+          "affected_ids": [
+            "test_passive_history_phase.PassiveHistoryPhase.test_nonlinear_observer_neighbours_dense_and_forced",
+            "test_passive_history_phase.PassiveHistoryPhase.test_autonomous_affine_flow_observer"
+          ],
+          "evidence_refs": [
+            "runs/pr-review-20261025/full3257/lane5-probe.json:7",
+            "evas/docs/math/events.md:1456"
+          ]
+        }
+      ],
+      "coordinator_corrections": []
+    },
+    {
+      "lane": 6,
+      "sha256": "dd744d8106c11fe2508c0d8e9d42f638a6d73506225b91faa265ebc0dafc4d1f",
+      "methods": 559,
+      "limits": [
+        "559 methods / 55 modules current text examined with local fixtures and helpers; static spec/oracle review only.",
+        "No simulator/kernel/build/full-suite/Spectre run and no external writes. Standalone arithmetic derivation saved separately.",
+        "no_defect_found means no identified defect in the stated static scope, not semantic qualification or fault-injection calibration.",
+        "Some deep production consumers and external LRM clauses were not independently rederived; source-only expected internal-layout assertions are labeled internal_contract; unresolved subset/oracle questions remain evidence_gap.",
+        "Prior audit is reused only as identity-bound failing-obligation context, never whole-method approval."
+      ],
+      "reviewed_files": [
+        {
+          "path": "evas/tests/test_boundary_portability.py",
+          "sha256": "bdbe994e17e92a50d78eab9341296fe2de9207946827ee03b0ea492731600ce3",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_causal_event_math.py",
+          "sha256": "4801ec19f01e585376beb0e2ab71c6171c9d384dc5aa52a72447d11c33caebd8",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_dc_factor.py",
+          "sha256": "01e7b7defe5355f67b9823e0b362d002bc428e3b3d7d512ff55ea0c8da06e333",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_default_transition_directive.py",
+          "sha256": "40f89059ac4cc3aa88e9b4b7aaceca541cede723d5339684b01c740426e31476",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_deferred_rdist.py",
+          "sha256": "326742fc00de3692715da1827b8a076513d09af573906c09ed51d17ff49a7184",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_event_body_loops.py",
+          "sha256": "fffccbe7e8d3bbca3d2b20d2fc4af95a70a3c7061dc50ed05e3da8d0b51874f5",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_event_floor_ranges.py",
+          "sha256": "6439b87ba697c05fb98965670d6e83d78566ddf2c78d47b30f4e3da59515de1e",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_event_history_continuation.py",
+          "sha256": "2833425af0cc62c142c170728fe2abc5f9a0a5d9e9d3567e2d20fc85020ed9b0",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_event_value_precision.py",
+          "sha256": "695ca116137d9d14ee88a66d6e7c1ea24ef9b4a1016184694c058947cdf8d901",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_filter_budget.py",
+          "sha256": "f22bc4f790904572abab6b62a12ea3590e94332bfda2317230bd83b8cef834c8",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_held_integer_targets.py",
+          "sha256": "6e6a8af79dde76f8f34935b5e91bd08e3b63692d6e7a8738df52cc18650e9868",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_history_forcing_shaped.py",
+          "sha256": "521da040d8d6866050f72f5dbe4bc0c5ac76195e1f20921a6a00f9d60f6a0402",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_initial_cross.py",
+          "sha256": "863e33f0df5218ac793fc46ee14f2a08f30ea65ed17490f54298681adf171947",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_initial_events.py",
+          "sha256": "219ee9c8ea39e7a4ee8adf7aa92ef5f77b1a357d168106e95f5ea78fe1b1936c",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_initial_power.py",
+          "sha256": "7195f3353d402b74e4fa0aa88c312803811e7eda65b8ed65f8c34584e2a418d5",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_initial_sampling_closure.py",
+          "sha256": "596c3ce0010b7fb65172277c145e30d780e927ba261ef7c4974308f869ba822e",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_initial_source_sequence_contract.py",
+          "sha256": "49d639c7907f19ba4d9499a07b2a6724f6e7f868c54ba54f0982af4663a5ae51",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_input_clamp.py",
+          "sha256": "53375b7d3866c2e0cb4afc7dc44f18a6356827ff4328c6c78a3f9ea1fedb9e64",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_input_initialization.py",
+          "sha256": "64acad59f6b03dd97ed98279f60bad6e0740ba0632c0ac5952f9d6f88476f033",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_input_rational_closure.py",
+          "sha256": "a27f99351828fb877ec7bf086a567007e1379f156923c4ab92eeb3ac1ed6778d",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_integer_loops.py",
+          "sha256": "d7644cbebd9b1d8dd75b72675caa8408d8aae33b2cd68280a08601a2d4bf0095",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_integer_round.py",
+          "sha256": "b351cffc2f52db732f9541f2d170ee59aefc5507fac15f6bb993a5b419612652",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_ir_cache.py",
+          "sha256": "47e694674e4795ef754174413b2463813d66bb02ba454ce45593839262148935",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_legacy_chain_bounds.py",
+          "sha256": "559ec4056f1005a283916e555e63df692f3df17f8c8bd2303ae97d57d95e46ab",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_loop_event_time.py",
+          "sha256": "aa972ecef0dd3a15f79a8b764d62eddf16908ca3a808e53e012796745f9cc1db",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_migrate.py",
+          "sha256": "03024b63f4f5697f05e0c4eae2bf13d006ffaffec5e896c9381c0918104f879c",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_n09_causal_state_readout.py",
+          "sha256": "8d68de397ba22eb81a7da127ff6d9da8b3e7401d3c591308596faf63c68b6497",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_native_source_floor_prefix.py",
+          "sha256": "9cefca427ce86bb43df3bb0530c8590eda05698cbe9802e9b7f33d2fd93aafb2",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_nonlinear_transient.py",
+          "sha256": "67f864be30fd64b0c327c708dd52933e7beef32ff4ae49b7183acb91bea6c177",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_observation_evidence_helper.py",
+          "sha256": "795b270b5077799cf751a9756154c25119030fdc73c81bd390a6b4ed0d7261c7",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_paper_case_inputs.py",
+          "sha256": "69ae664190e40d530a94163b3a5d26b33a99888d78af6a3a71bafafda3111dd3",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_paper_scenarios.py",
+          "sha256": "aa7dec7c9e0f10df6e32a56d8a9c36517a847bfe0edf127a2953169f3411fa37",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_parameter_constraints.py",
+          "sha256": "9953e50b7227afec437f1c6ab81970c04944c0032bd1185d4961161e9c5325a4",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_precision_breadth_foundation.py",
+          "sha256": "41ca1f5e33984ec476598cfe29bd2c9cb9e8dd863097f64ff531a473f8559c54",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_precision_breadth_runner.py",
+          "sha256": "db374db02f68b28b9ae8bb6ea3fc3c7c210e700bfe31bb139a77b2cd1c1c359d",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_preprocessor.py",
+          "sha256": "147eaa14042e91c7e42dfd98272b5a5340d861c0ce454d3006eb85f7c24c5ae3",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_proven_lineage_point_query.py",
+          "sha256": "c6d3f81d35784076c7957a3ecf17d308cd215cc52595620c213089a4bb81c003",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_rational_transition_freshness.py",
+          "sha256": "532b06004cb77ba81f68c44d9da0b3a4f3d57dc42ab547ba7e1fa274167b6efa",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_root_recovery.py",
+          "sha256": "abf46b22dd275e12e9422ba204cdefee5433b2914e3f6a1cfcda06350c23eb4e",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_scs_bsource.py",
+          "sha256": "f42f18e909efade5e95e6065deb9f72d59b781e86a3a4274e5d5c96e98072c85",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_scs_closure.py",
+          "sha256": "5f4a80e6db83f415ecb06dbd73e507cabaa50e597d8cd20040ca73c059de5e12",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_slew_accuracy.py",
+          "sha256": "a9d56c6b269c2167f8a83bcac21efb569f362c0b3c98d666e6fdd08f7e7618e8",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_source_math.py",
+          "sha256": "6046d9972325d51df1ccecda1be3dc3b7216a605c7cb1f2eddec2573473f432d",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_source_shape.py",
+          "sha256": "23a7a773fa137fd450c03ea77a1225982252a14898f0a71ae5255edde5461fb9",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_sparse_transient.py",
+          "sha256": "f0e2a96f223cce8d72d536cac7c0afd240df2603a53821ea952b81f81135e5c6",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_static_loop_integer_type.py",
+          "sha256": "e2eb35534f231577ccefa37ef85e6dc289174e83276fa2f8d096c6022405c3ad",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_tanh_waveform.py",
+          "sha256": "9666dff1a83bf33ca7fb1694400440f1e016d231f5516a895979d383f7ddea9c",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_timed_composition.py",
+          "sha256": "e5de78900ec8dc846a70f53e6b355a6074313f12f21ecbe69dae59f0f96d995c",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_transition_initialization.py",
+          "sha256": "b1cfcdc7f65979b594fc9d29461ad094deecc59b19e3cf06d20d390112a52cef",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_transition_integral.py",
+          "sha256": "ab554147b4e12e13a43d9f1ab1bc832ab95b20df09fb3ee8c2aeb981cb50a18d",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_transition_rational_levels.py",
+          "sha256": "41bda2561539eec16484756ff7ea3c75d3fbcc23f7b5976b8478f2a0e7907245",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_unary_functions.py",
+          "sha256": "b00a95f92a2b53d4d1602c4c4a57df10cc9ebb63a466aef07a058e8a0b12ca2e",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_unused_internal_nodes.py",
+          "sha256": "1044f17863619b201530b417616162499fc2722f2849a8693f8679849cefeb78",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_variable_arrays.py",
+          "sha256": "39224a71f92f82a88c662a186f0d8862b0249cb01b333637b9f66e017c38e2ed",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "evas/tests/test_variable_zero_timer_transition.py",
+          "sha256": "c812d06857d7e21c70a974806241e5d35f985886732dbd626a6d940a3d0f771c",
+          "read_scope": "full source, bounded batches"
+        },
+        {
+          "path": "docs/contributing/validation.md",
+          "sha256": "aff8954d2918f72cbdf083a327821c6a56c5b3c4cbd9aa8cd0c2bc491e28e588",
+          "read_scope": "7-62"
+        },
+        {
+          "path": "evas/src/evas/protocol.py",
+          "sha256": "f18abfbc928069023f6f31c736e87ab823a0412d4b5d483e74f91c10f91d9cc6",
+          "read_scope": "1-85,188-241"
+        },
+        {
+          "path": "evas/rust_core/src/real_expression.rs",
+          "sha256": "cfe760b1181df82cfd69189cc5d151613cb92bca4c54dacb382e454b507198cd",
+          "read_scope": "1-80"
+        },
+        {
+          "path": "evas/rust_core/src/real_rounding.rs",
+          "sha256": "e9c846f5d229bfc44407a41babcd6d4d454114595b0b320ccf4504dd9f9c7113",
+          "read_scope": "270-303"
+        },
+        {
+          "path": "evas/rust_core/src/procedure_operations.rs",
+          "sha256": "f72a12a0a75b896f531ca64b8bb2225c5f12a662c149c1a7223d434dd306941c",
+          "read_scope": "434 via precise source search"
+        },
+        {
+          "path": "evas/rust_core/src/procedure_plan.rs",
+          "sha256": "19bff45d8a64cf3c0e2a27ae585cd90d7ce2046c23eac2558bd8061fb05219dc",
+          "read_scope": "895-920"
+        },
+        {
+          "path": "evas/validation/observation_evidence.py",
+          "sha256": "28116528babc00bc9dd8b22b25fef7deb83592884f54ff04c3c12d4327a678b9",
+          "read_scope": "126-618,618-800"
+        },
+        {
+          "path": "evas/validation/paper/precision_breadth_foundation.py",
+          "sha256": "6f05ac4db9b528021d8a8d903acc2d48c0a744c9866658b116913b2f3388224d",
+          "read_scope": "1-240,281-410"
+        },
+        {
+          "path": "evas/validation/paper/precision_breadth.py",
+          "sha256": "299ae9a2bcdff8fa2d987ad54ce0a4a8ebaa9db015a6b686a23dba63c6f31ceb",
+          "read_scope": "93-163,236-345"
+        },
+        {
+          "path": "evas/validation/paper/legacy_chain_bounds.py",
+          "sha256": "6cf231dd8f3dd3540a5d7362083f1f21af8d5890ce2687c81a3b99f417a4547c",
+          "read_scope": "1-102,176-385"
+        },
+        {
+          "path": "evas/validation/paper/primitives.py",
+          "sha256": "a039cd064b0fd49ee8faf8b5f9a5815be95e06d02fc46f9add6ce00eed082405",
+          "read_scope": "1-180"
+        },
+        {
+          "path": "experiments/backends/support/precision_breadth_run.py",
+          "sha256": "437068b530ff4a3c83291a40654f581d9aa4d3d0c35ea55ce204fe57772b5913",
+          "read_scope": "60-130,143-239,259-411"
+        },
+        {
+          "path": "evas/tests/test_native_integer_events.py",
+          "sha256": "2335f46d43913a8ec05eb2de577c8c4812581d2a5c0ba5e815fb47841f323371",
+          "read_scope": "1-60"
+        },
+        {
+          "path": "evas/tests/test_ordinary_integer_event_prefix.py",
+          "sha256": "1460af76f99f677d6ef0cb8cb221833031bda8392461020de91b5dd63b9defe4",
+          "read_scope": "1-60"
+        },
+        {
+          "path": "evas/tests/test_source_floor_event.py",
+          "sha256": "f2b7fd989191e0f8c736a9db29efb1a36df4561ac673ba990ad7e729dbf7f89a",
+          "read_scope": "1-33"
+        },
+        {
+          "path": "evas/tests/test_history_forcing.py",
+          "sha256": "25561dfce4540bce78e255980a4c06bd61473becf1301e20ffffc18a6aa5622f",
+          "read_scope": "first6500 chars, model and helper used by assigned tests"
+        },
+        {
+          "path": "evas/tests/test_sample_edge_filter.py",
+          "sha256": "c7165c165c70e00ec930a2996a1f599d617f92124d97c6dd5f8c83bacfa53eaa",
+          "read_scope": "first6500 chars including ramp_filter"
+        },
+        {
+          "path": "evas/tests/test_sample_state_precision.py",
+          "sha256": "aaacf4d53ead732955630e32f78b4abc86e794e7d38ef07c11e467b32f353211",
+          "read_scope": "first6500 chars including sampled_filter_answer"
+        },
+        {
+          "path": "evas/tests/helpers/check_rational_transition_fixture.py",
+          "sha256": "f2d38e950d46de898da3329daf0b1ffc6d5e63a7172395627ec57299cd5df6d0",
+          "read_scope": "full"
+        },
+        {
+          "path": "evas/validation/event_alignment/C1/case.json",
+          "sha256": "00d6f76734def2237fdc578d9695335bd4159186851d620f8db74fb022dd8438",
+          "read_scope": "full"
+        },
+        {
+          "path": "evas/validation/event_alignment/C1/dut.va",
+          "sha256": "47f25c781213ffa5bf7dc90484ef884f59641adfdd63c9286d9b9d652359b1da",
+          "read_scope": "full"
+        },
+        {
+          "path": "evas/docs/math/events.md",
+          "sha256": "406eefbe57d72d1a1bbdd567b3be71fd6bb57bfcf8b495c52a9eee0368a2f38d",
+          "read_scope": "135-180,780-812,1148-1198,1452-1515,2533-2554"
+        },
+        {
+          "path": "evas/docs/development/DECISIONS.md",
+          "sha256": "7e0e35aebc23226ad769e805972c27037a157d947a1dd44eb97da36efaf0c7b3",
+          "read_scope": "ADR-006"
+        },
+        {
+          "path": "evas/src/evas/runtime.py",
+          "sha256": "acc896bb2054163a4741f84f38b6e542bb3d121a2965ba01e112fbcb4ed902ae",
+          "read_scope": "1-155"
+        },
+        {
+          "path": "evas/tests/test_affine.py",
+          "sha256": "d0f7a2df8c81139e3eaaeba7699827843163080e7c5ce0d39d9ce123558a2e9e",
+          "read_scope": "full"
+        },
+        {
+          "path": "evas/tests/test_continuous_dynamics.py",
+          "sha256": "159c7598e164f829e394864a8206ad9f58470cf69e2e780618c02b443845c512",
+          "read_scope": "1-90"
+        },
+        {
+          "path": "evas/tests/test_transition.py",
+          "sha256": "ca074e0a83a42f8ae28472ef56ebeca0b1632a44355917b54d950a124ceac83d",
+          "read_scope": "1-95"
+        },
+        {
+          "path": "evas/tests/initial_union_contract.py",
+          "sha256": "396e4e7de149e5058fbfeb11c7fb3439f53566c230cebdfac597fe65622cae38",
+          "read_scope": "full"
+        },
+        {
+          "path": "evas/tests/initial_record_contract.py",
+          "sha256": "59393a03b3e31ea53cf3029778bef97db48b09f050f9a11cdb16548d3c8937b5",
+          "read_scope": "full"
+        },
+        {
+          "path": "evas/tests/initial_source_sequence_contract.py",
+          "sha256": "396c572ac9087078cddcc9efdf8cd46bbe146ec79eaae65293bf566ca2999864",
+          "read_scope": "full"
+        },
+        {
+          "path": "evas/tests/fixtures/proven-lineage-point-query.va",
+          "sha256": "061f677342360fc9bf07d2b3093553cb9e2e18f513b35e65c8b9a4072c2d5f31",
+          "read_scope": "full"
+        },
+        {
+          "path": "evas/validation/paper/core-v1.json",
+          "sha256": "e1ae5311da9e05991e9802da1a24e97a70d179972608a1b9d21eb00013f61a53",
+          "read_scope": "all card source/stimulus/anchors/counts and shared_contract"
+        },
+        {
+          "path": "evas/validation/paper/case_inputs.py",
+          "sha256": "690d27715e6ea8bf896f19bc1e2c916dbecbe2a1a5e50e489378991082c3b1cf",
+          "read_scope": "1-66"
+        },
+        {
+          "path": "evas/src/evas/limits.py",
+          "sha256": "415b04dbf0274c458a1a9ea78def59c1ce4c81f97830dc205142eedec0d97f96",
+          "read_scope": "1-155"
+        },
+        {
+          "path": "evas/src/evas/native_audit.py",
+          "sha256": "515cfcd776062a18568b134e4354b5b80314ac28fec124e5a82db97a15b8a1cc",
+          "read_scope": "1-110"
+        }
+      ],
+      "withdrawn_findings": [],
+      "coordinator_corrections": []
+    }
+  ]
+}

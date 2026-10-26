@@ -1,0 +1,243 @@
+{
+  "review": "independent final semantic review",
+  "status": "approved within stated independent semantic review scope",
+  "scope": "Semantic spot review of six source audits and strongest receipts; not an independent reread of all 3257 method bodies. No source edits, full suite, build, Spectre, or remote action. Three compile-only fixture inspections, no kernel execution.",
+  "reviewed_sources": [
+    {
+      "path": "evas/docs/math/events.md",
+      "sha256": "406eefbe57d72d1a1bbdd567b3be71fd6bb57bfcf8b495c52a9eee0368a2f38d"
+    },
+    {
+      "path": "evas/docs/math/operators.md",
+      "sha256": "7c3748e1ddbaa4181b6510470dd0dbbc08fcd092ce1f49b3448f4070d456a7f7"
+    },
+    {
+      "path": "evas/docs/math/continuous.md",
+      "sha256": "73109f222c2832fd938628238535ada81f553879723e7fb204cc487086622847"
+    },
+    {
+      "path": "evas/docs/development/DECISIONS.md",
+      "sha256": "7e0e35aebc23226ad769e805972c27037a157d947a1dd44eb97da36efaf0c7b3"
+    },
+    {
+      "path": "evas/tests/test_source_selected_slew.py",
+      "sha256": "00cc53c4f71991bb8cab298d93d38b5bb92642eca01e1d7a911b9f7b10f9b67f"
+    },
+    {
+      "path": "evas/tests/test_source_root_windows.py",
+      "sha256": "27f016410e01069b8a58b2db5cb0331d96e9baad1059d0d90ea1f70ba5029005"
+    },
+    {
+      "path": "evas/tests/test_root_recovery.py",
+      "sha256": "abf46b22dd275e12e9422ba204cdefee5433b2914e3f6a1cfcda06350c23eb4e"
+    },
+    {
+      "path": "evas/tests/test_source_math.py",
+      "sha256": "6046d9972325d51df1ccecda1be3dc3b7216a605c7cb1f2eddec2573473f432d"
+    },
+    {
+      "path": "evas/tests/test_settlement.py",
+      "sha256": "0f41566d20db71c8df2f68562a11a4326d6e3b093efcb784dbc813b77af19fc9"
+    },
+    {
+      "path": "evas/tests/test_native_integer_events.py",
+      "sha256": "2335f46d43913a8ec05eb2de577c8c4812581d2a5c0ba5e815fb47841f323371"
+    },
+    {
+      "path": "evas/tests/test_constant_initial_power.py",
+      "sha256": "3828652eb502732bbf8668cd59ce6c8b7faf8592711373978b3057d42eed0dde"
+    },
+    {
+      "path": "evas/tests/test_input_clamp.py",
+      "sha256": "53375b7d3866c2e0cb4afc7dc44f18a6356827ff4328c6c78a3f9ea1fedb9e64"
+    },
+    {
+      "path": "evas/tests/test_phase.py",
+      "sha256": "337be6dc4fbd187b1a869128a0a6411ce79fa3ed8dd3f209294885cf97d464c2"
+    },
+    {
+      "path": "evas/tests/test_timer_ordering.py",
+      "sha256": "990c5cbc13de98989b12726866c63ba78e046d6c99c518cac56da0179cdb80c1"
+    },
+    {
+      "path": "evas/tests/test_integer_math_closure.py",
+      "sha256": "a278b8413a7d1b19108fe6ba5903c65b7d18476bc0fd277206ccadef074a6572"
+    },
+    {
+      "path": "evas/tests/test_independent_driver_condition.py",
+      "sha256": "a86d22aaf5e106d3bcf6c31dffe9ea42897dedb2b7c905b49badf82b5129bd35"
+    },
+    {
+      "path": "evas/tests/test_sample_state_precision.py",
+      "sha256": "aaacf4d53ead732955630e32f78b4abc86e794e7d38ef07c11e467b32f353211"
+    },
+    {
+      "path": "evas/rust_core/src/procedure_plan.rs",
+      "sha256": "19bff45d8a64cf3c0e2a27ae585cd90d7ce2046c23eac2558bd8061fb05219dc"
+    },
+    {
+      "path": "evas/rust_core/src/procedure_history.rs",
+      "sha256": "24c9a355ca91cb7f3fa74d08f2606ef6b5773ac41ab17959b84f0150b7ed089d"
+    },
+    {
+      "path": "evas/tests/test_held_timer_provenance.py",
+      "sha256": "add9c011b11a0dc9bb5e44cb1cfeb8dbfb8c8796796dccdce43983d31754a030"
+    }
+  ],
+  "findings": [
+    {
+      "id": "FS-F01",
+      "priority": "P1",
+      "audit_finding": "L4-F12",
+      "problem": "RN premise is absent from the exact current direct-contribution slew fixture. Current compiled operator input is Select with bare Affine comparison operands, not RealBoundary(sample); procedure Plan condition resolves operands without inserting RN. Hence the alleged always-false adjacent predicate is not established for this program. The exact physical interval (.5,nextafter(.5,1)) remains nonempty. A rate 1e16 yields height min(1,1e16*2^-53)=1, so >.9 assertion is mathematically consistent.",
+      "refs": [
+        "evas/tests/test_source_selected_slew.py:89",
+        "evas/rust_core/src/procedure_plan.rs:305",
+        "evas/rust_core/src/procedure_plan.rs:451",
+        "evas/rust_core/src/procedure_plan.rs:480",
+        "evas/docs/math/events.md:1483"
+      ],
+      "correction": "Withdraw RN-impossibility finding from these direct physical predicates or identify an explicit required boundary and explain a compiler defect rather than declaring test oracle false. Reclassify each affected row independently.",
+      "status": "resolved in final reviewed artifacts"
+    },
+    {
+      "id": "FS-F02",
+      "priority": "P1",
+      "audit_finding": "L1-F11",
+      "problem": "Current original root-window transition contribution also compiles condition $abstime>52n as Select with bare Affine operands. The program event-body if($abstime>=52n) has an RN boundary, but that does not move the earlier direct physical transition source cut. Thus root104*500p being below RN midpoint does not establish absent old prefix.",
+      "refs": [
+        "evas/tests/test_source_root_windows.py:163",
+        "evas/tests/test_source_root_windows.py:169",
+        "evas/rust_core/src/procedure_plan.rs:305"
+      ],
+      "correction": "Remove blanket absent-prefix conclusion; separately assess stored sample RN against strict boxes and budgets while retaining exact physical source cut. Do not use this finding to replace the four tests with zero-prefix targets.",
+      "status": "resolved in final reviewed artifacts"
+    },
+    {
+      "id": "FS-F03",
+      "priority": "P2",
+      "audit_finding": "L4-F10:first method",
+      "problem": "The exact nonbinary held due comment uses an unrounded reference, but the actual asserted values do not contradict current RN. query=float(Q(.1)+1/6) equals RN(.1+RN(.5/3)); both the old slightly later due and current due yield y=1 at this query, with y0=0 and y(.35)=0. Root-time discrepancy/0.01 is only9.251858538542972e-16, below1e-12 anyway. The evidence_gap designation must not be promoted to a bad numerical development target.",
+      "refs": [
+        "evas/tests/test_held_timer_provenance.py:45",
+        "evas/tests/test_held_timer_provenance.py:53",
+        "evas/tests/test_held_timer_provenance.py:57"
+      ],
+      "correction": "Classify the assertion-level numerical target as no identified defect; retain a documentation/provenance note if useful. Evaluate the separate future amplification method independently.",
+      "status": "resolved in final reviewed artifacts"
+    },
+    {
+      "id": "FS-F04",
+      "priority": "P2",
+      "audit_finding": "L4-F11:timer_ordering different periods",
+      "problem": "Exact-equal-writers test uses timer(.1,.1) and timer(.1,.2). ADR006 does not infer logical occurrence identity from equal exact physical times alone. Row acknowledges unresolved identity but still says mixed and repair_test_before_using_affected_assertion, counting it as a proven bad target.",
+      "refs": [
+        "evas/tests/test_timer_ordering.py:76",
+        "evas/docs/development/DECISIONS.md:204"
+      ],
+      "correction": "Classify as evidence_gap until occurrence identity/admissibility contract is resolved. Retain actual same-clock same-procedure counterexamples in L4-F11 separately.",
+      "status": "resolved in final reviewed artifacts"
+    }
+  ],
+  "confirmed": [
+    {
+      "ids": [
+        "L6-F09"
+      ],
+      "assessment": "Original timer sample RN at1 gives u1 and q0; on1<t<2 q0. Filter DC initial y1 stays1 until1 then y(1.5)=exp(-.5). Old helper .897756 differs from .606531 by .291226, far above1.01e-6. Valid concrete bad target."
+    },
+    {
+      "ids": [
+        "L6-F11"
+      ],
+      "assessment": "Full unchanged methods accept empty/truncated solutions under synthetic transport, but calibration baseline intentionally uses old runtime-only event metadata. Establishes assertion weakness, not valid IR33 baseline or kernel bug."
+    },
+    {
+      "ids": [
+        "L6-F12"
+      ],
+      "assessment": "Original method derives expected endpoints from returned DUT source bounds. Matching public-validator synthetic positive/drop-band/wrong-output controls substantiate vacuity against loss of requested source band."
+    },
+    {
+      "ids": [
+        "L5-F04"
+      ],
+      "assessment": "Shallow RHS field mutations hit RealBoundary rather than typed/affine leaf and can fail JSON parsing; do not credit target semantic rejection."
+    },
+    {
+      "ids": [
+        "L5-F08"
+      ],
+      "assessment": "No exact finite binary64 fixed point argument for s=RN(1-.5*s) is sound, but acceptance uses engineering residual rules and is not resolved by that proof. Keep evidence_gap; do not prescribe original rejection absent contract decision."
+    },
+    {
+      "ids": [
+        "L4-F09"
+      ],
+      "assessment": "Current generated exact truth contains explicit initial event plus shifted timer IDs. Baseline checker errors contaminate calibration. Numeric rectangle area is independently correct."
+    },
+    {
+      "ids": [
+        "L5-F01"
+      ],
+      "assessment": "Independent-driver matched receipt confirms correct u/y before obsolete event inventory assertion. expectedFailure cannot be interpreted as missing voltage provider without updating initial records and reassessing."
+    },
+    {
+      "ids": [
+        "L4-F16"
+      ],
+      "assessment": "Unlike direct slew contribution, assignment phase_v=idtmod(V(f)/3,...) does compile operator input with sample and real_binary divide. RN phase finding is grounded in actual boundaries."
+    }
+  ],
+  "limits": [
+    "Same exact float timestamp or even equal exact rational clock root does not alone prove identical logical occurrence. Different-period timer_ordering case must retain contract gap unless occurrence identity is established.",
+    "Approximate analytic references below declared tolerance are not wrong merely because RN changes exact answer. Strict enclosure assertions require separate analysis.",
+    "No qualification of all no_defect_found rows; these remain static review statements.",
+    "Final artifact coverage is independent semantic spot-check and claim/priority-plan review. Structural manifests, hashes, row completeness and schema are owned by separate Standards reviewer. Final README summary counts were read back, not independently rederived from CI."
+  ],
+  "standalone_probes": [
+    {
+      "name": "direct slew compiled current fixture",
+      "input": "V(y,r)<+slew((V(u,r)>0.5 && V(u,r)<0.5000000000000001)?1.0:0.0,1e16,-1e16);",
+      "actual": "operators[0].input Select(gt Affine(u),Affine(.5), then Select(lt Affine(u),Affine(.5000000000000001),1,0),else0); procedures only contribution_capture; real_bindings empty. No sample boundary.",
+      "expected_derivation": "Direct physical predicate interval nonempty; width=1/9007199254740992; rate1e16*width=152587890625/137438953472 >1, so rate limiter reaches1 before uppercut."
+    },
+    {
+      "name": "direct transition source cut",
+      "input": "@(initial_step) begin q=1; z=0; end @(timer(500p,500p)) if($abstime>=52n) begin z=V(y,r); q=2; end V(y,r)<+transition(($abstime>52n)?q:0,0,200p,200p);",
+      "actual": "operators[0].input Select(gt Affine(abstime),Affine(5.2e-8),State(q),Affine0), no sample boundary.",
+      "expected_derivation": "Original exact root104*Q(500e-12)>Q(52e-9) remains true for direct physical target."
+    },
+    {
+      "name": "program phase input",
+      "input": "p=idtmod(V(u,r)/3,0.125,1,0);V(y,r)<+p; real p;",
+      "actual": "operators[0].input real_binary(divide,left=real_boundary(sample,Affine(u)),right=Affine3).",
+      "expected_derivation": "RN(1.5/3)=.5 exactly; do not reuse legacy reciprocal coefficient."
+    },
+    {
+      "name": "held exact-nonbinary approximate target",
+      "input": "due=.1; due=$abstime+.5/f at first .1 trigger;f3; query=float(Q(.1)+1/6)",
+      "unrounded_due": "28823037615171175/108086391056891904",
+      "rounded_due": "4803839602528529/18014398509481984",
+      "query": "4803839602528529/18014398509481984",
+      "actual_computed_waveform_error_at_query": 0.0,
+      "global_time_error_over_edge": 9.251858538542972e-16,
+      "tolerance": 1e-12
+    }
+  ],
+  "final_artifacts": {
+    "audit.json": "0df596c67689c55fcd5dd0db00cfc2f2d852f4eef7ae0125df12c4017976b402",
+    "README.md": "26ea438a287ace95105cf8ad0e6bc99f03e5e839413551288ec5ae596b62c53f",
+    "review-1.json": "181e25ba8acfcdce4a78609a92dc2aff10cf7623172f01ff9db4aec2c0277199",
+    "review-4.json": "fa1523e84356f058f3788a1daa813e52f8cc8f2395f94b5bee3fe21eeb786c69"
+  },
+  "allowed_post_signoff_change": "README status line may change from pending independent review to completed after both independent reviewers approve. This does not authorize other claim changes without review.",
+  "final_assessment": "All four actionable semantic review findings were corrected. Direct physical Select RN overreach removed, approximate held-clock target retained within tolerance, different-period clock identity remains evidence_gap. Final priority plan can use these records to select reviewable development targets, provided mixed assertions are repaired and evidence_gap contracts resolved before implementation is forced to satisfy them. No blanket certification of 3257 numerical oracles is granted.",
+  "final_counts_semantic_readback": {
+    "contains_problem": 377,
+    "evidence_gap": 95,
+    "no_defect_found": 2785,
+    "passing_contains_problem": 32,
+    "finding_groups": 86
+  }
+}

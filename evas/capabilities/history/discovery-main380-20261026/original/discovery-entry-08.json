@@ -1,0 +1,1652 @@
+{
+  "start": "experiments/backends/dvs2-spectre-validation",
+  "pattern": "test_*.py",
+  "scope": "discovery-only",
+  "rows": [
+    {
+      "id": "test_checks.Calibration.test_all_new_positive_and_missing_observation_controls",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_checks.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_checks.py",
+      "source_line": 56,
+      "module": "test_checks",
+      "generated": false,
+      "method_source_sha256": "831e6fd8611110ba51101776de2d973706b6e5ba75afefd9c45fe67a0178662a"
+    },
+    {
+      "id": "test_checks.Calibration.test_c2_linearization_reserve",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_checks.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_checks.py",
+      "source_line": 106,
+      "module": "test_checks",
+      "generated": false,
+      "method_source_sha256": "d8ccafad0f4013ad31e4d500dff2f277b0ea4558bc44a5a9fe9a84ec90e9e2c7"
+    },
+    {
+      "id": "test_checks.Calibration.test_hand_anchors",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_checks.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_checks.py",
+      "source_line": 32,
+      "module": "test_checks",
+      "generated": false,
+      "method_source_sha256": "3a1675181f977441959e195b68b9553f1d2db34eba04996ee64a5eb98bb66854"
+    },
+    {
+      "id": "test_checks.Calibration.test_manifest_identity_and_real_parameter_override",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_checks.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_checks.py",
+      "source_line": 21,
+      "module": "test_checks",
+      "generated": false,
+      "method_source_sha256": "3f06d9650cc10cae2db878f2a5698a61927026c80d01218bdb0e3c56610fc40b"
+    },
+    {
+      "id": "test_checks.Calibration.test_nonfinite_time_order_density_and_input",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_checks.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_checks.py",
+      "source_line": 88,
+      "module": "test_checks",
+      "generated": false,
+      "method_source_sha256": "5106ef612e1fe2826aae6b9ebd6daeef5f679ac9119ec35a2e0e0ed764f6148a"
+    },
+    {
+      "id": "test_checks.Calibration.test_phase_range_and_whole_cycle_not_hidden_by_sine",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_checks.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_checks.py",
+      "source_line": 80,
+      "module": "test_checks",
+      "generated": false,
+      "method_source_sha256": "fe0d43ff4b291b1c7a6de941633316de5ba82a153c5b8a16e3a01212e7dfaa3d"
+    },
+    {
+      "id": "test_checks.Calibration.test_seven_distinguishing_semantic_faults",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_checks.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_checks.py",
+      "source_line": 64,
+      "module": "test_checks",
+      "generated": false,
+      "method_source_sha256": "9cb509d180b03c2d7c2ad84d284c92031d9e54a3306e0d7c407b1c532dd95b2b"
+    },
+    {
+      "id": "test_checks.Calibration.test_uncertainty_is_not_forced_to_pass_or_fail",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_checks.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_checks.py",
+      "source_line": 96,
+      "module": "test_checks",
+      "generated": false,
+      "method_source_sha256": "dfe142765ee8fd63f2a4bf1963820c1c4017a25cf37bf2c62c74acc883d501eb"
+    },
+    {
+      "id": "test_cross_boundaries.BoundaryCalibration.test_hand_counts_and_full_candidate",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_cross_boundaries.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_cross_boundaries.py",
+      "source_line": 23,
+      "module": "test_cross_boundaries",
+      "generated": false,
+      "method_source_sha256": "c6b678b3eed95566b2690ac2963bea43f2285ea25d4dba81faa9f68d0be54e04"
+    },
+    {
+      "id": "test_cross_boundaries.BoundaryCalibration.test_invalid_observations_fail",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_cross_boundaries.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_cross_boundaries.py",
+      "source_line": 64,
+      "module": "test_cross_boundaries",
+      "generated": false,
+      "method_source_sha256": "ccb54b9cd8c97d45bafcf1426ad2a3eb1936643dad279e0e89791377324551f8"
+    },
+    {
+      "id": "test_cross_boundaries.BoundaryCalibration.test_missing_extra_wrong_direction_and_departure_are_visible",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_cross_boundaries.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_cross_boundaries.py",
+      "source_line": 34,
+      "module": "test_cross_boundaries",
+      "generated": false,
+      "method_source_sha256": "ac6df5b8d638b9494c8f42641ffc684bd1074865ff0976ba1072ddc0c84db945"
+    },
+    {
+      "id": "test_cross_boundaries.BoundaryCalibration.test_samples_and_history_are_checked",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_cross_boundaries.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_cross_boundaries.py",
+      "source_line": 47,
+      "module": "test_cross_boundaries",
+      "generated": false,
+      "method_source_sha256": "cfdc718c82f10dfe09dd88e6dd6846dee73e863b2f710c67a80ecebf6e85190e"
+    },
+    {
+      "id": "test_cross_reference.CrossReferenceCalibration.test_hand_anchors_and_nominal_observations",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_cross_reference.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_cross_reference.py",
+      "source_line": 21,
+      "module": "test_cross_reference",
+      "generated": false,
+      "method_source_sha256": "eae66c0d8959ddf7c3ef1bdfff998649ebd12a1b0ff5aee6ab44c54a56447149"
+    },
+    {
+      "id": "test_cross_reference.CrossReferenceCalibration.test_invalid_observations_are_rejected",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_cross_reference.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_cross_reference.py",
+      "source_line": 54,
+      "module": "test_cross_reference",
+      "generated": false,
+      "method_source_sha256": "eaca045756158cde1cb8446cf7410ae22b60523dda6bd67839bfa8ff56381c40"
+    },
+    {
+      "id": "test_cross_reference.CrossReferenceCalibration.test_known_legal_delays_are_accepted",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_cross_reference.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_cross_reference.py",
+      "source_line": 31,
+      "module": "test_cross_reference",
+      "generated": false,
+      "method_source_sha256": "ff333bd5888af177474928d9ce7e0f385ad01fd0590719c20baacb9c421a6284"
+    },
+    {
+      "id": "test_cross_reference.CrossReferenceCalibration.test_shared_wrong_backend_results_cannot_pass",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_cross_reference.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_cross_reference.py",
+      "source_line": 39,
+      "module": "test_cross_reference",
+      "generated": false,
+      "method_source_sha256": "87133898773ab656f55064d4b20a7cf41e27def3cbdf900529fa9262a690f10d"
+    },
+    {
+      "id": "test_cross_restart_diagnostic.RestartMeasurements.test_exact_control_and_distinct_faults",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_cross_restart_diagnostic.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_cross_restart_diagnostic.py",
+      "source_line": 14,
+      "module": "test_cross_restart_diagnostic",
+      "generated": false,
+      "method_source_sha256": "68d7c74ea5277fbef2e6b9a22aee1a349471c286aba5cceac6ef170f6a827184"
+    },
+    {
+      "id": "test_cross_restart_diagnostic.RestartMeasurements.test_execution_delay_separate_from_history_error",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_cross_restart_diagnostic.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_cross_restart_diagnostic.py",
+      "source_line": 24,
+      "module": "test_cross_restart_diagnostic",
+      "generated": false,
+      "method_source_sha256": "e21c6a6670ef33ce743454799961e929e6062d669bc18828280aa5ac6d3e9539"
+    },
+    {
+      "id": "test_cross_restart_diagnostic.RestartMeasurements.test_original_model_has_no_triangle_oracle",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_cross_restart_diagnostic.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_cross_restart_diagnostic.py",
+      "source_line": 35,
+      "module": "test_cross_restart_diagnostic",
+      "generated": false,
+      "method_source_sha256": "82e5697d2d33159d29bf0b936eef6dc3fa025250ed8b1a12028515e380e06d0c"
+    },
+    {
+      "id": "test_cross_restart_diagnostic.RestartMeasurements.test_sparse_outputs_use_event_log_and_check_it_against_counter",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_cross_restart_diagnostic.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_cross_restart_diagnostic.py",
+      "source_line": 41,
+      "module": "test_cross_restart_diagnostic",
+      "generated": false,
+      "method_source_sha256": "f067aa227993e12e6f1534aba7a1ed7d97bf26fe6b342bfbeb4fceaa0ad23138"
+    },
+    {
+      "id": "test_cross_touch.TouchCalibration.test_arrival_contract_accepts_both_polarities",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_cross_touch.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_cross_touch.py",
+      "source_line": 30,
+      "module": "test_cross_touch",
+      "generated": false,
+      "method_source_sha256": "e344c2cfeb2af44af84939087547548863a1cfac13afce08775dc6885597bb72"
+    },
+    {
+      "id": "test_cross_touch.TouchCalibration.test_arrival_contract_checks_touch_history_and_samples",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_cross_touch.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_cross_touch.py",
+      "source_line": 43,
+      "module": "test_cross_touch",
+      "generated": false,
+      "method_source_sha256": "8f8a1f1948829ad60733e6fdf0e97374d141315b9f8b980fa9302cc5c2108725"
+    },
+    {
+      "id": "test_cross_touch.TouchCalibration.test_arrival_contract_rejects_other_touch_hypotheses",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_cross_touch.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_cross_touch.py",
+      "source_line": 36,
+      "module": "test_cross_touch",
+      "generated": false,
+      "method_source_sha256": "a57db6b3a815e0ec08126fcd2c306060bb5dfd14d26d3e94e31c64fc208ecc2e"
+    },
+    {
+      "id": "test_cross_touch.TouchCalibration.test_hand_answers_and_root_separation",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_cross_touch.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_cross_touch.py",
+      "source_line": 76,
+      "module": "test_cross_touch",
+      "generated": false,
+      "method_source_sha256": "60482cef7ee0d7059fe33918181220e043a095bef3839e04667ea731c74994aa"
+    },
+    {
+      "id": "test_cross_touch.TouchCalibration.test_invalid_observation_sets_fail",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_cross_touch.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_cross_touch.py",
+      "source_line": 112,
+      "module": "test_cross_touch",
+      "generated": false,
+      "method_source_sha256": "15cf5baeb010053d5ae0eae36c6fa12b5f7a046409332049f36e48277d3913c3"
+    },
+    {
+      "id": "test_cross_touch.TouchCalibration.test_metadata_repair_does_not_accept_wrong_settings",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_cross_touch.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_cross_touch.py",
+      "source_line": 69,
+      "module": "test_cross_touch",
+      "generated": false,
+      "method_source_sha256": "f0610479aed602330e71ef0c1fcdbc0f6a106b5096702d1c13ea15d05f77f246"
+    },
+    {
+      "id": "test_cross_touch.TouchCalibration.test_rounded_stop_log_requires_matching_waveform_endpoint",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_cross_touch.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_cross_touch.py",
+      "source_line": 60,
+      "module": "test_cross_touch",
+      "generated": false,
+      "method_source_sha256": "7aa6a81b8f00c2cfec462d89862b0b0be3457e06b3015bf8f8a04ca796d29466"
+    },
+    {
+      "id": "test_cross_touch.TouchCalibration.test_touch_hypotheses_are_classified_without_selecting_a_winner",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_cross_touch.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_cross_touch.py",
+      "source_line": 89,
+      "module": "test_cross_touch",
+      "generated": false,
+      "method_source_sha256": "4c653f6c333cd2491856f8b837b5d4594e73b30ce8e793786df5abac9a39078b"
+    },
+    {
+      "id": "test_cross_touch.TouchCalibration.test_wrong_histories_and_timing_fail",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_cross_touch.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_cross_touch.py",
+      "source_line": 99,
+      "module": "test_cross_touch",
+      "generated": false,
+      "method_source_sha256": "11e73da27c500df066d28bc5df654cbd89643ae4f938ba1c286cdde679824dd8"
+    },
+    {
+      "id": "test_event_or_reference.EventOrReference.test_duplicate_missing_merged_and_extra_updates_are_rejected",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_event_or_reference.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_event_or_reference.py",
+      "source_line": 45,
+      "module": "test_event_or_reference",
+      "generated": false,
+      "method_source_sha256": "bc27b0f56b39b9cebbf43241f7c2cc741752f758434ded593b909ee69161fad2"
+    },
+    {
+      "id": "test_event_or_reference.EventOrReference.test_explicit_tables_and_positive_controls",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_event_or_reference.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_event_or_reference.py",
+      "source_line": 33,
+      "module": "test_event_or_reference",
+      "generated": false,
+      "method_source_sha256": "8b6512b6ce3b9284db96ccd662465405251801a650b14cfc0d435b4eaa9182f0"
+    },
+    {
+      "id": "test_event_or_reference.EventOrReference.test_invalid_observations_cannot_pass",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_event_or_reference.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_event_or_reference.py",
+      "source_line": 61,
+      "module": "test_event_or_reference",
+      "generated": false,
+      "method_source_sha256": "1aa6a02f586f55b6847bb3e9c54a53a6cd7f379d7a723f81216d3c8d756ccee6"
+    },
+    {
+      "id": "test_event_or_reference.EventOrReference.test_numeric_literals_include_required_integer_part",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_event_or_reference.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_event_or_reference.py",
+      "source_line": 27,
+      "module": "test_event_or_reference",
+      "generated": false,
+      "method_source_sha256": "a0c270239932f609775b60784b659d689a3dc24d52d6b4c7e4b97851f5afeff9"
+    },
+    {
+      "id": "test_event_or_reference.EventOrReference.test_reset_priority_and_sampled_stamp_are_checked",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_event_or_reference.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_event_or_reference.py",
+      "source_line": 54,
+      "module": "test_event_or_reference",
+      "generated": false,
+      "method_source_sha256": "92facbcbc3b7bb171ccfadf597bf7b086559844f035d05acc0a1e2f47b8df065"
+    },
+    {
+      "id": "test_event_review.IndependentEventReview.test_fixture_has_no_production_oracle_dependency",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+      "source_line": 64,
+      "module": "test_event_review",
+      "generated": false,
+      "method_source_sha256": "d998673ebd625b1adfd66b699c2139291f4b3cd56183ddd6fa9630134206237c"
+    },
+    {
+      "id": "test_event_review.IndependentEventReview.test_hand_worked_positive_controls",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+      "source_line": 58,
+      "module": "test_event_review",
+      "generated": false,
+      "method_source_sha256": "a615d0dcbe243f39f6c5395db1ded7c86cae263020f1e0984bff72f5b914e65c"
+    },
+    {
+      "id": "test_event_review.IndependentEventReview.test_high_initial_clock_does_not_justify_initial_sample",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+      "source_line": 94,
+      "module": "test_event_review",
+      "generated": false,
+      "method_source_sha256": "f91503d94a85da4956ab9266ce7f9aecfef78518591f5a95d30bf7ece4976c23"
+    },
+    {
+      "id": "test_event_review.IndependentEventReview.test_independence_guard_rejects_a_checker_coupled_control",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+      "source_line": 72,
+      "module": "test_event_review",
+      "generated": false,
+      "method_source_sha256": "fbc80f6b5e42811dd8063524a037d7822ea270601490e28dd9c49869a23f189e"
+    },
+    {
+      "id": "test_event_review.IndependentEventReview.test_instance_crosstalk_and_extra_effective_update_are_rejected",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+      "source_line": 109,
+      "module": "test_event_review",
+      "generated": false,
+      "method_source_sha256": "e77614b3a7803981e0763ccabe21909852c6c8f357f41837fe25115678dea749"
+    },
+    {
+      "id": "test_event_review.IndependentEventReview.test_invalid_observations_stay_invalid",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+      "source_line": 126,
+      "module": "test_event_review",
+      "generated": false,
+      "method_source_sha256": "d8dfc545a9b22ff75981091b675dab758e224109b4df368fee593654cbc9ea95"
+    },
+    {
+      "id": "test_event_review.IndependentEventReview.test_missing_duplicate_and_wrong_direction_counts_are_rejected",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+      "source_line": 84,
+      "module": "test_event_review",
+      "generated": false,
+      "method_source_sha256": "52f600b9d41a37415bb32d561485fa041380a71ac0c3e3f16293d1de15c88c86"
+    },
+    {
+      "id": "test_event_review.IndependentEventReview.test_missing_first_sample_is_rejected",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+      "source_line": 78,
+      "module": "test_event_review",
+      "generated": false,
+      "method_source_sha256": "0615ecd6f957ecd4545983e59cb1ef6a601a8dd466a51aca0188ad5ce75aec3f"
+    },
+    {
+      "id": "test_event_review.IndependentEventReview.test_reset_priority_and_extra_release_sample_are_rejected",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+      "source_line": 100,
+      "module": "test_event_review",
+      "generated": false,
+      "method_source_sha256": "14790a2c3b420b5ca3dccaa60b2b41cf03158c5e44429ad2b3428a42adc7af92"
+    },
+    {
+      "id": "test_event_review.IndependentEventReview.test_tolerance_margins_on_plateaus",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+      "source_line": 118,
+      "module": "test_event_review",
+      "generated": false,
+      "method_source_sha256": "f7fd89d9698f95c1fe2fc6cc5765ee4f5070cb358e2097531775195e744d1298"
+    },
+    {
+      "id": "test_history_relocalization_reference.HistoryReference.test_all_exact_answers",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_history_relocalization_reference.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_history_relocalization_reference.py",
+      "source_line": 13,
+      "module": "test_history_relocalization_reference",
+      "generated": false,
+      "method_source_sha256": "fc53bad238fab791e410fd9b1d9fd3b8bc11ae1989b615c9be79f3a9090d364d"
+    },
+    {
+      "id": "test_history_relocalization_reference.HistoryReference.test_spectre_real_literals_have_a_leading_digit",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_history_relocalization_reference.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_history_relocalization_reference.py",
+      "source_line": 17,
+      "module": "test_history_relocalization_reference",
+      "generated": false,
+      "method_source_sha256": "e8e1600ba6c45d97bbc5ba64f85ce934457f4fc970e8b11517b28d2cb688c542"
+    },
+    {
+      "id": "test_history_relocalization_reference.HistoryReference.test_wrong_history_and_missing_extra_or_shifted_events",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_history_relocalization_reference.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_history_relocalization_reference.py",
+      "source_line": 21,
+      "module": "test_history_relocalization_reference",
+      "generated": false,
+      "method_source_sha256": "09d786c16691b0b8826fa0e5a675bf0583aa2ccbb1e06eeb3e744febc053d502"
+    },
+    {
+      "id": "test_s1_review.S1Review.test_dut_reorders_only_the_three_contributions",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+      "source_line": 121,
+      "module": "test_s1_review",
+      "generated": false,
+      "method_source_sha256": "93acb1557bc2fb262669163f113e8da96c88fe7fe1c9f36eaad5acf2ee558b23"
+    },
+    {
+      "id": "test_s1_review.S1Review.test_fixture_does_not_use_production_oracle",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+      "source_line": 50,
+      "module": "test_s1_review",
+      "generated": false,
+      "method_source_sha256": "6cfe1223165ae88be612226a59a31cf54345114673e8f6432da29c9bf5e88e91"
+    },
+    {
+      "id": "test_s1_review.S1Review.test_freezing_either_input_is_rejected",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+      "source_line": 65,
+      "module": "test_s1_review",
+      "generated": false,
+      "method_source_sha256": "db26549070a47ace19556eda88909af5575201a3430aa6f165585be279440afe"
+    },
+    {
+      "id": "test_s1_review.S1Review.test_ignored_parameter_override_is_rejected",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+      "source_line": 77,
+      "module": "test_s1_review",
+      "generated": false,
+      "method_source_sha256": "8ff3fb41c066e88fd44237f6a881db7174f45f90d2568d5963690bac38203b52"
+    },
+    {
+      "id": "test_s1_review.S1Review.test_independence_guard_rejects_checker_coupled_controls",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+      "source_line": 56,
+      "module": "test_s1_review",
+      "generated": false,
+      "method_source_sha256": "d843f7d012f44d1f9339e02c1144e8042b3956bc03548794ad0af4d972ce6e23"
+    },
+    {
+      "id": "test_s1_review.S1Review.test_last_contribution_wins_is_rejected",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+      "source_line": 82,
+      "module": "test_s1_review",
+      "generated": false,
+      "method_source_sha256": "d0cb267e2de20f1dc75fd18ad8a487eef0d54d21f66207f7ba08fbe06fa81a29"
+    },
+    {
+      "id": "test_s1_review.S1Review.test_rational_positive_controls",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+      "source_line": 43,
+      "module": "test_s1_review",
+      "generated": false,
+      "method_source_sha256": "080d9f239793d3c96884d87344bbc85bb00cdb8fa6804fa3844b683691f8aeea"
+    },
+    {
+      "id": "test_s1_review.S1Review.test_reordered_condition_changes_only_source_identity",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+      "source_line": 103,
+      "module": "test_s1_review",
+      "generated": false,
+      "method_source_sha256": "613714e50c2dea8a35b2eba6282cd45d05739213c5d2c33b911f35c5a76067e2"
+    },
+    {
+      "id": "test_s1_review.S1Review.test_reordered_oracle_cannot_pass_two_equal_wrong_outputs",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+      "source_line": 133,
+      "module": "test_s1_review",
+      "generated": false,
+      "method_source_sha256": "420ce1ebe2677b30091a770400d95f326e5598ae2e01fdb73530570bfc9d3ff0"
+    },
+    {
+      "id": "test_s1_review.S1Review.test_signed_tolerance_margins",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+      "source_line": 90,
+      "module": "test_s1_review",
+      "generated": false,
+      "method_source_sha256": "be2f4111491b26a8a6e6a1f38145469d811ab54c3cc0b3a5696e9d8c1bae1742"
+    },
+    {
+      "id": "test_science_contract.SharedScience.test_new_input_freeze_binds_shared_scientific_sources",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_science_contract.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_science_contract.py",
+      "source_line": 64,
+      "module": "test_science_contract",
+      "generated": false,
+      "method_source_sha256": "5c7167a39637ad4f337491a47784d2536d601f34e5b8c76cb50abf957f7a60bc"
+    },
+    {
+      "id": "test_science_contract.SharedScience.test_original_conditions_profiles_and_decks_remain_fixed",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_science_contract.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_science_contract.py",
+      "source_line": 31,
+      "module": "test_science_contract",
+      "generated": false,
+      "method_source_sha256": "73b990b2bbbac55f931498ab1f0962571ff77b63beafd2fe286985e234c5dc11"
+    },
+    {
+      "id": "test_science_contract.SharedScience.test_scientific_import_needs_no_backend_archive_or_solver",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_science_contract.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_science_contract.py",
+      "source_line": 42,
+      "module": "test_science_contract",
+      "generated": false,
+      "method_source_sha256": "17319bde6962bea335067ed944abed33535d7a0ab18a4e1fca8056b9b47f218a"
+    },
+    {
+      "id": "test_science_contract.SharedScience.test_source_identity_includes_new_scientific_modules",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_science_contract.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_science_contract.py",
+      "source_line": 21,
+      "module": "test_science_contract",
+      "generated": false,
+      "method_source_sha256": "eabd7584c5f8439695dc438c3e56a3c2779ba54bab51a7060c5bdb0b9cfe72cc"
+    },
+    {
+      "id": "test_timer_reference.TimerReferenceTests.test_cross_window_is_one_sided",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+      "source_line": 101,
+      "module": "test_timer_reference",
+      "generated": false,
+      "method_source_sha256": "2314a96688b959a36505836ef5a18835d45026001a9f8ac862bd6bdca5874ffb"
+    },
+    {
+      "id": "test_timer_reference.TimerReferenceTests.test_independent_legal_shift_and_all_observations",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+      "source_line": 23,
+      "module": "test_timer_reference",
+      "generated": false,
+      "method_source_sha256": "63ec567c1f1ae4db177897c55337abdf804eb39855138160ba03cbbb56cf48a4"
+    },
+    {
+      "id": "test_timer_reference.TimerReferenceTests.test_individually_legal_stamps_without_common_history_fail",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+      "source_line": 41,
+      "module": "test_timer_reference",
+      "generated": false,
+      "method_source_sha256": "d64a20f6e30a9cc4b54d2d8ac4c517797372190b54ad3e489fd37a990dea5afd"
+    },
+    {
+      "id": "test_timer_reference.TimerReferenceTests.test_initial_sentinel_and_missed_intermediate_history",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+      "source_line": 50,
+      "module": "test_timer_reference",
+      "generated": false,
+      "method_source_sha256": "40603823339030ec75cc44d91e7dbab4336397dc9ae9950ec4c1a28d8a83067b"
+    },
+    {
+      "id": "test_timer_reference.TimerReferenceTests.test_invalid_observations_do_not_pass",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+      "source_line": 70,
+      "module": "test_timer_reference",
+      "generated": false,
+      "method_source_sha256": "6779a02b03a657931eb62a1f21f839638be39f46e2b94c3c33f4e94768002de6"
+    },
+    {
+      "id": "test_timer_reference.TimerReferenceTests.test_isolation_retains_every_original_probe_and_parameter",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+      "source_line": 108,
+      "module": "test_timer_reference",
+      "generated": false,
+      "method_source_sha256": "572c6d0e884a2e99e867489605992cc5a67d6e0e32fd46893e1394b07f4128e7"
+    },
+    {
+      "id": "test_timer_reference.TimerReferenceTests.test_long_schedule_and_single_shot_variants",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+      "source_line": 77,
+      "module": "test_timer_reference",
+      "generated": false,
+      "method_source_sha256": "0f2ddf1fa90cebfda4988e781f81a12a49c4c9748f8bfd609477341de2a36c1a"
+    },
+    {
+      "id": "test_timer_reference.TimerReferenceTests.test_missing_duplicate_and_fractional_counts",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+      "source_line": 28,
+      "module": "test_timer_reference",
+      "generated": false,
+      "method_source_sha256": "70c2af6d55ffce371b989d3c9966038061c77c571d7ae88b152f8ace44a34416"
+    },
+    {
+      "id": "test_timer_reference.TimerReferenceTests.test_pwl_endpoint_hold_preserves_raw_timestamp_and_strict_gates",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+      "source_line": 121,
+      "module": "test_timer_reference",
+      "generated": false,
+      "method_source_sha256": "448fe39294b023cd444175634483284010058eea53887a0a59b6ae6a91e437ae"
+    },
+    {
+      "id": "test_timer_reference.TimerReferenceTests.test_sample_must_share_event_time_with_stamp",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+      "source_line": 46,
+      "module": "test_timer_reference",
+      "generated": false,
+      "method_source_sha256": "63eaa220a0982882876e595c778044f5ae625564616900d46bf36a8560be8bee"
+    },
+    {
+      "id": "test_timer_reference.TimerReferenceTests.test_simultaneous_state_read_is_classified_not_assumed",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+      "source_line": 90,
+      "module": "test_timer_reference",
+      "generated": false,
+      "method_source_sha256": "c582dec8a5bcd61be30d326d2e42a6291e985584fa0a5cbc200b38c693172af3"
+    },
+    {
+      "id": "test_timer_reference.TimerReferenceTests.test_stop_window_is_not_clipped",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+      "source_line": 56,
+      "module": "test_timer_reference",
+      "generated": false,
+      "method_source_sha256": "d4f76e37dd57ea845cb2f64e3c038c7b14594db60c61411cdc2664c2d568a564"
+    },
+    {
+      "id": "test_timer_reference.TimerReferenceTests.test_timer_zero_accepts_post_initial_step_and_left_right_exports",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+      "source_line": 63,
+      "module": "test_timer_reference",
+      "generated": false,
+      "method_source_sha256": "f3bde3509397a18bf0ef4b6c3079b1340c17ab26afb12bf6db76ef0ec24cc935"
+    },
+    {
+      "id": "test_timer_reference.TimerReferenceTests.test_wrong_phase_and_future_stamp",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+      "source_line": 34,
+      "module": "test_timer_reference",
+      "generated": false,
+      "method_source_sha256": "8cbcbb290196f6f45ecc44075cb126e95861c6e0ba01a5d6f6639cad5e9b1185"
+    },
+    {
+      "id": "test_timer_settlement.SettlementChecker.test_analytic_closure_and_finite_time_shift",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_timer_settlement.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_timer_settlement.py",
+      "source_line": 21,
+      "module": "test_timer_settlement",
+      "generated": false,
+      "method_source_sha256": "fc2fcb373ff8ab533f5b56bb49efc6a38a843793591e7821b154c8f48ec07367"
+    },
+    {
+      "id": "test_timer_settlement.SettlementChecker.test_bad_input_missing_nonfinite_and_truncated_are_rejected",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_timer_settlement.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_timer_settlement.py",
+      "source_line": 41,
+      "module": "test_timer_settlement",
+      "generated": false,
+      "method_source_sha256": "98913cf8107ab9a49bd55368510216d9cde504f3a7a06c4e29b3750daedc3404"
+    },
+    {
+      "id": "test_timer_settlement.SettlementChecker.test_duplicate_missing_and_unheld_samples_are_rejected",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_timer_settlement.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_timer_settlement.py",
+      "source_line": 35,
+      "module": "test_timer_settlement",
+      "generated": false,
+      "method_source_sha256": "be5a37ae748162baa0eae30dba865387a236eb509b837b7516f1a48c1c3be9af"
+    },
+    {
+      "id": "test_timer_settlement.SettlementChecker.test_extended_analytic_candidates_and_wrong_sequence_result",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_timer_settlement.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_timer_settlement.py",
+      "source_line": 50,
+      "module": "test_timer_settlement",
+      "generated": false,
+      "method_source_sha256": "e80b8d64e9c34cd71fe20e3c909063c9a416ad60dad9c5d81a3ba534742cc1a5"
+    },
+    {
+      "id": "test_timer_settlement.SettlementChecker.test_old_snapshot_is_a_difference_not_invalid_history",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_timer_settlement.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_timer_settlement.py",
+      "source_line": 29,
+      "module": "test_timer_settlement",
+      "generated": false,
+      "method_source_sha256": "4407cbceffc69897e837049d9f76056c84aada32a369e9f976c8c481a0634122"
+    },
+    {
+      "id": "test_transition_reference.TransitionChecker.test_common_grid_requires_each_requested_time",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_transition_reference.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_transition_reference.py",
+      "source_line": 17,
+      "module": "test_transition_reference",
+      "generated": false,
+      "method_source_sha256": "cd85ea0d37a797c24545b2371e8c6c9e0d9ec38f9509ebef7f33f2c1717b09a5"
+    },
+    {
+      "id": "test_transition_reference.TransitionChecker.test_independent_knots_and_reflection",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_transition_reference.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_transition_reference.py",
+      "source_line": 25,
+      "module": "test_transition_reference",
+      "generated": false,
+      "method_source_sha256": "3c27e76896644a9bebf38073da92b68bc6b2f3bba8642474d09544a6e528c467"
+    },
+    {
+      "id": "test_transition_reference.TransitionChecker.test_rejects_amplitude_target_stamp_loss_and_missing_edge",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_transition_reference.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_transition_reference.py",
+      "source_line": 33,
+      "module": "test_transition_reference",
+      "generated": false,
+      "method_source_sha256": "a9d864b06ec63440df58d2ab04827390949b80ecbc5fc308fde55906e7c06032"
+    },
+    {
+      "id": "test_transition_reference.TransitionChecker.test_small_phase_shift_inside_frozen_allowance",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_transition_reference.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_transition_reference.py",
+      "source_line": 42,
+      "module": "test_transition_reference",
+      "generated": false,
+      "method_source_sha256": "9e8b27d8da88517cf5422294a75ef34f05225b767a9a2d9389c5e4dbbbdfb208"
+    },
+    {
+      "id": "test_triangle_oscillator.ExperimentAdapter.test_evas_uses_transient_time_axis",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+      "source_line": 218,
+      "module": "test_triangle_oscillator",
+      "generated": false,
+      "method_source_sha256": "d0efc57b89f58183bcc4697038afcfecc7e337aa9ea387737799731efb1b0c60"
+    },
+    {
+      "id": "test_triangle_oscillator.TriangleOracle.test_bad_waveform_rejected",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+      "source_line": 54,
+      "module": "test_triangle_oscillator",
+      "generated": false,
+      "method_source_sha256": "248e24a5d98e9542857fe88d8d26b8916a5d016abdd90921c42ae76b02f09ac5"
+    },
+    {
+      "id": "test_triangle_oscillator.TriangleOracle.test_constant",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+      "source_line": 29,
+      "module": "test_triangle_oscillator",
+      "generated": false,
+      "method_source_sha256": "0928d13fec56a16cb6f6e792f6fa60f9d0d4570a3cf8c4fdd90eab4b598fec38"
+    },
+    {
+      "id": "test_triangle_oscillator.TriangleOracle.test_corrupted_histories_rejected",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+      "source_line": 61,
+      "module": "test_triangle_oscillator",
+      "generated": false,
+      "method_source_sha256": "668115c4ca4dbca70b0a44d1502239ddfc73958ae6a2a48226d5ac644ff443d9"
+    },
+    {
+      "id": "test_triangle_oscillator.TriangleOracle.test_late_explicit_event_rejected",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+      "source_line": 58,
+      "module": "test_triangle_oscillator",
+      "generated": false,
+      "method_source_sha256": "26c719760d24199748333e9c151760c972298f4cf8f4c7017219581476728ce9"
+    },
+    {
+      "id": "test_triangle_oscillator.TriangleOracle.test_nonzero_initial_descending",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+      "source_line": 33,
+      "module": "test_triangle_oscillator",
+      "generated": false,
+      "method_source_sha256": "bf155bcc6ec6e04f35afd9d6d8232ce3e6ac06bee2313e721b89ba0e450c20c1"
+    },
+    {
+      "id": "test_triangle_oscillator.TriangleOracle.test_piecewise_area",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+      "source_line": 47,
+      "module": "test_triangle_oscillator",
+      "generated": false,
+      "method_source_sha256": "e7b98c90594bea5a177fbe1ee8d97f81cf89d1dcc870835eefd13ae834490ade"
+    },
+    {
+      "id": "test_triangle_oscillator.TriangleOracle.test_psf_requires_end_and_unique_signals",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+      "source_line": 74,
+      "module": "test_triangle_oscillator",
+      "generated": false,
+      "method_source_sha256": "3d14c3c917d5ed7e073751290120b45eab12c92c58f17ac07e849812507db34f"
+    },
+    {
+      "id": "test_triangle_oscillator.TriangleOracle.test_ramp_closed_form",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+      "source_line": 40,
+      "module": "test_triangle_oscillator",
+      "generated": false,
+      "method_source_sha256": "a7ff4a49d5296b3c0b1811c93f5adf8ddd0ef784815859dad616b4e4eed13c31"
+    },
+    {
+      "id": "test_triangle_oscillator.TriangleOracle.test_task_checker_is_identical",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+      "source_line": 81,
+      "module": "test_triangle_oscillator",
+      "generated": false,
+      "method_source_sha256": "5c54a299671d1f1cbf1f3dc82a99a770e7f78c702a6ee7778da6092d2909cd1e"
+    },
+    {
+      "id": "test_triangle_oscillator.TriangleVerifier.test_complete_reference_is_graded_pass",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+      "source_line": 144,
+      "module": "test_triangle_oscillator",
+      "generated": false,
+      "method_source_sha256": "142d1f4f925a2d19bf104cd4e77436c9d26908befd19bea3bb5d0828e1669e62"
+    },
+    {
+      "id": "test_triangle_oscillator.TriangleVerifier.test_complete_semantic_rejections_remain_zero_score",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+      "source_line": 151,
+      "module": "test_triangle_oscillator",
+      "generated": false,
+      "method_source_sha256": "14fd5f998f5ee67b134cc1a9ff35f8909b56a6ed73c6091ac6193e334fea3028"
+    },
+    {
+      "id": "test_triangle_oscillator.TriangleVerifier.test_complete_voltage_error_remains_graded_failure",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+      "source_line": 168,
+      "module": "test_triangle_oscillator",
+      "generated": false,
+      "method_source_sha256": "b109d074c7b8a6029ca9e2b3928b9b9c27027f23f31378eb23af081d615cafa3"
+    },
+    {
+      "id": "test_triangle_oscillator.TriangleVerifier.test_complete_wrong_count_is_graded_failure_with_waveform_identity",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+      "source_line": 128,
+      "module": "test_triangle_oscillator",
+      "generated": false,
+      "method_source_sha256": "e5428e6136b27de3803e8fcfec179c568494ab3034b26d74592dbcf57cd5a87e"
+    },
+    {
+      "id": "test_triangle_oscillator.TriangleVerifier.test_corrupt_or_incomplete_waveform_has_no_grade_or_reward",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+      "source_line": 187,
+      "module": "test_triangle_oscillator",
+      "generated": false,
+      "method_source_sha256": "7dbdb00ebcac4224c78f20f385e10a154b77f3859cac065de4f9dc0fad1d5938"
+    },
+    {
+      "id": "test_triangle_oscillator.TriangleVerifier.test_graded_failures_keep_every_case_in_the_report",
+      "source_file": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+      "method_source_file": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+      "source_line": 176,
+      "module": "test_triangle_oscillator",
+      "generated": false,
+      "method_source_sha256": "76a83f08eac55865627ee2ccb7af5cb74579e6e8e20a12027997512d12bec93b"
+    }
+  ],
+  "failed_import_ids": [],
+  "loader_errors": [],
+  "method_count": 100,
+  "generated_count": 0,
+  "read_paths": [
+    "benchmark/material/historyref/legacy-authoring/checkers/triangle_oscillator.py",
+    "evas/src/evas/__init__.py",
+    "evas/src/evas/__pycache__/__init__.cpython-314.pyc",
+    "evas/src/evas/__pycache__/array_elaboration.cpython-314.pyc",
+    "evas/src/evas/__pycache__/compact_source_select.cpython-314.pyc",
+    "evas/src/evas/__pycache__/condition_domains.cpython-314.pyc",
+    "evas/src/evas/__pycache__/elaboration.cpython-314.pyc",
+    "evas/src/evas/__pycache__/errors.cpython-314.pyc",
+    "evas/src/evas/__pycache__/event_index_domains.cpython-314.pyc",
+    "evas/src/evas/__pycache__/finite_math.cpython-314.pyc",
+    "evas/src/evas/__pycache__/forcing_components.cpython-314.pyc",
+    "evas/src/evas/__pycache__/frontend.cpython-314.pyc",
+    "evas/src/evas/__pycache__/held_power2.cpython-314.pyc",
+    "evas/src/evas/__pycache__/hierarchy.cpython-314.pyc",
+    "evas/src/evas/__pycache__/identity.cpython-314.pyc",
+    "evas/src/evas/__pycache__/initialization_aliases.cpython-314.pyc",
+    "evas/src/evas/__pycache__/input_rational_scope.cpython-314.pyc",
+    "evas/src/evas/__pycache__/instance_compiler.cpython-314.pyc",
+    "evas/src/evas/__pycache__/integer_arithmetic.cpython-314.pyc",
+    "evas/src/evas/__pycache__/integer_bits.cpython-314.pyc",
+    "evas/src/evas/__pycache__/integer_constants.cpython-314.pyc",
+    "evas/src/evas/__pycache__/integer_invariants.cpython-314.pyc",
+    "evas/src/evas/__pycache__/integer_prefix.cpython-314.pyc",
+    "evas/src/evas/__pycache__/integer_table_composition.cpython-314.pyc",
+    "evas/src/evas/__pycache__/ir.cpython-314.pyc",
+    "evas/src/evas/__pycache__/kernel.cpython-314.pyc",
+    "evas/src/evas/__pycache__/limits.cpython-314.pyc",
+    "evas/src/evas/__pycache__/loop_bounds.cpython-314.pyc",
+    "evas/src/evas/__pycache__/lowering.cpython-314.pyc",
+    "evas/src/evas/__pycache__/manifest.cpython-314.pyc",
+    "evas/src/evas/__pycache__/native_audit.cpython-314.pyc",
+    "evas/src/evas/__pycache__/node_elaboration.cpython-314.pyc",
+    "evas/src/evas/__pycache__/parameters.cpython-314.pyc",
+    "evas/src/evas/__pycache__/preprocessor.cpython-314.pyc",
+    "evas/src/evas/__pycache__/protocol.cpython-314.pyc",
+    "evas/src/evas/__pycache__/rational_predicates.cpython-314.pyc",
+    "evas/src/evas/__pycache__/readout_scope.cpython-314.pyc",
+    "evas/src/evas/__pycache__/runtime.cpython-314.pyc",
+    "evas/src/evas/__pycache__/settled_integer_reads.cpython-314.pyc",
+    "evas/src/evas/__pycache__/standard_headers.cpython-314.pyc",
+    "evas/src/evas/__pycache__/strobe.cpython-314.pyc",
+    "evas/src/evas/__pycache__/syntax.cpython-314.pyc",
+    "evas/src/evas/array_elaboration.py",
+    "evas/src/evas/compact_source_select.py",
+    "evas/src/evas/condition_domains.py",
+    "evas/src/evas/elaboration.py",
+    "evas/src/evas/errors.py",
+    "evas/src/evas/event_index_domains.py",
+    "evas/src/evas/finite_math.py",
+    "evas/src/evas/forcing_components.py",
+    "evas/src/evas/frontend.py",
+    "evas/src/evas/held_power2.py",
+    "evas/src/evas/hierarchy.py",
+    "evas/src/evas/identity.py",
+    "evas/src/evas/initialization_aliases.py",
+    "evas/src/evas/input_rational_scope.py",
+    "evas/src/evas/instance_compiler.py",
+    "evas/src/evas/integer_arithmetic.py",
+    "evas/src/evas/integer_bits.py",
+    "evas/src/evas/integer_constants.py",
+    "evas/src/evas/integer_invariants.py",
+    "evas/src/evas/integer_prefix.py",
+    "evas/src/evas/integer_table_composition.py",
+    "evas/src/evas/ir.py",
+    "evas/src/evas/kernel.py",
+    "evas/src/evas/limits.py",
+    "evas/src/evas/loop_bounds.py",
+    "evas/src/evas/lowering.py",
+    "evas/src/evas/manifest.py",
+    "evas/src/evas/native_audit.py",
+    "evas/src/evas/node_elaboration.py",
+    "evas/src/evas/parameters.py",
+    "evas/src/evas/preprocessor.py",
+    "evas/src/evas/protocol.py",
+    "evas/src/evas/rational_predicates.py",
+    "evas/src/evas/readout_scope.py",
+    "evas/src/evas/runtime.py",
+    "evas/src/evas/settled_integer_reads.py",
+    "evas/src/evas/standard_headers.py",
+    "evas/src/evas/strobe.py",
+    "evas/src/evas/syntax.py",
+    "evas/validation/dvs2/__init__.py",
+    "evas/validation/dvs2/__pycache__/__init__.cpython-314.pyc",
+    "evas/validation/dvs2/__pycache__/cases.cpython-314.pyc",
+    "evas/validation/dvs2/__pycache__/checker.cpython-314.pyc",
+    "evas/validation/dvs2/__pycache__/history.cpython-314.pyc",
+    "evas/validation/dvs2/__pycache__/legacy.cpython-314.pyc",
+    "evas/validation/dvs2/__pycache__/legacy_checks.cpython-314.pyc",
+    "evas/validation/dvs2/cases.py",
+    "evas/validation/dvs2/checker.py",
+    "evas/validation/dvs2/history.py",
+    "evas/validation/dvs2/legacy.py",
+    "evas/validation/dvs2/legacy_checks.py",
+    "experiments/backends/dvs2-spectre-validation/__pycache__/check_results.cpython-314.pyc",
+    "experiments/backends/dvs2-spectre-validation/__pycache__/cross_boundaries.cpython-314.pyc",
+    "experiments/backends/dvs2-spectre-validation/__pycache__/cross_reference.cpython-314.pyc",
+    "experiments/backends/dvs2-spectre-validation/__pycache__/cross_restart_diagnostic.cpython-314.pyc",
+    "experiments/backends/dvs2-spectre-validation/__pycache__/cross_touch.cpython-314.pyc",
+    "experiments/backends/dvs2-spectre-validation/__pycache__/event_or_reference.cpython-314.pyc",
+    "experiments/backends/dvs2-spectre-validation/__pycache__/history_relocalization.cpython-314.pyc",
+    "experiments/backends/dvs2-spectre-validation/__pycache__/oscillator_compatibility.cpython-314.pyc",
+    "experiments/backends/dvs2-spectre-validation/__pycache__/remote.cpython-314.pyc",
+    "experiments/backends/dvs2-spectre-validation/__pycache__/report.cpython-314.pyc",
+    "experiments/backends/dvs2-spectre-validation/__pycache__/run_suite.cpython-314.pyc",
+    "experiments/backends/dvs2-spectre-validation/__pycache__/s1_review.cpython-314.pyc",
+    "experiments/backends/dvs2-spectre-validation/__pycache__/test_checks.cpython-314.pyc",
+    "experiments/backends/dvs2-spectre-validation/__pycache__/test_cross_boundaries.cpython-314.pyc",
+    "experiments/backends/dvs2-spectre-validation/__pycache__/test_cross_reference.cpython-314.pyc",
+    "experiments/backends/dvs2-spectre-validation/__pycache__/test_cross_restart_diagnostic.cpython-314.pyc",
+    "experiments/backends/dvs2-spectre-validation/__pycache__/test_cross_touch.cpython-314.pyc",
+    "experiments/backends/dvs2-spectre-validation/__pycache__/test_event_or_reference.cpython-314.pyc",
+    "experiments/backends/dvs2-spectre-validation/__pycache__/test_event_review.cpython-314.pyc",
+    "experiments/backends/dvs2-spectre-validation/__pycache__/test_history_relocalization_reference.cpython-314.pyc",
+    "experiments/backends/dvs2-spectre-validation/__pycache__/test_s1_review.cpython-314.pyc",
+    "experiments/backends/dvs2-spectre-validation/__pycache__/test_science_contract.cpython-314.pyc",
+    "experiments/backends/dvs2-spectre-validation/__pycache__/test_timer_reference.cpython-314.pyc",
+    "experiments/backends/dvs2-spectre-validation/__pycache__/test_timer_settlement.cpython-314.pyc",
+    "experiments/backends/dvs2-spectre-validation/__pycache__/test_transition_reference.cpython-314.pyc",
+    "experiments/backends/dvs2-spectre-validation/__pycache__/test_triangle_oscillator.cpython-314.pyc",
+    "experiments/backends/dvs2-spectre-validation/__pycache__/timer_reference.cpython-314.pyc",
+    "experiments/backends/dvs2-spectre-validation/__pycache__/timer_settlement.cpython-314.pyc",
+    "experiments/backends/dvs2-spectre-validation/__pycache__/transition_reference.cpython-314.pyc",
+    "experiments/backends/dvs2-spectre-validation/check_results.py",
+    "experiments/backends/dvs2-spectre-validation/cross_boundaries.py",
+    "experiments/backends/dvs2-spectre-validation/cross_reference.py",
+    "experiments/backends/dvs2-spectre-validation/cross_restart_diagnostic.py",
+    "experiments/backends/dvs2-spectre-validation/cross_touch.py",
+    "experiments/backends/dvs2-spectre-validation/event_or_reference.py",
+    "experiments/backends/dvs2-spectre-validation/history_relocalization.py",
+    "experiments/backends/dvs2-spectre-validation/oscillator_compatibility.py",
+    "experiments/backends/dvs2-spectre-validation/remote.py",
+    "experiments/backends/dvs2-spectre-validation/report.py",
+    "experiments/backends/dvs2-spectre-validation/run_suite.py",
+    "experiments/backends/dvs2-spectre-validation/s1_review.py",
+    "experiments/backends/dvs2-spectre-validation/test_checks.py",
+    "experiments/backends/dvs2-spectre-validation/test_cross_boundaries.py",
+    "experiments/backends/dvs2-spectre-validation/test_cross_reference.py",
+    "experiments/backends/dvs2-spectre-validation/test_cross_restart_diagnostic.py",
+    "experiments/backends/dvs2-spectre-validation/test_cross_touch.py",
+    "experiments/backends/dvs2-spectre-validation/test_event_or_reference.py",
+    "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+    "experiments/backends/dvs2-spectre-validation/test_history_relocalization_reference.py",
+    "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+    "experiments/backends/dvs2-spectre-validation/test_science_contract.py",
+    "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+    "experiments/backends/dvs2-spectre-validation/test_timer_settlement.py",
+    "experiments/backends/dvs2-spectre-validation/test_transition_reference.py",
+    "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+    "experiments/backends/dvs2-spectre-validation/timer_reference.py",
+    "experiments/backends/dvs2-spectre-validation/timer_settlement.py",
+    "experiments/backends/dvs2-spectre-validation/transition_reference.py",
+    "experiments/backends/evidence/__pycache__/legacy_waveforms.cpython-314.pyc",
+    "experiments/backends/evidence/legacy_waveforms.py"
+  ],
+  "blocked": [
+    {
+      "event": "protected-read",
+      "target": "benchmark/material/historyref/legacy-authoring/checkers/__pycache__/triangle_oscillator.cpython-314.pyc"
+    },
+    {
+      "event": "protected-read",
+      "target": "benchmark/material/historyref/legacy-authoring/checkers/__pycache__/triangle_oscillator.cpython-314.pyc"
+    }
+  ],
+  "imported_project_modules": [
+    "evas/src/evas/__init__.py",
+    "evas/src/evas/array_elaboration.py",
+    "evas/src/evas/compact_source_select.py",
+    "evas/src/evas/condition_domains.py",
+    "evas/src/evas/elaboration.py",
+    "evas/src/evas/errors.py",
+    "evas/src/evas/event_index_domains.py",
+    "evas/src/evas/finite_math.py",
+    "evas/src/evas/forcing_components.py",
+    "evas/src/evas/frontend.py",
+    "evas/src/evas/held_power2.py",
+    "evas/src/evas/hierarchy.py",
+    "evas/src/evas/identity.py",
+    "evas/src/evas/initialization_aliases.py",
+    "evas/src/evas/input_rational_scope.py",
+    "evas/src/evas/instance_compiler.py",
+    "evas/src/evas/integer_arithmetic.py",
+    "evas/src/evas/integer_bits.py",
+    "evas/src/evas/integer_constants.py",
+    "evas/src/evas/integer_invariants.py",
+    "evas/src/evas/integer_prefix.py",
+    "evas/src/evas/integer_table_composition.py",
+    "evas/src/evas/ir.py",
+    "evas/src/evas/kernel.py",
+    "evas/src/evas/limits.py",
+    "evas/src/evas/loop_bounds.py",
+    "evas/src/evas/lowering.py",
+    "evas/src/evas/manifest.py",
+    "evas/src/evas/native_audit.py",
+    "evas/src/evas/node_elaboration.py",
+    "evas/src/evas/parameters.py",
+    "evas/src/evas/preprocessor.py",
+    "evas/src/evas/protocol.py",
+    "evas/src/evas/rational_predicates.py",
+    "evas/src/evas/readout_scope.py",
+    "evas/src/evas/runtime.py",
+    "evas/src/evas/settled_integer_reads.py",
+    "evas/src/evas/standard_headers.py",
+    "evas/src/evas/strobe.py",
+    "evas/src/evas/syntax.py",
+    "evas/validation/dvs2/__init__.py",
+    "evas/validation/dvs2/cases.py",
+    "evas/validation/dvs2/checker.py",
+    "evas/validation/dvs2/history.py",
+    "evas/validation/dvs2/legacy.py",
+    "evas/validation/dvs2/legacy_checks.py",
+    "experiments/backends/dvs2-spectre-validation/check_results.py",
+    "experiments/backends/dvs2-spectre-validation/cross_boundaries.py",
+    "experiments/backends/dvs2-spectre-validation/cross_reference.py",
+    "experiments/backends/dvs2-spectre-validation/cross_restart_diagnostic.py",
+    "experiments/backends/dvs2-spectre-validation/cross_touch.py",
+    "experiments/backends/dvs2-spectre-validation/event_or_reference.py",
+    "experiments/backends/dvs2-spectre-validation/history_relocalization.py",
+    "experiments/backends/dvs2-spectre-validation/oscillator_compatibility.py",
+    "experiments/backends/dvs2-spectre-validation/remote.py",
+    "experiments/backends/dvs2-spectre-validation/report.py",
+    "experiments/backends/dvs2-spectre-validation/run_suite.py",
+    "experiments/backends/dvs2-spectre-validation/s1_review.py",
+    "experiments/backends/dvs2-spectre-validation/test_checks.py",
+    "experiments/backends/dvs2-spectre-validation/test_cross_boundaries.py",
+    "experiments/backends/dvs2-spectre-validation/test_cross_reference.py",
+    "experiments/backends/dvs2-spectre-validation/test_cross_restart_diagnostic.py",
+    "experiments/backends/dvs2-spectre-validation/test_cross_touch.py",
+    "experiments/backends/dvs2-spectre-validation/test_event_or_reference.py",
+    "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+    "experiments/backends/dvs2-spectre-validation/test_history_relocalization_reference.py",
+    "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+    "experiments/backends/dvs2-spectre-validation/test_science_contract.py",
+    "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+    "experiments/backends/dvs2-spectre-validation/test_timer_settlement.py",
+    "experiments/backends/dvs2-spectre-validation/test_transition_reference.py",
+    "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+    "experiments/backends/dvs2-spectre-validation/timer_reference.py",
+    "experiments/backends/dvs2-spectre-validation/timer_settlement.py",
+    "experiments/backends/dvs2-spectre-validation/transition_reference.py",
+    "experiments/backends/evidence/legacy_waveforms.py"
+  ],
+  "returncode": 0,
+  "stderr": "",
+  "static_import_review": [
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/test_checks.py",
+      "git_blob": "363ccba5fc84a9254d9586801c15b6f3f3faf627",
+      "top_level_calls": [
+        "conditions()"
+      ]
+    },
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/test_cross_boundaries.py",
+      "git_blob": "1483c8d78e309e77c41f1347c7ce2d092b78287a",
+      "top_level_calls": []
+    },
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/test_cross_reference.py",
+      "git_blob": "8e42d29a405d5d763e10976030d1519e32656824",
+      "top_level_calls": []
+    },
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/test_cross_restart_diagnostic.py",
+      "git_blob": "933fb76cbd93c97643278da61cbfe1b057b063d8",
+      "top_level_calls": []
+    },
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/test_cross_touch.py",
+      "git_blob": "219572b6136e86dd14bbfc5f4ec717a78a30bb1e",
+      "top_level_calls": []
+    },
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/test_event_or_reference.py",
+      "git_blob": "d4cc65347b702c99bcb8ab41b035b5fc8c4216b9",
+      "top_level_calls": []
+    },
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+      "git_blob": "0cbd6b980dbdc9457b8dc76e16f1181b3907312d",
+      "top_level_calls": [
+        "conditions()"
+      ]
+    },
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/test_history_relocalization_reference.py",
+      "git_blob": "8d247469f89d970171794a0c6ee74019c72b9eaf",
+      "top_level_calls": []
+    },
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+      "git_blob": "605a061582b7bb846fb49d9b160652eef5217645",
+      "top_level_calls": [
+        "Path(__file__).resolve()",
+        "Path(__file__)",
+        "F(0)",
+        "F(2, 5)",
+        "F(2, 5)",
+        "F(-1, 5)",
+        "F(-1, 5)",
+        "F(-1, 5)",
+        "F(-1, 5)",
+        "F(3, 10)",
+        "F(3, 10)",
+        "F(-1, 10)",
+        "F(9, 40)",
+        "F(33, 40)",
+        "F(23, 40)",
+        "F(-13, 40)",
+        "F(-1, 8)",
+        "F(-13, 20)",
+        "F(-17, 20)",
+        "F(3, 20)",
+        "F(9, 20)",
+        "F(-7, 20)"
+      ]
+    },
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/test_science_contract.py",
+      "git_blob": "65413de6caaa430a23d46e11fb935d04816c140b",
+      "top_level_calls": []
+    },
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+      "git_blob": "9a18e2673cf4c269fc9ff68ec2b1f95c6d9481e9",
+      "top_level_calls": []
+    },
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/test_timer_settlement.py",
+      "git_blob": "c3d95537bdf3d024c395b96783a7b1793ced1ee5",
+      "top_level_calls": []
+    },
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/test_transition_reference.py",
+      "git_blob": "f9b4ec5b6e55ed10452e4055c3aef98805d5a938",
+      "top_level_calls": []
+    },
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+      "git_blob": "43b1ba4b318244bce13c9e1a95115a48cbd50cd0",
+      "top_level_calls": [
+        "Path(__file__).resolve()",
+        "Path(__file__)",
+        "importlib.util.spec_from_file_location('triangle', ROOT / 'benchmark/material/historyref/legacy-authoring/checkers/triangle_oscillator.py')",
+        "importlib.util.module_from_spec(spec)",
+        "spec.loader.exec_module(m)"
+      ]
+    }
+  ],
+  "origin": "ci",
+  "shared_checker_review": "shared-triangle-import-review.json",
+  "loaded_source_identities": [
+    {
+      "path": "benchmark/material/historyref/legacy-authoring/checkers/triangle_oscillator.py",
+      "git_blob": "a2a98354721150436d3dfaa6d9457c8ca25dfe85",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/__init__.py",
+      "git_blob": "b3750e93934a698a575abf55934882a66801963d",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/array_elaboration.py",
+      "git_blob": "0141ee0dc246f4bf5034a23d9459188722efaf3b",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/compact_source_select.py",
+      "git_blob": "7febe70d98fade31b1ca658b700ffc2c1b68a469",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/condition_domains.py",
+      "git_blob": "17588176e3a5829e43dace558a29a5b2eb42273c",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/elaboration.py",
+      "git_blob": "cdfbe6b05eb71ec9d77a1f13f3a142afae9412a8",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/errors.py",
+      "git_blob": "921915a3e840e7f59fcf7f2951c99a5aa922cb67",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/event_index_domains.py",
+      "git_blob": "b94da5ccf4bbc2b0f8104feee818884f6673d5fc",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/finite_math.py",
+      "git_blob": "325c6407484a7fec3ed4583cae44e2d51a28287a",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/forcing_components.py",
+      "git_blob": "cbe1824a43b4cf54a135b3d4beacfd021b296a14",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/frontend.py",
+      "git_blob": "e3af9fcce89725ced811d3ff5a61fad28484c4c2",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/held_power2.py",
+      "git_blob": "b3f32155e3e4a0ca2dd517ca3de5857012341594",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/hierarchy.py",
+      "git_blob": "7d24a0e2dd3e88b29060894c8b3aa0244e895060",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/identity.py",
+      "git_blob": "cbdfa8fa0da4081be22d0f0e7fe4ff7505cec2e8",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/initialization_aliases.py",
+      "git_blob": "32761bcd0f7e00e51ef3a0892c823ad5ee515c79",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/input_rational_scope.py",
+      "git_blob": "0c69fb6842915522c3b68812ca782a032650294e",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/instance_compiler.py",
+      "git_blob": "342f8765f99b58760cc673a37088fb2a043b4e62",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/integer_arithmetic.py",
+      "git_blob": "288b1563567eeb8813666d3c2f9a7fb2acc317bf",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/integer_bits.py",
+      "git_blob": "90e5627a7561965f4f47e5fe44f37aed704b3930",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/integer_constants.py",
+      "git_blob": "d49d6c84c01e21cd10e5c80b6dd70843f8e3308e",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/integer_invariants.py",
+      "git_blob": "1fbe0c19bf86038497872e309a75b137465ccabc",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/integer_prefix.py",
+      "git_blob": "fa9b6b77a84893cbcc5b78f2b9c9083b8b77abb3",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/integer_table_composition.py",
+      "git_blob": "196b5435bf7655226f55afc46ee0014aab079072",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/ir.py",
+      "git_blob": "7fb9829b8864addfb786432b042a36aa5d171136",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/kernel.py",
+      "git_blob": "50c92a299cb049a6261c68774914b2fd1a962ce1",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/limits.py",
+      "git_blob": "e2bb6bdbf073378fdeacaa7b21d46565db489a11",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/loop_bounds.py",
+      "git_blob": "8c17d3c63c0cceaf87bd9fbe51e3996f8cce502d",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/lowering.py",
+      "git_blob": "989c3154d2de172218e85e99d9258210bb06ab32",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/manifest.py",
+      "git_blob": "3a3378198ac9cb6383eb4106f7797212abcf3828",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/native_audit.py",
+      "git_blob": "97777b7118b71ba9cb6df622b2c5e6bf4734697e",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/node_elaboration.py",
+      "git_blob": "ada0bd08d14d319a7214ba3fe321301e5cf1c3ae",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/parameters.py",
+      "git_blob": "9cd72cb31f84230406f5bc4e3a443276c797fd43",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/preprocessor.py",
+      "git_blob": "321ef8182a263c2d80e46116e373530e422f8b33",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/protocol.py",
+      "git_blob": "4cf54b68b04999f2f6c41d5b59a377687073b6c5",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/rational_predicates.py",
+      "git_blob": "eec03e5ae0ad3a93ff3a2e340479e3f32c8987f0",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/readout_scope.py",
+      "git_blob": "80e527d5c410b40996bbd9bd0db6920cb1ed8287",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/runtime.py",
+      "git_blob": "1c18ccd9cc5423e95a05023634ecd61f4c1ecda3",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/settled_integer_reads.py",
+      "git_blob": "4156163d4c753959f254f4a320cdc36df1ce11c4",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/standard_headers.py",
+      "git_blob": "692c8a511f69b3ca5672fdb72acdc0233f352665",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/strobe.py",
+      "git_blob": "728e200cfc5a9b25a1e0de2f633427bfa02f6a78",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/syntax.py",
+      "git_blob": "109355460695fb535ca872b7eafa0806d041e00a",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/dvs2/__init__.py",
+      "git_blob": "435bb0f6ce2db5f753a450fbf4edb3f06a1f39a7",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/dvs2/cases.py",
+      "git_blob": "a451f8104d35001a0559ce35deb5c5d9193d4ec0",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/dvs2/checker.py",
+      "git_blob": "abb056ccb42c891ddd839270354f08e3d12723ad",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/dvs2/history.py",
+      "git_blob": "b7390cadad333ebdac2a00073ed129b8415f177f",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/dvs2/legacy.py",
+      "git_blob": "e1355d880a70b7341aa7d5e61055a557b36735fe",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/dvs2/legacy_checks.py",
+      "git_blob": "fc3e73073946f0a4fb533f5199d89b893874182e",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/check_results.py",
+      "git_blob": "9b6e8ff28a7b5a4cd0215d699c25271ea0dedc1c",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/cross_boundaries.py",
+      "git_blob": "4cb7e7ebf2ea1e7a36ef2cddb7f06c690b83bc32",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/cross_reference.py",
+      "git_blob": "17b674646fd08062ac177a9edba53f50b3ea98a5",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/cross_restart_diagnostic.py",
+      "git_blob": "b700615324f0000ee9c32ceab6ddd9c5b0f7be09",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/cross_touch.py",
+      "git_blob": "e07c5e7c2fc789bbf9eaf528ffa1100236d6c770",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/event_or_reference.py",
+      "git_blob": "6e285364b62d98d0b5d37511700b36628804a5a0",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/history_relocalization.py",
+      "git_blob": "9a82fca30c1de495abed5b61b1bd09a46efd5186",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/oscillator_compatibility.py",
+      "git_blob": "ba89d836f37526cf655d749c5039f8bcdf3c8473",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/remote.py",
+      "git_blob": "c26d809d780198a67bccec1461ce3f44d45f4f53",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/report.py",
+      "git_blob": "91f614bc27c07d0d6faa54ffb82f27eb7003f447",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/run_suite.py",
+      "git_blob": "bc058ee739a4326bd94930db530143fc44e3ad94",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/s1_review.py",
+      "git_blob": "dd68e9c21cbb4fbfb55272c032d55cbd8711100c",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/test_checks.py",
+      "git_blob": "363ccba5fc84a9254d9586801c15b6f3f3faf627",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/test_cross_boundaries.py",
+      "git_blob": "1483c8d78e309e77c41f1347c7ce2d092b78287a",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/test_cross_reference.py",
+      "git_blob": "8e42d29a405d5d763e10976030d1519e32656824",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/test_cross_restart_diagnostic.py",
+      "git_blob": "933fb76cbd93c97643278da61cbfe1b057b063d8",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/test_cross_touch.py",
+      "git_blob": "219572b6136e86dd14bbfc5f4ec717a78a30bb1e",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/test_event_or_reference.py",
+      "git_blob": "d4cc65347b702c99bcb8ab41b035b5fc8c4216b9",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+      "git_blob": "0cbd6b980dbdc9457b8dc76e16f1181b3907312d",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/test_history_relocalization_reference.py",
+      "git_blob": "8d247469f89d970171794a0c6ee74019c72b9eaf",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+      "git_blob": "605a061582b7bb846fb49d9b160652eef5217645",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/test_science_contract.py",
+      "git_blob": "65413de6caaa430a23d46e11fb935d04816c140b",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+      "git_blob": "9a18e2673cf4c269fc9ff68ec2b1f95c6d9481e9",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/test_timer_settlement.py",
+      "git_blob": "c3d95537bdf3d024c395b96783a7b1793ced1ee5",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/test_transition_reference.py",
+      "git_blob": "f9b4ec5b6e55ed10452e4055c3aef98805d5a938",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+      "git_blob": "43b1ba4b318244bce13c9e1a95115a48cbd50cd0",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/timer_reference.py",
+      "git_blob": "1da365ebbf3647992e71feb9c1e940ce0082e372",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/timer_settlement.py",
+      "git_blob": "49cc2460a3cc303a193449fd1c3c4666e1e9c241",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/dvs2-spectre-validation/transition_reference.py",
+      "git_blob": "f4656d935d5117f34985d50d11fdc7e9084a8e7c",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/evidence/legacy_waveforms.py",
+      "git_blob": "69f2dbf2394a353a40d6d78ece27b5429905c1aa",
+      "matches_main": true
+    }
+  ],
+  "source_identity_mismatches": [],
+  "collection_issues": []
+}

@@ -1,0 +1,1372 @@
+{
+  "start": "experiments/backends/paper",
+  "pattern": "test_*.py",
+  "scope": "discovery-only",
+  "rows": [
+    {
+      "id": "test_actual_observation.ActualEvidence.test_actual_radius_not_tolerance_and_continuous_input_sup",
+      "source_file": "experiments/backends/paper/test_actual_observation.py",
+      "method_source_file": "experiments/backends/paper/test_actual_observation.py",
+      "source_line": 24,
+      "module": "test_actual_observation",
+      "generated": false,
+      "method_source_sha256": "4e61195918eef67407c6466ed7558dd5ec122d554c57ff61555e8c75ea80bd2c"
+    },
+    {
+      "id": "test_actual_observation.ActualEvidence.test_boundary_role_uses_unique_actual_request_id_and_same_response",
+      "source_file": "experiments/backends/paper/test_actual_observation.py",
+      "method_source_file": "experiments/backends/paper/test_actual_observation.py",
+      "source_line": 87,
+      "module": "test_actual_observation",
+      "generated": false,
+      "method_source_sha256": "963d9659e2f4b0b0c19ffe598606cea714837fc9cdd3379f7d8d4fb865874670"
+    },
+    {
+      "id": "test_actual_observation.ActualEvidence.test_causal_and_stateless_native_require_certificate_and_execution_identity",
+      "source_file": "experiments/backends/paper/test_actual_observation.py",
+      "method_source_file": "experiments/backends/paper/test_actual_observation.py",
+      "source_line": 77,
+      "module": "test_actual_observation",
+      "generated": false,
+      "method_source_sha256": "e44589a2a98357f3ecd4a19369877787b885940d3bea053acb3bf7c712f14e2d"
+    },
+    {
+      "id": "test_actual_observation.ActualEvidence.test_continuous_union_bound_detects_positive_and_negative_perturbations",
+      "source_file": "experiments/backends/paper/test_actual_observation.py",
+      "method_source_file": "experiments/backends/paper/test_actual_observation.py",
+      "source_line": 56,
+      "module": "test_actual_observation",
+      "generated": false,
+      "method_source_sha256": "0e96bf31d91b46a1f6a1dc5680860105d0b372a0e44517ee2be0f091551f34a0"
+    },
+    {
+      "id": "test_actual_observation.ActualEvidence.test_executed_domain_and_stop_roundoff_are_explicit",
+      "source_file": "experiments/backends/paper/test_actual_observation.py",
+      "method_source_file": "experiments/backends/paper/test_actual_observation.py",
+      "source_line": 65,
+      "module": "test_actual_observation",
+      "generated": false,
+      "method_source_sha256": "dbc1c53a488812339572be6000a8781792eea608fb0354aa5a79c756a9722f00"
+    },
+    {
+      "id": "test_actual_observation.ActualEvidence.test_failed_unknown_or_empty_review_is_not_source_qualification",
+      "source_file": "experiments/backends/paper/test_actual_observation.py",
+      "method_source_file": "experiments/backends/paper/test_actual_observation.py",
+      "source_line": 52,
+      "module": "test_actual_observation",
+      "generated": false,
+      "method_source_sha256": "206f9bc2053d9dedb17d29a82367d44cadca620aebb6194877250358f96874bb"
+    },
+    {
+      "id": "test_actual_observation.ActualEvidence.test_full_existing_receipt_chain_and_boundary_packet_fail_closed_on_drift",
+      "source_file": "experiments/backends/paper/test_actual_observation.py",
+      "method_source_file": "experiments/backends/paper/test_actual_observation.py",
+      "source_line": 128,
+      "module": "test_actual_observation",
+      "generated": false,
+      "method_source_sha256": "0a4d7fa35412a0621b0be516e151e02ba5778a0cbb15f754bbf3cd2f306b15cb"
+    },
+    {
+      "id": "test_actual_observation.ActualEvidence.test_identity_and_invalid_interval_fail_closed",
+      "source_file": "experiments/backends/paper/test_actual_observation.py",
+      "method_source_file": "experiments/backends/paper/test_actual_observation.py",
+      "source_line": 41,
+      "module": "test_actual_observation",
+      "generated": false,
+      "method_source_sha256": "769bf75689f730c2e4301e2b3a4d6d122d2e70279590129809a0c0cb7de02c13"
+    },
+    {
+      "id": "test_actual_observation.ActualEvidence.test_initial_callback_bound_touching_zero_stays_unknown",
+      "source_file": "experiments/backends/paper/test_actual_observation.py",
+      "method_source_file": "experiments/backends/paper/test_actual_observation.py",
+      "source_line": 38,
+      "module": "test_actual_observation",
+      "generated": false,
+      "method_source_sha256": "56b5adf53c094af162b90f56e7be1b2ba6368b053ae28a0f18d7e857ba730516"
+    },
+    {
+      "id": "test_actual_observation.ActualEvidence.test_missing_interval_and_direct_query_are_not_promoted",
+      "source_file": "experiments/backends/paper/test_actual_observation.py",
+      "method_source_file": "experiments/backends/paper/test_actual_observation.py",
+      "source_line": 32,
+      "module": "test_actual_observation",
+      "generated": false,
+      "method_source_sha256": "c576f534df660ba6124802360c0bec58384dae49a4f9965623b3db436b50e6b1"
+    },
+    {
+      "id": "test_actual_observation.ActualEvidence.test_new_packet_preserves_raw_bytes_and_uses_actual_review_schema",
+      "source_file": "experiments/backends/paper/test_actual_observation.py",
+      "method_source_file": "experiments/backends/paper/test_actual_observation.py",
+      "source_line": 99,
+      "module": "test_actual_observation",
+      "generated": false,
+      "method_source_sha256": "c725a158c339733e629db18df49d6dc248c32fb80d1cfeeba080f4ec37918a12"
+    },
+    {
+      "id": "test_actual_observation.ActualEvidence.test_outward_conversion_never_shrinks_rational_bound",
+      "source_file": "experiments/backends/paper/test_actual_observation.py",
+      "method_source_file": "experiments/backends/paper/test_actual_observation.py",
+      "source_line": 184,
+      "module": "test_actual_observation",
+      "generated": false,
+      "method_source_sha256": "181765bb66264b15c2aeb78fd493e430ae3ec032be811f8592a336c97e784c56"
+    },
+    {
+      "id": "test_actual_observation.ActualEvidence.test_production_closure_cannot_be_omitted_or_changed_in_manifest",
+      "source_file": "experiments/backends/paper/test_actual_observation.py",
+      "method_source_file": "experiments/backends/paper/test_actual_observation.py",
+      "source_line": 164,
+      "module": "test_actual_observation",
+      "generated": false,
+      "method_source_sha256": "75b54b7eeeaf806fb03b44f2c4b957687ddd2271da6bc04b1a25ecca12175925"
+    },
+    {
+      "id": "test_inputs.InputContracts.test_exact_sources_and_hierarchical_isolation_survive_all_decks",
+      "source_file": "experiments/backends/paper/test_inputs.py",
+      "method_source_file": "experiments/backends/paper/test_inputs.py",
+      "source_line": 33,
+      "module": "test_inputs",
+      "generated": false,
+      "method_source_sha256": "ae493f316e3db96a98bbbf1efcf077d575f2aad8530d666ed434151c2045baa9"
+    },
+    {
+      "id": "test_inputs.InputContracts.test_freeze_cannot_exceed_authorized_stage_limit",
+      "source_file": "experiments/backends/paper/test_inputs.py",
+      "method_source_file": "experiments/backends/paper/test_inputs.py",
+      "source_line": 72,
+      "module": "test_inputs",
+      "generated": false,
+      "method_source_sha256": "2995c6c7bb16ecc1ce23f884dffbe7d09406a7d80a1daf39344e9be800451f65"
+    },
+    {
+      "id": "test_inputs.InputContracts.test_gnucap_observer_continuations_preserve_all_ordered_corners",
+      "source_file": "experiments/backends/paper/test_inputs.py",
+      "method_source_file": "experiments/backends/paper/test_inputs.py",
+      "source_line": 98,
+      "module": "test_inputs",
+      "generated": false,
+      "method_source_sha256": "1eaadff405a24312c5a342cabb6dd4f059ea24aea07b5fa778b4c9b0043429ca"
+    },
+    {
+      "id": "test_inputs.InputContracts.test_grid_requests_global_local_and_exact_root_obligations",
+      "source_file": "experiments/backends/paper/test_inputs.py",
+      "method_source_file": "experiments/backends/paper/test_inputs.py",
+      "source_line": 53,
+      "module": "test_inputs",
+      "generated": false,
+      "method_source_sha256": "c73981e9c3885d95948d3b7bad3ef30e23e3a2e9e309367b045a0038d970e201"
+    },
+    {
+      "id": "test_inputs.InputContracts.test_nested_manifest_named_file_cannot_evade_frozen_file_set",
+      "source_file": "experiments/backends/paper/test_inputs.py",
+      "method_source_file": "experiments/backends/paper/test_inputs.py",
+      "source_line": 64,
+      "module": "test_inputs",
+      "generated": false,
+      "method_source_sha256": "a7ce029796580059308f3fc920ff0c32aef1e35d087b68c01ea7a26e0206bb43"
+    },
+    {
+      "id": "test_inputs.InputContracts.test_ngspice_operator_named_nodes_are_exported_without_renaming_ports",
+      "source_file": "experiments/backends/paper/test_inputs.py",
+      "method_source_file": "experiments/backends/paper/test_inputs.py",
+      "source_line": 12,
+      "module": "test_inputs",
+      "generated": false,
+      "method_source_sha256": "cbd79e8927c71a814fb02050180db84f12e96b049c08c908cc8de6983de32d03"
+    },
+    {
+      "id": "test_inputs.InputContracts.test_spice_local_requests_are_decoupled_and_fit_frozen_budget",
+      "source_file": "experiments/backends/paper/test_inputs.py",
+      "method_source_file": "experiments/backends/paper/test_inputs.py",
+      "source_line": 77,
+      "module": "test_inputs",
+      "generated": false,
+      "method_source_sha256": "c8a5a385a8ccb8c91d015ad999346588c376797d041297a51c760f89097778d3"
+    },
+    {
+      "id": "test_observations.ObservationContracts.test_boolean_is_not_a_physical_sample",
+      "source_file": "experiments/backends/paper/test_observations.py",
+      "method_source_file": "experiments/backends/paper/test_observations.py",
+      "source_line": 81,
+      "module": "test_observations",
+      "generated": false,
+      "method_source_sha256": "449f92279bfaa651e2a0bbb85cd767f81a69685e835275d12601597a846f2d3d"
+    },
+    {
+      "id": "test_observations.ObservationContracts.test_boundary_request_provenance_is_preserved_without_qualification",
+      "source_file": "experiments/backends/paper/test_observations.py",
+      "method_source_file": "experiments/backends/paper/test_observations.py",
+      "source_line": 72,
+      "module": "test_observations",
+      "generated": false,
+      "method_source_sha256": "3a043311ed443e3050b9b9bfd79df05c0a950d8b8e7c6f1639bd9ccecb837ed1"
+    },
+    {
+      "id": "test_observations.ObservationContracts.test_dense_interpolated_counter_cannot_become_native_evidence",
+      "source_file": "experiments/backends/paper/test_observations.py",
+      "method_source_file": "experiments/backends/paper/test_observations.py",
+      "source_line": 9,
+      "module": "test_observations",
+      "generated": false,
+      "method_source_sha256": "23ee0fcc921cdce2ae63fcbd6ecd992579be45ef1befc8897a799bbcf5655a94"
+    },
+    {
+      "id": "test_observations.ObservationContracts.test_different_nominal_identity_is_diagnosed_not_tolerance_matched",
+      "source_file": "experiments/backends/paper/test_observations.py",
+      "method_source_file": "experiments/backends/paper/test_observations.py",
+      "source_line": 124,
+      "module": "test_observations",
+      "generated": false,
+      "method_source_sha256": "6138992767c6e5947df89ea313bafdae02f64f22e1f17787e057c753d1473cf2"
+    },
+    {
+      "id": "test_observations.ObservationContracts.test_empty_local_window_not_hidden_by_contained_point_filter",
+      "source_file": "experiments/backends/paper/test_observations.py",
+      "method_source_file": "experiments/backends/paper/test_observations.py",
+      "source_line": 47,
+      "module": "test_observations",
+      "generated": false,
+      "method_source_sha256": "e26d04337ecc39d3b076caa0692985287a068203c7a48b7c99c39cf4eb9109cd"
+    },
+    {
+      "id": "test_observations.ObservationContracts.test_invalid_input_rows_are_preserved_and_flagged",
+      "source_file": "experiments/backends/paper/test_observations.py",
+      "method_source_file": "experiments/backends/paper/test_observations.py",
+      "source_line": 25,
+      "module": "test_observations",
+      "generated": false,
+      "method_source_sha256": "c2a57abc681b6cc9f6f4fce21b84010cc4d8bb72c19184f6868d130873cda9e6"
+    },
+    {
+      "id": "test_observations.ObservationContracts.test_malformed_boundary_nominals_remain_diagnosed",
+      "source_file": "experiments/backends/paper/test_observations.py",
+      "method_source_file": "experiments/backends/paper/test_observations.py",
+      "source_line": 137,
+      "module": "test_observations",
+      "generated": false,
+      "method_source_sha256": "15e1d94633695f2f40445cbd42aec3bc8b6469befcd5219db6d171952cbd000b"
+    },
+    {
+      "id": "test_observations.ObservationContracts.test_missing_uncertainty_never_inferred_from_native_grid",
+      "source_file": "experiments/backends/paper/test_observations.py",
+      "method_source_file": "experiments/backends/paper/test_observations.py",
+      "source_line": 19,
+      "module": "test_observations",
+      "generated": false,
+      "method_source_sha256": "5cf0a741304b4d3f970c8a3af82e3ebe351034634111bf7c447036c3045a976c"
+    },
+    {
+      "id": "test_observations.ObservationContracts.test_native_format_reader_preserves_raw_boundary_values",
+      "source_file": "experiments/backends/paper/test_observations.py",
+      "method_source_file": "experiments/backends/paper/test_observations.py",
+      "source_line": 31,
+      "module": "test_observations",
+      "generated": false,
+      "method_source_sha256": "b0e637d9465dedc961d4d6be916af5ba1049d9b37458c22737325de8f88d885c"
+    },
+    {
+      "id": "test_observations.ObservationContracts.test_proved_boundary_serialization_offset_does_not_fail_exact_literal_gate",
+      "source_file": "experiments/backends/paper/test_observations.py",
+      "method_source_file": "experiments/backends/paper/test_observations.py",
+      "source_line": 108,
+      "module": "test_observations",
+      "generated": false,
+      "method_source_sha256": "c4343a8619a116208a25e8d4741c617da768f40c906d428aeac4414fd0048019"
+    },
+    {
+      "id": "test_observations.ObservationContracts.test_qualified_native_export_requires_unchanged_role_certificates",
+      "source_file": "experiments/backends/paper/test_observations.py",
+      "method_source_file": "experiments/backends/paper/test_observations.py",
+      "source_line": 53,
+      "module": "test_observations",
+      "generated": false,
+      "method_source_sha256": "920a44f8597efc93bb7e8b0c9dfd0853b5d8cd25c8832e42cdd43d8255a50928"
+    },
+    {
+      "id": "test_observations.ObservationContracts.test_reader_leaves_suite_unchanged_on_success_and_parse_failure",
+      "source_file": "experiments/backends/paper/test_observations.py",
+      "method_source_file": "experiments/backends/paper/test_observations.py",
+      "source_line": 86,
+      "module": "test_observations",
+      "generated": false,
+      "method_source_sha256": "0f1c0f9704b0638f721f2aa9f696a5ec886b7151b0ceb1e82c579ebc602e43b0"
+    },
+    {
+      "id": "test_producer_dependencies.ProducerDependencyContracts.test_legacy_and_current_producers_keep_distinct_reader_contracts",
+      "source_file": "experiments/backends/paper/test_producer_dependencies.py",
+      "method_source_file": "experiments/backends/paper/test_producer_dependencies.py",
+      "source_line": 41,
+      "module": "test_producer_dependencies",
+      "generated": false,
+      "method_source_sha256": "21a785281b379718d2c5832efd632e3ab6bed33454eccac27ecac217b67709b9"
+    },
+    {
+      "id": "test_producer_dependencies.ProducerDependencyContracts.test_missing_current_reader_does_not_fall_back_to_existing_legacy_files",
+      "source_file": "experiments/backends/paper/test_producer_dependencies.py",
+      "method_source_file": "experiments/backends/paper/test_producer_dependencies.py",
+      "source_line": 57,
+      "module": "test_producer_dependencies",
+      "generated": false,
+      "method_source_sha256": "fcdc1efdd074417be398df8570164200800bea19f646d4ab44d22d67063841e2"
+    },
+    {
+      "id": "test_producer_dependencies.ProducerDependencyContracts.test_shared_constructor_is_required_when_the_audited_worker_imports_it",
+      "source_file": "experiments/backends/paper/test_producer_dependencies.py",
+      "method_source_file": "experiments/backends/paper/test_producer_dependencies.py",
+      "source_line": 66,
+      "module": "test_producer_dependencies",
+      "generated": false,
+      "method_source_sha256": "6ecf50305e2654cb1b901423f7e5d70dcc3c765068d02446d2b3cebf1df4f203"
+    },
+    {
+      "id": "test_producer_dependencies.ProducerDependencyContracts.test_unknown_or_ambiguous_reader_contract_cannot_claim_a_complete_producer",
+      "source_file": "experiments/backends/paper/test_producer_dependencies.py",
+      "method_source_file": "experiments/backends/paper/test_producer_dependencies.py",
+      "source_line": 79,
+      "module": "test_producer_dependencies",
+      "generated": false,
+      "method_source_sha256": "b1b3d41f27cae609b94741c7f1cfcf771cb113bae1f17aed89bea56ce01bf77e"
+    },
+    {
+      "id": "test_runner.RunnerContracts.test_actual_controls_override_request_echo_and_keep_unsupported_unknown",
+      "source_file": "experiments/backends/paper/test_runner.py",
+      "method_source_file": "experiments/backends/paper/test_runner.py",
+      "source_line": 122,
+      "module": "test_runner",
+      "generated": false,
+      "method_source_sha256": "f3a984e296a9b39e8aecc3daf3eef15becfc63c2ae4690240f0852127c6f9d13"
+    },
+    {
+      "id": "test_runner.RunnerContracts.test_allocation_must_bind_frozen_inputs_and_profile",
+      "source_file": "experiments/backends/paper/test_runner.py",
+      "method_source_file": "experiments/backends/paper/test_runner.py",
+      "source_line": 28,
+      "module": "test_runner",
+      "generated": false,
+      "method_source_sha256": "60e875f264e68a9b29076ada74b84ff8660b4b8c9a0e7f2d073d72c41c069923"
+    },
+    {
+      "id": "test_runner.RunnerContracts.test_cleanup_failure_overrides_zero_exit_and_aborts",
+      "source_file": "experiments/backends/paper/test_runner.py",
+      "method_source_file": "experiments/backends/paper/test_runner.py",
+      "source_line": 17,
+      "module": "test_runner",
+      "generated": false,
+      "method_source_sha256": "427917603177d2dc0ee74809bd1ce4ccacc4f7ca19bfc09cdc97f33300ec2ee3"
+    },
+    {
+      "id": "test_runner.RunnerContracts.test_compact_response_preserves_all_fields_values_and_unknown_bounds",
+      "source_file": "experiments/backends/paper/test_runner.py",
+      "method_source_file": "experiments/backends/paper/test_runner.py",
+      "source_line": 105,
+      "module": "test_runner",
+      "generated": false,
+      "method_source_sha256": "4eaf3151def26249540505d4b50b9be5e487b4f50fd49e96b1ec787bd5c012d3"
+    },
+    {
+      "id": "test_runner.RunnerContracts.test_compile_failure_and_timeout_keep_stage_and_different_states",
+      "source_file": "experiments/backends/paper/test_runner.py",
+      "method_source_file": "experiments/backends/paper/test_runner.py",
+      "source_line": 23,
+      "module": "test_runner",
+      "generated": false,
+      "method_source_sha256": "7137b0342d30ac4da33288c95d485856cddfefa18c0565e40ac68e359700cf2c"
+    },
+    {
+      "id": "test_runner.RunnerContracts.test_container_allocation_cannot_claim_less_than_factory_memory",
+      "source_file": "experiments/backends/paper/test_runner.py",
+      "method_source_file": "experiments/backends/paper/test_runner.py",
+      "source_line": 64,
+      "module": "test_runner",
+      "generated": false,
+      "method_source_sha256": "830e630885d82266177f155a6a56a2162edd2930fbaf7dd5a76e8a20179c4561"
+    },
+    {
+      "id": "test_runner.RunnerContracts.test_container_manifest_and_package_cannot_drift_together",
+      "source_file": "experiments/backends/paper/test_runner.py",
+      "method_source_file": "experiments/backends/paper/test_runner.py",
+      "source_line": 71,
+      "module": "test_runner",
+      "generated": false,
+      "method_source_sha256": "f261094edac8bb3048235c3f87dc3ce1128dd240838fb44c20119c5a2ffe5ce2"
+    },
+    {
+      "id": "test_runner.RunnerContracts.test_drift_after_first_case_preserves_complete_lane_receipt",
+      "source_file": "experiments/backends/paper/test_runner.py",
+      "method_source_file": "experiments/backends/paper/test_runner.py",
+      "source_line": 152,
+      "module": "test_runner",
+      "generated": false,
+      "method_source_sha256": "523f975c55ce385b25e8d00c1c76f6bff5ac1111465074f52401070ed79ca12e"
+    },
+    {
+      "id": "test_runner.RunnerContracts.test_gnucap_parser_errors_override_existing_waveform_and_zero_exit",
+      "source_file": "experiments/backends/paper/test_runner.py",
+      "method_source_file": "experiments/backends/paper/test_runner.py",
+      "source_line": 317,
+      "module": "test_runner",
+      "generated": false,
+      "method_source_sha256": "bba31b243db6d3636f34abea25913d7b80be3d15fac9c946e0d5ee2617b729e2"
+    },
+    {
+      "id": "test_runner.RunnerContracts.test_owned_container_is_checked_after_success_and_failed_removal",
+      "source_file": "experiments/backends/paper/test_runner.py",
+      "method_source_file": "experiments/backends/paper/test_runner.py",
+      "source_line": 44,
+      "module": "test_runner",
+      "generated": false,
+      "method_source_sha256": "ed1fc47f60156c3c4a7852cbe7a5fc102a7186c14b8fdd21aff81351dde2faeb"
+    },
+    {
+      "id": "test_runner.RunnerContracts.test_raw_parser_error_retains_invalid_observation_state",
+      "source_file": "experiments/backends/paper/test_runner.py",
+      "method_source_file": "experiments/backends/paper/test_runner.py",
+      "source_line": 36,
+      "module": "test_runner",
+      "generated": false,
+      "method_source_sha256": "288f68ff831e33271f9b82b024e8a1c940226a9f57d350805137d54ba3ccbba8"
+    },
+    {
+      "id": "test_runner.RunnerContracts.test_request_echo_cannot_be_effective_evas_readback",
+      "source_file": "experiments/backends/paper/test_runner.py",
+      "method_source_file": "experiments/backends/paper/test_runner.py",
+      "source_line": 90,
+      "module": "test_runner",
+      "generated": false,
+      "method_source_sha256": "b9abd5169bcd9d46f4e9baa6a682c8712bbfa2f68e57c9bac3d17ff93d32c8b7"
+    },
+    {
+      "id": "test_runner.RunnerContracts.test_selected_plan_is_checked_against_actual_allocation_before_preflight",
+      "source_file": "experiments/backends/paper/test_runner.py",
+      "method_source_file": "experiments/backends/paper/test_runner.py",
+      "source_line": 201,
+      "module": "test_runner",
+      "generated": false,
+      "method_source_sha256": "49852f9408a039fa78cd27b9e8bec02eaec4b112f2a31ff181a919b33e0c0a2e"
+    },
+    {
+      "id": "test_runner.RunnerContracts.test_subset_selection_requires_known_distinct_ids_and_matching_grants",
+      "source_file": "experiments/backends/paper/test_runner.py",
+      "method_source_file": "experiments/backends/paper/test_runner.py",
+      "source_line": 217,
+      "module": "test_runner",
+      "generated": false,
+      "method_source_sha256": "0e586c4f091533599b03d62e5e3707499c1530aa997956346a785101324c64ec"
+    },
+    {
+      "id": "test_runner.RunnerContracts.test_successful_exit_without_artifact_is_not_success",
+      "source_file": "experiments/backends/paper/test_runner.py",
+      "method_source_file": "experiments/backends/paper/test_runner.py",
+      "source_line": 8,
+      "module": "test_runner",
+      "generated": false,
+      "method_source_sha256": "b14941a8e1bc0f0a36f7e26ac7547fa9fd11b74529aadbbd186b826660a3fb5b"
+    },
+    {
+      "id": "test_runner.RunnerContracts.test_terminal_directory_budget_is_actual_and_excess_is_explicit",
+      "source_file": "experiments/backends/paper/test_runner.py",
+      "method_source_file": "experiments/backends/paper/test_runner.py",
+      "source_line": 229,
+      "module": "test_runner",
+      "generated": false,
+      "method_source_sha256": "eff32116de0ec4c137d086b45c835aced753863fba30d859fc7d870223d2c06c"
+    },
+    {
+      "id": "test_runner.RunnerContracts.test_two_selected_conditions_keep_twelve_records_without_launching_others",
+      "source_file": "experiments/backends/paper/test_runner.py",
+      "method_source_file": "experiments/backends/paper/test_runner.py",
+      "source_line": 238,
+      "module": "test_runner",
+      "generated": false,
+      "method_source_sha256": "4206bcadb2228fa886a66964498c64ce97255dc942850e47892a03cc62400ea6"
+    },
+    {
+      "id": "test_settings_readback.Calibration.test_dimension_wrong",
+      "source_file": "experiments/backends/paper/test_settings_readback.py",
+      "method_source_file": "experiments/backends/paper/test_settings_readback.py",
+      "source_line": 102,
+      "module": "test_settings_readback",
+      "generated": false,
+      "method_source_sha256": "9e99f560094661baa40acb9c2d61c9d44375a706ce53d57858326bb8fcae9d19"
+    },
+    {
+      "id": "test_settings_readback.Calibration.test_global_after_analysis",
+      "source_file": "experiments/backends/paper/test_settings_readback.py",
+      "method_source_file": "experiments/backends/paper/test_settings_readback.py",
+      "source_line": 108,
+      "module": "test_settings_readback",
+      "generated": false,
+      "method_source_sha256": "bf33048c9cd882eefa65aafb440742c4e1a0b2115bd5702fefbe1691503a124e"
+    },
+    {
+      "id": "test_settings_readback.Calibration.test_gnucap_conflicting_parsed_settings_are_rejected",
+      "source_file": "experiments/backends/paper/test_settings_readback.py",
+      "method_source_file": "experiments/backends/paper/test_settings_readback.py",
+      "source_line": 160,
+      "module": "test_settings_readback",
+      "generated": false,
+      "method_source_sha256": "b2710fa867277cdf2e0e5e6e20da312b8debafd2886a338b7825740e0bce116e"
+    },
+    {
+      "id": "test_settings_readback.Calibration.test_gnucap_equivalent_suffix_and_exponent_readbacks_are_accepted",
+      "source_file": "experiments/backends/paper/test_settings_readback.py",
+      "method_source_file": "experiments/backends/paper/test_settings_readback.py",
+      "source_line": 192,
+      "module": "test_settings_readback",
+      "generated": false,
+      "method_source_sha256": "c0c79dc3b8b936d3c5697477b898c9ba308e22e2ff563d45b7acf044fd82606f"
+    },
+    {
+      "id": "test_settings_readback.Calibration.test_gnucap_identical_repeated_settings_are_preserved",
+      "source_file": "experiments/backends/paper/test_settings_readback.py",
+      "method_source_file": "experiments/backends/paper/test_settings_readback.py",
+      "source_line": 171,
+      "module": "test_settings_readback",
+      "generated": false,
+      "method_source_sha256": "9bf9ed32ac081498050a1f90013b0db14336407410adc141a28d40db6335be18"
+    },
+    {
+      "id": "test_settings_readback.Calibration.test_gnucap_parse_error_blocks_settings",
+      "source_file": "experiments/backends/paper/test_settings_readback.py",
+      "method_source_file": "experiments/backends/paper/test_settings_readback.py",
+      "source_line": 150,
+      "module": "test_settings_readback",
+      "generated": false,
+      "method_source_sha256": "fb24b215e5d69d1dcc31b93ae8eaf5c5505c03ad7a717d768094a75900467bf6"
+    },
+    {
+      "id": "test_settings_readback.Calibration.test_ng_ambiguity",
+      "source_file": "experiments/backends/paper/test_settings_readback.py",
+      "method_source_file": "experiments/backends/paper/test_settings_readback.py",
+      "source_line": 92,
+      "module": "test_settings_readback",
+      "generated": false,
+      "method_source_sha256": "81b03a2f96629e8f24cb3dbf61d6ecc06827dccb5fc41867e8997caf94724197"
+    },
+    {
+      "id": "test_settings_readback.Calibration.test_ng_analysis_outside_snapshots",
+      "source_file": "experiments/backends/paper/test_settings_readback.py",
+      "method_source_file": "experiments/backends/paper/test_settings_readback.py",
+      "source_line": 123,
+      "module": "test_settings_readback",
+      "generated": false,
+      "method_source_sha256": "354057420b7c960292a04333befd9f05fb11172a8351eb8a413ba17f2af14d78"
+    },
+    {
+      "id": "test_settings_readback.Calibration.test_ng_command_suffix_mutation",
+      "source_file": "experiments/backends/paper/test_settings_readback.py",
+      "method_source_file": "experiments/backends/paper/test_settings_readback.py",
+      "source_line": 114,
+      "module": "test_settings_readback",
+      "generated": false,
+      "method_source_sha256": "a9c9b7c441c8183de55575f7a102ef77553a45eeaf40dfa8570e023dccc0bf6f"
+    },
+    {
+      "id": "test_settings_readback.Calibration.test_ng_intervening_mutator",
+      "source_file": "experiments/backends/paper/test_settings_readback.py",
+      "method_source_file": "experiments/backends/paper/test_settings_readback.py",
+      "source_line": 100,
+      "module": "test_settings_readback",
+      "generated": false,
+      "method_source_sha256": "c59af4bd9a42360f5c424578c93c95fc373388a8ada22942e9e7db4dfa3766e8"
+    },
+    {
+      "id": "test_settings_readback.Calibration.test_ng_logged_mutator_rejected",
+      "source_file": "experiments/backends/paper/test_settings_readback.py",
+      "method_source_file": "experiments/backends/paper/test_settings_readback.py",
+      "source_line": 121,
+      "module": "test_settings_readback",
+      "generated": false,
+      "method_source_sha256": "68c848760620996ad741a43ee163f9fa70f26f89c7ce5e13e52732cd588f8051"
+    },
+    {
+      "id": "test_settings_readback.Calibration.test_ng_malformed",
+      "source_file": "experiments/backends/paper/test_settings_readback.py",
+      "method_source_file": "experiments/backends/paper/test_settings_readback.py",
+      "source_line": 96,
+      "module": "test_settings_readback",
+      "generated": false,
+      "method_source_sha256": "578ae85753921ac2598a7c9828a59e08ebc7737c30767f003e09024539dc984e"
+    },
+    {
+      "id": "test_settings_readback.Calibration.test_ng_missing",
+      "source_file": "experiments/backends/paper/test_settings_readback.py",
+      "method_source_file": "experiments/backends/paper/test_settings_readback.py",
+      "source_line": 94,
+      "module": "test_settings_readback",
+      "generated": false,
+      "method_source_sha256": "77cc01463abbb68c1c05e5f5a248643c0e354714c9721c59a212b6080683b107"
+    },
+    {
+      "id": "test_settings_readback.Calibration.test_ng_multianalysis",
+      "source_file": "experiments/backends/paper/test_settings_readback.py",
+      "method_source_file": "experiments/backends/paper/test_settings_readback.py",
+      "source_line": 98,
+      "module": "test_settings_readback",
+      "generated": false,
+      "method_source_sha256": "d5f8cbbb40840fc91a6fa76fa678834d652d14668ab74c2c4ce2c4637486da86"
+    },
+    {
+      "id": "test_settings_readback.Calibration.test_ng_mutable_commands",
+      "source_file": "experiments/backends/paper/test_settings_readback.py",
+      "method_source_file": "experiments/backends/paper/test_settings_readback.py",
+      "source_line": 111,
+      "module": "test_settings_readback",
+      "generated": false,
+      "method_source_sha256": "5e324c3f8162bfb43e000156f2e83f57a02b8583723cecc0696bad22740ff186"
+    },
+    {
+      "id": "test_settings_readback.Calibration.test_ng_quoted_exports_reject_commands_and_expressions",
+      "source_file": "experiments/backends/paper/test_settings_readback.py",
+      "method_source_file": "experiments/backends/paper/test_settings_readback.py",
+      "source_line": 86,
+      "module": "test_settings_readback",
+      "generated": false,
+      "method_source_sha256": "7d99445b1d525911c8c455cf5f951c07ba060aac774d9055e543b7455c87d099"
+    },
+    {
+      "id": "test_settings_readback.Calibration.test_ng_quoted_node_exports_preserve_readback",
+      "source_file": "experiments/backends/paper/test_settings_readback.py",
+      "method_source_file": "experiments/backends/paper/test_settings_readback.py",
+      "source_line": 79,
+      "module": "test_settings_readback",
+      "generated": false,
+      "method_source_sha256": "2eab6649c3f775aa69b8d31abfbe1ac4c0ad5e3e177073c4e0451354a7e654b2"
+    },
+    {
+      "id": "test_settings_readback.Calibration.test_ng_scope_positive",
+      "source_file": "experiments/backends/paper/test_settings_readback.py",
+      "method_source_file": "experiments/backends/paper/test_settings_readback.py",
+      "source_line": 74,
+      "module": "test_settings_readback",
+      "generated": false,
+      "method_source_sha256": "00fd8308311adc7c35060e2cec6974d77f260dba2314ccfc95308d2655560b0c"
+    },
+    {
+      "id": "test_settings_readback.Calibration.test_ng_setting_change_after_snapshot",
+      "source_file": "experiments/backends/paper/test_settings_readback.py",
+      "method_source_file": "experiments/backends/paper/test_settings_readback.py",
+      "source_line": 125,
+      "module": "test_settings_readback",
+      "generated": false,
+      "method_source_sha256": "75cb2344e6a78ce7576e0cba410f468e1a893e9a0ba7e633d98434ec9dbcb105"
+    },
+    {
+      "id": "test_settings_readback.Calibration.test_ng_source_stepping_is_failure_diagnostic",
+      "source_file": "experiments/backends/paper/test_settings_readback.py",
+      "method_source_file": "experiments/backends/paper/test_settings_readback.py",
+      "source_line": 118,
+      "module": "test_settings_readback",
+      "generated": false,
+      "method_source_sha256": "6dd47c089962de90a3996fd929e917c5910e114c9d53eb44f8318a0051c79130"
+    },
+    {
+      "id": "test_settings_readback.Calibration.test_psf_duplicate",
+      "source_file": "experiments/backends/paper/test_settings_readback.py",
+      "method_source_file": "experiments/backends/paper/test_settings_readback.py",
+      "source_line": 129,
+      "module": "test_settings_readback",
+      "generated": false,
+      "method_source_sha256": "65a5eac805f6a1041f9f6443f7a6db5929230c20a54496e751d6b213b7f80301"
+    },
+    {
+      "id": "test_settings_readback.Calibration.test_psf_malformed_method_quotes",
+      "source_file": "experiments/backends/paper/test_settings_readback.py",
+      "method_source_file": "experiments/backends/paper/test_settings_readback.py",
+      "source_line": 127,
+      "module": "test_settings_readback",
+      "generated": false,
+      "method_source_sha256": "62572c4a70e9cea3491ba32bbc3c8ba40ee221891f7ff773d7a6eb57b089d328"
+    },
+    {
+      "id": "test_settings_readback.Calibration.test_psf_mismatch",
+      "source_file": "experiments/backends/paper/test_settings_readback.py",
+      "method_source_file": "experiments/backends/paper/test_settings_readback.py",
+      "source_line": 71,
+      "module": "test_settings_readback",
+      "generated": false,
+      "method_source_sha256": "8a46e2a7add4d48c4abce80f13fd600de5e5176dd73e1a710289b8eb1b683ac7"
+    },
+    {
+      "id": "test_settings_readback.Calibration.test_runner_preserves_scopes_mismatch_unknown",
+      "source_file": "experiments/backends/paper/test_settings_readback.py",
+      "method_source_file": "experiments/backends/paper/test_settings_readback.py",
+      "source_line": 131,
+      "module": "test_settings_readback",
+      "generated": false,
+      "method_source_sha256": "f01050b322d30ab1e8655c6b2e56ea346fa2b23699594c6d85f6b466e993bf97"
+    },
+    {
+      "id": "test_settings_readback.Calibration.test_spectre_ambiguity",
+      "source_file": "experiments/backends/paper/test_settings_readback.py",
+      "method_source_file": "experiments/backends/paper/test_settings_readback.py",
+      "source_line": 62,
+      "module": "test_settings_readback",
+      "generated": false,
+      "method_source_sha256": "6ae726dfe1942de7187a5ef0c4436b44f950774a227a83bf4c25001e79c86200"
+    },
+    {
+      "id": "test_settings_readback.Calibration.test_spectre_malformed",
+      "source_file": "experiments/backends/paper/test_settings_readback.py",
+      "method_source_file": "experiments/backends/paper/test_settings_readback.py",
+      "source_line": 66,
+      "module": "test_settings_readback",
+      "generated": false,
+      "method_source_sha256": "4e221afb6a51d4b6fa07fd846e14f23232a18a6598be03ba4dd2cc4d24de1b9d"
+    },
+    {
+      "id": "test_settings_readback.Calibration.test_spectre_missing",
+      "source_file": "experiments/backends/paper/test_settings_readback.py",
+      "method_source_file": "experiments/backends/paper/test_settings_readback.py",
+      "source_line": 64,
+      "module": "test_settings_readback",
+      "generated": false,
+      "method_source_sha256": "bb636a99932f9094294b5aea698e7d42c772211f7c0b9270cf8cdc8e82092b18"
+    },
+    {
+      "id": "test_settings_readback.Calibration.test_spectre_multianalysis",
+      "source_file": "experiments/backends/paper/test_settings_readback.py",
+      "method_source_file": "experiments/backends/paper/test_settings_readback.py",
+      "source_line": 69,
+      "module": "test_settings_readback",
+      "generated": false,
+      "method_source_sha256": "a9622f0807b350b148f1481e9de42d5aa89818ade4818452941ba70ad8d299fd"
+    },
+    {
+      "id": "test_settings_readback.Calibration.test_spectre_observed_si_prefixes",
+      "source_file": "experiments/backends/paper/test_settings_readback.py",
+      "method_source_file": "experiments/backends/paper/test_settings_readback.py",
+      "source_line": 47,
+      "module": "test_settings_readback",
+      "generated": false,
+      "method_source_sha256": "2182cdee882fbe1f200bb88804922bccf870b3a176e00b752cde4a6aa3a16eeb"
+    },
+    {
+      "id": "test_settings_readback.Calibration.test_spectre_scoped_positive",
+      "source_file": "experiments/backends/paper/test_settings_readback.py",
+      "method_source_file": "experiments/backends/paper/test_settings_readback.py",
+      "source_line": 57,
+      "module": "test_settings_readback",
+      "generated": false,
+      "method_source_sha256": "3f7ec1049dd40439eb962982972f477be3d5528010439f7280f2e96d35e1d9c6"
+    },
+    {
+      "id": "test_spectre_printed_metadata.PrintedMetadata.test_actual_global_format_controls_are_required_only_for_calibrated_mode",
+      "source_file": "experiments/backends/paper/test_spectre_printed_metadata.py",
+      "method_source_file": "experiments/backends/paper/test_spectre_printed_metadata.py",
+      "source_line": 59,
+      "module": "test_spectre_printed_metadata",
+      "generated": false,
+      "method_source_sha256": "90227cb98da37e9fca6c42bceca58f82e85b27902bc95084d24de8eb700f7140"
+    },
+    {
+      "id": "test_spectre_printed_metadata.PrintedMetadata.test_actual_sci_producer_uses_log_values_and_printed_intervals",
+      "source_file": "experiments/backends/paper/test_spectre_printed_metadata.py",
+      "method_source_file": "experiments/backends/paper/test_spectre_printed_metadata.py",
+      "source_line": 16,
+      "module": "test_spectre_printed_metadata",
+      "generated": false,
+      "method_source_sha256": "286b6d04fe844b08f26f5757d90a2e09948068ecb7a4b8a0421b4d4e07d754ba"
+    },
+    {
+      "id": "test_spectre_printed_metadata.PrintedMetadata.test_changed_calibration_is_not_an_admission_flag",
+      "source_file": "experiments/backends/paper/test_spectre_printed_metadata.py",
+      "method_source_file": "experiments/backends/paper/test_spectre_printed_metadata.py",
+      "source_line": 48,
+      "module": "test_spectre_printed_metadata",
+      "generated": false,
+      "method_source_sha256": "6980ee269072dc45a511015e248ba0d9cf268ec109f3828c688e0df67973e44f"
+    },
+    {
+      "id": "test_spectre_printed_metadata.PrintedMetadata.test_decimal_power_of_ten_lower_bin_is_narrower",
+      "source_file": "experiments/backends/paper/test_spectre_printed_metadata.py",
+      "method_source_file": "experiments/backends/paper/test_spectre_printed_metadata.py",
+      "source_line": 52,
+      "module": "test_spectre_printed_metadata",
+      "generated": false,
+      "method_source_sha256": "eec2b486ff198a45fb8cff57768de1f232e7b532044191b931dbe7f02eed6976"
+    },
+    {
+      "id": "test_spectre_printed_metadata.PrintedMetadata.test_opt_in_rejects_scope_format_identity_and_value_corruption",
+      "source_file": "experiments/backends/paper/test_spectre_printed_metadata.py",
+      "method_source_file": "experiments/backends/paper/test_spectre_printed_metadata.py",
+      "source_line": 24,
+      "module": "test_spectre_printed_metadata",
+      "generated": false,
+      "method_source_sha256": "39540af6437f87b6ee42cd853c6b2403272cde8f8831c43654338ada6682324e"
+    },
+    {
+      "id": "test_spectre_printed_metadata.PrintedMetadata.test_rounding_alone_is_not_calibration",
+      "source_file": "experiments/backends/paper/test_spectre_printed_metadata.py",
+      "method_source_file": "experiments/backends/paper/test_spectre_printed_metadata.py",
+      "source_line": 13,
+      "module": "test_spectre_printed_metadata",
+      "generated": false,
+      "method_source_sha256": "2106a82823fbda5ce3e11a689d1a1b658b17e96212490a86b31cba9bdce14ec1"
+    },
+    {
+      "id": "test_spectre_printed_metadata.PrintedMetadata.test_strict_mode_does_not_accept_rounded_header",
+      "source_file": "experiments/backends/paper/test_spectre_printed_metadata.py",
+      "method_source_file": "experiments/backends/paper/test_spectre_printed_metadata.py",
+      "source_line": 9,
+      "module": "test_spectre_printed_metadata",
+      "generated": false,
+      "method_source_sha256": "a38279810b8cfaf20202ba80d1670ee3d3797143288aa4a36883e31aa1d8e8f5"
+    },
+    {
+      "id": "test_table.TableControls.test_all_six_statuses_are_retained",
+      "source_file": "experiments/backends/paper/test_table.py",
+      "method_source_file": "experiments/backends/paper/test_table.py",
+      "source_line": 719,
+      "module": "test_table",
+      "generated": false,
+      "method_source_sha256": "f1295d0d06940d3de6cb328a0eef63ef83610558fef496ee27c19e96ad0eee65"
+    },
+    {
+      "id": "test_table.TableControls.test_bound_deck_parse_X_needs_no_rejected_waveform_when_none_created",
+      "source_file": "experiments/backends/paper/test_table.py",
+      "method_source_file": "experiments/backends/paper/test_table.py",
+      "source_line": 817,
+      "module": "test_table",
+      "generated": false,
+      "method_source_sha256": "a5586fb5de39265de2328acc857b89a2e7f50d6a097262279af813aded4ec03b"
+    },
+    {
+      "id": "test_table.TableControls.test_checker_reanalysis_composes_with_unchanged_observation_derivation",
+      "source_file": "experiments/backends/paper/test_table.py",
+      "method_source_file": "experiments/backends/paper/test_table.py",
+      "source_line": 280,
+      "module": "test_table",
+      "generated": false,
+      "method_source_sha256": "d3e0f32a1e181fa536b3fef1af617324b908517b920e58842b58a1692444eb48"
+    },
+    {
+      "id": "test_table.TableControls.test_checker_reanalysis_preserves_original_verdict_for_all_backends_and_X",
+      "source_file": "experiments/backends/paper/test_table.py",
+      "method_source_file": "experiments/backends/paper/test_table.py",
+      "source_line": 268,
+      "module": "test_table",
+      "generated": false,
+      "method_source_sha256": "d29a65935372761cd7af1ebe2c965c1e9070275d0a15f30b0203f47ee2738a7c"
+    },
+    {
+      "id": "test_table.TableControls.test_checker_reanalysis_rejects_changes_to_execution_or_observation_fields",
+      "source_file": "experiments/backends/paper/test_table.py",
+      "method_source_file": "experiments/backends/paper/test_table.py",
+      "source_line": 296,
+      "module": "test_table",
+      "generated": false,
+      "method_source_sha256": "d9058aa3a90e8651e47778ae784be7a792ec402dac0de3e22a7e6d0f336ca805"
+    },
+    {
+      "id": "test_table.TableControls.test_checker_reanalysis_rejects_unadmitted_method_and_snapshot_drift",
+      "source_file": "experiments/backends/paper/test_table.py",
+      "method_source_file": "experiments/backends/paper/test_table.py",
+      "source_line": 285,
+      "module": "test_table",
+      "generated": false,
+      "method_source_sha256": "6ff51debf8bb83dcff3d783bf7c99fa00fee24424358186e06c0e9c01c0e7436"
+    },
+    {
+      "id": "test_table.TableControls.test_checker_reanalysis_requires_actual_original_record_validation",
+      "source_file": "experiments/backends/paper/test_table.py",
+      "method_source_file": "experiments/backends/paper/test_table.py",
+      "source_line": 306,
+      "module": "test_table",
+      "generated": false,
+      "method_source_sha256": "4f6b5226223c6a7bb4ea4d913a23dfc488e5a44eb3557cfca780b6c115cb233e"
+    },
+    {
+      "id": "test_table.TableControls.test_condition_observation_and_card_bindings_are_checked",
+      "source_file": "experiments/backends/paper/test_table.py",
+      "method_source_file": "experiments/backends/paper/test_table.py",
+      "source_line": 498,
+      "module": "test_table",
+      "generated": false,
+      "method_source_sha256": "7e291110168ff639616d6dc709f617336b3a0101f60757a16f3eac460731e036"
+    },
+    {
+      "id": "test_table.TableControls.test_deck_parse_X_rejects_unbound_diagnostic_and_raw_evidence",
+      "source_file": "experiments/backends/paper/test_table.py",
+      "method_source_file": "experiments/backends/paper/test_table.py",
+      "source_line": 778,
+      "module": "test_table",
+      "generated": false,
+      "method_source_sha256": "1d34d5a721a5d21979f6948a76d9485bc123f573620d6c446ac4fa9714900c89"
+    },
+    {
+      "id": "test_table.TableControls.test_deck_parse_X_requires_manifest_bound_diagnostic_log",
+      "source_file": "experiments/backends/paper/test_table.py",
+      "method_source_file": "experiments/backends/paper/test_table.py",
+      "source_line": 797,
+      "module": "test_table",
+      "generated": false,
+      "method_source_sha256": "f1821670aff12816b359e763c24335a18020661e98be9e219593966861068794"
+    },
+    {
+      "id": "test_table.TableControls.test_deck_parse_X_requires_manifest_bound_rejected_raw",
+      "source_file": "experiments/backends/paper/test_table.py",
+      "method_source_file": "experiments/backends/paper/test_table.py",
+      "source_line": 807,
+      "module": "test_table",
+      "generated": false,
+      "method_source_sha256": "0c8a02a9b0ee99f8f7060c6afec5fa97685b47c6bb5eb4ad7b40ad0fd5f3f896"
+    },
+    {
+      "id": "test_table.TableControls.test_derived_analysis_cannot_change_time_voltage_or_geometry",
+      "source_file": "experiments/backends/paper/test_table.py",
+      "method_source_file": "experiments/backends/paper/test_table.py",
+      "source_line": 190,
+      "module": "test_table",
+      "generated": false,
+      "method_source_sha256": "1b62109ced0eb3650b9f273dbc2128820b18b121d16ff2d3f5136c1edcdf3eab"
+    },
+    {
+      "id": "test_table.TableControls.test_derived_analysis_keeps_original_I_without_new_attempt",
+      "source_file": "experiments/backends/paper/test_table.py",
+      "method_source_file": "experiments/backends/paper/test_table.py",
+      "source_line": 171,
+      "module": "test_table",
+      "generated": false,
+      "method_source_sha256": "1122831290bff97a286d616e2846a91ef220a8ee97c4e57bbdecb499aea9900b"
+    },
+    {
+      "id": "test_table.TableControls.test_derived_analysis_rejects_actual_or_analysis_artifact_drift",
+      "source_file": "experiments/backends/paper/test_table.py",
+      "method_source_file": "experiments/backends/paper/test_table.py",
+      "source_line": 180,
+      "module": "test_table",
+      "generated": false,
+      "method_source_sha256": "c65ac803c908f3b10dbfa7c80efd5aebf604cdd13dfe932ea93505c6a02677ea"
+    },
+    {
+      "id": "test_table.TableControls.test_derived_analysis_rejects_rehashed_evidence_identity_changes",
+      "source_file": "experiments/backends/paper/test_table.py",
+      "method_source_file": "experiments/backends/paper/test_table.py",
+      "source_line": 318,
+      "module": "test_table",
+      "generated": false,
+      "method_source_sha256": "f009148e428c677e913894210f2ed84f7a3ea0191aac8df2cc9dc22c30074f6e"
+    },
+    {
+      "id": "test_table.TableControls.test_derived_analysis_requires_original_assessment_and_exact_execution",
+      "source_file": "experiments/backends/paper/test_table.py",
+      "method_source_file": "experiments/backends/paper/test_table.py",
+      "source_line": 231,
+      "module": "test_table",
+      "generated": false,
+      "method_source_sha256": "d27700109f8ac9ad6bdef12b8e25767920e342ee96b59a7f42a1f47001d5f167"
+    },
+    {
+      "id": "test_table.TableControls.test_derived_analysis_retained_adapter_does_not_require_latest_checkout",
+      "source_file": "experiments/backends/paper/test_table.py",
+      "method_source_file": "experiments/backends/paper/test_table.py",
+      "source_line": 333,
+      "module": "test_table",
+      "generated": false,
+      "method_source_sha256": "55f5b12fdc1c0552336aad85d716ce194187e2f6269f588a7d979bde388de580"
+    },
+    {
+      "id": "test_table.TableControls.test_derived_analysis_retains_required_roles_and_property_failure",
+      "source_file": "experiments/backends/paper/test_table.py",
+      "method_source_file": "experiments/backends/paper/test_table.py",
+      "source_line": 205,
+      "module": "test_table",
+      "generated": false,
+      "method_source_sha256": "29293a673ac04173c62c34bf2159da3d50296a8a04c4725cd9693d0601796631"
+    },
+    {
+      "id": "test_table.TableControls.test_dynamic_tool_receipts_allow_disjoint_two_plus_ten",
+      "source_file": "experiments/backends/paper/test_table.py",
+      "method_source_file": "experiments/backends/paper/test_table.py",
+      "source_line": 620,
+      "module": "test_table",
+      "generated": false,
+      "method_source_sha256": "2cf1bfb3ca5565ac223bc2bdbf35333f25a57ed115e893607afb90f850bcb8a4"
+    },
+    {
+      "id": "test_table.TableControls.test_execution_status_cannot_be_relabelled_U_X_or_T",
+      "source_file": "experiments/backends/paper/test_table.py",
+      "method_source_file": "experiments/backends/paper/test_table.py",
+      "source_line": 539,
+      "module": "test_table",
+      "generated": false,
+      "method_source_sha256": "99e2555523a0a378952c082d719c155b53e6c3efc69d868371c7d13a06b82148"
+    },
+    {
+      "id": "test_table.TableControls.test_fake_pass_and_changed_artifacts_are_rejected",
+      "source_file": "experiments/backends/paper/test_table.py",
+      "method_source_file": "experiments/backends/paper/test_table.py",
+      "source_line": 485,
+      "module": "test_table",
+      "generated": false,
+      "method_source_sha256": "421656eb7a61b92c77f9530fa89186a3a3b547dc728415ea2be27474800c4908"
+    },
+    {
+      "id": "test_table.TableControls.test_final_lane_requires_unique_identical_row_and_unchanged_artifact",
+      "source_file": "experiments/backends/paper/test_table.py",
+      "method_source_file": "experiments/backends/paper/test_table.py",
+      "source_line": 698,
+      "module": "test_table",
+      "generated": false,
+      "method_source_sha256": "ea79172c5f28ed1315b676398fdf06480bca3f6980cd06a07fe947732bb6a289"
+    },
+    {
+      "id": "test_table.TableControls.test_frozen_identity_json_bytes_are_verified",
+      "source_file": "experiments/backends/paper/test_table.py",
+      "method_source_file": "experiments/backends/paper/test_table.py",
+      "source_line": 371,
+      "module": "test_table",
+      "generated": false,
+      "method_source_sha256": "3a8efec1424b69ff932ec2ecf37541328e35736a4125007794c54f8b1e1ab5f2"
+    },
+    {
+      "id": "test_table.TableControls.test_frozen_runner_checker_and_dependency_digest_are_bound",
+      "source_file": "experiments/backends/paper/test_table.py",
+      "method_source_file": "experiments/backends/paper/test_table.py",
+      "source_line": 353,
+      "module": "test_table",
+      "generated": false,
+      "method_source_sha256": "03fd69597229dfdd91acd3d17de9b4b28380ed7abb22fe39f2d6e2be7c175d95"
+    },
+    {
+      "id": "test_table.TableControls.test_frozen_waveform_deleted_or_changed_is_rejected",
+      "source_file": "experiments/backends/paper/test_table.py",
+      "method_source_file": "experiments/backends/paper/test_table.py",
+      "source_line": 404,
+      "module": "test_table",
+      "generated": false,
+      "method_source_sha256": "6c713449b05e9d83263d187540792337151aa9ce44cec02425f78251afe9f781"
+    },
+    {
+      "id": "test_table.TableControls.test_gnucap_deck_parse_error_requires_immutable_final_record_and_counts_X",
+      "source_file": "experiments/backends/paper/test_table.py",
+      "method_source_file": "experiments/backends/paper/test_table.py",
+      "source_line": 731,
+      "module": "test_table",
+      "generated": false,
+      "method_source_sha256": "c06b287eaf6001f6c490c025c68d4976881ceb0389a8c8d32fa1ee9dea022982"
+    },
+    {
+      "id": "test_table.TableControls.test_historical_valid_frozen_checker_is_accepted",
+      "source_file": "experiments/backends/paper/test_table.py",
+      "method_source_file": "experiments/backends/paper/test_table.py",
+      "source_line": 382,
+      "module": "test_table",
+      "generated": false,
+      "method_source_sha256": "f77e630e740ca4539419d5a4a5accaa70e9a92cdf503f6d5e6c71213097563dc"
+    },
+    {
+      "id": "test_table.TableControls.test_malformed_record_public_url_and_observation_are_ValueError",
+      "source_file": "experiments/backends/paper/test_table.py",
+      "method_source_file": "experiments/backends/paper/test_table.py",
+      "source_line": 386,
+      "module": "test_table",
+      "generated": false,
+      "method_source_sha256": "66f45ca3f4dfb6b30d588982a3f7f678edf81d20cea00a248cd304e80f78ea37"
+    },
+    {
+      "id": "test_table.TableControls.test_missing_duplicate_and_unknown_slots_are_rejected",
+      "source_file": "experiments/backends/paper/test_table.py",
+      "method_source_file": "experiments/backends/paper/test_table.py",
+      "source_line": 475,
+      "module": "test_table",
+      "generated": false,
+      "method_source_sha256": "8751f81960c35bcd7ae48159e6638d19a1879b55e50913ad2c4bef004c99ff56"
+    },
+    {
+      "id": "test_table.TableControls.test_other_attempt_started_or_tool_not_in_lane_manifest_is_rejected",
+      "source_file": "experiments/backends/paper/test_table.py",
+      "method_source_file": "experiments/backends/paper/test_table.py",
+      "source_line": 657,
+      "module": "test_table",
+      "generated": false,
+      "method_source_sha256": "4be7ab3f1c2b71c8ee98097a1ad18d142b7b597679978d6087f0cce31d8f1f98"
+    },
+    {
+      "id": "test_table.TableControls.test_partial_batch_keeps_all_denominators_and_card_design_separate",
+      "source_file": "experiments/backends/paper/test_table.py",
+      "method_source_file": "experiments/backends/paper/test_table.py",
+      "source_line": 460,
+      "module": "test_table",
+      "generated": false,
+      "method_source_sha256": "d76c4ed162acdeecd4434d320f461a0a27df42c70233b874d44fdd7e5f62bb48"
+    },
+    {
+      "id": "test_table.TableControls.test_pending_placeholder_cannot_claim_derived_analysis",
+      "source_file": "experiments/backends/paper/test_table.py",
+      "method_source_file": "experiments/backends/paper/test_table.py",
+      "source_line": 242,
+      "module": "test_table",
+      "generated": false,
+      "method_source_sha256": "15413203ade94785bb9b791b108a46995782d4eb71656f8254f77e39567cb08e"
+    },
+    {
+      "id": "test_table.TableControls.test_previous_assessment_cannot_grade_new_observation_or_execution",
+      "source_file": "experiments/backends/paper/test_table.py",
+      "method_source_file": "experiments/backends/paper/test_table.py",
+      "source_line": 521,
+      "module": "test_table",
+      "generated": false,
+      "method_source_sha256": "9a9e407b506b8e1fd33e2290f1941091c2fa3d28e38961185ab011334c8b5e5f"
+    },
+    {
+      "id": "test_table.TableControls.test_same_backend_two_plus_ten_requires_one_execution_identity",
+      "source_file": "experiments/backends/paper/test_table.py",
+      "method_source_file": "experiments/backends/paper/test_table.py",
+      "source_line": 571,
+      "module": "test_table",
+      "generated": false,
+      "method_source_sha256": "69bab9496abb923763145c3338626829835d7d0793707e3b01aec4d403363cb6"
+    },
+    {
+      "id": "test_table.TableControls.test_selected_slot_keeps_declared_prior_failure_without_increasing_N",
+      "source_file": "experiments/backends/paper/test_table.py",
+      "method_source_file": "experiments/backends/paper/test_table.py",
+      "source_line": 665,
+      "module": "test_table",
+      "generated": false,
+      "method_source_sha256": "f9dfdc78d37a09e29cfd1a49baf4d34c304f246481b0124b3156928b28298ed0"
+    },
+    {
+      "id": "test_table.TableControls.test_spectre_nested_waveform_is_accepted",
+      "source_file": "experiments/backends/paper/test_table.py",
+      "method_source_file": "experiments/backends/paper/test_table.py",
+      "source_line": 446,
+      "module": "test_table",
+      "generated": false,
+      "method_source_sha256": "39a61c270de4a9d7fe35bf77cdb631121eed3fe2eab47149e5e67a3cddc80b69"
+    },
+    {
+      "id": "test_table.TableControls.test_started_source_and_deck_match_executed_source_and_frozen_inputs",
+      "source_file": "experiments/backends/paper/test_table.py",
+      "method_source_file": "experiments/backends/paper/test_table.py",
+      "source_line": 599,
+      "module": "test_table",
+      "generated": false,
+      "method_source_sha256": "fd430b320c80b0103d5657a6c9d10709d045f8b4508e663cc475afcda4310c92"
+    },
+    {
+      "id": "test_table.TableControls.test_terminal_budget_failure_rejects_earlier_waveform_snapshot",
+      "source_file": "experiments/backends/paper/test_table.py",
+      "method_source_file": "experiments/backends/paper/test_table.py",
+      "source_line": 681,
+      "module": "test_table",
+      "generated": false,
+      "method_source_sha256": "3264ff953aa509c781478438ff2b6a1e30c1b51f0c0fc83df0e8a9aa0e30c664"
+    },
+    {
+      "id": "test_table.TableControls.test_waveform_digest_and_condition_path_are_checked",
+      "source_file": "experiments/backends/paper/test_table.py",
+      "method_source_file": "experiments/backends/paper/test_table.py",
+      "source_line": 417,
+      "module": "test_table",
+      "generated": false,
+      "method_source_sha256": "7927d5591327755d5accb0e3539798f53ec5496c1caff0b07f01aa2d3c7edc91"
+    }
+  ],
+  "failed_import_ids": [],
+  "loader_errors": [],
+  "method_count": 129,
+  "generated_count": 0,
+  "read_paths": [
+    "evas/validation/paper/__pycache__/case_inputs.cpython-314.pyc",
+    "evas/validation/paper/case_inputs.py",
+    "evas/validation/paper/core-v1.json",
+    "experiments/backends/evidence/__pycache__/legacy_waveforms.cpython-314.pyc",
+    "experiments/backends/evidence/legacy_waveforms.py",
+    "experiments/backends/paper/__pycache__/actual_observation.cpython-314.pyc",
+    "experiments/backends/paper/__pycache__/inputs.cpython-314.pyc",
+    "experiments/backends/paper/__pycache__/observations.cpython-314.pyc",
+    "experiments/backends/paper/__pycache__/process.cpython-314.pyc",
+    "experiments/backends/paper/__pycache__/runner.cpython-314.pyc",
+    "experiments/backends/paper/__pycache__/settings_readback.cpython-314.pyc",
+    "experiments/backends/paper/__pycache__/table.cpython-314.pyc",
+    "experiments/backends/paper/__pycache__/test_actual_observation.cpython-314.pyc",
+    "experiments/backends/paper/__pycache__/test_inputs.cpython-314.pyc",
+    "experiments/backends/paper/__pycache__/test_observations.cpython-314.pyc",
+    "experiments/backends/paper/__pycache__/test_producer_dependencies.cpython-314.pyc",
+    "experiments/backends/paper/__pycache__/test_runner.cpython-314.pyc",
+    "experiments/backends/paper/__pycache__/test_settings_readback.cpython-314.pyc",
+    "experiments/backends/paper/__pycache__/test_spectre_printed_metadata.cpython-314.pyc",
+    "experiments/backends/paper/__pycache__/test_table.cpython-314.pyc",
+    "experiments/backends/paper/actual_observation.py",
+    "experiments/backends/paper/inputs.py",
+    "experiments/backends/paper/observations.py",
+    "experiments/backends/paper/process.py",
+    "experiments/backends/paper/runner.py",
+    "experiments/backends/paper/settings_readback.py",
+    "experiments/backends/paper/table.py",
+    "experiments/backends/paper/test_actual_observation.py",
+    "experiments/backends/paper/test_inputs.py",
+    "experiments/backends/paper/test_observations.py",
+    "experiments/backends/paper/test_producer_dependencies.py",
+    "experiments/backends/paper/test_runner.py",
+    "experiments/backends/paper/test_settings_readback.py",
+    "experiments/backends/paper/test_spectre_printed_metadata.py",
+    "experiments/backends/paper/test_table.py"
+  ],
+  "blocked": [],
+  "imported_project_modules": [
+    "experiments/backends/paper/actual_observation.py",
+    "experiments/backends/paper/inputs.py",
+    "experiments/backends/paper/observations.py",
+    "experiments/backends/paper/process.py",
+    "experiments/backends/paper/runner.py",
+    "experiments/backends/paper/settings_readback.py",
+    "experiments/backends/paper/table.py",
+    "experiments/backends/paper/test_actual_observation.py",
+    "experiments/backends/paper/test_inputs.py",
+    "experiments/backends/paper/test_observations.py",
+    "experiments/backends/paper/test_producer_dependencies.py",
+    "experiments/backends/paper/test_runner.py",
+    "experiments/backends/paper/test_settings_readback.py",
+    "experiments/backends/paper/test_spectre_printed_metadata.py",
+    "experiments/backends/paper/test_table.py"
+  ],
+  "returncode": 0,
+  "stderr": "",
+  "static_import_review": [
+    {
+      "path": "experiments/backends/paper/test_actual_observation.py",
+      "git_blob": "94f2853fb0462d731b808093ea0b2af8647df2de",
+      "top_level_calls": []
+    },
+    {
+      "path": "experiments/backends/paper/test_inputs.py",
+      "git_blob": "de27eafe2e1b18a880cf22d48471913fa93f3732",
+      "top_level_calls": [
+        "Path(__file__).resolve()",
+        "Path(__file__)"
+      ]
+    },
+    {
+      "path": "experiments/backends/paper/test_observations.py",
+      "git_blob": "4405c5e25dea393f4ea88270f132ccb048a4acf5",
+      "top_level_calls": []
+    },
+    {
+      "path": "experiments/backends/paper/test_producer_dependencies.py",
+      "git_blob": "0a51bc2dd091804b8acc8d42fc6316b735ea6032",
+      "top_level_calls": []
+    },
+    {
+      "path": "experiments/backends/paper/test_runner.py",
+      "git_blob": "1681b291cedfc3bfa5ee2e08bbbfdcf46a97f39c",
+      "top_level_calls": []
+    },
+    {
+      "path": "experiments/backends/paper/test_settings_readback.py",
+      "git_blob": "dee19d5ebcd73dd44e29db19aeaae99465509b28",
+      "top_level_calls": [
+        "SNAP.format('1e-5')",
+        "SNAP.format('0.001')"
+      ]
+    },
+    {
+      "path": "experiments/backends/paper/test_spectre_printed_metadata.py",
+      "git_blob": "a15bd636df91eb527ebd2a882f71f9a21d8350bd",
+      "top_level_calls": []
+    },
+    {
+      "path": "experiments/backends/paper/test_table.py",
+      "git_blob": "6ac77279dffc0f10f1abb001f2b6fe82eff2e5a6",
+      "top_level_calls": []
+    }
+  ],
+  "origin": "ci",
+  "loaded_source_identities": [
+    {
+      "path": "evas/validation/paper/case_inputs.py",
+      "git_blob": "af840830fdba7e321dc50102570248f50ee474e6",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/paper/core-v1.json",
+      "git_blob": "6e84ca899011c83d7b41fb252b60a4ad71b72837",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/evidence/legacy_waveforms.py",
+      "git_blob": "69f2dbf2394a353a40d6d78ece27b5429905c1aa",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/paper/actual_observation.py",
+      "git_blob": "138dd8dbff4bcf7eb19e5042cdf9d8dd8b7f35f0",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/paper/inputs.py",
+      "git_blob": "e03d3b68236f1649893cb9ded30db036335e0413",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/paper/observations.py",
+      "git_blob": "2657b39e773f526ba7b2e819b81364ac0be1f888",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/paper/process.py",
+      "git_blob": "1310c293da5daa0d18b3e110ac55d39d63a6a6c3",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/paper/runner.py",
+      "git_blob": "fdb7d1e1ed7d848ef42a11152d95f6d81adbd7cb",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/paper/settings_readback.py",
+      "git_blob": "cc5fb08977e9fbf88caa17053f745eae162c6cb8",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/paper/table.py",
+      "git_blob": "2866801ab0e12770240348e81a80dbf80ac3e1d1",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/paper/test_actual_observation.py",
+      "git_blob": "94f2853fb0462d731b808093ea0b2af8647df2de",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/paper/test_inputs.py",
+      "git_blob": "de27eafe2e1b18a880cf22d48471913fa93f3732",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/paper/test_observations.py",
+      "git_blob": "4405c5e25dea393f4ea88270f132ccb048a4acf5",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/paper/test_producer_dependencies.py",
+      "git_blob": "0a51bc2dd091804b8acc8d42fc6316b735ea6032",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/paper/test_runner.py",
+      "git_blob": "1681b291cedfc3bfa5ee2e08bbbfdcf46a97f39c",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/paper/test_settings_readback.py",
+      "git_blob": "dee19d5ebcd73dd44e29db19aeaae99465509b28",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/paper/test_spectre_printed_metadata.py",
+      "git_blob": "a15bd636df91eb527ebd2a882f71f9a21d8350bd",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/paper/test_table.py",
+      "git_blob": "6ac77279dffc0f10f1abb001f2b6fe82eff2e5a6",
+      "matches_main": true
+    }
+  ],
+  "source_identity_mismatches": [],
+  "collection_issues": []
+}

@@ -1,0 +1,155 @@
+{
+  "start": "evas/validation/strobe",
+  "pattern": "test_*.py",
+  "scope": "discovery-only",
+  "rows": [
+    {
+      "id": "test_near_timer.NearTimerChecker.test_positive_and_negative_controls",
+      "source_file": "evas/validation/strobe/test_near_timer.py",
+      "method_source_file": "evas/validation/strobe/test_near_timer.py",
+      "source_line": 11,
+      "module": "test_near_timer",
+      "generated": false,
+      "method_source_sha256": "478be4f194d898ef017e6866447f6edec0ce7eaa6a14eaec23f0917ce7709952"
+    },
+    {
+      "id": "test_output_policy.OutputPolicyCalibration.test_exact_forced_terminal_and_window_contract",
+      "source_file": "evas/validation/strobe/test_output_policy.py",
+      "method_source_file": "evas/validation/strobe/test_output_policy.py",
+      "source_line": 8,
+      "module": "test_output_policy",
+      "generated": false,
+      "method_source_sha256": "f8e664ce678303e988c311550c3b799daf7c3a9aab2b68c6c27f97d78a57f2e2"
+    },
+    {
+      "id": "test_output_policy.OutputPolicyCalibration.test_period_window_outside_rows_and_wrong_analytic_value",
+      "source_file": "evas/validation/strobe/test_output_policy.py",
+      "method_source_file": "evas/validation/strobe/test_output_policy.py",
+      "source_line": 16,
+      "module": "test_output_policy",
+      "generated": false,
+      "method_source_sha256": "bb8c5a09e2b760308d7a7cb0b3da981bc2754d836e0e71783c5d0b4461677546"
+    },
+    {
+      "id": "test_timer_composition.TimerIntegralCalibration.test_accept_and_reject_history_errors",
+      "source_file": "evas/validation/strobe/test_timer_composition.py",
+      "method_source_file": "evas/validation/strobe/test_timer_composition.py",
+      "source_line": 12,
+      "module": "test_timer_composition",
+      "generated": false,
+      "method_source_sha256": "cf1817f1215edb6995b2ac1922a863f443c8fd91c8db4152c03d13d4b2be413f"
+    },
+    {
+      "id": "test_timer_composition.TimerIntegralCalibration.test_rectangle_areas",
+      "source_file": "evas/validation/strobe/test_timer_composition.py",
+      "method_source_file": "evas/validation/strobe/test_timer_composition.py",
+      "source_line": 7,
+      "module": "test_timer_composition",
+      "generated": false,
+      "method_source_sha256": "8ca1df2b798049a753e044f429648270b9f5041408498ec247ff152fe34ff923"
+    }
+  ],
+  "failed_import_ids": [],
+  "loader_errors": [],
+  "method_count": 5,
+  "generated_count": 0,
+  "read_paths": [
+    "evas/validation/paper/__pycache__/precision_checker.cpython-314.pyc",
+    "evas/validation/paper/precision-v1.json",
+    "evas/validation/paper/precision_checker.py",
+    "evas/validation/sample_edge_filter/__pycache__/contract.cpython-314.pyc",
+    "evas/validation/sample_edge_filter/contract.py",
+    "evas/validation/strobe/__pycache__/near_timer.cpython-314.pyc",
+    "evas/validation/strobe/__pycache__/output_policy.cpython-314.pyc",
+    "evas/validation/strobe/__pycache__/test_near_timer.cpython-314.pyc",
+    "evas/validation/strobe/__pycache__/test_output_policy.cpython-314.pyc",
+    "evas/validation/strobe/__pycache__/test_timer_composition.cpython-314.pyc",
+    "evas/validation/strobe/__pycache__/timer_composition.cpython-314.pyc",
+    "evas/validation/strobe/near_timer.py",
+    "evas/validation/strobe/output_policy.py",
+    "evas/validation/strobe/test_near_timer.py",
+    "evas/validation/strobe/test_output_policy.py",
+    "evas/validation/strobe/test_timer_composition.py",
+    "evas/validation/strobe/timer_composition.py"
+  ],
+  "blocked": [],
+  "imported_project_modules": [
+    "evas/validation/paper/precision_checker.py",
+    "evas/validation/sample_edge_filter/contract.py",
+    "evas/validation/strobe/near_timer.py",
+    "evas/validation/strobe/output_policy.py",
+    "evas/validation/strobe/test_near_timer.py",
+    "evas/validation/strobe/test_output_policy.py",
+    "evas/validation/strobe/test_timer_composition.py",
+    "evas/validation/strobe/timer_composition.py"
+  ],
+  "returncode": 0,
+  "stderr": "",
+  "static_import_review": [
+    {
+      "path": "evas/validation/strobe/test_near_timer.py",
+      "git_blob": "edaa2562e54fa4588703a915dcfc925d98b4c68f",
+      "top_level_calls": []
+    },
+    {
+      "path": "evas/validation/strobe/test_output_policy.py",
+      "git_blob": "e55fd0f522a7c1a1d3e35a221761e038115cb9a5",
+      "top_level_calls": []
+    },
+    {
+      "path": "evas/validation/strobe/test_timer_composition.py",
+      "git_blob": "2907a7eaa0decc2fc8a971e6fc4511add03b156d",
+      "top_level_calls": []
+    }
+  ],
+  "origin": "ci",
+  "loaded_source_identities": [
+    {
+      "path": "evas/validation/paper/precision-v1.json",
+      "git_blob": "f12092c2fc8dc8f55941c56cf348bc0494afc71c",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/paper/precision_checker.py",
+      "git_blob": "6bbbe47d3d73f19e5355634ba5eba8dfc4f1fc07",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/sample_edge_filter/contract.py",
+      "git_blob": "e642ee16ddcbe97c49d9120ccaef2617e2585b9d",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/strobe/near_timer.py",
+      "git_blob": "c287f839da2596d38abc8be3b55d6b7157dc6abc",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/strobe/output_policy.py",
+      "git_blob": "8cbbe594cbac1a89a11219bca1cc119038d669f6",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/strobe/test_near_timer.py",
+      "git_blob": "edaa2562e54fa4588703a915dcfc925d98b4c68f",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/strobe/test_output_policy.py",
+      "git_blob": "e55fd0f522a7c1a1d3e35a221761e038115cb9a5",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/strobe/test_timer_composition.py",
+      "git_blob": "2907a7eaa0decc2fc8a971e6fc4511add03b156d",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/strobe/timer_composition.py",
+      "git_blob": "fe2a03bc66d6e3b21c3d5b693cb3a01b38cbb672",
+      "matches_main": true
+    }
+  ],
+  "source_identity_mismatches": [],
+  "collection_issues": []
+}

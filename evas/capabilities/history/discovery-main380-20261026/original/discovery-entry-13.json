@@ -1,0 +1,82 @@
+{
+  "start": "evas/validation/sample_edge_filter",
+  "pattern": "test_*.py",
+  "scope": "discovery-only",
+  "rows": [
+    {
+      "id": "test_contract.ContractCalibration.test_accepts_independent_analytical_histories",
+      "source_file": "evas/validation/sample_edge_filter/test_contract.py",
+      "method_source_file": "evas/validation/sample_edge_filter/test_contract.py",
+      "source_line": 33,
+      "module": "test_contract",
+      "generated": false,
+      "method_source_sha256": "50881c234f6d0f0620cee929febde9bba7efa3a0bed232e90ed09d6bdbfda93d"
+    },
+    {
+      "id": "test_contract.ContractCalibration.test_closed_form_ramp_anchor",
+      "source_file": "evas/validation/sample_edge_filter/test_contract.py",
+      "method_source_file": "evas/validation/sample_edge_filter/test_contract.py",
+      "source_line": 27,
+      "module": "test_contract",
+      "generated": false,
+      "method_source_sha256": "aebf260972c0a937be18d9c680864ca94ea2db1dab78656a5d7f59c61b475186"
+    },
+    {
+      "id": "test_contract.ContractCalibration.test_polygon_keeps_decimal_intent_distinct_from_exact_binary64",
+      "source_file": "evas/validation/sample_edge_filter/test_contract.py",
+      "method_source_file": "evas/validation/sample_edge_filter/test_contract.py",
+      "source_line": 21,
+      "module": "test_contract",
+      "generated": false,
+      "method_source_sha256": "9af3c3a469c9bd3c34966218e10593bc8d8a15b466e30e3c5fe5fd21ef1b3059"
+    },
+    {
+      "id": "test_contract.ContractCalibration.test_rejects_history_reset_missing_events_input_drift_and_nonfinite",
+      "source_file": "evas/validation/sample_edge_filter/test_contract.py",
+      "method_source_file": "evas/validation/sample_edge_filter/test_contract.py",
+      "source_line": 38,
+      "module": "test_contract",
+      "generated": false,
+      "method_source_sha256": "0d0156b15c6426dc7a5f2f8df844c3c7e55b3bc5a1753a6377886203e2ac7384"
+    }
+  ],
+  "failed_import_ids": [],
+  "loader_errors": [],
+  "method_count": 4,
+  "generated_count": 0,
+  "read_paths": [
+    "evas/validation/sample_edge_filter/__pycache__/contract.cpython-314.pyc",
+    "evas/validation/sample_edge_filter/__pycache__/test_contract.cpython-314.pyc",
+    "evas/validation/sample_edge_filter/contract.py",
+    "evas/validation/sample_edge_filter/test_contract.py"
+  ],
+  "blocked": [],
+  "imported_project_modules": [
+    "evas/validation/sample_edge_filter/contract.py",
+    "evas/validation/sample_edge_filter/test_contract.py"
+  ],
+  "returncode": 0,
+  "stderr": "",
+  "static_import_review": [
+    {
+      "path": "evas/validation/sample_edge_filter/test_contract.py",
+      "git_blob": "5fcd6e1509ae961bb0317d192d028bbf043e11e1",
+      "top_level_calls": []
+    }
+  ],
+  "origin": "ci",
+  "loaded_source_identities": [
+    {
+      "path": "evas/validation/sample_edge_filter/contract.py",
+      "git_blob": "e642ee16ddcbe97c49d9120ccaef2617e2585b9d",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/sample_edge_filter/test_contract.py",
+      "git_blob": "5fcd6e1509ae961bb0317d192d028bbf043e11e1",
+      "matches_main": true
+    }
+  ],
+  "source_identity_mismatches": [],
+  "collection_issues": []
+}

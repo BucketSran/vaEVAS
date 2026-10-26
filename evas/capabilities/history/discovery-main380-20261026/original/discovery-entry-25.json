@@ -1,0 +1,96 @@
+{
+  "start": "evas/validation/paper",
+  "pattern": "test_precision_binding.py",
+  "scope": "discovery-only",
+  "rows": [
+    {
+      "id": "test_precision_binding.BindingCalibration.test_changed_recipe_rejected_before_write",
+      "source_file": "evas/validation/paper/test_precision_binding.py",
+      "method_source_file": "evas/validation/paper/test_precision_binding.py",
+      "source_line": 44,
+      "module": "test_precision_binding",
+      "generated": false,
+      "method_source_sha256": "eb22989164fca19def63ba8334ffcef8ff176f0fe9d997ae869af9f73f7329c2"
+    },
+    {
+      "id": "test_precision_binding.BindingCalibration.test_dependency_drift_invalidates_registry",
+      "source_file": "evas/validation/paper/test_precision_binding.py",
+      "method_source_file": "evas/validation/paper/test_precision_binding.py",
+      "source_line": 31,
+      "module": "test_precision_binding",
+      "generated": false,
+      "method_source_sha256": "e2409e2a3ffa718c8b5a0447dfe96b13e746c927be93f78b5c8fbd0df3a8a77b"
+    },
+    {
+      "id": "test_precision_binding.BindingCalibration.test_no_silent_looser_target_or_unknown_case",
+      "source_file": "evas/validation/paper/test_precision_binding.py",
+      "method_source_file": "evas/validation/paper/test_precision_binding.py",
+      "source_line": 21,
+      "module": "test_precision_binding",
+      "generated": false,
+      "method_source_sha256": "a4f0e675e3f284a0f9b3c43f819b810f39bee7dc83a223be984fd3f439266fed"
+    },
+    {
+      "id": "test_precision_binding.BindingCalibration.test_tool_mismatch_invalidates_reuse",
+      "source_file": "evas/validation/paper/test_precision_binding.py",
+      "method_source_file": "evas/validation/paper/test_precision_binding.py",
+      "source_line": 27,
+      "module": "test_precision_binding",
+      "generated": false,
+      "method_source_sha256": "e2ea2f69318da23d66e3445d93d0174f3962256e4e26bc3075365d16b45153ce"
+    },
+    {
+      "id": "test_precision_binding.BindingCalibration.test_unqualified_prepare_does_not_write",
+      "source_file": "evas/validation/paper/test_precision_binding.py",
+      "method_source_file": "evas/validation/paper/test_precision_binding.py",
+      "source_line": 37,
+      "module": "test_precision_binding",
+      "generated": false,
+      "method_source_sha256": "e6e86c8965070279758868b43a306ba742df8d2269c870a0d241029b1d047d32"
+    }
+  ],
+  "failed_import_ids": [],
+  "loader_errors": [],
+  "method_count": 5,
+  "generated_count": 0,
+  "read_paths": [
+    "evas/validation/paper/__pycache__/precision_binding.cpython-314.pyc",
+    "evas/validation/paper/__pycache__/test_precision_binding.cpython-314.pyc",
+    "evas/validation/paper/precision_binding.py",
+    "evas/validation/paper/test_precision_binding.py"
+  ],
+  "blocked": [],
+  "imported_project_modules": [
+    "evas/validation/paper/precision_binding.py",
+    "evas/validation/paper/test_precision_binding.py"
+  ],
+  "returncode": 0,
+  "stderr": "",
+  "static_import_review": [
+    {
+      "path": "evas/validation/paper/test_precision_binding.py",
+      "git_blob": "5d373d00ebff0782e4d8e3c365559148239a837d",
+      "top_level_calls": [
+        "sys.path.insert(0, str(Path(__file__).resolve().parent))",
+        "str(Path(__file__).resolve().parent)",
+        "Path(__file__).resolve()",
+        "Path(__file__)"
+      ]
+    }
+  ],
+  "origin": "historically-omitted-extra",
+  "loaded_source_identities": [
+    {
+      "path": "evas/validation/paper/precision_binding.py",
+      "git_blob": "69e5662769cdbc4db8ce687db4cfaf008a200b69",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/paper/test_precision_binding.py",
+      "git_blob": "5d373d00ebff0782e4d8e3c365559148239a837d",
+      "matches_main": true
+    }
+  ],
+  "source_identity_mismatches": [],
+  "collection_issues": []
+}

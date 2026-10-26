@@ -1,0 +1,3066 @@
+{
+  "results": [
+    {
+      "mutation": "correct",
+      "test": "test_selected_ln.SelectedLn.test_extra_queries_preserve_common_physical_values",
+      "passed": true,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "mutation": "correct",
+      "test": "test_selected_ln.SelectedLn.test_hidden_interior_clamp_uses_original_source_at_every_query",
+      "passed": true,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "mutation": "constant_wrong_output",
+      "test": "test_selected_ln.SelectedLn.test_extra_queries_preserve_common_physical_values",
+      "passed": true,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "mutation": "constant_wrong_output",
+      "test": "test_selected_ln.SelectedLn.test_hidden_interior_clamp_uses_original_source_at_every_query",
+      "passed": false,
+      "failures": [
+        "Traceback (most recent call last):\n  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_selected_ln.py\", line 21, in test_hidden_interior_clamp_uses_original_source_at_every_query\n    self.assertLess(abs(row['voltages'][y]-float(want)),1e-10)\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 0.6931471805599454 not less than 1e-10\n"
+      ],
+      "errors": []
+    }
+  ],
+  "controls": [
+    {
+      "mutation": "correct",
+      "request": {
+        "program": {
+          "nodes": [
+            "0",
+            "u",
+            "y"
+          ],
+          "contributions": [
+            {
+              "branch": {
+                "instance": "dut",
+                "local_positive": "0",
+                "local_negative": "y",
+                "kind": "voltage"
+              },
+              "positive": 0,
+              "negative": 2,
+              "rhs": {
+                "op": "multiply",
+                "left": {
+                  "constant": -1.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "right": {
+                  "operator": 0,
+                  "op": "operator"
+                }
+              },
+              "origin": {
+                "source": "selected.va",
+                "line": 2,
+                "column": 116,
+                "instance": "dut",
+                "expansion": []
+              }
+            }
+          ],
+          "states": [],
+          "events": [],
+          "operators": [
+            {
+              "function": "ln",
+              "input": {
+                "binding": 0,
+                "op": "real_local"
+              },
+              "origin": {
+                "source": "selected.va",
+                "line": 2,
+                "column": 122,
+                "instance": "dut",
+                "expansion": []
+              },
+              "kind": "math"
+            }
+          ],
+          "schema_version": 33,
+          "step_bounds": [],
+          "procedures": [
+            {
+              "procedure_id": 0,
+              "instance": "dut",
+              "body": [
+                {
+                  "expanded_statement_ordinal": 0,
+                  "action": {
+                    "binding": 0,
+                    "value": {
+                      "value": {
+                        "relation": "ge",
+                        "left": {
+                          "operation": "subtract",
+                          "left": {
+                            "value": {
+                              "constant": 0.0,
+                              "terms": [
+                                {
+                                  "node": 0,
+                                  "coefficient": -1.0
+                                },
+                                {
+                                  "node": 1,
+                                  "coefficient": 1.0
+                                }
+                              ],
+                              "op": "affine"
+                            },
+                            "kind": "sample",
+                            "origin": {
+                              "source": "selected.va",
+                              "line": 2,
+                              "column": 91,
+                              "instance": "dut",
+                              "expansion": []
+                            },
+                            "op": "real_boundary"
+                          },
+                          "right": {
+                            "constant": 0.2,
+                            "terms": [],
+                            "op": "affine"
+                          },
+                          "origin": {
+                            "source": "selected.va",
+                            "line": 2,
+                            "column": 95,
+                            "instance": "dut",
+                            "expansion": []
+                          },
+                          "op": "real_binary"
+                        },
+                        "right": {
+                          "constant": 0.0,
+                          "terms": [],
+                          "op": "affine"
+                        },
+                        "then_value": {
+                          "operation": "subtract",
+                          "left": {
+                            "value": {
+                              "constant": 0.0,
+                              "terms": [
+                                {
+                                  "node": 0,
+                                  "coefficient": -1.0
+                                },
+                                {
+                                  "node": 1,
+                                  "coefficient": 1.0
+                                }
+                              ],
+                              "op": "affine"
+                            },
+                            "kind": "sample",
+                            "origin": {
+                              "source": "selected.va",
+                              "line": 2,
+                              "column": 91,
+                              "instance": "dut",
+                              "expansion": []
+                            },
+                            "op": "real_boundary"
+                          },
+                          "right": {
+                            "constant": 0.2,
+                            "terms": [],
+                            "op": "affine"
+                          },
+                          "origin": {
+                            "source": "selected.va",
+                            "line": 2,
+                            "column": 95,
+                            "instance": "dut",
+                            "expansion": []
+                          },
+                          "op": "real_binary"
+                        },
+                        "else_value": {
+                          "op": "multiply",
+                          "left": {
+                            "constant": -1.0,
+                            "terms": [],
+                            "op": "affine"
+                          },
+                          "right": {
+                            "operation": "subtract",
+                            "left": {
+                              "value": {
+                                "constant": 0.0,
+                                "terms": [
+                                  {
+                                    "node": 0,
+                                    "coefficient": -1.0
+                                  },
+                                  {
+                                    "node": 1,
+                                    "coefficient": 1.0
+                                  }
+                                ],
+                                "op": "affine"
+                              },
+                              "kind": "sample",
+                              "origin": {
+                                "source": "selected.va",
+                                "line": 2,
+                                "column": 91,
+                                "instance": "dut",
+                                "expansion": []
+                              },
+                              "op": "real_boundary"
+                            },
+                            "right": {
+                              "constant": 0.2,
+                              "terms": [],
+                              "op": "affine"
+                            },
+                            "origin": {
+                              "source": "selected.va",
+                              "line": 2,
+                              "column": 95,
+                              "instance": "dut",
+                              "expansion": []
+                            },
+                            "op": "real_binary"
+                          }
+                        },
+                        "origin": {
+                          "source": "selected.va",
+                          "line": 2,
+                          "column": 87,
+                          "instance": "dut",
+                          "expansion": []
+                        },
+                        "op": "select"
+                      },
+                      "kind": "snapshot",
+                      "origin": {
+                        "source": "selected.va",
+                        "line": 2,
+                        "column": 85,
+                        "instance": "dut",
+                        "expansion": []
+                      },
+                      "op": "real_boundary"
+                    },
+                    "origin": {
+                      "source": "selected.va",
+                      "line": 2,
+                      "column": 85,
+                      "instance": "dut",
+                      "expansion": []
+                    },
+                    "kind": "real_bind"
+                  }
+                },
+                {
+                  "expanded_statement_ordinal": 1,
+                  "action": {
+                    "relation": "lt",
+                    "left": {
+                      "binding": 0,
+                      "op": "real_local"
+                    },
+                    "right": {
+                      "constant": 0.1,
+                      "terms": [],
+                      "op": "affine"
+                    },
+                    "then_body": [
+                      {
+                        "expanded_statement_ordinal": 2,
+                        "action": {
+                          "binding": 0,
+                          "value": {
+                            "value": {
+                              "constant": 0.1,
+                              "terms": [],
+                              "op": "affine"
+                            },
+                            "kind": "snapshot",
+                            "origin": {
+                              "source": "selected.va",
+                              "line": 2,
+                              "column": 110,
+                              "instance": "dut",
+                              "expansion": []
+                            },
+                            "op": "real_boundary"
+                          },
+                          "origin": {
+                            "source": "selected.va",
+                            "line": 2,
+                            "column": 110,
+                            "instance": "dut",
+                            "expansion": []
+                          },
+                          "kind": "real_bind"
+                        }
+                      }
+                    ],
+                    "else_body": [],
+                    "origin": {
+                      "source": "selected.va",
+                      "line": 2,
+                      "column": 101,
+                      "instance": "dut",
+                      "expansion": []
+                    },
+                    "kind": "procedure_if"
+                  }
+                },
+                {
+                  "expanded_statement_ordinal": 3,
+                  "action": {
+                    "contribution": 0,
+                    "kind": "contribution_capture"
+                  }
+                }
+              ]
+            }
+          ],
+          "real_bindings": [
+            {
+              "procedure_id": 0,
+              "name": "x",
+              "origin": {
+                "source": "selected.va",
+                "line": 2,
+                "column": 1,
+                "instance": "dut",
+                "expansion": []
+              },
+              "lifetime": "occurrence"
+            }
+          ]
+        },
+        "driven": [
+          "u"
+        ],
+        "samples": [],
+        "transient": {
+          "pwl": [
+            [
+              [
+                0,
+                0.7
+              ],
+              [
+                1,
+                -0.3
+              ]
+            ]
+          ],
+          "output_times": [
+            0,
+            0.5,
+            1
+          ],
+          "stop": 1,
+          "max_step": 1
+        },
+        "tolerances": {
+          "absolute": 1e-12,
+          "relative": 1e-10
+        }
+      },
+      "response": {
+        "schema_version": 33,
+        "engine": "independent-synthetic-control",
+        "nodes": [
+          "0",
+          "u",
+          "y"
+        ],
+        "solutions": [
+          {
+            "voltages": [
+              0.0,
+              0.7,
+              -0.6931471805599454
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              0.19999999999999996,
+              -2.3025850929940455
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              -0.30000000000000004,
+              -0.6931471805599453
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          }
+        ],
+        "transient": {
+          "times": [
+            0,
+            0.5,
+            1
+          ],
+          "state_names": [],
+          "states": [
+            [],
+            [],
+            []
+          ],
+          "events": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0
+        },
+        "observation_evidence": {
+          "schema_version": 1,
+          "nodes": [
+            "0",
+            "u",
+            "y"
+          ],
+          "effective_controls": {
+            "absolute_V": 1e-12,
+            "relative": 1e-10,
+            "stop_s": 1.0,
+            "max_step_s": 1.0,
+            "max_step_applied": false
+          },
+          "sample_origins": [
+            "stateless_working_point",
+            "stateless_working_point",
+            "stateless_working_point"
+          ],
+          "voltage_bounds_V": [
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                0.6999999999999998,
+                0.7000000000000001
+              ],
+              [
+                -0.6931471805599455,
+                -0.6931471805599453
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                0.19999999999999993,
+                0.19999999999999998
+              ],
+              [
+                -2.302585092994046,
+                -2.302585092994045
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                -0.3000000000000001,
+                -0.3
+              ],
+              [
+                -0.6931471805599454,
+                -0.6931471805599452
+              ]
+            ]
+          ],
+          "initial_settled": true
+        }
+      }
+    },
+    {
+      "mutation": "correct",
+      "request": {
+        "program": {
+          "nodes": [
+            "0",
+            "u",
+            "y"
+          ],
+          "contributions": [
+            {
+              "branch": {
+                "instance": "dut",
+                "local_positive": "0",
+                "local_negative": "y",
+                "kind": "voltage"
+              },
+              "positive": 0,
+              "negative": 2,
+              "rhs": {
+                "op": "multiply",
+                "left": {
+                  "constant": -1.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "right": {
+                  "operator": 0,
+                  "op": "operator"
+                }
+              },
+              "origin": {
+                "source": "selected.va",
+                "line": 2,
+                "column": 116,
+                "instance": "dut",
+                "expansion": []
+              }
+            }
+          ],
+          "states": [],
+          "events": [],
+          "operators": [
+            {
+              "function": "ln",
+              "input": {
+                "binding": 0,
+                "op": "real_local"
+              },
+              "origin": {
+                "source": "selected.va",
+                "line": 2,
+                "column": 122,
+                "instance": "dut",
+                "expansion": []
+              },
+              "kind": "math"
+            }
+          ],
+          "schema_version": 33,
+          "step_bounds": [],
+          "procedures": [
+            {
+              "procedure_id": 0,
+              "instance": "dut",
+              "body": [
+                {
+                  "expanded_statement_ordinal": 0,
+                  "action": {
+                    "binding": 0,
+                    "value": {
+                      "value": {
+                        "relation": "ge",
+                        "left": {
+                          "operation": "subtract",
+                          "left": {
+                            "value": {
+                              "constant": 0.0,
+                              "terms": [
+                                {
+                                  "node": 0,
+                                  "coefficient": -1.0
+                                },
+                                {
+                                  "node": 1,
+                                  "coefficient": 1.0
+                                }
+                              ],
+                              "op": "affine"
+                            },
+                            "kind": "sample",
+                            "origin": {
+                              "source": "selected.va",
+                              "line": 2,
+                              "column": 91,
+                              "instance": "dut",
+                              "expansion": []
+                            },
+                            "op": "real_boundary"
+                          },
+                          "right": {
+                            "constant": 0.2,
+                            "terms": [],
+                            "op": "affine"
+                          },
+                          "origin": {
+                            "source": "selected.va",
+                            "line": 2,
+                            "column": 95,
+                            "instance": "dut",
+                            "expansion": []
+                          },
+                          "op": "real_binary"
+                        },
+                        "right": {
+                          "constant": 0.0,
+                          "terms": [],
+                          "op": "affine"
+                        },
+                        "then_value": {
+                          "operation": "subtract",
+                          "left": {
+                            "value": {
+                              "constant": 0.0,
+                              "terms": [
+                                {
+                                  "node": 0,
+                                  "coefficient": -1.0
+                                },
+                                {
+                                  "node": 1,
+                                  "coefficient": 1.0
+                                }
+                              ],
+                              "op": "affine"
+                            },
+                            "kind": "sample",
+                            "origin": {
+                              "source": "selected.va",
+                              "line": 2,
+                              "column": 91,
+                              "instance": "dut",
+                              "expansion": []
+                            },
+                            "op": "real_boundary"
+                          },
+                          "right": {
+                            "constant": 0.2,
+                            "terms": [],
+                            "op": "affine"
+                          },
+                          "origin": {
+                            "source": "selected.va",
+                            "line": 2,
+                            "column": 95,
+                            "instance": "dut",
+                            "expansion": []
+                          },
+                          "op": "real_binary"
+                        },
+                        "else_value": {
+                          "op": "multiply",
+                          "left": {
+                            "constant": -1.0,
+                            "terms": [],
+                            "op": "affine"
+                          },
+                          "right": {
+                            "operation": "subtract",
+                            "left": {
+                              "value": {
+                                "constant": 0.0,
+                                "terms": [
+                                  {
+                                    "node": 0,
+                                    "coefficient": -1.0
+                                  },
+                                  {
+                                    "node": 1,
+                                    "coefficient": 1.0
+                                  }
+                                ],
+                                "op": "affine"
+                              },
+                              "kind": "sample",
+                              "origin": {
+                                "source": "selected.va",
+                                "line": 2,
+                                "column": 91,
+                                "instance": "dut",
+                                "expansion": []
+                              },
+                              "op": "real_boundary"
+                            },
+                            "right": {
+                              "constant": 0.2,
+                              "terms": [],
+                              "op": "affine"
+                            },
+                            "origin": {
+                              "source": "selected.va",
+                              "line": 2,
+                              "column": 95,
+                              "instance": "dut",
+                              "expansion": []
+                            },
+                            "op": "real_binary"
+                          }
+                        },
+                        "origin": {
+                          "source": "selected.va",
+                          "line": 2,
+                          "column": 87,
+                          "instance": "dut",
+                          "expansion": []
+                        },
+                        "op": "select"
+                      },
+                      "kind": "snapshot",
+                      "origin": {
+                        "source": "selected.va",
+                        "line": 2,
+                        "column": 85,
+                        "instance": "dut",
+                        "expansion": []
+                      },
+                      "op": "real_boundary"
+                    },
+                    "origin": {
+                      "source": "selected.va",
+                      "line": 2,
+                      "column": 85,
+                      "instance": "dut",
+                      "expansion": []
+                    },
+                    "kind": "real_bind"
+                  }
+                },
+                {
+                  "expanded_statement_ordinal": 1,
+                  "action": {
+                    "relation": "lt",
+                    "left": {
+                      "binding": 0,
+                      "op": "real_local"
+                    },
+                    "right": {
+                      "constant": 0.1,
+                      "terms": [],
+                      "op": "affine"
+                    },
+                    "then_body": [
+                      {
+                        "expanded_statement_ordinal": 2,
+                        "action": {
+                          "binding": 0,
+                          "value": {
+                            "value": {
+                              "constant": 0.1,
+                              "terms": [],
+                              "op": "affine"
+                            },
+                            "kind": "snapshot",
+                            "origin": {
+                              "source": "selected.va",
+                              "line": 2,
+                              "column": 110,
+                              "instance": "dut",
+                              "expansion": []
+                            },
+                            "op": "real_boundary"
+                          },
+                          "origin": {
+                            "source": "selected.va",
+                            "line": 2,
+                            "column": 110,
+                            "instance": "dut",
+                            "expansion": []
+                          },
+                          "kind": "real_bind"
+                        }
+                      }
+                    ],
+                    "else_body": [],
+                    "origin": {
+                      "source": "selected.va",
+                      "line": 2,
+                      "column": 101,
+                      "instance": "dut",
+                      "expansion": []
+                    },
+                    "kind": "procedure_if"
+                  }
+                },
+                {
+                  "expanded_statement_ordinal": 3,
+                  "action": {
+                    "contribution": 0,
+                    "kind": "contribution_capture"
+                  }
+                }
+              ]
+            }
+          ],
+          "real_bindings": [
+            {
+              "procedure_id": 0,
+              "name": "x",
+              "origin": {
+                "source": "selected.va",
+                "line": 2,
+                "column": 1,
+                "instance": "dut",
+                "expansion": []
+              },
+              "lifetime": "occurrence"
+            }
+          ]
+        },
+        "driven": [
+          "u"
+        ],
+        "samples": [],
+        "transient": {
+          "pwl": [
+            [
+              [
+                0,
+                0.7
+              ],
+              [
+                1,
+                -0.3
+              ]
+            ]
+          ],
+          "output_times": [
+            0,
+            0.125,
+            0.5,
+            0.875,
+            1
+          ],
+          "stop": 1,
+          "max_step": 1
+        },
+        "tolerances": {
+          "absolute": 1e-12,
+          "relative": 1e-10
+        }
+      },
+      "response": {
+        "schema_version": 33,
+        "engine": "independent-synthetic-control",
+        "nodes": [
+          "0",
+          "u",
+          "y"
+        ],
+        "solutions": [
+          {
+            "voltages": [
+              0.0,
+              0.7,
+              -0.6931471805599454
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              0.575,
+              -0.9808292530117264
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              0.19999999999999996,
+              -2.3025850929940455
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              -0.17500000000000004,
+              -0.9808292530117262
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              -0.30000000000000004,
+              -0.6931471805599453
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          }
+        ],
+        "transient": {
+          "times": [
+            0,
+            0.125,
+            0.5,
+            0.875,
+            1
+          ],
+          "state_names": [],
+          "states": [
+            [],
+            [],
+            [],
+            [],
+            []
+          ],
+          "events": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0
+        },
+        "observation_evidence": {
+          "schema_version": 1,
+          "nodes": [
+            "0",
+            "u",
+            "y"
+          ],
+          "effective_controls": {
+            "absolute_V": 1e-12,
+            "relative": 1e-10,
+            "stop_s": 1.0,
+            "max_step_s": 1.0,
+            "max_step_applied": false
+          },
+          "sample_origins": [
+            "stateless_working_point",
+            "stateless_working_point",
+            "stateless_working_point",
+            "stateless_working_point",
+            "stateless_working_point"
+          ],
+          "voltage_bounds_V": [
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                0.6999999999999998,
+                0.7000000000000001
+              ],
+              [
+                -0.6931471805599455,
+                -0.6931471805599453
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                0.5749999999999998,
+                0.5750000000000001
+              ],
+              [
+                -0.9808292530117265,
+                -0.9808292530117263
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                0.19999999999999993,
+                0.19999999999999998
+              ],
+              [
+                -2.302585092994046,
+                -2.302585092994045
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                -0.17500000000000007,
+                -0.17500000000000002
+              ],
+              [
+                -0.9808292530117263,
+                -0.9808292530117261
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                -0.3000000000000001,
+                -0.3
+              ],
+              [
+                -0.6931471805599454,
+                -0.6931471805599452
+              ]
+            ]
+          ],
+          "initial_settled": true
+        }
+      }
+    },
+    {
+      "mutation": "correct",
+      "request": {
+        "program": {
+          "nodes": [
+            "0",
+            "u",
+            "y"
+          ],
+          "contributions": [
+            {
+              "branch": {
+                "instance": "dut",
+                "local_positive": "0",
+                "local_negative": "y",
+                "kind": "voltage"
+              },
+              "positive": 0,
+              "negative": 2,
+              "rhs": {
+                "op": "multiply",
+                "left": {
+                  "constant": -1.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "right": {
+                  "operator": 0,
+                  "op": "operator"
+                }
+              },
+              "origin": {
+                "source": "selected.va",
+                "line": 2,
+                "column": 116,
+                "instance": "dut",
+                "expansion": []
+              }
+            }
+          ],
+          "states": [],
+          "events": [],
+          "operators": [
+            {
+              "function": "ln",
+              "input": {
+                "binding": 0,
+                "op": "real_local"
+              },
+              "origin": {
+                "source": "selected.va",
+                "line": 2,
+                "column": 122,
+                "instance": "dut",
+                "expansion": []
+              },
+              "kind": "math"
+            }
+          ],
+          "schema_version": 33,
+          "step_bounds": [],
+          "procedures": [
+            {
+              "procedure_id": 0,
+              "instance": "dut",
+              "body": [
+                {
+                  "expanded_statement_ordinal": 0,
+                  "action": {
+                    "binding": 0,
+                    "value": {
+                      "value": {
+                        "relation": "ge",
+                        "left": {
+                          "operation": "subtract",
+                          "left": {
+                            "value": {
+                              "constant": 0.0,
+                              "terms": [
+                                {
+                                  "node": 0,
+                                  "coefficient": -1.0
+                                },
+                                {
+                                  "node": 1,
+                                  "coefficient": 1.0
+                                }
+                              ],
+                              "op": "affine"
+                            },
+                            "kind": "sample",
+                            "origin": {
+                              "source": "selected.va",
+                              "line": 2,
+                              "column": 91,
+                              "instance": "dut",
+                              "expansion": []
+                            },
+                            "op": "real_boundary"
+                          },
+                          "right": {
+                            "constant": 0.2,
+                            "terms": [],
+                            "op": "affine"
+                          },
+                          "origin": {
+                            "source": "selected.va",
+                            "line": 2,
+                            "column": 95,
+                            "instance": "dut",
+                            "expansion": []
+                          },
+                          "op": "real_binary"
+                        },
+                        "right": {
+                          "constant": 0.0,
+                          "terms": [],
+                          "op": "affine"
+                        },
+                        "then_value": {
+                          "operation": "subtract",
+                          "left": {
+                            "value": {
+                              "constant": 0.0,
+                              "terms": [
+                                {
+                                  "node": 0,
+                                  "coefficient": -1.0
+                                },
+                                {
+                                  "node": 1,
+                                  "coefficient": 1.0
+                                }
+                              ],
+                              "op": "affine"
+                            },
+                            "kind": "sample",
+                            "origin": {
+                              "source": "selected.va",
+                              "line": 2,
+                              "column": 91,
+                              "instance": "dut",
+                              "expansion": []
+                            },
+                            "op": "real_boundary"
+                          },
+                          "right": {
+                            "constant": 0.2,
+                            "terms": [],
+                            "op": "affine"
+                          },
+                          "origin": {
+                            "source": "selected.va",
+                            "line": 2,
+                            "column": 95,
+                            "instance": "dut",
+                            "expansion": []
+                          },
+                          "op": "real_binary"
+                        },
+                        "else_value": {
+                          "op": "multiply",
+                          "left": {
+                            "constant": -1.0,
+                            "terms": [],
+                            "op": "affine"
+                          },
+                          "right": {
+                            "operation": "subtract",
+                            "left": {
+                              "value": {
+                                "constant": 0.0,
+                                "terms": [
+                                  {
+                                    "node": 0,
+                                    "coefficient": -1.0
+                                  },
+                                  {
+                                    "node": 1,
+                                    "coefficient": 1.0
+                                  }
+                                ],
+                                "op": "affine"
+                              },
+                              "kind": "sample",
+                              "origin": {
+                                "source": "selected.va",
+                                "line": 2,
+                                "column": 91,
+                                "instance": "dut",
+                                "expansion": []
+                              },
+                              "op": "real_boundary"
+                            },
+                            "right": {
+                              "constant": 0.2,
+                              "terms": [],
+                              "op": "affine"
+                            },
+                            "origin": {
+                              "source": "selected.va",
+                              "line": 2,
+                              "column": 95,
+                              "instance": "dut",
+                              "expansion": []
+                            },
+                            "op": "real_binary"
+                          }
+                        },
+                        "origin": {
+                          "source": "selected.va",
+                          "line": 2,
+                          "column": 87,
+                          "instance": "dut",
+                          "expansion": []
+                        },
+                        "op": "select"
+                      },
+                      "kind": "snapshot",
+                      "origin": {
+                        "source": "selected.va",
+                        "line": 2,
+                        "column": 85,
+                        "instance": "dut",
+                        "expansion": []
+                      },
+                      "op": "real_boundary"
+                    },
+                    "origin": {
+                      "source": "selected.va",
+                      "line": 2,
+                      "column": 85,
+                      "instance": "dut",
+                      "expansion": []
+                    },
+                    "kind": "real_bind"
+                  }
+                },
+                {
+                  "expanded_statement_ordinal": 1,
+                  "action": {
+                    "relation": "lt",
+                    "left": {
+                      "binding": 0,
+                      "op": "real_local"
+                    },
+                    "right": {
+                      "constant": 0.1,
+                      "terms": [],
+                      "op": "affine"
+                    },
+                    "then_body": [
+                      {
+                        "expanded_statement_ordinal": 2,
+                        "action": {
+                          "binding": 0,
+                          "value": {
+                            "value": {
+                              "constant": 0.1,
+                              "terms": [],
+                              "op": "affine"
+                            },
+                            "kind": "snapshot",
+                            "origin": {
+                              "source": "selected.va",
+                              "line": 2,
+                              "column": 110,
+                              "instance": "dut",
+                              "expansion": []
+                            },
+                            "op": "real_boundary"
+                          },
+                          "origin": {
+                            "source": "selected.va",
+                            "line": 2,
+                            "column": 110,
+                            "instance": "dut",
+                            "expansion": []
+                          },
+                          "kind": "real_bind"
+                        }
+                      }
+                    ],
+                    "else_body": [],
+                    "origin": {
+                      "source": "selected.va",
+                      "line": 2,
+                      "column": 101,
+                      "instance": "dut",
+                      "expansion": []
+                    },
+                    "kind": "procedure_if"
+                  }
+                },
+                {
+                  "expanded_statement_ordinal": 3,
+                  "action": {
+                    "contribution": 0,
+                    "kind": "contribution_capture"
+                  }
+                }
+              ]
+            }
+          ],
+          "real_bindings": [
+            {
+              "procedure_id": 0,
+              "name": "x",
+              "origin": {
+                "source": "selected.va",
+                "line": 2,
+                "column": 1,
+                "instance": "dut",
+                "expansion": []
+              },
+              "lifetime": "occurrence"
+            }
+          ]
+        },
+        "driven": [
+          "u"
+        ],
+        "samples": [],
+        "transient": {
+          "pwl": [
+            [
+              [
+                0,
+                0.7
+              ],
+              [
+                1,
+                -0.3
+              ]
+            ]
+          ],
+          "output_times": [
+            0,
+            0.25,
+            0.5,
+            0.75,
+            1
+          ],
+          "stop": 1,
+          "max_step": 1
+        },
+        "tolerances": {
+          "absolute": 1e-12,
+          "relative": 1e-10
+        }
+      },
+      "response": {
+        "schema_version": 33,
+        "engine": "independent-synthetic-control",
+        "nodes": [
+          "0",
+          "u",
+          "y"
+        ],
+        "solutions": [
+          {
+            "voltages": [
+              0.0,
+              0.7,
+              -0.6931471805599454
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              0.44999999999999996,
+              -1.3862943611198908
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              0.19999999999999996,
+              -2.3025850929940455
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              -0.050000000000000044,
+              -1.3862943611198906
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              -0.30000000000000004,
+              -0.6931471805599453
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          }
+        ],
+        "transient": {
+          "times": [
+            0,
+            0.25,
+            0.5,
+            0.75,
+            1
+          ],
+          "state_names": [],
+          "states": [
+            [],
+            [],
+            [],
+            [],
+            []
+          ],
+          "events": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0
+        },
+        "observation_evidence": {
+          "schema_version": 1,
+          "nodes": [
+            "0",
+            "u",
+            "y"
+          ],
+          "effective_controls": {
+            "absolute_V": 1e-12,
+            "relative": 1e-10,
+            "stop_s": 1.0,
+            "max_step_s": 1.0,
+            "max_step_applied": false
+          },
+          "sample_origins": [
+            "stateless_working_point",
+            "stateless_working_point",
+            "stateless_working_point",
+            "stateless_working_point",
+            "stateless_working_point"
+          ],
+          "voltage_bounds_V": [
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                0.6999999999999998,
+                0.7000000000000001
+              ],
+              [
+                -0.6931471805599455,
+                -0.6931471805599453
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                0.4499999999999999,
+                0.45
+              ],
+              [
+                -1.386294361119891,
+                -1.3862943611198906
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                0.19999999999999993,
+                0.19999999999999998
+              ],
+              [
+                -2.302585092994046,
+                -2.302585092994045
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                -0.05000000000000005,
+                -0.05000000000000004
+              ],
+              [
+                -1.3862943611198908,
+                -1.3862943611198904
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                -0.3000000000000001,
+                -0.3
+              ],
+              [
+                -0.6931471805599454,
+                -0.6931471805599452
+              ]
+            ]
+          ],
+          "initial_settled": true
+        }
+      }
+    },
+    {
+      "mutation": "constant_wrong_output",
+      "request": {
+        "program": {
+          "nodes": [
+            "0",
+            "u",
+            "y"
+          ],
+          "contributions": [
+            {
+              "branch": {
+                "instance": "dut",
+                "local_positive": "0",
+                "local_negative": "y",
+                "kind": "voltage"
+              },
+              "positive": 0,
+              "negative": 2,
+              "rhs": {
+                "op": "multiply",
+                "left": {
+                  "constant": -1.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "right": {
+                  "operator": 0,
+                  "op": "operator"
+                }
+              },
+              "origin": {
+                "source": "selected.va",
+                "line": 2,
+                "column": 116,
+                "instance": "dut",
+                "expansion": []
+              }
+            }
+          ],
+          "states": [],
+          "events": [],
+          "operators": [
+            {
+              "function": "ln",
+              "input": {
+                "binding": 0,
+                "op": "real_local"
+              },
+              "origin": {
+                "source": "selected.va",
+                "line": 2,
+                "column": 122,
+                "instance": "dut",
+                "expansion": []
+              },
+              "kind": "math"
+            }
+          ],
+          "schema_version": 33,
+          "step_bounds": [],
+          "procedures": [
+            {
+              "procedure_id": 0,
+              "instance": "dut",
+              "body": [
+                {
+                  "expanded_statement_ordinal": 0,
+                  "action": {
+                    "binding": 0,
+                    "value": {
+                      "value": {
+                        "relation": "ge",
+                        "left": {
+                          "operation": "subtract",
+                          "left": {
+                            "value": {
+                              "constant": 0.0,
+                              "terms": [
+                                {
+                                  "node": 0,
+                                  "coefficient": -1.0
+                                },
+                                {
+                                  "node": 1,
+                                  "coefficient": 1.0
+                                }
+                              ],
+                              "op": "affine"
+                            },
+                            "kind": "sample",
+                            "origin": {
+                              "source": "selected.va",
+                              "line": 2,
+                              "column": 91,
+                              "instance": "dut",
+                              "expansion": []
+                            },
+                            "op": "real_boundary"
+                          },
+                          "right": {
+                            "constant": 0.2,
+                            "terms": [],
+                            "op": "affine"
+                          },
+                          "origin": {
+                            "source": "selected.va",
+                            "line": 2,
+                            "column": 95,
+                            "instance": "dut",
+                            "expansion": []
+                          },
+                          "op": "real_binary"
+                        },
+                        "right": {
+                          "constant": 0.0,
+                          "terms": [],
+                          "op": "affine"
+                        },
+                        "then_value": {
+                          "operation": "subtract",
+                          "left": {
+                            "value": {
+                              "constant": 0.0,
+                              "terms": [
+                                {
+                                  "node": 0,
+                                  "coefficient": -1.0
+                                },
+                                {
+                                  "node": 1,
+                                  "coefficient": 1.0
+                                }
+                              ],
+                              "op": "affine"
+                            },
+                            "kind": "sample",
+                            "origin": {
+                              "source": "selected.va",
+                              "line": 2,
+                              "column": 91,
+                              "instance": "dut",
+                              "expansion": []
+                            },
+                            "op": "real_boundary"
+                          },
+                          "right": {
+                            "constant": 0.2,
+                            "terms": [],
+                            "op": "affine"
+                          },
+                          "origin": {
+                            "source": "selected.va",
+                            "line": 2,
+                            "column": 95,
+                            "instance": "dut",
+                            "expansion": []
+                          },
+                          "op": "real_binary"
+                        },
+                        "else_value": {
+                          "op": "multiply",
+                          "left": {
+                            "constant": -1.0,
+                            "terms": [],
+                            "op": "affine"
+                          },
+                          "right": {
+                            "operation": "subtract",
+                            "left": {
+                              "value": {
+                                "constant": 0.0,
+                                "terms": [
+                                  {
+                                    "node": 0,
+                                    "coefficient": -1.0
+                                  },
+                                  {
+                                    "node": 1,
+                                    "coefficient": 1.0
+                                  }
+                                ],
+                                "op": "affine"
+                              },
+                              "kind": "sample",
+                              "origin": {
+                                "source": "selected.va",
+                                "line": 2,
+                                "column": 91,
+                                "instance": "dut",
+                                "expansion": []
+                              },
+                              "op": "real_boundary"
+                            },
+                            "right": {
+                              "constant": 0.2,
+                              "terms": [],
+                              "op": "affine"
+                            },
+                            "origin": {
+                              "source": "selected.va",
+                              "line": 2,
+                              "column": 95,
+                              "instance": "dut",
+                              "expansion": []
+                            },
+                            "op": "real_binary"
+                          }
+                        },
+                        "origin": {
+                          "source": "selected.va",
+                          "line": 2,
+                          "column": 87,
+                          "instance": "dut",
+                          "expansion": []
+                        },
+                        "op": "select"
+                      },
+                      "kind": "snapshot",
+                      "origin": {
+                        "source": "selected.va",
+                        "line": 2,
+                        "column": 85,
+                        "instance": "dut",
+                        "expansion": []
+                      },
+                      "op": "real_boundary"
+                    },
+                    "origin": {
+                      "source": "selected.va",
+                      "line": 2,
+                      "column": 85,
+                      "instance": "dut",
+                      "expansion": []
+                    },
+                    "kind": "real_bind"
+                  }
+                },
+                {
+                  "expanded_statement_ordinal": 1,
+                  "action": {
+                    "relation": "lt",
+                    "left": {
+                      "binding": 0,
+                      "op": "real_local"
+                    },
+                    "right": {
+                      "constant": 0.1,
+                      "terms": [],
+                      "op": "affine"
+                    },
+                    "then_body": [
+                      {
+                        "expanded_statement_ordinal": 2,
+                        "action": {
+                          "binding": 0,
+                          "value": {
+                            "value": {
+                              "constant": 0.1,
+                              "terms": [],
+                              "op": "affine"
+                            },
+                            "kind": "snapshot",
+                            "origin": {
+                              "source": "selected.va",
+                              "line": 2,
+                              "column": 110,
+                              "instance": "dut",
+                              "expansion": []
+                            },
+                            "op": "real_boundary"
+                          },
+                          "origin": {
+                            "source": "selected.va",
+                            "line": 2,
+                            "column": 110,
+                            "instance": "dut",
+                            "expansion": []
+                          },
+                          "kind": "real_bind"
+                        }
+                      }
+                    ],
+                    "else_body": [],
+                    "origin": {
+                      "source": "selected.va",
+                      "line": 2,
+                      "column": 101,
+                      "instance": "dut",
+                      "expansion": []
+                    },
+                    "kind": "procedure_if"
+                  }
+                },
+                {
+                  "expanded_statement_ordinal": 3,
+                  "action": {
+                    "contribution": 0,
+                    "kind": "contribution_capture"
+                  }
+                }
+              ]
+            }
+          ],
+          "real_bindings": [
+            {
+              "procedure_id": 0,
+              "name": "x",
+              "origin": {
+                "source": "selected.va",
+                "line": 2,
+                "column": 1,
+                "instance": "dut",
+                "expansion": []
+              },
+              "lifetime": "occurrence"
+            }
+          ]
+        },
+        "driven": [
+          "u"
+        ],
+        "samples": [],
+        "transient": {
+          "pwl": [
+            [
+              [
+                0,
+                0.7
+              ],
+              [
+                1,
+                -0.3
+              ]
+            ]
+          ],
+          "output_times": [
+            0,
+            0.5,
+            1
+          ],
+          "stop": 1,
+          "max_step": 1
+        },
+        "tolerances": {
+          "absolute": 1e-12,
+          "relative": 1e-10
+        }
+      },
+      "response": {
+        "schema_version": 33,
+        "engine": "independent-synthetic-control",
+        "nodes": [
+          "0",
+          "u",
+          "y"
+        ],
+        "solutions": [
+          {
+            "voltages": [
+              0.0,
+              0.7,
+              0.0
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              0.19999999999999996,
+              0.0
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              -0.30000000000000004,
+              0.0
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          }
+        ],
+        "transient": {
+          "times": [
+            0,
+            0.5,
+            1
+          ],
+          "state_names": [],
+          "states": [
+            [],
+            [],
+            []
+          ],
+          "events": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0
+        },
+        "observation_evidence": {
+          "schema_version": 1,
+          "nodes": [
+            "0",
+            "u",
+            "y"
+          ],
+          "effective_controls": {
+            "absolute_V": 1e-12,
+            "relative": 1e-10,
+            "stop_s": 1.0,
+            "max_step_s": 1.0,
+            "max_step_applied": false
+          },
+          "sample_origins": [
+            "stateless_working_point",
+            "stateless_working_point",
+            "stateless_working_point"
+          ],
+          "voltage_bounds_V": [
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                0.6999999999999998,
+                0.7000000000000001
+              ],
+              [
+                -5e-324,
+                5e-324
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                0.19999999999999993,
+                0.19999999999999998
+              ],
+              [
+                -5e-324,
+                5e-324
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                -0.3000000000000001,
+                -0.3
+              ],
+              [
+                -5e-324,
+                5e-324
+              ]
+            ]
+          ],
+          "initial_settled": true
+        }
+      }
+    },
+    {
+      "mutation": "constant_wrong_output",
+      "request": {
+        "program": {
+          "nodes": [
+            "0",
+            "u",
+            "y"
+          ],
+          "contributions": [
+            {
+              "branch": {
+                "instance": "dut",
+                "local_positive": "0",
+                "local_negative": "y",
+                "kind": "voltage"
+              },
+              "positive": 0,
+              "negative": 2,
+              "rhs": {
+                "op": "multiply",
+                "left": {
+                  "constant": -1.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "right": {
+                  "operator": 0,
+                  "op": "operator"
+                }
+              },
+              "origin": {
+                "source": "selected.va",
+                "line": 2,
+                "column": 116,
+                "instance": "dut",
+                "expansion": []
+              }
+            }
+          ],
+          "states": [],
+          "events": [],
+          "operators": [
+            {
+              "function": "ln",
+              "input": {
+                "binding": 0,
+                "op": "real_local"
+              },
+              "origin": {
+                "source": "selected.va",
+                "line": 2,
+                "column": 122,
+                "instance": "dut",
+                "expansion": []
+              },
+              "kind": "math"
+            }
+          ],
+          "schema_version": 33,
+          "step_bounds": [],
+          "procedures": [
+            {
+              "procedure_id": 0,
+              "instance": "dut",
+              "body": [
+                {
+                  "expanded_statement_ordinal": 0,
+                  "action": {
+                    "binding": 0,
+                    "value": {
+                      "value": {
+                        "relation": "ge",
+                        "left": {
+                          "operation": "subtract",
+                          "left": {
+                            "value": {
+                              "constant": 0.0,
+                              "terms": [
+                                {
+                                  "node": 0,
+                                  "coefficient": -1.0
+                                },
+                                {
+                                  "node": 1,
+                                  "coefficient": 1.0
+                                }
+                              ],
+                              "op": "affine"
+                            },
+                            "kind": "sample",
+                            "origin": {
+                              "source": "selected.va",
+                              "line": 2,
+                              "column": 91,
+                              "instance": "dut",
+                              "expansion": []
+                            },
+                            "op": "real_boundary"
+                          },
+                          "right": {
+                            "constant": 0.2,
+                            "terms": [],
+                            "op": "affine"
+                          },
+                          "origin": {
+                            "source": "selected.va",
+                            "line": 2,
+                            "column": 95,
+                            "instance": "dut",
+                            "expansion": []
+                          },
+                          "op": "real_binary"
+                        },
+                        "right": {
+                          "constant": 0.0,
+                          "terms": [],
+                          "op": "affine"
+                        },
+                        "then_value": {
+                          "operation": "subtract",
+                          "left": {
+                            "value": {
+                              "constant": 0.0,
+                              "terms": [
+                                {
+                                  "node": 0,
+                                  "coefficient": -1.0
+                                },
+                                {
+                                  "node": 1,
+                                  "coefficient": 1.0
+                                }
+                              ],
+                              "op": "affine"
+                            },
+                            "kind": "sample",
+                            "origin": {
+                              "source": "selected.va",
+                              "line": 2,
+                              "column": 91,
+                              "instance": "dut",
+                              "expansion": []
+                            },
+                            "op": "real_boundary"
+                          },
+                          "right": {
+                            "constant": 0.2,
+                            "terms": [],
+                            "op": "affine"
+                          },
+                          "origin": {
+                            "source": "selected.va",
+                            "line": 2,
+                            "column": 95,
+                            "instance": "dut",
+                            "expansion": []
+                          },
+                          "op": "real_binary"
+                        },
+                        "else_value": {
+                          "op": "multiply",
+                          "left": {
+                            "constant": -1.0,
+                            "terms": [],
+                            "op": "affine"
+                          },
+                          "right": {
+                            "operation": "subtract",
+                            "left": {
+                              "value": {
+                                "constant": 0.0,
+                                "terms": [
+                                  {
+                                    "node": 0,
+                                    "coefficient": -1.0
+                                  },
+                                  {
+                                    "node": 1,
+                                    "coefficient": 1.0
+                                  }
+                                ],
+                                "op": "affine"
+                              },
+                              "kind": "sample",
+                              "origin": {
+                                "source": "selected.va",
+                                "line": 2,
+                                "column": 91,
+                                "instance": "dut",
+                                "expansion": []
+                              },
+                              "op": "real_boundary"
+                            },
+                            "right": {
+                              "constant": 0.2,
+                              "terms": [],
+                              "op": "affine"
+                            },
+                            "origin": {
+                              "source": "selected.va",
+                              "line": 2,
+                              "column": 95,
+                              "instance": "dut",
+                              "expansion": []
+                            },
+                            "op": "real_binary"
+                          }
+                        },
+                        "origin": {
+                          "source": "selected.va",
+                          "line": 2,
+                          "column": 87,
+                          "instance": "dut",
+                          "expansion": []
+                        },
+                        "op": "select"
+                      },
+                      "kind": "snapshot",
+                      "origin": {
+                        "source": "selected.va",
+                        "line": 2,
+                        "column": 85,
+                        "instance": "dut",
+                        "expansion": []
+                      },
+                      "op": "real_boundary"
+                    },
+                    "origin": {
+                      "source": "selected.va",
+                      "line": 2,
+                      "column": 85,
+                      "instance": "dut",
+                      "expansion": []
+                    },
+                    "kind": "real_bind"
+                  }
+                },
+                {
+                  "expanded_statement_ordinal": 1,
+                  "action": {
+                    "relation": "lt",
+                    "left": {
+                      "binding": 0,
+                      "op": "real_local"
+                    },
+                    "right": {
+                      "constant": 0.1,
+                      "terms": [],
+                      "op": "affine"
+                    },
+                    "then_body": [
+                      {
+                        "expanded_statement_ordinal": 2,
+                        "action": {
+                          "binding": 0,
+                          "value": {
+                            "value": {
+                              "constant": 0.1,
+                              "terms": [],
+                              "op": "affine"
+                            },
+                            "kind": "snapshot",
+                            "origin": {
+                              "source": "selected.va",
+                              "line": 2,
+                              "column": 110,
+                              "instance": "dut",
+                              "expansion": []
+                            },
+                            "op": "real_boundary"
+                          },
+                          "origin": {
+                            "source": "selected.va",
+                            "line": 2,
+                            "column": 110,
+                            "instance": "dut",
+                            "expansion": []
+                          },
+                          "kind": "real_bind"
+                        }
+                      }
+                    ],
+                    "else_body": [],
+                    "origin": {
+                      "source": "selected.va",
+                      "line": 2,
+                      "column": 101,
+                      "instance": "dut",
+                      "expansion": []
+                    },
+                    "kind": "procedure_if"
+                  }
+                },
+                {
+                  "expanded_statement_ordinal": 3,
+                  "action": {
+                    "contribution": 0,
+                    "kind": "contribution_capture"
+                  }
+                }
+              ]
+            }
+          ],
+          "real_bindings": [
+            {
+              "procedure_id": 0,
+              "name": "x",
+              "origin": {
+                "source": "selected.va",
+                "line": 2,
+                "column": 1,
+                "instance": "dut",
+                "expansion": []
+              },
+              "lifetime": "occurrence"
+            }
+          ]
+        },
+        "driven": [
+          "u"
+        ],
+        "samples": [],
+        "transient": {
+          "pwl": [
+            [
+              [
+                0,
+                0.7
+              ],
+              [
+                1,
+                -0.3
+              ]
+            ]
+          ],
+          "output_times": [
+            0,
+            0.125,
+            0.5,
+            0.875,
+            1
+          ],
+          "stop": 1,
+          "max_step": 1
+        },
+        "tolerances": {
+          "absolute": 1e-12,
+          "relative": 1e-10
+        }
+      },
+      "response": {
+        "schema_version": 33,
+        "engine": "independent-synthetic-control",
+        "nodes": [
+          "0",
+          "u",
+          "y"
+        ],
+        "solutions": [
+          {
+            "voltages": [
+              0.0,
+              0.7,
+              0.0
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              0.575,
+              0.0
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              0.19999999999999996,
+              0.0
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              -0.17500000000000004,
+              0.0
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              -0.30000000000000004,
+              0.0
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          }
+        ],
+        "transient": {
+          "times": [
+            0,
+            0.125,
+            0.5,
+            0.875,
+            1
+          ],
+          "state_names": [],
+          "states": [
+            [],
+            [],
+            [],
+            [],
+            []
+          ],
+          "events": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0
+        },
+        "observation_evidence": {
+          "schema_version": 1,
+          "nodes": [
+            "0",
+            "u",
+            "y"
+          ],
+          "effective_controls": {
+            "absolute_V": 1e-12,
+            "relative": 1e-10,
+            "stop_s": 1.0,
+            "max_step_s": 1.0,
+            "max_step_applied": false
+          },
+          "sample_origins": [
+            "stateless_working_point",
+            "stateless_working_point",
+            "stateless_working_point",
+            "stateless_working_point",
+            "stateless_working_point"
+          ],
+          "voltage_bounds_V": [
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                0.6999999999999998,
+                0.7000000000000001
+              ],
+              [
+                -5e-324,
+                5e-324
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                0.5749999999999998,
+                0.5750000000000001
+              ],
+              [
+                -5e-324,
+                5e-324
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                0.19999999999999993,
+                0.19999999999999998
+              ],
+              [
+                -5e-324,
+                5e-324
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                -0.17500000000000007,
+                -0.17500000000000002
+              ],
+              [
+                -5e-324,
+                5e-324
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                -0.3000000000000001,
+                -0.3
+              ],
+              [
+                -5e-324,
+                5e-324
+              ]
+            ]
+          ],
+          "initial_settled": true
+        }
+      }
+    },
+    {
+      "mutation": "constant_wrong_output",
+      "request": {
+        "program": {
+          "nodes": [
+            "0",
+            "u",
+            "y"
+          ],
+          "contributions": [
+            {
+              "branch": {
+                "instance": "dut",
+                "local_positive": "0",
+                "local_negative": "y",
+                "kind": "voltage"
+              },
+              "positive": 0,
+              "negative": 2,
+              "rhs": {
+                "op": "multiply",
+                "left": {
+                  "constant": -1.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "right": {
+                  "operator": 0,
+                  "op": "operator"
+                }
+              },
+              "origin": {
+                "source": "selected.va",
+                "line": 2,
+                "column": 116,
+                "instance": "dut",
+                "expansion": []
+              }
+            }
+          ],
+          "states": [],
+          "events": [],
+          "operators": [
+            {
+              "function": "ln",
+              "input": {
+                "binding": 0,
+                "op": "real_local"
+              },
+              "origin": {
+                "source": "selected.va",
+                "line": 2,
+                "column": 122,
+                "instance": "dut",
+                "expansion": []
+              },
+              "kind": "math"
+            }
+          ],
+          "schema_version": 33,
+          "step_bounds": [],
+          "procedures": [
+            {
+              "procedure_id": 0,
+              "instance": "dut",
+              "body": [
+                {
+                  "expanded_statement_ordinal": 0,
+                  "action": {
+                    "binding": 0,
+                    "value": {
+                      "value": {
+                        "relation": "ge",
+                        "left": {
+                          "operation": "subtract",
+                          "left": {
+                            "value": {
+                              "constant": 0.0,
+                              "terms": [
+                                {
+                                  "node": 0,
+                                  "coefficient": -1.0
+                                },
+                                {
+                                  "node": 1,
+                                  "coefficient": 1.0
+                                }
+                              ],
+                              "op": "affine"
+                            },
+                            "kind": "sample",
+                            "origin": {
+                              "source": "selected.va",
+                              "line": 2,
+                              "column": 91,
+                              "instance": "dut",
+                              "expansion": []
+                            },
+                            "op": "real_boundary"
+                          },
+                          "right": {
+                            "constant": 0.2,
+                            "terms": [],
+                            "op": "affine"
+                          },
+                          "origin": {
+                            "source": "selected.va",
+                            "line": 2,
+                            "column": 95,
+                            "instance": "dut",
+                            "expansion": []
+                          },
+                          "op": "real_binary"
+                        },
+                        "right": {
+                          "constant": 0.0,
+                          "terms": [],
+                          "op": "affine"
+                        },
+                        "then_value": {
+                          "operation": "subtract",
+                          "left": {
+                            "value": {
+                              "constant": 0.0,
+                              "terms": [
+                                {
+                                  "node": 0,
+                                  "coefficient": -1.0
+                                },
+                                {
+                                  "node": 1,
+                                  "coefficient": 1.0
+                                }
+                              ],
+                              "op": "affine"
+                            },
+                            "kind": "sample",
+                            "origin": {
+                              "source": "selected.va",
+                              "line": 2,
+                              "column": 91,
+                              "instance": "dut",
+                              "expansion": []
+                            },
+                            "op": "real_boundary"
+                          },
+                          "right": {
+                            "constant": 0.2,
+                            "terms": [],
+                            "op": "affine"
+                          },
+                          "origin": {
+                            "source": "selected.va",
+                            "line": 2,
+                            "column": 95,
+                            "instance": "dut",
+                            "expansion": []
+                          },
+                          "op": "real_binary"
+                        },
+                        "else_value": {
+                          "op": "multiply",
+                          "left": {
+                            "constant": -1.0,
+                            "terms": [],
+                            "op": "affine"
+                          },
+                          "right": {
+                            "operation": "subtract",
+                            "left": {
+                              "value": {
+                                "constant": 0.0,
+                                "terms": [
+                                  {
+                                    "node": 0,
+                                    "coefficient": -1.0
+                                  },
+                                  {
+                                    "node": 1,
+                                    "coefficient": 1.0
+                                  }
+                                ],
+                                "op": "affine"
+                              },
+                              "kind": "sample",
+                              "origin": {
+                                "source": "selected.va",
+                                "line": 2,
+                                "column": 91,
+                                "instance": "dut",
+                                "expansion": []
+                              },
+                              "op": "real_boundary"
+                            },
+                            "right": {
+                              "constant": 0.2,
+                              "terms": [],
+                              "op": "affine"
+                            },
+                            "origin": {
+                              "source": "selected.va",
+                              "line": 2,
+                              "column": 95,
+                              "instance": "dut",
+                              "expansion": []
+                            },
+                            "op": "real_binary"
+                          }
+                        },
+                        "origin": {
+                          "source": "selected.va",
+                          "line": 2,
+                          "column": 87,
+                          "instance": "dut",
+                          "expansion": []
+                        },
+                        "op": "select"
+                      },
+                      "kind": "snapshot",
+                      "origin": {
+                        "source": "selected.va",
+                        "line": 2,
+                        "column": 85,
+                        "instance": "dut",
+                        "expansion": []
+                      },
+                      "op": "real_boundary"
+                    },
+                    "origin": {
+                      "source": "selected.va",
+                      "line": 2,
+                      "column": 85,
+                      "instance": "dut",
+                      "expansion": []
+                    },
+                    "kind": "real_bind"
+                  }
+                },
+                {
+                  "expanded_statement_ordinal": 1,
+                  "action": {
+                    "relation": "lt",
+                    "left": {
+                      "binding": 0,
+                      "op": "real_local"
+                    },
+                    "right": {
+                      "constant": 0.1,
+                      "terms": [],
+                      "op": "affine"
+                    },
+                    "then_body": [
+                      {
+                        "expanded_statement_ordinal": 2,
+                        "action": {
+                          "binding": 0,
+                          "value": {
+                            "value": {
+                              "constant": 0.1,
+                              "terms": [],
+                              "op": "affine"
+                            },
+                            "kind": "snapshot",
+                            "origin": {
+                              "source": "selected.va",
+                              "line": 2,
+                              "column": 110,
+                              "instance": "dut",
+                              "expansion": []
+                            },
+                            "op": "real_boundary"
+                          },
+                          "origin": {
+                            "source": "selected.va",
+                            "line": 2,
+                            "column": 110,
+                            "instance": "dut",
+                            "expansion": []
+                          },
+                          "kind": "real_bind"
+                        }
+                      }
+                    ],
+                    "else_body": [],
+                    "origin": {
+                      "source": "selected.va",
+                      "line": 2,
+                      "column": 101,
+                      "instance": "dut",
+                      "expansion": []
+                    },
+                    "kind": "procedure_if"
+                  }
+                },
+                {
+                  "expanded_statement_ordinal": 3,
+                  "action": {
+                    "contribution": 0,
+                    "kind": "contribution_capture"
+                  }
+                }
+              ]
+            }
+          ],
+          "real_bindings": [
+            {
+              "procedure_id": 0,
+              "name": "x",
+              "origin": {
+                "source": "selected.va",
+                "line": 2,
+                "column": 1,
+                "instance": "dut",
+                "expansion": []
+              },
+              "lifetime": "occurrence"
+            }
+          ]
+        },
+        "driven": [
+          "u"
+        ],
+        "samples": [],
+        "transient": {
+          "pwl": [
+            [
+              [
+                0,
+                0.7
+              ],
+              [
+                1,
+                -0.3
+              ]
+            ]
+          ],
+          "output_times": [
+            0,
+            0.25,
+            0.5,
+            0.75,
+            1
+          ],
+          "stop": 1,
+          "max_step": 1
+        },
+        "tolerances": {
+          "absolute": 1e-12,
+          "relative": 1e-10
+        }
+      },
+      "response": {
+        "schema_version": 33,
+        "engine": "independent-synthetic-control",
+        "nodes": [
+          "0",
+          "u",
+          "y"
+        ],
+        "solutions": [
+          {
+            "voltages": [
+              0.0,
+              0.7,
+              0.0
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              0.44999999999999996,
+              0.0
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              0.19999999999999996,
+              0.0
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              -0.050000000000000044,
+              0.0
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              -0.30000000000000004,
+              0.0
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          }
+        ],
+        "transient": {
+          "times": [
+            0,
+            0.25,
+            0.5,
+            0.75,
+            1
+          ],
+          "state_names": [],
+          "states": [
+            [],
+            [],
+            [],
+            [],
+            []
+          ],
+          "events": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0
+        },
+        "observation_evidence": {
+          "schema_version": 1,
+          "nodes": [
+            "0",
+            "u",
+            "y"
+          ],
+          "effective_controls": {
+            "absolute_V": 1e-12,
+            "relative": 1e-10,
+            "stop_s": 1.0,
+            "max_step_s": 1.0,
+            "max_step_applied": false
+          },
+          "sample_origins": [
+            "stateless_working_point",
+            "stateless_working_point",
+            "stateless_working_point",
+            "stateless_working_point",
+            "stateless_working_point"
+          ],
+          "voltage_bounds_V": [
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                0.6999999999999998,
+                0.7000000000000001
+              ],
+              [
+                -5e-324,
+                5e-324
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                0.4499999999999999,
+                0.45
+              ],
+              [
+                -5e-324,
+                5e-324
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                0.19999999999999993,
+                0.19999999999999998
+              ],
+              [
+                -5e-324,
+                5e-324
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                -0.05000000000000005,
+                -0.05000000000000004
+              ],
+              [
+                -5e-324,
+                5e-324
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                -0.3000000000000001,
+                -0.3
+              ],
+              [
+                -5e-324,
+                5e-324
+              ]
+            ]
+          ],
+          "initial_settled": true
+        }
+      }
+    }
+  ]
+}

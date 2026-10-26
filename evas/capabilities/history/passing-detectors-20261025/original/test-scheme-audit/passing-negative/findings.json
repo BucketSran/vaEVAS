@@ -1,0 +1,149 @@
+{
+  "review_kind": "independent read-only targeted passing-negative audit",
+  "base": "f210ebd59dfd5db78eea7ac0751479bc9e02beed",
+  "candidate_digest": "e5df94a01dd621346777137e6c9073a690bf2ce58713a6db2cb5e0f62c7243e2",
+  "workspace": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night",
+  "skills": [
+    "evas-validate",
+    "vaevas-review-pr",
+    "unslop"
+  ],
+  "selection": "All 11 executed method IDs are passed/no_defect_found in the fixed universe. Structural searches selected negative assertions and raw-IR/resource controls; no coverage claim for all 2577 or 3262 methods.",
+  "executed_methods": [
+    {
+      "id": "test_absdelay.AbsDelayRejections.test_internal_state_nested_nonlinear_and_feedback_inputs_rejected",
+      "scope": "Targeted original-method execution and source/error-path inspection; not full semantic qualification.",
+      "status": "no_additional_confirmed_defect_in_targeted_inspection",
+      "original_test_passed": true,
+      "evidence": "raw.json"
+    },
+    {
+      "id": "test_absdelay.AbsDelayRejections.test_cross_on_delayed_output_direct_or_indirect_is_rejected",
+      "scope": "Targeted original-method execution and source/error-path inspection; not full semantic qualification.",
+      "status": "no_additional_confirmed_defect_in_targeted_inspection",
+      "original_test_passed": true,
+      "evidence": "raw.json"
+    },
+    {
+      "id": "test_absdelay.AbsDelayRejections.test_cross_instance_guard_dependency_survives_cancellation",
+      "scope": "Targeted original-method execution and source/error-path inspection; not full semantic qualification.",
+      "status": "no_additional_confirmed_defect_in_targeted_inspection",
+      "original_test_passed": true,
+      "evidence": "raw.json"
+    },
+    {
+      "id": "test_slew.SlewContracts.test_unsupported_inputs_and_operator_uses_are_rejected",
+      "scope": "Targeted original-method execution and source/error-path inspection; not full semantic qualification.",
+      "status": "no_additional_confirmed_defect_in_targeted_inspection",
+      "original_test_passed": true,
+      "evidence": "raw.json"
+    },
+    {
+      "id": "test_deferred_rdist.DeferredRdist.test_bad_raw_leaf_seed_and_signature_are_rejected",
+      "scope": "Targeted original-method execution and source/error-path inspection; not full semantic qualification.",
+      "status": "confirmed_defect",
+      "original_test_passed": true,
+      "evidence": "raw.json"
+    },
+    {
+      "id": "test_events.EventRejections.test_frontend_rejects_nonconstant_init_and_unsupported_events",
+      "scope": "Targeted original-method execution and source/error-path inspection; not full semantic qualification.",
+      "status": "no_additional_confirmed_defect_in_targeted_inspection",
+      "original_test_passed": true,
+      "evidence": "raw.json"
+    },
+    {
+      "id": "test_held_integer_targets.HeldIntegerTargets.test_each_source_child_overflow_precedes_mask_and_retarget",
+      "scope": "Targeted original-method execution and source/error-path inspection; not full semantic qualification.",
+      "status": "no_additional_confirmed_defect_in_targeted_inspection",
+      "original_test_passed": true,
+      "evidence": "raw.json"
+    },
+    {
+      "id": "test_real_call.RealCallContract.test_original_owner_charges_call_work_and_failed_retry_is_sticky",
+      "scope": "Targeted original-method execution and source/error-path inspection; not full semantic qualification.",
+      "status": "no_additional_confirmed_defect_in_targeted_inspection",
+      "original_test_passed": true,
+      "evidence": "resource-raw-output.txt"
+    },
+    {
+      "id": "test_initial_selected_interval.InitialSelectedInterval.test_natural_domain_work_exhaustion_and_sticky_retry_stay_on_same_owner",
+      "scope": "Targeted original-method execution and source/error-path inspection; not full semantic qualification.",
+      "status": "no_additional_confirmed_defect_in_targeted_inspection",
+      "original_test_passed": true,
+      "evidence": "resource-raw-output.txt"
+    },
+    {
+      "id": "test_source_audit_reuse.SourceAuditReuse.test_cache_prepaid_failure_has_no_shared_next_request",
+      "scope": "Targeted original-method execution and source/error-path inspection; not full semantic qualification.",
+      "status": "no_additional_confirmed_defect_in_targeted_inspection",
+      "original_test_passed": true,
+      "evidence": "resource-raw-output.txt"
+    },
+    {
+      "id": "test_held_integer_targets.HeldIntegerTargets.test_raw_target_protocol_audits_unselected_and_canceled_dependencies",
+      "scope": "Targeted original-method execution and source/error-path inspection; not full semantic qualification.",
+      "status": "no_additional_confirmed_defect_in_targeted_inspection",
+      "original_test_passed": true,
+      "evidence": "resource-raw-output.txt"
+    }
+  ],
+  "findings": [
+    {
+      "id": "PN-F01",
+      "priority": "P2",
+      "status": "confirmed",
+      "method_id": "test_deferred_rdist.DeferredRdist.test_bad_raw_leaf_seed_and_signature_are_rejected",
+      "file": "evas/tests/test_deferred_rdist.py",
+      "line": 166,
+      "title": "Preserve the selected event index when mutating deferred-call leaves",
+      "obligation": "Malformed deferred-call function, real-valued seed state, and arity must be rejected by their leaf checks before public serialization; a legal unchanged deferred leaf must serialize.",
+      "actual": "The selected timer is events[0], followed by the initial-step event at events[1]. (*p.events[:-1], replacement) duplicates the timer at index1 and removes initial_step, while its procedure gate metadata still names ordinal1. All three cases fail the earlier unique procedure-gate metadata check before visiting the malformed leaf.",
+      "positive_control": "Original build().to_dict succeeds. Repeating the exact test placement with an unchanged legal leaf fails the same gate-metadata check. Replacing the actual index0 event preserves gate metadata and accepts the legal leaf.",
+      "real_fault_calibration": "An in-memory AST mutant removes only production UnsupportedSystemCall signature/seed/owner validation, retaining argument traversal. The unmodified original method still passes all three cases; index-preserving wrong-function, real-state-seed and wrong-arity controls all serialize under the mutant and are all rejected by the unmodified validator. This proves the original detector misses absent target checks, beyond a merely different error code.",
+      "impact": "The method cannot guard the three claimed malformed-leaf rejection obligations; regression in those leaf checks remains invisible to this test. This is a per-method conclusion, not a claim that the full suite has no other related detector.",
+      "recommendation": "Replace the event at its discovered index and retain an unchanged legal replacement control; assert the target leaf refusal or calibrated target-check behavior.",
+      "evidence": [
+        "calibration.json",
+        "raw.json",
+        "raw-output.txt",
+        "probe.py"
+      ]
+    }
+  ],
+  "excluded_hypotheses": [
+    {
+      "ids": [
+        "test_absdelay.AbsDelayRejections.test_internal_state_nested_nonlinear_and_feedback_inputs_rejected",
+        "test_absdelay.AbsDelayRejections.test_cross_on_delayed_output_direct_or_indirect_is_rejected",
+        "test_absdelay.AbsDelayRejections.test_cross_instance_guard_dependency_survives_cancellation",
+        "test_slew.SlewContracts.test_unsupported_inputs_and_operator_uses_are_rejected",
+        "test_events.EventRejections.test_frontend_rejects_nonconstant_init_and_unsupported_events",
+        "test_held_integer_targets.HeldIntegerTargets.test_each_source_child_overflow_precedes_mask_and_retarget"
+      ],
+      "status": "no_confirmed_new_finding",
+      "reason": "Observed original exception paths include the intended unsupported operator/cross/initial value/type/domain boundaries. Some CompileError constructors are internal caught attempts, not the terminal error; they were not treated as false-positive proof."
+    },
+    {
+      "ids": [
+        "test_real_call.RealCallContract.test_original_owner_charges_call_work_and_failed_retry_is_sticky",
+        "test_initial_selected_interval.InitialSelectedInterval.test_natural_domain_work_exhaustion_and_sticky_retry_stay_on_same_owner",
+        "test_source_audit_reuse.SourceAuditReuse.test_cache_prepaid_failure_has_no_shared_next_request"
+      ],
+      "status": "no_confirmed_new_finding",
+      "reason": "Original same-owner natural exhaustion methods hit the actual100000 resource limit and retain retry refusal; cache-prepayment fault injection reaches ten named real work debit sites and fresh builds succeed. No stronger same-engine rollback conclusion is made."
+    }
+  ],
+  "unresolved": [
+    {
+      "id": "test_held_integer_targets.HeldIntegerTargets.test_raw_target_protocol_audits_unselected_and_canceled_dependencies",
+      "reason": "Original raw-target method executes successfully, but its subprocess return-code-only control was not separately instrumented or mutated here. No wrong-stage finding is claimed."
+    }
+  ],
+  "limits": [
+    "No repository edits, build, Git mutation, Spectre, or full suite execution. Only files in this passing-negative evidence directory were written.",
+    "No claim to re-audit known377 cases.",
+    "No private Rust same-engine rollback control was executed; fresh Python requests are not counted as rollback proof."
+  ],
+  "rerun": "python3 -B /Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py; optional positional unittest IDs select the tracing set; calibration always runs."
+}

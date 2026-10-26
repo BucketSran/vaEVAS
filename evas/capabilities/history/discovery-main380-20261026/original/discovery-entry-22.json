@@ -1,0 +1,447 @@
+{
+  "start": "evas/validation/differential",
+  "pattern": "test*.py",
+  "scope": "discovery-only",
+  "rows": [
+    {
+      "id": "test_ngspice_compare.DifferentialCalibration.test_actual_suite_sources_reach_their_intended_export_paths",
+      "source_file": "evas/validation/differential/test_ngspice_compare.py",
+      "method_source_file": "evas/validation/differential/test_ngspice_compare.py",
+      "source_line": 68,
+      "module": "test_ngspice_compare",
+      "generated": false,
+      "method_source_sha256": "1ecda346a35babac78c08bb0a75f6af0fd76619142e10b10371e554eb302c7d5"
+    },
+    {
+      "id": "test_ngspice_compare.DifferentialCalibration.test_contributions_sum_within_branch",
+      "source_file": "evas/validation/differential/test_ngspice_compare.py",
+      "method_source_file": "evas/validation/differential/test_ngspice_compare.py",
+      "source_line": 38,
+      "module": "test_ngspice_compare",
+      "generated": false,
+      "method_source_sha256": "11f1b326fe3c68cbf447cd04be33cd1bdebcd662993ba407212de9dd6eca2be8"
+    },
+    {
+      "id": "test_ngspice_compare.DifferentialCalibration.test_exporter_rejects_two_independent_ideal_sources_on_same_node",
+      "source_file": "evas/validation/differential/test_ngspice_compare.py",
+      "method_source_file": "evas/validation/differential/test_ngspice_compare.py",
+      "source_line": 47,
+      "module": "test_ngspice_compare",
+      "generated": false,
+      "method_source_sha256": "6af2d00a6cc31efe0863108bec633c5450ef28afd51cabd62d54b5928dabf31e"
+    },
+    {
+      "id": "test_ngspice_compare.DifferentialCalibration.test_generated_cases_are_deterministic",
+      "source_file": "evas/validation/differential/test_ngspice_compare.py",
+      "method_source_file": "evas/validation/differential/test_ngspice_compare.py",
+      "source_line": 79,
+      "module": "test_ngspice_compare",
+      "generated": false,
+      "method_source_sha256": "037f62bc26eb863c604aa3380067aff7743f00f29df288999932df93480c479e"
+    },
+    {
+      "id": "test_ngspice_compare.DifferentialCalibration.test_negative_integer_power_uses_polynomial_multiplication",
+      "source_file": "evas/validation/differential/test_ngspice_compare.py",
+      "method_source_file": "evas/validation/differential/test_ngspice_compare.py",
+      "source_line": 33,
+      "module": "test_ngspice_compare",
+      "generated": false,
+      "method_source_sha256": "d7d42d682a5800383377eb962128e3d208a33da64054f992eda368b9bb07290c"
+    },
+    {
+      "id": "test_ngspice_compare.DifferentialCalibration.test_original_smoke_admission_outcomes_remain_explicit",
+      "source_file": "evas/validation/differential/test_ngspice_compare.py",
+      "method_source_file": "evas/validation/differential/test_ngspice_compare.py",
+      "source_line": 53,
+      "module": "test_ngspice_compare",
+      "generated": false,
+      "method_source_sha256": "4757c7beeb21b2a9a3a3305356cdf4b22ba9a93798ad697a3674e092e4acbbc6"
+    },
+    {
+      "id": "test_ngspice_compare.DifferentialCalibration.test_piecewise_interpolation_has_no_extrapolation",
+      "source_file": "evas/validation/differential/test_ngspice_compare.py",
+      "method_source_file": "evas/validation/differential/test_ngspice_compare.py",
+      "source_line": 22,
+      "module": "test_ngspice_compare",
+      "generated": false,
+      "method_source_sha256": "289f63a14e5312d4799431bb5f064d34580060302b1a43ffc7857aa732f742fe"
+    },
+    {
+      "id": "test_ngspice_compare.DifferentialCalibration.test_shape_and_nonfinite_cannot_pass",
+      "source_file": "evas/validation/differential/test_ngspice_compare.py",
+      "method_source_file": "evas/validation/differential/test_ngspice_compare.py",
+      "source_line": 17,
+      "module": "test_ngspice_compare",
+      "generated": false,
+      "method_source_sha256": "767376b8e5e161f1012b5522850f01aaa23d2b476bf5c5b1f7bd7c91c2ed90e5"
+    },
+    {
+      "id": "test_ngspice_compare.DifferentialCalibration.test_voltage_budget_accepts_boundary_and_rejects_perturbation",
+      "source_file": "evas/validation/differential/test_ngspice_compare.py",
+      "method_source_file": "evas/validation/differential/test_ngspice_compare.py",
+      "source_line": 12,
+      "module": "test_ngspice_compare",
+      "generated": false,
+      "method_source_sha256": "c84b8c6f009d4b82fe91d27e25e500f15630067e28d95013a052f3b1a06c70a9"
+    }
+  ],
+  "failed_import_ids": [],
+  "loader_errors": [],
+  "method_count": 9,
+  "generated_count": 0,
+  "read_paths": [
+    "evas/src/evas/__init__.py",
+    "evas/src/evas/__pycache__/__init__.cpython-314.pyc",
+    "evas/src/evas/__pycache__/array_elaboration.cpython-314.pyc",
+    "evas/src/evas/__pycache__/compact_source_select.cpython-314.pyc",
+    "evas/src/evas/__pycache__/condition_domains.cpython-314.pyc",
+    "evas/src/evas/__pycache__/elaboration.cpython-314.pyc",
+    "evas/src/evas/__pycache__/errors.cpython-314.pyc",
+    "evas/src/evas/__pycache__/event_index_domains.cpython-314.pyc",
+    "evas/src/evas/__pycache__/finite_math.cpython-314.pyc",
+    "evas/src/evas/__pycache__/forcing_components.cpython-314.pyc",
+    "evas/src/evas/__pycache__/frontend.cpython-314.pyc",
+    "evas/src/evas/__pycache__/held_power2.cpython-314.pyc",
+    "evas/src/evas/__pycache__/hierarchy.cpython-314.pyc",
+    "evas/src/evas/__pycache__/identity.cpython-314.pyc",
+    "evas/src/evas/__pycache__/initialization_aliases.cpython-314.pyc",
+    "evas/src/evas/__pycache__/input_rational_scope.cpython-314.pyc",
+    "evas/src/evas/__pycache__/instance_compiler.cpython-314.pyc",
+    "evas/src/evas/__pycache__/integer_arithmetic.cpython-314.pyc",
+    "evas/src/evas/__pycache__/integer_bits.cpython-314.pyc",
+    "evas/src/evas/__pycache__/integer_constants.cpython-314.pyc",
+    "evas/src/evas/__pycache__/integer_invariants.cpython-314.pyc",
+    "evas/src/evas/__pycache__/integer_prefix.cpython-314.pyc",
+    "evas/src/evas/__pycache__/integer_table_composition.cpython-314.pyc",
+    "evas/src/evas/__pycache__/ir.cpython-314.pyc",
+    "evas/src/evas/__pycache__/kernel.cpython-314.pyc",
+    "evas/src/evas/__pycache__/limits.cpython-314.pyc",
+    "evas/src/evas/__pycache__/loop_bounds.cpython-314.pyc",
+    "evas/src/evas/__pycache__/lowering.cpython-314.pyc",
+    "evas/src/evas/__pycache__/manifest.cpython-314.pyc",
+    "evas/src/evas/__pycache__/native_audit.cpython-314.pyc",
+    "evas/src/evas/__pycache__/node_elaboration.cpython-314.pyc",
+    "evas/src/evas/__pycache__/parameters.cpython-314.pyc",
+    "evas/src/evas/__pycache__/preprocessor.cpython-314.pyc",
+    "evas/src/evas/__pycache__/protocol.cpython-314.pyc",
+    "evas/src/evas/__pycache__/rational_predicates.cpython-314.pyc",
+    "evas/src/evas/__pycache__/readout_scope.cpython-314.pyc",
+    "evas/src/evas/__pycache__/runtime.cpython-314.pyc",
+    "evas/src/evas/__pycache__/settled_integer_reads.cpython-314.pyc",
+    "evas/src/evas/__pycache__/standard_headers.cpython-314.pyc",
+    "evas/src/evas/__pycache__/strobe.cpython-314.pyc",
+    "evas/src/evas/__pycache__/syntax.cpython-314.pyc",
+    "evas/src/evas/array_elaboration.py",
+    "evas/src/evas/compact_source_select.py",
+    "evas/src/evas/condition_domains.py",
+    "evas/src/evas/elaboration.py",
+    "evas/src/evas/errors.py",
+    "evas/src/evas/event_index_domains.py",
+    "evas/src/evas/finite_math.py",
+    "evas/src/evas/forcing_components.py",
+    "evas/src/evas/frontend.py",
+    "evas/src/evas/held_power2.py",
+    "evas/src/evas/hierarchy.py",
+    "evas/src/evas/identity.py",
+    "evas/src/evas/initialization_aliases.py",
+    "evas/src/evas/input_rational_scope.py",
+    "evas/src/evas/instance_compiler.py",
+    "evas/src/evas/integer_arithmetic.py",
+    "evas/src/evas/integer_bits.py",
+    "evas/src/evas/integer_constants.py",
+    "evas/src/evas/integer_invariants.py",
+    "evas/src/evas/integer_prefix.py",
+    "evas/src/evas/integer_table_composition.py",
+    "evas/src/evas/ir.py",
+    "evas/src/evas/kernel.py",
+    "evas/src/evas/limits.py",
+    "evas/src/evas/loop_bounds.py",
+    "evas/src/evas/lowering.py",
+    "evas/src/evas/manifest.py",
+    "evas/src/evas/native_audit.py",
+    "evas/src/evas/node_elaboration.py",
+    "evas/src/evas/parameters.py",
+    "evas/src/evas/preprocessor.py",
+    "evas/src/evas/protocol.py",
+    "evas/src/evas/rational_predicates.py",
+    "evas/src/evas/readout_scope.py",
+    "evas/src/evas/runtime.py",
+    "evas/src/evas/settled_integer_reads.py",
+    "evas/src/evas/standard_headers.py",
+    "evas/src/evas/strobe.py",
+    "evas/src/evas/syntax.py",
+    "evas/validation/differential/__pycache__/ngspice_compare.cpython-314.pyc",
+    "evas/validation/differential/__pycache__/test_ngspice_compare.cpython-314.pyc",
+    "evas/validation/differential/ngspice_compare.py",
+    "evas/validation/differential/test_ngspice_compare.py"
+  ],
+  "blocked": [],
+  "imported_project_modules": [
+    "evas/src/evas/__init__.py",
+    "evas/src/evas/array_elaboration.py",
+    "evas/src/evas/compact_source_select.py",
+    "evas/src/evas/condition_domains.py",
+    "evas/src/evas/elaboration.py",
+    "evas/src/evas/errors.py",
+    "evas/src/evas/event_index_domains.py",
+    "evas/src/evas/finite_math.py",
+    "evas/src/evas/forcing_components.py",
+    "evas/src/evas/frontend.py",
+    "evas/src/evas/held_power2.py",
+    "evas/src/evas/hierarchy.py",
+    "evas/src/evas/identity.py",
+    "evas/src/evas/initialization_aliases.py",
+    "evas/src/evas/input_rational_scope.py",
+    "evas/src/evas/instance_compiler.py",
+    "evas/src/evas/integer_arithmetic.py",
+    "evas/src/evas/integer_bits.py",
+    "evas/src/evas/integer_constants.py",
+    "evas/src/evas/integer_invariants.py",
+    "evas/src/evas/integer_prefix.py",
+    "evas/src/evas/integer_table_composition.py",
+    "evas/src/evas/ir.py",
+    "evas/src/evas/kernel.py",
+    "evas/src/evas/limits.py",
+    "evas/src/evas/loop_bounds.py",
+    "evas/src/evas/lowering.py",
+    "evas/src/evas/manifest.py",
+    "evas/src/evas/native_audit.py",
+    "evas/src/evas/node_elaboration.py",
+    "evas/src/evas/parameters.py",
+    "evas/src/evas/preprocessor.py",
+    "evas/src/evas/protocol.py",
+    "evas/src/evas/rational_predicates.py",
+    "evas/src/evas/readout_scope.py",
+    "evas/src/evas/runtime.py",
+    "evas/src/evas/settled_integer_reads.py",
+    "evas/src/evas/standard_headers.py",
+    "evas/src/evas/strobe.py",
+    "evas/src/evas/syntax.py",
+    "evas/validation/differential/ngspice_compare.py",
+    "evas/validation/differential/test_ngspice_compare.py"
+  ],
+  "returncode": 0,
+  "stderr": "",
+  "static_import_review": [
+    {
+      "path": "evas/validation/differential/test_ngspice_compare.py",
+      "git_blob": "1547e0544e2cd1f02338a03c059a5a48e422daaf",
+      "top_level_calls": []
+    }
+  ],
+  "origin": "ci",
+  "loaded_source_identities": [
+    {
+      "path": "evas/src/evas/__init__.py",
+      "git_blob": "b3750e93934a698a575abf55934882a66801963d",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/array_elaboration.py",
+      "git_blob": "0141ee0dc246f4bf5034a23d9459188722efaf3b",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/compact_source_select.py",
+      "git_blob": "7febe70d98fade31b1ca658b700ffc2c1b68a469",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/condition_domains.py",
+      "git_blob": "17588176e3a5829e43dace558a29a5b2eb42273c",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/elaboration.py",
+      "git_blob": "cdfbe6b05eb71ec9d77a1f13f3a142afae9412a8",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/errors.py",
+      "git_blob": "921915a3e840e7f59fcf7f2951c99a5aa922cb67",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/event_index_domains.py",
+      "git_blob": "b94da5ccf4bbc2b0f8104feee818884f6673d5fc",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/finite_math.py",
+      "git_blob": "325c6407484a7fec3ed4583cae44e2d51a28287a",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/forcing_components.py",
+      "git_blob": "cbe1824a43b4cf54a135b3d4beacfd021b296a14",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/frontend.py",
+      "git_blob": "e3af9fcce89725ced811d3ff5a61fad28484c4c2",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/held_power2.py",
+      "git_blob": "b3f32155e3e4a0ca2dd517ca3de5857012341594",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/hierarchy.py",
+      "git_blob": "7d24a0e2dd3e88b29060894c8b3aa0244e895060",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/identity.py",
+      "git_blob": "cbdfa8fa0da4081be22d0f0e7fe4ff7505cec2e8",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/initialization_aliases.py",
+      "git_blob": "32761bcd0f7e00e51ef3a0892c823ad5ee515c79",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/input_rational_scope.py",
+      "git_blob": "0c69fb6842915522c3b68812ca782a032650294e",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/instance_compiler.py",
+      "git_blob": "342f8765f99b58760cc673a37088fb2a043b4e62",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/integer_arithmetic.py",
+      "git_blob": "288b1563567eeb8813666d3c2f9a7fb2acc317bf",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/integer_bits.py",
+      "git_blob": "90e5627a7561965f4f47e5fe44f37aed704b3930",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/integer_constants.py",
+      "git_blob": "d49d6c84c01e21cd10e5c80b6dd70843f8e3308e",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/integer_invariants.py",
+      "git_blob": "1fbe0c19bf86038497872e309a75b137465ccabc",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/integer_prefix.py",
+      "git_blob": "fa9b6b77a84893cbcc5b78f2b9c9083b8b77abb3",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/integer_table_composition.py",
+      "git_blob": "196b5435bf7655226f55afc46ee0014aab079072",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/ir.py",
+      "git_blob": "7fb9829b8864addfb786432b042a36aa5d171136",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/kernel.py",
+      "git_blob": "50c92a299cb049a6261c68774914b2fd1a962ce1",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/limits.py",
+      "git_blob": "e2bb6bdbf073378fdeacaa7b21d46565db489a11",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/loop_bounds.py",
+      "git_blob": "8c17d3c63c0cceaf87bd9fbe51e3996f8cce502d",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/lowering.py",
+      "git_blob": "989c3154d2de172218e85e99d9258210bb06ab32",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/manifest.py",
+      "git_blob": "3a3378198ac9cb6383eb4106f7797212abcf3828",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/native_audit.py",
+      "git_blob": "97777b7118b71ba9cb6df622b2c5e6bf4734697e",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/node_elaboration.py",
+      "git_blob": "ada0bd08d14d319a7214ba3fe321301e5cf1c3ae",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/parameters.py",
+      "git_blob": "9cd72cb31f84230406f5bc4e3a443276c797fd43",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/preprocessor.py",
+      "git_blob": "321ef8182a263c2d80e46116e373530e422f8b33",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/protocol.py",
+      "git_blob": "4cf54b68b04999f2f6c41d5b59a377687073b6c5",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/rational_predicates.py",
+      "git_blob": "eec03e5ae0ad3a93ff3a2e340479e3f32c8987f0",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/readout_scope.py",
+      "git_blob": "80e527d5c410b40996bbd9bd0db6920cb1ed8287",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/runtime.py",
+      "git_blob": "1c18ccd9cc5423e95a05023634ecd61f4c1ecda3",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/settled_integer_reads.py",
+      "git_blob": "4156163d4c753959f254f4a320cdc36df1ce11c4",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/standard_headers.py",
+      "git_blob": "692c8a511f69b3ca5672fdb72acdc0233f352665",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/strobe.py",
+      "git_blob": "728e200cfc5a9b25a1e0de2f633427bfa02f6a78",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/syntax.py",
+      "git_blob": "109355460695fb535ca872b7eafa0806d041e00a",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/differential/ngspice_compare.py",
+      "git_blob": "479f3c7fccb59c433d56d631490b795eef8333c6",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/differential/test_ngspice_compare.py",
+      "git_blob": "1547e0544e2cd1f02338a03c059a5a48e422daaf",
+      "matches_main": true
+    }
+  ],
+  "source_identity_mismatches": [],
+  "collection_issues": []
+}

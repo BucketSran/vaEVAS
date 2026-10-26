@@ -1,0 +1,2728 @@
+{
+  "schema_version": 1,
+  "sources": [
+    {
+      "id": "source:f3b9936e0e1b48fd0a4dbf92",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/method-audit-20261025/full3257/README.md",
+      "sha256": "5032b2844daa2e0ea00bede7d1cd827e41b3ebffb21bf16d449121c41e1985a8",
+      "path": "evas/capabilities/history/method-audit-20261025/original/full3257/README.md",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/method-audit-20261025/original/full3257/README.md"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "c2b2bb488709b38288ba4d547716211f0e5b676f61c6de29ec9b55a63a6886e5"
+    },
+    {
+      "id": "source:2d9028bfd44c27c37418df2f",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/method-audit-20261025/full3257/acceptance.json",
+      "sha256": "e5bc8d5abfc8e05bc296235a81ffb474788146059a495bb158338e6d429f1c4d",
+      "path": "evas/capabilities/history/method-audit-20261025/original/full3257/acceptance.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/method-audit-20261025/original/full3257/acceptance.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "62de7196b0b45fccb739668ee48f44c3c2bf15c37253d2608eeacde42a083673"
+    },
+    {
+      "id": "source:8bb8c598a44237129e8b9e14",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/method-audit-20261025/full3257/audit.json",
+      "sha256": "0df596c67689c55fcd5dd0db00cfc2f2d852f4eef7ae0125df12c4017976b402",
+      "path": "evas/capabilities/history/method-audit-20261025/original/full3257/audit.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/method-audit-20261025/original/full3257/audit.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "57bb9dc819fcd5525db80b5a85324d4e484f9dda99ee8877439654832a187a93"
+    },
+    {
+      "id": "source:415f4456e28395bc3144057f",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/method-audit-20261025/full3257/consolidate.py",
+      "sha256": "dbbb3a6232af1fe616313299327a2c9256346d7dd8fdac4b8a59f3c484abce34",
+      "path": "evas/capabilities/history/method-audit-20261025/original/full3257/consolidate.py",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/method-audit-20261025/original/full3257/consolidate.py"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "268a1274b2c617efcdaf151362fbf77738bece6eee0bcc81b39c084cbb41db53"
+    },
+    {
+      "id": "source:dc20eaa3d52988c0c8ae82d1",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/method-audit-20261025/full3257/final-spec-review.json",
+      "sha256": "c21ea94996cae0d3801c890899b3f2caab7e4dcc3706eda16ba9e4c709d084ae",
+      "path": "evas/capabilities/history/method-audit-20261025/original/full3257/final-spec-review.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/method-audit-20261025/original/full3257/final-spec-review.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "a68da0c638e5bb9c9004fa76b14da2ad219f3fa989078939e9e89f4547cbcf3e"
+    },
+    {
+      "id": "source:e6642d273f1ff1896a44cae3",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/method-audit-20261025/full3257/inventory.json",
+      "sha256": "621e08225044ac3add852515d5c82360c0cbdd5e3247893ee69969d5d7dcd3e9",
+      "path": "evas/capabilities/history/method-audit-20261025/original/full3257/inventory.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/method-audit-20261025/original/full3257/inventory.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "1924dcd0fc117807101dbc6889106fd98623ae9b871abde0e4fd76b074983969"
+    },
+    {
+      "id": "source:9418c5c54cbad44e44acf24b",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/method-audit-20261025/full3257/methods.tsv",
+      "sha256": "2cb8a8c3d7a4a11cbfcc12fc32490606a7119616c3abd634b2e8232592920928",
+      "path": "evas/capabilities/history/method-audit-20261025/original/full3257/methods.tsv",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/method-audit-20261025/original/full3257/methods.tsv"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "789e7768ab929302749bef7eceb8e104f7ce1ed2608789b4db7e4c9e463fd07e"
+    },
+    {
+      "id": "source:5a4eb896be1345ec74209ef0",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/method-audit-20261025/full3257/prepare.py",
+      "sha256": "74f20a4230734c59d2889b362293bb6d52de26a9b74729c0a6702ec9a079c127",
+      "path": "evas/capabilities/history/method-audit-20261025/original/full3257/prepare.py",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/method-audit-20261025/original/full3257/prepare.py"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "b466eba38bb2d8a533c762a3776028c9f7ff5e6549113b80a46339e3e3ec2f84"
+    },
+    {
+      "id": "source:d6953216f58dced1a6f82d9f",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/method-audit-20261025/full3257/review-1.json",
+      "sha256": "181e25ba8acfcdce4a78609a92dc2aff10cf7623172f01ff9db4aec2c0277199",
+      "path": "evas/capabilities/history/method-audit-20261025/original/full3257/review-1.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/method-audit-20261025/original/full3257/review-1.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "fe961052edce29053abc0aae563d78de53dae26ca9bde16bae796159bd080304"
+    },
+    {
+      "id": "source:1c2edbb94e7240600d6a3402",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/method-audit-20261025/full3257/review-2.json",
+      "sha256": "a47e3abd667147ad02e11b72f095c664274586f3f286c967db4c61453690c0ee",
+      "path": "evas/capabilities/history/method-audit-20261025/original/full3257/review-2.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/method-audit-20261025/original/full3257/review-2.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "41cf25fe6bfc69e6b901b7b091091c032921e70eeab1e912a5867b01e942c059"
+    },
+    {
+      "id": "source:a8033aee9ed6faa79b3a643a",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/method-audit-20261025/full3257/review-3.json",
+      "sha256": "88ea2438efa494a75526d99a4eae35e30a849dce8cd8090a09ba526ee41a75ac",
+      "path": "evas/capabilities/history/method-audit-20261025/original/full3257/review-3.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/method-audit-20261025/original/full3257/review-3.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "79cbafae3756bca345a01bdf224e90d52e018d29ecfba82507395aca0192d595"
+    },
+    {
+      "id": "source:d4a0627de0e3e193ead1f664",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/method-audit-20261025/full3257/review-4.json",
+      "sha256": "fa1523e84356f058f3788a1daa813e52f8cc8f2395f94b5bee3fe21eeb786c69",
+      "path": "evas/capabilities/history/method-audit-20261025/original/full3257/review-4.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/method-audit-20261025/original/full3257/review-4.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "a887bca1bd34da1c88d5669fce69f7bbb7d2ffe504baae7e654db6129720be02"
+    },
+    {
+      "id": "source:6086dc4409780192efe5d9f2",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/method-audit-20261025/full3257/review-5.json",
+      "sha256": "34e25e4d14f1e60e6f8051ba348bf075294a249a6539a2df7f151d0e0e59d0ff",
+      "path": "evas/capabilities/history/method-audit-20261025/original/full3257/review-5.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/method-audit-20261025/original/full3257/review-5.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "0be9e00c329e4a5cc66dfc06af20151535688c1906e04215259bfe0cb7faa601"
+    },
+    {
+      "id": "source:d6fa8f5aa2a600bf82fb7a5c",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/method-audit-20261025/full3257/review-6.json",
+      "sha256": "dd744d8106c11fe2508c0d8e9d42f638a6d73506225b91faa265ebc0dafc4d1f",
+      "path": "evas/capabilities/history/method-audit-20261025/original/full3257/review-6.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/method-audit-20261025/original/full3257/review-6.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "b37cb1b0e32fe1e37342acc89ce323a87e8842a51800a183020b294e402595bb"
+    },
+    {
+      "id": "source:8c243a244009616e6061e0f7",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/method-audit-20261025/full3257/scope.json",
+      "sha256": "6a2312779cf6a43f5d1f152faf5ee792f93483f7d3cba54212726009672e4f10",
+      "path": "evas/capabilities/history/method-audit-20261025/original/full3257/scope.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/method-audit-20261025/original/full3257/scope.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "96c369bb8a987da0f8d10e45d37718653e723ed6a09eacb405cf1b320979460d"
+    },
+    {
+      "id": "source:2f28a29875d417cc4ec59468",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/method-audit-20261025/full3257/standards-review.json",
+      "sha256": "05d56023acc3b46f0cec0199e55376caa3908b2a2ef41e503f7a8ebd4b60510f",
+      "path": "evas/capabilities/history/method-audit-20261025/original/full3257/standards-review.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/method-audit-20261025/original/full3257/standards-review.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "6172e62c99258cef71226e68213f3288765c1dcccbf30c320e13b241952050da"
+    },
+    {
+      "id": "source:a895fd73b4c4a922f030cfe5",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/method-audit-20261025/full3257/summary.json",
+      "sha256": "0f97f53982ff2eece1e07a3647d9bf2f3f94178335dd9b99623d1eb936c19348",
+      "path": "evas/capabilities/history/method-audit-20261025/original/full3257/summary.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/method-audit-20261025/original/full3257/summary.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "283c38cbddf9a64808594a7ea38f48aa85bf009dfed9fd8da468894c03124f43"
+    },
+    {
+      "id": "source:a367d9241b4285886c12507f",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/method-audit-20261025/full3257/verification.json",
+      "sha256": "13f2b9574538beb1babe8e518f092566e698564f06564d7719582c562754f640",
+      "path": "evas/capabilities/history/method-audit-20261025/original/full3257/verification.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/method-audit-20261025/original/full3257/verification.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "7c64e2e919403cc27e22b87f5c5b650cacf382749a3c0a354b219782ed81780c"
+    },
+    {
+      "id": "source:ad5bc2fbbed5c54ccc0e7aaf",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-oracles/calibrate.py",
+      "sha256": "09ab6878e0693a902a026c36145e51d4c7137f89058f6328fce93a87185777c5",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-oracles/calibrate.py",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-oracles/calibrate.py"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "62f1855c1025938e0403b8270686baef0c2e46aa6cbeddd7c67365368ff8516c"
+    },
+    {
+      "id": "source:9eb18bfbae89628f95f2e97a",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-oracles/calibrate_source_math.py",
+      "sha256": "fc4c4d8547206a6789fb70dddd4203a09621e96f03b20b15962e6d9f46b0693f",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-oracles/calibrate_source_math.py",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-oracles/calibrate_source_math.py"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "75f0a022ed7f31d095b4f181e1eb297cf7f7d8ba35b4d5970da7e58d2443d635"
+    },
+    {
+      "id": "source:8fd5e51e97e76282ad18d1ef",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-oracles/calibration-raw.json",
+      "sha256": "53d95ee794d8878a2aa22ed4093886fd82187e9ec31e180551d17fd85c0526d0",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-oracles/calibration-raw.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-oracles/calibration-raw.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "aca6379cf7a56536bc2a1e851c4fa736a33700be1f9abbbfe4ca016e77bc19a9"
+    },
+    {
+      "id": "source:550d45b122a7a5c6a053c5cb",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-oracles/findings.json",
+      "sha256": "08b2a257ed7eb1a728d71fc91c2ecc77a7e98b3e76eadbdb644d79f2ad7bdb10",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-oracles/findings.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-oracles/findings.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "0a8435e008f37fbf1f48c94a62dff8473892b3c9f48943097f657457d7e3e060"
+    },
+    {
+      "id": "source:98eb1530a5e500ef68bf0039",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-oracles/source-math-calibration-raw.json",
+      "sha256": "df37480f11c3ea73786790931a0f1cb7bfc1e40ae2e41f6cc45abab570501054",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-oracles/source-math-calibration-raw.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-oracles/source-math-calibration-raw.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "ab8d064ac2b18af76e8fac83ac54cc32da1ffd92b24f1e27d0269fc0366723e2"
+    },
+    {
+      "id": "source:6a820b436e4340b96eedfe11",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-negative/calibration.json",
+      "sha256": "e91b9d2b3c3f2a5c1cfc0915b7e4bf93a8a8d7c5e98cd4010723d346e9f8eae7",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-negative/calibration.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-negative/calibration.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "08379ecf3b145ef01a14a3d97330d6431d8cdf8c286a2131183d2b28ee674f63"
+    },
+    {
+      "id": "source:fd9164cde2dcab01b8a6b15a",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-negative/findings.json",
+      "sha256": "e828e67e79584279b5c9da84f2007a3332ffcf6184383934f555e8898fc9d88b",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-negative/findings.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-negative/findings.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "8a5e70943e9a4e3e1ab59ac701fe4360a737adbdd259b6599ee7e79745224203"
+    },
+    {
+      "id": "source:a146316e18ed90ca5618592c",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-negative/probe.py",
+      "sha256": "6dec7d55f0b546254119fcbffd831b6e6ac5f1972a5bd919b894b2c71f5cf049",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-negative/probe.py",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-negative/probe.py"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "06c75a4111d9ceb3835f28a646c6cf3445154242e19f0b7e7dfa7fd86500da91"
+    },
+    {
+      "id": "source:a18ee9bde5300b7fb190c083",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-negative/raw-output.txt",
+      "sha256": "224fb04f3de397738a29f9311dc8c26b005cf3d3216108fbe6ff2955de908738",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-negative/raw-output.txt",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-negative/raw-output.txt"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "4e72a055386aa497bf516774154a86621ed917197406f13e0f8196621d66a52b"
+    },
+    {
+      "id": "source:7115f87007d5b46b8fc791b1",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-negative/raw.json",
+      "sha256": "051f2a88cf46c502e2132e4c0217eabcad8660f9073045e93d718eea55080d69",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-negative/raw.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-negative/raw.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "55c7d7c27be34200b774273fdf662bf54e3a0336e3412e87e61588d634bad3b3"
+    },
+    {
+      "id": "source:0de336cf1f965426b21a1856",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-negative/resource-raw-output.txt",
+      "sha256": "3956923dc9d264a28c25020a99c39135d22047ee2affe86814cd6af1b2a04f90",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-negative/resource-raw-output.txt",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-negative/resource-raw-output.txt"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "ff79dcb5367df667a24ceed6fa70277f17bf6f6aabc6989a0e183564aab546fb"
+    },
+    {
+      "id": "source:7a0ce180f597711bfd7e7095",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/findings.json",
+      "sha256": "176da08b282e48137f873e79feef29f6ef5b3e7453d66f4d5596698df03d579b",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/findings.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/findings.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "d327f193f6f25849f23d50acf041fdd8f39c209187580d42c757bf489432da94"
+    },
+    {
+      "id": "source:2b66e5b707ed03d128230288",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/probe.py",
+      "sha256": "811ada50de001aae1041ec5e44b1ccaa565c2987b0468dabb95c4e3ef6e4fcd2",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/probe.py",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/probe.py"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "b7bfba9231afb0ca8e3595be4c82073bfb5214d1517aa59f0fe7f42591e0a356"
+    },
+    {
+      "id": "source:a660ecc3024229242509ef61",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/raw-results.json",
+      "sha256": "4760e8661d5ffbf6a684e040d75ab5c3c48f8d409023a2f6d77d85a2aff84461",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/raw-results.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/raw-results.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "d7def0d5b95b2fc4a6ef2c04b3db1ad07c5c532f83582fa4eafa2a1c9407b209"
+    },
+    {
+      "id": "source:b941c7da6d422ea06ee79d0b",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/stdout.jsonl",
+      "sha256": "392420376a47eeaaccfef818ab239435e0bb167a7daaf4084c968512ee6bcfc0",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/stdout.jsonl",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/stdout.jsonl"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "d97b30d8d361b4062bb484f1cab3819a7a88a360b8e7a9085a6982daf5d7b86f"
+    },
+    {
+      "id": "source:be68eefee3b9d0a1e6f4296b",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--drop_initial_solution--0.diagnostics.json",
+      "sha256": "037c1dace2d2a0572433352e347d87028ed31e8e110b4d56b4352761de206efa",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--drop_initial_solution--0.diagnostics.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--drop_initial_solution--0.diagnostics.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "9858e24e9131a32920e3a075b62a66aa5be2eb262771d1a6f950e45ef91ac396"
+    },
+    {
+      "id": "source:906b95015c1ced0cce672120",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--drop_initial_solution--0.mutated-response.json",
+      "sha256": "86f2d94d2cf07f8fd6df9c9c19a93ce1f76611e5ab821eb022b02b9f462a88ba",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--drop_initial_solution--0.mutated-response.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--drop_initial_solution--0.mutated-response.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "a719b3464276f5421fd10daa967e482848cdb4316d960264a0837e9bffb49774"
+    },
+    {
+      "id": "source:6487f70011eba9de015b0217",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--drop_initial_solution--0.original-response.json",
+      "sha256": "c20ae003b5b5dc1699cdfd443fe38fcc49941c1a3ab1a896d8e6a07eb0acd018",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--drop_initial_solution--0.original-response.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--drop_initial_solution--0.original-response.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "993ecb6973878eb5ae42b9e1d3457f4a83bbece6326e3ef280f5b07085795a7f"
+    },
+    {
+      "id": "source:ef9c5f12d07d13665aac2e71",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--drop_initial_solution--0.request.json",
+      "sha256": "a1a1f1cb70986036d3df960c27d0009e78681af622a9261005df918151df20b8",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--drop_initial_solution--0.request.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--drop_initial_solution--0.request.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "3b48393a25e4f23cac5b7f76e70f65d1ce7cb3299cc2b51719173040ff76a6a4"
+    },
+    {
+      "id": "source:c74f55b935d7e373714e0c6b",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--identity--0.diagnostics.json",
+      "sha256": "41962db96770dac82f8f8f29f6872630d41cd1848a47020987d916831de99d2d",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--identity--0.diagnostics.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--identity--0.diagnostics.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "3558de2270e16cc055b54f4f84aade3e092383d639ede01b1fee8e9cb5914880"
+    },
+    {
+      "id": "source:3eea0da19f25ec3d0e0ed7b9",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--identity--0.mutated-response.json",
+      "sha256": "c20ae003b5b5dc1699cdfd443fe38fcc49941c1a3ab1a896d8e6a07eb0acd018",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--identity--0.mutated-response.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--identity--0.mutated-response.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "bff515b42953f74b4e2e29cef0a1d1b67d6538e7f78c8857299ddd53114017b4"
+    },
+    {
+      "id": "source:fb7b7b49e2dded86aba5f462",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--identity--0.original-response.json",
+      "sha256": "c20ae003b5b5dc1699cdfd443fe38fcc49941c1a3ab1a896d8e6a07eb0acd018",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--identity--0.original-response.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--identity--0.original-response.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "54ef8c40041d0ef01280e280297434faf328daf036b19c32c04d1925b5a5c646"
+    },
+    {
+      "id": "source:8cdb3f5a46f75c768ee4cef5",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--identity--0.request.json",
+      "sha256": "a1a1f1cb70986036d3df960c27d0009e78681af622a9261005df918151df20b8",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--identity--0.request.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--identity--0.request.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "52a9bc741b8b52cf5cb6835105f685d33c66e35ec15cbc0175fbe4366289bd29"
+    },
+    {
+      "id": "source:a16d2bbc61a453e5cc5754af",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_final_voltage--0.diagnostics.json",
+      "sha256": "0de635542aabc876271c5c91c006748b790c071d8d1288d02edf83d6aad36874",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_final_voltage--0.diagnostics.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_final_voltage--0.diagnostics.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "a0438734edb5abf57d6db987fc4d8e14879cb30a03b1678cdffa1cd5f73adeef"
+    },
+    {
+      "id": "source:34a69bd6a9d4dd63adb6e0a0",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_final_voltage--0.mutated-response.json",
+      "sha256": "2e6e76fa954d156e1ce19c62f83ef9ae61604194483e11cdb5902a727d1bd9fe",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_final_voltage--0.mutated-response.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_final_voltage--0.mutated-response.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "085e86960639afd29558717b2a2f324e0e790533792b5d6ebd8059cac29479d6"
+    },
+    {
+      "id": "source:d5227dc7fe78dec76fe5a134",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_final_voltage--0.original-response.json",
+      "sha256": "c20ae003b5b5dc1699cdfd443fe38fcc49941c1a3ab1a896d8e6a07eb0acd018",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_final_voltage--0.original-response.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_final_voltage--0.original-response.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "b23485d7d8776b2990c4cb643792086315f2a9eecf47b3f440ce3c2d2a36c696"
+    },
+    {
+      "id": "source:30d078d1b9e008238fbc632e",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_final_voltage--0.request.json",
+      "sha256": "a1a1f1cb70986036d3df960c27d0009e78681af622a9261005df918151df20b8",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_final_voltage--0.request.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_final_voltage--0.request.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "477b2b4f2502c50f542c40822d97af9c529e379ab737e75ecf7bc184214e69b1"
+    },
+    {
+      "id": "source:118259e8de8881ec6d458462",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_initial_voltage--0.diagnostics.json",
+      "sha256": "fed17a78b914ee8b4a7b50c05ea53f3fcf61175bed64beaa102ad4288fd667b8",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_initial_voltage--0.diagnostics.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_initial_voltage--0.diagnostics.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "7bf646051390529cb2b0035d2fcdb58b63fc9d05d4a23f4b7e1483672df97673"
+    },
+    {
+      "id": "source:83659b9dce06f69eb1a4726b",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_initial_voltage--0.mutated-response.json",
+      "sha256": "1df627241fd15b32f0f1bcf4465769330406401cd8f68b5c8e0bdb8b38840e8e",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_initial_voltage--0.mutated-response.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_initial_voltage--0.mutated-response.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "cc2a0d06f5fa01ad790edd0291823798769e908226dfafebcb9f9fdae1e189a3"
+    },
+    {
+      "id": "source:f8ff7fe29cac0897f34fdbad",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_initial_voltage--0.original-response.json",
+      "sha256": "c20ae003b5b5dc1699cdfd443fe38fcc49941c1a3ab1a896d8e6a07eb0acd018",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_initial_voltage--0.original-response.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_initial_voltage--0.original-response.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "f657d6f796f36a713f2c3bb300c56ff1e48070d7e9c30f01e31969d233b0dbcc"
+    },
+    {
+      "id": "source:c3ca557b8a14d3b67f368770",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_initial_voltage--0.request.json",
+      "sha256": "a1a1f1cb70986036d3df960c27d0009e78681af622a9261005df918151df20b8",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_initial_voltage--0.request.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_initial_voltage--0.request.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "b50456de4686aa0b8eb160647d396e99bdc4e0ca9ba91999d69b5e491aa9d653"
+    },
+    {
+      "id": "source:977bee0b704c6c5918d69cc6",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--0.diagnostics.json",
+      "sha256": "fb748a3babf17032970b0477324aa825da9497196d52bc70cc93e53c4e072edb",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--0.diagnostics.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--0.diagnostics.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "6cbb1b76927f539057a8209424ebf3c11a238e966e76b414e8ed12347da90d5d"
+    },
+    {
+      "id": "source:0fc92da4d2869fb2b12d7baa",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--0.mutated-response.json",
+      "sha256": "4b453c67d7b28f7fcf552f610bf4c6a338fcbf1375a1e383a298f454f0797500",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--0.mutated-response.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--0.mutated-response.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "e59247103c3dc2bb068274a579c887f30e1b4c9b62860b4fb64b60b69f4be0ab"
+    },
+    {
+      "id": "source:6f55594f7c4e3fc5235bdb8b",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--0.original-response.json",
+      "sha256": "3c0e0e000fc529f0f5ae804398fa25f04890ca7603b0ced42e117e935cf03404",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--0.original-response.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--0.original-response.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "cd745b05fd5a585fa8a328d8d1266eefe878aa2569341618a4128c7bc809292b"
+    },
+    {
+      "id": "source:14693c37935cdd2aaa1d9114",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--0.request.json",
+      "sha256": "64f1a1a50d75f2af0094da9b201c496e19d5541ac2196ed6c9fb2f7224d8f618",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--0.request.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--0.request.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "3efeef297e0c2fe71319cd97437d177f5498b3b4a169d1720c8920992b81d382"
+    },
+    {
+      "id": "source:6feb344e9227c65fbd55e2c6",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--1.mutated-response.json",
+      "sha256": "8d5d34bbeea8e8ad938b3917263a8dac5268a4b78574f0ea00930776674ae561",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--1.mutated-response.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--1.mutated-response.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "1fbb56a0f4644f32482f86fe28189ae63faa4d5ae31d9782b89c0a5a2cdd1128"
+    },
+    {
+      "id": "source:a9bf53b173686ee09d6aee9e",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--1.original-response.json",
+      "sha256": "8d5d34bbeea8e8ad938b3917263a8dac5268a4b78574f0ea00930776674ae561",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--1.original-response.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--1.original-response.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "282ac4399768a053f2f4ab372c2d9a59daa69c10fd281ba2b471fddf0a6805dc"
+    },
+    {
+      "id": "source:10c7aaf2de96b8ea0b0dc734",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--1.request.json",
+      "sha256": "ff4cef8bbf8e2e5ea83dc548f7e15651edaf101960c60e99c2b18a674cf08f8b",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--1.request.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--1.request.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "ddae242b43794cb3d1d31f67a2b0e0742c92546839471a34836612c2cbf5f81f"
+    },
+    {
+      "id": "source:25b42186e0fc5d46cb99fa16",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.diagnostics.json",
+      "sha256": "a819c9b451681a232fa33d83d3ca3675facc09bd8ef8c1e02b4627fd7fd3ebf4",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.diagnostics.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.diagnostics.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "97905de97eb26f5e0f5f9a86504e9fcf3205bf8989315c86221a232522efda85"
+    },
+    {
+      "id": "source:e0ebe642692db8db910978d8",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.mutated-response.json",
+      "sha256": "3c0e0e000fc529f0f5ae804398fa25f04890ca7603b0ced42e117e935cf03404",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.mutated-response.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.mutated-response.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "45989eb68d4a2dea183cc7ad9e9bfeec7537c0bcb702dfc07f240e3f578ae45f"
+    },
+    {
+      "id": "source:7c4eb3b44d4a059408b2fdaa",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.original-response.json",
+      "sha256": "3c0e0e000fc529f0f5ae804398fa25f04890ca7603b0ced42e117e935cf03404",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.original-response.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.original-response.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "8847030ea67522aaaf76fafb6399cffb4d762eee13c084e83b5f1e007d1d3ae0"
+    },
+    {
+      "id": "source:b3a24a396c9336cca5ea8601",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.request.json",
+      "sha256": "64f1a1a50d75f2af0094da9b201c496e19d5541ac2196ed6c9fb2f7224d8f618",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.request.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.request.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "4ec1bf8c0783ea6a95d78a8a226587e7204304b8f1dd683b7813745daf60f198"
+    },
+    {
+      "id": "source:56d7717896bcbbf736e22bfe",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.mutated-response.json",
+      "sha256": "8d5d34bbeea8e8ad938b3917263a8dac5268a4b78574f0ea00930776674ae561",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.mutated-response.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.mutated-response.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "f4a40fa1f3777b6c617d623b739fa4802ae024305f7c86e8681f88cee23f8bab"
+    },
+    {
+      "id": "source:8159f34aaa7d1c65b0cb185b",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.original-response.json",
+      "sha256": "8d5d34bbeea8e8ad938b3917263a8dac5268a4b78574f0ea00930776674ae561",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.original-response.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.original-response.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "244801150367d74af1b0d9b7f3979ecf1bfd581fd9120ada87fa868dcf17e0a1"
+    },
+    {
+      "id": "source:c18d7fb9f73cec4f84f68b05",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.request.json",
+      "sha256": "ff4cef8bbf8e2e5ea83dc548f7e15651edaf101960c60e99c2b18a674cf08f8b",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.request.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.request.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "0d20214e20fb2c01a404f82ed27993e0af258c0a543314ed0f108d977f786b39"
+    },
+    {
+      "id": "source:410b9e90adb1dea5708190ef",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--0.diagnostics.json",
+      "sha256": "339de75d79a11e154f93022daebdac6dd49ee91c33252a0e683ea0b61420dc75",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--0.diagnostics.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--0.diagnostics.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "2f73f3a4d7ca07206a3feec6a3353dda5cf55791de53d867e2ce8c50c4702dfe"
+    },
+    {
+      "id": "source:3fde9ba8a3978e75877ec735",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--0.mutated-response.json",
+      "sha256": "6abd5fc39bef35d1d0fccabe4d088d2497152a4d8b8254e954718fca6012811f",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--0.mutated-response.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--0.mutated-response.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "52333a3bdc3a1b5275fe5d2efc31be3190f3b42664bbb3774ee773161d1be0d8"
+    },
+    {
+      "id": "source:e07dd0fe3b9da1a2bce2d72a",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--0.original-response.json",
+      "sha256": "3c0e0e000fc529f0f5ae804398fa25f04890ca7603b0ced42e117e935cf03404",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--0.original-response.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--0.original-response.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "5aa0fdbcf0d0d288e1f62c13a4f719d8aa5e08e71289478c9a167bb8aa290406"
+    },
+    {
+      "id": "source:1a9ab82f127d55d253053b2c",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--0.request.json",
+      "sha256": "64f1a1a50d75f2af0094da9b201c496e19d5541ac2196ed6c9fb2f7224d8f618",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--0.request.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--0.request.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "8f6d06294709efa3810b91cb7af5916fb029827140ef8c7c9cd93e693b4f696f"
+    },
+    {
+      "id": "source:250b800ad1b42aead9f2500a",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--1.mutated-response.json",
+      "sha256": "8d5d34bbeea8e8ad938b3917263a8dac5268a4b78574f0ea00930776674ae561",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--1.mutated-response.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--1.mutated-response.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "c37d6d73daeab1430d82185656fe69abebd15433323d0e0b948137863dec664c"
+    },
+    {
+      "id": "source:cad0502c015e5690acada41d",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--1.original-response.json",
+      "sha256": "8d5d34bbeea8e8ad938b3917263a8dac5268a4b78574f0ea00930776674ae561",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--1.original-response.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--1.original-response.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "d83504cc45a6b1117316964e5805763e75061b9ca99dc30a545aea2e6e6148c6"
+    },
+    {
+      "id": "source:1850a6e0edcec71164479b8b",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--1.request.json",
+      "sha256": "ff4cef8bbf8e2e5ea83dc548f7e15651edaf101960c60e99c2b18a674cf08f8b",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--1.request.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--1.request.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "2ebfb6719bdf7a1a469f5842b313a027a7b0b648b28b9a14e8ec07b5b566e18e"
+    },
+    {
+      "id": "source:a9e7a0855d3eb0e30b5826d3",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_final_voltage--0.diagnostics.json",
+      "sha256": "60c1b2aa236d1034d59528c06a91fa58e827114cddba9a3eb2ba562adfc9040b",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_final_voltage--0.diagnostics.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_final_voltage--0.diagnostics.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "2e3e0613b0a571f51e79ce4cadf74a02b9ae63b05b5632c708d91a550efe3bd8"
+    },
+    {
+      "id": "source:7fdf77909a165eef2a8d7fa8",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_final_voltage--0.mutated-response.json",
+      "sha256": "ae06149981dd4fa08f1ec849ee66fce0aaf425707bae030fe1a2f161d30cdef2",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_final_voltage--0.mutated-response.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_final_voltage--0.mutated-response.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "d77030385552751557ee530585bc55a4609fc12d820cacbf55853bdc48c41552"
+    },
+    {
+      "id": "source:5d1fa842ed0f291fb906e9c0",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_final_voltage--0.original-response.json",
+      "sha256": "3c0e0e000fc529f0f5ae804398fa25f04890ca7603b0ced42e117e935cf03404",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_final_voltage--0.original-response.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_final_voltage--0.original-response.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "fccd2c0c26f1f209b5bd2afe429dc791334485728a4e262b586f5adb69a349c6"
+    },
+    {
+      "id": "source:73234263ecae5c294771aa57",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_final_voltage--0.request.json",
+      "sha256": "64f1a1a50d75f2af0094da9b201c496e19d5541ac2196ed6c9fb2f7224d8f618",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_final_voltage--0.request.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_final_voltage--0.request.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "ceba5464cc7dd561136136756d3bf464826576e6cfd6a01f28eab74e58ad6ec4"
+    },
+    {
+      "id": "source:7cbd24153e7d57f6779734ed",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--0.diagnostics.json",
+      "sha256": "e22f9b8c23d659e2588183e0a291da55b4208fc06d63a1fc7fa27e37d380e3e1",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--0.diagnostics.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--0.diagnostics.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "793ed46154cbcc1e3bb7dfd2cd4e86b5ddaf45cf871df6dda767b7fcaff62151"
+    },
+    {
+      "id": "source:7cbb93e789569ae7787b836f",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--0.mutated-response.json",
+      "sha256": "552d1fee7a0028d0dfabdcf151d430469fc3bf4235b8eb0f8e5a6c428b2b86a0",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--0.mutated-response.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--0.mutated-response.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "fed7032d85c514ffd7a4d3b76aecf6dd2016011f8433f96e28319d8483a24c8c"
+    },
+    {
+      "id": "source:65eb80609e1521da7a4ee93b",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--0.original-response.json",
+      "sha256": "3c0e0e000fc529f0f5ae804398fa25f04890ca7603b0ced42e117e935cf03404",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--0.original-response.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--0.original-response.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "e9bf649a00de20524c251f3b3590dcc5464f9cb7c0c1d17a2d6b126318721a78"
+    },
+    {
+      "id": "source:86cc96b425a6f196a6014bca",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--0.request.json",
+      "sha256": "64f1a1a50d75f2af0094da9b201c496e19d5541ac2196ed6c9fb2f7224d8f618",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--0.request.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--0.request.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "6ed97cab4fd3eb3819425f3408820e15ba78f81e7c1f1c2db2206898e5a7007d"
+    },
+    {
+      "id": "source:bfb211afa85076de3db4124f",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--1.mutated-response.json",
+      "sha256": "8d5d34bbeea8e8ad938b3917263a8dac5268a4b78574f0ea00930776674ae561",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--1.mutated-response.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--1.mutated-response.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "9f4f57f8de13dcd2971ed1ee2a1f156cb9071f074aa58ef450e621992ab74369"
+    },
+    {
+      "id": "source:8aa0f065afb093327a424756",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--1.original-response.json",
+      "sha256": "8d5d34bbeea8e8ad938b3917263a8dac5268a4b78574f0ea00930776674ae561",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--1.original-response.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--1.original-response.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "f6aa1c1b8b92b24b78d4d22e999fdfba3bc43a75c7f66ca278a5e548a5c43c08"
+    },
+    {
+      "id": "source:c037e01061852e3bc42fdb2d",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--1.request.json",
+      "sha256": "ff4cef8bbf8e2e5ea83dc548f7e15651edaf101960c60e99c2b18a674cf08f8b",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--1.request.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--1.request.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "f4dcc087c9e2f3430b958dae818c9bbece506df7041bce5cd06ef459d5359250"
+    },
+    {
+      "id": "source:2f2d3d4275fb840e951953d5",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/test-scheme-audit/assessment.json",
+      "sha256": "97ea8e5ecd60a8dc5a9d64ceafa1caac5e36283ce839fd98aef5d56bae39d665",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/assessment.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/assessment.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "ab22796ae8c34ecee221d7b261664820a8ba11859fa76f6c3fe5fbbaae6068df"
+    },
+    {
+      "id": "source:1b2956fae193a63bd4160f07",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/passing-detectors-20261025/passing-detector-receipts.json",
+      "sha256": "9d04a3f1bd90fe8839a7d2d87d4a972b2fd06ae716c0cfaae16944b84d5ab2e2",
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/passing-detector-receipts.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/passing-detectors-20261025/original/passing-detector-receipts.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "a79b84928417b7a5be8881a90243ce0fb0ef64232bfc9cb2511797c2d16d61bf"
+    },
+    {
+      "id": "source:6bd1602d3b3e31378ac6311d",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/discovery-main380-20261026/main-method-discovery.json",
+      "sha256": "140b39277e6025b7ee7be48bebaee9cc7b04f42624c778765d984e56e7f25341",
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/main-method-discovery.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/discovery-main380-20261026/original/main-method-discovery.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "92ca3344797e3f0b117e06de926822ea3e8acc6c946bd1d8a4e4a2177f57f3dd"
+    },
+    {
+      "id": "source:55d45877437e416b2590f7c7",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/discovery-main380-20261026/actual-discovery-receipt.json",
+      "sha256": "8ac41e3ce2b8620bf958c8072cc603cd8b7d9a73d7fc3f86058bab7fb044e005",
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/actual-discovery-receipt.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/discovery-main380-20261026/original/actual-discovery-receipt.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "544786d729983f0c30656fb956609ab5fc6fa8ff75f05fd9acd8835cfc8872a3"
+    },
+    {
+      "id": "source:fc5d7d0ca1cfc56bb73f29e9",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/discovery-main380-20261026/calibration-discovery-summary.json",
+      "sha256": "6c11e76f23899f98f09b91d00e259d8642fb7204be85efcc4ebc35359536fa8f",
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/calibration-discovery-summary.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/discovery-main380-20261026/original/calibration-discovery-summary.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "ee68bf0a5950c5bf82aea5340ecf50f92d2e0a4863ef5e8c60e3f1c0bcb7972f"
+    },
+    {
+      "id": "source:eb18c1be332cdf2f2c4f5034",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/discovery-main380-20261026/rust-test-discovery.json",
+      "sha256": "d27573262b1fd0a007d9d75722a7fcad35663a78dbc975e54f733520a0f8e274",
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/rust-test-discovery.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/discovery-main380-20261026/original/rust-test-discovery.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "ec901354a72da316ec93c0f458e0f87eeb1e37bd4c78ad7967279dd2c73911d6"
+    },
+    {
+      "id": "source:043141639347ee87518ba7c4",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/discovery-main380-20261026/discovery-entry-06.json",
+      "sha256": "266c5c9bc72859cd949c29e949084ec89e75537ea4a31c8db6baa690bd642230",
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-06.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-06.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "8fd57ffe9c05153095c5aab3e67ad1a2228f1feb045992879b07f3f5ebde469b"
+    },
+    {
+      "id": "source:3b6862ec6e0cccd501538a0c",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/discovery-main380-20261026/discovery-entry-07.json",
+      "sha256": "f73d2f4d616c9c0656dfce8c62f5d00c5686b8d8978b9aa4a66e470ba2027df2",
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-07.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-07.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "50db5fc479250677b2a9c390b822677b627fd165f7b3cd6c49fe078c4cce62a0"
+    },
+    {
+      "id": "source:baa8082396dabfa1a4522791",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/discovery-main380-20261026/discovery-entry-08.json",
+      "sha256": "2707fbb3f114e3062ba90a5bbdfd6dd8d3dadf7663bdb27b17afc9476732d398",
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-08.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-08.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "120fd8227cf136fef0d56ed180ae26c5c284e80346551d65ec269639c0a73578"
+    },
+    {
+      "id": "source:9bca13ea570d55c9f65712a6",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/discovery-main380-20261026/discovery-entry-09.json",
+      "sha256": "6399d314aa2ac8f6f3959fbcacfb5af37f8b972c22f0ef9d20ac8d5a5fe3960c",
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-09.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-09.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "1530fb33ef48cd45d2816bb055397f13f6c15b6dd11342975338c99db7757487"
+    },
+    {
+      "id": "source:22f7f26468298045a7dbdbf4",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/discovery-main380-20261026/discovery-entry-10.json",
+      "sha256": "4591cdaf42c162fccb4609c6c0274c27026b34696883760706bea1bbadf2c359",
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-10.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-10.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "e2d3d608924efbe387d2160aebefac924a8e3f7930d43ae53aa2b44c6aa43869"
+    },
+    {
+      "id": "source:fb314ecd0aa9f8a4906b794b",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/discovery-main380-20261026/discovery-entry-11.json",
+      "sha256": "080a3e482c4e5414bcb4e4bc35a034764a0b4b8ce7608b87e5886e06ef28e7e5",
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-11.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-11.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "e28cf68438659397a6c5bc97fd8723da67d1f2005bf57d13b87c372465f2de06"
+    },
+    {
+      "id": "source:1b147c4c527321c1ef5660e2",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/discovery-main380-20261026/discovery-entry-12.json",
+      "sha256": "d53bdab0477caf4f43267de08a1c00414c25147d980e062f486ba047af676f13",
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-12.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-12.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "1771d0c958fd603183c0701a5908e1db10a7bf397cba97933d95533e4b516381"
+    },
+    {
+      "id": "source:2d8f69011f5bf3d285027308",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/discovery-main380-20261026/discovery-entry-13.json",
+      "sha256": "452a2420d3e249234dd40b2766b940a83502b1c2bffda03a78e556e7b5a547f5",
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-13.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-13.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "7bb59018ff78a01cf5269262bb0641c46f1b36d779a923952df1b40133abef6c"
+    },
+    {
+      "id": "source:a8d60807ddfeb47d8f90d080",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/discovery-main380-20261026/discovery-entry-14.json",
+      "sha256": "57f29d5b56d57c74ac8709fcf21c8d744c4fa654541ee153df5f3ecdf5176ad6",
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-14.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-14.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "32315856daf08f1f6ad54dd8f42d198791a05d8844e372ec6974e91178e7d668"
+    },
+    {
+      "id": "source:9ef164785c8bff9ffc64fc8b",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/discovery-main380-20261026/discovery-entry-15.json",
+      "sha256": "9dc9e23a9404d701db6ed8f226cdb081e0026df593f01a06fc55d33fe746ea2c",
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-15.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-15.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "f158d9eb90cedfcb80005bb06da98b5f08416f5de2fca488de9f044f1083393f"
+    },
+    {
+      "id": "source:d51bda919139906b4a4cd50e",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/discovery-main380-20261026/discovery-entry-16.json",
+      "sha256": "2ad4bf1646e37246018873eb5fb4b804b02353db995409868d96472891797cba",
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-16.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-16.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "40ebd4bb66d641c984b4b54ce6fd9d272aabca02a3a80ba7c2f4b3f7144c76b9"
+    },
+    {
+      "id": "source:66e11fe20474f5344365cad5",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/discovery-main380-20261026/discovery-entry-17.json",
+      "sha256": "de14a54d50f2171409755158a17ba8847fab441993cee36cedec6129add58b45",
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-17.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-17.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "33daf6eafbd2e01e7a9682b653bfc0d9811a9d061774257c869b54e6c931c82c"
+    },
+    {
+      "id": "source:0a34535c52052256d63d59a9",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/discovery-main380-20261026/discovery-entry-18.json",
+      "sha256": "6d0aaec20d8d528b7be6c68ee9a4f94a1be72862b16e3600314ae7da74b66ecd",
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-18.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-18.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "cc7cf73e01e27310c9b9a414bf7a9982c2f80532c60c947518c611a369f9dfc5"
+    },
+    {
+      "id": "source:4d25de5cf899f9e70d28a77c",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/discovery-main380-20261026/discovery-entry-19.json",
+      "sha256": "b9abe96545d3b4b3e6af6ad0a119e3e548d82feb99273ba230ff2291404a11c6",
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-19.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-19.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "fe95c3df4aae9ec9f5718033522a403649a9fa0751e255a3c4ea1aa193e4507c"
+    },
+    {
+      "id": "source:000e7fc434918afd3c5d53c7",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/discovery-main380-20261026/discovery-entry-20.json",
+      "sha256": "9a2aabd5fc465249f428820869b8226d9d6265cd2e411769ef8c8cab6be7d52c",
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-20.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-20.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "2391d7824504ebdd9c5ff9e308ddaa43a812278f2eb6972515b2b54723157ed0"
+    },
+    {
+      "id": "source:679285253318b5602fedd7d1",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/discovery-main380-20261026/discovery-entry-21.json",
+      "sha256": "f74181dad6f2f3b489768f91a6c4dc7bd3c38bf480b3297f7247a3ede6e1fe99",
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-21.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-21.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "6ad16f2f125cbb981799e9aec39a43cd2a8341011e8aac246af61d0d4cae0ff9"
+    },
+    {
+      "id": "source:c306b32198f20cf6728d2d9d",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/discovery-main380-20261026/discovery-entry-22.json",
+      "sha256": "51b7eacd66e9db1f2dd71c866a6dae2975ad4e9fb0e44758d126277cffbec743",
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-22.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-22.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "c2c6f04fdd339a0cca2d021ead6427714c547cd4199ecb38ca524e4052cd1fdb"
+    },
+    {
+      "id": "source:76eeeffbf5886615356b1110",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/discovery-main380-20261026/discovery-entry-23.json",
+      "sha256": "53ec3800a5a9aec455c55470242e8d1fcc861eba53f14e16b4ab4b6408dab18d",
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-23.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-23.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "7e44b9833a690a1e1ae259036b40b9f104bc21a4021dada81086105fc9b5fd63"
+    },
+    {
+      "id": "source:616bbc380052434f5b88144d",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/discovery-main380-20261026/discovery-entry-24.json",
+      "sha256": "8815766831675ea40d9825337f3931ade35a2415947ac7619b4d635b9c9bdfce",
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-24.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-24.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "c3beda796da90057b6f97eb015647eec5facdc1bdc7f4e21504ffd1874d4a7bc"
+    },
+    {
+      "id": "source:48da4f6d6cc11301e5c9da4c",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/discovery-main380-20261026/discovery-entry-25.json",
+      "sha256": "7d53d21a84daf93c075eb0414a9a5b8da7994dc396c379404f1d7221d3d30005",
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-25.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-25.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "f4dc10873bd04ce795b5d67af57a0264d5e272ca7a44da37682ee28541599e22"
+    },
+    {
+      "id": "source:ff44fbaa99b4a8113a8999f4",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/discovery-main380-20261026/discovery-entry-26.json",
+      "sha256": "b335235cbc2d19b4ac5d31387906e2a55e6bea60d774f6cc8da40e8dfcbe29f6",
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-26.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-26.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "86b92a0fc25e89dfdeedf6166e5ad9b01614e530a3397fb35ff6a670dafe2c28"
+    },
+    {
+      "id": "source:a383f10b6ebbf894ef1f55a5",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/discovery-main380-20261026/discovery-entry-27.json",
+      "sha256": "2212f991e14d95a61ca3bf2ec83c14de7458950615e8120aadd9efc7eb878569",
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-27.json",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-27.json"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "657ac474f7d938fb706768159edd0998c9ea3adc0242fe8aae7a03f8072fd9be"
+    },
+    {
+      "id": "source:24716b00532d904d07f33398",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/method-audit-20261025/module-samples/evas/tests/test_absdelay.py",
+      "sha256": "dd1198c024fe5deb4bd54b40f84652c645b8e73b8a647a7bed1babc0d9e6a4e5",
+      "path": "evas/capabilities/history/method-audit-20261025/original/module-samples/evas/tests/test_absdelay.py",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/method-audit-20261025/original/module-samples/evas/tests/test_absdelay.py"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "2b4c27db760a1e27bf29f582a621d8e1b4abf1fc67710081c8e2a83e689d80b1"
+    },
+    {
+      "id": "source:3cdbbad385c6947479287c1d",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/method-audit-20261025/module-samples/evas/tests/test_bound_step.py",
+      "sha256": "1ff7d706256e24fd7a3276e6c743517e38b70c6ad1260d6ba6210ef8d51b0330",
+      "path": "evas/capabilities/history/method-audit-20261025/original/module-samples/evas/tests/test_bound_step.py",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/method-audit-20261025/original/module-samples/evas/tests/test_bound_step.py"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "03812395f8612362a5ab5c51b12c93e4ed88fbe70f8fe967d98be4b1fd3159d7"
+    },
+    {
+      "id": "source:09a6db0b10e34b2d95ce30b8",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/method-audit-20261025/module-samples/evas/tests/test_deferred_rdist.py",
+      "sha256": "326742fc00de3692715da1827b8a076513d09af573906c09ed51d17ff49a7184",
+      "path": "evas/capabilities/history/method-audit-20261025/original/module-samples/evas/tests/test_deferred_rdist.py",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/method-audit-20261025/original/module-samples/evas/tests/test_deferred_rdist.py"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "409a69276cb80d3049dd9dd5a2d7a319a993308b39b9b43da23f7b66d70cc451"
+    },
+    {
+      "id": "source:bf6724e5279c863ba54f77bf",
+      "kind": "source",
+      "status": "active",
+      "mutability": "frozen",
+      "origin": "research-run:20261025/method-audit-20261025/module-samples/evas/tests/test_source_math.py",
+      "sha256": "6046d9972325d51df1ccecda1be3dc3b7216a605c7cb1f2eddec2573473f432d",
+      "path": "evas/capabilities/history/method-audit-20261025/original/module-samples/evas/tests/test_source_math.py",
+      "locator": {
+        "kind": "repository-relative",
+        "path": "evas/capabilities/history/method-audit-20261025/original/module-samples/evas/tests/test_source_math.py"
+      },
+      "interpretation": "original payload only; embedded historical absolute strings are inert",
+      "dependencies": [],
+      "version": "0e756a6c309ba996fb4fe862945846b6a3d6611de3eaf78a1b153473a925a5de"
+    }
+  ],
+  "copy_receipts": [
+    {
+      "alias": "full3257/README.md",
+      "packaged_path": "evas/capabilities/history/method-audit-20261025/original/full3257/README.md",
+      "sha256": "5032b2844daa2e0ea00bede7d1cd827e41b3ebffb21bf16d449121c41e1985a8",
+      "expected_accepted_sha256": "26ea438a287ace95105cf8ad0e6bc99f03e5e839413551288ec5ae596b62c53f",
+      "accepted_bytes_match": false,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "full3257/acceptance.json",
+      "packaged_path": "evas/capabilities/history/method-audit-20261025/original/full3257/acceptance.json",
+      "sha256": "e5bc8d5abfc8e05bc296235a81ffb474788146059a495bb158338e6d429f1c4d",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "full3257/audit.json",
+      "packaged_path": "evas/capabilities/history/method-audit-20261025/original/full3257/audit.json",
+      "sha256": "0df596c67689c55fcd5dd0db00cfc2f2d852f4eef7ae0125df12c4017976b402",
+      "expected_accepted_sha256": "0df596c67689c55fcd5dd0db00cfc2f2d852f4eef7ae0125df12c4017976b402",
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "full3257/consolidate.py",
+      "packaged_path": "evas/capabilities/history/method-audit-20261025/original/full3257/consolidate.py",
+      "sha256": "dbbb3a6232af1fe616313299327a2c9256346d7dd8fdac4b8a59f3c484abce34",
+      "expected_accepted_sha256": "dbbb3a6232af1fe616313299327a2c9256346d7dd8fdac4b8a59f3c484abce34",
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "full3257/final-spec-review.json",
+      "packaged_path": "evas/capabilities/history/method-audit-20261025/original/full3257/final-spec-review.json",
+      "sha256": "c21ea94996cae0d3801c890899b3f2caab7e4dcc3706eda16ba9e4c709d084ae",
+      "expected_accepted_sha256": "c21ea94996cae0d3801c890899b3f2caab7e4dcc3706eda16ba9e4c709d084ae",
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "full3257/inventory.json",
+      "packaged_path": "evas/capabilities/history/method-audit-20261025/original/full3257/inventory.json",
+      "sha256": "621e08225044ac3add852515d5c82360c0cbdd5e3247893ee69969d5d7dcd3e9",
+      "expected_accepted_sha256": "621e08225044ac3add852515d5c82360c0cbdd5e3247893ee69969d5d7dcd3e9",
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "full3257/methods.tsv",
+      "packaged_path": "evas/capabilities/history/method-audit-20261025/original/full3257/methods.tsv",
+      "sha256": "2cb8a8c3d7a4a11cbfcc12fc32490606a7119616c3abd634b2e8232592920928",
+      "expected_accepted_sha256": "2cb8a8c3d7a4a11cbfcc12fc32490606a7119616c3abd634b2e8232592920928",
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "full3257/prepare.py",
+      "packaged_path": "evas/capabilities/history/method-audit-20261025/original/full3257/prepare.py",
+      "sha256": "74f20a4230734c59d2889b362293bb6d52de26a9b74729c0a6702ec9a079c127",
+      "expected_accepted_sha256": "74f20a4230734c59d2889b362293bb6d52de26a9b74729c0a6702ec9a079c127",
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "full3257/review-1.json",
+      "packaged_path": "evas/capabilities/history/method-audit-20261025/original/full3257/review-1.json",
+      "sha256": "181e25ba8acfcdce4a78609a92dc2aff10cf7623172f01ff9db4aec2c0277199",
+      "expected_accepted_sha256": "181e25ba8acfcdce4a78609a92dc2aff10cf7623172f01ff9db4aec2c0277199",
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "full3257/review-2.json",
+      "packaged_path": "evas/capabilities/history/method-audit-20261025/original/full3257/review-2.json",
+      "sha256": "a47e3abd667147ad02e11b72f095c664274586f3f286c967db4c61453690c0ee",
+      "expected_accepted_sha256": "a47e3abd667147ad02e11b72f095c664274586f3f286c967db4c61453690c0ee",
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "full3257/review-3.json",
+      "packaged_path": "evas/capabilities/history/method-audit-20261025/original/full3257/review-3.json",
+      "sha256": "88ea2438efa494a75526d99a4eae35e30a849dce8cd8090a09ba526ee41a75ac",
+      "expected_accepted_sha256": "88ea2438efa494a75526d99a4eae35e30a849dce8cd8090a09ba526ee41a75ac",
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "full3257/review-4.json",
+      "packaged_path": "evas/capabilities/history/method-audit-20261025/original/full3257/review-4.json",
+      "sha256": "fa1523e84356f058f3788a1daa813e52f8cc8f2395f94b5bee3fe21eeb786c69",
+      "expected_accepted_sha256": "fa1523e84356f058f3788a1daa813e52f8cc8f2395f94b5bee3fe21eeb786c69",
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "full3257/review-5.json",
+      "packaged_path": "evas/capabilities/history/method-audit-20261025/original/full3257/review-5.json",
+      "sha256": "34e25e4d14f1e60e6f8051ba348bf075294a249a6539a2df7f151d0e0e59d0ff",
+      "expected_accepted_sha256": "34e25e4d14f1e60e6f8051ba348bf075294a249a6539a2df7f151d0e0e59d0ff",
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "full3257/review-6.json",
+      "packaged_path": "evas/capabilities/history/method-audit-20261025/original/full3257/review-6.json",
+      "sha256": "dd744d8106c11fe2508c0d8e9d42f638a6d73506225b91faa265ebc0dafc4d1f",
+      "expected_accepted_sha256": "dd744d8106c11fe2508c0d8e9d42f638a6d73506225b91faa265ebc0dafc4d1f",
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "full3257/scope.json",
+      "packaged_path": "evas/capabilities/history/method-audit-20261025/original/full3257/scope.json",
+      "sha256": "6a2312779cf6a43f5d1f152faf5ee792f93483f7d3cba54212726009672e4f10",
+      "expected_accepted_sha256": "6a2312779cf6a43f5d1f152faf5ee792f93483f7d3cba54212726009672e4f10",
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "full3257/standards-review.json",
+      "packaged_path": "evas/capabilities/history/method-audit-20261025/original/full3257/standards-review.json",
+      "sha256": "05d56023acc3b46f0cec0199e55376caa3908b2a2ef41e503f7a8ebd4b60510f",
+      "expected_accepted_sha256": "05d56023acc3b46f0cec0199e55376caa3908b2a2ef41e503f7a8ebd4b60510f",
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "full3257/summary.json",
+      "packaged_path": "evas/capabilities/history/method-audit-20261025/original/full3257/summary.json",
+      "sha256": "0f97f53982ff2eece1e07a3647d9bf2f3f94178335dd9b99623d1eb936c19348",
+      "expected_accepted_sha256": "0f97f53982ff2eece1e07a3647d9bf2f3f94178335dd9b99623d1eb936c19348",
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "full3257/verification.json",
+      "packaged_path": "evas/capabilities/history/method-audit-20261025/original/full3257/verification.json",
+      "sha256": "13f2b9574538beb1babe8e518f092566e698564f06564d7719582c562754f640",
+      "expected_accepted_sha256": "13f2b9574538beb1babe8e518f092566e698564f06564d7719582c562754f640",
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-oracles/calibrate.py",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-oracles/calibrate.py",
+      "sha256": "09ab6878e0693a902a026c36145e51d4c7137f89058f6328fce93a87185777c5",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-oracles/calibrate_source_math.py",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-oracles/calibrate_source_math.py",
+      "sha256": "fc4c4d8547206a6789fb70dddd4203a09621e96f03b20b15962e6d9f46b0693f",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-oracles/calibration-raw.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-oracles/calibration-raw.json",
+      "sha256": "53d95ee794d8878a2aa22ed4093886fd82187e9ec31e180551d17fd85c0526d0",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-oracles/findings.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-oracles/findings.json",
+      "sha256": "08b2a257ed7eb1a728d71fc91c2ecc77a7e98b3e76eadbdb644d79f2ad7bdb10",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-oracles/source-math-calibration-raw.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-oracles/source-math-calibration-raw.json",
+      "sha256": "df37480f11c3ea73786790931a0f1cb7bfc1e40ae2e41f6cc45abab570501054",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-negative/calibration.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-negative/calibration.json",
+      "sha256": "e91b9d2b3c3f2a5c1cfc0915b7e4bf93a8a8d7c5e98cd4010723d346e9f8eae7",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-negative/findings.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-negative/findings.json",
+      "sha256": "e828e67e79584279b5c9da84f2007a3332ffcf6184383934f555e8898fc9d88b",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-negative/probe.py",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-negative/probe.py",
+      "sha256": "6dec7d55f0b546254119fcbffd831b6e6ac5f1972a5bd919b894b2c71f5cf049",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-negative/raw-output.txt",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-negative/raw-output.txt",
+      "sha256": "224fb04f3de397738a29f9311dc8c26b005cf3d3216108fbe6ff2955de908738",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-negative/raw.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-negative/raw.json",
+      "sha256": "051f2a88cf46c502e2132e4c0217eabcad8660f9073045e93d718eea55080d69",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-negative/resource-raw-output.txt",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-negative/resource-raw-output.txt",
+      "sha256": "3956923dc9d264a28c25020a99c39135d22047ee2affe86814cd6af1b2a04f90",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/findings.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/findings.json",
+      "sha256": "176da08b282e48137f873e79feef29f6ef5b3e7453d66f4d5596698df03d579b",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/probe.py",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/probe.py",
+      "sha256": "811ada50de001aae1041ec5e44b1ccaa565c2987b0468dabb95c4e3ef6e4fcd2",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/raw-results.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/raw-results.json",
+      "sha256": "4760e8661d5ffbf6a684e040d75ab5c3c48f8d409023a2f6d77d85a2aff84461",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/stdout.jsonl",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/stdout.jsonl",
+      "sha256": "392420376a47eeaaccfef818ab239435e0bb167a7daaf4084c968512ee6bcfc0",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--drop_initial_solution--0.diagnostics.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--drop_initial_solution--0.diagnostics.json",
+      "sha256": "037c1dace2d2a0572433352e347d87028ed31e8e110b4d56b4352761de206efa",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--drop_initial_solution--0.mutated-response.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--drop_initial_solution--0.mutated-response.json",
+      "sha256": "86f2d94d2cf07f8fd6df9c9c19a93ce1f76611e5ab821eb022b02b9f462a88ba",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--drop_initial_solution--0.original-response.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--drop_initial_solution--0.original-response.json",
+      "sha256": "c20ae003b5b5dc1699cdfd443fe38fcc49941c1a3ab1a896d8e6a07eb0acd018",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--drop_initial_solution--0.request.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--drop_initial_solution--0.request.json",
+      "sha256": "a1a1f1cb70986036d3df960c27d0009e78681af622a9261005df918151df20b8",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--identity--0.diagnostics.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--identity--0.diagnostics.json",
+      "sha256": "41962db96770dac82f8f8f29f6872630d41cd1848a47020987d916831de99d2d",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--identity--0.mutated-response.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--identity--0.mutated-response.json",
+      "sha256": "c20ae003b5b5dc1699cdfd443fe38fcc49941c1a3ab1a896d8e6a07eb0acd018",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--identity--0.original-response.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--identity--0.original-response.json",
+      "sha256": "c20ae003b5b5dc1699cdfd443fe38fcc49941c1a3ab1a896d8e6a07eb0acd018",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--identity--0.request.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--identity--0.request.json",
+      "sha256": "a1a1f1cb70986036d3df960c27d0009e78681af622a9261005df918151df20b8",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_final_voltage--0.diagnostics.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_final_voltage--0.diagnostics.json",
+      "sha256": "0de635542aabc876271c5c91c006748b790c071d8d1288d02edf83d6aad36874",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_final_voltage--0.mutated-response.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_final_voltage--0.mutated-response.json",
+      "sha256": "2e6e76fa954d156e1ce19c62f83ef9ae61604194483e11cdb5902a727d1bd9fe",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_final_voltage--0.original-response.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_final_voltage--0.original-response.json",
+      "sha256": "c20ae003b5b5dc1699cdfd443fe38fcc49941c1a3ab1a896d8e6a07eb0acd018",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_final_voltage--0.request.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_final_voltage--0.request.json",
+      "sha256": "a1a1f1cb70986036d3df960c27d0009e78681af622a9261005df918151df20b8",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_initial_voltage--0.diagnostics.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_initial_voltage--0.diagnostics.json",
+      "sha256": "fed17a78b914ee8b4a7b50c05ea53f3fcf61175bed64beaa102ad4288fd667b8",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_initial_voltage--0.mutated-response.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_initial_voltage--0.mutated-response.json",
+      "sha256": "1df627241fd15b32f0f1bcf4465769330406401cd8f68b5c8e0bdb8b38840e8e",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_initial_voltage--0.original-response.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_initial_voltage--0.original-response.json",
+      "sha256": "c20ae003b5b5dc1699cdfd443fe38fcc49941c1a3ab1a896d8e6a07eb0acd018",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_initial_voltage--0.request.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_initial_voltage--0.request.json",
+      "sha256": "a1a1f1cb70986036d3df960c27d0009e78681af622a9261005df918151df20b8",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--0.diagnostics.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--0.diagnostics.json",
+      "sha256": "fb748a3babf17032970b0477324aa825da9497196d52bc70cc93e53c4e072edb",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--0.mutated-response.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--0.mutated-response.json",
+      "sha256": "4b453c67d7b28f7fcf552f610bf4c6a338fcbf1375a1e383a298f454f0797500",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--0.original-response.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--0.original-response.json",
+      "sha256": "3c0e0e000fc529f0f5ae804398fa25f04890ca7603b0ced42e117e935cf03404",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--0.request.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--0.request.json",
+      "sha256": "64f1a1a50d75f2af0094da9b201c496e19d5541ac2196ed6c9fb2f7224d8f618",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--1.mutated-response.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--1.mutated-response.json",
+      "sha256": "8d5d34bbeea8e8ad938b3917263a8dac5268a4b78574f0ea00930776674ae561",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--1.original-response.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--1.original-response.json",
+      "sha256": "8d5d34bbeea8e8ad938b3917263a8dac5268a4b78574f0ea00930776674ae561",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--1.request.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--1.request.json",
+      "sha256": "ff4cef8bbf8e2e5ea83dc548f7e15651edaf101960c60e99c2b18a674cf08f8b",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.diagnostics.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.diagnostics.json",
+      "sha256": "a819c9b451681a232fa33d83d3ca3675facc09bd8ef8c1e02b4627fd7fd3ebf4",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.mutated-response.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.mutated-response.json",
+      "sha256": "3c0e0e000fc529f0f5ae804398fa25f04890ca7603b0ced42e117e935cf03404",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.original-response.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.original-response.json",
+      "sha256": "3c0e0e000fc529f0f5ae804398fa25f04890ca7603b0ced42e117e935cf03404",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.request.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.request.json",
+      "sha256": "64f1a1a50d75f2af0094da9b201c496e19d5541ac2196ed6c9fb2f7224d8f618",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.mutated-response.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.mutated-response.json",
+      "sha256": "8d5d34bbeea8e8ad938b3917263a8dac5268a4b78574f0ea00930776674ae561",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.original-response.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.original-response.json",
+      "sha256": "8d5d34bbeea8e8ad938b3917263a8dac5268a4b78574f0ea00930776674ae561",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.request.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.request.json",
+      "sha256": "ff4cef8bbf8e2e5ea83dc548f7e15651edaf101960c60e99c2b18a674cf08f8b",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--0.diagnostics.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--0.diagnostics.json",
+      "sha256": "339de75d79a11e154f93022daebdac6dd49ee91c33252a0e683ea0b61420dc75",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--0.mutated-response.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--0.mutated-response.json",
+      "sha256": "6abd5fc39bef35d1d0fccabe4d088d2497152a4d8b8254e954718fca6012811f",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--0.original-response.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--0.original-response.json",
+      "sha256": "3c0e0e000fc529f0f5ae804398fa25f04890ca7603b0ced42e117e935cf03404",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--0.request.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--0.request.json",
+      "sha256": "64f1a1a50d75f2af0094da9b201c496e19d5541ac2196ed6c9fb2f7224d8f618",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--1.mutated-response.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--1.mutated-response.json",
+      "sha256": "8d5d34bbeea8e8ad938b3917263a8dac5268a4b78574f0ea00930776674ae561",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--1.original-response.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--1.original-response.json",
+      "sha256": "8d5d34bbeea8e8ad938b3917263a8dac5268a4b78574f0ea00930776674ae561",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--1.request.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--1.request.json",
+      "sha256": "ff4cef8bbf8e2e5ea83dc548f7e15651edaf101960c60e99c2b18a674cf08f8b",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_final_voltage--0.diagnostics.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_final_voltage--0.diagnostics.json",
+      "sha256": "60c1b2aa236d1034d59528c06a91fa58e827114cddba9a3eb2ba562adfc9040b",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_final_voltage--0.mutated-response.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_final_voltage--0.mutated-response.json",
+      "sha256": "ae06149981dd4fa08f1ec849ee66fce0aaf425707bae030fe1a2f161d30cdef2",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_final_voltage--0.original-response.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_final_voltage--0.original-response.json",
+      "sha256": "3c0e0e000fc529f0f5ae804398fa25f04890ca7603b0ced42e117e935cf03404",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_final_voltage--0.request.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_final_voltage--0.request.json",
+      "sha256": "64f1a1a50d75f2af0094da9b201c496e19d5541ac2196ed6c9fb2f7224d8f618",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--0.diagnostics.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--0.diagnostics.json",
+      "sha256": "e22f9b8c23d659e2588183e0a291da55b4208fc06d63a1fc7fa27e37d380e3e1",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--0.mutated-response.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--0.mutated-response.json",
+      "sha256": "552d1fee7a0028d0dfabdcf151d430469fc3bf4235b8eb0f8e5a6c428b2b86a0",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--0.original-response.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--0.original-response.json",
+      "sha256": "3c0e0e000fc529f0f5ae804398fa25f04890ca7603b0ced42e117e935cf03404",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--0.request.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--0.request.json",
+      "sha256": "64f1a1a50d75f2af0094da9b201c496e19d5541ac2196ed6c9fb2f7224d8f618",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--1.mutated-response.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--1.mutated-response.json",
+      "sha256": "8d5d34bbeea8e8ad938b3917263a8dac5268a4b78574f0ea00930776674ae561",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--1.original-response.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--1.original-response.json",
+      "sha256": "8d5d34bbeea8e8ad938b3917263a8dac5268a4b78574f0ea00930776674ae561",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--1.request.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--1.request.json",
+      "sha256": "ff4cef8bbf8e2e5ea83dc548f7e15651edaf101960c60e99c2b18a674cf08f8b",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "test-scheme-audit/assessment.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/assessment.json",
+      "sha256": "97ea8e5ecd60a8dc5a9d64ceafa1caac5e36283ce839fd98aef5d56bae39d665",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "passing-detector-receipts.json",
+      "packaged_path": "evas/capabilities/history/passing-detectors-20261025/original/passing-detector-receipts.json",
+      "sha256": "9d04a3f1bd90fe8839a7d2d87d4a972b2fd06ae716c0cfaae16944b84d5ab2e2",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "main-method-discovery.json",
+      "packaged_path": "evas/capabilities/history/discovery-main380-20261026/original/main-method-discovery.json",
+      "sha256": "140b39277e6025b7ee7be48bebaee9cc7b04f42624c778765d984e56e7f25341",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "actual-discovery-receipt.json",
+      "packaged_path": "evas/capabilities/history/discovery-main380-20261026/original/actual-discovery-receipt.json",
+      "sha256": "8ac41e3ce2b8620bf958c8072cc603cd8b7d9a73d7fc3f86058bab7fb044e005",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "calibration-discovery-summary.json",
+      "packaged_path": "evas/capabilities/history/discovery-main380-20261026/original/calibration-discovery-summary.json",
+      "sha256": "6c11e76f23899f98f09b91d00e259d8642fb7204be85efcc4ebc35359536fa8f",
+      "expected_accepted_sha256": "6c11e76f23899f98f09b91d00e259d8642fb7204be85efcc4ebc35359536fa8f",
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "rust-test-discovery.json",
+      "packaged_path": "evas/capabilities/history/discovery-main380-20261026/original/rust-test-discovery.json",
+      "sha256": "d27573262b1fd0a007d9d75722a7fcad35663a78dbc975e54f733520a0f8e274",
+      "expected_accepted_sha256": "d27573262b1fd0a007d9d75722a7fcad35663a78dbc975e54f733520a0f8e274",
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "discovery-entry-06.json",
+      "packaged_path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-06.json",
+      "sha256": "266c5c9bc72859cd949c29e949084ec89e75537ea4a31c8db6baa690bd642230",
+      "expected_accepted_sha256": "266c5c9bc72859cd949c29e949084ec89e75537ea4a31c8db6baa690bd642230",
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "discovery-entry-07.json",
+      "packaged_path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-07.json",
+      "sha256": "f73d2f4d616c9c0656dfce8c62f5d00c5686b8d8978b9aa4a66e470ba2027df2",
+      "expected_accepted_sha256": "f73d2f4d616c9c0656dfce8c62f5d00c5686b8d8978b9aa4a66e470ba2027df2",
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "discovery-entry-08.json",
+      "packaged_path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-08.json",
+      "sha256": "2707fbb3f114e3062ba90a5bbdfd6dd8d3dadf7663bdb27b17afc9476732d398",
+      "expected_accepted_sha256": "2707fbb3f114e3062ba90a5bbdfd6dd8d3dadf7663bdb27b17afc9476732d398",
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "discovery-entry-09.json",
+      "packaged_path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-09.json",
+      "sha256": "6399d314aa2ac8f6f3959fbcacfb5af37f8b972c22f0ef9d20ac8d5a5fe3960c",
+      "expected_accepted_sha256": "6399d314aa2ac8f6f3959fbcacfb5af37f8b972c22f0ef9d20ac8d5a5fe3960c",
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "discovery-entry-10.json",
+      "packaged_path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-10.json",
+      "sha256": "4591cdaf42c162fccb4609c6c0274c27026b34696883760706bea1bbadf2c359",
+      "expected_accepted_sha256": "4591cdaf42c162fccb4609c6c0274c27026b34696883760706bea1bbadf2c359",
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "discovery-entry-11.json",
+      "packaged_path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-11.json",
+      "sha256": "080a3e482c4e5414bcb4e4bc35a034764a0b4b8ce7608b87e5886e06ef28e7e5",
+      "expected_accepted_sha256": "080a3e482c4e5414bcb4e4bc35a034764a0b4b8ce7608b87e5886e06ef28e7e5",
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "discovery-entry-12.json",
+      "packaged_path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-12.json",
+      "sha256": "d53bdab0477caf4f43267de08a1c00414c25147d980e062f486ba047af676f13",
+      "expected_accepted_sha256": "d53bdab0477caf4f43267de08a1c00414c25147d980e062f486ba047af676f13",
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "discovery-entry-13.json",
+      "packaged_path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-13.json",
+      "sha256": "452a2420d3e249234dd40b2766b940a83502b1c2bffda03a78e556e7b5a547f5",
+      "expected_accepted_sha256": "452a2420d3e249234dd40b2766b940a83502b1c2bffda03a78e556e7b5a547f5",
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "discovery-entry-14.json",
+      "packaged_path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-14.json",
+      "sha256": "57f29d5b56d57c74ac8709fcf21c8d744c4fa654541ee153df5f3ecdf5176ad6",
+      "expected_accepted_sha256": "57f29d5b56d57c74ac8709fcf21c8d744c4fa654541ee153df5f3ecdf5176ad6",
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "discovery-entry-15.json",
+      "packaged_path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-15.json",
+      "sha256": "9dc9e23a9404d701db6ed8f226cdb081e0026df593f01a06fc55d33fe746ea2c",
+      "expected_accepted_sha256": "9dc9e23a9404d701db6ed8f226cdb081e0026df593f01a06fc55d33fe746ea2c",
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "discovery-entry-16.json",
+      "packaged_path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-16.json",
+      "sha256": "2ad4bf1646e37246018873eb5fb4b804b02353db995409868d96472891797cba",
+      "expected_accepted_sha256": "2ad4bf1646e37246018873eb5fb4b804b02353db995409868d96472891797cba",
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "discovery-entry-17.json",
+      "packaged_path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-17.json",
+      "sha256": "de14a54d50f2171409755158a17ba8847fab441993cee36cedec6129add58b45",
+      "expected_accepted_sha256": "de14a54d50f2171409755158a17ba8847fab441993cee36cedec6129add58b45",
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "discovery-entry-18.json",
+      "packaged_path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-18.json",
+      "sha256": "6d0aaec20d8d528b7be6c68ee9a4f94a1be72862b16e3600314ae7da74b66ecd",
+      "expected_accepted_sha256": "6d0aaec20d8d528b7be6c68ee9a4f94a1be72862b16e3600314ae7da74b66ecd",
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "discovery-entry-19.json",
+      "packaged_path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-19.json",
+      "sha256": "b9abe96545d3b4b3e6af6ad0a119e3e548d82feb99273ba230ff2291404a11c6",
+      "expected_accepted_sha256": "b9abe96545d3b4b3e6af6ad0a119e3e548d82feb99273ba230ff2291404a11c6",
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "discovery-entry-20.json",
+      "packaged_path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-20.json",
+      "sha256": "9a2aabd5fc465249f428820869b8226d9d6265cd2e411769ef8c8cab6be7d52c",
+      "expected_accepted_sha256": "9a2aabd5fc465249f428820869b8226d9d6265cd2e411769ef8c8cab6be7d52c",
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "discovery-entry-21.json",
+      "packaged_path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-21.json",
+      "sha256": "f74181dad6f2f3b489768f91a6c4dc7bd3c38bf480b3297f7247a3ede6e1fe99",
+      "expected_accepted_sha256": "f74181dad6f2f3b489768f91a6c4dc7bd3c38bf480b3297f7247a3ede6e1fe99",
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "discovery-entry-22.json",
+      "packaged_path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-22.json",
+      "sha256": "51b7eacd66e9db1f2dd71c866a6dae2975ad4e9fb0e44758d126277cffbec743",
+      "expected_accepted_sha256": "51b7eacd66e9db1f2dd71c866a6dae2975ad4e9fb0e44758d126277cffbec743",
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "discovery-entry-23.json",
+      "packaged_path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-23.json",
+      "sha256": "53ec3800a5a9aec455c55470242e8d1fcc861eba53f14e16b4ab4b6408dab18d",
+      "expected_accepted_sha256": "53ec3800a5a9aec455c55470242e8d1fcc861eba53f14e16b4ab4b6408dab18d",
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "discovery-entry-24.json",
+      "packaged_path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-24.json",
+      "sha256": "8815766831675ea40d9825337f3931ade35a2415947ac7619b4d635b9c9bdfce",
+      "expected_accepted_sha256": "8815766831675ea40d9825337f3931ade35a2415947ac7619b4d635b9c9bdfce",
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "discovery-entry-25.json",
+      "packaged_path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-25.json",
+      "sha256": "7d53d21a84daf93c075eb0414a9a5b8da7994dc396c379404f1d7221d3d30005",
+      "expected_accepted_sha256": "7d53d21a84daf93c075eb0414a9a5b8da7994dc396c379404f1d7221d3d30005",
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "discovery-entry-26.json",
+      "packaged_path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-26.json",
+      "sha256": "b335235cbc2d19b4ac5d31387906e2a55e6bea60d774f6cc8da40e8dfcbe29f6",
+      "expected_accepted_sha256": "b335235cbc2d19b4ac5d31387906e2a55e6bea60d774f6cc8da40e8dfcbe29f6",
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "discovery-entry-27.json",
+      "packaged_path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-27.json",
+      "sha256": "2212f991e14d95a61ca3bf2ec83c14de7458950615e8120aadd9efc7eb878569",
+      "expected_accepted_sha256": "2212f991e14d95a61ca3bf2ec83c14de7458950615e8120aadd9efc7eb878569",
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "module-samples/evas/tests/test_absdelay.py",
+      "packaged_path": "evas/capabilities/history/method-audit-20261025/original/module-samples/evas/tests/test_absdelay.py",
+      "sha256": "dd1198c024fe5deb4bd54b40f84652c645b8e73b8a647a7bed1babc0d9e6a4e5",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "module-samples/evas/tests/test_bound_step.py",
+      "packaged_path": "evas/capabilities/history/method-audit-20261025/original/module-samples/evas/tests/test_bound_step.py",
+      "sha256": "1ff7d706256e24fd7a3276e6c743517e38b70c6ad1260d6ba6210ef8d51b0330",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "module-samples/evas/tests/test_deferred_rdist.py",
+      "packaged_path": "evas/capabilities/history/method-audit-20261025/original/module-samples/evas/tests/test_deferred_rdist.py",
+      "sha256": "326742fc00de3692715da1827b8a076513d09af573906c09ed51d17ff49a7184",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    },
+    {
+      "alias": "module-samples/evas/tests/test_source_math.py",
+      "packaged_path": "evas/capabilities/history/method-audit-20261025/original/module-samples/evas/tests/test_source_math.py",
+      "sha256": "6046d9972325d51df1ccecda1be3dc3b7216a605c7cb1f2eddec2573473f432d",
+      "expected_accepted_sha256": null,
+      "accepted_bytes_match": true,
+      "bytes_copied_verbatim": true
+    }
+  ],
+  "accepted_source_mismatches": [
+    {
+      "alias": "full3257/README.md",
+      "expected": "26ea438a287ace95105cf8ad0e6bc99f03e5e839413551288ec5ae596b62c53f",
+      "actual": "5032b2844daa2e0ea00bede7d1cd827e41b3ebffb21bf16d449121c41e1985a8",
+      "reconciliation": "declared-post-review-final-report-version; prior reviewed SHA preserved",
+      "evidence": "original acceptance.json /final_report_sha256 and /post_review_delta_verified"
+    }
+  ]
+}

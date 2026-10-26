@@ -1,0 +1,232 @@
+{
+  "start": "experiments/backends/evidence",
+  "pattern": "test*.py",
+  "scope": "discovery-only",
+  "rows": [
+    {
+      "id": "test_archive.ArchiveCalibration.test_duplicate_and_unsafe_member_names_rejected",
+      "source_file": "experiments/backends/evidence/test_archive.py",
+      "method_source_file": "experiments/backends/evidence/test_archive.py",
+      "source_line": 85,
+      "module": "test_archive",
+      "generated": false,
+      "method_source_sha256": "93176c77575972a3dc9e54671c4e5686dd48f40d2c90a778136d1333009aaa78"
+    },
+    {
+      "id": "test_archive.ArchiveCalibration.test_empty_archive_and_directory_only_archive_rejected",
+      "source_file": "experiments/backends/evidence/test_archive.py",
+      "method_source_file": "experiments/backends/evidence/test_archive.py",
+      "source_line": 77,
+      "module": "test_archive",
+      "generated": false,
+      "method_source_sha256": "2e5534730914f59ba279bc962bf798aa40669c41b249c3fd6ec90d17bed04f42"
+    },
+    {
+      "id": "test_archive.ArchiveCalibration.test_manifest_mutation_cannot_skip_archived_file_binding",
+      "source_file": "experiments/backends/evidence/test_archive.py",
+      "method_source_file": "experiments/backends/evidence/test_archive.py",
+      "source_line": 12,
+      "module": "test_archive",
+      "generated": false,
+      "method_source_sha256": "caf9a93d2854722572035287c2b5928c6a02af0c0f169a7d8fcf810ca656cba3"
+    },
+    {
+      "id": "test_archive.ArchiveCalibration.test_missing_unpacked_member_rejected",
+      "source_file": "experiments/backends/evidence/test_archive.py",
+      "method_source_file": "experiments/backends/evidence/test_archive.py",
+      "source_line": 56,
+      "module": "test_archive",
+      "generated": false,
+      "method_source_sha256": "4e8b83d6c15daeaa93c38cf0b76f263112f28dd7efbf2e4f1fb0347cb7bf06d4"
+    },
+    {
+      "id": "test_archive.ArchiveCalibration.test_nonregular_payload_types_rejected",
+      "source_file": "experiments/backends/evidence/test_archive.py",
+      "method_source_file": "experiments/backends/evidence/test_archive.py",
+      "source_line": 97,
+      "module": "test_archive",
+      "generated": false,
+      "method_source_sha256": "9b038ce043d057796fc689186b61c612b407837b59bf52cb2d784cd53893df5e"
+    },
+    {
+      "id": "test_archive.ArchiveCalibration.test_required_members_nonempty_regular_and_present",
+      "source_file": "experiments/backends/evidence/test_archive.py",
+      "method_source_file": "experiments/backends/evidence/test_archive.py",
+      "source_line": 71,
+      "module": "test_archive",
+      "generated": false,
+      "method_source_sha256": "f99d35f3fe4b983cba2d9eb18cdc1a82e3bc741260f0b1d113fd6f8a4718cd36"
+    },
+    {
+      "id": "test_archive.ArchiveCalibration.test_reviewed_hash_required_before_tar_parsing",
+      "source_file": "experiments/backends/evidence/test_archive.py",
+      "method_source_file": "experiments/backends/evidence/test_archive.py",
+      "source_line": 62,
+      "module": "test_archive",
+      "generated": false,
+      "method_source_sha256": "6fbbd65faafe4713a5126c369f325281729e874eda7c7a15805e4e1881d7be01"
+    },
+    {
+      "id": "test_archive.ArchiveCalibration.test_same_shape_same_size_psf_mutation_rejected",
+      "source_file": "experiments/backends/evidence/test_archive.py",
+      "method_source_file": "experiments/backends/evidence/test_archive.py",
+      "source_line": 50,
+      "module": "test_archive",
+      "generated": false,
+      "method_source_sha256": "192aa4ebcb97aaa83f05d578e378a19cf486296b8ebb54ca1d1ec2aa3379f536"
+    },
+    {
+      "id": "test_archive.ArchiveCalibration.test_unpacked_file_directory_and_archive_symlinks_rejected",
+      "source_file": "experiments/backends/evidence/test_archive.py",
+      "method_source_file": "experiments/backends/evidence/test_archive.py",
+      "source_line": 106,
+      "module": "test_archive",
+      "generated": false,
+      "method_source_sha256": "dd9584f3808c8738c18cf6b2760f843ae6057421ba0a3be1fbe5daa99fc83b08"
+    },
+    {
+      "id": "test_archive.ArchiveCalibration.test_valid_archive_returns_all_regular_members_without_extraction",
+      "source_file": "experiments/backends/evidence/test_archive.py",
+      "method_source_file": "experiments/backends/evidence/test_archive.py",
+      "source_line": 42,
+      "module": "test_archive",
+      "generated": false,
+      "method_source_sha256": "26e4ee4f85e97bc53a65ebfd6cbf606a7b8f87e3621c2d1a3c22aed61d855f50"
+    },
+    {
+      "id": "test_legacy_waveforms.LegacyWaveformContracts.test_csv_and_text_keep_original_columns_units_and_row_order",
+      "source_file": "experiments/backends/evidence/test_legacy_waveforms.py",
+      "method_source_file": "experiments/backends/evidence/test_legacy_waveforms.py",
+      "source_line": 32,
+      "module": "test_legacy_waveforms",
+      "generated": false,
+      "method_source_sha256": "43939748740acd2627cf24b1a70ef8541559eac1a6285361704ce68b6f2bb2cb"
+    },
+    {
+      "id": "test_legacy_waveforms.LegacyWaveformContracts.test_damaged_formats_still_fail_instead_of_returning_a_partial_export",
+      "source_file": "experiments/backends/evidence/test_legacy_waveforms.py",
+      "method_source_file": "experiments/backends/evidence/test_legacy_waveforms.py",
+      "source_line": 53,
+      "module": "test_legacy_waveforms",
+      "generated": false,
+      "method_source_sha256": "8a11dbd055f5a99b46690d797a75963119bcb342a98c6f757cdf31c4098b81a6"
+    },
+    {
+      "id": "test_legacy_waveforms.LegacyWaveformContracts.test_duplicate_psf_times_order_and_original_file_survive_float_projection",
+      "source_file": "experiments/backends/evidence/test_legacy_waveforms.py",
+      "method_source_file": "experiments/backends/evidence/test_legacy_waveforms.py",
+      "source_line": 13,
+      "module": "test_legacy_waveforms",
+      "generated": false,
+      "method_source_sha256": "a0a88d792fa1d2eff5a557278a7b2092042f7ef12f34aa82528355c7c7cdf096"
+    },
+    {
+      "id": "test_legacy_waveforms.LegacyWaveformContracts.test_spice_number_rounding_and_unsupported_suffixes_keep_their_contract",
+      "source_file": "experiments/backends/evidence/test_legacy_waveforms.py",
+      "method_source_file": "experiments/backends/evidence/test_legacy_waveforms.py",
+      "source_line": 44,
+      "module": "test_legacy_waveforms",
+      "generated": false,
+      "method_source_sha256": "da38cf7efc4e5631f2b6fb28c2d689fd575a51663f19be7feebdb5f642cfc4db"
+    },
+    {
+      "id": "test_psf.Observations.test_duplicate_times_and_original_tokens_survive",
+      "source_file": "experiments/backends/evidence/test_psf.py",
+      "method_source_file": "experiments/backends/evidence/test_psf.py",
+      "source_line": 10,
+      "module": "test_psf",
+      "generated": false,
+      "method_source_sha256": "81e8028241497f0d0924a2129872df6d27f32383d1e2eb723b689e7fc965d963"
+    },
+    {
+      "id": "test_psf.Observations.test_missing_truncated_duplicate_or_nonfinite_values_fail",
+      "source_file": "experiments/backends/evidence/test_psf.py",
+      "method_source_file": "experiments/backends/evidence/test_psf.py",
+      "source_line": 22,
+      "module": "test_psf",
+      "generated": false,
+      "method_source_sha256": "8a905ec8d6a2271344efec38ce948cb15a0ee81608333c64255109977ebad6c6"
+    }
+  ],
+  "failed_import_ids": [],
+  "loader_errors": [],
+  "method_count": 16,
+  "generated_count": 0,
+  "read_paths": [
+    "experiments/backends/evidence/__pycache__/archive.cpython-314.pyc",
+    "experiments/backends/evidence/__pycache__/legacy_waveforms.cpython-314.pyc",
+    "experiments/backends/evidence/__pycache__/psf.cpython-314.pyc",
+    "experiments/backends/evidence/__pycache__/test_archive.cpython-314.pyc",
+    "experiments/backends/evidence/__pycache__/test_legacy_waveforms.cpython-314.pyc",
+    "experiments/backends/evidence/__pycache__/test_psf.cpython-314.pyc",
+    "experiments/backends/evidence/archive.py",
+    "experiments/backends/evidence/legacy_waveforms.py",
+    "experiments/backends/evidence/psf.py",
+    "experiments/backends/evidence/test_archive.py",
+    "experiments/backends/evidence/test_legacy_waveforms.py",
+    "experiments/backends/evidence/test_psf.py"
+  ],
+  "blocked": [],
+  "imported_project_modules": [
+    "experiments/backends/evidence/archive.py",
+    "experiments/backends/evidence/legacy_waveforms.py",
+    "experiments/backends/evidence/psf.py",
+    "experiments/backends/evidence/test_archive.py",
+    "experiments/backends/evidence/test_legacy_waveforms.py",
+    "experiments/backends/evidence/test_psf.py"
+  ],
+  "returncode": 0,
+  "stderr": "",
+  "static_import_review": [
+    {
+      "path": "experiments/backends/evidence/test_archive.py",
+      "git_blob": "f514dc9ab8921b09aa3b70910d69010e034d28b7",
+      "top_level_calls": []
+    },
+    {
+      "path": "experiments/backends/evidence/test_legacy_waveforms.py",
+      "git_blob": "297109b5b444e9c550c29142c873d92f31e25fd4",
+      "top_level_calls": []
+    },
+    {
+      "path": "experiments/backends/evidence/test_psf.py",
+      "git_blob": "3afc9532ed54b4771367d5e0309cc2340f900ce0",
+      "top_level_calls": []
+    }
+  ],
+  "origin": "ci",
+  "loaded_source_identities": [
+    {
+      "path": "experiments/backends/evidence/archive.py",
+      "git_blob": "acdde83ce4b82ec48e4f365af01d1f55b22022aa",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/evidence/legacy_waveforms.py",
+      "git_blob": "69f2dbf2394a353a40d6d78ece27b5429905c1aa",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/evidence/psf.py",
+      "git_blob": "35f047add3ebad52a85a5fa64e23d8d71e67d68d",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/evidence/test_archive.py",
+      "git_blob": "f514dc9ab8921b09aa3b70910d69010e034d28b7",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/evidence/test_legacy_waveforms.py",
+      "git_blob": "297109b5b444e9c550c29142c873d92f31e25fd4",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/evidence/test_psf.py",
+      "git_blob": "3afc9532ed54b4771367d5e0309cc2340f900ce0",
+      "matches_main": true
+    }
+  ],
+  "source_identity_mismatches": [],
+  "collection_issues": []
+}

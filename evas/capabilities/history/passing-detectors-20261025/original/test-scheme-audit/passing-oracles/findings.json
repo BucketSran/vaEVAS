@@ -1,0 +1,110 @@
+{
+  "scope": {
+    "base": "f210ebd59dfd5db78eea7ac0751479bc9e02beed",
+    "candidate_digest": "e5df94a01dd621346777137e6c9073a690bf2ce58713a6db2cb5e0f62c7243e2",
+    "workspace": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night",
+    "selection": "current_outcome=passed && previous_audit=no_defect_found",
+    "review_mode": "independent read-only targeted test-scheme audit",
+    "limits": "Static targeted review and synthetic controls only; no build, git writes, Spectre, full suite, or actual kernel execution. Not an exhaustive audit of all eligible rows."
+  },
+  "confirmed": [
+    {
+      "id": "PO-F01",
+      "severity": "P2",
+      "title": "原树纯数学和多节点证书测试接受超过原电压预算的代表值与超宽盒",
+      "test_ids": [
+        "test_source_math.SourceMath.test_product_contains_independent_decimal_root_in_reported_box",
+        "test_source_math.SourceMath.test_multinode_certificate_uses_same_original_constraint_system"
+      ],
+      "eligibility": [
+        {
+          "id": "test_source_math.SourceMath.test_product_contains_independent_decimal_root_in_reported_box",
+          "current_outcome": "passed",
+          "previous_audit": "no_defect_found",
+          "source_file": "evas/tests/test_source_math.py",
+          "current_module_sha256": "12b27fe5cf5d977bd1b295bdbf95c5c27a19495f6086b4a5c4b7449258f3ac22",
+          "previous_findings": [],
+          "old_audit_source_line": "34"
+        },
+        {
+          "id": "test_source_math.SourceMath.test_multinode_certificate_uses_same_original_constraint_system",
+          "current_outcome": "passed",
+          "previous_audit": "no_defect_found",
+          "source_file": "evas/tests/test_source_math.py",
+          "current_module_sha256": "12b27fe5cf5d977bd1b295bdbf95c5c27a19495f6086b4a5c4b7449258f3ac22",
+          "previous_findings": [],
+          "old_audit_source_line": "143"
+        }
+      ],
+      "file": "evas/tests/test_source_math.py",
+      "lines": [
+        34,
+        152,
+        158,
+        161
+      ],
+      "local_fact": "Correct synthetic controls pass both original test methods. Returning y=independent_answer+0.01 with y box [-1000,1000] also passes both, through unmodified evas.runtime.transient and evas.protocol.validate_response. The default requested voltage budget is absolute=1e-12, relative=1e-10, so the 0.01 V shift is far outside budget for all tested answers.",
+      "mechanism": "Tests check independent answer containment, and the product method also checks representative containment. Neither constrains representative error against the independent answer nor maximum distance from representative to certificate endpoints. Protocol checks shape/finiteness/representative containment only and intentionally does not enforce the numerical acceptance budget.",
+      "scheme_scope": "Confirmed missing positive acceptance-budget detector for the specific pure driven product V(u)*tanh(V(u)/smooth), and its V(y,z)+fixed-z composition. This is narrower than claiming every finite-box test is defective.",
+      "consumer_check": [
+        {
+          "file": "evas/tests/test_source_math.py",
+          "result": "Other positive native-math consumers at lines 100-139 compare point values for plain tanh / slew / transition, not the pure product or two-node relation. The small_true_source_box test checks input/request endpoints and output endpoint enclosure, but does not enforce output width/representative budget either. Existing negative amplification tests only require refusal under distinct amplified requests, so they do not detect returning an invalid successful value for these positive requests."
+        },
+        {
+          "file": "evas/tests/test_tanh_waveform.py",
+          "result": "Independent direct/comparator tanh point oracles cover other expression shapes; they are a retained detector for primitive tanh errors, but cannot detect a product-certificate-specific or multi-node acceptance bypass."
+        },
+        {
+          "file": "evas/tests/test_audited_response_contracts.py:177",
+          "result": "The existing requested-source-domain calibration targets a different known issue and only the small_true_source_box method. It checks dropped_source_band and wrong_value with shifted narrow boxes, not oversized boxes preserving the independent answer."
+        }
+      ],
+      "fault_model": "A pure-product / coupled-relation certificate route skips its final accuracy gate but returns valid JSON, finite values, correct identities and bounds containing both true root and inaccurate representative. This response need not affect separate direct-tanh routes or refusal cases.",
+      "suggested_fix": "Keep the independent enclosure assertions and add independent point-error plus representative-to-full-box budget assertions using the original effective tolerance. Calibrate a response with correct independent root containment but an inaccurate representative or an oversized box.",
+      "evidence": [
+        "calibrate_source_math.py",
+        "source-math-calibration-raw.json"
+      ],
+      "not_claimed": "No actual DUT numerical defect is established; synthetic controls establish what the current tests can accept."
+    }
+  ],
+  "nonfindings": [
+    {
+      "tests": [
+        "test_selected_ln.SelectedLn.test_extra_queries_preserve_common_physical_values",
+        "test_selected_ln.SelectedLn.test_hidden_interior_clamp_uses_original_source_at_every_query"
+      ],
+      "result": "The metamorphic method accepts a consistent wrong constant output, as expected for its invariant-only role. The independent same-module Decimal/RN anchor rejects it. Correct controls pass both. No scheme defect reported.",
+      "evidence": [
+        "calibrate.py",
+        "calibration-raw.json"
+      ]
+    },
+    {
+      "modules": [
+        "test_event_horizons",
+        "test_semantic_invariants",
+        "test_mixed_dynamics",
+        "test_laplace",
+        "test_laplace_np",
+        "test_source_factor",
+        "test_continuous_dynamics",
+        "test_dynamic_closure"
+      ],
+      "result": "Read relevant grid/order/history methods and nearby independent closed-form/Fraction/Decimal anchors. Identified no additional confirmed scheme defect in the inspected portions; this is not a module-wide pass claim."
+    }
+  ],
+  "withdrawn": [
+    {
+      "test_id": "test_event_history_continuation.EventHistoryContinuation.test_three_clock_nonlinear_chain_preserves_physical_sampling",
+      "reason": "Excluded after precise universe lookup: current_outcome=error, previous_audit=mixed, existing L6-F01. No new finding or calibration."
+    }
+  ],
+  "artifacts": {
+    "source-math-calibration-raw.json": "df37480f11c3ea73786790931a0f1cb7bfc1e40ae2e41f6cc45abab570501054",
+    "calibrate_source_math.py": "fc4c4d8547206a6789fb70dddd4203a09621e96f03b20b15962e6d9f46b0693f",
+    "calibration-raw.json": "53d95ee794d8878a2aa22ed4093886fd82187e9ec31e180551d17fd85c0526d0",
+    "calibrate.py": "09ab6878e0693a902a026c36145e51d4c7137f89058f6328fce93a87185777c5"
+  }
+}

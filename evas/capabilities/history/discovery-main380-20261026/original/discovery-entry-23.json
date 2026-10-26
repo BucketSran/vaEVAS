@@ -1,0 +1,86 @@
+{
+  "start": "evas/validation/paper",
+  "pattern": "test_coefficient_first_order.py",
+  "scope": "discovery-only",
+  "rows": [
+    {
+      "id": "test_coefficient_first_order.CoefficientFirstOrderCalibration.test_coefficient_ratio_uses_exact_binary64_not_decimal_token",
+      "source_file": "evas/validation/paper/test_coefficient_first_order.py",
+      "method_source_file": "evas/validation/paper/test_coefficient_first_order.py",
+      "source_line": 41,
+      "module": "test_coefficient_first_order",
+      "generated": false,
+      "method_source_sha256": "9326de98b54d06d70ba3d2092d262113d04edc9eebe1b651ae65a761a3dd2ac3"
+    },
+    {
+      "id": "test_coefficient_first_order.CoefficientFirstOrderCalibration.test_constant_input_stays_at_dc_equilibrium",
+      "source_file": "evas/validation/paper/test_coefficient_first_order.py",
+      "method_source_file": "evas/validation/paper/test_coefficient_first_order.py",
+      "source_line": 33,
+      "module": "test_coefficient_first_order",
+      "generated": false,
+      "method_source_sha256": "00714ea9e1756c3fd9d6aa5356dd6395dc8fd303756fad3806c3c462474f3bc0"
+    },
+    {
+      "id": "test_coefficient_first_order.CoefficientFirstOrderCalibration.test_ramp_bounds_contain_hand_integrated_answer_and_reject_lagless_endpoint",
+      "source_file": "evas/validation/paper/test_coefficient_first_order.py",
+      "method_source_file": "evas/validation/paper/test_coefficient_first_order.py",
+      "source_line": 22,
+      "module": "test_coefficient_first_order",
+      "generated": false,
+      "method_source_sha256": "bab2b4a5befbcc63a2b76d43abf2390124b8598f5dcd6c25de23760b46ed726f"
+    }
+  ],
+  "failed_import_ids": [],
+  "loader_errors": [],
+  "method_count": 3,
+  "generated_count": 0,
+  "read_paths": [
+    "evas/validation/paper/__pycache__/coefficient_first_order.cpython-314.pyc",
+    "evas/validation/paper/__pycache__/precision_reference.cpython-314.pyc",
+    "evas/validation/paper/__pycache__/test_coefficient_first_order.cpython-314.pyc",
+    "evas/validation/paper/coefficient_first_order.py",
+    "evas/validation/paper/precision_reference.py",
+    "evas/validation/paper/test_coefficient_first_order.py"
+  ],
+  "blocked": [],
+  "imported_project_modules": [
+    "evas/validation/paper/coefficient_first_order.py",
+    "evas/validation/paper/precision_reference.py",
+    "evas/validation/paper/test_coefficient_first_order.py"
+  ],
+  "returncode": 0,
+  "stderr": "",
+  "static_import_review": [
+    {
+      "path": "evas/validation/paper/test_coefficient_first_order.py",
+      "git_blob": "3056789a87c7785e3deccc4a12827e56a2a5e9f3",
+      "top_level_calls": [
+        "Fraction('2.718281828')",
+        "Fraction('2.718281829')",
+        "Fraction(2)",
+        "Fraction(2)"
+      ]
+    }
+  ],
+  "origin": "historically-omitted-extra",
+  "loaded_source_identities": [
+    {
+      "path": "evas/validation/paper/coefficient_first_order.py",
+      "git_blob": "bd834518eaca8126c31a6258f196857456ec89a1",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/paper/precision_reference.py",
+      "git_blob": "32dcd4b1fc571ead116764ac0179dff3aeeb5c72",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/paper/test_coefficient_first_order.py",
+      "git_blob": "3056789a87c7785e3deccc4a12827e56a2a5e9f3",
+      "matches_main": true
+    }
+  ],
+  "source_identity_mismatches": [],
+  "collection_issues": []
+}

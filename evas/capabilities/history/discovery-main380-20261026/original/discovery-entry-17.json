@@ -1,0 +1,331 @@
+{
+  "start": "evas/validation/paper",
+  "pattern": "test_criteria.py",
+  "scope": "discovery-only",
+  "rows": [
+    {
+      "id": "test_criteria.Calibration.test_all_saved_values_reject_bool",
+      "source_file": "evas/validation/paper/test_criteria.py",
+      "method_source_file": "evas/validation/paper/test_criteria.py",
+      "source_line": 331,
+      "module": "test_criteria",
+      "generated": false,
+      "method_source_sha256": "a0c6e8ea0f2fc44fbf2b04e0dcf8c6cb1ac77e1409ac83e6d00c18e3f2089690"
+    },
+    {
+      "id": "test_criteria.Calibration.test_boundary_cohort_missing_cannot_use_nearest_grid",
+      "source_file": "evas/validation/paper/test_criteria.py",
+      "method_source_file": "evas/validation/paper/test_criteria.py",
+      "source_line": 279,
+      "module": "test_criteria",
+      "generated": false,
+      "method_source_sha256": "50107cee123f7935b6e043a8e9bfbaa8c00526e6a9570da193047d8aea30b77b"
+    },
+    {
+      "id": "test_criteria.Calibration.test_boundary_serialization_requires_bound_and_provenance",
+      "source_file": "evas/validation/paper/test_criteria.py",
+      "method_source_file": "evas/validation/paper/test_criteria.py",
+      "source_line": 289,
+      "module": "test_criteria",
+      "generated": false,
+      "method_source_sha256": "01af177e468c8161cd65a185326af9f75eaed2871333c679362fe128142eb677"
+    },
+    {
+      "id": "test_criteria.Calibration.test_budget_overlap_is_undecided",
+      "source_file": "evas/validation/paper/test_criteria.py",
+      "method_source_file": "evas/validation/paper/test_criteria.py",
+      "source_line": 215,
+      "module": "test_criteria",
+      "generated": false,
+      "method_source_sha256": "33799ae832ed799b9f7c779e058779a5c399e6ffe4f2d2aba530a260b21db796"
+    },
+    {
+      "id": "test_criteria.Calibration.test_counter_uncertainty_overlap_is_undecided",
+      "source_file": "evas/validation/paper/test_criteria.py",
+      "method_source_file": "evas/validation/paper/test_criteria.py",
+      "source_line": 164,
+      "module": "test_criteria",
+      "generated": false,
+      "method_source_sha256": "64664a0478a3543046ed2985fa42585ebb3de90715313547ab920c29b617e3ff"
+    },
+    {
+      "id": "test_criteria.Calibration.test_cross_limits_derive_from_source_stimulus",
+      "source_file": "evas/validation/paper/test_criteria.py",
+      "method_source_file": "evas/validation/paper/test_criteria.py",
+      "source_line": 303,
+      "module": "test_criteria",
+      "generated": false,
+      "method_source_sha256": "06f976ef2a9303a7e33c9e8ac81c12371dd79db157c94a7c6b5569c0fecfebbb"
+    },
+    {
+      "id": "test_criteria.Calibration.test_distinct_native_times_survive_unit_conversion_collision",
+      "source_file": "evas/validation/paper/test_criteria.py",
+      "method_source_file": "evas/validation/paper/test_criteria.py",
+      "source_line": 149,
+      "module": "test_criteria",
+      "generated": false,
+      "method_source_sha256": "e3e02f26d4de58b8d5f634dcbd000ba199e7cfa69bf65d5e140c6548fdc396b7"
+    },
+    {
+      "id": "test_criteria.Calibration.test_distinct_voltage_and_history_faults",
+      "source_file": "evas/validation/paper/test_criteria.py",
+      "method_source_file": "evas/validation/paper/test_criteria.py",
+      "source_line": 110,
+      "module": "test_criteria",
+      "generated": false,
+      "method_source_sha256": "85806bceecbb0dc43daeb9329da5dd2ebec5d35af35a3a0109832b685bbd31b5"
+    },
+    {
+      "id": "test_criteria.Calibration.test_duplicate_count",
+      "source_file": "evas/validation/paper/test_criteria.py",
+      "method_source_file": "evas/validation/paper/test_criteria.py",
+      "source_line": 124,
+      "module": "test_criteria",
+      "generated": false,
+      "method_source_sha256": "1c2af498f44e8eac80a2cb46d17e3b61b23da2a660f1c1aaecebab372d4829a1"
+    },
+    {
+      "id": "test_criteria.Calibration.test_exact_boundary_diagnostic_is_retained",
+      "source_file": "evas/validation/paper/test_criteria.py",
+      "method_source_file": "evas/validation/paper/test_criteria.py",
+      "source_line": 223,
+      "module": "test_criteria",
+      "generated": false,
+      "method_source_sha256": "c63ff818597a605f91a6ddd6a595577a646c10b392092c770492e13f2949cf00"
+    },
+    {
+      "id": "test_criteria.Calibration.test_execution_states_are_separate",
+      "source_file": "evas/validation/paper/test_criteria.py",
+      "method_source_file": "evas/validation/paper/test_criteria.py",
+      "source_line": 169,
+      "module": "test_criteria",
+      "generated": false,
+      "method_source_sha256": "818401184073de8d5cfd8d831b2882342d62db2e7c7be3d6494cba670aed92e1"
+    },
+    {
+      "id": "test_criteria.Calibration.test_freeze_refuses_dependency_replacement",
+      "source_file": "evas/validation/paper/test_criteria.py",
+      "method_source_file": "evas/validation/paper/test_criteria.py",
+      "source_line": 349,
+      "module": "test_criteria",
+      "generated": false,
+      "method_source_sha256": "b77cb794ea87f8f312ad61e5b9340a6e0afb7faf54ac1610b84db039d889fbd0"
+    },
+    {
+      "id": "test_criteria.Calibration.test_history_pass_is_compatible_existence_not_actual_time_bound",
+      "source_file": "evas/validation/paper/test_criteria.py",
+      "method_source_file": "evas/validation/paper/test_criteria.py",
+      "source_line": 323,
+      "module": "test_criteria",
+      "generated": false,
+      "method_source_sha256": "7ee1eee10be0b964cd5ab5a801ed8daee511912d729f0e593048b6079eb609e3"
+    },
+    {
+      "id": "test_criteria.Calibration.test_incoherent_history_not_envelope_pass",
+      "source_file": "evas/validation/paper/test_criteria.py",
+      "method_source_file": "evas/validation/paper/test_criteria.py",
+      "source_line": 174,
+      "module": "test_criteria",
+      "generated": false,
+      "method_source_sha256": "c3ea6c21b9f8347c4e1249987d5f4808649a37764364e4bb5666543801f69363"
+    },
+    {
+      "id": "test_criteria.Calibration.test_independent_si_instance_shifts",
+      "source_file": "evas/validation/paper/test_criteria.py",
+      "method_source_file": "evas/validation/paper/test_criteria.py",
+      "source_line": 315,
+      "module": "test_criteria",
+      "generated": false,
+      "method_source_sha256": "8c0c4a863e5e4fe3cc0bacab5f549bcc18bf355d07f335abc32b87be10076772"
+    },
+    {
+      "id": "test_criteria.Calibration.test_invalid_saved_input_is_observation_not_dut_failure",
+      "source_file": "evas/validation/paper/test_criteria.py",
+      "method_source_file": "evas/validation/paper/test_criteria.py",
+      "source_line": 270,
+      "module": "test_criteria",
+      "generated": false,
+      "method_source_sha256": "ef7673896b8ba9ac3102994c6402534b12cbef81a45aaedd10caaad9206720ec"
+    },
+    {
+      "id": "test_criteria.Calibration.test_legal_all_conditions",
+      "source_file": "evas/validation/paper/test_criteria.py",
+      "method_source_file": "evas/validation/paper/test_criteria.py",
+      "source_line": 102,
+      "module": "test_criteria",
+      "generated": false,
+      "method_source_sha256": "0658675298f37a46b563972d26b51b15ed1e89d707487231715dfff53597b699"
+    },
+    {
+      "id": "test_criteria.Calibration.test_legal_common_event_shifts",
+      "source_file": "evas/validation/paper/test_criteria.py",
+      "method_source_file": "evas/validation/paper/test_criteria.py",
+      "source_line": 106,
+      "module": "test_criteria",
+      "generated": false,
+      "method_source_sha256": "ff38f0a701df2ab88b0d0d422be21faed346621e7495ce3945de77d824c1754b"
+    },
+    {
+      "id": "test_criteria.Calibration.test_legal_small_wrap_displacements",
+      "source_file": "evas/validation/paper/test_criteria.py",
+      "method_source_file": "evas/validation/paper/test_criteria.py",
+      "source_line": 336,
+      "module": "test_criteria",
+      "generated": false,
+      "method_source_sha256": "05a38c35ffe717a36c6968c078048ed4b2de1d55a77dfd50c65b5f96c1d0883f"
+    },
+    {
+      "id": "test_criteria.Calibration.test_malformed_records_are_undecided",
+      "source_file": "evas/validation/paper/test_criteria.py",
+      "method_source_file": "evas/validation/paper/test_criteria.py",
+      "source_line": 141,
+      "module": "test_criteria",
+      "generated": false,
+      "method_source_sha256": "b3b8ac267b2e83a5e981d503e912e77aa35620ff891e1c292779a6feacb672dd"
+    },
+    {
+      "id": "test_criteria.Calibration.test_missing_units_columns_and_unqualified_counter",
+      "source_file": "evas/validation/paper/test_criteria.py",
+      "method_source_file": "evas/validation/paper/test_criteria.py",
+      "source_line": 130,
+      "module": "test_criteria",
+      "generated": false,
+      "method_source_sha256": "a02d2052be1a0f84a6fa292032a118ba7e2cb49e0f92a7f8e8f588c8102fd981"
+    },
+    {
+      "id": "test_criteria.Calibration.test_named_engineering_fault_controls",
+      "source_file": "evas/validation/paper/test_criteria.py",
+      "method_source_file": "evas/validation/paper/test_criteria.py",
+      "source_line": 181,
+      "module": "test_criteria",
+      "generated": false,
+      "method_source_sha256": "271964c14c01fec57776732a26dbc63568901d2cd978630ae05335d58c5583bd"
+    },
+    {
+      "id": "test_criteria.Calibration.test_no_evidence_boolean_does_not_qualify",
+      "source_file": "evas/validation/paper/test_criteria.py",
+      "method_source_file": "evas/validation/paper/test_criteria.py",
+      "source_line": 220,
+      "module": "test_criteria",
+      "generated": false,
+      "method_source_sha256": "0421fd98d6bb0c3fe435fb1331f2390eff916be5a258d18f4b40dbe3738df12c"
+    },
+    {
+      "id": "test_criteria.Calibration.test_nominal_event_rows_preserve_shared_history",
+      "source_file": "evas/validation/paper/test_criteria.py",
+      "method_source_file": "evas/validation/paper/test_criteria.py",
+      "source_line": 116,
+      "module": "test_criteria",
+      "generated": false,
+      "method_source_sha256": "77dd25cc2e431eed7cae255535b094ec32cbe180245a8fcf1643e3d33338feb1"
+    },
+    {
+      "id": "test_criteria.Calibration.test_observation_envelope_bridge",
+      "source_file": "evas/validation/paper/test_criteria.py",
+      "method_source_file": "evas/validation/paper/test_criteria.py",
+      "source_line": 252,
+      "module": "test_criteria",
+      "generated": false,
+      "method_source_sha256": "41b87f23bfb8ea0f5abf0d9adc7038f76cafaae64e84be445723a270babe375b"
+    },
+    {
+      "id": "test_criteria.Calibration.test_observation_uncertainty_and_sparse_records",
+      "source_file": "evas/validation/paper/test_criteria.py",
+      "method_source_file": "evas/validation/paper/test_criteria.py",
+      "source_line": 137,
+      "module": "test_criteria",
+      "generated": false,
+      "method_source_sha256": "d3dfd44557e08de7acc2babe5d2a3b2ce90f265ab3a8503e8701aaaa927697e5"
+    },
+    {
+      "id": "test_criteria.Calibration.test_row_paired_error_bounds_do_not_hide_failure",
+      "source_file": "evas/validation/paper/test_criteria.py",
+      "method_source_file": "evas/validation/paper/test_criteria.py",
+      "source_line": 262,
+      "module": "test_criteria",
+      "generated": false,
+      "method_source_sha256": "3f700df76ef6b954846828e09154915f49c615dccdde2c252c514d10db5ec8a2"
+    },
+    {
+      "id": "test_criteria.Calibration.test_short_pulse_observation_limit_is_explicit",
+      "source_file": "evas/validation/paper/test_criteria.py",
+      "method_source_file": "evas/validation/paper/test_criteria.py",
+      "source_line": 230,
+      "module": "test_criteria",
+      "generated": false,
+      "method_source_sha256": "b1ff82c8af9a177cb310e71623f8672e3c520ff2c5925f75cfe45c13706d1b60"
+    },
+    {
+      "id": "test_criteria.Calibration.test_two_backends_same_wrong_answer_fail_independently",
+      "source_file": "evas/validation/paper/test_criteria.py",
+      "method_source_file": "evas/validation/paper/test_criteria.py",
+      "source_line": 245,
+      "module": "test_criteria",
+      "generated": false,
+      "method_source_sha256": "aaa117cb4f328be7c9d3b5189bf204abcfb8bf57ddb634aec46801e2db4b4536"
+    }
+  ],
+  "failed_import_ids": [],
+  "loader_errors": [],
+  "method_count": 29,
+  "generated_count": 0,
+  "read_paths": [
+    "evas/validation/paper/__pycache__/criteria.cpython-314.pyc",
+    "evas/validation/paper/__pycache__/oracle.cpython-314.pyc",
+    "evas/validation/paper/__pycache__/test_criteria.cpython-314.pyc",
+    "evas/validation/paper/core-v1.json",
+    "evas/validation/paper/criteria.py",
+    "evas/validation/paper/oracle.py",
+    "evas/validation/paper/test_criteria.py"
+  ],
+  "blocked": [],
+  "imported_project_modules": [
+    "evas/validation/paper/criteria.py",
+    "evas/validation/paper/oracle.py",
+    "evas/validation/paper/test_criteria.py"
+  ],
+  "returncode": 0,
+  "stderr": "",
+  "static_import_review": [
+    {
+      "path": "evas/validation/paper/test_criteria.py",
+      "git_blob": "cfa86c6269b9a0a12a0787677e49712bf743b906",
+      "top_level_calls": [
+        "str(Path(__file__).resolve())",
+        "hashlib.sha256(Path(__file__).read_bytes()).hexdigest()",
+        "Path(__file__).resolve()",
+        "hashlib.sha256(Path(__file__).read_bytes())",
+        "Path(__file__)",
+        "Path(__file__).read_bytes()",
+        "Path(__file__)",
+        "math.sqrt(0.555)",
+        "math.sqrt(0.1025)"
+      ]
+    }
+  ],
+  "origin": "ci",
+  "loaded_source_identities": [
+    {
+      "path": "evas/validation/paper/core-v1.json",
+      "git_blob": "6e84ca899011c83d7b41fb252b60a4ad71b72837",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/paper/criteria.py",
+      "git_blob": "2755c5c0ba92a21648e364d4b86e1b467cfda4b4",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/paper/oracle.py",
+      "git_blob": "876a4cc530dea998fad1cc50390da84a88152167",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/paper/test_criteria.py",
+      "git_blob": "cfa86c6269b9a0a12a0787677e49712bf743b906",
+      "matches_main": true
+    }
+  ],
+  "source_identity_mismatches": [],
+  "collection_issues": []
+}

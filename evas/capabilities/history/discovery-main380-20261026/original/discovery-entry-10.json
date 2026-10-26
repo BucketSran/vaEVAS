@@ -1,0 +1,219 @@
+{
+  "start": "evas/validation/event_alignment",
+  "pattern": "test_checker.py",
+  "scope": "discovery-only",
+  "rows": [
+    {
+      "id": "test_checker.CheckerCalibration.test_boundary_consumers_cannot_choose_conflicting_phases",
+      "source_file": "evas/validation/event_alignment/test_checker.py",
+      "method_source_file": "evas/validation/event_alignment/test_checker.py",
+      "source_line": 140,
+      "module": "test_checker",
+      "generated": false,
+      "method_source_sha256": "8e5f0250ba9d935448799cae7222c534231d7abc74084d615128722cc12f7c8a"
+    },
+    {
+      "id": "test_checker.CheckerCalibration.test_boundary_rows_cannot_refit_the_event_time_independently",
+      "source_file": "evas/validation/event_alignment/test_checker.py",
+      "method_source_file": "evas/validation/event_alignment/test_checker.py",
+      "source_line": 146,
+      "module": "test_checker",
+      "generated": false,
+      "method_source_sha256": "fd8f850855c07234332aad6bf07448613e1190fcc7bfaed232db8d33e00404e8"
+    },
+    {
+      "id": "test_checker.CheckerCalibration.test_cancelled_held_root_cannot_still_increment",
+      "source_file": "evas/validation/event_alignment/test_checker.py",
+      "method_source_file": "evas/validation/event_alignment/test_checker.py",
+      "source_line": 105,
+      "module": "test_checker",
+      "generated": false,
+      "method_source_sha256": "c60b5fbd89268342f9661108d0f05d9ab1200cb4fc0993475740989eb767d061"
+    },
+    {
+      "id": "test_checker.CheckerCalibration.test_cross_sample_is_not_an_independently_fitted_target",
+      "source_file": "evas/validation/event_alignment/test_checker.py",
+      "method_source_file": "evas/validation/event_alignment/test_checker.py",
+      "source_line": 88,
+      "module": "test_checker",
+      "generated": false,
+      "method_source_sha256": "cf639784a635a87676c6aa719f07281e4e1d1102b42329b398c12e460e87acb5"
+    },
+    {
+      "id": "test_checker.CheckerCalibration.test_decimal_export_last_bit_is_not_exact_stop_failure",
+      "source_file": "evas/validation/event_alignment/test_checker.py",
+      "method_source_file": "evas/validation/event_alignment/test_checker.py",
+      "source_line": 169,
+      "module": "test_checker",
+      "generated": false,
+      "method_source_sha256": "3245c6988abe345aa168abfbd1aec3d403bec4cc78bf3d16019ed62ddd73ae2e"
+    },
+    {
+      "id": "test_checker.CheckerCalibration.test_downstream_edge_cannot_choose_another_event_time",
+      "source_file": "evas/validation/event_alignment/test_checker.py",
+      "method_source_file": "evas/validation/event_alignment/test_checker.py",
+      "source_line": 76,
+      "module": "test_checker",
+      "generated": false,
+      "method_source_sha256": "36e72306083aab5ffbaa5039f11429d8f8e4f50241aecfd3d4c8c84e2bdecbb6"
+    },
+    {
+      "id": "test_checker.CheckerCalibration.test_dropped_pulse_fails_even_with_correct_final_zero",
+      "source_file": "evas/validation/event_alignment/test_checker.py",
+      "method_source_file": "evas/validation/event_alignment/test_checker.py",
+      "source_line": 100,
+      "module": "test_checker",
+      "generated": false,
+      "method_source_sha256": "bff623147bbb0b29b19cf5c26f579b76bbcc49298d11712ac8841239c04e0a36"
+    },
+    {
+      "id": "test_checker.CheckerCalibration.test_incomplete_run_and_rejection_are_not_success",
+      "source_file": "evas/validation/event_alignment/test_checker.py",
+      "method_source_file": "evas/validation/event_alignment/test_checker.py",
+      "source_line": 165,
+      "module": "test_checker",
+      "generated": false,
+      "method_source_sha256": "a01a74c75725e362d3c2880ba82f277f46fc6128c0fc47e7dc6f7f3351d88204"
+    },
+    {
+      "id": "test_checker.CheckerCalibration.test_integral_area_cannot_choose_another_event_time",
+      "source_file": "evas/validation/event_alignment/test_checker.py",
+      "method_source_file": "evas/validation/event_alignment/test_checker.py",
+      "source_line": 82,
+      "module": "test_checker",
+      "generated": false,
+      "method_source_sha256": "0050c163b42ec1ae6fcd09dc80917242ccb5ce8e4720de98333b871d771cafd7"
+    },
+    {
+      "id": "test_checker.CheckerCalibration.test_interruption_sample_is_checked_against_retained_edge",
+      "source_file": "evas/validation/event_alignment/test_checker.py",
+      "method_source_file": "evas/validation/event_alignment/test_checker.py",
+      "source_line": 94,
+      "module": "test_checker",
+      "generated": false,
+      "method_source_sha256": "ea6c229eb597d6bddd98c01b57d108dc8b22c9e53eee04eb579803a31e6d81fc"
+    },
+    {
+      "id": "test_checker.CheckerCalibration.test_missing_common_point_fails",
+      "source_file": "evas/validation/event_alignment/test_checker.py",
+      "method_source_file": "evas/validation/event_alignment/test_checker.py",
+      "source_line": 155,
+      "module": "test_checker",
+      "generated": false,
+      "method_source_sha256": "8e760e65475fa26355eed5d725fbd703fc0ad8c8a94e4db5e9df4dbdce3e27de"
+    },
+    {
+      "id": "test_checker.CheckerCalibration.test_missing_output_and_nonfinite_fail",
+      "source_file": "evas/validation/event_alignment/test_checker.py",
+      "method_source_file": "evas/validation/event_alignment/test_checker.py",
+      "source_line": 159,
+      "module": "test_checker",
+      "generated": false,
+      "method_source_sha256": "7cbf69b3aa9d0ad95bd658b57fadd2262bf4bf07330fab1cca87122c90d31f03"
+    },
+    {
+      "id": "test_checker.CheckerCalibration.test_near_sources_must_each_be_observed",
+      "source_file": "evas/validation/event_alignment/test_checker.py",
+      "method_source_file": "evas/validation/event_alignment/test_checker.py",
+      "source_line": 118,
+      "module": "test_checker",
+      "generated": false,
+      "method_source_sha256": "e3f02342b29974a1be51bc54f954c0cbd152f6b1a3e891064d1b7aea1132b296"
+    },
+    {
+      "id": "test_checker.CheckerCalibration.test_old_rescheduled_root_is_not_hidden_by_final_count",
+      "source_file": "evas/validation/event_alignment/test_checker.py",
+      "method_source_file": "evas/validation/event_alignment/test_checker.py",
+      "source_line": 111,
+      "module": "test_checker",
+      "generated": false,
+      "method_source_sha256": "e113568ebdabd1829f7914b089e0a30dbed130cd6f1459980d7ed6521e00a5f4"
+    },
+    {
+      "id": "test_checker.CheckerCalibration.test_one_permitted_event_shift_is_shared_by_all_consumers",
+      "source_file": "evas/validation/event_alignment/test_checker.py",
+      "method_source_file": "evas/validation/event_alignment/test_checker.py",
+      "source_line": 71,
+      "module": "test_checker",
+      "generated": false,
+      "method_source_sha256": "b576835f3d29887f4195de8d506d8cc323fdddc703114d32499ae194f25f96e9"
+    },
+    {
+      "id": "test_checker.CheckerCalibration.test_seven_independent_worked_positive_fixtures",
+      "source_file": "evas/validation/event_alignment/test_checker.py",
+      "method_source_file": "evas/validation/event_alignment/test_checker.py",
+      "source_line": 65,
+      "module": "test_checker",
+      "generated": false,
+      "method_source_sha256": "22a532e7eda95167f23cd4c4921371304ad4e75899142f554e5e400c09eec83d"
+    },
+    {
+      "id": "test_checker.CheckerCalibration.test_shared_boundary_can_use_the_common_pre_event_state",
+      "source_file": "evas/validation/event_alignment/test_checker.py",
+      "method_source_file": "evas/validation/event_alignment/test_checker.py",
+      "source_line": 134,
+      "module": "test_checker",
+      "generated": false,
+      "method_source_sha256": "cb1f7152a0d75af94e2641992f0dd61d11db376bc35d467015bc6e5a1b7b4532"
+    },
+    {
+      "id": "test_checker.CheckerCalibration.test_stamp_must_remain_held",
+      "source_file": "evas/validation/event_alignment/test_checker.py",
+      "method_source_file": "evas/validation/event_alignment/test_checker.py",
+      "source_line": 129,
+      "module": "test_checker",
+      "generated": false,
+      "method_source_sha256": "56423d9fb1b78a1564c9dd6d2b203575ae19aedbd406a528d2e2ae96a0f5124a"
+    },
+    {
+      "id": "test_checker.CheckerCalibration.test_stamp_outside_window_fails",
+      "source_file": "evas/validation/event_alignment/test_checker.py",
+      "method_source_file": "evas/validation/event_alignment/test_checker.py",
+      "source_line": 124,
+      "module": "test_checker",
+      "generated": false,
+      "method_source_sha256": "703a094cbfe60077acd102f3877edf414678cb08ffb8279a82c636d1fda245af"
+    }
+  ],
+  "failed_import_ids": [],
+  "loader_errors": [],
+  "method_count": 19,
+  "generated_count": 0,
+  "read_paths": [
+    "evas/validation/event_alignment/__pycache__/checker.cpython-314.pyc",
+    "evas/validation/event_alignment/__pycache__/test_checker.cpython-314.pyc",
+    "evas/validation/event_alignment/checker.py",
+    "evas/validation/event_alignment/test_checker.py"
+  ],
+  "blocked": [],
+  "imported_project_modules": [
+    "evas/validation/event_alignment/checker.py",
+    "evas/validation/event_alignment/test_checker.py"
+  ],
+  "returncode": 0,
+  "stderr": "",
+  "static_import_review": [
+    {
+      "path": "evas/validation/event_alignment/test_checker.py",
+      "git_blob": "1623ed684306a019db5ab4b839500d20992da80b",
+      "top_level_calls": [
+        "Path(__file__)"
+      ]
+    }
+  ],
+  "origin": "ci",
+  "loaded_source_identities": [
+    {
+      "path": "evas/validation/event_alignment/checker.py",
+      "git_blob": "ad8b883feb524035d29a5925a7146b8924cea75d",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/event_alignment/test_checker.py",
+      "git_blob": "1623ed684306a019db5ab4b839500d20992da80b",
+      "matches_main": true
+    }
+  ],
+  "source_identity_mismatches": [],
+  "collection_issues": []
+}

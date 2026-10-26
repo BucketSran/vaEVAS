@@ -1,0 +1,91 @@
+{
+  "start": "experiments/performance",
+  "pattern": "test_*.py",
+  "scope": "discovery-only",
+  "rows": [
+    {
+      "id": "test_profile_requests.TriangleAccuracy.test_close_value_with_false_enclosure_fails",
+      "source_file": "experiments/performance/test_profile_requests.py",
+      "method_source_file": "experiments/performance/test_profile_requests.py",
+      "source_line": 31,
+      "module": "test_profile_requests",
+      "generated": false,
+      "method_source_sha256": "5c4c887559d5259552940bbd2d7d6b19f4fb98d2378bb24695c194bd1e95b1a8"
+    },
+    {
+      "id": "test_profile_requests.TriangleAccuracy.test_exact_answer_passes",
+      "source_file": "experiments/performance/test_profile_requests.py",
+      "method_source_file": "experiments/performance/test_profile_requests.py",
+      "source_line": 28,
+      "module": "test_profile_requests",
+      "generated": false,
+      "method_source_sha256": "3768fcde62da56fcb88104a6dfebe7d368d365e0319cd73e265c19e55d5aa86f"
+    },
+    {
+      "id": "test_profile_requests.TriangleAccuracy.test_exact_value_with_wide_enclosure_fails",
+      "source_file": "experiments/performance/test_profile_requests.py",
+      "method_source_file": "experiments/performance/test_profile_requests.py",
+      "source_line": 38,
+      "module": "test_profile_requests",
+      "generated": false,
+      "method_source_sha256": "196b35e3440d1ed6eae5ee52dcee1e762b0030ae902c6e73e1792e3f948a2702"
+    },
+    {
+      "id": "test_profile_requests.TriangleAccuracy.test_missing_observation_fails",
+      "source_file": "experiments/performance/test_profile_requests.py",
+      "method_source_file": "experiments/performance/test_profile_requests.py",
+      "source_line": 43,
+      "module": "test_profile_requests",
+      "generated": false,
+      "method_source_sha256": "7f31ccf41a71037b932c00470db41e3195e95771d48b0f796eb87c065b795584"
+    },
+    {
+      "id": "test_profile_requests.TriangleAccuracy.test_wrong_stimulus_fails",
+      "source_file": "experiments/performance/test_profile_requests.py",
+      "method_source_file": "experiments/performance/test_profile_requests.py",
+      "source_line": 48,
+      "module": "test_profile_requests",
+      "generated": false,
+      "method_source_sha256": "620163d5efa0dbfab72fb3a4337a4e6c3c3e8f7de58bab29c66901a826a3db7c"
+    }
+  ],
+  "failed_import_ids": [],
+  "loader_errors": [],
+  "method_count": 5,
+  "generated_count": 0,
+  "read_paths": [
+    "experiments/performance/__pycache__/profile_requests.cpython-314.pyc",
+    "experiments/performance/__pycache__/test_profile_requests.cpython-314.pyc",
+    "experiments/performance/profile_requests.py",
+    "experiments/performance/test_profile_requests.py"
+  ],
+  "blocked": [],
+  "imported_project_modules": [
+    "experiments/performance/profile_requests.py",
+    "experiments/performance/test_profile_requests.py"
+  ],
+  "returncode": 0,
+  "stderr": "",
+  "static_import_review": [
+    {
+      "path": "experiments/performance/test_profile_requests.py",
+      "git_blob": "4089eef69473015b76a349c20dd71924e8b281f2",
+      "top_level_calls": []
+    }
+  ],
+  "origin": "ci",
+  "loaded_source_identities": [
+    {
+      "path": "experiments/performance/profile_requests.py",
+      "git_blob": "545e902ea90fa74544356eafbd11b69ec906c7a6",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/performance/test_profile_requests.py",
+      "git_blob": "4089eef69473015b76a349c20dd71924e8b281f2",
+      "matches_main": true
+    }
+  ],
+  "source_identity_mismatches": [],
+  "collection_issues": []
+}

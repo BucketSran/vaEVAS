@@ -1,0 +1,224 @@
+{
+  "workspace": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night",
+  "base": "f210ebd59dfd5db78eea7ac0751479bc9e02beed",
+  "candidate_digest": "e5df94a01dd621346777137e6c9073a690bf2ce58713a6db2cb5e0f62c7243e2",
+  "kernel_sha256": "655a156529d857be8f5fcd467623a324cc463be5977b00aa6c2ea4a4592686d1",
+  "results": [
+    {
+      "id": "test_bound_step.BoundStepContracts.test_bound_caps_actual_nonlinear_integration_segments",
+      "mutation": "identity",
+      "passed": true,
+      "tests_run": 1,
+      "failures": 0,
+      "errors": 0,
+      "captures": [
+        {
+          "applied_mutation": "identity",
+          "protocol": "accepted",
+          "original_count": 2,
+          "mutated_count": 2,
+          "original_event_count": 0,
+          "mutated_event_count": 0,
+          "prefix": "/Volumes/vaEVAS-runs/pr-review-20261025/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--identity--0"
+        }
+      ],
+      "output": "test_bound_caps_actual_nonlinear_integration_segments (test_bound_step.BoundStepContracts.test_bound_caps_actual_nonlinear_integration_segments) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.526s\n\nOK\n"
+    },
+    {
+      "id": "test_bound_step.BoundStepContracts.test_bound_caps_actual_nonlinear_integration_segments",
+      "mutation": "drop_initial_solution",
+      "passed": true,
+      "tests_run": 1,
+      "failures": 0,
+      "errors": 0,
+      "captures": [
+        {
+          "applied_mutation": "drop_initial_solution",
+          "protocol": "KernelError: invalid_response: kernel solution count mismatch",
+          "original_count": 2,
+          "mutated_count": 1,
+          "original_event_count": 0,
+          "mutated_event_count": 0,
+          "prefix": "/Volumes/vaEVAS-runs/pr-review-20261025/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--drop_initial_solution--0"
+        }
+      ],
+      "output": "test_bound_caps_actual_nonlinear_integration_segments (test_bound_step.BoundStepContracts.test_bound_caps_actual_nonlinear_integration_segments) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.523s\n\nOK\n"
+    },
+    {
+      "id": "test_bound_step.BoundStepContracts.test_bound_caps_actual_nonlinear_integration_segments",
+      "mutation": "wrong_initial_voltage",
+      "passed": true,
+      "tests_run": 1,
+      "failures": 0,
+      "errors": 0,
+      "captures": [
+        {
+          "applied_mutation": "wrong_initial_voltage",
+          "protocol": "accepted",
+          "original_count": 2,
+          "mutated_count": 2,
+          "original_event_count": 0,
+          "mutated_event_count": 0,
+          "prefix": "/Volumes/vaEVAS-runs/pr-review-20261025/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_initial_voltage--0"
+        }
+      ],
+      "output": "test_bound_caps_actual_nonlinear_integration_segments (test_bound_step.BoundStepContracts.test_bound_caps_actual_nonlinear_integration_segments) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.521s\n\nOK\n"
+    },
+    {
+      "id": "test_bound_step.BoundStepContracts.test_bound_caps_actual_nonlinear_integration_segments",
+      "mutation": "wrong_final_voltage",
+      "passed": false,
+      "tests_run": 1,
+      "failures": 1,
+      "errors": 0,
+      "captures": [
+        {
+          "applied_mutation": "wrong_final_voltage",
+          "protocol": "accepted",
+          "original_count": 2,
+          "mutated_count": 2,
+          "original_event_count": 0,
+          "mutated_event_count": 0,
+          "prefix": "/Volumes/vaEVAS-runs/pr-review-20261025/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_final_voltage--0"
+        }
+      ],
+      "output": "test_bound_caps_actual_nonlinear_integration_segments (test_bound_step.BoundStepContracts.test_bound_caps_actual_nonlinear_integration_segments) ... FAIL\n\n======================================================================\nFAIL: test_bound_caps_actual_nonlinear_integration_segments (test_bound_step.BoundStepContracts.test_bound_caps_actual_nonlinear_integration_segments)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_bound_step.py\", line 122, in test_bound_caps_actual_nonlinear_integration_segments\n    self.assertLessEqual(abs(result['solutions'][-1]['voltages'][result['nodes'].index('y')]-2),1e-8)\n    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 121.0 not less than or equal to 1e-08\n\n----------------------------------------------------------------------\nRan 1 test in 0.585s\n\nFAILED (failures=1)\n"
+    },
+    {
+      "id": "test_bound_step.BoundStepContracts.test_sampled_clock_activation_preserves_physics_and_caps_inner_segments",
+      "mutation": "identity",
+      "passed": true,
+      "tests_run": 1,
+      "failures": 0,
+      "errors": 0,
+      "captures": [
+        {
+          "applied_mutation": "identity",
+          "protocol": "accepted",
+          "original_count": 4,
+          "mutated_count": 4,
+          "original_event_count": 2,
+          "mutated_event_count": 2,
+          "prefix": "/Volumes/vaEVAS-runs/pr-review-20261025/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0"
+        },
+        {
+          "applied_mutation": "identity",
+          "protocol": "accepted",
+          "original_count": 41,
+          "mutated_count": 41,
+          "original_event_count": 2,
+          "mutated_event_count": 2,
+          "prefix": "/Volumes/vaEVAS-runs/pr-review-20261025/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1"
+        }
+      ],
+      "output": "test_sampled_clock_activation_preserves_physics_and_caps_inner_segments (test_bound_step.BoundStepContracts.test_sampled_clock_activation_preserves_physics_and_caps_inner_segments) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 4.610s\n\nOK\n"
+    },
+    {
+      "id": "test_bound_step.BoundStepContracts.test_sampled_clock_activation_preserves_physics_and_caps_inner_segments",
+      "mutation": "wrong_times",
+      "passed": true,
+      "tests_run": 1,
+      "failures": 0,
+      "errors": 0,
+      "captures": [
+        {
+          "applied_mutation": "wrong_times",
+          "protocol": "KernelError: invalid_response: transient response identity mismatch",
+          "original_count": 4,
+          "mutated_count": 4,
+          "original_event_count": 2,
+          "mutated_event_count": 2,
+          "prefix": "/Volumes/vaEVAS-runs/pr-review-20261025/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--0"
+        },
+        {
+          "applied_mutation": "identity",
+          "protocol": "accepted",
+          "original_count": 41,
+          "mutated_count": 41,
+          "original_event_count": 2,
+          "mutated_event_count": 2,
+          "prefix": "/Volumes/vaEVAS-runs/pr-review-20261025/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--1"
+        }
+      ],
+      "output": "test_sampled_clock_activation_preserves_physics_and_caps_inner_segments (test_bound_step.BoundStepContracts.test_sampled_clock_activation_preserves_physics_and_caps_inner_segments) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 4.574s\n\nOK\n"
+    },
+    {
+      "id": "test_bound_step.BoundStepContracts.test_sampled_clock_activation_preserves_physics_and_caps_inner_segments",
+      "mutation": "drop_cross_event",
+      "passed": true,
+      "tests_run": 1,
+      "failures": 0,
+      "errors": 0,
+      "captures": [
+        {
+          "applied_mutation": "drop_cross_event",
+          "protocol": "KernelError: invalid_response: invalid portability advisory record",
+          "original_count": 4,
+          "mutated_count": 4,
+          "original_event_count": 2,
+          "mutated_event_count": 1,
+          "prefix": "/Volumes/vaEVAS-runs/pr-review-20261025/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--0"
+        },
+        {
+          "applied_mutation": "identity",
+          "protocol": "accepted",
+          "original_count": 41,
+          "mutated_count": 41,
+          "original_event_count": 2,
+          "mutated_event_count": 2,
+          "prefix": "/Volumes/vaEVAS-runs/pr-review-20261025/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--1"
+        }
+      ],
+      "output": "test_sampled_clock_activation_preserves_physics_and_caps_inner_segments (test_bound_step.BoundStepContracts.test_sampled_clock_activation_preserves_physics_and_caps_inner_segments) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 4.677s\n\nOK\n"
+    },
+    {
+      "id": "test_bound_step.BoundStepContracts.test_sampled_clock_activation_preserves_physics_and_caps_inner_segments",
+      "mutation": "wrong_cross_after",
+      "passed": true,
+      "tests_run": 1,
+      "failures": 0,
+      "errors": 0,
+      "captures": [
+        {
+          "applied_mutation": "wrong_cross_after",
+          "protocol": "accepted",
+          "original_count": 4,
+          "mutated_count": 4,
+          "original_event_count": 2,
+          "mutated_event_count": 2,
+          "prefix": "/Volumes/vaEVAS-runs/pr-review-20261025/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--0"
+        },
+        {
+          "applied_mutation": "identity",
+          "protocol": "accepted",
+          "original_count": 41,
+          "mutated_count": 41,
+          "original_event_count": 2,
+          "mutated_event_count": 2,
+          "prefix": "/Volumes/vaEVAS-runs/pr-review-20261025/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--1"
+        }
+      ],
+      "output": "test_sampled_clock_activation_preserves_physics_and_caps_inner_segments (test_bound_step.BoundStepContracts.test_sampled_clock_activation_preserves_physics_and_caps_inner_segments) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 4.595s\n\nOK\n"
+    },
+    {
+      "id": "test_bound_step.BoundStepContracts.test_sampled_clock_activation_preserves_physics_and_caps_inner_segments",
+      "mutation": "wrong_final_voltage",
+      "passed": false,
+      "tests_run": 1,
+      "failures": 1,
+      "errors": 0,
+      "captures": [
+        {
+          "applied_mutation": "wrong_final_voltage",
+          "protocol": "accepted",
+          "original_count": 4,
+          "mutated_count": 4,
+          "original_event_count": 2,
+          "mutated_event_count": 2,
+          "prefix": "/Volumes/vaEVAS-runs/pr-review-20261025/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_final_voltage--0"
+        }
+      ],
+      "output": "test_sampled_clock_activation_preserves_physics_and_caps_inner_segments (test_bound_step.BoundStepContracts.test_sampled_clock_activation_preserves_physics_and_caps_inner_segments) ... FAIL\n\n======================================================================\nFAIL: test_sampled_clock_activation_preserves_physics_and_caps_inner_segments (test_bound_step.BoundStepContracts.test_sampled_clock_activation_preserves_physics_and_caps_inner_segments)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_bound_step.py\", line 194, in test_sampled_clock_activation_preserves_physics_and_caps_inner_segments\n    self.assertAlmostEqual(solution['voltages'][y],math.atan(3*t)/3,places=8)\n    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 123.0 != 0.41634859079941816 within 8 places (122.58365140920058 difference)\n\n----------------------------------------------------------------------\nRan 1 test in 2.131s\n\nFAILED (failures=1)\n"
+    }
+  ]
+}

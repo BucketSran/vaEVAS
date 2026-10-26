@@ -1,0 +1,152 @@
+{
+  "kind": "test-scheme-reassessment",
+  "base": "f210ebd59dfd5db78eea7ac0751479bc9e02beed",
+  "candidate_digest": "e5df94a01dd621346777137e6c9073a690bf2ce58713a6db2cb5e0f62c7243e2",
+  "scope": {
+    "python_methods": 3262,
+    "modules": 333,
+    "ast_screened_methods": 3250,
+    "factory_methods_inspected": 12,
+    "previously_unflagged_passing": 2577,
+    "targeted_original_methods_exercised": 17,
+    "targeted_original_method_ids": [
+      "test_absdelay.AbsDelayRejections.test_cross_instance_guard_dependency_survives_cancellation",
+      "test_absdelay.AbsDelayRejections.test_cross_on_delayed_output_direct_or_indirect_is_rejected",
+      "test_absdelay.AbsDelayRejections.test_internal_state_nested_nonlinear_and_feedback_inputs_rejected",
+      "test_bound_step.BoundStepContracts.test_bound_caps_actual_nonlinear_integration_segments",
+      "test_bound_step.BoundStepContracts.test_sampled_clock_activation_preserves_physics_and_caps_inner_segments",
+      "test_deferred_rdist.DeferredRdist.test_bad_raw_leaf_seed_and_signature_are_rejected",
+      "test_events.EventRejections.test_frontend_rejects_nonconstant_init_and_unsupported_events",
+      "test_held_integer_targets.HeldIntegerTargets.test_each_source_child_overflow_precedes_mask_and_retarget",
+      "test_held_integer_targets.HeldIntegerTargets.test_raw_target_protocol_audits_unselected_and_canceled_dependencies",
+      "test_initial_selected_interval.InitialSelectedInterval.test_natural_domain_work_exhaustion_and_sticky_retry_stay_on_same_owner",
+      "test_real_call.RealCallContract.test_original_owner_charges_call_work_and_failed_retry_is_sticky",
+      "test_selected_ln.SelectedLn.test_extra_queries_preserve_common_physical_values",
+      "test_selected_ln.SelectedLn.test_hidden_interior_clamp_uses_original_source_at_every_query",
+      "test_slew.SlewContracts.test_unsupported_inputs_and_operator_uses_are_rejected",
+      "test_source_audit_reuse.SourceAuditReuse.test_cache_prepaid_failure_has_no_shared_next_request",
+      "test_source_math.SourceMath.test_multinode_certificate_uses_same_original_constraint_system",
+      "test_source_math.SourceMath.test_product_contains_independent_decimal_root_in_reported_box"
+    ],
+    "omitted_ci_calibration_methods_executed": 47
+  },
+  "findings": [
+    {
+      "id": "RAW-PASS-01",
+      "priority": "P2",
+      "category": "test_detection_defect",
+      "methods": [
+        "test_bound_step.BoundStepContracts.test_bound_caps_actual_nonlinear_integration_segments",
+        "test_bound_step.BoundStepContracts.test_sampled_clock_activation_preserves_physics_and_caps_inner_segments"
+      ],
+      "source": "passing-raw/findings.json",
+      "evidence": "passing-raw/raw-results.json",
+      "fact": "两个原始接口成功路径不验证返回样本完整性/请求时间对应关系；删除初始样本或把时间轴整体移10秒，原方法仍通过。",
+      "limit": "A local defect in these two original method acceptance paths. Does not establish a production solver failure or invalidate all bound_step mechanism coverage."
+    },
+    {
+      "id": "PN-F01",
+      "priority": "P2",
+      "category": "test_detection_defect",
+      "methods": [
+        "test_deferred_rdist.DeferredRdist.test_bad_raw_leaf_seed_and_signature_are_rejected"
+      ],
+      "source": "passing-negative/findings.json",
+      "evidence": "passing-negative/calibration.json",
+      "fact": "坏leaf负控先拼错事件列表。合法leaf用同拼接也拒绝；在内存禁用目标签名/seed校验后原方法仍过，保持事件索引的负控才会暴露缺失。",
+      "limit": "Proves a frontend/IR negative-control detection defect, not a current runtime random-call implementation defect."
+    },
+    {
+      "id": "PO-F01",
+      "priority": "P2",
+      "category": "test_detection_defect",
+      "methods": [
+        "test_source_math.SourceMath.test_product_contains_independent_decimal_root_in_reported_box",
+        "test_source_math.SourceMath.test_multinode_certificate_uses_same_original_constraint_system"
+      ],
+      "source": "passing-oracles/findings.json",
+      "evidence": "passing-oracles/source-math-calibration-raw.json",
+      "fact": "两个SourceMath测试接受独立答案偏移0.01V的代表值与[-1000,1000]盒；公共transient与协议校验保持启用，偏差明显超过原预算。",
+      "limit": "Synthetic response calibration, not an assertion that the real EVAS currently returns that wrong answer."
+    },
+    {
+      "id": "SCHEME-CI-01",
+      "priority": "P2",
+      "category": "ci_coverage_gap",
+      "methods": [],
+      "source": "scheme/findings.json",
+      "evidence": "scheme/static-metadata.json",
+      "fact": "现有CI发现规则漏掉5个paper校准文件的47个方法；本地定向执行47/47通过。",
+      "limit": "These47 are outside the3262 evas/tests denominator. Missing routing is confirmed; no current checker numerical bug inferred."
+    }
+  ],
+  "confirmed_new_method_ids": [
+    "test_bound_step.BoundStepContracts.test_bound_caps_actual_nonlinear_integration_segments",
+    "test_bound_step.BoundStepContracts.test_sampled_clock_activation_preserves_physics_and_caps_inner_segments",
+    "test_deferred_rdist.DeferredRdist.test_bad_raw_leaf_seed_and_signature_are_rejected",
+    "test_source_math.SourceMath.test_multinode_certificate_uses_same_original_constraint_system",
+    "test_source_math.SourceMath.test_product_contains_independent_decimal_root_in_reported_box"
+  ],
+  "excluded": [
+    "Public solve/transient already validate response shape; non-strict zip alone is not a defect.",
+    "A SelectedLn metamorphic test accepts a common wrong value, but its independent same-module oracle rejects it; no scheme defect.",
+    "Missing t0 numerical check in a step-bound mechanism test is not automatically a physical-scheme defect.",
+    "A three-clock hypothesis was withdrawn because it was already error/mixed and in the old377."
+  ],
+  "design_assessment": [
+    {
+      "issue": "执行结果与检出能力没有同等证据强度",
+      "basis": "5个此前passed/no_defect方法经目标变异暴露漏检；原静态结论明确有限。",
+      "action": "分别记录执行、独立参考、目标错误检出、适用版本；不把静态未发现问题称为认证。"
+    },
+    {
+      "issue": "数值包含性与准确性可以被混用",
+      "basis": "PO-F01",
+      "action": "分别核验参考包含、代表值误差和认证预算，采用原请求输入与容差。"
+    },
+    {
+      "issue": "原始接口与公共协议路径的保护不同",
+      "basis": "RAW-PASS-01",
+      "action": "raw响应显式验证请求/响应身份和完整性，保留机制检查。"
+    },
+    {
+      "issue": "负控可能被前置无关错误代替",
+      "basis": "PN-F01",
+      "action": "保持目标以外结构不变；合法邻例必须通过；目标检查被移除时负控必须失败。"
+    },
+    {
+      "issue": "检查器自身测试未完整纳入CI",
+      "basis": "SCHEME-CI-01",
+      "action": "覆盖这47方法，并核对校准文件发现范围避免新增文件静默遗漏。"
+    }
+  ],
+  "prioritized_followup": [
+    {
+      "priority": 0,
+      "action": "Repair and permanently calibrate the5 newly confirmed detectors; retain original inputs and budgets."
+    },
+    {
+      "priority": 0,
+      "action": "Wire the47 existing checker methods into CI and add a coverage-of-discovery check without rebuilding simulator features."
+    },
+    {
+      "priority": 1,
+      "action": "Extend targeted mutation review by risk families across remaining raw transport, rejection and certificate consumers; do not extrapolate the observed defect rate."
+    },
+    {
+      "priority": 1,
+      "action": "Continue known377 repairs and95 evidence gaps against independently supported obligations; keep language semantics, project support limits and implementation diagnostics distinct."
+    }
+  ],
+  "limits": [
+    "This is an all-method structural screen plus targeted executable calibration, not exhaustive semantic or mutation qualification of3262 methods.",
+    "17 selected original methods are risk-based examples, not a random statistical sample.",
+    "No production or test source edits, no build, no full regression rerun or remote CI, no Spectre in this stage.",
+    "Rust lifecycle test registration and CI connection were inspected; every Rust method was not re-audited.",
+    "Earlier377/95/2785 counts remain historical. The5 newly found passing methods are a separate correction overlay; absence of another finding does not prove correctness."
+  ],
+  "review": "Independent synthesis review completed; no required corrections within the recorded limited scope.",
+  "review_evidence": "review/synthesis.json",
+  "parent_verification": "review/parent-verification.json",
+  "followup_plan": "action-plan.json"
+}

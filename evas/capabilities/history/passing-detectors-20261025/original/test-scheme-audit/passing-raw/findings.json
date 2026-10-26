@@ -1,0 +1,378 @@
+{
+  "task": "Independent audit of passing previously unflagged methods; raw subprocess/_invoke scope",
+  "generated_at": "2026-10-25T15:36:02.798629+00:00",
+  "workspace": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night",
+  "base": "f210ebd59dfd5db78eea7ac0751479bc9e02beed",
+  "candidate_digest": "e5df94a01dd621346777137e6c9073a690bf2ce58713a6db2cb5e0f62c7243e2",
+  "kernel_sha256": "655a156529d857be8f5fcd467623a324cc463be5977b00aa6c2ea4a4592686d1",
+  "reviewed_methods": [
+    {
+      "id": "test_bound_step.BoundStepContracts.test_raw_ir_rejects_old_version_invalid_nodes_and_state_indices",
+      "file": "evas/tests/test_bound_step.py",
+      "line": 85,
+      "mode": "source_and_call_path_review",
+      "executed": false
+    },
+    {
+      "id": "test_bound_step.BoundStepContracts.test_raw_ir_rejects_malformed_bound_source_expansion",
+      "file": "evas/tests/test_bound_step.py",
+      "line": 95,
+      "mode": "source_and_call_path_review",
+      "executed": false
+    },
+    {
+      "id": "test_bound_step.BoundStepContracts.test_bound_caps_actual_nonlinear_integration_segments",
+      "file": "evas/tests/test_bound_step.py",
+      "line": 107,
+      "mode": "source_and_call_path_review",
+      "executed": true
+    },
+    {
+      "id": "test_bound_step.BoundStepContracts.test_sampled_clock_activation_preserves_physics_and_caps_inner_segments",
+      "file": "evas/tests/test_bound_step.py",
+      "line": 180,
+      "mode": "source_and_call_path_review",
+      "executed": true
+    },
+    {
+      "id": "test_dc_held_ramp_contract.DcHeldRampContract.test_bound_step_caps_committed_controller_segments",
+      "file": "evas/tests/test_dc_held_ramp_contract.py",
+      "line": 103,
+      "mode": "source_and_call_path_review",
+      "executed": false
+    },
+    {
+      "id": "test_decision_raw_reuse.DecisionRawReuse.test_checked_operator_and_invalid_hidden_arms_keep_old_rejection",
+      "file": "evas/tests/test_decision_raw_reuse.py",
+      "line": 104,
+      "mode": "source_and_call_path_review",
+      "executed": false
+    },
+    {
+      "id": "test_diagnostics.DiagnosticTests.test_failure_retains_commit_prefix_and_original_error",
+      "file": "evas/tests/test_diagnostics.py",
+      "line": 59,
+      "mode": "source_and_call_path_review",
+      "executed": false
+    },
+    {
+      "id": "test_diagnostics.DiagnosticTests.test_small_budget_is_explicit_and_does_not_change_answers",
+      "file": "evas/tests/test_diagnostics.py",
+      "line": 80,
+      "mode": "source_and_call_path_review",
+      "executed": false
+    },
+    {
+      "id": "test_diagnostics.DiagnosticTests.test_invalid_budget_and_existing_sidecar_fail_explicitly",
+      "file": "evas/tests/test_diagnostics.py",
+      "line": 145,
+      "mode": "source_and_call_path_review",
+      "executed": false
+    },
+    {
+      "id": "test_exact_predicate_endpoints.ExactPredicateEndpoints.test_ordinary_endpoint_uncertainty_never_erases_a_finite_integral",
+      "file": "evas/tests/test_exact_predicate_endpoints.py",
+      "line": 10,
+      "mode": "source_and_call_path_review",
+      "executed": false
+    },
+    {
+      "id": "test_floor_rn_contract.FloorRNOracle.test_actual_dead_raw_owner_and_reference_rejected_before_admission",
+      "file": "evas/tests/test_floor_rn_contract.py",
+      "line": 164,
+      "mode": "source_and_call_path_review",
+      "executed": false
+    },
+    {
+      "id": "test_initial_ordinary_alias.InitialOrdinaryAlias.test_nonpoint_source_band_remains_a_band_or_an_existing_rejection",
+      "file": "evas/tests/test_initial_ordinary_alias.py",
+      "line": 94,
+      "mode": "source_and_call_path_review",
+      "executed": false
+    },
+    {
+      "id": "test_initial_seed_invariance.InitialSeedInvariance.test_initial_timer_or_is_not_proved_by_replaying_one_body_twice",
+      "file": "evas/tests/test_initial_seed_invariance.py",
+      "line": 63,
+      "mode": "source_and_call_path_review",
+      "executed": false
+    },
+    {
+      "id": "test_initial_source_sequence_contract.InitialSourceSequenceCalibration.test_inspection_does_not_invoke_production_serialization",
+      "file": "evas/tests/test_initial_source_sequence_contract.py",
+      "line": 39,
+      "mode": "source_and_call_path_review",
+      "executed": false
+    },
+    {
+      "id": "test_integer_functions.AdditionalContracts.test_source_spelling_does_not_invoke_internal_assignment_ast",
+      "file": "evas/tests/test_integer_functions.py",
+      "line": 63,
+      "mode": "source_and_call_path_review",
+      "executed": false
+    },
+    {
+      "id": "test_integer_table_composition.IntegerTableComposition.test_public_sixbit_full_wire_uses_original_owner_and_exact_counter_values",
+      "file": "evas/tests/test_integer_table_composition.py",
+      "line": 24,
+      "mode": "source_and_call_path_review",
+      "executed": false
+    },
+    {
+      "id": "test_ir33_phase_inputs.IndependentEventVoltages.test_ordinary_statement_write_is_not_a_pre_activation_state_certificate",
+      "file": "evas/tests/test_ir33_phase_inputs.py",
+      "line": 53,
+      "mode": "source_and_call_path_review",
+      "executed": false
+    },
+    {
+      "id": "test_native_event_floor.NativeEventFloor.test_actual_driven_nodes_are_verified_by_kernel",
+      "file": "evas/tests/test_native_event_floor.py",
+      "line": 71,
+      "mode": "source_and_call_path_review",
+      "executed": false
+    },
+    {
+      "id": "test_native_event_floor.NativeEventFloor.test_native_ir_arity_origin_and_old_version_reject",
+      "file": "evas/tests/test_native_event_floor.py",
+      "line": 85,
+      "mode": "source_and_call_path_review",
+      "executed": false
+    },
+    {
+      "id": "test_original079_contract.Original079Contract.test_bound_step_limits_actual_committed_segments_of_both_output_request",
+      "file": "evas/tests/test_original079_contract.py",
+      "line": 161,
+      "mode": "source_and_call_path_review",
+      "executed": false
+    },
+    {
+      "id": "test_precision_chain.PointRootAccuracy.test_point_input_near_fold_cannot_hide_root_error",
+      "file": "evas/tests/test_precision_chain.py",
+      "line": 26,
+      "mode": "source_and_call_path_review",
+      "executed": false
+    },
+    {
+      "id": "test_procedure_runtime.ProcedureRuntime.test_inactive_numeric_domain_and_invalid_references_are_distinct",
+      "file": "evas/tests/test_procedure_runtime.py",
+      "line": 54,
+      "mode": "source_and_call_path_review",
+      "executed": false
+    },
+    {
+      "id": "test_root_window_history.RootWindowHistory.test_endpoint_window_has_a_dense_history_and_survives_held_off",
+      "file": "evas/tests/test_root_window_history.py",
+      "line": 57,
+      "mode": "source_and_call_path_review",
+      "executed": false
+    },
+    {
+      "id": "test_root_window_history.RootWindowHistory.test_insufficient_budget_never_returns_a_false_zero_certificate",
+      "file": "evas/tests/test_root_window_history.py",
+      "line": 65,
+      "mode": "source_and_call_path_review",
+      "executed": false
+    },
+    {
+      "id": "test_source_floor_event.SourceFloorEvent.test_original_child_domain_overflow_and_hidden_dependence_remain_errors",
+      "file": "evas/tests/test_source_floor_event.py",
+      "line": 84,
+      "mode": "source_and_call_path_review",
+      "executed": false
+    },
+    {
+      "id": "test_strobe.StrobeControl.test_signed_zero_is_one_physical_time_at_both_entry_points",
+      "file": "evas/tests/test_strobe.py",
+      "line": 31,
+      "mode": "source_and_call_path_review",
+      "executed": false
+    },
+    {
+      "id": "test_strobe.StrobeControl.test_invalid_controls_and_malformed_raw_requests_reject",
+      "file": "evas/tests/test_strobe.py",
+      "line": 65,
+      "mode": "source_and_call_path_review",
+      "executed": false
+    }
+  ],
+  "additional_source_reviewed": [
+    {
+      "file": "evas/tests/test_bound_step.py",
+      "scope": "all 13 method bodies and related run helper"
+    },
+    {
+      "file": "evas/tests/test_contracts.py",
+      "scope": "BranchContracts.request and initial positive method body"
+    },
+    {
+      "file": "evas/tests/test_event_conditions.py",
+      "scope": "test_raw_ir_state_predicate_reads_accepted_state_at_each_event and check_initial_record_batch helper"
+    },
+    {
+      "file": "evas/tests/test_input_initialization.py",
+      "scope": "test_raw_selected_initial_arms_have_their_actual_numeric_value"
+    },
+    {
+      "file": "evas/tests/test_event_accuracy.py",
+      "scope": "test_raw_ir_products_require_causal_assignment_and_keep_structural_voltage_checks"
+    },
+    {
+      "file": "evas/tests/test_history_forcing.py",
+      "scope": "raw helper and positive/negative raw methods"
+    },
+    {
+      "file": "evas/tests/test_filter_precision.py",
+      "scope": "public run_filter and polynomial filter method source only; no build"
+    },
+    {
+      "file": "evas/src/evas/runtime.py",
+      "scope": "solve/transient/_invoke complete path"
+    },
+    {
+      "file": "evas/src/evas/protocol.py",
+      "scope": "response count/time/vector/event validation"
+    },
+    {
+      "file": "evas/tests/raw_solution_contract.py",
+      "scope": "complete helper"
+    }
+  ],
+  "findings": [
+    {
+      "id": "RAW-PASS-01",
+      "category": "raw_response_integrity",
+      "severity": "P2",
+      "title": "Two raw bound_step success paths accept incomplete or incorrectly timed observations",
+      "methods": [
+        "test_bound_step.BoundStepContracts.test_bound_caps_actual_nonlinear_integration_segments",
+        "test_bound_step.BoundStepContracts.test_sampled_clock_activation_preserves_physics_and_caps_inner_segments"
+      ],
+      "locations": [
+        {
+          "file": "evas/tests/test_bound_step.py",
+          "line": 114
+        },
+        {
+          "file": "evas/tests/test_bound_step.py",
+          "line": 190
+        }
+      ],
+      "prior_state": "passed / no_defect_found",
+      "new_not_repeat_of_known_377": true,
+      "claim_boundary": "A local defect in these two original method acceptance paths. Does not establish a production solver failure or invalidate all bound_step mechanism coverage.",
+      "explicit_contract": "The nonlinear method submits output_times=[0,.5], checks a nonempty certified segment list ending at .5 and y(.5)=2. The sampled-clock method submits four output_times and independently checks y(t)=atan(3*t)/3 at those times, with bounded active inner segments and a dense final-value comparison.",
+      "call_trace": [
+        "test methods call their imported evas.runtime._invoke directly",
+        "_invoke executes subprocess.run, enforces process/error/finite JSON parsing, then returns parsed JSON without validate_response",
+        "public solve/transient call validate_response after _invoke, but that call is absent on the first raw path in both methods",
+        "raw_solution_contract.check_raw_solutions already checks complete rows, node identity, finite vectors and requested times; these two methods do not call it"
+      ],
+      "controls": [
+        {
+          "method": "test_bound_step.BoundStepContracts.test_bound_caps_actual_nonlinear_integration_segments",
+          "positive": "identity passes",
+          "wrong": "drop_initial_solution passes",
+          "mutation": "Remove only the initial solution row. All other original output and diagnostic data remain unchanged.",
+          "protocol": "illegal: kernel solution count mismatch",
+          "independent_obligation": "The request requires two observations, including t=0. The original method uses only the last row and therefore accepts a partial response."
+        },
+        {
+          "method": "test_bound_step.BoundStepContracts.test_sampled_clock_activation_preserves_physics_and_caps_inner_segments",
+          "positive": "identity passes",
+          "wrong": "wrong_times passes",
+          "mutation": "Only the first raw response transient.times values are offset by +10. All values, bounds, diagnostics and the later public dense result remain original.",
+          "protocol": "illegal: transient response identity mismatch",
+          "independent_obligation": "The requested time/value association is necessary for the explicit atan(3*t)/3 physical oracle. The test compares rows with hardcoded times and never verifies the returned time axis."
+        },
+        {
+          "positive": "Both original methods with identity responses pass",
+          "negative": "Protocol-legal final y=123 with corresponding [123,123] voltage bound fails both original methods",
+          "purpose": "Shows the independent numerical assertions remain active; this is not a mock of the actual test checker."
+        }
+      ],
+      "recommended_fix": "Check each raw response with check_raw_solutions against its original request before using numerical arrays, or call full validate_response when a Program object is available. Keep the existing step and independent numerical assertions.",
+      "evidence": [
+        "probe.py",
+        "raw-results.json",
+        "stdout.jsonl"
+      ]
+    }
+  ],
+  "excluded_false_positives": [
+    {
+      "hypothesis": "Ordinary public solve/transient zip loops can accept an empty solution list",
+      "disposition": "excluded",
+      "reason": "Both public entry points call validate_response, which binds exact solution count, vectors, evidence and requested times. Source examples reviewed include TightFilterPrecision.run_filter, HistoryForcingRed.assert_point_and_box and DcHeldRampContract.assert_ramp."
+    },
+    {
+      "hypothesis": "RootWindowHistory raw check silently truncates empty results",
+      "disposition": "excluded",
+      "reason": "The original check uses zip(..., strict=True), and its expected list is nonempty."
+    },
+    {
+      "hypothesis": "Every mechanism test must independently check its entire physical waveform",
+      "disposition": "excluded_from_findings",
+      "reason": "The nonlinear bound_step method explicitly targets certified segment widths and final Riccati value. Its protocol-legal wrong initial y control passes, but that alone does not show the suite lacks a retained initial-condition detector."
+    },
+    {
+      "hypothesis": "sampled-clock deletion of cross inventory proves a valid physically wrong execution is admitted",
+      "disposition": "not_claimed",
+      "reason": "Deleting the cross event alone breaks portability advisory indices. This is evidence for unvalidated raw integrity only, not a protocol-legal event semantics finding."
+    },
+    {
+      "hypothesis": "sampled-clock wrong cross after state proves a missing required physical oracle",
+      "disposition": "not_claimed",
+      "reason": "Changing only cross.after to [-1] remains protocol legal and passes. The method explicitly checks voltage physics and segment caps rather than event-record semantics; no separate scheme-wide conclusion is drawn."
+    },
+    {
+      "hypothesis": "Broad KernelError catching universally hides infrastructure failures",
+      "disposition": "not_confirmed",
+      "reason": "Reviewed safety methods constrain error kinds or messages, except the reuse equivalence test which compares both errors. No calibrated infrastructure false pass was established."
+    },
+    {
+      "hypothesis": "Raw _invoke admits JSON NaN or Infinity",
+      "disposition": "excluded",
+      "reason": "_invoke uses reject_constant and finite_float on successful JSON, including extra fields."
+    }
+  ],
+  "uncalibrated_risks": [
+    {
+      "id": "RAW-RISK-01",
+      "method": "test_bound_step.BoundStepContracts.test_bound_caps_actual_nonlinear_integration_segments",
+      "observation": "Protocol-legal y(0)=100 with matching bound passes original method; final y(.5)=123 is rejected.",
+      "status": "Not a separate finding; method targets step mechanism/final anchor. No same exact-source fixture elsewhere in test_bound_step was found. The related dynamic_bound test changes h initialization and also anchors final y only. No claim that the broader suite lacks Riccati initialization coverage."
+    },
+    {
+      "id": "RAW-RISK-02",
+      "methods": [
+        "test_dc_held_ramp_contract.DcHeldRampContract.test_bound_step_caps_committed_controller_segments",
+        "test_original079_contract.Original079Contract.test_bound_step_limits_actual_committed_segments_of_both_output_request"
+      ],
+      "observation": "Source inspection finds raw _invoke and independent values plus diagnostic endpoint/width checks. No explicit returned time-axis check was seen.",
+      "status": "Not mutation calibrated or executed in this subtask; do not count as confirmed additional finding."
+    },
+    {
+      "id": "RAW-RISK-03",
+      "observation": "Only two original methods were executed, under nine method/mutation combinations. Raw direct-call and broad-exception bodies were screened by source, not exhaustive semantic qualification.",
+      "status": "No full-suite, build, Spectre or release execution was performed."
+    }
+  ],
+  "execution": {
+    "original_methods": 2,
+    "method_mutation_runs": 9,
+    "baseline_passes": 2,
+    "confirmed_wrong_response_passes": [
+      "drop_initial_solution",
+      "wrong_times"
+    ],
+    "numeric_reject_controls": 2,
+    "artifacts_local_only": true
+  },
+  "source_sha256": {
+    "evas/tests/test_bound_step.py": "1ff7d706256e24fd7a3276e6c743517e38b70c6ad1260d6ba6210ef8d51b0330",
+    "evas/src/evas/runtime.py": "acc896bb2054163a4741f84f38b6e542bb3d121a2965ba01e112fbcb4ed902ae",
+    "evas/src/evas/protocol.py": "f18abfbc928069023f6f31c736e87ab823a0412d4b5d483e74f91c10f91d9cc6",
+    "evas/tests/raw_solution_contract.py": "ffd5243e3b590f81e6e671e5761316b40c60558da2e2c81a001a118a57cf12dc"
+  }
+}

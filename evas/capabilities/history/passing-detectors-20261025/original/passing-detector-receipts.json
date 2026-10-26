@@ -1,0 +1,193 @@
+{
+  "status": "read-only preparation; historical findings not revalidated on future batch4 main",
+  "receipts": [
+    {
+      "source": "test-scheme-audit/passing-oracles/findings.json",
+      "sha256": "08b2a257ed7eb1a728d71fc91c2ecc77a7e98b3e76eadbdb644d79f2ad7bdb10",
+      "scope": {
+        "scope": {
+          "base": "f210ebd59dfd5db78eea7ac0751479bc9e02beed",
+          "candidate_digest": "e5df94a01dd621346777137e6c9073a690bf2ce58713a6db2cb5e0f62c7243e2",
+          "workspace": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night",
+          "selection": "current_outcome=passed && previous_audit=no_defect_found",
+          "review_mode": "independent read-only targeted test-scheme audit",
+          "limits": "Static targeted review and synthetic controls only; no build, git writes, Spectre, full suite, or actual kernel execution. Not an exhaustive audit of all eligible rows."
+        }
+      },
+      "findings": [
+        {
+          "id": "PO-F01",
+          "severity": "P2",
+          "title": "原树纯数学和多节点证书测试接受超过原电压预算的代表值与超宽盒",
+          "test_ids": [
+            "test_source_math.SourceMath.test_product_contains_independent_decimal_root_in_reported_box",
+            "test_source_math.SourceMath.test_multinode_certificate_uses_same_original_constraint_system"
+          ],
+          "eligibility": [
+            {
+              "id": "test_source_math.SourceMath.test_product_contains_independent_decimal_root_in_reported_box",
+              "current_outcome": "passed",
+              "previous_audit": "no_defect_found",
+              "source_file": "evas/tests/test_source_math.py",
+              "current_module_sha256": "12b27fe5cf5d977bd1b295bdbf95c5c27a19495f6086b4a5c4b7449258f3ac22",
+              "previous_findings": [],
+              "old_audit_source_line": "34"
+            },
+            {
+              "id": "test_source_math.SourceMath.test_multinode_certificate_uses_same_original_constraint_system",
+              "current_outcome": "passed",
+              "previous_audit": "no_defect_found",
+              "source_file": "evas/tests/test_source_math.py",
+              "current_module_sha256": "12b27fe5cf5d977bd1b295bdbf95c5c27a19495f6086b4a5c4b7449258f3ac22",
+              "previous_findings": [],
+              "old_audit_source_line": "143"
+            }
+          ],
+          "file": "evas/tests/test_source_math.py",
+          "lines": [
+            34,
+            152,
+            158,
+            161
+          ],
+          "local_fact": "Correct synthetic controls pass both original test methods. Returning y=independent_answer+0.01 with y box [-1000,1000] also passes both, through unmodified evas.runtime.transient and evas.protocol.validate_response. The default requested voltage budget is absolute=1e-12, relative=1e-10, so the 0.01 V shift is far outside budget for all tested answers.",
+          "mechanism": "Tests check independent answer containment, and the product method also checks representative containment. Neither constrains representative error against the independent answer nor maximum distance from representative to certificate endpoints. Protocol checks shape/finiteness/representative containment only and intentionally does not enforce the numerical acceptance budget.",
+          "scheme_scope": "Confirmed missing positive acceptance-budget detector for the specific pure driven product V(u)*tanh(V(u)/smooth), and its V(y,z)+fixed-z composition. This is narrower than claiming every finite-box test is defective.",
+          "consumer_check": [
+            {
+              "file": "evas/tests/test_source_math.py",
+              "result": "Other positive native-math consumers at lines 100-139 compare point values for plain tanh / slew / transition, not the pure product or two-node relation. The small_true_source_box test checks input/request endpoints and output endpoint enclosure, but does not enforce output width/representative budget either. Existing negative amplification tests only require refusal under distinct amplified requests, so they do not detect returning an invalid successful value for these positive requests."
+            },
+            {
+              "file": "evas/tests/test_tanh_waveform.py",
+              "result": "Independent direct/comparator tanh point oracles cover other expression shapes; they are a retained detector for primitive tanh errors, but cannot detect a product-certificate-specific or multi-node acceptance bypass."
+            },
+            {
+              "file": "evas/tests/test_audited_response_contracts.py:177",
+              "result": "The existing requested-source-domain calibration targets a different known issue and only the small_true_source_box method. It checks dropped_source_band and wrong_value with shifted narrow boxes, not oversized boxes preserving the independent answer."
+            }
+          ],
+          "fault_model": "A pure-product / coupled-relation certificate route skips its final accuracy gate but returns valid JSON, finite values, correct identities and bounds containing both true root and inaccurate representative. This response need not affect separate direct-tanh routes or refusal cases.",
+          "suggested_fix": "Keep the independent enclosure assertions and add independent point-error plus representative-to-full-box budget assertions using the original effective tolerance. Calibrate a response with correct independent root containment but an inaccurate representative or an oversized box.",
+          "evidence": [
+            "calibrate_source_math.py",
+            "source-math-calibration-raw.json"
+          ],
+          "not_claimed": "No actual DUT numerical defect is established; synthetic controls establish what the current tests can accept."
+        }
+      ]
+    },
+    {
+      "source": "test-scheme-audit/passing-negative/findings.json",
+      "sha256": "e828e67e79584279b5c9da84f2007a3332ffcf6184383934f555e8898fc9d88b",
+      "scope": {
+        "base": "f210ebd59dfd5db78eea7ac0751479bc9e02beed",
+        "candidate_digest": "e5df94a01dd621346777137e6c9073a690bf2ce58713a6db2cb5e0f62c7243e2",
+        "limits": [
+          "No repository edits, build, Git mutation, Spectre, or full suite execution. Only files in this passing-negative evidence directory were written.",
+          "No claim to re-audit known377 cases.",
+          "No private Rust same-engine rollback control was executed; fresh Python requests are not counted as rollback proof."
+        ],
+        "selection": "All 11 executed method IDs are passed/no_defect_found in the fixed universe. Structural searches selected negative assertions and raw-IR/resource controls; no coverage claim for all 2577 or 3262 methods."
+      },
+      "findings": [
+        {
+          "id": "PN-F01",
+          "priority": "P2",
+          "status": "confirmed",
+          "method_id": "test_deferred_rdist.DeferredRdist.test_bad_raw_leaf_seed_and_signature_are_rejected",
+          "file": "evas/tests/test_deferred_rdist.py",
+          "line": 166,
+          "title": "Preserve the selected event index when mutating deferred-call leaves",
+          "obligation": "Malformed deferred-call function, real-valued seed state, and arity must be rejected by their leaf checks before public serialization; a legal unchanged deferred leaf must serialize.",
+          "actual": "The selected timer is events[0], followed by the initial-step event at events[1]. (*p.events[:-1], replacement) duplicates the timer at index1 and removes initial_step, while its procedure gate metadata still names ordinal1. All three cases fail the earlier unique procedure-gate metadata check before visiting the malformed leaf.",
+          "positive_control": "Original build().to_dict succeeds. Repeating the exact test placement with an unchanged legal leaf fails the same gate-metadata check. Replacing the actual index0 event preserves gate metadata and accepts the legal leaf.",
+          "real_fault_calibration": "An in-memory AST mutant removes only production UnsupportedSystemCall signature/seed/owner validation, retaining argument traversal. The unmodified original method still passes all three cases; index-preserving wrong-function, real-state-seed and wrong-arity controls all serialize under the mutant and are all rejected by the unmodified validator. This proves the original detector misses absent target checks, beyond a merely different error code.",
+          "impact": "The method cannot guard the three claimed malformed-leaf rejection obligations; regression in those leaf checks remains invisible to this test. This is a per-method conclusion, not a claim that the full suite has no other related detector.",
+          "recommendation": "Replace the event at its discovered index and retain an unchanged legal replacement control; assert the target leaf refusal or calibrated target-check behavior.",
+          "evidence": [
+            "calibration.json",
+            "raw.json",
+            "raw-output.txt",
+            "probe.py"
+          ]
+        }
+      ]
+    },
+    {
+      "source": "test-scheme-audit/passing-raw/findings.json",
+      "sha256": "176da08b282e48137f873e79feef29f6ef5b3e7453d66f4d5596698df03d579b",
+      "scope": {
+        "base": "f210ebd59dfd5db78eea7ac0751479bc9e02beed",
+        "candidate_digest": "e5df94a01dd621346777137e6c9073a690bf2ce58713a6db2cb5e0f62c7243e2",
+        "source_sha256": {
+          "evas/tests/test_bound_step.py": "1ff7d706256e24fd7a3276e6c743517e38b70c6ad1260d6ba6210ef8d51b0330",
+          "evas/src/evas/runtime.py": "acc896bb2054163a4741f84f38b6e542bb3d121a2965ba01e112fbcb4ed902ae",
+          "evas/src/evas/protocol.py": "f18abfbc928069023f6f31c736e87ab823a0412d4b5d483e74f91c10f91d9cc6",
+          "evas/tests/raw_solution_contract.py": "ffd5243e3b590f81e6e671e5761316b40c60558da2e2c81a001a118a57cf12dc"
+        }
+      },
+      "findings": [
+        {
+          "id": "RAW-PASS-01",
+          "category": "raw_response_integrity",
+          "severity": "P2",
+          "title": "Two raw bound_step success paths accept incomplete or incorrectly timed observations",
+          "methods": [
+            "test_bound_step.BoundStepContracts.test_bound_caps_actual_nonlinear_integration_segments",
+            "test_bound_step.BoundStepContracts.test_sampled_clock_activation_preserves_physics_and_caps_inner_segments"
+          ],
+          "locations": [
+            {
+              "file": "evas/tests/test_bound_step.py",
+              "line": 114
+            },
+            {
+              "file": "evas/tests/test_bound_step.py",
+              "line": 190
+            }
+          ],
+          "prior_state": "passed / no_defect_found",
+          "new_not_repeat_of_known_377": true,
+          "claim_boundary": "A local defect in these two original method acceptance paths. Does not establish a production solver failure or invalidate all bound_step mechanism coverage.",
+          "explicit_contract": "The nonlinear method submits output_times=[0,.5], checks a nonempty certified segment list ending at .5 and y(.5)=2. The sampled-clock method submits four output_times and independently checks y(t)=atan(3*t)/3 at those times, with bounded active inner segments and a dense final-value comparison.",
+          "call_trace": [
+            "test methods call their imported evas.runtime._invoke directly",
+            "_invoke executes subprocess.run, enforces process/error/finite JSON parsing, then returns parsed JSON without validate_response",
+            "public solve/transient call validate_response after _invoke, but that call is absent on the first raw path in both methods",
+            "raw_solution_contract.check_raw_solutions already checks complete rows, node identity, finite vectors and requested times; these two methods do not call it"
+          ],
+          "controls": [
+            {
+              "method": "test_bound_step.BoundStepContracts.test_bound_caps_actual_nonlinear_integration_segments",
+              "positive": "identity passes",
+              "wrong": "drop_initial_solution passes",
+              "mutation": "Remove only the initial solution row. All other original output and diagnostic data remain unchanged.",
+              "protocol": "illegal: kernel solution count mismatch",
+              "independent_obligation": "The request requires two observations, including t=0. The original method uses only the last row and therefore accepts a partial response."
+            },
+            {
+              "method": "test_bound_step.BoundStepContracts.test_sampled_clock_activation_preserves_physics_and_caps_inner_segments",
+              "positive": "identity passes",
+              "wrong": "wrong_times passes",
+              "mutation": "Only the first raw response transient.times values are offset by +10. All values, bounds, diagnostics and the later public dense result remain original.",
+              "protocol": "illegal: transient response identity mismatch",
+              "independent_obligation": "The requested time/value association is necessary for the explicit atan(3*t)/3 physical oracle. The test compares rows with hardcoded times and never verifies the returned time axis."
+            },
+            {
+              "positive": "Both original methods with identity responses pass",
+              "negative": "Protocol-legal final y=123 with corresponding [123,123] voltage bound fails both original methods",
+              "purpose": "Shows the independent numerical assertions remain active; this is not a mock of the actual test checker."
+            }
+          ],
+          "recommended_fix": "Check each raw response with check_raw_solutions against its original request before using numerical arrays, or call full validate_response when a Program object is available. Keep the existing step and independent numerical assertions.",
+          "evidence": [
+            "probe.py",
+            "raw-results.json",
+            "stdout.jsonl"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,248 @@
+{
+  "candidate_digest": "e5df94a01dd621346777137e6c9073a690bf2ce58713a6db2cb5e0f62c7243e2",
+  "test_file_sha256": "326742fc00de3692715da1827b8a076513d09af573906c09ed51d17ff49a7184",
+  "validator_sha256": "b7f8ad313aa842c21a09124b9a9527b3efaa8ceea2b52c5d3aafac38ab146cc7",
+  "mutation": "Remove only UnsupportedSystemCall signature/seed/owner checks, preserving argument traversal; executed as an in-memory replacement function.",
+  "production": {
+    "selected_event_index": 0,
+    "events": [
+      {
+        "index": 0,
+        "trigger": "timer",
+        "procedure_id": 0,
+        "expanded_statement_ordinal": 1
+      },
+      {
+        "index": 1,
+        "trigger": "initial_step",
+        "procedure_id": 0,
+        "expanded_statement_ordinal": 0
+      }
+    ],
+    "positive": {
+      "outcome": "accepted"
+    },
+    "controls": [
+      {
+        "case": "unchanged_legal_leaf",
+        "original_test_placement": {
+          "outcome": "rejected",
+          "message": "IR33: Event metadata does not match its unique procedure gate",
+          "diagnostic": {
+            "diagnostic_version": 1,
+            "kind": "compile_error",
+            "code": "invalid_ir",
+            "category": "invalid_input",
+            "stage": "binding",
+            "capability": "LANG",
+            "message": "IR33: Event metadata does not match its unique procedure gate",
+            "hint": "Recompile the original source and check IR node ownership and references."
+          }
+        },
+        "index_preserved_placement": {
+          "outcome": "accepted"
+        }
+      },
+      {
+        "case": "wrong_function",
+        "original_test_placement": {
+          "outcome": "rejected",
+          "message": "IR33: Event metadata does not match its unique procedure gate",
+          "diagnostic": {
+            "diagnostic_version": 1,
+            "kind": "compile_error",
+            "code": "invalid_ir",
+            "category": "invalid_input",
+            "stage": "binding",
+            "capability": "LANG",
+            "message": "IR33: Event metadata does not match its unique procedure gate",
+            "hint": "Recompile the original source and check IR node ownership and references."
+          }
+        },
+        "index_preserved_placement": {
+          "outcome": "rejected",
+          "message": "IR33: invalid deferred system function signature",
+          "diagnostic": {
+            "diagnostic_version": 1,
+            "kind": "compile_error",
+            "code": "invalid_ir",
+            "category": "invalid_input",
+            "stage": "binding",
+            "capability": "LANG",
+            "message": "IR33: invalid deferred system function signature",
+            "hint": "Recompile the original source and check IR node ownership and references."
+          }
+        }
+      },
+      {
+        "case": "real_state_seed",
+        "original_test_placement": {
+          "outcome": "rejected",
+          "message": "IR33: Event metadata does not match its unique procedure gate",
+          "diagnostic": {
+            "diagnostic_version": 1,
+            "kind": "compile_error",
+            "code": "invalid_ir",
+            "category": "invalid_input",
+            "stage": "binding",
+            "capability": "LANG",
+            "message": "IR33: Event metadata does not match its unique procedure gate",
+            "hint": "Recompile the original source and check IR node ownership and references."
+          }
+        },
+        "index_preserved_placement": {
+          "outcome": "rejected",
+          "message": "IR33: system function seed requires same-instance integer state outside a function call",
+          "diagnostic": {
+            "diagnostic_version": 1,
+            "kind": "compile_error",
+            "code": "invalid_ir",
+            "category": "invalid_input",
+            "stage": "binding",
+            "capability": "LANG",
+            "message": "IR33: system function seed requires same-instance integer state outside a function call",
+            "hint": "Recompile the original source and check IR node ownership and references."
+          }
+        }
+      },
+      {
+        "case": "wrong_arity",
+        "original_test_placement": {
+          "outcome": "rejected",
+          "message": "IR33: Event metadata does not match its unique procedure gate",
+          "diagnostic": {
+            "diagnostic_version": 1,
+            "kind": "compile_error",
+            "code": "invalid_ir",
+            "category": "invalid_input",
+            "stage": "binding",
+            "capability": "LANG",
+            "message": "IR33: Event metadata does not match its unique procedure gate",
+            "hint": "Recompile the original source and check IR node ownership and references."
+          }
+        },
+        "index_preserved_placement": {
+          "outcome": "rejected",
+          "message": "IR33: invalid deferred system function signature",
+          "diagnostic": {
+            "diagnostic_version": 1,
+            "kind": "compile_error",
+            "code": "invalid_ir",
+            "category": "invalid_input",
+            "stage": "binding",
+            "capability": "LANG",
+            "message": "IR33: invalid deferred system function signature",
+            "hint": "Recompile the original source and check IR node ownership and references."
+          }
+        }
+      }
+    ]
+  },
+  "mutant": {
+    "selected_event_index": 0,
+    "events": [
+      {
+        "index": 0,
+        "trigger": "timer",
+        "procedure_id": 0,
+        "expanded_statement_ordinal": 1
+      },
+      {
+        "index": 1,
+        "trigger": "initial_step",
+        "procedure_id": 0,
+        "expanded_statement_ordinal": 0
+      }
+    ],
+    "positive": {
+      "outcome": "accepted"
+    },
+    "controls": [
+      {
+        "case": "unchanged_legal_leaf",
+        "original_test_placement": {
+          "outcome": "rejected",
+          "message": "IR33: Event metadata does not match its unique procedure gate",
+          "diagnostic": {
+            "diagnostic_version": 1,
+            "kind": "compile_error",
+            "code": "invalid_ir",
+            "category": "invalid_input",
+            "stage": "binding",
+            "capability": "LANG",
+            "message": "IR33: Event metadata does not match its unique procedure gate",
+            "hint": "Recompile the original source and check IR node ownership and references."
+          }
+        },
+        "index_preserved_placement": {
+          "outcome": "accepted"
+        }
+      },
+      {
+        "case": "wrong_function",
+        "original_test_placement": {
+          "outcome": "rejected",
+          "message": "IR33: Event metadata does not match its unique procedure gate",
+          "diagnostic": {
+            "diagnostic_version": 1,
+            "kind": "compile_error",
+            "code": "invalid_ir",
+            "category": "invalid_input",
+            "stage": "binding",
+            "capability": "LANG",
+            "message": "IR33: Event metadata does not match its unique procedure gate",
+            "hint": "Recompile the original source and check IR node ownership and references."
+          }
+        },
+        "index_preserved_placement": {
+          "outcome": "accepted"
+        }
+      },
+      {
+        "case": "real_state_seed",
+        "original_test_placement": {
+          "outcome": "rejected",
+          "message": "IR33: Event metadata does not match its unique procedure gate",
+          "diagnostic": {
+            "diagnostic_version": 1,
+            "kind": "compile_error",
+            "code": "invalid_ir",
+            "category": "invalid_input",
+            "stage": "binding",
+            "capability": "LANG",
+            "message": "IR33: Event metadata does not match its unique procedure gate",
+            "hint": "Recompile the original source and check IR node ownership and references."
+          }
+        },
+        "index_preserved_placement": {
+          "outcome": "accepted"
+        }
+      },
+      {
+        "case": "wrong_arity",
+        "original_test_placement": {
+          "outcome": "rejected",
+          "message": "IR33: Event metadata does not match its unique procedure gate",
+          "diagnostic": {
+            "diagnostic_version": 1,
+            "kind": "compile_error",
+            "code": "invalid_ir",
+            "category": "invalid_input",
+            "stage": "binding",
+            "capability": "LANG",
+            "message": "IR33: Event metadata does not match its unique procedure gate",
+            "hint": "Recompile the original source and check IR node ownership and references."
+          }
+        },
+        "index_preserved_placement": {
+          "outcome": "accepted"
+        }
+      }
+    ]
+  },
+  "original_test_under_mutant": {
+    "run": 1,
+    "errors": [],
+    "failures": []
+  }
+}

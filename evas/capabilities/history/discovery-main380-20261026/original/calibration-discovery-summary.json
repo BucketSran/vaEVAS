@@ -1,0 +1,321 @@
+{
+  "revision": "380e7a4e12e428b9776417d9d8a7792848aed6e7",
+  "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
+  "scope": "separate-process unittest discover only; no test bodies/setup/calibration/simulator/backend run; -B used",
+  "entries": [
+    {
+      "artifact": "discovery-entry-00.json",
+      "start": "scripts/tests",
+      "pattern": "test_ci_selection.py",
+      "actual_methods": 35,
+      "generated": 0,
+      "collection_issues": [],
+      "source_mismatches": []
+    },
+    {
+      "artifact": "discovery-entry-01.json",
+      "start": "scripts/tests",
+      "pattern": "test_evas_check_policy.py",
+      "actual_methods": 12,
+      "generated": 0,
+      "collection_issues": [],
+      "source_mismatches": []
+    },
+    {
+      "artifact": "discovery-entry-02.json",
+      "start": "scripts/tests",
+      "pattern": "test_fast_feedback.py",
+      "actual_methods": 14,
+      "generated": 0,
+      "collection_issues": [],
+      "source_mismatches": []
+    },
+    {
+      "artifact": "discovery-entry-03.json",
+      "start": "scripts/tests",
+      "pattern": "test_independent_ci.py",
+      "actual_methods": 7,
+      "generated": 0,
+      "collection_issues": [],
+      "source_mismatches": []
+    },
+    {
+      "artifact": "discovery-entry-04.json",
+      "start": "scripts/tests",
+      "pattern": "test_regression_runner.py",
+      "actual_methods": 5,
+      "generated": 0,
+      "collection_issues": [],
+      "source_mismatches": []
+    },
+    {
+      "artifact": "discovery-entry-05.json",
+      "start": "scripts/tests",
+      "pattern": "test*.py",
+      "actual_methods": 235,
+      "generated": 0,
+      "collection_issues": [
+        {
+          "module": "test_benchmark_package",
+          "classification": "collector-policy-pending",
+          "limit": "No claim that CI itself fails collection."
+        },
+        {
+          "module": "test_benchmark_workbench",
+          "classification": "collector-policy-pending",
+          "limit": "No claim that CI itself fails collection."
+        }
+      ],
+      "source_mismatches": []
+    },
+    {
+      "artifact": "discovery-entry-06.json",
+      "start": "evas/capabilities",
+      "pattern": "test_registry.py",
+      "actual_methods": 33,
+      "generated": 0,
+      "collection_issues": [],
+      "source_mismatches": []
+    },
+    {
+      "artifact": "discovery-entry-07.json",
+      "start": "experiments/backends/evidence",
+      "pattern": "test*.py",
+      "actual_methods": 16,
+      "generated": 0,
+      "collection_issues": [],
+      "source_mismatches": []
+    },
+    {
+      "artifact": "discovery-entry-08.json",
+      "start": "experiments/backends/dvs2-spectre-validation",
+      "pattern": "test_*.py",
+      "actual_methods": 100,
+      "generated": 0,
+      "collection_issues": [],
+      "source_mismatches": []
+    },
+    {
+      "artifact": "discovery-entry-09.json",
+      "start": "experiments/backends/spectre-alignment",
+      "pattern": "test_*.py",
+      "actual_methods": 20,
+      "generated": 0,
+      "collection_issues": [],
+      "source_mismatches": []
+    },
+    {
+      "artifact": "discovery-entry-10.json",
+      "start": "evas/validation/event_alignment",
+      "pattern": "test_checker.py",
+      "actual_methods": 19,
+      "generated": 0,
+      "collection_issues": [],
+      "source_mismatches": []
+    },
+    {
+      "artifact": "discovery-entry-11.json",
+      "start": "evas/validation/strobe",
+      "pattern": "test_*.py",
+      "actual_methods": 5,
+      "generated": 0,
+      "collection_issues": [],
+      "source_mismatches": []
+    },
+    {
+      "artifact": "discovery-entry-12.json",
+      "start": "experiments/backends/event-alignment",
+      "pattern": "test_*.py",
+      "actual_methods": 35,
+      "generated": 0,
+      "collection_issues": [],
+      "source_mismatches": []
+    },
+    {
+      "artifact": "discovery-entry-13.json",
+      "start": "evas/validation/sample_edge_filter",
+      "pattern": "test_*.py",
+      "actual_methods": 4,
+      "generated": 0,
+      "collection_issues": [],
+      "source_mismatches": []
+    },
+    {
+      "artifact": "discovery-entry-14.json",
+      "start": "experiments/backends/sample-edge-filter",
+      "pattern": "test_*.py",
+      "actual_methods": 36,
+      "generated": 0,
+      "collection_issues": [],
+      "source_mismatches": []
+    },
+    {
+      "artifact": "discovery-entry-15.json",
+      "start": "experiments/backends/implicit-event-restart",
+      "pattern": "test_check.py",
+      "actual_methods": 26,
+      "generated": 0,
+      "collection_issues": [],
+      "source_mismatches": []
+    },
+    {
+      "artifact": "discovery-entry-16.json",
+      "start": "experiments/performance",
+      "pattern": "test_*.py",
+      "actual_methods": 5,
+      "generated": 0,
+      "collection_issues": [],
+      "source_mismatches": []
+    },
+    {
+      "artifact": "discovery-entry-17.json",
+      "start": "evas/validation/paper",
+      "pattern": "test_criteria.py",
+      "actual_methods": 29,
+      "generated": 0,
+      "collection_issues": [],
+      "source_mismatches": []
+    },
+    {
+      "artifact": "discovery-entry-18.json",
+      "start": "evas/validation/paper",
+      "pattern": "test_*root*.py",
+      "actual_methods": 34,
+      "generated": 0,
+      "collection_issues": [],
+      "source_mismatches": []
+    },
+    {
+      "artifact": "discovery-entry-19.json",
+      "start": "experiments/backends/paper",
+      "pattern": "test_*.py",
+      "actual_methods": 129,
+      "generated": 0,
+      "collection_issues": [],
+      "source_mismatches": []
+    },
+    {
+      "artifact": "discovery-entry-20.json",
+      "start": "evas/validation/support",
+      "pattern": "test_*.py",
+      "actual_methods": 3,
+      "generated": 0,
+      "collection_issues": [],
+      "source_mismatches": []
+    },
+    {
+      "artifact": "discovery-entry-21.json",
+      "start": "experiments/backends/support",
+      "pattern": "test_*.py",
+      "actual_methods": 221,
+      "generated": 0,
+      "collection_issues": [],
+      "source_mismatches": []
+    },
+    {
+      "artifact": "discovery-entry-22.json",
+      "start": "evas/validation/differential",
+      "pattern": "test*.py",
+      "actual_methods": 9,
+      "generated": 0,
+      "collection_issues": [],
+      "source_mismatches": []
+    },
+    {
+      "artifact": "discovery-entry-23.json",
+      "start": "evas/validation/paper",
+      "pattern": "test_coefficient_first_order.py",
+      "actual_methods": 3,
+      "generated": 0,
+      "collection_issues": [],
+      "source_mismatches": []
+    },
+    {
+      "artifact": "discovery-entry-24.json",
+      "start": "evas/validation/paper",
+      "pattern": "test_precision.py",
+      "actual_methods": 12,
+      "generated": 0,
+      "collection_issues": [],
+      "source_mismatches": []
+    },
+    {
+      "artifact": "discovery-entry-25.json",
+      "start": "evas/validation/paper",
+      "pattern": "test_precision_binding.py",
+      "actual_methods": 5,
+      "generated": 0,
+      "collection_issues": [],
+      "source_mismatches": []
+    },
+    {
+      "artifact": "discovery-entry-26.json",
+      "start": "evas/validation/paper",
+      "pattern": "test_precision_v2.py",
+      "actual_methods": 16,
+      "generated": 0,
+      "collection_issues": [],
+      "source_mismatches": []
+    },
+    {
+      "artifact": "discovery-entry-27.json",
+      "start": "evas/validation/paper",
+      "pattern": "test_primitives.py",
+      "actual_methods": 11,
+      "generated": 0,
+      "collection_issues": [],
+      "source_mismatches": []
+    }
+  ],
+  "ci_entry_count": 23,
+  "sum_ci_entry_methods": 1032,
+  "unique_ci_source_method_pairs": 959,
+  "calibration_and_registry_entries": {
+    "entries": 17,
+    "actual_methods": 724,
+    "unique_source_method_pairs": 724,
+    "import_errors": 0,
+    "generated_methods": 0
+  },
+  "collection_issues": [
+    {
+      "entry": 5,
+      "start": "scripts/tests",
+      "pattern": "test*.py",
+      "module": "test_benchmark_package",
+      "classification": "collector-policy-pending",
+      "limit": "No claim that CI itself fails collection."
+    },
+    {
+      "entry": 5,
+      "start": "scripts/tests",
+      "pattern": "test*.py",
+      "module": "test_benchmark_workbench",
+      "classification": "collector-policy-pending",
+      "limit": "No claim that CI itself fails collection."
+    }
+  ],
+  "genuine_entry_import_errors_after_matching_root_path": [],
+  "policy_pending_count": 2,
+  "historically_omitted_five": {
+    "current_methods": 47,
+    "current_file_counts": {
+      "test_coefficient_first_order.py": 3,
+      "test_precision.py": 12,
+      "test_precision_binding.py": 5,
+      "test_precision_v2.py": 16,
+      "test_primitives.py": 11
+    },
+    "current_import_errors": 0,
+    "method_union_with_ci": "These47are collected by explicit extra entries. Some modules are imported by existing CI tests but theirTestCase methods are not thereby selected."
+  },
+  "dynamic_methods": [],
+  "normal_import_data_reads": "Allowed current EVAS/experiment-owned fixture/contract registration reads. Every actual tracked read/import records Git blob identity in per-entry JSON; zero source mismatches.",
+  "shared_current_historical_dependency": {
+    "review": "shared-triangle-import-review.json",
+    "actual_dvs_methods": 100,
+    "import_errors": 0,
+    "policy": "Exact reviewed triangle_oscillator.py allowed; cases.json, benchmark customer data and holdout contents remain denied. Blocked pycache lookups do not prevent successful source import and are not pending methods."
+  },
+  "qualification": "No execution success or semantic qualification inferred. Never present collector policy refusal as actual CI import failure."
+}

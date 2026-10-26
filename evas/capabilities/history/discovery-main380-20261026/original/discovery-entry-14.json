@@ -1,0 +1,909 @@
+{
+  "start": "experiments/backends/sample-edge-filter",
+  "pattern": "test_*.py",
+  "scope": "discovery-only",
+  "rows": [
+    {
+      "id": "test_analyze.NativePairing.test_boundary_jump_is_retained_beside_windowed_values",
+      "source_file": "experiments/backends/sample-edge-filter/test_analyze.py",
+      "method_source_file": "experiments/backends/sample-edge-filter/test_analyze.py",
+      "source_line": 6,
+      "module": "test_analyze",
+      "generated": false,
+      "method_source_sha256": "9ab9f23bbb5243f1c86798d81c8c51aea65d938ff1728fba4c2a1067aaaadb1f"
+    },
+    {
+      "id": "test_analyze.NativePairing.test_nearby_time_cannot_substitute_for_same_time",
+      "source_file": "experiments/backends/sample-edge-filter/test_analyze.py",
+      "method_source_file": "experiments/backends/sample-edge-filter/test_analyze.py",
+      "source_line": 18,
+      "module": "test_analyze",
+      "generated": false,
+      "method_source_sha256": "d5289de4d5848b35e2f15ec1e941fd27d9849424808d9f6f241268826af7fca5"
+    },
+    {
+      "id": "test_callback_policy.AcceptedGridPolicy.test_empty_or_truncated_window_is_not_coverage",
+      "source_file": "experiments/backends/sample-edge-filter/test_callback_policy.py",
+      "method_source_file": "experiments/backends/sample-edge-filter/test_callback_policy.py",
+      "source_line": 20,
+      "module": "test_callback_policy",
+      "generated": false,
+      "method_source_sha256": "0436a9266eaf2fec5a3d576096c4a3eb857bbd38c66a9be52bf84894846dc586"
+    },
+    {
+      "id": "test_callback_policy.AcceptedGridPolicy.test_first_point_inside_window",
+      "source_file": "experiments/backends/sample-edge-filter/test_callback_policy.py",
+      "method_source_file": "experiments/backends/sample-edge-filter/test_callback_policy.py",
+      "source_line": 6,
+      "module": "test_callback_policy",
+      "generated": false,
+      "method_source_sha256": "21992488ac79f986fd44ba2a84a77b7aa238bed997e8fbb3fd43a883ebe8df19"
+    },
+    {
+      "id": "test_callback_policy.AcceptedGridPolicy.test_grid_missing_window_is_not_silent_success",
+      "source_file": "experiments/backends/sample-edge-filter/test_callback_policy.py",
+      "method_source_file": "experiments/backends/sample-edge-filter/test_callback_policy.py",
+      "source_line": 14,
+      "module": "test_callback_policy",
+      "generated": false,
+      "method_source_sha256": "37c72309ff0f69f54e4ab492e2887fa75e34ec5fc665bf05d0f1524e7b52b62c"
+    },
+    {
+      "id": "test_callback_policy.AcceptedGridPolicy.test_one_shot_does_not_repeat",
+      "source_file": "experiments/backends/sample-edge-filter/test_callback_policy.py",
+      "method_source_file": "experiments/backends/sample-edge-filter/test_callback_policy.py",
+      "source_line": 11,
+      "module": "test_callback_policy",
+      "generated": false,
+      "method_source_sha256": "5ca5d92e44668eec613449587bebf361e1dce7790e0b1eb92d82dc45b316825b"
+    },
+    {
+      "id": "test_callback_policy.AcceptedGridPolicy.test_zero_tolerance_is_outside_hypothesis",
+      "source_file": "experiments/backends/sample-edge-filter/test_callback_policy.py",
+      "method_source_file": "experiments/backends/sample-edge-filter/test_callback_policy.py",
+      "source_line": 17,
+      "module": "test_callback_policy",
+      "generated": false,
+      "method_source_sha256": "3785aa80cf4b3fb8fd485c196111e9f7b64a90d6f748bcc36531e1e072992715"
+    },
+    {
+      "id": "test_callback_probe.ProbeFailureReceipt.test_execution_failure_preserves_receipt_and_returns_failure",
+      "source_file": "experiments/backends/sample-edge-filter/test_callback_probe.py",
+      "method_source_file": "experiments/backends/sample-edge-filter/test_callback_probe.py",
+      "source_line": 11,
+      "module": "test_callback_probe",
+      "generated": false,
+      "method_source_sha256": "ebbed6133777b802356bfe4e0bc644f732ac908e3d8b2928c13e1be08d7e01b4"
+    },
+    {
+      "id": "test_callback_rules.CallbackReceipt.test_changed_executed_source_is_rejected",
+      "source_file": "experiments/backends/sample-edge-filter/test_callback_rules.py",
+      "method_source_file": "experiments/backends/sample-edge-filter/test_callback_rules.py",
+      "source_line": 66,
+      "module": "test_callback_rules",
+      "generated": false,
+      "method_source_sha256": "f24bc074ef074bc2ad85dffcc95e694873dfe7ea0ac3090530dc2e87d631f675"
+    },
+    {
+      "id": "test_callback_rules.CallbackReceipt.test_duplicate_callback_is_rejected",
+      "source_file": "experiments/backends/sample-edge-filter/test_callback_rules.py",
+      "method_source_file": "experiments/backends/sample-edge-filter/test_callback_rules.py",
+      "source_line": 72,
+      "module": "test_callback_rules",
+      "generated": false,
+      "method_source_sha256": "e3ab2bb4dfd0426f7ee3c0ca6eb14d11e9715849fef3cc13925d5faae52723d8"
+    },
+    {
+      "id": "test_callback_rules.CallbackReceipt.test_failed_process_with_complete_rows_is_not_success",
+      "source_file": "experiments/backends/sample-edge-filter/test_callback_rules.py",
+      "method_source_file": "experiments/backends/sample-edge-filter/test_callback_rules.py",
+      "source_line": 59,
+      "module": "test_callback_rules",
+      "generated": false,
+      "method_source_sha256": "0513580aa87e2544d067510be8897b71b2d261f20b647e5926d80df3167d8ca1"
+    },
+    {
+      "id": "test_callback_rules.CallbackReceipt.test_missing_condition_keeps_denominator",
+      "source_file": "experiments/backends/sample-edge-filter/test_callback_rules.py",
+      "method_source_file": "experiments/backends/sample-edge-filter/test_callback_rules.py",
+      "source_line": 50,
+      "module": "test_callback_rules",
+      "generated": false,
+      "method_source_sha256": "2e8a48455afd75b1c2c9689556b956ea5329b1d062e6603d32fa6d6dfb8aee76"
+    },
+    {
+      "id": "test_callback_rules.CallbackReceipt.test_progress_prefixed_callback_is_read",
+      "source_file": "experiments/backends/sample-edge-filter/test_callback_rules.py",
+      "method_source_file": "experiments/backends/sample-edge-filter/test_callback_rules.py",
+      "source_line": 45,
+      "module": "test_callback_rules",
+      "generated": false,
+      "method_source_sha256": "88e0063739b63a25643bddeb0356ce8211888c18271adfa4c48a4bce5b39b114"
+    },
+    {
+      "id": "test_callback_rules.CallbackReceipt.test_raw_hash_must_match_receipt",
+      "source_file": "experiments/backends/sample-edge-filter/test_callback_rules.py",
+      "method_source_file": "experiments/backends/sample-edge-filter/test_callback_rules.py",
+      "source_line": 84,
+      "module": "test_callback_rules",
+      "generated": false,
+      "method_source_sha256": "ad4e3c6febe7fc18c71577ed954e511bd2dabd9920278aba4ccfbe26b4b7c2a7"
+    },
+    {
+      "id": "test_callback_rules.CallbackReceipt.test_rows_cannot_be_substituted_for_native_waveform",
+      "source_file": "experiments/backends/sample-edge-filter/test_callback_rules.py",
+      "method_source_file": "experiments/backends/sample-edge-filter/test_callback_rules.py",
+      "source_line": 78,
+      "module": "test_callback_rules",
+      "generated": false,
+      "method_source_sha256": "ba7d029b3805dbe40957904e541708b8ac74129dc3a21b7aa2fcb90426b971e5"
+    },
+    {
+      "id": "test_direct_sample.Calibration.test_early_event_and_wrong_input_fail",
+      "source_file": "experiments/backends/sample-edge-filter/test_direct_sample.py",
+      "method_source_file": "experiments/backends/sample-edge-filter/test_direct_sample.py",
+      "source_line": 45,
+      "module": "test_direct_sample",
+      "generated": false,
+      "method_source_sha256": "4b9ad9d7cfa7b594ca094c7f8071842e7e8773dd8e3677ee54cf62b38603d1ea"
+    },
+    {
+      "id": "test_direct_sample.Calibration.test_explicit_event_representative_is_separate_and_legal",
+      "source_file": "experiments/backends/sample-edge-filter/test_direct_sample.py",
+      "method_source_file": "experiments/backends/sample-edge-filter/test_direct_sample.py",
+      "source_line": 20,
+      "module": "test_direct_sample",
+      "generated": false,
+      "method_source_sha256": "63cab3b04cd2d898d1599fde6d868ff95484833be1a2b9b552b73d8beef5f1a7"
+    },
+    {
+      "id": "test_direct_sample.Calibration.test_missing_boundary_and_nonfinite_are_inconclusive",
+      "source_file": "experiments/backends/sample-edge-filter/test_direct_sample.py",
+      "method_source_file": "experiments/backends/sample-edge-filter/test_direct_sample.py",
+      "source_line": 53,
+      "module": "test_direct_sample",
+      "generated": false,
+      "method_source_sha256": "20b61325af7f2f863468c52f8b06a597edc1b10717b234204058a324bdc3c69a"
+    },
+    {
+      "id": "test_direct_sample.Calibration.test_missing_repeated_or_fractional_events_fail",
+      "source_file": "experiments/backends/sample-edge-filter/test_direct_sample.py",
+      "method_source_file": "experiments/backends/sample-edge-filter/test_direct_sample.py",
+      "source_line": 40,
+      "module": "test_direct_sample",
+      "generated": false,
+      "method_source_sha256": "3dc5671aa3737d83455bf2d264545d50ea01aefc4395f56888a7bec86a85feba"
+    },
+    {
+      "id": "test_direct_sample.Calibration.test_positive_negative_and_small_answers",
+      "source_file": "experiments/backends/sample-edge-filter/test_direct_sample.py",
+      "method_source_file": "experiments/backends/sample-edge-filter/test_direct_sample.py",
+      "source_line": 27,
+      "module": "test_direct_sample",
+      "generated": false,
+      "method_source_sha256": "fd1978085d904d5124d7a2a1cc6e370f4c6b969a8f3afae5da623900bb6140fe"
+    },
+    {
+      "id": "test_direct_sample.Calibration.test_voltage_bias_and_hold_drift_fail",
+      "source_file": "experiments/backends/sample-edge-filter/test_direct_sample.py",
+      "method_source_file": "experiments/backends/sample-edge-filter/test_direct_sample.py",
+      "source_line": 32,
+      "module": "test_direct_sample",
+      "generated": false,
+      "method_source_sha256": "de3b842a39c894ff338198d8d09cf3954ac97ae9f33dd2b03ae6947f24014b94"
+    },
+    {
+      "id": "test_error_decomposition.ErrorDecomposition.test_binary64_time_side_is_not_rounded_to_decimal_label",
+      "source_file": "experiments/backends/sample-edge-filter/test_error_decomposition.py",
+      "method_source_file": "experiments/backends/sample-edge-filter/test_error_decomposition.py",
+      "source_line": 60,
+      "module": "test_error_decomposition",
+      "generated": false,
+      "method_source_sha256": "c0c3a2d8a8b99977a3c10f00975c78b36c51a106d8bb316df589c74d37c881c4"
+    },
+    {
+      "id": "test_error_decomposition.ErrorDecomposition.test_callback_conditioning_recomputes_sample_from_source",
+      "source_file": "experiments/backends/sample-edge-filter/test_error_decomposition.py",
+      "method_source_file": "experiments/backends/sample-edge-filter/test_error_decomposition.py",
+      "source_line": 44,
+      "module": "test_error_decomposition",
+      "generated": false,
+      "method_source_sha256": "1fb472bf2b88c668b2517952fe0932b8a83f459ad0a4b07c0f82551c0584866d"
+    },
+    {
+      "id": "test_error_decomposition.ErrorDecomposition.test_counter_extraction_rejects_missing_repeated_and_nonfinite_evidence",
+      "source_file": "experiments/backends/sample-edge-filter/test_error_decomposition.py",
+      "method_source_file": "experiments/backends/sample-edge-filter/test_error_decomposition.py",
+      "source_line": 66,
+      "module": "test_error_decomposition",
+      "generated": false,
+      "method_source_sha256": "15023759ded012ecac43e7cb09476c4908572142543c50d78c99d4a1fa451dc7"
+    },
+    {
+      "id": "test_error_decomposition.ErrorDecomposition.test_delayed_event_splits_phase_difference_from_wrong_sample",
+      "source_file": "experiments/backends/sample-edge-filter/test_error_decomposition.py",
+      "method_source_file": "experiments/backends/sample-edge-filter/test_error_decomposition.py",
+      "source_line": 49,
+      "module": "test_error_decomposition",
+      "generated": false,
+      "method_source_sha256": "68a35a460cd21d6cded4d9046d248a0ca425025c45c1ab6fb4b0593f3ac803c3"
+    },
+    {
+      "id": "test_error_decomposition.ErrorDecomposition.test_ramp_and_filter_have_independent_closed_form_anchor",
+      "source_file": "experiments/backends/sample-edge-filter/test_error_decomposition.py",
+      "method_source_file": "experiments/backends/sample-edge-filter/test_error_decomposition.py",
+      "source_line": 34,
+      "module": "test_error_decomposition",
+      "generated": false,
+      "method_source_sha256": "297c056890fff4415264ba3f835db2ec4774a4575e9e2212f90b3d49df4982fe"
+    },
+    {
+      "id": "test_error_decomposition.ErrorDecomposition.test_rehashed_replacement_manifest_does_not_replace_retained_identity",
+      "source_file": "experiments/backends/sample-edge-filter/test_error_decomposition.py",
+      "method_source_file": "experiments/backends/sample-edge-filter/test_error_decomposition.py",
+      "source_line": 21,
+      "module": "test_error_decomposition",
+      "generated": false,
+      "method_source_sha256": "4cf3c1212ade3009b71434e8005ddfffc44e31778876fcd01ea343ec54067ce3"
+    },
+    {
+      "id": "test_filter_budget_compare.FilterBudgetChecker.test_exact_response_passes_and_output_or_input_corruption_fails",
+      "source_file": "experiments/backends/sample-edge-filter/test_filter_budget_compare.py",
+      "method_source_file": "experiments/backends/sample-edge-filter/test_filter_budget_compare.py",
+      "source_line": 37,
+      "module": "test_filter_budget_compare",
+      "generated": false,
+      "method_source_sha256": "17b17222e63393776e28d354339ef3311934ba60e4d20b5ff4344be91ee1dbe1"
+    },
+    {
+      "id": "test_filter_budget_compare.FilterBudgetChecker.test_freeze_preserves_all_original_budgets_and_profiles",
+      "source_file": "experiments/backends/sample-edge-filter/test_filter_budget_compare.py",
+      "method_source_file": "experiments/backends/sample-edge-filter/test_filter_budget_compare.py",
+      "source_line": 56,
+      "module": "test_filter_budget_compare",
+      "generated": false,
+      "method_source_sha256": "9a1171ff8e3a05f18d1e75d1284f2aa5f0a7a790408e5a2523149f7600528007"
+    },
+    {
+      "id": "test_filter_budget_compare.FilterBudgetChecker.test_missing_boundary_nonfinite_and_missing_data_are_not_passes",
+      "source_file": "experiments/backends/sample-edge-filter/test_filter_budget_compare.py",
+      "method_source_file": "experiments/backends/sample-edge-filter/test_filter_budget_compare.py",
+      "source_line": 43,
+      "module": "test_filter_budget_compare",
+      "generated": false,
+      "method_source_sha256": "d6fb5ee075c4a09f7dd38f1098a198f65ebbdee51622ddd1e1eb40a7f5e1a995"
+    },
+    {
+      "id": "test_filter_budget_compare.FilterBudgetChecker.test_observation_control_requires_unmodified_source_and_actual_callback",
+      "source_file": "experiments/backends/sample-edge-filter/test_filter_budget_compare.py",
+      "method_source_file": "experiments/backends/sample-edge-filter/test_filter_budget_compare.py",
+      "source_line": 72,
+      "module": "test_filter_budget_compare",
+      "generated": false,
+      "method_source_sha256": "f440d95b3032d5e69350c7c5ff78cfd130132b6758699cb410c9824d0c70aeb9"
+    },
+    {
+      "id": "test_filter_budget_compare.FilterBudgetChecker.test_old_export_without_right_edge_end_is_insufficient",
+      "source_file": "experiments/backends/sample-edge-filter/test_filter_budget_compare.py",
+      "method_source_file": "experiments/backends/sample-edge-filter/test_filter_budget_compare.py",
+      "source_line": 51,
+      "module": "test_filter_budget_compare",
+      "generated": false,
+      "method_source_sha256": "4a6b82b5377b28ab5cfdcebfaca3f1c5fbfbc1a5f4e39f1eb6144ae8a5c8e9a3"
+    },
+    {
+      "id": "test_root_compare.RootComparison.test_empty_reference_cannot_report_success",
+      "source_file": "experiments/backends/sample-edge-filter/test_root_compare.py",
+      "method_source_file": "experiments/backends/sample-edge-filter/test_root_compare.py",
+      "source_line": 55,
+      "module": "test_root_compare",
+      "generated": false,
+      "method_source_sha256": "b7bc5cf58d14928a92751ac5ab6670963e0bf521f905a8903c49d2750db39b8f"
+    },
+    {
+      "id": "test_root_compare.RootComparison.test_old_rejection_and_new_recovery_are_distinct_obligations",
+      "source_file": "experiments/backends/sample-edge-filter/test_root_compare.py",
+      "method_source_file": "experiments/backends/sample-edge-filter/test_root_compare.py",
+      "source_line": 65,
+      "module": "test_root_compare",
+      "generated": false,
+      "method_source_sha256": "01bb181db74639fb3535c9532b75fde40b66c790c3fdb56e8cb44850246b2864"
+    },
+    {
+      "id": "test_root_compare.RootComparison.test_reference_denominator_survives_rehashed_partial_archive",
+      "source_file": "experiments/backends/sample-edge-filter/test_root_compare.py",
+      "method_source_file": "experiments/backends/sample-edge-filter/test_root_compare.py",
+      "source_line": 26,
+      "module": "test_root_compare",
+      "generated": false,
+      "method_source_sha256": "69a55308bd8b77041742248e186f5da6e9f3434016682c13c261a6a92b88c1e9"
+    },
+    {
+      "id": "test_root_compare.RootComparison.test_same_fixed_observations_detect_corruption",
+      "source_file": "experiments/backends/sample-edge-filter/test_root_compare.py",
+      "method_source_file": "experiments/backends/sample-edge-filter/test_root_compare.py",
+      "source_line": 75,
+      "module": "test_root_compare",
+      "generated": false,
+      "method_source_sha256": "4d4b732b1f3927a8f63450ab969e4e3a20882275cc360942dff147acffe5ba9f"
+    }
+  ],
+  "failed_import_ids": [],
+  "loader_errors": [],
+  "method_count": 36,
+  "generated_count": 0,
+  "read_paths": [
+    "evas/src/evas/__init__.py",
+    "evas/src/evas/__pycache__/__init__.cpython-314.pyc",
+    "evas/src/evas/__pycache__/array_elaboration.cpython-314.pyc",
+    "evas/src/evas/__pycache__/compact_source_select.cpython-314.pyc",
+    "evas/src/evas/__pycache__/condition_domains.cpython-314.pyc",
+    "evas/src/evas/__pycache__/elaboration.cpython-314.pyc",
+    "evas/src/evas/__pycache__/errors.cpython-314.pyc",
+    "evas/src/evas/__pycache__/event_index_domains.cpython-314.pyc",
+    "evas/src/evas/__pycache__/finite_math.cpython-314.pyc",
+    "evas/src/evas/__pycache__/forcing_components.cpython-314.pyc",
+    "evas/src/evas/__pycache__/frontend.cpython-314.pyc",
+    "evas/src/evas/__pycache__/held_power2.cpython-314.pyc",
+    "evas/src/evas/__pycache__/hierarchy.cpython-314.pyc",
+    "evas/src/evas/__pycache__/identity.cpython-314.pyc",
+    "evas/src/evas/__pycache__/initialization_aliases.cpython-314.pyc",
+    "evas/src/evas/__pycache__/input_rational_scope.cpython-314.pyc",
+    "evas/src/evas/__pycache__/instance_compiler.cpython-314.pyc",
+    "evas/src/evas/__pycache__/integer_arithmetic.cpython-314.pyc",
+    "evas/src/evas/__pycache__/integer_bits.cpython-314.pyc",
+    "evas/src/evas/__pycache__/integer_constants.cpython-314.pyc",
+    "evas/src/evas/__pycache__/integer_invariants.cpython-314.pyc",
+    "evas/src/evas/__pycache__/integer_prefix.cpython-314.pyc",
+    "evas/src/evas/__pycache__/integer_table_composition.cpython-314.pyc",
+    "evas/src/evas/__pycache__/ir.cpython-314.pyc",
+    "evas/src/evas/__pycache__/kernel.cpython-314.pyc",
+    "evas/src/evas/__pycache__/limits.cpython-314.pyc",
+    "evas/src/evas/__pycache__/loop_bounds.cpython-314.pyc",
+    "evas/src/evas/__pycache__/lowering.cpython-314.pyc",
+    "evas/src/evas/__pycache__/manifest.cpython-314.pyc",
+    "evas/src/evas/__pycache__/native_audit.cpython-314.pyc",
+    "evas/src/evas/__pycache__/node_elaboration.cpython-314.pyc",
+    "evas/src/evas/__pycache__/parameters.cpython-314.pyc",
+    "evas/src/evas/__pycache__/preprocessor.cpython-314.pyc",
+    "evas/src/evas/__pycache__/protocol.cpython-314.pyc",
+    "evas/src/evas/__pycache__/rational_predicates.cpython-314.pyc",
+    "evas/src/evas/__pycache__/readout_scope.cpython-314.pyc",
+    "evas/src/evas/__pycache__/runtime.cpython-314.pyc",
+    "evas/src/evas/__pycache__/settled_integer_reads.cpython-314.pyc",
+    "evas/src/evas/__pycache__/standard_headers.cpython-314.pyc",
+    "evas/src/evas/__pycache__/strobe.cpython-314.pyc",
+    "evas/src/evas/__pycache__/syntax.cpython-314.pyc",
+    "evas/src/evas/array_elaboration.py",
+    "evas/src/evas/compact_source_select.py",
+    "evas/src/evas/condition_domains.py",
+    "evas/src/evas/elaboration.py",
+    "evas/src/evas/errors.py",
+    "evas/src/evas/event_index_domains.py",
+    "evas/src/evas/finite_math.py",
+    "evas/src/evas/forcing_components.py",
+    "evas/src/evas/frontend.py",
+    "evas/src/evas/held_power2.py",
+    "evas/src/evas/hierarchy.py",
+    "evas/src/evas/identity.py",
+    "evas/src/evas/initialization_aliases.py",
+    "evas/src/evas/input_rational_scope.py",
+    "evas/src/evas/instance_compiler.py",
+    "evas/src/evas/integer_arithmetic.py",
+    "evas/src/evas/integer_bits.py",
+    "evas/src/evas/integer_constants.py",
+    "evas/src/evas/integer_invariants.py",
+    "evas/src/evas/integer_prefix.py",
+    "evas/src/evas/integer_table_composition.py",
+    "evas/src/evas/ir.py",
+    "evas/src/evas/kernel.py",
+    "evas/src/evas/limits.py",
+    "evas/src/evas/loop_bounds.py",
+    "evas/src/evas/lowering.py",
+    "evas/src/evas/manifest.py",
+    "evas/src/evas/native_audit.py",
+    "evas/src/evas/node_elaboration.py",
+    "evas/src/evas/parameters.py",
+    "evas/src/evas/preprocessor.py",
+    "evas/src/evas/protocol.py",
+    "evas/src/evas/rational_predicates.py",
+    "evas/src/evas/readout_scope.py",
+    "evas/src/evas/runtime.py",
+    "evas/src/evas/settled_integer_reads.py",
+    "evas/src/evas/standard_headers.py",
+    "evas/src/evas/strobe.py",
+    "evas/src/evas/syntax.py",
+    "evas/validation/paper/__pycache__/case_inputs.cpython-314.pyc",
+    "evas/validation/paper/case_inputs.py",
+    "evas/validation/sample_edge_filter/__pycache__/contract.cpython-314.pyc",
+    "evas/validation/sample_edge_filter/contract.py",
+    "experiments/backends/evidence/__pycache__/legacy_waveforms.cpython-314.pyc",
+    "experiments/backends/evidence/legacy_waveforms.py",
+    "experiments/backends/paper/__pycache__/inputs.cpython-314.pyc",
+    "experiments/backends/paper/__pycache__/observations.cpython-314.pyc",
+    "experiments/backends/paper/__pycache__/process.cpython-314.pyc",
+    "experiments/backends/paper/__pycache__/runner.cpython-314.pyc",
+    "experiments/backends/paper/__pycache__/settings_readback.cpython-314.pyc",
+    "experiments/backends/paper/inputs.py",
+    "experiments/backends/paper/observations.py",
+    "experiments/backends/paper/process.py",
+    "experiments/backends/paper/runner.py",
+    "experiments/backends/paper/settings_readback.py",
+    "experiments/backends/sample-edge-filter/__pycache__/analyze.cpython-314.pyc",
+    "experiments/backends/sample-edge-filter/__pycache__/boundary_replay.cpython-314.pyc",
+    "experiments/backends/sample-edge-filter/__pycache__/callback_policy.cpython-314.pyc",
+    "experiments/backends/sample-edge-filter/__pycache__/callback_probe.cpython-314.pyc",
+    "experiments/backends/sample-edge-filter/__pycache__/callback_rules.cpython-314.pyc",
+    "experiments/backends/sample-edge-filter/__pycache__/direct_sample.cpython-314.pyc",
+    "experiments/backends/sample-edge-filter/__pycache__/error_decomposition.cpython-314.pyc",
+    "experiments/backends/sample-edge-filter/__pycache__/filter_budget_compare.cpython-314.pyc",
+    "experiments/backends/sample-edge-filter/__pycache__/root_compare.cpython-314.pyc",
+    "experiments/backends/sample-edge-filter/__pycache__/test_analyze.cpython-314.pyc",
+    "experiments/backends/sample-edge-filter/__pycache__/test_callback_policy.cpython-314.pyc",
+    "experiments/backends/sample-edge-filter/__pycache__/test_callback_probe.cpython-314.pyc",
+    "experiments/backends/sample-edge-filter/__pycache__/test_callback_rules.cpython-314.pyc",
+    "experiments/backends/sample-edge-filter/__pycache__/test_direct_sample.cpython-314.pyc",
+    "experiments/backends/sample-edge-filter/__pycache__/test_error_decomposition.cpython-314.pyc",
+    "experiments/backends/sample-edge-filter/__pycache__/test_filter_budget_compare.cpython-314.pyc",
+    "experiments/backends/sample-edge-filter/__pycache__/test_root_compare.cpython-314.pyc",
+    "experiments/backends/sample-edge-filter/analyze.py",
+    "experiments/backends/sample-edge-filter/boundary_replay.py",
+    "experiments/backends/sample-edge-filter/callback_policy.py",
+    "experiments/backends/sample-edge-filter/callback_probe.py",
+    "experiments/backends/sample-edge-filter/callback_rules.py",
+    "experiments/backends/sample-edge-filter/direct_sample.py",
+    "experiments/backends/sample-edge-filter/error_decomposition.py",
+    "experiments/backends/sample-edge-filter/filter_budget_compare.py",
+    "experiments/backends/sample-edge-filter/root_compare.py",
+    "experiments/backends/sample-edge-filter/test_analyze.py",
+    "experiments/backends/sample-edge-filter/test_callback_policy.py",
+    "experiments/backends/sample-edge-filter/test_callback_probe.py",
+    "experiments/backends/sample-edge-filter/test_callback_rules.py",
+    "experiments/backends/sample-edge-filter/test_direct_sample.py",
+    "experiments/backends/sample-edge-filter/test_error_decomposition.py",
+    "experiments/backends/sample-edge-filter/test_filter_budget_compare.py",
+    "experiments/backends/sample-edge-filter/test_root_compare.py"
+  ],
+  "blocked": [],
+  "imported_project_modules": [
+    "evas/src/evas/__init__.py",
+    "evas/src/evas/array_elaboration.py",
+    "evas/src/evas/compact_source_select.py",
+    "evas/src/evas/condition_domains.py",
+    "evas/src/evas/elaboration.py",
+    "evas/src/evas/errors.py",
+    "evas/src/evas/event_index_domains.py",
+    "evas/src/evas/finite_math.py",
+    "evas/src/evas/forcing_components.py",
+    "evas/src/evas/frontend.py",
+    "evas/src/evas/held_power2.py",
+    "evas/src/evas/hierarchy.py",
+    "evas/src/evas/identity.py",
+    "evas/src/evas/initialization_aliases.py",
+    "evas/src/evas/input_rational_scope.py",
+    "evas/src/evas/instance_compiler.py",
+    "evas/src/evas/integer_arithmetic.py",
+    "evas/src/evas/integer_bits.py",
+    "evas/src/evas/integer_constants.py",
+    "evas/src/evas/integer_invariants.py",
+    "evas/src/evas/integer_prefix.py",
+    "evas/src/evas/integer_table_composition.py",
+    "evas/src/evas/ir.py",
+    "evas/src/evas/kernel.py",
+    "evas/src/evas/limits.py",
+    "evas/src/evas/loop_bounds.py",
+    "evas/src/evas/lowering.py",
+    "evas/src/evas/manifest.py",
+    "evas/src/evas/native_audit.py",
+    "evas/src/evas/node_elaboration.py",
+    "evas/src/evas/parameters.py",
+    "evas/src/evas/preprocessor.py",
+    "evas/src/evas/protocol.py",
+    "evas/src/evas/rational_predicates.py",
+    "evas/src/evas/readout_scope.py",
+    "evas/src/evas/runtime.py",
+    "evas/src/evas/settled_integer_reads.py",
+    "evas/src/evas/standard_headers.py",
+    "evas/src/evas/strobe.py",
+    "evas/src/evas/syntax.py",
+    "evas/validation/sample_edge_filter/contract.py",
+    "experiments/backends/paper/inputs.py",
+    "experiments/backends/paper/observations.py",
+    "experiments/backends/paper/process.py",
+    "experiments/backends/paper/runner.py",
+    "experiments/backends/paper/settings_readback.py",
+    "experiments/backends/sample-edge-filter/analyze.py",
+    "experiments/backends/sample-edge-filter/boundary_replay.py",
+    "experiments/backends/sample-edge-filter/callback_policy.py",
+    "experiments/backends/sample-edge-filter/callback_probe.py",
+    "experiments/backends/sample-edge-filter/callback_rules.py",
+    "experiments/backends/sample-edge-filter/direct_sample.py",
+    "experiments/backends/sample-edge-filter/error_decomposition.py",
+    "experiments/backends/sample-edge-filter/filter_budget_compare.py",
+    "experiments/backends/sample-edge-filter/root_compare.py",
+    "experiments/backends/sample-edge-filter/test_analyze.py",
+    "experiments/backends/sample-edge-filter/test_callback_policy.py",
+    "experiments/backends/sample-edge-filter/test_callback_probe.py",
+    "experiments/backends/sample-edge-filter/test_callback_rules.py",
+    "experiments/backends/sample-edge-filter/test_direct_sample.py",
+    "experiments/backends/sample-edge-filter/test_error_decomposition.py",
+    "experiments/backends/sample-edge-filter/test_filter_budget_compare.py",
+    "experiments/backends/sample-edge-filter/test_root_compare.py"
+  ],
+  "returncode": 0,
+  "stderr": "",
+  "static_import_review": [
+    {
+      "path": "experiments/backends/sample-edge-filter/test_analyze.py",
+      "git_blob": "421f5edb27023fa190ea221f51cc27fbe213ebad",
+      "top_level_calls": []
+    },
+    {
+      "path": "experiments/backends/sample-edge-filter/test_callback_policy.py",
+      "git_blob": "516844a688d74f6d508af789c050352bb15ff1b3",
+      "top_level_calls": []
+    },
+    {
+      "path": "experiments/backends/sample-edge-filter/test_callback_probe.py",
+      "git_blob": "77d640a599001242be567a1c1156b1fcad16b532",
+      "top_level_calls": []
+    },
+    {
+      "path": "experiments/backends/sample-edge-filter/test_callback_rules.py",
+      "git_blob": "634c4d05a7035c1b59fde9f21ad9b2d666afebdd",
+      "top_level_calls": []
+    },
+    {
+      "path": "experiments/backends/sample-edge-filter/test_direct_sample.py",
+      "git_blob": "d3a7d6b5f2ca9c23c96510b8e94aeacf1ba9956d",
+      "top_level_calls": [
+        "dict(absolute_V=1e-08, relative=1e-06, input_absolute_V=1e-10, input_relative=1e-08, count_V=1e-06, global_gap_units=0.0625, time_serialization_ulps=16, voltage_serialization_ulps=8, boundary_distance"
+      ]
+    },
+    {
+      "path": "experiments/backends/sample-edge-filter/test_error_decomposition.py",
+      "git_blob": "40fc81d195db7265c8a439c8c71dd5bfdc84227f",
+      "top_level_calls": []
+    },
+    {
+      "path": "experiments/backends/sample-edge-filter/test_filter_budget_compare.py",
+      "git_blob": "c730429f7a8570e297f4cd0eabf7cea535a938ea",
+      "top_level_calls": []
+    },
+    {
+      "path": "experiments/backends/sample-edge-filter/test_root_compare.py",
+      "git_blob": "a0524347d814134938d2301484077b7c525a29af",
+      "top_level_calls": []
+    }
+  ],
+  "origin": "ci",
+  "loaded_source_identities": [
+    {
+      "path": "evas/src/evas/__init__.py",
+      "git_blob": "b3750e93934a698a575abf55934882a66801963d",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/array_elaboration.py",
+      "git_blob": "0141ee0dc246f4bf5034a23d9459188722efaf3b",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/compact_source_select.py",
+      "git_blob": "7febe70d98fade31b1ca658b700ffc2c1b68a469",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/condition_domains.py",
+      "git_blob": "17588176e3a5829e43dace558a29a5b2eb42273c",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/elaboration.py",
+      "git_blob": "cdfbe6b05eb71ec9d77a1f13f3a142afae9412a8",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/errors.py",
+      "git_blob": "921915a3e840e7f59fcf7f2951c99a5aa922cb67",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/event_index_domains.py",
+      "git_blob": "b94da5ccf4bbc2b0f8104feee818884f6673d5fc",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/finite_math.py",
+      "git_blob": "325c6407484a7fec3ed4583cae44e2d51a28287a",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/forcing_components.py",
+      "git_blob": "cbe1824a43b4cf54a135b3d4beacfd021b296a14",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/frontend.py",
+      "git_blob": "e3af9fcce89725ced811d3ff5a61fad28484c4c2",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/held_power2.py",
+      "git_blob": "b3f32155e3e4a0ca2dd517ca3de5857012341594",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/hierarchy.py",
+      "git_blob": "7d24a0e2dd3e88b29060894c8b3aa0244e895060",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/identity.py",
+      "git_blob": "cbdfa8fa0da4081be22d0f0e7fe4ff7505cec2e8",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/initialization_aliases.py",
+      "git_blob": "32761bcd0f7e00e51ef3a0892c823ad5ee515c79",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/input_rational_scope.py",
+      "git_blob": "0c69fb6842915522c3b68812ca782a032650294e",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/instance_compiler.py",
+      "git_blob": "342f8765f99b58760cc673a37088fb2a043b4e62",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/integer_arithmetic.py",
+      "git_blob": "288b1563567eeb8813666d3c2f9a7fb2acc317bf",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/integer_bits.py",
+      "git_blob": "90e5627a7561965f4f47e5fe44f37aed704b3930",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/integer_constants.py",
+      "git_blob": "d49d6c84c01e21cd10e5c80b6dd70843f8e3308e",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/integer_invariants.py",
+      "git_blob": "1fbe0c19bf86038497872e309a75b137465ccabc",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/integer_prefix.py",
+      "git_blob": "fa9b6b77a84893cbcc5b78f2b9c9083b8b77abb3",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/integer_table_composition.py",
+      "git_blob": "196b5435bf7655226f55afc46ee0014aab079072",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/ir.py",
+      "git_blob": "7fb9829b8864addfb786432b042a36aa5d171136",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/kernel.py",
+      "git_blob": "50c92a299cb049a6261c68774914b2fd1a962ce1",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/limits.py",
+      "git_blob": "e2bb6bdbf073378fdeacaa7b21d46565db489a11",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/loop_bounds.py",
+      "git_blob": "8c17d3c63c0cceaf87bd9fbe51e3996f8cce502d",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/lowering.py",
+      "git_blob": "989c3154d2de172218e85e99d9258210bb06ab32",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/manifest.py",
+      "git_blob": "3a3378198ac9cb6383eb4106f7797212abcf3828",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/native_audit.py",
+      "git_blob": "97777b7118b71ba9cb6df622b2c5e6bf4734697e",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/node_elaboration.py",
+      "git_blob": "ada0bd08d14d319a7214ba3fe321301e5cf1c3ae",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/parameters.py",
+      "git_blob": "9cd72cb31f84230406f5bc4e3a443276c797fd43",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/preprocessor.py",
+      "git_blob": "321ef8182a263c2d80e46116e373530e422f8b33",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/protocol.py",
+      "git_blob": "4cf54b68b04999f2f6c41d5b59a377687073b6c5",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/rational_predicates.py",
+      "git_blob": "eec03e5ae0ad3a93ff3a2e340479e3f32c8987f0",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/readout_scope.py",
+      "git_blob": "80e527d5c410b40996bbd9bd0db6920cb1ed8287",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/runtime.py",
+      "git_blob": "1c18ccd9cc5423e95a05023634ecd61f4c1ecda3",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/settled_integer_reads.py",
+      "git_blob": "4156163d4c753959f254f4a320cdc36df1ce11c4",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/standard_headers.py",
+      "git_blob": "692c8a511f69b3ca5672fdb72acdc0233f352665",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/strobe.py",
+      "git_blob": "728e200cfc5a9b25a1e0de2f633427bfa02f6a78",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/syntax.py",
+      "git_blob": "109355460695fb535ca872b7eafa0806d041e00a",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/paper/case_inputs.py",
+      "git_blob": "af840830fdba7e321dc50102570248f50ee474e6",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/sample_edge_filter/contract.py",
+      "git_blob": "e642ee16ddcbe97c49d9120ccaef2617e2585b9d",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/evidence/legacy_waveforms.py",
+      "git_blob": "69f2dbf2394a353a40d6d78ece27b5429905c1aa",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/paper/inputs.py",
+      "git_blob": "e03d3b68236f1649893cb9ded30db036335e0413",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/paper/observations.py",
+      "git_blob": "2657b39e773f526ba7b2e819b81364ac0be1f888",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/paper/process.py",
+      "git_blob": "1310c293da5daa0d18b3e110ac55d39d63a6a6c3",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/paper/runner.py",
+      "git_blob": "fdb7d1e1ed7d848ef42a11152d95f6d81adbd7cb",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/paper/settings_readback.py",
+      "git_blob": "cc5fb08977e9fbf88caa17053f745eae162c6cb8",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/sample-edge-filter/analyze.py",
+      "git_blob": "6bc4610258eb737b7b8d9d7016011dc164e2ed2a",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/sample-edge-filter/boundary_replay.py",
+      "git_blob": "3145bf78896485d18a67e02e780b713130ad11e6",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/sample-edge-filter/callback_policy.py",
+      "git_blob": "93e0f97828c459b7a3a4010325ae77610b3d8dc1",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/sample-edge-filter/callback_probe.py",
+      "git_blob": "545d82d782f5ed0daf83950e698e7460202db3a6",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/sample-edge-filter/callback_rules.py",
+      "git_blob": "c45c4baee1ba914e77291c5e478c69eb140c87d5",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/sample-edge-filter/direct_sample.py",
+      "git_blob": "593bc4c3b02157aece480ea20a40e1713292cd4e",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/sample-edge-filter/error_decomposition.py",
+      "git_blob": "85328e7c76d16589e6cc73d2d6b4c7d73924ad9b",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/sample-edge-filter/filter_budget_compare.py",
+      "git_blob": "de7b88dca87778d40ada052087b995c3dfbeaaac",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/sample-edge-filter/root_compare.py",
+      "git_blob": "b6b0d7c001413a4b59df2ef3381783fca2652bf6",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/sample-edge-filter/test_analyze.py",
+      "git_blob": "421f5edb27023fa190ea221f51cc27fbe213ebad",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/sample-edge-filter/test_callback_policy.py",
+      "git_blob": "516844a688d74f6d508af789c050352bb15ff1b3",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/sample-edge-filter/test_callback_probe.py",
+      "git_blob": "77d640a599001242be567a1c1156b1fcad16b532",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/sample-edge-filter/test_callback_rules.py",
+      "git_blob": "634c4d05a7035c1b59fde9f21ad9b2d666afebdd",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/sample-edge-filter/test_direct_sample.py",
+      "git_blob": "d3a7d6b5f2ca9c23c96510b8e94aeacf1ba9956d",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/sample-edge-filter/test_error_decomposition.py",
+      "git_blob": "40fc81d195db7265c8a439c8c71dd5bfdc84227f",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/sample-edge-filter/test_filter_budget_compare.py",
+      "git_blob": "c730429f7a8570e297f4cd0eabf7cea535a938ea",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/sample-edge-filter/test_root_compare.py",
+      "git_blob": "a0524347d814134938d2301484077b7c525a29af",
+      "matches_main": true
+    }
+  ],
+  "source_identity_mismatches": [],
+  "collection_issues": []
+}

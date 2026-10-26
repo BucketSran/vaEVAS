@@ -1,0 +1,1227 @@
+[
+  {
+    "id": "test_absdelay.AbsDelayRejections.test_internal_state_nested_nonlinear_and_feedback_inputs_rejected",
+    "run": 1,
+    "errors": [],
+    "failures": [],
+    "exceptions": [
+      {
+        "kind": "KernelError",
+        "message": "unsupported_operator: absdelay cannot depend on event state",
+        "detail": {
+          "kind": "unsupported_operator",
+          "message": "absdelay cannot depend on event state"
+        },
+        "stack": [
+          "  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 615, in _callTestMethod\n    result = method()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_absdelay.py\", line 167, in test_internal_state_nested_nonlinear_and_feedback_inputs_rejected\n    execute_delay(source)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_absdelay.py\", line 41, in execute_delay\n    return transient(compile_delay(source, instances),\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 76, in transient\n    response = _invoke(request, kernel, timeout)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 122, in _invoke\n    raise KernelError(detail)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "KernelError",
+        "message": "unsupported_operator: absdelay composition is limited to two stages; cycles are unsupported",
+        "detail": {
+          "kind": "unsupported_operator",
+          "message": "absdelay composition is limited to two stages; cycles are unsupported"
+        },
+        "stack": [
+          "  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 615, in _callTestMethod\n    result = method()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_absdelay.py\", line 167, in test_internal_state_nested_nonlinear_and_feedback_inputs_rejected\n    execute_delay(source)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_absdelay.py\", line 41, in execute_delay\n    return transient(compile_delay(source, instances),\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 76, in transient\n    response = _invoke(request, kernel, timeout)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 122, in _invoke\n    raise KernelError(detail)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "KernelError",
+        "message": "unsupported_transient: transient expressions must be jointly affine in voltage and state",
+        "detail": {
+          "kind": "unsupported_transient",
+          "message": "transient expressions must be jointly affine in voltage and state"
+        },
+        "stack": [
+          "  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 615, in _callTestMethod\n    result = method()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_absdelay.py\", line 167, in test_internal_state_nested_nonlinear_and_feedback_inputs_rejected\n    execute_delay(source)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_absdelay.py\", line 41, in execute_delay\n    return transient(compile_delay(source, instances),\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 76, in transient\n    response = _invoke(request, kernel, timeout)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 122, in _invoke\n    raise KernelError(detail)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "KernelError",
+        "message": "unsupported_operator: absdelay composition is limited to two stages; cycles are unsupported",
+        "detail": {
+          "kind": "unsupported_operator",
+          "message": "absdelay composition is limited to two stages; cycles are unsupported"
+        },
+        "stack": [
+          "  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 615, in _callTestMethod\n    result = method()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_absdelay.py\", line 167, in test_internal_state_nested_nonlinear_and_feedback_inputs_rejected\n    execute_delay(source)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_absdelay.py\", line 41, in execute_delay\n    return transient(compile_delay(source, instances),\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 76, in transient\n    response = _invoke(request, kernel, timeout)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 122, in _invoke\n    raise KernelError(detail)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "KernelError",
+        "message": "unsupported_operator: implicit polynomial DAE supports explicit-IC unreset integrals and proper filters at absdelay.va:2:86 (dut)",
+        "detail": {
+          "kind": "unsupported_operator",
+          "message": "implicit polynomial DAE supports explicit-IC unreset integrals and proper filters at absdelay.va:2:86 (dut)"
+        },
+        "stack": [
+          "  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 615, in _callTestMethod\n    result = method()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_absdelay.py\", line 167, in test_internal_state_nested_nonlinear_and_feedback_inputs_rejected\n    execute_delay(source)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_absdelay.py\", line 41, in execute_delay\n    return transient(compile_delay(source, instances),\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 76, in transient\n    response = _invoke(request, kernel, timeout)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 122, in _invoke\n    raise KernelError(detail)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "test_absdelay.AbsDelayRejections.test_cross_on_delayed_output_direct_or_indirect_is_rejected",
+    "run": 1,
+    "errors": [],
+    "failures": [],
+    "exceptions": [
+      {
+        "kind": "CompileError",
+        "message": "integer intermediate signed 32-bit range is unproven",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 684, in compile\n    self.infer_integer_state_ranges()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1507, in infer_integer_state_ranges\n    value = self.lower_event(rhs, self.symbol, self.node_ids,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1164, in lower_event\n    value = lower(expr, typed, nodes, self.model.source, *args, **kwargs)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 188, in lower\n    checked = validator(expr, value, root=depth == 0 and getattr(parameters, \"allow_integer_assignment_root\", False))\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1439, in validate_integer_operation\n    raise FiniteIntegerUnavailable(\"integer intermediate signed 32-bit range is unproven\",\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "absdelay.va: unknown parameter 'n'",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 146, in evaluate\n    args = [evaluate(arg, env, parameters, arrays, on_read) for arg in expr.args]\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 137, in evaluate\n    value = parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/integer_invariants.py\", line 136, in lookup\n    return parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1854, in parameters\n    return self.parameter(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1069, in parameter\n    raise CompileError(f\"{self.model.source}: unknown parameter {name!r}\")\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "absdelay.va: unknown parameter 'n'",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 146, in evaluate\n    args = [evaluate(arg, env, parameters, arrays, on_read) for arg in expr.args]\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 137, in evaluate\n    value = parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/integer_invariants.py\", line 136, in lookup\n    return parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1854, in parameters\n    return self.parameter(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1069, in parameter\n    raise CompileError(f\"{self.model.source}: unknown parameter {name!r}\")\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "KernelError",
+        "message": "unsupported_cross: operator guard requires a certified continuous trajectory and derivative",
+        "detail": {
+          "kind": "unsupported_cross",
+          "message": "operator guard requires a certified continuous trajectory and derivative"
+        },
+        "stack": [
+          "  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 615, in _callTestMethod\n    result = method()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_absdelay.py\", line 175, in test_cross_on_delayed_output_direct_or_indirect_is_rejected\n    execute_delay(source)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_absdelay.py\", line 41, in execute_delay\n    return transient(compile_delay(source, instances),\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 76, in transient\n    response = _invoke(request, kernel, timeout)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 122, in _invoke\n    raise KernelError(detail)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "integer intermediate signed 32-bit range is unproven",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 684, in compile\n    self.infer_integer_state_ranges()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1507, in infer_integer_state_ranges\n    value = self.lower_event(rhs, self.symbol, self.node_ids,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1164, in lower_event\n    value = lower(expr, typed, nodes, self.model.source, *args, **kwargs)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 188, in lower\n    checked = validator(expr, value, root=depth == 0 and getattr(parameters, \"allow_integer_assignment_root\", False))\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1439, in validate_integer_operation\n    raise FiniteIntegerUnavailable(\"integer intermediate signed 32-bit range is unproven\",\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "absdelay.va: unknown parameter 'n'",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 146, in evaluate\n    args = [evaluate(arg, env, parameters, arrays, on_read) for arg in expr.args]\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 137, in evaluate\n    value = parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/integer_invariants.py\", line 136, in lookup\n    return parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1854, in parameters\n    return self.parameter(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1069, in parameter\n    raise CompileError(f\"{self.model.source}: unknown parameter {name!r}\")\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "absdelay.va: unknown parameter 'n'",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 146, in evaluate\n    args = [evaluate(arg, env, parameters, arrays, on_read) for arg in expr.args]\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 137, in evaluate\n    value = parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/integer_invariants.py\", line 136, in lookup\n    return parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1854, in parameters\n    return self.parameter(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1069, in parameter\n    raise CompileError(f\"{self.model.source}: unknown parameter {name!r}\")\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "KernelError",
+        "message": "unsupported_cross: operator guard requires a certified continuous trajectory and derivative",
+        "detail": {
+          "kind": "unsupported_cross",
+          "message": "operator guard requires a certified continuous trajectory and derivative"
+        },
+        "stack": [
+          "  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 615, in _callTestMethod\n    result = method()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_absdelay.py\", line 175, in test_cross_on_delayed_output_direct_or_indirect_is_rejected\n    execute_delay(source)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_absdelay.py\", line 41, in execute_delay\n    return transient(compile_delay(source, instances),\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 76, in transient\n    response = _invoke(request, kernel, timeout)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 122, in _invoke\n    raise KernelError(detail)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "integer intermediate signed 32-bit range is unproven",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 684, in compile\n    self.infer_integer_state_ranges()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1507, in infer_integer_state_ranges\n    value = self.lower_event(rhs, self.symbol, self.node_ids,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1164, in lower_event\n    value = lower(expr, typed, nodes, self.model.source, *args, **kwargs)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 188, in lower\n    checked = validator(expr, value, root=depth == 0 and getattr(parameters, \"allow_integer_assignment_root\", False))\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1439, in validate_integer_operation\n    raise FiniteIntegerUnavailable(\"integer intermediate signed 32-bit range is unproven\",\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "absdelay.va: unknown parameter 'n'",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 146, in evaluate\n    args = [evaluate(arg, env, parameters, arrays, on_read) for arg in expr.args]\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 137, in evaluate\n    value = parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/integer_invariants.py\", line 136, in lookup\n    return parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1854, in parameters\n    return self.parameter(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1069, in parameter\n    raise CompileError(f\"{self.model.source}: unknown parameter {name!r}\")\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "absdelay.va: unknown parameter 'n'",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 146, in evaluate\n    args = [evaluate(arg, env, parameters, arrays, on_read) for arg in expr.args]\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 137, in evaluate\n    value = parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/integer_invariants.py\", line 136, in lookup\n    return parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1854, in parameters\n    return self.parameter(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1069, in parameter\n    raise CompileError(f\"{self.model.source}: unknown parameter {name!r}\")\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "KernelError",
+        "message": "unsupported_cross: operator guard requires a certified continuous trajectory and derivative",
+        "detail": {
+          "kind": "unsupported_cross",
+          "message": "operator guard requires a certified continuous trajectory and derivative"
+        },
+        "stack": [
+          "  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 615, in _callTestMethod\n    result = method()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_absdelay.py\", line 175, in test_cross_on_delayed_output_direct_or_indirect_is_rejected\n    execute_delay(source)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_absdelay.py\", line 41, in execute_delay\n    return transient(compile_delay(source, instances),\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 76, in transient\n    response = _invoke(request, kernel, timeout)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 122, in _invoke\n    raise KernelError(detail)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "test_absdelay.AbsDelayRejections.test_cross_instance_guard_dependency_survives_cancellation",
+    "run": 1,
+    "errors": [],
+    "failures": [],
+    "exceptions": [
+      {
+        "kind": "CompileError",
+        "message": "integer intermediate signed 32-bit range is unproven",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 684, in compile\n    self.infer_integer_state_ranges()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1507, in infer_integer_state_ranges\n    value = self.lower_event(rhs, self.symbol, self.node_ids,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1164, in lower_event\n    value = lower(expr, typed, nodes, self.model.source, *args, **kwargs)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 188, in lower\n    checked = validator(expr, value, root=depth == 0 and getattr(parameters, \"allow_integer_assignment_root\", False))\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1439, in validate_integer_operation\n    raise FiniteIntegerUnavailable(\"integer intermediate signed 32-bit range is unproven\",\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "monitor.va: unknown parameter 'n'",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 146, in evaluate\n    args = [evaluate(arg, env, parameters, arrays, on_read) for arg in expr.args]\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 137, in evaluate\n    value = parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/integer_invariants.py\", line 136, in lookup\n    return parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1854, in parameters\n    return self.parameter(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1069, in parameter\n    raise CompileError(f\"{self.model.source}: unknown parameter {name!r}\")\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "monitor.va: unknown parameter 'n'",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 146, in evaluate\n    args = [evaluate(arg, env, parameters, arrays, on_read) for arg in expr.args]\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 137, in evaluate\n    value = parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/integer_invariants.py\", line 136, in lookup\n    return parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1854, in parameters\n    return self.parameter(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1069, in parameter\n    raise CompileError(f\"{self.model.source}: unknown parameter {name!r}\")\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "KernelError",
+        "message": "unsupported_cross: operator guard requires a certified continuous trajectory and derivative",
+        "detail": {
+          "kind": "unsupported_cross",
+          "message": "operator guard requires a certified continuous trajectory and derivative"
+        },
+        "stack": [
+          "  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 669, in run\n    self._callTestMethod(testMethod)\n",
+          "  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 615, in _callTestMethod\n    result = method()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_absdelay.py\", line 188, in test_cross_instance_guard_dependency_survives_cancellation\n    transient(program, {\"u\": POINTS}, [0, 10e-9], stop=10e-9, max_step=100e-9, kernel=KERNEL)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 76, in transient\n    response = _invoke(request, kernel, timeout)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 122, in _invoke\n    raise KernelError(detail)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "integer intermediate signed 32-bit range is unproven",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 684, in compile\n    self.infer_integer_state_ranges()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1507, in infer_integer_state_ranges\n    value = self.lower_event(rhs, self.symbol, self.node_ids,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1164, in lower_event\n    value = lower(expr, typed, nodes, self.model.source, *args, **kwargs)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 188, in lower\n    checked = validator(expr, value, root=depth == 0 and getattr(parameters, \"allow_integer_assignment_root\", False))\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1439, in validate_integer_operation\n    raise FiniteIntegerUnavailable(\"integer intermediate signed 32-bit range is unproven\",\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "monitor.va: unknown parameter 'n'",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 146, in evaluate\n    args = [evaluate(arg, env, parameters, arrays, on_read) for arg in expr.args]\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 137, in evaluate\n    value = parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/integer_invariants.py\", line 136, in lookup\n    return parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1854, in parameters\n    return self.parameter(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1069, in parameter\n    raise CompileError(f\"{self.model.source}: unknown parameter {name!r}\")\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "monitor.va: unknown parameter 'n'",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 146, in evaluate\n    args = [evaluate(arg, env, parameters, arrays, on_read) for arg in expr.args]\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 137, in evaluate\n    value = parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/integer_invariants.py\", line 136, in lookup\n    return parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1854, in parameters\n    return self.parameter(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1069, in parameter\n    raise CompileError(f\"{self.model.source}: unknown parameter {name!r}\")\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "KernelError",
+        "message": "unsupported_cross: operator guard requires a certified continuous trajectory and derivative",
+        "detail": {
+          "kind": "unsupported_cross",
+          "message": "operator guard requires a certified continuous trajectory and derivative"
+        },
+        "stack": [
+          "  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 669, in run\n    self._callTestMethod(testMethod)\n",
+          "  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 615, in _callTestMethod\n    result = method()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_absdelay.py\", line 188, in test_cross_instance_guard_dependency_survives_cancellation\n    transient(program, {\"u\": POINTS}, [0, 10e-9], stop=10e-9, max_step=100e-9, kernel=KERNEL)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 76, in transient\n    response = _invoke(request, kernel, timeout)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 122, in _invoke\n    raise KernelError(detail)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "integer intermediate signed 32-bit range is unproven",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 684, in compile\n    self.infer_integer_state_ranges()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1507, in infer_integer_state_ranges\n    value = self.lower_event(rhs, self.symbol, self.node_ids,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1164, in lower_event\n    value = lower(expr, typed, nodes, self.model.source, *args, **kwargs)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 188, in lower\n    checked = validator(expr, value, root=depth == 0 and getattr(parameters, \"allow_integer_assignment_root\", False))\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1439, in validate_integer_operation\n    raise FiniteIntegerUnavailable(\"integer intermediate signed 32-bit range is unproven\",\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "monitor.va: unknown parameter 'n'",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 146, in evaluate\n    args = [evaluate(arg, env, parameters, arrays, on_read) for arg in expr.args]\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 137, in evaluate\n    value = parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/integer_invariants.py\", line 136, in lookup\n    return parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1854, in parameters\n    return self.parameter(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1069, in parameter\n    raise CompileError(f\"{self.model.source}: unknown parameter {name!r}\")\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "monitor.va: unknown parameter 'n'",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 146, in evaluate\n    args = [evaluate(arg, env, parameters, arrays, on_read) for arg in expr.args]\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 137, in evaluate\n    value = parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/integer_invariants.py\", line 136, in lookup\n    return parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1854, in parameters\n    return self.parameter(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1069, in parameter\n    raise CompileError(f\"{self.model.source}: unknown parameter {name!r}\")\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "KernelError",
+        "message": "unsupported_cross: operator guard requires a certified continuous trajectory and derivative",
+        "detail": {
+          "kind": "unsupported_cross",
+          "message": "operator guard requires a certified continuous trajectory and derivative"
+        },
+        "stack": [
+          "  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 669, in run\n    self._callTestMethod(testMethod)\n",
+          "  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 615, in _callTestMethod\n    result = method()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_absdelay.py\", line 188, in test_cross_instance_guard_dependency_survives_cancellation\n    transient(program, {\"u\": POINTS}, [0, 10e-9], stop=10e-9, max_step=100e-9, kernel=KERNEL)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 76, in transient\n    response = _invoke(request, kernel, timeout)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 122, in _invoke\n    raise KernelError(detail)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "integer intermediate signed 32-bit range is unproven",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 684, in compile\n    self.infer_integer_state_ranges()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1507, in infer_integer_state_ranges\n    value = self.lower_event(rhs, self.symbol, self.node_ids,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1164, in lower_event\n    value = lower(expr, typed, nodes, self.model.source, *args, **kwargs)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 188, in lower\n    checked = validator(expr, value, root=depth == 0 and getattr(parameters, \"allow_integer_assignment_root\", False))\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1439, in validate_integer_operation\n    raise FiniteIntegerUnavailable(\"integer intermediate signed 32-bit range is unproven\",\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "monitor.va: unknown parameter 'n'",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 146, in evaluate\n    args = [evaluate(arg, env, parameters, arrays, on_read) for arg in expr.args]\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 137, in evaluate\n    value = parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/integer_invariants.py\", line 136, in lookup\n    return parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1854, in parameters\n    return self.parameter(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1069, in parameter\n    raise CompileError(f\"{self.model.source}: unknown parameter {name!r}\")\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "monitor.va: unknown parameter 'n'",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 146, in evaluate\n    args = [evaluate(arg, env, parameters, arrays, on_read) for arg in expr.args]\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 137, in evaluate\n    value = parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/integer_invariants.py\", line 136, in lookup\n    return parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1854, in parameters\n    return self.parameter(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1069, in parameter\n    raise CompileError(f\"{self.model.source}: unknown parameter {name!r}\")\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "KernelError",
+        "message": "unsupported_cross: operator guard requires a certified continuous trajectory and derivative",
+        "detail": {
+          "kind": "unsupported_cross",
+          "message": "operator guard requires a certified continuous trajectory and derivative"
+        },
+        "stack": [
+          "  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 669, in run\n    self._callTestMethod(testMethod)\n",
+          "  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 615, in _callTestMethod\n    result = method()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_absdelay.py\", line 188, in test_cross_instance_guard_dependency_survives_cancellation\n    transient(program, {\"u\": POINTS}, [0, 10e-9], stop=10e-9, max_step=100e-9, kernel=KERNEL)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 76, in transient\n    response = _invoke(request, kernel, timeout)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 122, in _invoke\n    raise KernelError(detail)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "test_slew.SlewContracts.test_unsupported_inputs_and_operator_uses_are_rejected",
+    "run": 1,
+    "errors": [],
+    "failures": [],
+    "exceptions": [
+      {
+        "kind": "KernelError",
+        "message": "unsupported_operator: slew composition is limited to two stages; cycles are unsupported",
+        "detail": {
+          "kind": "unsupported_operator",
+          "message": "slew composition is limited to two stages; cycles are unsupported"
+        },
+        "stack": [
+          "  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 669, in run\n    self._callTestMethod(testMethod)\n",
+          "  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 615, in _callTestMethod\n    result = method()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_slew.py\", line 174, in test_unsupported_inputs_and_operator_uses_are_rejected\n    transient(compiled(model(body, declarations)),\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 76, in transient\n    response = _invoke(request, kernel, timeout)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 122, in _invoke\n    raise KernelError(detail)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "KernelError",
+        "message": "unsupported_transient: transient expressions must be jointly affine in voltage and state",
+        "detail": {
+          "kind": "unsupported_transient",
+          "message": "transient expressions must be jointly affine in voltage and state"
+        },
+        "stack": [
+          "  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 669, in run\n    self._callTestMethod(testMethod)\n",
+          "  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 615, in _callTestMethod\n    result = method()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_slew.py\", line 174, in test_unsupported_inputs_and_operator_uses_are_rejected\n    transient(compiled(model(body, declarations)),\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 76, in transient\n    response = _invoke(request, kernel, timeout)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 122, in _invoke\n    raise KernelError(detail)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "KernelError",
+        "message": "unsupported_operator: implicit polynomial DAE supports explicit-IC unreset integrals and proper filters at slew.va:2:99 (dut)",
+        "detail": {
+          "kind": "unsupported_operator",
+          "message": "implicit polynomial DAE supports explicit-IC unreset integrals and proper filters at slew.va:2:99 (dut)"
+        },
+        "stack": [
+          "  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 669, in run\n    self._callTestMethod(testMethod)\n",
+          "  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 615, in _callTestMethod\n    result = method()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_slew.py\", line 174, in test_unsupported_inputs_and_operator_uses_are_rejected\n    transient(compiled(model(body, declarations)),\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 76, in transient\n    response = _invoke(request, kernel, timeout)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 122, in _invoke\n    raise KernelError(detail)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "KernelError",
+        "message": "unsupported_operator: implicit polynomial DAE supports explicit-IC unreset integrals and proper filters at slew.va:2:99 (dut)",
+        "detail": {
+          "kind": "unsupported_operator",
+          "message": "implicit polynomial DAE supports explicit-IC unreset integrals and proper filters at slew.va:2:99 (dut)"
+        },
+        "stack": [
+          "  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 669, in run\n    self._callTestMethod(testMethod)\n",
+          "  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 615, in _callTestMethod\n    result = method()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_slew.py\", line 174, in test_unsupported_inputs_and_operator_uses_are_rejected\n    transient(compiled(model(body, declarations)),\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 76, in transient\n    response = _invoke(request, kernel, timeout)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 122, in _invoke\n    raise KernelError(detail)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "KernelError",
+        "message": "unsupported_operator: slew cannot depend on event state",
+        "detail": {
+          "kind": "unsupported_operator",
+          "message": "slew cannot depend on event state"
+        },
+        "stack": [
+          "  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 669, in run\n    self._callTestMethod(testMethod)\n",
+          "  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 615, in _callTestMethod\n    result = method()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_slew.py\", line 174, in test_unsupported_inputs_and_operator_uses_are_rejected\n    transient(compiled(model(body, declarations)),\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 76, in transient\n    response = _invoke(request, kernel, timeout)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 122, in _invoke\n    raise KernelError(detail)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "slew.va: unknown parameter 'q'",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 146, in evaluate\n    args = [evaluate(arg, env, parameters, arrays, on_read) for arg in expr.args]\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 137, in evaluate\n    value = parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/integer_invariants.py\", line 136, in lookup\n    return parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1854, in parameters\n    return self.parameter(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1069, in parameter\n    raise CompileError(f\"{self.model.source}: unknown parameter {name!r}\")\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "slew.va: unknown parameter 'q'",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 146, in evaluate\n    args = [evaluate(arg, env, parameters, arrays, on_read) for arg in expr.args]\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 137, in evaluate\n    value = parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/integer_invariants.py\", line 136, in lookup\n    return parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1854, in parameters\n    return self.parameter(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1069, in parameter\n    raise CompileError(f\"{self.model.source}: unknown parameter {name!r}\")\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "slew.va: unknown parameter 'q'",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 146, in evaluate\n    args = [evaluate(arg, env, parameters, arrays, on_read) for arg in expr.args]\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 137, in evaluate\n    value = parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/integer_invariants.py\", line 136, in lookup\n    return parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1854, in parameters\n    return self.parameter(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1069, in parameter\n    raise CompileError(f\"{self.model.source}: unknown parameter {name!r}\")\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "slew.va: unknown parameter 'q'",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 146, in evaluate\n    args = [evaluate(arg, env, parameters, arrays, on_read) for arg in expr.args]\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 137, in evaluate\n    value = parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/integer_invariants.py\", line 136, in lookup\n    return parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1854, in parameters\n    return self.parameter(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1069, in parameter\n    raise CompileError(f\"{self.model.source}: unknown parameter {name!r}\")\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "KernelError",
+        "message": "unsupported_cross: operator guard requires a certified continuous trajectory and derivative",
+        "detail": {
+          "kind": "unsupported_cross",
+          "message": "operator guard requires a certified continuous trajectory and derivative"
+        },
+        "stack": [
+          "  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 669, in run\n    self._callTestMethod(testMethod)\n",
+          "  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 615, in _callTestMethod\n    result = method()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_slew.py\", line 174, in test_unsupported_inputs_and_operator_uses_are_rejected\n    transient(compiled(model(body, declarations)),\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 76, in transient\n    response = _invoke(request, kernel, timeout)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 122, in _invoke\n    raise KernelError(detail)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "slew.va: unknown parameter 'q'",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 146, in evaluate\n    args = [evaluate(arg, env, parameters, arrays, on_read) for arg in expr.args]\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 137, in evaluate\n    value = parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/integer_invariants.py\", line 136, in lookup\n    return parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1854, in parameters\n    return self.parameter(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1069, in parameter\n    raise CompileError(f\"{self.model.source}: unknown parameter {name!r}\")\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "slew.va: unknown parameter 'q'",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 146, in evaluate\n    args = [evaluate(arg, env, parameters, arrays, on_read) for arg in expr.args]\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 137, in evaluate\n    value = parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/integer_invariants.py\", line 136, in lookup\n    return parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1854, in parameters\n    return self.parameter(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1069, in parameter\n    raise CompileError(f\"{self.model.source}: unknown parameter {name!r}\")\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "slew.va: unknown parameter 'q'",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 146, in evaluate\n    args = [evaluate(arg, env, parameters, arrays, on_read) for arg in expr.args]\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 137, in evaluate\n    value = parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/integer_invariants.py\", line 136, in lookup\n    return parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1854, in parameters\n    return self.parameter(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1069, in parameter\n    raise CompileError(f\"{self.model.source}: unknown parameter {name!r}\")\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "slew.va: unknown parameter 'q'",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 146, in evaluate\n    args = [evaluate(arg, env, parameters, arrays, on_read) for arg in expr.args]\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 137, in evaluate\n    value = parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/integer_invariants.py\", line 136, in lookup\n    return parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1854, in parameters\n    return self.parameter(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1069, in parameter\n    raise CompileError(f\"{self.model.source}: unknown parameter {name!r}\")\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "KernelError",
+        "message": "unsupported_cross: operator guard requires a certified continuous trajectory and derivative",
+        "detail": {
+          "kind": "unsupported_cross",
+          "message": "operator guard requires a certified continuous trajectory and derivative"
+        },
+        "stack": [
+          "  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 669, in run\n    self._callTestMethod(testMethod)\n",
+          "  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 615, in _callTestMethod\n    result = method()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_slew.py\", line 174, in test_unsupported_inputs_and_operator_uses_are_rejected\n    transient(compiled(model(body, declarations)),\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 76, in transient\n    response = _invoke(request, kernel, timeout)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 122, in _invoke\n    raise KernelError(detail)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "KernelError",
+        "message": "unsupported_analysis: state/event program requires transient execution",
+        "detail": {
+          "kind": "unsupported_analysis",
+          "message": "state/event program requires transient execution"
+        },
+        "stack": [
+          "  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 669, in run\n    self._callTestMethod(testMethod)\n",
+          "  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 615, in _callTestMethod\n    result = method()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_slew.py\", line 178, in test_unsupported_inputs_and_operator_uses_are_rejected\n    solve(compiled(), ['u'], [[1]], kernel=KERNEL)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 26, in solve\n    response = _invoke(request, kernel, timeout)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 122, in _invoke\n    raise KernelError(detail)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "test_deferred_rdist.DeferredRdist.test_bad_raw_leaf_seed_and_signature_are_rejected",
+    "run": 1,
+    "errors": [],
+    "failures": [],
+    "exceptions": [
+      {
+        "kind": "CompileError",
+        "message": "IR33: Event metadata does not match its unique procedure gate",
+        "detail": null,
+        "stack": [
+          "  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 615, in _callTestMethod\n    result = method()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_deferred_rdist.py\", line 167, in test_bad_raw_leaf_seed_and_signature_are_rejected\n    with self.subTest(bad=bad),self.assertRaisesRegex(CompileError,'IR33:'):forged.to_dict()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/ir.py\", line 493, in to_dict\n    validate_program_ir(self, work=audit.ir_work if audit is not None else None,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/program_real_validation.py\", line 164, in validate_program_ir\n    fail('Event metadata does not match its unique procedure gate')\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/program_real_validation.py\", line 35, in fail\n    raise CompileError('IR33: ' + message, code='invalid_ir')\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "IR33: Event metadata does not match its unique procedure gate",
+        "detail": null,
+        "stack": [
+          "  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 615, in _callTestMethod\n    result = method()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_deferred_rdist.py\", line 167, in test_bad_raw_leaf_seed_and_signature_are_rejected\n    with self.subTest(bad=bad),self.assertRaisesRegex(CompileError,'IR33:'):forged.to_dict()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/ir.py\", line 493, in to_dict\n    validate_program_ir(self, work=audit.ir_work if audit is not None else None,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/program_real_validation.py\", line 164, in validate_program_ir\n    fail('Event metadata does not match its unique procedure gate')\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/program_real_validation.py\", line 35, in fail\n    raise CompileError('IR33: ' + message, code='invalid_ir')\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "IR33: Event metadata does not match its unique procedure gate",
+        "detail": null,
+        "stack": [
+          "  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 615, in _callTestMethod\n    result = method()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_deferred_rdist.py\", line 167, in test_bad_raw_leaf_seed_and_signature_are_rejected\n    with self.subTest(bad=bad),self.assertRaisesRegex(CompileError,'IR33:'):forged.to_dict()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/ir.py\", line 493, in to_dict\n    validate_program_ir(self, work=audit.ir_work if audit is not None else None,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/program_real_validation.py\", line 164, in validate_program_ir\n    fail('Event metadata does not match its unique procedure gate')\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/program_real_validation.py\", line 35, in fail\n    raise CompileError('IR33: ' + message, code='invalid_ir')\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "test_events.EventRejections.test_frontend_rejects_nonconstant_init_and_unsupported_events",
+    "run": 1,
+    "errors": [],
+    "failures": [],
+    "exceptions": [
+      {
+        "kind": "CompileError",
+        "message": "integer initial_step values require constant-valued arms selected by input predicates",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_events.py\", line 28, in compile_event\n    return compile_sources({'events.va': source}, instances or [instance()])\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/frontend.py\", line 138, in compile_sources\n    InstanceCompiler(instance, model, nets, compilation, source_model=qualified_sources.get(instance.name, models[model.name])).compile()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 678, in compile\n    self.initialize_states()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1022, in initialize_states\n    env = execute(self.model.initial, env)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1013, in execute\n    raise CompileError(\"integer initial_step values require constant-valued arms selected by input predicates\")\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "unsupported initial_step value: integer initial_step values require constant-valued arms selected by input predicates",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_events.py\", line 247, in test_frontend_rejects_nonconstant_init_and_unsupported_events\n    compile_event(model(body,declarations))\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_events.py\", line 28, in compile_event\n    return compile_sources({'events.va': source}, instances or [instance()])\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/frontend.py\", line 138, in compile_sources\n    InstanceCompiler(instance, model, nets, compilation, source_model=qualified_sources.get(instance.name, models[model.name])).compile()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 678, in compile\n    self.initialize_states()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1027, in initialize_states\n    raise CompileError(f'unsupported initial_step value: {exc}',\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "integer intermediate signed 32-bit range is unproven",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 684, in compile\n    self.infer_integer_state_ranges()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1507, in infer_integer_state_ranges\n    value = self.lower_event(rhs, self.symbol, self.node_ids,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1164, in lower_event\n    value = lower(expr, typed, nodes, self.model.source, *args, **kwargs)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 188, in lower\n    checked = validator(expr, value, root=depth == 0 and getattr(parameters, \"allow_integer_assignment_root\", False))\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1439, in validate_integer_operation\n    raise FiniteIntegerUnavailable(\"integer intermediate signed 32-bit range is unproven\",\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "events.va: unknown parameter 'n'",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 146, in evaluate\n    args = [evaluate(arg, env, parameters, arrays, on_read) for arg in expr.args]\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 137, in evaluate\n    value = parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/integer_invariants.py\", line 136, in lookup\n    return parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1854, in parameters\n    return self.parameter(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1069, in parameter\n    raise CompileError(f\"{self.model.source}: unknown parameter {name!r}\")\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "events.va: unknown parameter 'n'",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 146, in evaluate\n    args = [evaluate(arg, env, parameters, arrays, on_read) for arg in expr.args]\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 137, in evaluate\n    value = parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/integer_invariants.py\", line 136, in lookup\n    return parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1854, in parameters\n    return self.parameter(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1069, in parameter\n    raise CompileError(f\"{self.model.source}: unknown parameter {name!r}\")\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "cross requires direction -1/0/1 and positive tolerances",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_events.py\", line 28, in compile_event\n    return compile_sources({'events.va': source}, instances or [instance()])\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/frontend.py\", line 138, in compile_sources\n    InstanceCompiler(instance, model, nets, compilation, source_model=qualified_sources.get(instance.name, models[model.name])).compile()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 701, in compile\n    triggers = tuple(self.trigger(leaf) for leaf in event.triggers)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 701, in <genexpr>\n    triggers = tuple(self.trigger(leaf) for leaf in event.triggers)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 2329, in trigger\n    raise CompileError(\"cross requires direction -1/0/1 and positive tolerances\")\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "integer intermediate signed 32-bit range is unproven",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 684, in compile\n    self.infer_integer_state_ranges()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1507, in infer_integer_state_ranges\n    value = self.lower_event(rhs, self.symbol, self.node_ids,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1164, in lower_event\n    value = lower(expr, typed, nodes, self.model.source, *args, **kwargs)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 188, in lower\n    checked = validator(expr, value, root=depth == 0 and getattr(parameters, \"allow_integer_assignment_root\", False))\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1439, in validate_integer_operation\n    raise FiniteIntegerUnavailable(\"integer intermediate signed 32-bit range is unproven\",\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "events.va: unknown parameter 'n'",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 146, in evaluate\n    args = [evaluate(arg, env, parameters, arrays, on_read) for arg in expr.args]\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 137, in evaluate\n    value = parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/integer_invariants.py\", line 136, in lookup\n    return parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1854, in parameters\n    return self.parameter(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1069, in parameter\n    raise CompileError(f\"{self.model.source}: unknown parameter {name!r}\")\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "events.va: unknown parameter 'n'",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 146, in evaluate\n    args = [evaluate(arg, env, parameters, arrays, on_read) for arg in expr.args]\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 137, in evaluate\n    value = parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/integer_invariants.py\", line 136, in lookup\n    return parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1854, in parameters\n    return self.parameter(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1069, in parameter\n    raise CompileError(f\"{self.model.source}: unknown parameter {name!r}\")\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "cross requires direction -1/0/1 and positive tolerances",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_events.py\", line 28, in compile_event\n    return compile_sources({'events.va': source}, instances or [instance()])\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/frontend.py\", line 138, in compile_sources\n    InstanceCompiler(instance, model, nets, compilation, source_model=qualified_sources.get(instance.name, models[model.name])).compile()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 701, in compile\n    triggers = tuple(self.trigger(leaf) for leaf in event.triggers)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 701, in <genexpr>\n    triggers = tuple(self.trigger(leaf) for leaf in event.triggers)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 2329, in trigger\n    raise CompileError(\"cross requires direction -1/0/1 and positive tolerances\")\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "integer intermediate signed 32-bit range is unproven",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 684, in compile\n    self.infer_integer_state_ranges()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1507, in infer_integer_state_ranges\n    value = self.lower_event(rhs, self.symbol, self.node_ids,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1164, in lower_event\n    value = lower(expr, typed, nodes, self.model.source, *args, **kwargs)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 188, in lower\n    checked = validator(expr, value, root=depth == 0 and getattr(parameters, \"allow_integer_assignment_root\", False))\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1439, in validate_integer_operation\n    raise FiniteIntegerUnavailable(\"integer intermediate signed 32-bit range is unproven\",\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "events.va: unknown parameter 'n'",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 146, in evaluate\n    args = [evaluate(arg, env, parameters, arrays, on_read) for arg in expr.args]\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 137, in evaluate\n    value = parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/integer_invariants.py\", line 136, in lookup\n    return parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1854, in parameters\n    return self.parameter(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1069, in parameter\n    raise CompileError(f\"{self.model.source}: unknown parameter {name!r}\")\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "events.va: unknown parameter 'n'",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 146, in evaluate\n    args = [evaluate(arg, env, parameters, arrays, on_read) for arg in expr.args]\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 137, in evaluate\n    value = parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/integer_invariants.py\", line 136, in lookup\n    return parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1854, in parameters\n    return self.parameter(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1069, in parameter\n    raise CompileError(f\"{self.model.source}: unknown parameter {name!r}\")\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "events.va:2:117: undeclared electrical node in V(u,0)",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 2382, in checked_event_context\n    start = lower(trigger.arguments[0], self.parameter, {}, self.model.source)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 178, in lower\n    value = _lower_checked(expr, parameters, nodes, source, operators, preserve_structure,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 270, in _lower_checked\n    value = _lower(expr, parameters, nodes, source, operators, preserve_structure,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 586, in _lower\n    fail(f\"undeclared electrical node in V({p},{n})\",\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 331, in fail\n    raise error(f\"{expr.token.source or source}:{expr.token.line}:{expr.token.column}: {message}\",\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "events.va:2:117: undeclared electrical node in V(u,0)",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 2382, in checked_event_context\n    start = lower(trigger.arguments[0], self.parameter, {}, self.model.source)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 178, in lower\n    value = _lower_checked(expr, parameters, nodes, source, operators, preserve_structure,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 270, in _lower_checked\n    value = _lower(expr, parameters, nodes, source, operators, preserve_structure,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 586, in _lower\n    fail(f\"undeclared electrical node in V({p},{n})\",\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 331, in fail\n    raise error(f\"{expr.token.source or source}:{expr.token.line}:{expr.token.column}: {message}\",\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "events.va:2:117: timer parameters cannot depend on continuous voltage or operator history",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_events.py\", line 28, in compile_event\n    return compile_sources({'events.va': source}, instances or [instance()])\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/frontend.py\", line 138, in compile_sources\n    InstanceCompiler(instance, model, nets, compilation, source_model=qualified_sources.get(instance.name, models[model.name])).compile()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 701, in compile\n    triggers = tuple(self.trigger(leaf) for leaf in event.triggers)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 701, in <genexpr>\n    triggers = tuple(self.trigger(leaf) for leaf in event.triggers)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 2292, in trigger\n    raise CompileError(\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "state-dependent integer bound",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_events.py\", line 247, in test_frontend_rejects_nonconstant_init_and_unsupported_events\n    compile_event(model(body,declarations))\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_events.py\", line 28, in compile_event\n    return compile_sources({'events.va': source}, instances or [instance()])\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/frontend.py\", line 138, in compile_sources\n    InstanceCompiler(instance, model, nets, compilation, source_model=qualified_sources.get(instance.name, models[model.name])).compile()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 684, in compile\n    self.infer_integer_state_ranges()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1511, in infer_integer_state_ranges\n    raise CompileError(\"state-dependent integer bound\")\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "events.va: unknown parameter 'n'",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 146, in evaluate\n    args = [evaluate(arg, env, parameters, arrays, on_read) for arg in expr.args]\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 137, in evaluate\n    value = parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/integer_invariants.py\", line 136, in lookup\n    return parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1854, in parameters\n    return self.parameter(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1069, in parameter\n    raise CompileError(f\"{self.model.source}: unknown parameter {name!r}\")\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "integer assignment requires integral state arithmetic",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/frontend.py\", line 138, in compile_sources\n    InstanceCompiler(instance, model, nets, compilation, source_model=qualified_sources.get(instance.name, models[model.name])).compile()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 693, in compile\n    native_allowances[id(event)] = audit_event_body(self, (event.body if self.integer_event_prefix is None else self.integer_event_prefix.body(event, self.compilation.native_audit)), view)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_specialization.py\", line 486, in audit_event_body\n    body(statements)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_specialization.py\", line 483, in body\n    fail(\"integer assignment requires integral state arithmetic\", statement)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_specialization.py\", line 84, in fail\n    raise CompileError(message, code=code, token=item.token,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "events.va:2:139: transition requires 3 or 4 explicit arguments",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/syntax.py\", line 525, in statements\n    return self._statements(conditional, analog)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/syntax.py\", line 659, in _statements\n    rhs = self.expression()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/syntax.py\", line 351, in expression\n    result = self._expression(minimum)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/syntax.py\", line 411, in _expression\n    self.fail(f\"{token.text} requires {label} explicit arguments\", token, code=code)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/syntax.py\", line 272, in fail\n    raise CompileError(f\"{token.source or self.source}:{token.line}:{token.column}: {message}\", code=code, token=token)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "test_held_integer_targets.HeldIntegerTargets.test_each_source_child_overflow_precedes_mask_and_retarget",
+    "run": 1,
+    "errors": [],
+    "failures": [],
+    "exceptions": [
+      {
+        "kind": "CompileError",
+        "message": "integer intermediate signed 32-bit range is unproven",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 684, in compile\n    self.infer_integer_state_ranges()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1507, in infer_integer_state_ranges\n    value = self.lower_event(rhs, self.symbol, self.node_ids,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1164, in lower_event\n    value = lower(expr, typed, nodes, self.model.source, *args, **kwargs)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 188, in lower\n    checked = validator(expr, value, root=depth == 0 and getattr(parameters, \"allow_integer_assignment_root\", False))\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1439, in validate_integer_operation\n    raise FiniteIntegerUnavailable(\"integer intermediate signed 32-bit range is unproven\",\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "integer intermediate signed 32-bit range is unproven",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 178, in lower\n    value = _lower_checked(expr, parameters, nodes, source, operators, preserve_structure,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 270, in _lower_checked\n    value = _lower(expr, parameters, nodes, source, operators, preserve_structure,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 598, in _lower\n    lower(arg, parameters, nodes, source, operators, preserve_structure,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 188, in lower\n    checked = validator(expr, value, root=depth == 0 and getattr(parameters, \"allow_integer_assignment_root\", False))\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1439, in validate_integer_operation\n    raise FiniteIntegerUnavailable(\"integer intermediate signed 32-bit range is unproven\",\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "bounded integer bitwise operation exceeds finite-domain budget (256)",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 2161, in waveform\n    value = lower(target_source, resolve, input_nodes, self.model.source,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 178, in lower\n    value = _lower_checked(expr, parameters, nodes, source, operators, preserve_structure,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 270, in _lower_checked\n    value = _lower(expr, parameters, nodes, source, operators, preserve_structure,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 625, in _lower\n    return bitwise(expr, values)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1658, in integer_bitwise\n    raise FiniteIntegerUnavailable(\"bounded integer bitwise operation exceeds finite-domain budget (256)\",\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "KernelError",
+        "message": "integer_range: held-bits.va:2:179 (dut): source integer operation is outside signed32 or divides by zero",
+        "detail": {
+          "kind": "integer_range",
+          "message": "held-bits.va:2:179 (dut): source integer operation is outside signed32 or divides by zero"
+        },
+        "stack": [
+          "  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 615, in _callTestMethod\n    result = method()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_held_integer_targets.py\", line 43, in test_each_source_child_overflow_precedes_mask_and_retarget\n    output(p,[0,1.2])\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_held_integer_targets.py\", line 17, in output\n    r=transient(p,{},times,stop=times[-1],max_step=.1,kernel=KERNEL)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 76, in transient\n    response = _invoke(request, kernel, timeout)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 122, in _invoke\n    raise KernelError(detail)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "integer intermediate signed 32-bit range is unproven",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 684, in compile\n    self.infer_integer_state_ranges()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1507, in infer_integer_state_ranges\n    value = self.lower_event(rhs, self.symbol, self.node_ids,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1164, in lower_event\n    value = lower(expr, typed, nodes, self.model.source, *args, **kwargs)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 188, in lower\n    checked = validator(expr, value, root=depth == 0 and getattr(parameters, \"allow_integer_assignment_root\", False))\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1439, in validate_integer_operation\n    raise FiniteIntegerUnavailable(\"integer intermediate signed 32-bit range is unproven\",\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "integer intermediate signed 32-bit range is unproven",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 178, in lower\n    value = _lower_checked(expr, parameters, nodes, source, operators, preserve_structure,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 270, in _lower_checked\n    value = _lower(expr, parameters, nodes, source, operators, preserve_structure,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 598, in _lower\n    lower(arg, parameters, nodes, source, operators, preserve_structure,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 188, in lower\n    checked = validator(expr, value, root=depth == 0 and getattr(parameters, \"allow_integer_assignment_root\", False))\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1439, in validate_integer_operation\n    raise FiniteIntegerUnavailable(\"integer intermediate signed 32-bit range is unproven\",\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "bounded integer bitwise operation exceeds finite-domain budget (256)",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 2161, in waveform\n    value = lower(target_source, resolve, input_nodes, self.model.source,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 178, in lower\n    value = _lower_checked(expr, parameters, nodes, source, operators, preserve_structure,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 270, in _lower_checked\n    value = _lower(expr, parameters, nodes, source, operators, preserve_structure,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 625, in _lower\n    return bitwise(expr, values)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1658, in integer_bitwise\n    raise FiniteIntegerUnavailable(\"bounded integer bitwise operation exceeds finite-domain budget (256)\",\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "KernelError",
+        "message": "integer_range: held-bits.va:2:179 (dut): source integer operation is outside signed32 or divides by zero",
+        "detail": {
+          "kind": "integer_range",
+          "message": "held-bits.va:2:179 (dut): source integer operation is outside signed32 or divides by zero"
+        },
+        "stack": [
+          "  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 615, in _callTestMethod\n    result = method()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_held_integer_targets.py\", line 43, in test_each_source_child_overflow_precedes_mask_and_retarget\n    output(p,[0,1.2])\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_held_integer_targets.py\", line 17, in output\n    r=transient(p,{},times,stop=times[-1],max_step=.1,kernel=KERNEL)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 76, in transient\n    response = _invoke(request, kernel, timeout)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 122, in _invoke\n    raise KernelError(detail)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "integer intermediate signed 32-bit range is unproven",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 684, in compile\n    self.infer_integer_state_ranges()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1507, in infer_integer_state_ranges\n    value = self.lower_event(rhs, self.symbol, self.node_ids,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1164, in lower_event\n    value = lower(expr, typed, nodes, self.model.source, *args, **kwargs)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 188, in lower\n    checked = validator(expr, value, root=depth == 0 and getattr(parameters, \"allow_integer_assignment_root\", False))\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1439, in validate_integer_operation\n    raise FiniteIntegerUnavailable(\"integer intermediate signed 32-bit range is unproven\",\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "integer intermediate signed 32-bit range is unproven",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 178, in lower\n    value = _lower_checked(expr, parameters, nodes, source, operators, preserve_structure,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 270, in _lower_checked\n    value = _lower(expr, parameters, nodes, source, operators, preserve_structure,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 598, in _lower\n    lower(arg, parameters, nodes, source, operators, preserve_structure,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 188, in lower\n    checked = validator(expr, value, root=depth == 0 and getattr(parameters, \"allow_integer_assignment_root\", False))\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1439, in validate_integer_operation\n    raise FiniteIntegerUnavailable(\"integer intermediate signed 32-bit range is unproven\",\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "bounded integer bitwise operation exceeds finite-domain budget (256)",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 489, in _lower\n    values.append(lower(arg, lookup, nodes, source, operators, True,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 178, in lower\n    value = _lower_checked(expr, parameters, nodes, source, operators, preserve_structure,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 270, in _lower_checked\n    value = _lower(expr, parameters, nodes, source, operators, preserve_structure,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 625, in _lower\n    return bitwise(expr, values)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1658, in integer_bitwise\n    raise FiniteIntegerUnavailable(\"bounded integer bitwise operation exceeds finite-domain budget (256)\",\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "KernelError",
+        "message": "integer_range: held-bits.va:2:180 (dut): source integer operation is outside signed32 or divides by zero",
+        "detail": {
+          "kind": "integer_range",
+          "message": "held-bits.va:2:180 (dut): source integer operation is outside signed32 or divides by zero"
+        },
+        "stack": [
+          "  File \"/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/case.py\", line 615, in _callTestMethod\n    result = method()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_held_integer_targets.py\", line 43, in test_each_source_child_overflow_precedes_mask_and_retarget\n    output(p,[0,1.2])\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_held_integer_targets.py\", line 17, in output\n    r=transient(p,{},times,stop=times[-1],max_step=.1,kernel=KERNEL)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 76, in transient\n    response = _invoke(request, kernel, timeout)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/runtime.py\", line 122, in _invoke\n    raise KernelError(detail)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      }
+    ]
+  }
+]
+{
+  "calibration_written": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/calibration.json",
+  "original_test_under_mutant": {
+    "run": 1,
+    "errors": [],
+    "failures": []
+  }
+}

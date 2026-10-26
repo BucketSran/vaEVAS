@@ -1,0 +1,3119 @@
+{
+  "start": "experiments/backends/support",
+  "pattern": "test_*.py",
+  "scope": "discovery-only",
+  "rows": [
+    {
+      "id": "test_callback_evidence.CallbackCalibration.test_OR_full_box_is_not_replaced_by_leaf",
+      "source_file": "experiments/backends/support/test_callback_evidence.py",
+      "method_source_file": "experiments/backends/support/test_callback_evidence.py",
+      "source_line": 59,
+      "module": "test_callback_evidence",
+      "generated": false,
+      "method_source_sha256": "f9805e51fbdb4caecf3a9b7dee9dcc70a97ee01b2a868e974841a227b9a0ecb6"
+    },
+    {
+      "id": "test_callback_evidence.CallbackCalibration.test_OR_leaf_and_own_box",
+      "source_file": "experiments/backends/support/test_callback_evidence.py",
+      "method_source_file": "experiments/backends/support/test_callback_evidence.py",
+      "source_line": 47,
+      "module": "test_callback_evidence",
+      "generated": false,
+      "method_source_sha256": "b2f97cee1755f902ab4bca342e5cf32eb3a205ed70d47bb990beebe4c6fb69a8"
+    },
+    {
+      "id": "test_callback_evidence.CallbackCalibration.test_OR_multiple_leaves_not_guessed",
+      "source_file": "experiments/backends/support/test_callback_evidence.py",
+      "method_source_file": "experiments/backends/support/test_callback_evidence.py",
+      "source_line": 54,
+      "module": "test_callback_evidence",
+      "generated": false,
+      "method_source_sha256": "44cf391f0fccab28b8f0408e332674fcf417ed30975c9d58b4b14d6fee5454d9"
+    },
+    {
+      "id": "test_callback_evidence.CallbackCalibration.test_box_crosses_legal_endpoint",
+      "source_file": "experiments/backends/support/test_callback_evidence.py",
+      "method_source_file": "experiments/backends/support/test_callback_evidence.py",
+      "source_line": 41,
+      "module": "test_callback_evidence",
+      "generated": false,
+      "method_source_sha256": "5341fbb26c6c366fe154778106761fd01e5a110c60a476d97d6f37180d16ab28"
+    },
+    {
+      "id": "test_callback_evidence.CallbackCalibration.test_broken_commit_chain",
+      "source_file": "experiments/backends/support/test_callback_evidence.py",
+      "method_source_file": "experiments/backends/support/test_callback_evidence.py",
+      "source_line": 40,
+      "module": "test_callback_evidence",
+      "generated": false,
+      "method_source_sha256": "4f4e91d801a052f3a6bd98c7d7efe41b6b2a06b9f16dc34e0fe04b3b730b7ab4"
+    },
+    {
+      "id": "test_callback_evidence.CallbackCalibration.test_complete_history",
+      "source_file": "experiments/backends/support/test_callback_evidence.py",
+      "method_source_file": "experiments/backends/support/test_callback_evidence.py",
+      "source_line": 30,
+      "module": "test_callback_evidence",
+      "generated": false,
+      "method_source_sha256": "a4867c7807f9666c0fa7bea61e84942c8d9e0fca7797979e388d58bbfbbe58d4"
+    },
+    {
+      "id": "test_callback_evidence.CallbackCalibration.test_exact_fixed_clock_order_does_not_clip_touching_boxes",
+      "source_file": "experiments/backends/support/test_callback_evidence.py",
+      "method_source_file": "experiments/backends/support/test_callback_evidence.py",
+      "source_line": 97,
+      "module": "test_callback_evidence",
+      "generated": false,
+      "method_source_sha256": "ea5922ffc2e44a0cc2cee041872d1dad7efec05f15c7543203a99777af666a9d"
+    },
+    {
+      "id": "test_callback_evidence.CallbackCalibration.test_extra_callback",
+      "source_file": "experiments/backends/support/test_callback_evidence.py",
+      "method_source_file": "experiments/backends/support/test_callback_evidence.py",
+      "source_line": 35,
+      "module": "test_callback_evidence",
+      "generated": false,
+      "method_source_sha256": "ab6575724567378b2e6e7e102d1e605bc1f2c34633b1378e5c895776f1705b67"
+    },
+    {
+      "id": "test_callback_evidence.CallbackCalibration.test_guard_wrong_sign_or_size",
+      "source_file": "experiments/backends/support/test_callback_evidence.py",
+      "method_source_file": "experiments/backends/support/test_callback_evidence.py",
+      "source_line": 43,
+      "module": "test_callback_evidence",
+      "generated": false,
+      "method_source_sha256": "d4bb11bf2d4d7459ef34c99e46a21784ac7dc82362fcfe2d9e74f4d55d6374fe"
+    },
+    {
+      "id": "test_callback_evidence.CallbackCalibration.test_incomplete_box_not_clipped",
+      "source_file": "experiments/backends/support/test_callback_evidence.py",
+      "method_source_file": "experiments/backends/support/test_callback_evidence.py",
+      "source_line": 42,
+      "module": "test_callback_evidence",
+      "generated": false,
+      "method_source_sha256": "15e02408782994fe85f492693736dfd4064528f2dd8dd24e5f8e6a5f49b298bc"
+    },
+    {
+      "id": "test_callback_evidence.CallbackCalibration.test_initial_not_settled",
+      "source_file": "experiments/backends/support/test_callback_evidence.py",
+      "method_source_file": "experiments/backends/support/test_callback_evidence.py",
+      "source_line": 45,
+      "module": "test_callback_evidence",
+      "generated": false,
+      "method_source_sha256": "b14ece2983d20cd4780fb1fcac7db6f459027f1fa8838f056235dca841bd52d3"
+    },
+    {
+      "id": "test_callback_evidence.CallbackCalibration.test_integral_consumer_keeps_the_complete_discrete_chain",
+      "source_file": "experiments/backends/support/test_callback_evidence.py",
+      "method_source_file": "experiments/backends/support/test_callback_evidence.py",
+      "source_line": 71,
+      "module": "test_callback_evidence",
+      "generated": false,
+      "method_source_sha256": "c0bff934d69a9ad3fb193f0fd5c872c917188d220b4378a09394974962aaecb4"
+    },
+    {
+      "id": "test_callback_evidence.CallbackCalibration.test_missing_callback",
+      "source_file": "experiments/backends/support/test_callback_evidence.py",
+      "method_source_file": "experiments/backends/support/test_callback_evidence.py",
+      "source_line": 34,
+      "module": "test_callback_evidence",
+      "generated": false,
+      "method_source_sha256": "67b0449c9728681fd837f15b9c3a6347576da910934131d2ed15aa447774ba46"
+    },
+    {
+      "id": "test_callback_evidence.CallbackCalibration.test_missing_guard_is_not_zero",
+      "source_file": "experiments/backends/support/test_callback_evidence.py",
+      "method_source_file": "experiments/backends/support/test_callback_evidence.py",
+      "source_line": 112,
+      "module": "test_callback_evidence",
+      "generated": false,
+      "method_source_sha256": "9744e0f5591191dbdc94d319a277926c1ed4c54edf20952b738c1c905547ead2"
+    },
+    {
+      "id": "test_callback_evidence.CallbackCalibration.test_missing_state_update",
+      "source_file": "experiments/backends/support/test_callback_evidence.py",
+      "method_source_file": "experiments/backends/support/test_callback_evidence.py",
+      "source_line": 39,
+      "module": "test_callback_evidence",
+      "generated": false,
+      "method_source_sha256": "1442ff4dec19f89bc031e7724977ee9c02753d2628d8592394700a46a9d36abd"
+    },
+    {
+      "id": "test_callback_evidence.CallbackCalibration.test_nonfinite_box",
+      "source_file": "experiments/backends/support/test_callback_evidence.py",
+      "method_source_file": "experiments/backends/support/test_callback_evidence.py",
+      "source_line": 114,
+      "module": "test_callback_evidence",
+      "generated": false,
+      "method_source_sha256": "daebea5c5ba5f993e7d18fba35cf0039ca7eecb5032c5f5f51009d63fe71daab"
+    },
+    {
+      "id": "test_callback_evidence.CallbackCalibration.test_reversed_order",
+      "source_file": "experiments/backends/support/test_callback_evidence.py",
+      "method_source_file": "experiments/backends/support/test_callback_evidence.py",
+      "source_line": 38,
+      "module": "test_callback_evidence",
+      "generated": false,
+      "method_source_sha256": "b4fa4a84ef07dde09e3b6d9b0db482109418827b4f0f4d1997cf61aa4773ccb3"
+    },
+    {
+      "id": "test_callback_evidence.CallbackCalibration.test_two_counters_prove_distinct_physical_order",
+      "source_file": "experiments/backends/support/test_callback_evidence.py",
+      "method_source_file": "experiments/backends/support/test_callback_evidence.py",
+      "source_line": 82,
+      "module": "test_callback_evidence",
+      "generated": false,
+      "method_source_sha256": "b1073ed9903693473e7577dfff1a3e25ae646d48d62fff1037041fa9d37df34f"
+    },
+    {
+      "id": "test_callback_evidence.CallbackCalibration.test_unreviewed_producer",
+      "source_file": "experiments/backends/support/test_callback_evidence.py",
+      "method_source_file": "experiments/backends/support/test_callback_evidence.py",
+      "source_line": 33,
+      "module": "test_callback_evidence",
+      "generated": false,
+      "method_source_sha256": "84efe18c2187befbe30cd3d53934a873d609858ab1dc07814afdda0567e45397"
+    },
+    {
+      "id": "test_callback_evidence.CallbackCalibration.test_waveform_does_not_commit",
+      "source_file": "experiments/backends/support/test_callback_evidence.py",
+      "method_source_file": "experiments/backends/support/test_callback_evidence.py",
+      "source_line": 46,
+      "module": "test_callback_evidence",
+      "generated": false,
+      "method_source_sha256": "05a9c1e0cfb7ec06416a5764f867f4eb85f57c03158f2a7a0fbe4e32a16bffb6"
+    },
+    {
+      "id": "test_callback_evidence.CallbackCalibration.test_wrong_counter_mapping",
+      "source_file": "experiments/backends/support/test_callback_evidence.py",
+      "method_source_file": "experiments/backends/support/test_callback_evidence.py",
+      "source_line": 37,
+      "module": "test_callback_evidence",
+      "generated": false,
+      "method_source_sha256": "d81a93bf9de9990a6e58bf28199d7ab23a295ff52e79610bb39280fdf3e54484"
+    },
+    {
+      "id": "test_callback_evidence.CallbackCalibration.test_wrong_direction",
+      "source_file": "experiments/backends/support/test_callback_evidence.py",
+      "method_source_file": "experiments/backends/support/test_callback_evidence.py",
+      "source_line": 44,
+      "module": "test_callback_evidence",
+      "generated": false,
+      "method_source_sha256": "bdcc3c8beef8b7d71a35ee6264f00f358bac7e20468cc18817202cbc135fb6c4"
+    },
+    {
+      "id": "test_callback_evidence.CallbackCalibration.test_wrong_instance",
+      "source_file": "experiments/backends/support/test_callback_evidence.py",
+      "method_source_file": "experiments/backends/support/test_callback_evidence.py",
+      "source_line": 36,
+      "module": "test_callback_evidence",
+      "generated": false,
+      "method_source_sha256": "148067a354c7cef44aa225c981efd894ce3007d26e7ace6257f3c56e95b7a1ac"
+    },
+    {
+      "id": "test_gnucap_output_evidence.OutputBounds.test_full_addition_preserves_old_gate_and_detects_budget_failure",
+      "source_file": "experiments/backends/support/test_gnucap_output_evidence.py",
+      "method_source_file": "experiments/backends/support/test_gnucap_output_evidence.py",
+      "source_line": 28,
+      "module": "test_gnucap_output_evidence",
+      "generated": false,
+      "method_source_sha256": "666e7de7caf73c9e808a3de504a18ac67dbd74d907015d44620bbfc0431853bf"
+    },
+    {
+      "id": "test_gnucap_output_evidence.OutputBounds.test_inverse_includes_extremes_and_hidden_zero",
+      "source_file": "experiments/backends/support/test_gnucap_output_evidence.py",
+      "method_source_file": "experiments/backends/support/test_gnucap_output_evidence.py",
+      "source_line": 9,
+      "module": "test_gnucap_output_evidence",
+      "generated": false,
+      "method_source_sha256": "0d9d6eb38ee1b3bbefc6f650a492b6d229e5da06fb433a9186526c637a76b821"
+    },
+    {
+      "id": "test_gnucap_output_evidence.OutputBounds.test_missing_sides_and_ambiguous_ticks_reject",
+      "source_file": "experiments/backends/support/test_gnucap_output_evidence.py",
+      "method_source_file": "experiments/backends/support/test_gnucap_output_evidence.py",
+      "source_line": 17,
+      "module": "test_gnucap_output_evidence",
+      "generated": false,
+      "method_source_sha256": "4aaebeb426e48d367e03b1649961518cb8ad0790a5548381f3a8a9dac356b998"
+    },
+    {
+      "id": "test_gnucap_output_evidence.OutputBounds.test_per_output_gain_and_slope_do_not_use_a_global_max",
+      "source_file": "experiments/backends/support/test_gnucap_output_evidence.py",
+      "method_source_file": "experiments/backends/support/test_gnucap_output_evidence.py",
+      "source_line": 41,
+      "module": "test_gnucap_output_evidence",
+      "generated": false,
+      "method_source_sha256": "96abf028632f633b0823b4a0542755e3793d637b58346b35043be1cbfa2c0c5a"
+    },
+    {
+      "id": "test_legacy_pipeline.AreaPipelineTests.test_actual_area_checker_accepts_reference_replay_with_qualification_gap",
+      "source_file": "experiments/backends/support/test_legacy_pipeline.py",
+      "method_source_file": "experiments/backends/support/test_legacy_pipeline.py",
+      "source_line": 148,
+      "module": "test_legacy_pipeline",
+      "generated": false,
+      "method_source_sha256": "e845ab1cd33142ececb65c85bfd1b4dc1bb0a2773b645f94dba4f6e7b20b9d18"
+    },
+    {
+      "id": "test_legacy_pipeline.AreaPipelineTests.test_area_freeze_precheck_deferred_and_offline_malformed_raw",
+      "source_file": "experiments/backends/support/test_legacy_pipeline.py",
+      "method_source_file": "experiments/backends/support/test_legacy_pipeline.py",
+      "source_line": 184,
+      "module": "test_legacy_pipeline",
+      "generated": false,
+      "method_source_sha256": "2363fa0badb4e091468c0e41899e006d1aa1db9f747f68357fb24a7df9f080b2"
+    },
+    {
+      "id": "test_legacy_pipeline.LegacyPipelineTests.test_adapter_failure_is_sealed_and_rest_not_run",
+      "source_file": "experiments/backends/support/test_legacy_pipeline.py",
+      "method_source_file": "experiments/backends/support/test_legacy_pipeline.py",
+      "source_line": 107,
+      "module": "test_legacy_pipeline",
+      "generated": false,
+      "method_source_sha256": "47494775848d327b27a881d40f8c03c76887c4e2275e479cea0214bff573a4bf"
+    },
+    {
+      "id": "test_legacy_pipeline.LegacyPipelineTests.test_deferred_lane_denominator_seal_and_offline_immutability",
+      "source_file": "experiments/backends/support/test_legacy_pipeline.py",
+      "method_source_file": "experiments/backends/support/test_legacy_pipeline.py",
+      "source_line": 88,
+      "module": "test_legacy_pipeline",
+      "generated": false,
+      "method_source_sha256": "097699c203fd52c04e7ccaa867e1f679e6700d5c20fe09b5a30e4a415fb90795"
+    },
+    {
+      "id": "test_legacy_pipeline.LegacyPipelineTests.test_ground_binding_and_paired_pilot",
+      "source_file": "experiments/backends/support/test_legacy_pipeline.py",
+      "method_source_file": "experiments/backends/support/test_legacy_pipeline.py",
+      "source_line": 36,
+      "module": "test_legacy_pipeline",
+      "generated": false,
+      "method_source_sha256": "c2b418c247571e26d314cc38f0ef4c47e1c438dfb826966830f899190ceef59d"
+    },
+    {
+      "id": "test_legacy_pipeline.LegacyPipelineTests.test_historical_record_cannot_escape_sealed_work_or_waveform",
+      "source_file": "experiments/backends/support/test_legacy_pipeline.py",
+      "method_source_file": "experiments/backends/support/test_legacy_pipeline.py",
+      "source_line": 129,
+      "module": "test_legacy_pipeline",
+      "generated": false,
+      "method_source_sha256": "a252f6bbf79fc6a3c112af68a8a81f3b8de933350e8a4c08433e26f067350d53"
+    },
+    {
+      "id": "test_legacy_pipeline.LegacyPipelineTests.test_producer_sources_checked_for_spectre_too",
+      "source_file": "experiments/backends/support/test_legacy_pipeline.py",
+      "method_source_file": "experiments/backends/support/test_legacy_pipeline.py",
+      "source_line": 141,
+      "module": "test_legacy_pipeline",
+      "generated": false,
+      "method_source_sha256": "ff4a96723defc0df07ee921001dbb7d4f2d171b6910f8a30af293ba8e3ba6e0f"
+    },
+    {
+      "id": "test_legacy_pipeline.LegacyPipelineTests.test_raw_file_addition_and_size_drift_rejected",
+      "source_file": "experiments/backends/support/test_legacy_pipeline.py",
+      "method_source_file": "experiments/backends/support/test_legacy_pipeline.py",
+      "source_line": 115,
+      "module": "test_legacy_pipeline",
+      "generated": false,
+      "method_source_sha256": "c3c9695f8def615b544d9fb4b3c6a0ab3326d306b9ca8189a9f375ba8b2bc2a3"
+    },
+    {
+      "id": "test_legacy_pipeline.LegacyPipelineTests.test_resealed_bad_ground_recipe_blocks_every_invocation",
+      "source_file": "experiments/backends/support/test_legacy_pipeline.py",
+      "method_source_file": "experiments/backends/support/test_legacy_pipeline.py",
+      "source_line": 52,
+      "module": "test_legacy_pipeline",
+      "generated": false,
+      "method_source_sha256": "f9adc2d4df62eb30e5cbb1ff7d849a5b0419ef2a3e49bd445726d1c1602c8ff3"
+    },
+    {
+      "id": "test_legacy_pipeline.LegacyPipelineTests.test_resealed_escaping_label_fails_before_tools",
+      "source_file": "experiments/backends/support/test_legacy_pipeline.py",
+      "method_source_file": "experiments/backends/support/test_legacy_pipeline.py",
+      "source_line": 66,
+      "module": "test_legacy_pipeline",
+      "generated": false,
+      "method_source_sha256": "e1ffd102fd33cad9fbdaf5edef15535db2b96260328ca95434d2252932381d38"
+    },
+    {
+      "id": "test_legacy_pipeline.LegacyPipelineTests.test_resealed_missing_or_duplicate_execution_slot_rejected",
+      "source_file": "experiments/backends/support/test_legacy_pipeline.py",
+      "method_source_file": "experiments/backends/support/test_legacy_pipeline.py",
+      "source_line": 122,
+      "module": "test_legacy_pipeline",
+      "generated": false,
+      "method_source_sha256": "5dca6a097927c3c092cb2b6250f18435271cbf2c890b08ce9a1b1fc1d53cb8a8"
+    },
+    {
+      "id": "test_legacy_pipeline.LegacyPipelineTests.test_unknown_selectors_fail_before_tools",
+      "source_file": "experiments/backends/support/test_legacy_pipeline.py",
+      "method_source_file": "experiments/backends/support/test_legacy_pipeline.py",
+      "source_line": 45,
+      "module": "test_legacy_pipeline",
+      "generated": false,
+      "method_source_sha256": "9206b1a4d78cc4a735204cc12a1f8df170a3d52d8501d2f9dc50e6e30ff30aaa"
+    },
+    {
+      "id": "test_precision_binding.Calibration.test_broken_event_count_is_not_a_zero_error_pass",
+      "source_file": "experiments/backends/support/test_precision_binding.py",
+      "method_source_file": "experiments/backends/support/test_precision_binding.py",
+      "source_line": 56,
+      "module": "test_precision_binding",
+      "generated": false,
+      "method_source_sha256": "e404f79c4d4677928a85551520058eb6282cb456468d652474c9adfcb9256f0b"
+    },
+    {
+      "id": "test_precision_binding.Calibration.test_dense_boundary_points_do_not_hide_an_observed_side",
+      "source_file": "experiments/backends/support/test_precision_binding.py",
+      "method_source_file": "experiments/backends/support/test_precision_binding.py",
+      "source_line": 66,
+      "module": "test_precision_binding",
+      "generated": false,
+      "method_source_sha256": "6cfb0cf26b0746222899624b26c948385dfd932a12ec9195623cc873565ff17f"
+    },
+    {
+      "id": "test_precision_binding.Calibration.test_machine_endpoint_allowed_but_one_ulp_early_is_not",
+      "source_file": "experiments/backends/support/test_precision_binding.py",
+      "method_source_file": "experiments/backends/support/test_precision_binding.py",
+      "source_line": 87,
+      "module": "test_precision_binding",
+      "generated": false,
+      "method_source_sha256": "345725ee79aa8b9e7ab293f141fc863dd02d9800190f878f835c4aa3c62d3e76"
+    },
+    {
+      "id": "test_precision_binding.Calibration.test_missing_extra_duplicate_malformed_trace_rejected",
+      "source_file": "experiments/backends/support/test_precision_binding.py",
+      "method_source_file": "experiments/backends/support/test_precision_binding.py",
+      "source_line": 27,
+      "module": "test_precision_binding",
+      "generated": false,
+      "method_source_sha256": "9121c2f81f42862a156a9f7c40fb0b32ef88d010afa02dcae2805a8ae0c631aa"
+    },
+    {
+      "id": "test_precision_binding.Calibration.test_ng_audit_cannot_hide_other_failures_or_identity_drift",
+      "source_file": "experiments/backends/support/test_precision_binding.py",
+      "method_source_file": "experiments/backends/support/test_precision_binding.py",
+      "source_line": 110,
+      "module": "test_precision_binding",
+      "generated": false,
+      "method_source_sha256": "ad2e01d2b91005e7b5ebcdfa5f08b8fcd8a9ef1f126889033a937580fa1d3e7e"
+    },
+    {
+      "id": "test_precision_binding.Calibration.test_numerical_pass_does_not_hide_missing_evidence",
+      "source_file": "experiments/backends/support/test_precision_binding.py",
+      "method_source_file": "experiments/backends/support/test_precision_binding.py",
+      "source_line": 44,
+      "module": "test_precision_binding",
+      "generated": false,
+      "method_source_sha256": "d766c46bf91e237be6d527a34d77aed131b330c17f21b339d4f3baab063ee845"
+    },
+    {
+      "id": "test_precision_binding.Calibration.test_other_run_time_counter_value_or_model_rejected",
+      "source_file": "experiments/backends/support/test_precision_binding.py",
+      "method_source_file": "experiments/backends/support/test_precision_binding.py",
+      "source_line": 36,
+      "module": "test_precision_binding",
+      "generated": false,
+      "method_source_sha256": "c8b25d6a4d7db384d59918167d119b65e5a414e34d295833b73a819f4afa17e2"
+    },
+    {
+      "id": "test_precision_binding.Calibration.test_recipe_preserves_all_original_v2_inputs",
+      "source_file": "experiments/backends/support/test_precision_binding.py",
+      "method_source_file": "experiments/backends/support/test_precision_binding.py",
+      "source_line": 139,
+      "module": "test_precision_binding",
+      "generated": false,
+      "method_source_sha256": "635dc68c3e0c18385415cc249427b9947c9a56b41fd3f0e7b77312406c11e0a0"
+    },
+    {
+      "id": "test_precision_binding.Calibration.test_same_run_callback_bound",
+      "source_file": "experiments/backends/support/test_precision_binding.py",
+      "method_source_file": "experiments/backends/support/test_precision_binding.py",
+      "source_line": 22,
+      "module": "test_precision_binding",
+      "generated": false,
+      "method_source_sha256": "ad18768d1d8f2ce66e17e83a07f1a221e7b2171a3da7b28e8fd6eca4757ad02f"
+    },
+    {
+      "id": "test_precision_boundary_probe.BoundaryProbeCalibration.test_correct_sides_never_claim_callback_qualification",
+      "source_file": "experiments/backends/support/test_precision_boundary_probe.py",
+      "method_source_file": "experiments/backends/support/test_precision_boundary_probe.py",
+      "source_line": 19,
+      "module": "test_precision_boundary_probe",
+      "generated": false,
+      "method_source_sha256": "2c8b7ad31e533ba84f44bc3ce0431bf69ed53c9a50a7bb00cfb4df3eb4397d0a"
+    },
+    {
+      "id": "test_precision_boundary_probe.BoundaryProbeCalibration.test_missing_duplicate_invalid_or_changed_fixture_refused",
+      "source_file": "experiments/backends/support/test_precision_boundary_probe.py",
+      "method_source_file": "experiments/backends/support/test_precision_boundary_probe.py",
+      "source_line": 37,
+      "module": "test_precision_boundary_probe",
+      "generated": false,
+      "method_source_sha256": "d5b222eeb3889b7255cccec8581749fe0410829c51da95e7c248b24a480221f0"
+    },
+    {
+      "id": "test_precision_boundary_probe.BoundaryProbeCalibration.test_one_ulp_early_and_stale_sides_are_detected",
+      "source_file": "experiments/backends/support/test_precision_boundary_probe.py",
+      "method_source_file": "experiments/backends/support/test_precision_boundary_probe.py",
+      "source_line": 24,
+      "module": "test_precision_boundary_probe",
+      "generated": false,
+      "method_source_sha256": "863f31975a6bac8e0ab56626a8af683f47316ddaaba1ddee6f0d1822662d14e0"
+    },
+    {
+      "id": "test_precision_boundary_probe.BoundaryProbeCalibration.test_wrong_hold_is_measured_separately_from_event_count",
+      "source_file": "experiments/backends/support/test_precision_boundary_probe.py",
+      "method_source_file": "experiments/backends/support/test_precision_boundary_probe.py",
+      "source_line": 31,
+      "module": "test_precision_boundary_probe",
+      "generated": false,
+      "method_source_sha256": "009d1102228ea215e55867787926ce87dd9a76279e33dee8aec9b3ef5cedb563"
+    },
+    {
+      "id": "test_precision_breadth_aggregate.AggregateCalibration.test_added_execution_profile_does_not_change_old_or_scientific_contract",
+      "source_file": "experiments/backends/support/test_precision_breadth_aggregate.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_aggregate.py",
+      "source_line": 102,
+      "module": "test_precision_breadth_aggregate",
+      "generated": false,
+      "method_source_sha256": "7edffc68bed0d93bc371d3d1ccd44ec3a77e2990ca5f2f6a03997ee36db75706"
+    },
+    {
+      "id": "test_precision_breadth_aggregate.AggregateCalibration.test_analysis_artifact_tampering_is_rejected",
+      "source_file": "experiments/backends/support/test_precision_breadth_aggregate.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_aggregate.py",
+      "source_line": 186,
+      "module": "test_precision_breadth_aggregate",
+      "generated": false,
+      "method_source_sha256": "e8fbc13a7a7b2c67ea071a9ab98de0409e6f52dfa96bcf42cc63794019511a07"
+    },
+    {
+      "id": "test_precision_breadth_aggregate.AggregateCalibration.test_duplicate_selected_attempt_is_rejected_even_if_one_is_better",
+      "source_file": "experiments/backends/support/test_precision_breadth_aggregate.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_aggregate.py",
+      "source_line": 156,
+      "module": "test_precision_breadth_aggregate",
+      "generated": false,
+      "method_source_sha256": "bdf8524448ee513e83d41f4f370c79c8a66194ffff234b24218d216bd32a1ffb"
+    },
+    {
+      "id": "test_precision_breadth_aggregate.AggregateCalibration.test_explicit_group_selection_is_independent_of_batch_names",
+      "source_file": "experiments/backends/support/test_precision_breadth_aggregate.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_aggregate.py",
+      "source_line": 138,
+      "module": "test_precision_breadth_aggregate",
+      "generated": false,
+      "method_source_sha256": "c3b7f82884b115ac4f59fdc2c3a8487a74f870ffa00e38ff4c58d05d1e50dc05"
+    },
+    {
+      "id": "test_precision_breadth_aggregate.AggregateCalibration.test_external_full_configuration_cannot_hide_unknown_actual_integrator",
+      "source_file": "experiments/backends/support/test_precision_breadth_aggregate.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_aggregate.py",
+      "source_line": 46,
+      "module": "test_precision_breadth_aggregate",
+      "generated": false,
+      "method_source_sha256": "f2dba5d6a48fe5982d45a702f61a1a2108a8eb1aaaf92c7f75e6f165ad7c837c"
+    },
+    {
+      "id": "test_precision_breadth_aggregate.AggregateCalibration.test_external_identity_must_be_bound_and_manifest_covered",
+      "source_file": "experiments/backends/support/test_precision_breadth_aggregate.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_aggregate.py",
+      "source_line": 53,
+      "module": "test_precision_breadth_aggregate",
+      "generated": false,
+      "method_source_sha256": "919e38e31c5a174607273c0cb4c5cf7fc5583269d91390502b80f621ae73df75"
+    },
+    {
+      "id": "test_precision_breadth_aggregate.AggregateCalibration.test_external_integrator_and_legacy_readback_survive_without_raising_scores",
+      "source_file": "experiments/backends/support/test_precision_breadth_aggregate.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_aggregate.py",
+      "source_line": 26,
+      "module": "test_precision_breadth_aggregate",
+      "generated": false,
+      "method_source_sha256": "fb6dad41c7cce018478f413adf1e9280a29f729e33df53696c1df7904fff0131"
+    },
+    {
+      "id": "test_precision_breadth_aggregate.AggregateCalibration.test_external_proof_metadata_is_exact_selected_subset_and_never_a_verdict",
+      "source_file": "experiments/backends/support/test_precision_breadth_aggregate.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_aggregate.py",
+      "source_line": 82,
+      "module": "test_precision_breadth_aggregate",
+      "generated": false,
+      "method_source_sha256": "08067fc1cbde03368baf8f554408ee47bafad92f2930763f654d0752730e0996"
+    },
+    {
+      "id": "test_precision_breadth_aggregate.AggregateCalibration.test_full_official_denominator_remains_852_without_any_results",
+      "source_file": "experiments/backends/support/test_precision_breadth_aggregate.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_aggregate.py",
+      "source_line": 176,
+      "module": "test_precision_breadth_aggregate",
+      "generated": false,
+      "method_source_sha256": "d299cd344a51fc3d0e1535039dcc08cd1707a9ba96068fb7854de60550da8367"
+    },
+    {
+      "id": "test_precision_breadth_aggregate.AggregateCalibration.test_group_execution_failure_precedence_retains_independent_numeric_failure",
+      "source_file": "experiments/backends/support/test_precision_breadth_aggregate.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_aggregate.py",
+      "source_line": 150,
+      "module": "test_precision_breadth_aggregate",
+      "generated": false,
+      "method_source_sha256": "304009a763176303166b1533f46133363cf47eda30805e2c2fd7fa2c4c52c5c3"
+    },
+    {
+      "id": "test_precision_breadth_aggregate.AggregateCalibration.test_incompatible_source_is_unknown_even_if_old_numeric_or_execution_failed",
+      "source_file": "experiments/backends/support/test_precision_breadth_aggregate.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_aggregate.py",
+      "source_line": 168,
+      "module": "test_precision_breadth_aggregate",
+      "generated": false,
+      "method_source_sha256": "676d5709f792ad336431ddc8ede140a3e45fc6cfec1a11dae08af6a60760c47e"
+    },
+    {
+      "id": "test_precision_breadth_aggregate.AggregateCalibration.test_missing_mandatory_variants_never_disappear_or_pass_group",
+      "source_file": "experiments/backends/support/test_precision_breadth_aggregate.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_aggregate.py",
+      "source_line": 110,
+      "module": "test_precision_breadth_aggregate",
+      "generated": false,
+      "method_source_sha256": "6543b907ac7ebfec8073d42bed5ab52ab81bc19386070cef0f27bcc45981836b"
+    },
+    {
+      "id": "test_precision_breadth_aggregate.AggregateCalibration.test_no_best_of_old_success_vs_selected_new_failure",
+      "source_file": "experiments/backends/support/test_precision_breadth_aggregate.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_aggregate.py",
+      "source_line": 119,
+      "module": "test_precision_breadth_aggregate",
+      "generated": false,
+      "method_source_sha256": "20713194a6950b751bd185313f2b315dd7db912b8d79dd65f3d074d05a2fca25"
+    },
+    {
+      "id": "test_precision_breadth_aggregate.AggregateCalibration.test_numeric_pass_and_probe_do_not_certify_full_pass",
+      "source_file": "experiments/backends/support/test_precision_breadth_aggregate.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_aggregate.py",
+      "source_line": 127,
+      "module": "test_precision_breadth_aggregate",
+      "generated": false,
+      "method_source_sha256": "2d7053855cf18f483b686d04274e9d1f2e06dbcb23e49c9ccdf65b9915449174"
+    },
+    {
+      "id": "test_precision_breadth_aggregate.AggregateCalibration.test_official_card_identity_requires_verified_manifest_membership",
+      "source_file": "experiments/backends/support/test_precision_breadth_aggregate.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_aggregate.py",
+      "source_line": 73,
+      "module": "test_precision_breadth_aggregate",
+      "generated": false,
+      "method_source_sha256": "70c40af70244a6aa0706125cd2b53d72037d775133d6d883504783a6f620cbb7"
+    },
+    {
+      "id": "test_precision_breadth_aggregate.AggregateCalibration.test_open_foundation_part2_reuses_only_preselected_old_batch",
+      "source_file": "experiments/backends/support/test_precision_breadth_aggregate.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_aggregate.py",
+      "source_line": 161,
+      "module": "test_precision_breadth_aggregate",
+      "generated": false,
+      "method_source_sha256": "add34fbdd8eb496ecdb863d8207f7763153f0297e63600017c4ca164aaf5d22e"
+    },
+    {
+      "id": "test_precision_breadth_aggregate.AggregateCalibration.test_raw_label_cannot_escape_runs_or_follow_a_symlink",
+      "source_file": "experiments/backends/support/test_precision_breadth_aggregate.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_aggregate.py",
+      "source_line": 194,
+      "module": "test_precision_breadth_aggregate",
+      "generated": false,
+      "method_source_sha256": "02d1e0d0352f4224c2dfb71b1c82d6dae8a72d310ba6f26512d3603179040129"
+    },
+    {
+      "id": "test_precision_breadth_aggregate.AggregateCalibration.test_unmanifested_official_profile_bindings_are_rejected",
+      "source_file": "experiments/backends/support/test_precision_breadth_aggregate.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_aggregate.py",
+      "source_line": 203,
+      "module": "test_precision_breadth_aggregate",
+      "generated": false,
+      "method_source_sha256": "f02e529d296c6317ecf91146d0b6223ab78bd4986f1ce70baf978fc99f709e89"
+    },
+    {
+      "id": "test_precision_breadth_aggregate.AggregateCalibration.test_wrong_designated_profile_preserves_numeric_failure_and_original_execution",
+      "source_file": "experiments/backends/support/test_precision_breadth_aggregate.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_aggregate.py",
+      "source_line": 143,
+      "module": "test_precision_breadth_aggregate",
+      "generated": false,
+      "method_source_sha256": "802d4b1355f3b6c7487d857dec4404c74ec4590ae2cf589d6b2eeb1a8a905b81"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_cleanup_incomplete",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 294,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "407747bb9ef48382bd4ecb3f55d3eef96a60cd227596cbae0b469f7e469eb9ed"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_compile_failed_cannot_qualify",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 296,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "83670189458b93b8a60d1a8515716ac1a57cd79ec059619b2bfbdbe22b82d07d"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_default_axes_present",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 261,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "bf754aee8fb78933f82b6435c33dc5fa76925074bfa2142bc296a135e1103dc6"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_early_stop",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 316,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "144899cb29fd60ee2c5f9c87e93b8252f67daf0b14662faa92c9c79efe8b9182"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_execution_json_list_fail_closed",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 210,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "24e4c9c3e7f5b798c72b03e2ba1d09269694ff4846622b973d561ecb15f0b4b8"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_exit_zero_transient_failure",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 286,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "2b01448b3d4ffb819bab05b6612a48f9c5f00c7c2a838f57b41b9f55c3409e2a"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_extra_tail_row",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 318,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "040f8526172c507e698b8dda512158c74f46a1390144f38cea924cf400f24b2c"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_full_argv_not_approved",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 292,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "6dcdb4d22c02c9ac65b0d10a70977c8746775ba745ead285aa4c1f9fce649361"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_gn_complete_reviewed_fixture",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 121,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "4bb73bf13e5b9ab92b633ee4da7a8d626948cde3173ab0d1ee570d1f9a09abdf"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_gn_continuation_after_closed_source_rejected",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 189,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "515c9d4a9ca02e6cdcea7bf9865847ffa74a5476822ee554b8688aa55f629638"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_gn_continuation_cannot_inject_command_in_pwl",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 185,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "ae8a6a888e7f5d3e656a205dae8ae01c2182f207c1c92df3f5a27cf9f4e3b3db"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_gn_effective_dtmin_uses_dtratio",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 129,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "698bd254c2ff6309741c02651b7c0e6a04e2aae31f32bc4539f882faf28aad3d"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_gn_initial_failed",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 306,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "65561c064b4a9e1cb78ebb5fba968639848b712d394aef92f406b45e3be5d704"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_gn_numeric_pwl_continuation_allowed",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 178,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "7e6278aa4baa9f92abb23a69c64a52af97113f5d73cd5a80f5a7c495d9fba31d"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_gn_quantized_cap_not_exact",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 124,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "7b65ee038a7a403086891ebdfaa937896e24700604f34b35c9473c11d3dac20c"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_gn_quitconvfail",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 308,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "3a8e4b3b1121dbd39f868e72d83aec4adf50fd20c6a09e8c18988b90cae77173"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_gn_rejected_trace",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 304,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "a804b829eb5af2eb0e53944d40b3bb97062f29ddeec717432f3b339227aa5897"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_gn_tran_continuation_rejected",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 154,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "87e355f49d658b17e033e61ca3a4ba3ca16027fe550d79ce000281229f47e4d0"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_gn_unknown_option",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 310,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "55f1a94d8f37479673ca66cfc76dac4bdd0493d811e33e71a1f912de6bc97860"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_include_after_control_rejected",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 150,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "c9df0f546c18bcfc6345824536505e04034d76b51c19e92c5186d4c81124a26f"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_invalid_proof_json_fail_closed",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 266,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "dde84244377c64b0a77a6ea4654fceddcf5b1c61447dd4c6f444380a62776fd7"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_malformed_environment_both_sides",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 197,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "18d1b534610cae35fa3b8ab42fbfeaa533e9e836e53429d1fd380d7077bfcf08"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_missing_environment_both_sides",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 158,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "51fd285c0fd39d91f880aabc7932bd24deae70d97d172ce892716cede77e951b"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_missing_manifest_digest",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 284,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "bed67db0c28512199e0484914afb5184ad985598141c65d8c7ed902d8758f7e5"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_missing_run_scope",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 172,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "e71e821392c6d1f90a7c1c194a07f61dd29f2b1a3fc4e5c5275ddbf7cd26a31c"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_nested_cleanup_schema_fail_closed",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 242,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "b82181fb4045a488334831b5a574055a12888b6cdc3581068beffd95714abe7f"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_nested_tool_schema_fail_closed",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 246,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "ea0794ba518dedb7b007a25c189e91e7df00da4caf8a6bcfd41e425efb8ead6f"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_new_dut_cannot_reuse_approved_scope",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 162,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "943ed9abc61ee8693077c04bcbbfcc3209ba7e96a1dcc2fa76ae763195d0378b"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_ng_complete_reviewed_fixture",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 116,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "497a8088548d89c21782e40bc9d5967491e98a0b121a3cfc10e3273b69d071b9"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_ng_extra_readback_override",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 134,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "ce8fce0bab6dd7dadf59517beaf80242155cbec975c8ac755740a3648169bf09"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_ng_interp",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 300,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "f274f094dae530f1bdba640944af109d8f4988221e0398e0645d9689923de9fd"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_ng_linearize",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 298,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "783006dae862f960c1d76fa98c94a8c835f7cde5975f730ef0770fbb3ab1ec60"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_ng_unknown_device_line_rejected",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 193,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "31585c2c623751cba08cbe0df6d01868dbfe984c3efb9667bceb833f3b57b423"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_ng_zero_tmax",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 302,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "a1a254fbbd99e6e71320cf1d135e5013ce0c58ec167bf8a94cbea9bf287a1fa6"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_no_approval",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 270,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "9def2ed8b4c08971e81f777d81ac669997eeb2467319e8a04a377d4d901c1866"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_no_startup_proof",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 289,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "66071e9e2464eb0832e40c9d14bacfc91261fb0ec78a21c0fc2ed504e593cc1b"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_one_review_missing",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 272,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "c7b9a03ffe8d90456cc0bb9973b5348e42a907120ff18792690ddd8609a32fe6"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_other_root_json_types_fail_closed",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 229,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "37e848a0ddc473d35862e1ee8c79669fdb5aed159a27db442991969b095f013d"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_plot_count_mismatch",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 314,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "0470a03eba2f729e2db773364c00c56be413c400947e37c6c8b8dd39d90d967e"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_proof_argv_digest_schema_fail_closed",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 252,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "1c41561aaca3f866564b64e6b1b1b7a473d43ffe6df45f65cccf8718706794e6"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_proof_claims_schema_fail_closed",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 249,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "7ffc871f85b7e2b7e8e93943c3a1410037fb8bff0d1ff29dc8e0d8fb13bdf87e"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_proof_json_list_fail_closed",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 214,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "7c50fa27192356a3bce9b41736064267380abcf275b021447138bb9c598a3117"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_raw_waveform_changed",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 280,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "317d57fff642ed4599f7782ebef232306525efd7ec6d23a4c074e5dc90b3cd54"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_result_compiled_binding",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 142,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "3e7839b72516e48435b9efabf5b1976d20ec2892c9a7054840581799d6559dc5"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_result_json_list_fail_closed",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 206,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "042a8bfeee3aefa52ede45d9bb33893b25f73e2d2a462ddca599e7162fc2b272"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_result_waveform_binding",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 138,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "3236623261fdbb29c0fde0065015c904bf8d8a7dd9902f054f427ee1f625b00f"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_review_attachment_changed",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 274,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "fadf00538018914612b2e8ae70c1e43fd4559024ddce229ce4ffd55a934b2bee"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_reviews_same_digest_rejected",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 222,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "7c0636bcd529626cb4c8c230d34feab84687e203fd3a5b9f924adcc9d1faf81e"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_reviews_same_path_rejected",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 218,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "d11731e42f8e0d345834783d822d1b0165187c4da5a914726045d4203514d56d"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_second_osdi_load_rejected",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 146,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "175025d86ac58471984e55936e80994c0ea5d3d0a989a9a678bc6934fd6a9d9c"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_source_changed",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 282,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "30843a7e0d1765bc4977ebe4e892d078465215eb221a156dfae794f610316ce4"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_unknown_warning",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 312,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "18e0416ccac50cd6a6e68e60997dea6d9a50e82ee03f09ba602b2bfda2776d05"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_unrecognized_row_not_filtered",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 320,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "a42356122cb91528b2783163e54b49c1574c5a4e7b0fe031b72a5e4dd6785be1"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_wrong_approved_digest",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 271,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "6936f0a017bcb82b6e6a20de895f64e4be65abe067b4d4fe5cdc87d3b7d14f6f"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_wrong_binary",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 276,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "c1cbe2cd1ac55b835787a1512064cbe036ea5c29f28c83519be1b65b5a44e139"
+    },
+    {
+      "id": "test_precision_breadth_open_evidence.OpenEvidenceTests.test_wrong_tool_image",
+      "source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "source_line": 278,
+      "module": "test_precision_breadth_open_evidence",
+      "generated": false,
+      "method_source_sha256": "579295f6c49739b5e06bb12b7c2ae3fcb4168515ea5a95289c3b48e4c3d1c12c"
+    },
+    {
+      "id": "test_precision_breadth_reanalysis.ReanalysisCalibration.test_configuration_gate_does_not_hide_numeric_or_execution_failure",
+      "source_file": "experiments/backends/support/test_precision_breadth_reanalysis.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_reanalysis.py",
+      "source_line": 169,
+      "module": "test_precision_breadth_reanalysis",
+      "generated": false,
+      "method_source_sha256": "3a0c43bdba58c6a6ba67a2a493fae6ed533ea6f5a28f2e33de8c4546827c9866"
+    },
+    {
+      "id": "test_precision_breadth_reanalysis.ReanalysisCalibration.test_exact_input_candidate_rejects_adjacent_binary64_even_inside_budget",
+      "source_file": "experiments/backends/support/test_precision_breadth_reanalysis.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_reanalysis.py",
+      "source_line": 177,
+      "module": "test_precision_breadth_reanalysis",
+      "generated": false,
+      "method_source_sha256": "a3d4fd8d828b96867016ba844a4e8a3399592f43ba7e55bd3f278277a053d940"
+    },
+    {
+      "id": "test_precision_breadth_reanalysis.ReanalysisCalibration.test_explicit_frozen_inputs_reject_card_or_checker_hash_drift",
+      "source_file": "experiments/backends/support/test_precision_breadth_reanalysis.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_reanalysis.py",
+      "source_line": 122,
+      "module": "test_precision_breadth_reanalysis",
+      "generated": false,
+      "method_source_sha256": "8fbaffc170657e0bfcd7e7fafff4f62ed35f38487c02589e19b09d78772c2281"
+    },
+    {
+      "id": "test_precision_breadth_reanalysis.ReanalysisCalibration.test_external_execution_manifest_is_independent_and_exhaustively_verified",
+      "source_file": "experiments/backends/support/test_precision_breadth_reanalysis.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_reanalysis.py",
+      "source_line": 36,
+      "module": "test_precision_breadth_reanalysis",
+      "generated": false,
+      "method_source_sha256": "3e6997624a3dd53b416387757e95f72b00d045caf719626a82125d6d81e67099"
+    },
+    {
+      "id": "test_precision_breadth_reanalysis.ReanalysisCalibration.test_external_integrator_axis_does_not_apply_to_evas_or_spectre",
+      "source_file": "experiments/backends/support/test_precision_breadth_reanalysis.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_reanalysis.py",
+      "source_line": 108,
+      "module": "test_precision_breadth_reanalysis",
+      "generated": false,
+      "method_source_sha256": "46e9d68b1021d946926368af9e194edb625681e47e70e0b2000db6e8dc3feb04"
+    },
+    {
+      "id": "test_precision_breadth_reanalysis.ReanalysisCalibration.test_external_proof_attachment_cannot_escape_or_change",
+      "source_file": "experiments/backends/support/test_precision_breadth_reanalysis.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_reanalysis.py",
+      "source_line": 66,
+      "module": "test_precision_breadth_reanalysis",
+      "generated": false,
+      "method_source_sha256": "871a3477225615498eaeb1ea3868aeb0cf8c3a509028d2e25e8978d5d22ac4a4"
+    },
+    {
+      "id": "test_precision_breadth_reanalysis.ReanalysisCalibration.test_external_seal_records_separate_identity_and_rejects_drift",
+      "source_file": "experiments/backends/support/test_precision_breadth_reanalysis.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_reanalysis.py",
+      "source_line": 51,
+      "module": "test_precision_breadth_reanalysis",
+      "generated": false,
+      "method_source_sha256": "ed9097439f2be9a0b509b42878fb455fef81d51c66013f38eda1a0f701532a00"
+    },
+    {
+      "id": "test_precision_breadth_reanalysis.ReanalysisCalibration.test_manifest_rejects_changed_or_extra_files",
+      "source_file": "experiments/backends/support/test_precision_breadth_reanalysis.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_reanalysis.py",
+      "source_line": 114,
+      "module": "test_precision_breadth_reanalysis",
+      "generated": false,
+      "method_source_sha256": "642396b4b88ff8aa854a83dfc02f613aec539a72fe18521a12dc77b6dc2ddb4d"
+    },
+    {
+      "id": "test_precision_breadth_reanalysis.ReanalysisCalibration.test_open_adapter_without_sealed_configuration_is_unknown",
+      "source_file": "experiments/backends/support/test_precision_breadth_reanalysis.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_reanalysis.py",
+      "source_line": 46,
+      "module": "test_precision_breadth_reanalysis",
+      "generated": false,
+      "method_source_sha256": "60de6aad2c0e26dc843f8ba8ba3d595912958a8ba36016484c5230b309306d41"
+    },
+    {
+      "id": "test_precision_breadth_reanalysis.ReanalysisCalibration.test_open_caller_uses_original_execution_manifest_and_rejects_missing_trust",
+      "source_file": "experiments/backends/support/test_precision_breadth_reanalysis.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_reanalysis.py",
+      "source_line": 79,
+      "module": "test_precision_breadth_reanalysis",
+      "generated": false,
+      "method_source_sha256": "722b9225e1a6f747f6be4ab273cd0b7982e7531b999b77a846ab7087ada924cb"
+    },
+    {
+      "id": "test_precision_breadth_reanalysis.ReanalysisCalibration.test_open_gate_keeps_legacy_binding_and_actual_integrator_obligations",
+      "source_file": "experiments/backends/support/test_precision_breadth_reanalysis.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_reanalysis.py",
+      "source_line": 23,
+      "module": "test_precision_breadth_reanalysis",
+      "generated": false,
+      "method_source_sha256": "b3e28d28587d7e5772d20c2930a672b1d529b8fb37e6d82f93bfa875be6f66c0"
+    },
+    {
+      "id": "test_precision_breadth_reanalysis.ReanalysisCalibration.test_profile_binding_accepts_legacy_open_and_rejects_profile_tier_or_control_change",
+      "source_file": "experiments/backends/support/test_precision_breadth_reanalysis.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_reanalysis.py",
+      "source_line": 149,
+      "module": "test_precision_breadth_reanalysis",
+      "generated": false,
+      "method_source_sha256": "e285093d8079cd414e25eb77a36a695dc12e0f8276452e1060f130fc658d9b64"
+    },
+    {
+      "id": "test_precision_breadth_reanalysis.ReanalysisCalibration.test_same_source_different_input_is_incompatible",
+      "source_file": "experiments/backends/support/test_precision_breadth_reanalysis.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_reanalysis.py",
+      "source_line": 143,
+      "module": "test_precision_breadth_reanalysis",
+      "generated": false,
+      "method_source_sha256": "19ca128f4c7710454548ebe2270fc7eb6d6867e7e7756f16e8990f60413eee0f"
+    },
+    {
+      "id": "test_precision_breadth_reanalysis.ReanalysisCalibration.test_single_lane_uses_prebound_target_slot_and_never_modifies_original",
+      "source_file": "experiments/backends/support/test_precision_breadth_reanalysis.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_reanalysis.py",
+      "source_line": 187,
+      "module": "test_precision_breadth_reanalysis",
+      "generated": false,
+      "method_source_sha256": "08d03cf61153f2dfcfe7b8877c0465579135a3759fe33c322a26e4c20d230abc"
+    },
+    {
+      "id": "test_precision_breadth_reanalysis.ReanalysisCalibration.test_source_rename_cannot_inherit_new_answer",
+      "source_file": "experiments/backends/support/test_precision_breadth_reanalysis.py",
+      "method_source_file": "experiments/backends/support/test_precision_breadth_reanalysis.py",
+      "source_line": 135,
+      "module": "test_precision_breadth_reanalysis",
+      "generated": false,
+      "method_source_sha256": "e28f7792ee70c15e173641863b2bce50f83902e18764dd83a26ff3914df03387"
+    },
+    {
+      "id": "test_precision_deferred_run.DeferredV2Tests.test_adapter_exception_is_not_relabelled_as_unrun",
+      "source_file": "experiments/backends/support/test_precision_deferred_run.py",
+      "method_source_file": "experiments/backends/support/test_precision_deferred_run.py",
+      "source_line": 80,
+      "module": "test_precision_deferred_run",
+      "generated": false,
+      "method_source_sha256": "cd2b63938ddf495139c3d5b4529b7570aa944ab6b6e98d786a2966517cad39f0"
+    },
+    {
+      "id": "test_precision_deferred_run.DeferredV2Tests.test_deferred_failure_keeps_unrun_slots",
+      "source_file": "experiments/backends/support/test_precision_deferred_run.py",
+      "method_source_file": "experiments/backends/support/test_precision_deferred_run.py",
+      "source_line": 54,
+      "module": "test_precision_deferred_run",
+      "generated": false,
+      "method_source_sha256": "2a0c3e304348516525d53a32b0c6f62a56c988dc5f4885f1fd3b6d8ddc1341e6"
+    },
+    {
+      "id": "test_precision_deferred_run.DeferredV2Tests.test_next_simulation_does_not_wait_for_analysis_and_raw_is_sealed",
+      "source_file": "experiments/backends/support/test_precision_deferred_run.py",
+      "method_source_file": "experiments/backends/support/test_precision_deferred_run.py",
+      "source_line": 15,
+      "module": "test_precision_deferred_run",
+      "generated": false,
+      "method_source_sha256": "2feb489070aa6ef52bf269e8124815e607d6997ef91e6cc7ae9702d516a0ae9a"
+    },
+    {
+      "id": "test_precision_precheck.PrecheckTests.test_adapter_failure_retains_elapsed_time_and_attempted_case",
+      "source_file": "experiments/backends/support/test_precision_precheck.py",
+      "method_source_file": "experiments/backends/support/test_precision_precheck.py",
+      "source_line": 164,
+      "module": "test_precision_precheck",
+      "generated": false,
+      "method_source_sha256": "2d65c99ba811c06ba5123b1d5415d9624a364e857fc319fc867607f4d1003d23"
+    },
+    {
+      "id": "test_precision_precheck.PrecheckTests.test_frozen_nonfinite_and_duplicate_observations_rejected",
+      "source_file": "experiments/backends/support/test_precision_precheck.py",
+      "method_source_file": "experiments/backends/support/test_precision_precheck.py",
+      "source_line": 77,
+      "module": "test_precision_precheck",
+      "generated": false,
+      "method_source_sha256": "2cb7d58a4a21002c6b684e9a8b05cec36cb9510b1b08ed5cbc45a44fa3c372c1"
+    },
+    {
+      "id": "test_precision_precheck.PrecheckTests.test_frozen_wrong_port_binding_stops_before_tool_preflight",
+      "source_file": "experiments/backends/support/test_precision_precheck.py",
+      "method_source_file": "experiments/backends/support/test_precision_precheck.py",
+      "source_line": 64,
+      "module": "test_precision_precheck",
+      "generated": false,
+      "method_source_sha256": "b5f1fd830555ebfc9118153bd63df3a8ac265541461309aaf8e7a9d42bde6515"
+    },
+    {
+      "id": "test_precision_precheck.PrecheckTests.test_other_backends_wrong_port_order_cannot_pass_recipe_precheck",
+      "source_file": "experiments/backends/support/test_precision_precheck.py",
+      "method_source_file": "experiments/backends/support/test_precision_precheck.py",
+      "source_line": 90,
+      "module": "test_precision_precheck",
+      "generated": false,
+      "method_source_sha256": "2ec53a7df74d1f12095d03ba930fbcc3b6df6f6cc97be0c9c71de8f7bd0eb365"
+    },
+    {
+      "id": "test_precision_precheck.PrecheckTests.test_pilot_covers_each_group_and_actual_profile_and_keeps_order",
+      "source_file": "experiments/backends/support/test_precision_precheck.py",
+      "method_source_file": "experiments/backends/support/test_precision_precheck.py",
+      "source_line": 106,
+      "module": "test_precision_precheck",
+      "generated": false,
+      "method_source_sha256": "4b4a7e46a2c14703a71b563f0a2b1a949ea9a9ec50f8c6abe64567f6a6359185"
+    },
+    {
+      "id": "test_precision_precheck.PrecheckTests.test_pilot_receipts_keep_unselected_slots_and_analysis_is_deferred",
+      "source_file": "experiments/backends/support/test_precision_precheck.py",
+      "method_source_file": "experiments/backends/support/test_precision_precheck.py",
+      "source_line": 133,
+      "module": "test_precision_precheck",
+      "generated": false,
+      "method_source_sha256": "db1958ba960c43c7d0eacdf5043ac8c63f500f941b52599b41c94f86669f65cb"
+    },
+    {
+      "id": "test_precision_precheck.PrecheckTests.test_precheck_reads_frozen_recipe_without_backend_or_writes",
+      "source_file": "experiments/backends/support/test_precision_precheck.py",
+      "method_source_file": "experiments/backends/support/test_precision_precheck.py",
+      "source_line": 55,
+      "module": "test_precision_precheck",
+      "generated": false,
+      "method_source_sha256": "7f66143cf09d4be7d3b57ce259ab4beb426237aa8f99836cd484156b537d14b5"
+    },
+    {
+      "id": "test_precision_precheck.PrecheckTests.test_profile_binding_cannot_be_changed_by_editing_plan_only",
+      "source_file": "experiments/backends/support/test_precision_precheck.py",
+      "method_source_file": "experiments/backends/support/test_precision_precheck.py",
+      "source_line": 84,
+      "module": "test_precision_precheck",
+      "generated": false,
+      "method_source_sha256": "b36b9fc25a51be8c5b552881f52c85da511387f611b1b88dffa15947536fe328"
+    },
+    {
+      "id": "test_precision_precheck.PrecheckTests.test_real_root_window_caller_keeps_its_own_family_and_schema",
+      "source_file": "experiments/backends/support/test_precision_precheck.py",
+      "method_source_file": "experiments/backends/support/test_precision_precheck.py",
+      "source_line": 118,
+      "module": "test_precision_precheck",
+      "generated": false,
+      "method_source_sha256": "ab0b9da45b6bb31ed578af15f6589e9d056412e601dcf3e0bed16bcf2a7e1bde"
+    },
+    {
+      "id": "test_precision_precheck.PrecheckTests.test_typo_in_subset_cannot_silently_remove_required_group",
+      "source_file": "experiments/backends/support/test_precision_precheck.py",
+      "method_source_file": "experiments/backends/support/test_precision_precheck.py",
+      "source_line": 114,
+      "module": "test_precision_precheck",
+      "generated": false,
+      "method_source_sha256": "ce450630489972ac924d2151682911e11606d223e1ad75308165028ea7c1e949"
+    },
+    {
+      "id": "test_precision_reporting.ReportingChecks.test_aborted_batch_keeps_unrun_denominator_without_case_files",
+      "source_file": "experiments/backends/support/test_precision_reporting.py",
+      "method_source_file": "experiments/backends/support/test_precision_reporting.py",
+      "source_line": 69,
+      "module": "test_precision_reporting",
+      "generated": false,
+      "method_source_sha256": "0212bee82dec5771c033f7e2ca687aacb57f9f0675ffb159266e9293d30edada"
+    },
+    {
+      "id": "test_precision_reporting.ReportingChecks.test_hold_budget_overlap_is_not_confirmed_error",
+      "source_file": "experiments/backends/support/test_precision_reporting.py",
+      "method_source_file": "experiments/backends/support/test_precision_reporting.py",
+      "source_line": 51,
+      "module": "test_precision_reporting",
+      "generated": false,
+      "method_source_sha256": "0a2800ecc462c93cec907e23c2512e9a00442bac111b1fcb1c1386bd68e6b503"
+    },
+    {
+      "id": "test_precision_reporting.ReportingChecks.test_initial_budget_overlap_is_not_confirmed_error",
+      "source_file": "experiments/backends/support/test_precision_reporting.py",
+      "method_source_file": "experiments/backends/support/test_precision_reporting.py",
+      "source_line": 44,
+      "module": "test_precision_reporting",
+      "generated": false,
+      "method_source_sha256": "cda53d2d0e3c5fab0540f38ca5b57ea10ddc19d5aa549e73fb6be4723e32bc3a"
+    },
+    {
+      "id": "test_precision_reporting.ReportingChecks.test_missing_method_and_ground_never_qualify",
+      "source_file": "experiments/backends/support/test_precision_reporting.py",
+      "method_source_file": "experiments/backends/support/test_precision_reporting.py",
+      "source_line": 58,
+      "module": "test_precision_reporting",
+      "generated": false,
+      "method_source_sha256": "5e4357d585de498d5bcf54f707a842ec27d36d3f379317c937ffe393c5aaaeef"
+    },
+    {
+      "id": "test_precision_reporting.ReportingChecks.test_report_rebinds_opted_in_spectre_to_actual_lane_tool_identity",
+      "source_file": "experiments/backends/support/test_precision_reporting.py",
+      "method_source_file": "experiments/backends/support/test_precision_reporting.py",
+      "source_line": 87,
+      "module": "test_precision_reporting",
+      "generated": false,
+      "method_source_sha256": "09574dfb8b4dd2e9c1913db5a09b317a417d4114c3388347dcc5e6ccc8782258"
+    },
+    {
+      "id": "test_precision_reporting.ReportingChecks.test_unexplained_preset_mismatch_not_excused",
+      "source_file": "experiments/backends/support/test_precision_reporting.py",
+      "method_source_file": "experiments/backends/support/test_precision_reporting.py",
+      "source_line": 120,
+      "module": "test_precision_reporting",
+      "generated": false,
+      "method_source_sha256": "f51cc1b02a41a1802430acd258c3a4c7f3ba18c51355d8ede408c08a7a72367a"
+    },
+    {
+      "id": "test_precision_v2_deferred_report.DeferredReportTests.test_deferred_raw_controls_restore_qualified_report_without_rewriting_execution",
+      "source_file": "experiments/backends/support/test_precision_v2_deferred_report.py",
+      "method_source_file": "experiments/backends/support/test_precision_v2_deferred_report.py",
+      "source_line": 92,
+      "module": "test_precision_v2_deferred_report",
+      "generated": false,
+      "method_source_sha256": "dce394a5cc7bca83221669bb21ae8c27ae92e78672cc56d64b88123f3d4207a8"
+    },
+    {
+      "id": "test_precision_v2_deferred_report.DeferredReportTests.test_missing_or_malformed_control_evidence_remains_nonqualified_and_batch_continues",
+      "source_file": "experiments/backends/support/test_precision_v2_deferred_report.py",
+      "method_source_file": "experiments/backends/support/test_precision_v2_deferred_report.py",
+      "source_line": 107,
+      "module": "test_precision_v2_deferred_report",
+      "generated": false,
+      "method_source_sha256": "632ef79aef7101a62820c1b489d4bd6208a55ef1d61ffc22aab1f3dda1ed7b0b"
+    },
+    {
+      "id": "test_precision_v2_deferred_report.DeferredReportTests.test_raw_identity_drift_is_rejected_before_settings_reconstruction",
+      "source_file": "experiments/backends/support/test_precision_v2_deferred_report.py",
+      "method_source_file": "experiments/backends/support/test_precision_v2_deferred_report.py",
+      "source_line": 120,
+      "module": "test_precision_v2_deferred_report",
+      "generated": false,
+      "method_source_sha256": "1acf3a5b1814aa242e7cd83afdeb5483067a77585efc3c5c2b17badaf765163f"
+    },
+    {
+      "id": "test_precision_v2_deferred_report.DeferredReportTests.test_sealed_execution_request_drift_cannot_restore_qualification",
+      "source_file": "experiments/backends/support/test_precision_v2_deferred_report.py",
+      "method_source_file": "experiments/backends/support/test_precision_v2_deferred_report.py",
+      "source_line": 140,
+      "module": "test_precision_v2_deferred_report",
+      "generated": false,
+      "method_source_sha256": "836b0454c9bc3b55ebc1d7695c3f48423817348352c9fe6541070f0e9735263d"
+    },
+    {
+      "id": "test_precision_v2_deferred_report.DeferredReportTests.test_unsealed_added_control_evidence_cannot_restore_qualification",
+      "source_file": "experiments/backends/support/test_precision_v2_deferred_report.py",
+      "method_source_file": "experiments/backends/support/test_precision_v2_deferred_report.py",
+      "source_line": 130,
+      "module": "test_precision_v2_deferred_report",
+      "generated": false,
+      "method_source_sha256": "593c1d0c06ff431aeb55fe47fa6a35f66486f32ae2d890a235a10bedebb0aa8f"
+    },
+    {
+      "id": "test_precision_v2_reporting.ReportingChecks.test_aborted_or_absent_configs_keep_whole_denominator",
+      "source_file": "experiments/backends/support/test_precision_v2_reporting.py",
+      "method_source_file": "experiments/backends/support/test_precision_v2_reporting.py",
+      "source_line": 16,
+      "module": "test_precision_v2_reporting",
+      "generated": false,
+      "method_source_sha256": "b0c7fb0fb2abb44a31456a2cab255b96edc496cd17b999944c01d805f8462c31"
+    },
+    {
+      "id": "test_precision_v2_reporting.ReportingChecks.test_executed_cards_controls_and_observations_are_bound_to_frozen_inputs",
+      "source_file": "experiments/backends/support/test_precision_v2_reporting.py",
+      "method_source_file": "experiments/backends/support/test_precision_v2_reporting.py",
+      "source_line": 84,
+      "module": "test_precision_v2_reporting",
+      "generated": false,
+      "method_source_sha256": "ccfe815a5fa642b3a52cf0c9b95ecdf59ab361c642bc62e83232d13f1152fc97"
+    },
+    {
+      "id": "test_precision_v2_reporting.ReportingChecks.test_gnucap_tick_quantization_is_not_exact_requested_deep_control",
+      "source_file": "experiments/backends/support/test_precision_v2_reporting.py",
+      "method_source_file": "experiments/backends/support/test_precision_v2_reporting.py",
+      "source_line": 98,
+      "module": "test_precision_v2_reporting",
+      "generated": false,
+      "method_source_sha256": "47ccd0a84e2a3bc7e48358f9522a54bfdc81f73a416a75c8ab1b7ff0dcb00eef"
+    },
+    {
+      "id": "test_precision_v2_reporting.ReportingChecks.test_missing_extra_controls_and_step_proof_reject",
+      "source_file": "experiments/backends/support/test_precision_v2_reporting.py",
+      "method_source_file": "experiments/backends/support/test_precision_v2_reporting.py",
+      "source_line": 46,
+      "module": "test_precision_v2_reporting",
+      "generated": false,
+      "method_source_sha256": "975065a670d6eff1976b9f2259549788762e471542e98a1092c7acaecc11851e"
+    },
+    {
+      "id": "test_precision_v2_reporting.ReportingChecks.test_requested_echo_does_not_establish_effective_setting",
+      "source_file": "experiments/backends/support/test_precision_v2_reporting.py",
+      "method_source_file": "experiments/backends/support/test_precision_v2_reporting.py",
+      "source_line": 30,
+      "module": "test_precision_v2_reporting",
+      "generated": false,
+      "method_source_sha256": "5c147694830755a98bca3b000022fc3e682e22b2e05a89c121d70443f46432b2"
+    },
+    {
+      "id": "test_precision_v2_reporting.ReportingChecks.test_selection_is_per_tier_and_regression_does_not_disappear",
+      "source_file": "experiments/backends/support/test_precision_v2_reporting.py",
+      "method_source_file": "experiments/backends/support/test_precision_v2_reporting.py",
+      "source_line": 20,
+      "module": "test_precision_v2_reporting",
+      "generated": false,
+      "method_source_sha256": "047afe9878dc10a3410573bb3efb2bb5b5c17b7f1f5d778a9016b8f531728c44"
+    },
+    {
+      "id": "test_precision_v2_reporting.ReportingChecks.test_step_proof_requires_identity_attachments_and_review",
+      "source_file": "experiments/backends/support/test_precision_v2_reporting.py",
+      "method_source_file": "experiments/backends/support/test_precision_v2_reporting.py",
+      "source_line": 62,
+      "module": "test_precision_v2_reporting",
+      "generated": false,
+      "method_source_sha256": "630731bf42f57244c7141662cc908b10c9d0c8620f76fdd008e5a58772c7a282"
+    },
+    {
+      "id": "test_primitive_provenance.Provenance.test_frozen_inputs_and_source_are_bound",
+      "source_file": "experiments/backends/support/test_primitive_provenance.py",
+      "method_source_file": "experiments/backends/support/test_primitive_provenance.py",
+      "source_line": 48,
+      "module": "test_primitive_provenance",
+      "generated": false,
+      "method_source_sha256": "61b8178ebc05bb111442a49d3c5e28a3119240ef04cb530c9bd62ec6e4124792"
+    },
+    {
+      "id": "test_primitive_provenance.Provenance.test_inventory_and_content_mutation",
+      "source_file": "experiments/backends/support/test_primitive_provenance.py",
+      "method_source_file": "experiments/backends/support/test_primitive_provenance.py",
+      "source_line": 18,
+      "module": "test_primitive_provenance",
+      "generated": false,
+      "method_source_sha256": "bcc256233b8f72f6e320261502161bf8cccb473ff8ef383099e8a0ac93bffe17"
+    },
+    {
+      "id": "test_primitive_provenance.Provenance.test_nested_manifest_is_not_exempt",
+      "source_file": "experiments/backends/support/test_primitive_provenance.py",
+      "method_source_file": "experiments/backends/support/test_primitive_provenance.py",
+      "source_line": 27,
+      "module": "test_primitive_provenance",
+      "generated": false,
+      "method_source_sha256": "bd6823fd94968c1b5a1433748b8e464ff33c8f2c18d6d9473d73e98673255749"
+    },
+    {
+      "id": "test_primitive_provenance.Provenance.test_not_run_can_be_analyzed_without_result",
+      "source_file": "experiments/backends/support/test_primitive_provenance.py",
+      "method_source_file": "experiments/backends/support/test_primitive_provenance.py",
+      "source_line": 39,
+      "module": "test_primitive_provenance",
+      "generated": false,
+      "method_source_sha256": "a4ee483be8f0c9a8e0ad18452f96b1e1562a46661dfd838b6b5fdb0cd8118fd1"
+    },
+    {
+      "id": "test_primitive_provenance.Provenance.test_symlink_fails_closed",
+      "source_file": "experiments/backends/support/test_primitive_provenance.py",
+      "method_source_file": "experiments/backends/support/test_primitive_provenance.py",
+      "source_line": 33,
+      "module": "test_primitive_provenance",
+      "generated": false,
+      "method_source_sha256": "7c26ed048cbc3e17a0a4ee091d0406c257c96123ee8284c59793fffeca8ec8b4"
+    },
+    {
+      "id": "test_primitives_audit.PrintedMetadataAudit.test_actual_disagreement_is_not_printed_rounding",
+      "source_file": "experiments/backends/support/test_primitives_audit.py",
+      "method_source_file": "experiments/backends/support/test_primitives_audit.py",
+      "source_line": 20,
+      "module": "test_primitives_audit",
+      "generated": false,
+      "method_source_sha256": "f6d5e0a8d86d9aa41c4c11a53e32ddf6854f29e476ab470ba190982159d13c79"
+    },
+    {
+      "id": "test_primitives_audit.PrintedMetadataAudit.test_float_rounding_cannot_hide_excess_at_decimal_boundary",
+      "source_file": "experiments/backends/support/test_primitives_audit.py",
+      "method_source_file": "experiments/backends/support/test_primitives_audit.py",
+      "source_line": 60,
+      "module": "test_primitives_audit",
+      "generated": false,
+      "method_source_sha256": "b7e250e8053c70d8ee4940d8ee71d378e421dceb336850309953e9c16b4e80c7"
+    },
+    {
+      "id": "test_primitives_audit.PrintedMetadataAudit.test_high_precision_stop_and_step_have_independent_rounding_checks",
+      "source_file": "experiments/backends/support/test_primitives_audit.py",
+      "method_source_file": "experiments/backends/support/test_primitives_audit.py",
+      "source_line": 26,
+      "module": "test_primitives_audit",
+      "generated": false,
+      "method_source_sha256": "cec3cebd846c90dc618425decc0f5c3169bbb6654e397a61b27f3bec935412bd"
+    },
+    {
+      "id": "test_primitives_audit.PrintedMetadataAudit.test_rounding_does_not_hide_analysis_or_method_changes",
+      "source_file": "experiments/backends/support/test_primitives_audit.py",
+      "method_source_file": "experiments/backends/support/test_primitives_audit.py",
+      "source_line": 41,
+      "module": "test_primitives_audit",
+      "generated": false,
+      "method_source_sha256": "801c5ac0a60fbe6af8e0f09ffa2320bb5bd44affac8817d80398622ffb02e72d"
+    },
+    {
+      "id": "test_primitives_audit.PrintedMetadataAudit.test_six_digit_metadata_preserves_strict_historical_readback",
+      "source_file": "experiments/backends/support/test_primitives_audit.py",
+      "method_source_file": "experiments/backends/support/test_primitives_audit.py",
+      "source_line": 12,
+      "module": "test_primitives_audit",
+      "generated": false,
+      "method_source_sha256": "7cfaa7adda1fe4be898ee17155368efb83af7d2e60c5ba40b8199f453c8bdcbb"
+    },
+    {
+      "id": "test_primitives_audit.PrintedMetadataAudit.test_small_printing_difference_is_retained_as_evidence",
+      "source_file": "experiments/backends/support/test_primitives_audit.py",
+      "method_source_file": "experiments/backends/support/test_primitives_audit.py",
+      "source_line": 49,
+      "module": "test_primitives_audit",
+      "generated": false,
+      "method_source_sha256": "40fc36bf1e76ef3570a70b7d4f83f8a4ae0cc6b007fc516cd19b451960a56ac0"
+    },
+    {
+      "id": "test_probes.TimeResolutionFreeze.test_only_gnucap_time_setting_changes",
+      "source_file": "experiments/backends/support/test_probes.py",
+      "method_source_file": "experiments/backends/support/test_probes.py",
+      "source_line": 11,
+      "module": "test_probes",
+      "generated": false,
+      "method_source_sha256": "373fc39fd29115215790f781b18057e82aac7193cd58cda6c4b7662501c56247"
+    },
+    {
+      "id": "test_root_callback_evidence.LedgerCalibration.test_complete_real_compiled_state_chain_retains_boxes",
+      "source_file": "experiments/backends/support/test_root_callback_evidence.py",
+      "method_source_file": "experiments/backends/support/test_root_callback_evidence.py",
+      "source_line": 38,
+      "module": "test_root_callback_evidence",
+      "generated": false,
+      "method_source_sha256": "ffdac1c82790b87af62283e7c249cb923618f7f238ebb37a5d6cd4081b113d23"
+    },
+    {
+      "id": "test_root_callback_evidence.LedgerCalibration.test_corrupt_history_and_waveform_are_rejected",
+      "source_file": "experiments/backends/support/test_root_callback_evidence.py",
+      "method_source_file": "experiments/backends/support/test_root_callback_evidence.py",
+      "source_line": 46,
+      "module": "test_root_callback_evidence",
+      "generated": false,
+      "method_source_sha256": "d80b4d42999b809cb6a6a9fe026a4ec06efb3f9a88bdc723c4bbd2a336b8cb52"
+    },
+    {
+      "id": "test_root_callback_evidence.LedgerCalibration.test_equivalent_affine_guard_keeps_actual_positive_slope",
+      "source_file": "experiments/backends/support/test_root_callback_evidence.py",
+      "method_source_file": "experiments/backends/support/test_root_callback_evidence.py",
+      "source_line": 92,
+      "module": "test_root_callback_evidence",
+      "generated": false,
+      "method_source_sha256": "f9f66dcd125f12541b3e9d04a9342e047ecf570a2fbdade31be86da1a0271f8e"
+    },
+    {
+      "id": "test_root_callback_evidence.LedgerCalibration.test_guard_direction_tolerance_and_instance_cannot_be_substituted",
+      "source_file": "experiments/backends/support/test_root_callback_evidence.py",
+      "method_source_file": "experiments/backends/support/test_root_callback_evidence.py",
+      "source_line": 81,
+      "module": "test_root_callback_evidence",
+      "generated": false,
+      "method_source_sha256": "b94cbe4e6de284e70c229f07116446b377d55cdfa61d615c84680bb9ff3ea6c3"
+    },
+    {
+      "id": "test_root_callback_evidence.LedgerCalibration.test_native_counter_timing_allowance_reads_frozen_budget",
+      "source_file": "experiments/backends/support/test_root_callback_evidence.py",
+      "method_source_file": "experiments/backends/support/test_root_callback_evidence.py",
+      "source_line": 99,
+      "module": "test_root_callback_evidence",
+      "generated": false,
+      "method_source_sha256": "deff86fa6e9e3e72b979eaec88d929d209dcdef68b270df69f8f521e110ac9d8"
+    },
+    {
+      "id": "test_root_callback_evidence.LedgerCalibration.test_standalone_ledger_rejects_wrong_guard_structure_and_input",
+      "source_file": "experiments/backends/support/test_root_callback_evidence.py",
+      "method_source_file": "experiments/backends/support/test_root_callback_evidence.py",
+      "source_line": 60,
+      "module": "test_root_callback_evidence",
+      "generated": false,
+      "method_source_sha256": "68de2ec57945dd4616d7f45668b39fa2f8d7b8604dac464523e6afde3ada15e6"
+    },
+    {
+      "id": "test_root_callback_evidence.LedgerCalibration.test_unreviewed_producer_is_not_qualified",
+      "source_file": "experiments/backends/support/test_root_callback_evidence.py",
+      "method_source_file": "experiments/backends/support/test_root_callback_evidence.py",
+      "source_line": 44,
+      "module": "test_root_callback_evidence",
+      "generated": false,
+      "method_source_sha256": "ba4a1003e9118a2cb3f47f2a07b8329a9da74be93fe7fbd6219efcc4efe4af80"
+    },
+    {
+      "id": "test_root_window_report.EvidenceIdentity.test_empty_or_incomplete_production_inventory_rejected",
+      "source_file": "experiments/backends/support/test_root_window_report.py",
+      "method_source_file": "experiments/backends/support/test_root_window_report.py",
+      "source_line": 65,
+      "module": "test_root_window_report",
+      "generated": false,
+      "method_source_sha256": "bb1620e0ac5b901f383898a1d311607c33b559ebaad862f39d85eba351deb0cc"
+    },
+    {
+      "id": "test_root_window_report.EvidenceIdentity.test_escape_even_if_both_plan_and_execution_agree",
+      "source_file": "experiments/backends/support/test_root_window_report.py",
+      "method_source_file": "experiments/backends/support/test_root_window_report.py",
+      "source_line": 37,
+      "module": "test_root_window_report",
+      "generated": false,
+      "method_source_sha256": "831a1eddbfb359090b5155e9bfb10b4c651bc1932582714179e381c98ed3955c"
+    },
+    {
+      "id": "test_root_window_report.EvidenceIdentity.test_execution_snapshot_is_independent_of_analysis_edits",
+      "source_file": "experiments/backends/support/test_root_window_report.py",
+      "method_source_file": "experiments/backends/support/test_root_window_report.py",
+      "source_line": 56,
+      "module": "test_root_window_report",
+      "generated": false,
+      "method_source_sha256": "1f82ed54eab219c683cb91e8ef57787b719b70723f27cfec1a11dc1ca02a33b6"
+    },
+    {
+      "id": "test_root_window_report.EvidenceIdentity.test_mixed_lane_or_profile_rejected",
+      "source_file": "experiments/backends/support/test_root_window_report.py",
+      "method_source_file": "experiments/backends/support/test_root_window_report.py",
+      "source_line": 32,
+      "module": "test_root_window_report",
+      "generated": false,
+      "method_source_sha256": "93d9abc27d00c566c6639516db4cbfbf45f6224d05e590300f324a8f1fafaec1"
+    },
+    {
+      "id": "test_root_window_report.EvidenceIdentity.test_observation_markers_cannot_silently_disappear",
+      "source_file": "experiments/backends/support/test_root_window_report.py",
+      "method_source_file": "experiments/backends/support/test_root_window_report.py",
+      "source_line": 92,
+      "module": "test_root_window_report",
+      "generated": false,
+      "method_source_sha256": "45b591c46e75dc029b206858783a65d4d4b11aa8edcdcf5cbd4b1248d8c85285"
+    },
+    {
+      "id": "test_root_window_report.EvidenceIdentity.test_output_inventory_must_be_complete",
+      "source_file": "experiments/backends/support/test_root_window_report.py",
+      "method_source_file": "experiments/backends/support/test_root_window_report.py",
+      "source_line": 43,
+      "module": "test_root_window_report",
+      "generated": false,
+      "method_source_sha256": "61d720ef5f491e035ca683f222ce83ea7d2ac713681dfefa39906748274996f7"
+    },
+    {
+      "id": "test_root_window_report.EvidenceIdentity.test_plan_keeps_failed_and_missing_slots",
+      "source_file": "experiments/backends/support/test_root_window_report.py",
+      "method_source_file": "experiments/backends/support/test_root_window_report.py",
+      "source_line": 25,
+      "module": "test_root_window_report",
+      "generated": false,
+      "method_source_sha256": "89337a9c0f1d69be87db027e02356e53209e452d8d69f4ba0371fa09f91ec1e3"
+    },
+    {
+      "id": "test_root_window_report.EvidenceIdentity.test_spectre_preflight_identity_rejected_if_wrong",
+      "source_file": "experiments/backends/support/test_root_window_report.py",
+      "method_source_file": "experiments/backends/support/test_root_window_report.py",
+      "source_line": 83,
+      "module": "test_root_window_report",
+      "generated": false,
+      "method_source_sha256": "ffcb524d557bddf7547375cc927e6c083faa4ea6e19ccf2fe48579381b2c63ae"
+    },
+    {
+      "id": "test_root_window_report.EvidenceIdentity.test_waveform_cannot_borrow_another_lane",
+      "source_file": "experiments/backends/support/test_root_window_report.py",
+      "method_source_file": "experiments/backends/support/test_root_window_report.py",
+      "source_line": 50,
+      "module": "test_root_window_report",
+      "generated": false,
+      "method_source_sha256": "60c12fc311ae867bbe0fb1e80187f6e959ccb8feb65813a0d376156f277fb18d"
+    },
+    {
+      "id": "test_sin_profile_probe.FixedScientificTarget.test_looser_internal_controls_still_reject_external_q3_error",
+      "source_file": "experiments/backends/support/test_sin_profile_probe.py",
+      "method_source_file": "experiments/backends/support/test_sin_profile_probe.py",
+      "source_line": 13,
+      "module": "test_sin_profile_probe",
+      "generated": false,
+      "method_source_sha256": "f5f6c4ca8d05ec4bfac86a6308e57feaff5d667b19de311f4969a02f6a9876eb"
+    },
+    {
+      "id": "test_spectre_callback_evidence.TraceCalibration.test_complete_trace",
+      "source_file": "experiments/backends/support/test_spectre_callback_evidence.py",
+      "method_source_file": "experiments/backends/support/test_spectre_callback_evidence.py",
+      "source_line": 27,
+      "module": "test_spectre_callback_evidence",
+      "generated": false,
+      "method_source_sha256": "61aaf2c53e79e1cead16328c413176daa207df19ff325abdc102191808c21c5b"
+    },
+    {
+      "id": "test_spectre_callback_evidence.TraceCalibration.test_counter_contradiction",
+      "source_file": "experiments/backends/support/test_spectre_callback_evidence.py",
+      "method_source_file": "experiments/backends/support/test_spectre_callback_evidence.py",
+      "source_line": 59,
+      "module": "test_spectre_callback_evidence",
+      "generated": false,
+      "method_source_sha256": "f8f229aed8149f8af70765d59e4c485891e1f248fae8f760f4d007cb2a8b0ad9"
+    },
+    {
+      "id": "test_spectre_callback_evidence.TraceCalibration.test_every_event_needs_a_unique_identity_and_reviewed_counter",
+      "source_file": "experiments/backends/support/test_spectre_callback_evidence.py",
+      "method_source_file": "experiments/backends/support/test_spectre_callback_evidence.py",
+      "source_line": 64,
+      "module": "test_spectre_callback_evidence",
+      "generated": false,
+      "method_source_sha256": "99d5d605f3d253d3840ed68a2413b5c4c21fd605a88f7a79615996d13dae1d5a"
+    },
+    {
+      "id": "test_spectre_callback_evidence.TraceCalibration.test_format_identity",
+      "source_file": "experiments/backends/support/test_spectre_callback_evidence.py",
+      "method_source_file": "experiments/backends/support/test_spectre_callback_evidence.py",
+      "source_line": 111,
+      "module": "test_spectre_callback_evidence",
+      "generated": false,
+      "method_source_sha256": "26c3d511b02588653738e63b1fb02868948df8356266f168526dda6decea64b6"
+    },
+    {
+      "id": "test_spectre_callback_evidence.TraceCalibration.test_frozen_time_allowance_is_retained",
+      "source_file": "experiments/backends/support/test_spectre_callback_evidence.py",
+      "method_source_file": "experiments/backends/support/test_spectre_callback_evidence.py",
+      "source_line": 84,
+      "module": "test_spectre_callback_evidence",
+      "generated": false,
+      "method_source_sha256": "4194585392d16f4f7f500cae303f6e5423789733e7718a77811134df50d01f23"
+    },
+    {
+      "id": "test_spectre_callback_evidence.TraceCalibration.test_hidden_child_schedule_is_compared_without_discarding_records",
+      "source_file": "experiments/backends/support/test_spectre_callback_evidence.py",
+      "method_source_file": "experiments/backends/support/test_spectre_callback_evidence.py",
+      "source_line": 43,
+      "module": "test_spectre_callback_evidence",
+      "generated": false,
+      "method_source_sha256": "50d40b50cf1371ea25a87e83532a71aa512bfe9202ee2ac6b63d20063d40f4b6"
+    },
+    {
+      "id": "test_spectre_callback_evidence.TraceCalibration.test_invalid_cross_metadata_stays_unknown",
+      "source_file": "experiments/backends/support/test_spectre_callback_evidence.py",
+      "method_source_file": "experiments/backends/support/test_spectre_callback_evidence.py",
+      "source_line": 74,
+      "module": "test_spectre_callback_evidence",
+      "generated": false,
+      "method_source_sha256": "2e8b5d1e041b3dcc5e1783d9f6b4b152dfd8b7030ca91698daf4a6f2f0971695"
+    },
+    {
+      "id": "test_spectre_callback_evidence.TraceCalibration.test_malformed_original_assessment_is_preserved",
+      "source_file": "experiments/backends/support/test_spectre_callback_evidence.py",
+      "method_source_file": "experiments/backends/support/test_spectre_callback_evidence.py",
+      "source_line": 101,
+      "module": "test_spectre_callback_evidence",
+      "generated": false,
+      "method_source_sha256": "7ee72a7dd0e62ad81b82be11bc93a2544eb5cbf3c56e68b706b4f1a75a3a10a1"
+    },
+    {
+      "id": "test_spectre_callback_evidence.TraceCalibration.test_missing_evidence_is_not_a_pass",
+      "source_file": "experiments/backends/support/test_spectre_callback_evidence.py",
+      "method_source_file": "experiments/backends/support/test_spectre_callback_evidence.py",
+      "source_line": 30,
+      "module": "test_spectre_callback_evidence",
+      "generated": false,
+      "method_source_sha256": "abd42f570034bf27a09b1e2e930c454a3d8844e557c201da3be07463a6183645"
+    },
+    {
+      "id": "test_spectre_callback_evidence.TraceCalibration.test_same_time_record_is_not_discarded",
+      "source_file": "experiments/backends/support/test_spectre_callback_evidence.py",
+      "method_source_file": "experiments/backends/support/test_spectre_callback_evidence.py",
+      "source_line": 97,
+      "module": "test_spectre_callback_evidence",
+      "generated": false,
+      "method_source_sha256": "0036479c44fab36e28b9a0ecc8fcae3257877b5b5b9235c755b590fb7d369d48"
+    },
+    {
+      "id": "test_spectre_producer_binding.ProducerBinding.test_binary_calibration_decoder_rejects_truncated_typed_records",
+      "source_file": "experiments/backends/support/test_spectre_producer_binding.py",
+      "method_source_file": "experiments/backends/support/test_spectre_producer_binding.py",
+      "source_line": 66,
+      "module": "test_spectre_producer_binding",
+      "generated": false,
+      "method_source_sha256": "bbea8167ffe6c977194c0ce5072531e3e26144f0510388f0cd2644bcafed8058"
+    },
+    {
+      "id": "test_spectre_producer_binding.ProducerBinding.test_frozen_calibrated_producer_has_observed_not_requested_values",
+      "source_file": "experiments/backends/support/test_spectre_producer_binding.py",
+      "method_source_file": "experiments/backends/support/test_spectre_producer_binding.py",
+      "source_line": 15,
+      "module": "test_spectre_producer_binding",
+      "generated": false,
+      "method_source_sha256": "a9f3499c9404b81b1d65e9907985c48276e4cfa4a50a1ea9d5b8d4a9e0765a78"
+    },
+    {
+      "id": "test_spectre_producer_binding.ProducerBinding.test_producer_rejects_wrong_binary_version_deck_and_case_claims",
+      "source_file": "experiments/backends/support/test_spectre_producer_binding.py",
+      "method_source_file": "experiments/backends/support/test_spectre_producer_binding.py",
+      "source_line": 30,
+      "module": "test_spectre_producer_binding",
+      "generated": false,
+      "method_source_sha256": "862706bfaf5143bcaeb64dba5b0fbe492e45d657ef58e6df7b091df5749a3248"
+    },
+    {
+      "id": "test_spectre_producer_binding.ProducerBinding.test_request_values_never_repair_or_change_observed_controls",
+      "source_file": "experiments/backends/support/test_spectre_producer_binding.py",
+      "method_source_file": "experiments/backends/support/test_spectre_producer_binding.py",
+      "source_line": 54,
+      "module": "test_spectre_producer_binding",
+      "generated": false,
+      "method_source_sha256": "f0f0656ec1760fb92162473c256a26503457354b03124047e998cd5d3b33ec2b"
+    },
+    {
+      "id": "test_spectre_producer_binding.ProducerBinding.test_wrong_or_duplicate_producer_controls_are_not_admitted",
+      "source_file": "experiments/backends/support/test_spectre_producer_binding.py",
+      "method_source_file": "experiments/backends/support/test_spectre_producer_binding.py",
+      "source_line": 43,
+      "module": "test_spectre_producer_binding",
+      "generated": false,
+      "method_source_sha256": "42d617609b4c410f8600e672b791305c1b6ad42a04102f10653a5af341177aa2"
+    },
+    {
+      "id": "test_static_input_evidence.StaticInputCalibration.test_incomplete_proof_stays_unknown",
+      "source_file": "experiments/backends/support/test_static_input_evidence.py",
+      "method_source_file": "experiments/backends/support/test_static_input_evidence.py",
+      "source_line": 68,
+      "module": "test_static_input_evidence",
+      "generated": false,
+      "method_source_sha256": "56ef4ecf7892785f43e51b18304c35f01ae93850fd2a54a89e3e9fde345252ac"
+    },
+    {
+      "id": "test_static_input_evidence.StaticInputCalibration.test_list_operands_do_not_hide_internal_dependencies",
+      "source_file": "experiments/backends/support/test_static_input_evidence.py",
+      "method_source_file": "experiments/backends/support/test_static_input_evidence.py",
+      "source_line": 55,
+      "module": "test_static_input_evidence",
+      "generated": false,
+      "method_source_sha256": "5c3564575aacbad355e7a53810aa10c623813794377266d58d2064db11d44ce5"
+    },
+    {
+      "id": "test_static_input_evidence.StaticInputCalibration.test_physical_constant_input",
+      "source_file": "experiments/backends/support/test_static_input_evidence.py",
+      "method_source_file": "experiments/backends/support/test_static_input_evidence.py",
+      "source_line": 51,
+      "module": "test_static_input_evidence",
+      "generated": false,
+      "method_source_sha256": "206c32df8944f044944548571e433482eaa71c41d38a53137b6af4d71403bbaa"
+    },
+    {
+      "id": "test_static_input_evidence.StaticInputCalibration.test_reviewed_spectre_native_path",
+      "source_file": "experiments/backends/support/test_static_input_evidence.py",
+      "method_source_file": "experiments/backends/support/test_static_input_evidence.py",
+      "source_line": 28,
+      "module": "test_static_input_evidence",
+      "generated": false,
+      "method_source_sha256": "6c4f5d6ae5c35a402dc2492e8f505129d10beadd55c19d4bd9a85f48a7dac0c3"
+    }
+  ],
+  "failed_import_ids": [],
+  "loader_errors": [],
+  "method_count": 221,
+  "generated_count": 0,
+  "read_paths": [
+    "evas/src/evas/__init__.py",
+    "evas/src/evas/__pycache__/__init__.cpython-314.pyc",
+    "evas/src/evas/__pycache__/array_elaboration.cpython-314.pyc",
+    "evas/src/evas/__pycache__/compact_source_select.cpython-314.pyc",
+    "evas/src/evas/__pycache__/condition_domains.cpython-314.pyc",
+    "evas/src/evas/__pycache__/elaboration.cpython-314.pyc",
+    "evas/src/evas/__pycache__/errors.cpython-314.pyc",
+    "evas/src/evas/__pycache__/event_index_domains.cpython-314.pyc",
+    "evas/src/evas/__pycache__/finite_math.cpython-314.pyc",
+    "evas/src/evas/__pycache__/forcing_components.cpython-314.pyc",
+    "evas/src/evas/__pycache__/frontend.cpython-314.pyc",
+    "evas/src/evas/__pycache__/held_power2.cpython-314.pyc",
+    "evas/src/evas/__pycache__/hierarchy.cpython-314.pyc",
+    "evas/src/evas/__pycache__/identity.cpython-314.pyc",
+    "evas/src/evas/__pycache__/initialization_aliases.cpython-314.pyc",
+    "evas/src/evas/__pycache__/input_rational_scope.cpython-314.pyc",
+    "evas/src/evas/__pycache__/instance_compiler.cpython-314.pyc",
+    "evas/src/evas/__pycache__/integer_arithmetic.cpython-314.pyc",
+    "evas/src/evas/__pycache__/integer_bits.cpython-314.pyc",
+    "evas/src/evas/__pycache__/integer_constants.cpython-314.pyc",
+    "evas/src/evas/__pycache__/integer_invariants.cpython-314.pyc",
+    "evas/src/evas/__pycache__/integer_prefix.cpython-314.pyc",
+    "evas/src/evas/__pycache__/integer_table_composition.cpython-314.pyc",
+    "evas/src/evas/__pycache__/ir.cpython-314.pyc",
+    "evas/src/evas/__pycache__/kernel.cpython-314.pyc",
+    "evas/src/evas/__pycache__/limits.cpython-314.pyc",
+    "evas/src/evas/__pycache__/loop_bounds.cpython-314.pyc",
+    "evas/src/evas/__pycache__/lowering.cpython-314.pyc",
+    "evas/src/evas/__pycache__/manifest.cpython-314.pyc",
+    "evas/src/evas/__pycache__/native_audit.cpython-314.pyc",
+    "evas/src/evas/__pycache__/node_elaboration.cpython-314.pyc",
+    "evas/src/evas/__pycache__/parameters.cpython-314.pyc",
+    "evas/src/evas/__pycache__/preprocessor.cpython-314.pyc",
+    "evas/src/evas/__pycache__/protocol.cpython-314.pyc",
+    "evas/src/evas/__pycache__/rational_predicates.cpython-314.pyc",
+    "evas/src/evas/__pycache__/readout_scope.cpython-314.pyc",
+    "evas/src/evas/__pycache__/runtime.cpython-314.pyc",
+    "evas/src/evas/__pycache__/settled_integer_reads.cpython-314.pyc",
+    "evas/src/evas/__pycache__/standard_headers.cpython-314.pyc",
+    "evas/src/evas/__pycache__/strobe.cpython-314.pyc",
+    "evas/src/evas/__pycache__/syntax.cpython-314.pyc",
+    "evas/src/evas/array_elaboration.py",
+    "evas/src/evas/compact_source_select.py",
+    "evas/src/evas/condition_domains.py",
+    "evas/src/evas/elaboration.py",
+    "evas/src/evas/errors.py",
+    "evas/src/evas/event_index_domains.py",
+    "evas/src/evas/finite_math.py",
+    "evas/src/evas/forcing_components.py",
+    "evas/src/evas/frontend.py",
+    "evas/src/evas/held_power2.py",
+    "evas/src/evas/hierarchy.py",
+    "evas/src/evas/identity.py",
+    "evas/src/evas/initialization_aliases.py",
+    "evas/src/evas/input_rational_scope.py",
+    "evas/src/evas/instance_compiler.py",
+    "evas/src/evas/integer_arithmetic.py",
+    "evas/src/evas/integer_bits.py",
+    "evas/src/evas/integer_constants.py",
+    "evas/src/evas/integer_invariants.py",
+    "evas/src/evas/integer_prefix.py",
+    "evas/src/evas/integer_table_composition.py",
+    "evas/src/evas/ir.py",
+    "evas/src/evas/kernel.py",
+    "evas/src/evas/limits.py",
+    "evas/src/evas/loop_bounds.py",
+    "evas/src/evas/lowering.py",
+    "evas/src/evas/manifest.py",
+    "evas/src/evas/native_audit.py",
+    "evas/src/evas/node_elaboration.py",
+    "evas/src/evas/parameters.py",
+    "evas/src/evas/preprocessor.py",
+    "evas/src/evas/protocol.py",
+    "evas/src/evas/rational_predicates.py",
+    "evas/src/evas/readout_scope.py",
+    "evas/src/evas/runtime.py",
+    "evas/src/evas/settled_integer_reads.py",
+    "evas/src/evas/standard_headers.py",
+    "evas/src/evas/strobe.py",
+    "evas/src/evas/syntax.py",
+    "evas/validation/paper/__pycache__/case_inputs.cpython-314.pyc",
+    "evas/validation/paper/__pycache__/legacy_chain_bounds.cpython-314.pyc",
+    "evas/validation/paper/__pycache__/legacy_chain_precision.cpython-314.pyc",
+    "evas/validation/paper/__pycache__/precision_breadth.cpython-314.pyc",
+    "evas/validation/paper/__pycache__/precision_breadth_composition.cpython-314.pyc",
+    "evas/validation/paper/__pycache__/precision_checker.cpython-314.pyc",
+    "evas/validation/paper/__pycache__/precision_composition_root_v3.cpython-314.pyc",
+    "evas/validation/paper/__pycache__/precision_reference.cpython-314.pyc",
+    "evas/validation/paper/__pycache__/precision_root_v3.cpython-314.pyc",
+    "evas/validation/paper/__pycache__/precision_v2.cpython-314.pyc",
+    "evas/validation/paper/__pycache__/primitives.cpython-314.pyc",
+    "evas/validation/paper/__pycache__/root_windows.cpython-314.pyc",
+    "evas/validation/paper/__pycache__/test_precision.cpython-314.pyc",
+    "evas/validation/paper/__pycache__/transition_integral_precision.cpython-314.pyc",
+    "evas/validation/paper/case_inputs.py",
+    "evas/validation/paper/legacy_chain_bounds.py",
+    "evas/validation/paper/legacy_chain_precision.py",
+    "evas/validation/paper/precision-v1.json",
+    "evas/validation/paper/precision_breadth.py",
+    "evas/validation/paper/precision_breadth_composition.py",
+    "evas/validation/paper/precision_checker.py",
+    "evas/validation/paper/precision_composition_root_v3.py",
+    "evas/validation/paper/precision_reference.py",
+    "evas/validation/paper/precision_root_v3.py",
+    "evas/validation/paper/precision_v2.py",
+    "evas/validation/paper/primitives.py",
+    "evas/validation/paper/root_windows.py",
+    "evas/validation/paper/test_precision.py",
+    "evas/validation/paper/transition_integral_precision.py",
+    "evas/validation/sample_edge_filter/__pycache__/contract.cpython-314.pyc",
+    "evas/validation/sample_edge_filter/contract.py",
+    "evas/validation/strobe/__pycache__/near_timer.cpython-314.pyc",
+    "evas/validation/strobe/__pycache__/timer_composition.cpython-314.pyc",
+    "evas/validation/strobe/near_timer.py",
+    "evas/validation/strobe/timer_composition.py",
+    "evas/validation/support/__pycache__/checker.cpython-314.pyc",
+    "evas/validation/support/checker.py",
+    "experiments/backends/evidence/__pycache__/legacy_waveforms.cpython-314.pyc",
+    "experiments/backends/evidence/legacy_waveforms.py",
+    "experiments/backends/paper/__pycache__/actual_observation.cpython-314.pyc",
+    "experiments/backends/paper/__pycache__/inputs.cpython-314.pyc",
+    "experiments/backends/paper/__pycache__/observations.cpython-314.pyc",
+    "experiments/backends/paper/__pycache__/process.cpython-314.pyc",
+    "experiments/backends/paper/__pycache__/runner.cpython-314.pyc",
+    "experiments/backends/paper/__pycache__/settings_readback.cpython-314.pyc",
+    "experiments/backends/paper/__pycache__/test_settings_readback.cpython-314.pyc",
+    "experiments/backends/paper/actual_observation.py",
+    "experiments/backends/paper/inputs.py",
+    "experiments/backends/paper/observations.py",
+    "experiments/backends/paper/process.py",
+    "experiments/backends/paper/runner.py",
+    "experiments/backends/paper/settings_readback.py",
+    "experiments/backends/paper/test_settings_readback.py",
+    "experiments/backends/support/__pycache__/breadth_callback_trace.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/callback_evidence.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/gnucap_output_evidence.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/legacy_chain_run.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/legacy_pipeline.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/precision_binding_evidence.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/precision_binding_run.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/precision_boundary_probe.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/precision_breadth_aggregate.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/precision_breadth_open_evidence.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/precision_breadth_reanalysis.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/precision_breadth_run.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/precision_precheck.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/precision_readback_audit.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/precision_report.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/precision_run.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/precision_v2_report.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/precision_v2_run.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/primitives_audit.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/primitives_run.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/probes.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/root_callback_evidence.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/root_window_report.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/root_window_run.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/sin_profile_probe.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/spectre_callback_evidence.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/static_input_evidence.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/test_callback_evidence.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/test_gnucap_output_evidence.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/test_legacy_pipeline.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/test_precision_binding.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/test_precision_boundary_probe.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/test_precision_breadth_aggregate.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/test_precision_breadth_open_evidence.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/test_precision_breadth_reanalysis.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/test_precision_deferred_run.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/test_precision_precheck.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/test_precision_reporting.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/test_precision_v2_deferred_report.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/test_precision_v2_reporting.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/test_primitive_provenance.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/test_primitives_audit.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/test_probes.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/test_root_callback_evidence.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/test_root_window_report.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/test_sin_profile_probe.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/test_spectre_callback_evidence.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/test_spectre_producer_binding.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/test_static_input_evidence.cpython-314.pyc",
+    "experiments/backends/support/__pycache__/transition_integral_run.cpython-314.pyc",
+    "experiments/backends/support/breadth_callback_trace.py",
+    "experiments/backends/support/callback_evidence.py",
+    "experiments/backends/support/gnucap_output_evidence.py",
+    "experiments/backends/support/legacy_chain_run.py",
+    "experiments/backends/support/legacy_pipeline.py",
+    "experiments/backends/support/precision_binding_evidence.py",
+    "experiments/backends/support/precision_binding_run.py",
+    "experiments/backends/support/precision_boundary_probe.py",
+    "experiments/backends/support/precision_breadth_aggregate.py",
+    "experiments/backends/support/precision_breadth_open_evidence.py",
+    "experiments/backends/support/precision_breadth_reanalysis.py",
+    "experiments/backends/support/precision_breadth_run.py",
+    "experiments/backends/support/precision_precheck.py",
+    "experiments/backends/support/precision_readback_audit.py",
+    "experiments/backends/support/precision_report.py",
+    "experiments/backends/support/precision_run.py",
+    "experiments/backends/support/precision_v2_report.py",
+    "experiments/backends/support/precision_v2_run.py",
+    "experiments/backends/support/primitives_audit.py",
+    "experiments/backends/support/primitives_run.py",
+    "experiments/backends/support/probes.py",
+    "experiments/backends/support/root_callback_evidence.py",
+    "experiments/backends/support/root_window_report.py",
+    "experiments/backends/support/root_window_run.py",
+    "experiments/backends/support/sin_profile_probe.py",
+    "experiments/backends/support/spectre_callback_evidence.py",
+    "experiments/backends/support/static_input_evidence.py",
+    "experiments/backends/support/test_callback_evidence.py",
+    "experiments/backends/support/test_gnucap_output_evidence.py",
+    "experiments/backends/support/test_legacy_pipeline.py",
+    "experiments/backends/support/test_precision_binding.py",
+    "experiments/backends/support/test_precision_boundary_probe.py",
+    "experiments/backends/support/test_precision_breadth_aggregate.py",
+    "experiments/backends/support/test_precision_breadth_open_evidence.py",
+    "experiments/backends/support/test_precision_breadth_reanalysis.py",
+    "experiments/backends/support/test_precision_deferred_run.py",
+    "experiments/backends/support/test_precision_precheck.py",
+    "experiments/backends/support/test_precision_reporting.py",
+    "experiments/backends/support/test_precision_v2_deferred_report.py",
+    "experiments/backends/support/test_precision_v2_reporting.py",
+    "experiments/backends/support/test_primitive_provenance.py",
+    "experiments/backends/support/test_primitives_audit.py",
+    "experiments/backends/support/test_probes.py",
+    "experiments/backends/support/test_root_callback_evidence.py",
+    "experiments/backends/support/test_root_window_report.py",
+    "experiments/backends/support/test_sin_profile_probe.py",
+    "experiments/backends/support/test_spectre_callback_evidence.py",
+    "experiments/backends/support/test_spectre_producer_binding.py",
+    "experiments/backends/support/test_static_input_evidence.py",
+    "experiments/backends/support/transition_integral_run.py"
+  ],
+  "blocked": [],
+  "imported_project_modules": [
+    "evas/src/evas/__init__.py",
+    "evas/src/evas/array_elaboration.py",
+    "evas/src/evas/compact_source_select.py",
+    "evas/src/evas/condition_domains.py",
+    "evas/src/evas/elaboration.py",
+    "evas/src/evas/errors.py",
+    "evas/src/evas/event_index_domains.py",
+    "evas/src/evas/finite_math.py",
+    "evas/src/evas/forcing_components.py",
+    "evas/src/evas/frontend.py",
+    "evas/src/evas/held_power2.py",
+    "evas/src/evas/hierarchy.py",
+    "evas/src/evas/identity.py",
+    "evas/src/evas/initialization_aliases.py",
+    "evas/src/evas/input_rational_scope.py",
+    "evas/src/evas/instance_compiler.py",
+    "evas/src/evas/integer_arithmetic.py",
+    "evas/src/evas/integer_bits.py",
+    "evas/src/evas/integer_constants.py",
+    "evas/src/evas/integer_invariants.py",
+    "evas/src/evas/integer_prefix.py",
+    "evas/src/evas/integer_table_composition.py",
+    "evas/src/evas/ir.py",
+    "evas/src/evas/kernel.py",
+    "evas/src/evas/limits.py",
+    "evas/src/evas/loop_bounds.py",
+    "evas/src/evas/lowering.py",
+    "evas/src/evas/manifest.py",
+    "evas/src/evas/native_audit.py",
+    "evas/src/evas/node_elaboration.py",
+    "evas/src/evas/parameters.py",
+    "evas/src/evas/preprocessor.py",
+    "evas/src/evas/protocol.py",
+    "evas/src/evas/rational_predicates.py",
+    "evas/src/evas/readout_scope.py",
+    "evas/src/evas/runtime.py",
+    "evas/src/evas/settled_integer_reads.py",
+    "evas/src/evas/standard_headers.py",
+    "evas/src/evas/strobe.py",
+    "evas/src/evas/syntax.py",
+    "evas/validation/paper/legacy_chain_bounds.py",
+    "evas/validation/paper/legacy_chain_precision.py",
+    "evas/validation/paper/precision_breadth.py",
+    "evas/validation/paper/precision_breadth_composition.py",
+    "evas/validation/paper/precision_checker.py",
+    "evas/validation/paper/precision_composition_root_v3.py",
+    "evas/validation/paper/precision_reference.py",
+    "evas/validation/paper/precision_root_v3.py",
+    "evas/validation/paper/precision_v2.py",
+    "evas/validation/paper/primitives.py",
+    "evas/validation/paper/root_windows.py",
+    "evas/validation/paper/test_precision.py",
+    "evas/validation/paper/transition_integral_precision.py",
+    "evas/validation/sample_edge_filter/contract.py",
+    "evas/validation/strobe/near_timer.py",
+    "evas/validation/strobe/timer_composition.py",
+    "evas/validation/support/checker.py",
+    "experiments/backends/paper/actual_observation.py",
+    "experiments/backends/paper/inputs.py",
+    "experiments/backends/paper/observations.py",
+    "experiments/backends/paper/process.py",
+    "experiments/backends/paper/runner.py",
+    "experiments/backends/paper/settings_readback.py",
+    "experiments/backends/paper/test_settings_readback.py",
+    "experiments/backends/support/breadth_callback_trace.py",
+    "experiments/backends/support/callback_evidence.py",
+    "experiments/backends/support/gnucap_output_evidence.py",
+    "experiments/backends/support/legacy_chain_run.py",
+    "experiments/backends/support/legacy_pipeline.py",
+    "experiments/backends/support/precision_binding_evidence.py",
+    "experiments/backends/support/precision_binding_run.py",
+    "experiments/backends/support/precision_boundary_probe.py",
+    "experiments/backends/support/precision_breadth_open_evidence.py",
+    "experiments/backends/support/precision_breadth_reanalysis.py",
+    "experiments/backends/support/precision_breadth_run.py",
+    "experiments/backends/support/precision_precheck.py",
+    "experiments/backends/support/precision_readback_audit.py",
+    "experiments/backends/support/precision_report.py",
+    "experiments/backends/support/precision_run.py",
+    "experiments/backends/support/precision_v2_report.py",
+    "experiments/backends/support/precision_v2_run.py",
+    "experiments/backends/support/primitives_audit.py",
+    "experiments/backends/support/primitives_run.py",
+    "experiments/backends/support/probes.py",
+    "experiments/backends/support/root_callback_evidence.py",
+    "experiments/backends/support/root_window_report.py",
+    "experiments/backends/support/root_window_run.py",
+    "experiments/backends/support/sin_profile_probe.py",
+    "experiments/backends/support/spectre_callback_evidence.py",
+    "experiments/backends/support/static_input_evidence.py",
+    "experiments/backends/support/test_callback_evidence.py",
+    "experiments/backends/support/test_gnucap_output_evidence.py",
+    "experiments/backends/support/test_legacy_pipeline.py",
+    "experiments/backends/support/test_precision_binding.py",
+    "experiments/backends/support/test_precision_boundary_probe.py",
+    "experiments/backends/support/test_precision_breadth_aggregate.py",
+    "experiments/backends/support/test_precision_breadth_open_evidence.py",
+    "experiments/backends/support/test_precision_breadth_reanalysis.py",
+    "experiments/backends/support/test_precision_deferred_run.py",
+    "experiments/backends/support/test_precision_precheck.py",
+    "experiments/backends/support/test_precision_reporting.py",
+    "experiments/backends/support/test_precision_v2_deferred_report.py",
+    "experiments/backends/support/test_precision_v2_reporting.py",
+    "experiments/backends/support/test_primitive_provenance.py",
+    "experiments/backends/support/test_primitives_audit.py",
+    "experiments/backends/support/test_probes.py",
+    "experiments/backends/support/test_root_callback_evidence.py",
+    "experiments/backends/support/test_root_window_report.py",
+    "experiments/backends/support/test_sin_profile_probe.py",
+    "experiments/backends/support/test_spectre_callback_evidence.py",
+    "experiments/backends/support/test_spectre_producer_binding.py",
+    "experiments/backends/support/test_static_input_evidence.py",
+    "experiments/backends/support/transition_integral_run.py"
+  ],
+  "returncode": 0,
+  "stderr": "",
+  "static_import_review": [
+    {
+      "path": "experiments/backends/support/test_callback_evidence.py",
+      "git_blob": "0eec25718b4733369a9992569d9ca39999f1f5e2",
+      "top_level_calls": []
+    },
+    {
+      "path": "experiments/backends/support/test_gnucap_output_evidence.py",
+      "git_blob": "673e1c11dd204281b225d0b772625cf4f51f1231",
+      "top_level_calls": []
+    },
+    {
+      "path": "experiments/backends/support/test_legacy_pipeline.py",
+      "git_blob": "e2d787bf0f6dd19e63c08c67c22068b5578c1f4d",
+      "top_level_calls": [
+        "sys.path.insert(0, str(Path(__file__).resolve().parent))",
+        "str(Path(__file__).resolve().parent)",
+        "Path(__file__).resolve()",
+        "Path(__file__)"
+      ]
+    },
+    {
+      "path": "experiments/backends/support/test_precision_binding.py",
+      "git_blob": "41b3197face2c927affee035f18e3c730fd60a24",
+      "top_level_calls": [
+        "sys.path.insert(0, str(Path(__file__).resolve().parent))",
+        "str(Path(__file__).resolve().parent)",
+        "Path(__file__).resolve()",
+        "Path(__file__)"
+      ]
+    },
+    {
+      "path": "experiments/backends/support/test_precision_boundary_probe.py",
+      "git_blob": "34c2e630916ef2e72012cf0fd86ebb428740394a",
+      "top_level_calls": []
+    },
+    {
+      "path": "experiments/backends/support/test_precision_breadth_aggregate.py",
+      "git_blob": "c72313a5da9052db7ffdb8f330d5a9983f3779d1",
+      "top_level_calls": [
+        "importlib.util.spec_from_file_location('aggregate', Path(__file__).with_name('precision_breadth_aggregate.py'))",
+        "Path(__file__).with_name('precision_breadth_aggregate.py')",
+        "Path(__file__)",
+        "importlib.util.module_from_spec(spec)",
+        "spec.loader.exec_module(a)"
+      ]
+    },
+    {
+      "path": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "git_blob": "b6bad87cb71eebf8305c626ccc8cf512c66fecda",
+      "top_level_calls": []
+    },
+    {
+      "path": "experiments/backends/support/test_precision_breadth_reanalysis.py",
+      "git_blob": "6cabc065e3fef718a499c8a39e12fb4fe32c6fbd",
+      "top_level_calls": [
+        "importlib.util.spec_from_file_location('reanalysis', Path(__file__).with_name('precision_breadth_reanalysis.py'))",
+        "Path(__file__).with_name('precision_breadth_reanalysis.py')",
+        "Path(__file__)",
+        "importlib.util.module_from_spec(spec)",
+        "spec.loader.exec_module(r)"
+      ]
+    },
+    {
+      "path": "experiments/backends/support/test_precision_deferred_run.py",
+      "git_blob": "77180eab34385c089ec5cb3c45ba5cb8b7cdf2da",
+      "top_level_calls": [
+        "sys.path.insert(0, str(Path(__file__).resolve().parent))",
+        "str(Path(__file__).resolve().parent)",
+        "Path(__file__).resolve()",
+        "Path(__file__)"
+      ]
+    },
+    {
+      "path": "experiments/backends/support/test_precision_precheck.py",
+      "git_blob": "0a1194f9720f9db498a3b32aad3f1cf59592e9b4",
+      "top_level_calls": [
+        "Path(__file__).resolve()",
+        "Path(__file__)",
+        "sys.path.insert(0, str(SUPPORT))",
+        "str(SUPPORT)"
+      ]
+    },
+    {
+      "path": "experiments/backends/support/test_precision_reporting.py",
+      "git_blob": "81e2962dc67d707d95d5c3e133cecb230f0e2e13",
+      "top_level_calls": [
+        "Path(__file__).resolve()",
+        "Path(__file__)",
+        "sys.path.insert(0, str(ROOT / 'evas/validation/paper'))",
+        "str(ROOT / 'evas/validation/paper')"
+      ]
+    },
+    {
+      "path": "experiments/backends/support/test_precision_v2_deferred_report.py",
+      "git_blob": "c06fc0bb662db3c213b4998cd74fc454cec3363d",
+      "top_level_calls": [
+        "sys.path.insert(0, str(Path(__file__).resolve().parent))",
+        "str(Path(__file__).resolve().parent)",
+        "Path(__file__).resolve()",
+        "Path(__file__)"
+      ]
+    },
+    {
+      "path": "experiments/backends/support/test_precision_v2_reporting.py",
+      "git_blob": "12423330d654605d60185e059de8f79fab0809e8",
+      "top_level_calls": [
+        "sys.path.insert(0, str(Path(__file__).resolve().parents[3] / 'evas/validation/paper'))",
+        "str(Path(__file__).resolve().parents[3] / 'evas/validation/paper')",
+        "Path(__file__).resolve()",
+        "Path(__file__)"
+      ]
+    },
+    {
+      "path": "experiments/backends/support/test_primitive_provenance.py",
+      "git_blob": "01716cc867a5a7e97373b631f4c5506e74aa5a7a",
+      "top_level_calls": []
+    },
+    {
+      "path": "experiments/backends/support/test_primitives_audit.py",
+      "git_blob": "cb3a4d6378f561d62458ef8c11d5ad4f81479d3e",
+      "top_level_calls": [
+        "sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'paper'))",
+        "str(Path(__file__).resolve().parents[1] / 'paper')",
+        "Path(__file__).resolve()",
+        "Path(__file__)"
+      ]
+    },
+    {
+      "path": "experiments/backends/support/test_probes.py",
+      "git_blob": "50190f41328f64b3a7ffb93615cc86cf09915a29",
+      "top_level_calls": []
+    },
+    {
+      "path": "experiments/backends/support/test_root_callback_evidence.py",
+      "git_blob": "11905e60a3a901d6182e2e40ce9839a153a88b27",
+      "top_level_calls": [
+        "Path(__file__).resolve()",
+        "Path(__file__)",
+        "sys.path.insert(0, str(ROOT / 'evas/src'))",
+        "str(ROOT / 'evas/src')",
+        "sys.path.insert(0, str(ROOT / 'evas/validation/paper'))",
+        "str(ROOT / 'evas/validation/paper')"
+      ]
+    },
+    {
+      "path": "experiments/backends/support/test_root_window_report.py",
+      "git_blob": "3c6ce2ed383641f7c1e0d0ff4e74287e3037cc21",
+      "top_level_calls": []
+    },
+    {
+      "path": "experiments/backends/support/test_sin_profile_probe.py",
+      "git_blob": "d3f6f67243cf4b94e32c092ac93f8aa0315a2162",
+      "top_level_calls": []
+    },
+    {
+      "path": "experiments/backends/support/test_spectre_callback_evidence.py",
+      "git_blob": "777442cb265c963d7121bc1dc83274fce90eb797",
+      "top_level_calls": []
+    },
+    {
+      "path": "experiments/backends/support/test_spectre_producer_binding.py",
+      "git_blob": "6c5ad176c28c2b62d27f5b0c99acd740b59bf98c",
+      "top_level_calls": [
+        "Path(__file__).resolve()",
+        "Path(__file__)",
+        "sys.path.insert(0, str(ROOT / 'experiments/backends/paper'))",
+        "str(ROOT / 'experiments/backends/paper')"
+      ]
+    },
+    {
+      "path": "experiments/backends/support/test_static_input_evidence.py",
+      "git_blob": "daad939633f20884e44275c4941335bb208c4d56",
+      "top_level_calls": []
+    }
+  ],
+  "origin": "ci",
+  "loaded_source_identities": [
+    {
+      "path": "evas/src/evas/__init__.py",
+      "git_blob": "b3750e93934a698a575abf55934882a66801963d",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/array_elaboration.py",
+      "git_blob": "0141ee0dc246f4bf5034a23d9459188722efaf3b",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/compact_source_select.py",
+      "git_blob": "7febe70d98fade31b1ca658b700ffc2c1b68a469",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/condition_domains.py",
+      "git_blob": "17588176e3a5829e43dace558a29a5b2eb42273c",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/elaboration.py",
+      "git_blob": "cdfbe6b05eb71ec9d77a1f13f3a142afae9412a8",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/errors.py",
+      "git_blob": "921915a3e840e7f59fcf7f2951c99a5aa922cb67",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/event_index_domains.py",
+      "git_blob": "b94da5ccf4bbc2b0f8104feee818884f6673d5fc",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/finite_math.py",
+      "git_blob": "325c6407484a7fec3ed4583cae44e2d51a28287a",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/forcing_components.py",
+      "git_blob": "cbe1824a43b4cf54a135b3d4beacfd021b296a14",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/frontend.py",
+      "git_blob": "e3af9fcce89725ced811d3ff5a61fad28484c4c2",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/held_power2.py",
+      "git_blob": "b3f32155e3e4a0ca2dd517ca3de5857012341594",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/hierarchy.py",
+      "git_blob": "7d24a0e2dd3e88b29060894c8b3aa0244e895060",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/identity.py",
+      "git_blob": "cbdfa8fa0da4081be22d0f0e7fe4ff7505cec2e8",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/initialization_aliases.py",
+      "git_blob": "32761bcd0f7e00e51ef3a0892c823ad5ee515c79",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/input_rational_scope.py",
+      "git_blob": "0c69fb6842915522c3b68812ca782a032650294e",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/instance_compiler.py",
+      "git_blob": "342f8765f99b58760cc673a37088fb2a043b4e62",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/integer_arithmetic.py",
+      "git_blob": "288b1563567eeb8813666d3c2f9a7fb2acc317bf",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/integer_bits.py",
+      "git_blob": "90e5627a7561965f4f47e5fe44f37aed704b3930",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/integer_constants.py",
+      "git_blob": "d49d6c84c01e21cd10e5c80b6dd70843f8e3308e",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/integer_invariants.py",
+      "git_blob": "1fbe0c19bf86038497872e309a75b137465ccabc",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/integer_prefix.py",
+      "git_blob": "fa9b6b77a84893cbcc5b78f2b9c9083b8b77abb3",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/integer_table_composition.py",
+      "git_blob": "196b5435bf7655226f55afc46ee0014aab079072",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/ir.py",
+      "git_blob": "7fb9829b8864addfb786432b042a36aa5d171136",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/kernel.py",
+      "git_blob": "50c92a299cb049a6261c68774914b2fd1a962ce1",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/limits.py",
+      "git_blob": "e2bb6bdbf073378fdeacaa7b21d46565db489a11",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/loop_bounds.py",
+      "git_blob": "8c17d3c63c0cceaf87bd9fbe51e3996f8cce502d",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/lowering.py",
+      "git_blob": "989c3154d2de172218e85e99d9258210bb06ab32",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/manifest.py",
+      "git_blob": "3a3378198ac9cb6383eb4106f7797212abcf3828",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/native_audit.py",
+      "git_blob": "97777b7118b71ba9cb6df622b2c5e6bf4734697e",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/node_elaboration.py",
+      "git_blob": "ada0bd08d14d319a7214ba3fe321301e5cf1c3ae",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/parameters.py",
+      "git_blob": "9cd72cb31f84230406f5bc4e3a443276c797fd43",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/preprocessor.py",
+      "git_blob": "321ef8182a263c2d80e46116e373530e422f8b33",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/protocol.py",
+      "git_blob": "4cf54b68b04999f2f6c41d5b59a377687073b6c5",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/rational_predicates.py",
+      "git_blob": "eec03e5ae0ad3a93ff3a2e340479e3f32c8987f0",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/readout_scope.py",
+      "git_blob": "80e527d5c410b40996bbd9bd0db6920cb1ed8287",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/runtime.py",
+      "git_blob": "1c18ccd9cc5423e95a05023634ecd61f4c1ecda3",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/settled_integer_reads.py",
+      "git_blob": "4156163d4c753959f254f4a320cdc36df1ce11c4",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/standard_headers.py",
+      "git_blob": "692c8a511f69b3ca5672fdb72acdc0233f352665",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/strobe.py",
+      "git_blob": "728e200cfc5a9b25a1e0de2f633427bfa02f6a78",
+      "matches_main": true
+    },
+    {
+      "path": "evas/src/evas/syntax.py",
+      "git_blob": "109355460695fb535ca872b7eafa0806d041e00a",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/paper/case_inputs.py",
+      "git_blob": "af840830fdba7e321dc50102570248f50ee474e6",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/paper/legacy_chain_bounds.py",
+      "git_blob": "89a16b05273ea25d6feb10c2966c63eb962fc269",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/paper/legacy_chain_precision.py",
+      "git_blob": "e2d3d01e15490fe8a414be36f19c0df061ade140",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/paper/precision-v1.json",
+      "git_blob": "f12092c2fc8dc8f55941c56cf348bc0494afc71c",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/paper/precision_breadth.py",
+      "git_blob": "44901a5fca10fa95bb404de54bf3233173239e57",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/paper/precision_breadth_composition.py",
+      "git_blob": "7c0779dfa62385fe860efb6a0682ef4a30547fca",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/paper/precision_checker.py",
+      "git_blob": "6bbbe47d3d73f19e5355634ba5eba8dfc4f1fc07",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/paper/precision_composition_root_v3.py",
+      "git_blob": "c00815dc7860d0fec84bb0216f2e1f64f6e8edf2",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/paper/precision_reference.py",
+      "git_blob": "32dcd4b1fc571ead116764ac0179dff3aeeb5c72",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/paper/precision_root_v3.py",
+      "git_blob": "df1416a48a7e991f8de329c1d1b3a698b7058948",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/paper/precision_v2.py",
+      "git_blob": "40cc86be11e67db839c9628a82e4fd85a875a3a0",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/paper/primitives.py",
+      "git_blob": "86cead7138711f6b85fa56be255e2f2487fe98f7",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/paper/root_windows.py",
+      "git_blob": "34bfc965e035e0fb1b4b9ee2259dea83bf9f0973",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/paper/test_precision.py",
+      "git_blob": "f2041b839938a1e78a41ef6b17c26ea301028c63",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/paper/transition_integral_precision.py",
+      "git_blob": "6ef8bc4102ea57c1759ab19339ba76b289527de9",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/sample_edge_filter/contract.py",
+      "git_blob": "e642ee16ddcbe97c49d9120ccaef2617e2585b9d",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/strobe/near_timer.py",
+      "git_blob": "c287f839da2596d38abc8be3b55d6b7157dc6abc",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/strobe/timer_composition.py",
+      "git_blob": "fe2a03bc66d6e3b21c3d5b693cb3a01b38cbb672",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/support/checker.py",
+      "git_blob": "9cfe1ae6745c7ca0e5fd700e29522ae207db8359",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/evidence/legacy_waveforms.py",
+      "git_blob": "69f2dbf2394a353a40d6d78ece27b5429905c1aa",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/paper/actual_observation.py",
+      "git_blob": "138dd8dbff4bcf7eb19e5042cdf9d8dd8b7f35f0",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/paper/inputs.py",
+      "git_blob": "e03d3b68236f1649893cb9ded30db036335e0413",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/paper/observations.py",
+      "git_blob": "2657b39e773f526ba7b2e819b81364ac0be1f888",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/paper/process.py",
+      "git_blob": "1310c293da5daa0d18b3e110ac55d39d63a6a6c3",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/paper/runner.py",
+      "git_blob": "fdb7d1e1ed7d848ef42a11152d95f6d81adbd7cb",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/paper/settings_readback.py",
+      "git_blob": "cc5fb08977e9fbf88caa17053f745eae162c6cb8",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/paper/test_settings_readback.py",
+      "git_blob": "dee19d5ebcd73dd44e29db19aeaae99465509b28",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/breadth_callback_trace.py",
+      "git_blob": "6dca5e0645f235e3e3cb1b75ea71a8edfc642a92",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/callback_evidence.py",
+      "git_blob": "18213c1f85fb333333b6861512418123e2af1ce4",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/gnucap_output_evidence.py",
+      "git_blob": "467844dc5f12998c01e71892900ee4d4bbffc8fc",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/legacy_chain_run.py",
+      "git_blob": "6755e7d2d246db9f7e2f9788edc49981a3273baf",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/legacy_pipeline.py",
+      "git_blob": "d3ec11e48a30cbef65bab196469cde100e39c7e9",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/precision_binding_evidence.py",
+      "git_blob": "06aada58f80f9f6052f6b57b25345104991e68d4",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/precision_binding_run.py",
+      "git_blob": "a5c56f403cc09be3ca74301e2fd82f0c59f19c8c",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/precision_boundary_probe.py",
+      "git_blob": "a927d9dc3f7de8644314e13657e9f57f2019208b",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/precision_breadth_aggregate.py",
+      "git_blob": "1db8d3808886f08ff284d571c133a849bb74c384",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/precision_breadth_open_evidence.py",
+      "git_blob": "4f823019780736978932886755e66f4c6fafaecf",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/precision_breadth_reanalysis.py",
+      "git_blob": "a9e05cd85ede4ae079dd41c1d409fa61a9df92d8",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/precision_breadth_run.py",
+      "git_blob": "3c236d20f669c10be45d04288b7c9f4b36469f76",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/precision_precheck.py",
+      "git_blob": "968008b0d1cd2ad720c11d31f85655aa169fd1d9",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/precision_readback_audit.py",
+      "git_blob": "a466c5712e61ca56d50c73f9d014df097bb8e4ba",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/precision_report.py",
+      "git_blob": "df10b753970b4912b5a2ca8309c72dda6ed157ed",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/precision_run.py",
+      "git_blob": "3bd11750b8afbb9defd265b484ebae724570d445",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/precision_v2_report.py",
+      "git_blob": "59bf293b184931a653298b2a0e7217c801ad673a",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/precision_v2_run.py",
+      "git_blob": "d636bdf152de71ef1dad5401e837c1a157c0aa2e",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/primitives_audit.py",
+      "git_blob": "79ad8e2a1e161d42ad4890e60a65261382420572",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/primitives_run.py",
+      "git_blob": "0a88111db941c20fc8c23715e5b3989c3091d304",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/probes.py",
+      "git_blob": "9c92fb1d1213f4b581662c528f8575b530a9639a",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/root_callback_evidence.py",
+      "git_blob": "09afd0e41c4cb735f6f3c179ef53df4e9ae90aed",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/root_window_report.py",
+      "git_blob": "d6ebd6a6edece6831b059761bed385b327949575",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/root_window_run.py",
+      "git_blob": "0c4fea0961152fa79be9f174b2fbf524a34c3a94",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/sin_profile_probe.py",
+      "git_blob": "abbb71c75e7d18f4561e494f3e9ede90377b473c",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/spectre_callback_evidence.py",
+      "git_blob": "4ec5951b6d4ef5932ed99b81f9e68e67db060382",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/static_input_evidence.py",
+      "git_blob": "3540ed054b72d54f81248dd30f7029e34bd37cf1",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/test_callback_evidence.py",
+      "git_blob": "0eec25718b4733369a9992569d9ca39999f1f5e2",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/test_gnucap_output_evidence.py",
+      "git_blob": "673e1c11dd204281b225d0b772625cf4f51f1231",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/test_legacy_pipeline.py",
+      "git_blob": "e2d787bf0f6dd19e63c08c67c22068b5578c1f4d",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/test_precision_binding.py",
+      "git_blob": "41b3197face2c927affee035f18e3c730fd60a24",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/test_precision_boundary_probe.py",
+      "git_blob": "34c2e630916ef2e72012cf0fd86ebb428740394a",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/test_precision_breadth_aggregate.py",
+      "git_blob": "c72313a5da9052db7ffdb8f330d5a9983f3779d1",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/test_precision_breadth_open_evidence.py",
+      "git_blob": "b6bad87cb71eebf8305c626ccc8cf512c66fecda",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/test_precision_breadth_reanalysis.py",
+      "git_blob": "6cabc065e3fef718a499c8a39e12fb4fe32c6fbd",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/test_precision_deferred_run.py",
+      "git_blob": "77180eab34385c089ec5cb3c45ba5cb8b7cdf2da",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/test_precision_precheck.py",
+      "git_blob": "0a1194f9720f9db498a3b32aad3f1cf59592e9b4",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/test_precision_reporting.py",
+      "git_blob": "81e2962dc67d707d95d5c3e133cecb230f0e2e13",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/test_precision_v2_deferred_report.py",
+      "git_blob": "c06fc0bb662db3c213b4998cd74fc454cec3363d",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/test_precision_v2_reporting.py",
+      "git_blob": "12423330d654605d60185e059de8f79fab0809e8",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/test_primitive_provenance.py",
+      "git_blob": "01716cc867a5a7e97373b631f4c5506e74aa5a7a",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/test_primitives_audit.py",
+      "git_blob": "cb3a4d6378f561d62458ef8c11d5ad4f81479d3e",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/test_probes.py",
+      "git_blob": "50190f41328f64b3a7ffb93615cc86cf09915a29",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/test_root_callback_evidence.py",
+      "git_blob": "11905e60a3a901d6182e2e40ce9839a153a88b27",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/test_root_window_report.py",
+      "git_blob": "3c6ce2ed383641f7c1e0d0ff4e74287e3037cc21",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/test_sin_profile_probe.py",
+      "git_blob": "d3f6f67243cf4b94e32c092ac93f8aa0315a2162",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/test_spectre_callback_evidence.py",
+      "git_blob": "777442cb265c963d7121bc1dc83274fce90eb797",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/test_spectre_producer_binding.py",
+      "git_blob": "6c5ad176c28c2b62d27f5b0c99acd740b59bf98c",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/test_static_input_evidence.py",
+      "git_blob": "daad939633f20884e44275c4941335bb208c4d56",
+      "matches_main": true
+    },
+    {
+      "path": "experiments/backends/support/transition_integral_run.py",
+      "git_blob": "b7a93b2d8d0806650465ae212f33509dc72e8f35",
+      "matches_main": true
+    }
+  ],
+  "source_identity_mismatches": [],
+  "collection_issues": []
+}

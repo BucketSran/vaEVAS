@@ -1,0 +1,94 @@
+{
+  "observation_evidence": {
+    "schema_version": 1,
+    "nodes": [
+      "0",
+      "u",
+      "y"
+    ],
+    "effective_controls": {
+      "absolute_V": 1e-08,
+      "relative": 0.0,
+      "stop_s": 0.5,
+      "max_step_s": 0.5,
+      "max_step_applied": true
+    },
+    "sample_origins": [
+      "accepted_controller_frame",
+      "accepted_controller_frame"
+    ],
+    "initial_settled": true,
+    "voltage_bounds_V": [
+      [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          1.9999999999941849,
+          2.000000000006505
+        ]
+      ]
+    ]
+  },
+  "engine": "evas-events-0.25.0",
+  "schema_version": 33,
+  "nodes": [
+    "0",
+    "u",
+    "y"
+  ],
+  "solutions": [
+    {
+      "voltages": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "max_residual_v": 0.0,
+      "max_residual_ratio": 0.0
+    },
+    {
+      "voltages": [
+        0.0,
+        0.0,
+        2.000000000000345
+      ],
+      "max_residual_v": 0.0,
+      "max_residual_ratio": 0.0
+    }
+  ],
+  "transient": {
+    "times": [
+      0.0,
+      0.5
+    ],
+    "state_names": [],
+    "states": [
+      [],
+      []
+    ],
+    "events": [],
+    "display_records": [],
+    "accepted_steps": 51,
+    "discarded_trials": 0
+  }
+}

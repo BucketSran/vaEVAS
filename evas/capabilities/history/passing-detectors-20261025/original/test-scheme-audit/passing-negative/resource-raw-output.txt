@@ -1,0 +1,302 @@
+[
+  {
+    "id": "test_real_call.RealCallContract.test_original_owner_charges_call_work_and_failed_retry_is_sticky",
+    "run": 1,
+    "errors": [],
+    "failures": [],
+    "exceptions": [
+      {
+        "kind": "CompileError",
+        "message": "typed held-target aggregate audit exceeds 100000 work items",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/native_audit.py\", line 123, in materialize\n    items.append(self.materialize(child))\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/native_audit.py\", line 116, in materialize\n    result[field.name] = self.materialize(getattr(value, field.name))\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/native_audit.py\", line 110, in materialize\n    self.debit('wire_visit')\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/native_audit.py\", line 75, in debit\n    self.fail(item, 'typed held-target aggregate audit exceeds 100000 work items')\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/native_audit.py\", line 82, in fail\n    raise CompileError(message, code='resource_budget', token=token)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "typed held-target aggregate audit exceeds 100000 work items",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/limits.py\", line 66, in check_ir\n    return _check_ir_cached(value, origin, work=work, cache=cache)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/limits.py\", line 118, in _check_ir_cached\n    work('ir_walk',1)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/native_audit.py\", line 106, in ir_work\n    self.debit(kind, amount)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/native_audit.py\", line 75, in debit\n    self.fail(item, 'typed held-target aggregate audit exceeds 100000 work items')\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/native_audit.py\", line 82, in fail\n    raise CompileError(message, code='resource_budget', token=token)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "typed held-target aggregate audit exceeds 100000 work items",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/limits.py\", line 66, in check_ir\n    return _check_ir_cached(value, origin, work=work, cache=cache)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/limits.py\", line 118, in _check_ir_cached\n    work('ir_walk',1)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/native_audit.py\", line 106, in ir_work\n    self.debit(kind, amount)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/native_audit.py\", line 75, in debit\n    self.fail(item, 'typed held-target aggregate audit exceeds 100000 work items')\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/native_audit.py\", line 82, in fail\n    raise CompileError(message, code='resource_budget', token=token)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "test_initial_selected_interval.InitialSelectedInterval.test_natural_domain_work_exhaustion_and_sticky_retry_stay_on_same_owner",
+    "run": 1,
+    "errors": [],
+    "failures": [],
+    "exceptions": [
+      {
+        "kind": "CompileError",
+        "message": "typed held-target aggregate audit exceeds 100000 work items",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/program_real_facts.py\", line 308, in selected_interval\n    return hull(points)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/program_real_facts.py\", line 242, in hull\n    self.work('program_interval_hull', 1 + 3 * len(bounds))\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/native_audit.py\", line 106, in ir_work\n    self.debit(kind, amount)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/native_audit.py\", line 75, in debit\n    self.fail(item, 'typed held-target aggregate audit exceeds 100000 work items')\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/native_audit.py\", line 82, in fail\n    raise CompileError(message, code='resource_budget', token=token)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "typed held-target aggregate audit exceeds 100000 work items",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/program_real_facts.py\", line 354, in query\n    return visit(value)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/program_real_facts.py\", line 73, in visit\n    self.work('program_fact_lookup', 1)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/native_audit.py\", line 106, in ir_work\n    self.debit(kind, amount)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/native_audit.py\", line 75, in debit\n    self.fail(item, 'typed held-target aggregate audit exceeds 100000 work items')\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/native_audit.py\", line 82, in fail\n    raise CompileError(message, code='resource_budget', token=token)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "typed held-target aggregate audit exceeds 100000 work items",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/program_real_facts.py\", line 354, in query\n    return visit(value)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/program_real_facts.py\", line 73, in visit\n    self.work('program_fact_lookup', 1)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/native_audit.py\", line 106, in ir_work\n    self.debit(kind, amount)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/native_audit.py\", line 75, in debit\n    self.fail(item, 'typed held-target aggregate audit exceeds 100000 work items')\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/native_audit.py\", line 82, in fail\n    raise CompileError(message, code='resource_budget', token=token)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "test_source_audit_reuse.SourceAuditReuse.test_cache_prepaid_failure_has_no_shared_next_request",
+    "run": 1,
+    "errors": [],
+    "failures": [],
+    "exceptions": [
+      {
+        "kind": "CompileError",
+        "message": "injected cache work failure",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_specialization.py\", line 468, in body\n    shape(statement.rhs, integer_assignment=(kind == \"integer\"), parameter_dead=parameter_dead)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_specialization.py\", line 362, in shape\n    and needs_choices(root, paid=True) and reusable(root)):\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_specialization.py\", line 176, in reusable\n    charge_native.extra(root, 'source_audit_reuse_qualify_fields', len(Expr.__dataclass_fields__)+len(Token.__dataclass_fields__))\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/native_audit.py\", line 144, in extra\n    self.owner.debit(kind, amount, item)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_source_audit_reuse.py\", line 79, in fail\n    raise CompileError('injected cache work failure',code='resource_budget')\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "injected cache work failure",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_specialization.py\", line 412, in shape\n    audit_lower(item, integer_assignment_root=(integer_assignment and item is root),\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_specialization.py\", line 225, in audit_lower\n    current_lower_memos[context] = _SourceAuditMemo(\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 211, in __init__\n    work('source_audit_lower_cache_create', 2)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/native_audit.py\", line 106, in ir_work\n    self.debit(kind, amount)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_source_audit_reuse.py\", line 79, in fail\n    raise CompileError('injected cache work failure',code='resource_budget')\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "injected cache work failure",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1164, in lower_event\n    value = lower(expr, typed, nodes, self.model.source, *args, **kwargs)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 178, in lower\n    value = _lower_checked(expr, parameters, nodes, source, operators, preserve_structure,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 238, in _lower_checked\n    memo.work('source_audit_lower_callback_guard', 9)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/native_audit.py\", line 106, in ir_work\n    self.debit(kind, amount)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_source_audit_reuse.py\", line 79, in fail\n    raise CompileError('injected cache work failure',code='resource_budget')\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "injected cache work failure",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1164, in lower_event\n    value = lower(expr, typed, nodes, self.model.source, *args, **kwargs)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 178, in lower\n    value = _lower_checked(expr, parameters, nodes, source, operators, preserve_structure,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 248, in _lower_checked\n    memo.work('source_audit_lower_cache_key', 8)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/native_audit.py\", line 106, in ir_work\n    self.debit(kind, amount)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_source_audit_reuse.py\", line 79, in fail\n    raise CompileError('injected cache work failure',code='resource_budget')\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "injected cache work failure",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 598, in _lower\n    lower(arg, parameters, nodes, source, operators, preserve_structure,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 178, in lower\n    value = _lower_checked(expr, parameters, nodes, source, operators, preserve_structure,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 264, in _lower_checked\n    memo.work('source_audit_lower_cache_insert', 2)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/native_audit.py\", line 106, in ir_work\n    self.debit(kind, amount)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_source_audit_reuse.py\", line 79, in fail\n    raise CompileError('injected cache work failure',code='resource_budget')\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "injected cache work failure",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_specialization.py\", line 468, in body\n    shape(statement.rhs, integer_assignment=(kind == \"integer\"), parameter_dead=parameter_dead)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_specialization.py\", line 362, in shape\n    and needs_choices(root, paid=True) and reusable(root)):\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_specialization.py\", line 132, in needs_choices\n    charge_native.extra(root, 'source_audit_choice_scan_create', 2)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/native_audit.py\", line 144, in extra\n    self.owner.debit(kind, amount, item)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_source_audit_reuse.py\", line 79, in fail\n    raise CompileError('injected cache work failure',code='resource_budget')\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "injected cache work failure",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_specialization.py\", line 468, in body\n    shape(statement.rhs, integer_assignment=(kind == \"integer\"), parameter_dead=parameter_dead)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_specialization.py\", line 362, in shape\n    and needs_choices(root, paid=True) and reusable(root)):\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_specialization.py\", line 136, in needs_choices\n    charge_native.extra(root, 'source_audit_choice_scan_pop', 2)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/native_audit.py\", line 144, in extra\n    self.owner.debit(kind, amount, item)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_source_audit_reuse.py\", line 79, in fail\n    raise CompileError('injected cache work failure',code='resource_budget')\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "injected cache work failure",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_specialization.py\", line 468, in body\n    shape(statement.rhs, integer_assignment=(kind == \"integer\"), parameter_dead=parameter_dead)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_specialization.py\", line 362, in shape\n    and needs_choices(root, paid=True) and reusable(root)):\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_specialization.py\", line 148, in needs_choices\n    charge_native.extra(item, 'source_audit_choice_scan_edges', 1+len(item.args))\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/native_audit.py\", line 144, in extra\n    self.owner.debit(kind, amount, item)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_source_audit_reuse.py\", line 79, in fail\n    raise CompileError('injected cache work failure',code='resource_budget')\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "injected cache work failure",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_specialization.py\", line 468, in body\n    shape(statement.rhs, integer_assignment=(kind == \"integer\"), parameter_dead=parameter_dead)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_specialization.py\", line 361, in shape\n    if (count == 5 and not paid_observer(root)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_specialization.py\", line 159, in paid_observer\n    charge_native.extra(root, 'source_audit_observer_query', 1)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/native_audit.py\", line 144, in extra\n    self.owner.debit(kind, amount, item)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_source_audit_reuse.py\", line 79, in fail\n    raise CompileError('injected cache work failure',code='resource_budget')\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "injected cache work failure",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 2374, in numeric_observer_candidate\n    return not physical(self.model.analog)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 2368, in physical\n    visit(statement)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_specialization.py\", line 163, in <lambda>\n    visit=lambda statement:charge_native.extra(statement, 'source_audit_observer_visit'))\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/native_audit.py\", line 144, in extra\n    self.owner.debit(kind, amount, item)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/tests/test_source_audit_reuse.py\", line 79, in fail\n    raise CompileError('injected cache work failure',code='resource_budget')\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "test_held_integer_targets.HeldIntegerTargets.test_raw_target_protocol_audits_unselected_and_canceled_dependencies",
+    "run": 1,
+    "errors": [],
+    "failures": [],
+    "exceptions": [
+      {
+        "kind": "CompileError",
+        "message": "integer intermediate signed 32-bit range is unproven",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 684, in compile\n    self.infer_integer_state_ranges()\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1507, in infer_integer_state_ranges\n    value = self.lower_event(rhs, self.symbol, self.node_ids,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1164, in lower_event\n    value = lower(expr, typed, nodes, self.model.source, *args, **kwargs)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 188, in lower\n    checked = validator(expr, value, root=depth == 0 and getattr(parameters, \"allow_integer_assignment_root\", False))\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1439, in validate_integer_operation\n    raise FiniteIntegerUnavailable(\"integer intermediate signed 32-bit range is unproven\",\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "held-bits.va: unknown parameter 'n'",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 146, in evaluate\n    args = [evaluate(arg, env, parameters, arrays, on_read) for arg in expr.args]\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 137, in evaluate\n    value = parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/integer_invariants.py\", line 136, in lookup\n    return parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1854, in parameters\n    return self.parameter(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1069, in parameter\n    raise CompileError(f\"{self.model.source}: unknown parameter {name!r}\")\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "held-bits.va: unknown parameter 'n'",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 146, in evaluate\n    args = [evaluate(arg, env, parameters, arrays, on_read) for arg in expr.args]\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/event_index_domains.py\", line 137, in evaluate\n    value = parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/integer_invariants.py\", line 136, in lookup\n    return parameters(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1854, in parameters\n    return self.parameter(name)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1069, in parameter\n    raise CompileError(f\"{self.model.source}: unknown parameter {name!r}\")\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      },
+      {
+        "kind": "CompileError",
+        "message": "bounded integer bitwise operation exceeds finite-domain budget (256)",
+        "detail": null,
+        "stack": [
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 489, in _lower\n    values.append(lower(arg, lookup, nodes, source, operators, True,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 178, in lower\n    value = _lower_checked(expr, parameters, nodes, source, operators, preserve_structure,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 270, in _lower_checked\n    value = _lower(expr, parameters, nodes, source, operators, preserve_structure,\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/lowering.py\", line 625, in _lower\n    return bitwise(expr, values)\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/src/evas/instance_compiler.py\", line 1658, in integer_bitwise\n    raise FiniteIntegerUnavailable(\"bounded integer bitwise operation exceeds finite-domain budget (256)\",\n",
+          "  File \"/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/probe.py\", line 13, in init\n    rows.append(dict(kind=_cls.__name__,message=str(self),detail=getattr(self,'detail',None),stack=traceback.format_stack(limit=6)))\n"
+        ]
+      }
+    ]
+  }
+]
+{
+  "calibration_written": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/test-scheme-audit/passing-negative/calibration.json",
+  "original_test_under_mutant": {
+    "run": 1,
+    "errors": [],
+    "failures": []
+  }
+}

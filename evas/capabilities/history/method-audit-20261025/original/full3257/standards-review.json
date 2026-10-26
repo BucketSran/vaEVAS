@@ -1,0 +1,179 @@
+{
+  "review": "fresh-context independent Standards/evidence review",
+  "status": "complete; no open Standards/evidence findings",
+  "review_scope": "Inventory/source/CI identities, coverage and row/probe/evidence trail. Semantic source spot checks only; not a second independent reread of all3257 methods.",
+  "findings": [
+    {
+      "id": "ST-F01",
+      "priority": "P2",
+      "status": "resolved",
+      "problem": "36 lane2 rows had nonempty template strings but no extracted helper oracle/assertion. Example test_implicit_dynamics.ImplicitDynamicsContracts.test_near_singular_branch_remains_accurate_before_the_fold.",
+      "resolution": "Current review2 explicitly records assert_close expectation(-1+sqrt(1-4*t))/2 and1e-8; all36 empty extraction templates disappeared, and consolidator now rejects such templates.",
+      "evidence": [
+        "review-2.json",
+        "consolidate.py",
+        "evas/tests/test_implicit_dynamics.py:69"
+      ]
+    }
+  ],
+  "open_findings": [],
+  "verified": {
+    "inventory": {
+      "methods": 3257,
+      "unique_ids": 3257,
+      "modules": 332,
+      "generated_methods": 12,
+      "skip_marked_methods": 0,
+      "independent_unittest_discovery": true,
+      "method_source_line_and_hash_mismatches": 0
+    },
+    "ci": {
+      "head": "66aaa8476eb45a7a11a4f1857547f30a2e2b12b3",
+      "run": "40192400498",
+      "counts": {
+        "passed": 2617,
+        "failed": 423,
+        "error": 214,
+        "expected_failure": 3
+      },
+      "ids_equal_inventory": true
+    },
+    "source": {
+      "main": "15eb7216f7071edb7eda7a9b0c56b7e8933c4c79",
+      "review": "566c36a9366419c970ec008ef27f7bdd3d82e9f6",
+      "trees_equal": true,
+      "production_tests_equal_ci": true,
+      "module_hash_mismatches": 0
+    },
+    "six_lane_records": {
+      "each_assigned_id_exact_once": true,
+      "332_modules_read_records_present": true,
+      "all_recorded_file_sha256_match": true,
+      "findings_bidirectional_mapping_checked": true
+    },
+    "independent_synthetic_calibration_replays": {
+      "execution": "Reexecuted existing lane6 probe code in separate python-B process after removing terminal write_text and print statements. No tests/source/receipt edited; no kernel invoked.",
+      "sourceband": {
+        "positive_pass": true,
+        "dropped_band_false_pass": true,
+        "wrong_value_rejected": true
+      },
+      "root_recovery": {
+        "methods": 3,
+        "positive_numeric_pass": 3,
+        "empty_false_pass": 3,
+        "truncated_false_pass": 3,
+        "wrong_value_rejected": 3,
+        "limit": "Positive metadata deliberately runtime-only per unchanged old assertion; not a qualified IR33 response."
+      }
+    },
+    "prior_dimension": {
+      "historical_prior_records": 691,
+      "separate_from_current_test_verdict": true,
+      "no_old_691_automatic_certification_in_consolidator": true
+    },
+    "workspace_check": "PASS;13 worktrees;0 errors",
+    "final_artifacts": {
+      "all_tsv_fields_equal_json": true,
+      "all_3257_ids_equal_inventory": true,
+      "all_source_and_review_sha_match": true,
+      "row_refs_exist_and_lines_in_range": true,
+      "all_findings_bidirectionally_linked": true,
+      "source_worktree_clean": true,
+      "withdrawn_findings_preserved_in_summary_reviews": [
+        "L1-F11",
+        "L4-F12",
+        "L5-F02"
+      ],
+      "old_approximate_oracle_findings_narrowed": true,
+      "README_counts_and_local_only_static_limits_match": true
+    }
+  },
+  "evidence": [
+    "scope.json",
+    "inventory.json",
+    "prepare.py",
+    "consolidate.py",
+    "review-instructions.md",
+    "coordinator-probes.json",
+    "rejection-path-probe.json",
+    "lane5-probe.json",
+    "lane6-probe-sourceband.py",
+    "lane6-probe-sourceband.json",
+    "lane6-probe-vacuity.py",
+    "lane6-probe-vacuity.json",
+    "../decisions.tsv",
+    "../delivery-phase2-final/summary.json",
+    "audit.json",
+    "summary.json",
+    "methods.tsv",
+    "verification.json",
+    "README.md",
+    "final-spec-review.json"
+  ],
+  "limits": [
+    "332 modules read assertion belongs to six lane source reviewers. This independent reviewer checked all module SHA/read records and selected bodies/helpers, not every body again.",
+    "no_defect_found means static negative finding only; it is neither proof, full calibration, capability qualification nor release acceptance.",
+    "No full suite/build/Spectre/remote action or source/test edits by this reviewer. Probes above assess assertion detection only.",
+    "Old and current execution evidence, failure-obligation labels, test validity and semantic qualification remain distinct.",
+    "This review does not independently establish all external LRM clause interpretations; independent final semantic review owns that scope.",
+    "Final README is a detailed audit report, not the concise user review summary. Coordinator owns the one human delivery summary/output-length check."
+  ],
+  "completed_at": "2026-10-25T13:26:50.011739+00:00",
+  "conclusion": "Final inventory, evidence identities, coverage, per-method table, counts and bounded report claims pass this independent Standards review. Semantic review is a separate conclusion; no simulator/test qualification is granted.",
+  "final_counts": {
+    "methods": 3257,
+    "modules": 332,
+    "definition_positions": 3246,
+    "generated_methods": 12,
+    "no_defect_found": 2785,
+    "evidence_gap": 95,
+    "mixed": 359,
+    "test_defect": 18,
+    "problem_methods": 377,
+    "passing_problem_methods": 32,
+    "finding_groups": 86
+  },
+  "artifact_snapshot": {
+    "scope.json": "6a2312779cf6a43f5d1f152faf5ee792f93483f7d3cba54212726009672e4f10",
+    "inventory.json": "621e08225044ac3add852515d5c82360c0cbdd5e3247893ee69969d5d7dcd3e9",
+    "prepare.py": "74f20a4230734c59d2889b362293bb6d52de26a9b74729c0a6702ec9a079c127",
+    "consolidate.py": "dbbb3a6232af1fe616313299327a2c9256346d7dd8fdac4b8a59f3c484abce34",
+    "audit.json": "0df596c67689c55fcd5dd0db00cfc2f2d852f4eef7ae0125df12c4017976b402",
+    "summary.json": "0f97f53982ff2eece1e07a3647d9bf2f3f94178335dd9b99623d1eb936c19348",
+    "methods.tsv": "2cb8a8c3d7a4a11cbfcc12fc32490606a7119616c3abd634b2e8232592920928",
+    "verification.json": "13f2b9574538beb1babe8e518f092566e698564f06564d7719582c562754f640",
+    "README.md": "26ea438a287ace95105cf8ad0e6bc99f03e5e839413551288ec5ae596b62c53f",
+    "review-1.json": "181e25ba8acfcdce4a78609a92dc2aff10cf7623172f01ff9db4aec2c0277199",
+    "review-2.json": "a47e3abd667147ad02e11b72f095c664274586f3f286c967db4c61453690c0ee",
+    "review-3.json": "88ea2438efa494a75526d99a4eae35e30a849dce8cd8090a09ba526ee41a75ac",
+    "review-4.json": "fa1523e84356f058f3788a1daa813e52f8cc8f2395f94b5bee3fe21eeb786c69",
+    "review-5.json": "34e25e4d14f1e60e6f8051ba348bf075294a249a6539a2df7f151d0e0e59d0ff",
+    "review-6.json": "dd744d8106c11fe2508c0d8e9d42f638a6d73506225b91faa265ebc0dafc4d1f"
+  },
+  "permitted_post_review_change": "README pending/completed status line may change after both reviewer signoffs; all substantive counts, findings, row content and evidence claims remain bound to this snapshot.",
+  "resolved_observations": [
+    {
+      "issue": "Lane4 contract reference-list representation",
+      "resolution": "Explicit source refs plus concrete oracle/assessment provide the row contract. Consolidator accepts descriptive strings or nonempty lists; no approval is inferred from this field type."
+    },
+    {
+      "issue": "Withdrawal L5-F02 passive oldDUE",
+      "resolution": "Independently computed oldDUE to RN due difference1/108086391056891904, but queried binary64 neighbours give same phase[0,1,1]and float(DUE)equalsRN due. No material oracle defect established at original budget; withdrawal reason preserved."
+    }
+  ],
+  "narrow_delta_review": {
+    "method": "test_timer_ordering.TimerOrdering.test_exact_equal_writers_still_fail_same_batch_ownership",
+    "old_verdict": "mixed",
+    "new_verdict": "evidence_gap",
+    "reason": "Different-period clocks with equal exact time lack established same logical occurrence. Uncertainty is preserved instead of declaring a test defect.",
+    "checks": [
+      "All unchanged lane1/2/3/5/6 SHA match prior reviewed snapshots",
+      "Updated review4 SHA matches final consolidated summary",
+      "All3257 TSV fields equal final JSON",
+      "Final counts377problem/95gap/2785no_defect;32passing problems;86groups",
+      "Coordinator correction reason preserved in summary reviews"
+    ],
+    "open_findings": []
+  }
+}

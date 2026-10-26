@@ -1,0 +1,153 @@
+{
+  "start": "evas/validation/paper",
+  "pattern": "test_primitives.py",
+  "scope": "discovery-only",
+  "rows": [
+    {
+      "id": "test_primitives.Calibration.test_accept_all_cards_and_tiers",
+      "source_file": "evas/validation/paper/test_primitives.py",
+      "method_source_file": "evas/validation/paper/test_primitives.py",
+      "source_line": 58,
+      "module": "test_primitives",
+      "generated": false,
+      "method_source_sha256": "92f3dc8c0e78109144192eaecf1fef61ac7debe949f214fba7b123235d504b08"
+    },
+    {
+      "id": "test_primitives.Calibration.test_budget_overlap_is_inconclusive",
+      "source_file": "evas/validation/paper/test_primitives.py",
+      "method_source_file": "evas/validation/paper/test_primitives.py",
+      "source_line": 85,
+      "module": "test_primitives",
+      "generated": false,
+      "method_source_sha256": "be447639dfa3a1daf5a88f5b215881e841f9687101f1bdd9fd0811872d545823"
+    },
+    {
+      "id": "test_primitives.Calibration.test_exact_anchors_and_domains",
+      "source_file": "evas/validation/paper/test_primitives.py",
+      "method_source_file": "evas/validation/paper/test_primitives.py",
+      "source_line": 8,
+      "module": "test_primitives",
+      "generated": false,
+      "method_source_sha256": "6eca006df6546f2a714db41d383d25ea85c515b21f58e074742dd37caebf9054"
+    },
+    {
+      "id": "test_primitives.Calibration.test_independent_nonzero_anchors",
+      "source_file": "evas/validation/paper/test_primitives.py",
+      "method_source_file": "evas/validation/paper/test_primitives.py",
+      "source_line": 25,
+      "module": "test_primitives",
+      "generated": false,
+      "method_source_sha256": "63bd0772c17cb52e5ad9325606bc0ee789edaa81c6ba192cb272ed689e291a3f"
+    },
+    {
+      "id": "test_primitives.Calibration.test_integral_signed_area_and_derivative",
+      "source_file": "evas/validation/paper/test_primitives.py",
+      "method_source_file": "evas/validation/paper/test_primitives.py",
+      "source_line": 102,
+      "module": "test_primitives",
+      "generated": false,
+      "method_source_sha256": "be1a802026f26bbb35bbbe30c3339bec7918c06a8f79f194f74f06c54ef7c154"
+    },
+    {
+      "id": "test_primitives.Calibration.test_integrated_input_uncertainty_prevents_false_pass",
+      "source_file": "evas/validation/paper/test_primitives.py",
+      "method_source_file": "evas/validation/paper/test_primitives.py",
+      "source_line": 95,
+      "module": "test_primitives",
+      "generated": false,
+      "method_source_sha256": "1fb38778b414a04067929c071cb053b5514a13a5f4ac78db09792a020c031a3a"
+    },
+    {
+      "id": "test_primitives.Calibration.test_missing_corner_and_observation_gap",
+      "source_file": "evas/validation/paper/test_primitives.py",
+      "method_source_file": "evas/validation/paper/test_primitives.py",
+      "source_line": 71,
+      "module": "test_primitives",
+      "generated": false,
+      "method_source_sha256": "ef15b817a0d9972908143ecfacd824585c9868c13693a4347ac2ad2bf2b8f0d0"
+    },
+    {
+      "id": "test_primitives.Calibration.test_near_zero_input_error_cannot_hide_sqrt_error",
+      "source_file": "evas/validation/paper/test_primitives.py",
+      "method_source_file": "evas/validation/paper/test_primitives.py",
+      "source_line": 80,
+      "module": "test_primitives",
+      "generated": false,
+      "method_source_sha256": "27fe548ef7da17f5121fb532d416c1d9710d2af875faf592c2c4614303521695"
+    },
+    {
+      "id": "test_primitives.Calibration.test_reject_wrong_output_and_input",
+      "source_file": "evas/validation/paper/test_primitives.py",
+      "method_source_file": "evas/validation/paper/test_primitives.py",
+      "source_line": 64,
+      "module": "test_primitives",
+      "generated": false,
+      "method_source_sha256": "2190d1a7ff443aa6a9aa2d89b0618431b481397dbe73c181c3bc8d3593043ff1"
+    },
+    {
+      "id": "test_primitives.Calibration.test_trigonometric_symmetry_and_extrema",
+      "source_file": "evas/validation/paper/test_primitives.py",
+      "method_source_file": "evas/validation/paper/test_primitives.py",
+      "source_line": 18,
+      "module": "test_primitives",
+      "generated": false,
+      "method_source_sha256": "941f84cfab6516dc2bde7c6677f7c299243d10083f813142dba5a352f32914bd"
+    },
+    {
+      "id": "test_primitives.Calibration.test_trigonometric_tail_range_boundary",
+      "source_file": "evas/validation/paper/test_primitives.py",
+      "method_source_file": "evas/validation/paper/test_primitives.py",
+      "source_line": 41,
+      "module": "test_primitives",
+      "generated": false,
+      "method_source_sha256": "b6df83697d1506bc477af05d86af2ddac6d5e8692757f48e52769c0a96c217bf"
+    }
+  ],
+  "failed_import_ids": [],
+  "loader_errors": [],
+  "method_count": 11,
+  "generated_count": 0,
+  "read_paths": [
+    "evas/validation/paper/__pycache__/precision_reference.cpython-314.pyc",
+    "evas/validation/paper/__pycache__/primitives.cpython-314.pyc",
+    "evas/validation/paper/__pycache__/test_primitives.cpython-314.pyc",
+    "evas/validation/paper/precision_reference.py",
+    "evas/validation/paper/primitives.py",
+    "evas/validation/paper/test_primitives.py"
+  ],
+  "blocked": [],
+  "imported_project_modules": [
+    "evas/validation/paper/precision_reference.py",
+    "evas/validation/paper/primitives.py",
+    "evas/validation/paper/test_primitives.py"
+  ],
+  "returncode": 0,
+  "stderr": "",
+  "static_import_review": [
+    {
+      "path": "evas/validation/paper/test_primitives.py",
+      "git_blob": "0ebd3fc07e0074dff86ff4cf3336ce7a6536beda",
+      "top_level_calls": []
+    }
+  ],
+  "origin": "historically-omitted-extra",
+  "loaded_source_identities": [
+    {
+      "path": "evas/validation/paper/precision_reference.py",
+      "git_blob": "32dcd4b1fc571ead116764ac0179dff3aeeb5c72",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/paper/primitives.py",
+      "git_blob": "86cead7138711f6b85fa56be255e2f2487fe98f7",
+      "matches_main": true
+    },
+    {
+      "path": "evas/validation/paper/test_primitives.py",
+      "git_blob": "0ebd3fc07e0074dff86ff4cf3336ce7a6536beda",
+      "matches_main": true
+    }
+  ],
+  "source_identity_mismatches": [],
+  "collection_issues": []
+}

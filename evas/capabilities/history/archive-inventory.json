@@ -1,0 +1,925 @@
+{
+  "schema_version": 1,
+  "kind": "frozen-evas-audit-archive",
+  "source_revision": "380e7a4e12e428b9776417d9d8a7792848aed6e7",
+  "preparation_receipt_sha256": "079d085143baf1595aa8dbfda43ff83aa86281f0469dd2a4e85077617ba9ff72",
+  "original_file_count": 113,
+  "self_inventory_sha": "not embedded; immutable published Git commit is recorded externally",
+  "semantic_qualification": false,
+  "copied_files": [
+    {
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/actual-discovery-receipt.json",
+      "sha256": "8ac41e3ce2b8620bf958c8072cc603cd8b7d9a73d7fc3f86058bab7fb044e005",
+      "bytes": 5617,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/discovery-main380-20261026/original/actual-discovery-receipt.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/calibration-discovery-summary.json",
+      "sha256": "6c11e76f23899f98f09b91d00e259d8642fb7204be85efcc4ebc35359536fa8f",
+      "bytes": 9757,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/discovery-main380-20261026/original/calibration-discovery-summary.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-06.json",
+      "sha256": "266c5c9bc72859cd949c29e949084ec89e75537ea4a31c8db6baa690bd642230",
+      "bytes": 16148,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-06.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-07.json",
+      "sha256": "f73d2f4d616c9c0656dfce8c62f5d00c5686b8d8978b9aa4a66e470ba2027df2",
+      "bytes": 10253,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-07.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-08.json",
+      "sha256": "2707fbb3f114e3062ba90a5bbdfd6dd8d3dadf7663bdb27b17afc9476732d398",
+      "bytes": 80238,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-08.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-09.json",
+      "sha256": "6399d314aa2ac8f6f3959fbcacfb5af37f8b972c22f0ef9d20ac8d5a5fe3960c",
+      "bytes": 10276,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-09.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-10.json",
+      "sha256": "4591cdaf42c162fccb4609c6c0274c27026b34696883760706bea1bbadf2c359",
+      "bytes": 9750,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-10.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-11.json",
+      "sha256": "080a3e482c4e5414bcb4e4bc35a034764a0b4b8ce7608b87e5886e06ef28e7e5",
+      "bytes": 6097,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-11.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-12.json",
+      "sha256": "d53bdab0477caf4f43267de08a1c00414c25147d980e062f486ba047af676f13",
+      "bytes": 21029,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-12.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-13.json",
+      "sha256": "452a2420d3e249234dd40b2766b940a83502b1c2bffda03a78e556e7b5a547f5",
+      "bytes": 3189,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-13.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-14.json",
+      "sha256": "57f29d5b56d57c74ac8709fcf21c8d744c4fa654541ee153df5f3ecdf5176ad6",
+      "bytes": 40780,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-14.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-15.json",
+      "sha256": "9dc9e23a9404d701db6ed8f226cdb081e0026df593f01a06fc55d33fe746ea2c",
+      "bytes": 13287,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-15.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-16.json",
+      "sha256": "2ad4bf1646e37246018873eb5fb4b804b02353db995409868d96472891797cba",
+      "bytes": 3551,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-16.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-17.json",
+      "sha256": "de14a54d50f2171409755158a17ba8847fab441993cee36cedec6129add58b45",
+      "bytes": 14049,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-17.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-18.json",
+      "sha256": "6d0aaec20d8d528b7be6c68ee9a4f94a1be72862b16e3600314ae7da74b66ecd",
+      "bytes": 22389,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-18.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-19.json",
+      "sha256": "b9abe96545d3b4b3e6af6ad0a119e3e548d82feb99273ba230ff2291404a11c6",
+      "bytes": 66011,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-19.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-20.json",
+      "sha256": "9a2aabd5fc465249f428820869b8226d9d6265cd2e411769ef8c8cab6be7d52c",
+      "bytes": 2903,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-20.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-21.json",
+      "sha256": "f74181dad6f2f3b489768f91a6c4dc7bd3c38bf480b3297f7247a3ede6e1fe99",
+      "bytes": 156711,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-21.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-22.json",
+      "sha256": "51b7eacd66e9db1f2dd71c866a6dae2975ad4e9fb0e44758d126277cffbec743",
+      "bytes": 17175,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-22.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-23.json",
+      "sha256": "53ec3800a5a9aec455c55470242e8d1fcc861eba53f14e16b4ab4b6408dab18d",
+      "bytes": 3421,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-23.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-24.json",
+      "sha256": "8815766831675ea40d9825337f3931ade35a2415947ac7619b4d635b9c9bdfce",
+      "bytes": 6776,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-24.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-25.json",
+      "sha256": "7d53d21a84daf93c075eb0414a9a5b8da7994dc396c379404f1d7221d3d30005",
+      "bytes": 3812,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-25.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-26.json",
+      "sha256": "b335235cbc2d19b4ac5d31387906e2a55e6bea60d774f6cc8da40e8dfcbe29f6",
+      "bytes": 9130,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-26.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-27.json",
+      "sha256": "2212f991e14d95a61ca3bf2ec83c14de7458950615e8120aadd9efc7eb878569",
+      "bytes": 6209,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/discovery-main380-20261026/original/discovery-entry-27.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/main-method-discovery.json",
+      "sha256": "140b39277e6025b7ee7be48bebaee9cc7b04f42624c778765d984e56e7f25341",
+      "bytes": 1729265,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/discovery-main380-20261026/original/main-method-discovery.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/discovery-main380-20261026/original/rust-test-discovery.json",
+      "sha256": "d27573262b1fd0a007d9d75722a7fcad35663a78dbc975e54f733520a0f8e274",
+      "bytes": 138559,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/discovery-main380-20261026/original/rust-test-discovery.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/method-audit-20261025/original/full3257/README.md",
+      "sha256": "5032b2844daa2e0ea00bede7d1cd827e41b3ebffb21bf16d449121c41e1985a8",
+      "bytes": 9756,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/method-audit-20261025/original/full3257/README.md",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/method-audit-20261025/original/full3257/acceptance.json",
+      "sha256": "e5bc8d5abfc8e05bc296235a81ffb474788146059a495bb158338e6d429f1c4d",
+      "bytes": 2667,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/method-audit-20261025/original/full3257/acceptance.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/method-audit-20261025/original/full3257/audit.json",
+      "sha256": "0df596c67689c55fcd5dd0db00cfc2f2d852f4eef7ae0125df12c4017976b402",
+      "bytes": 11354649,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/method-audit-20261025/original/full3257/audit.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/method-audit-20261025/original/full3257/consolidate.py",
+      "sha256": "dbbb3a6232af1fe616313299327a2c9256346d7dd8fdac4b8a59f3c484abce34",
+      "bytes": 7420,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/method-audit-20261025/original/full3257/consolidate.py",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/method-audit-20261025/original/full3257/final-spec-review.json",
+      "sha256": "c21ea94996cae0d3801c890899b3f2caab7e4dcc3706eda16ba9e4c709d084ae",
+      "bytes": 13532,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/method-audit-20261025/original/full3257/final-spec-review.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/method-audit-20261025/original/full3257/inventory.json",
+      "sha256": "621e08225044ac3add852515d5c82360c0cbdd5e3247893ee69969d5d7dcd3e9",
+      "bytes": 11245987,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/method-audit-20261025/original/full3257/inventory.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/method-audit-20261025/original/full3257/methods.tsv",
+      "sha256": "2cb8a8c3d7a4a11cbfcc12fc32490606a7119616c3abd634b2e8232592920928",
+      "bytes": 3787394,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/method-audit-20261025/original/full3257/methods.tsv",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/method-audit-20261025/original/full3257/prepare.py",
+      "sha256": "74f20a4230734c59d2889b362293bb6d52de26a9b74729c0a6702ec9a079c127",
+      "bytes": 3631,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/method-audit-20261025/original/full3257/prepare.py",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/method-audit-20261025/original/full3257/review-1.json",
+      "sha256": "181e25ba8acfcdce4a78609a92dc2aff10cf7623172f01ff9db4aec2c0277199",
+      "bytes": 657732,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/method-audit-20261025/original/full3257/review-1.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/method-audit-20261025/original/full3257/review-2.json",
+      "sha256": "a47e3abd667147ad02e11b72f095c664274586f3f286c967db4c61453690c0ee",
+      "bytes": 896910,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/method-audit-20261025/original/full3257/review-2.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/method-audit-20261025/original/full3257/review-3.json",
+      "sha256": "88ea2438efa494a75526d99a4eae35e30a849dce8cd8090a09ba526ee41a75ac",
+      "bytes": 666387,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/method-audit-20261025/original/full3257/review-3.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/method-audit-20261025/original/full3257/review-4.json",
+      "sha256": "fa1523e84356f058f3788a1daa813e52f8cc8f2395f94b5bee3fe21eeb786c69",
+      "bytes": 766416,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/method-audit-20261025/original/full3257/review-4.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/method-audit-20261025/original/full3257/review-5.json",
+      "sha256": "34e25e4d14f1e60e6f8051ba348bf075294a249a6539a2df7f151d0e0e59d0ff",
+      "bytes": 851696,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/method-audit-20261025/original/full3257/review-5.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/method-audit-20261025/original/full3257/review-6.json",
+      "sha256": "dd744d8106c11fe2508c0d8e9d42f638a6d73506225b91faa265ebc0dafc4d1f",
+      "bytes": 949509,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/method-audit-20261025/original/full3257/review-6.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/method-audit-20261025/original/full3257/scope.json",
+      "sha256": "6a2312779cf6a43f5d1f152faf5ee792f93483f7d3cba54212726009672e4f10",
+      "bytes": 39159,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/method-audit-20261025/original/full3257/scope.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/method-audit-20261025/original/full3257/standards-review.json",
+      "sha256": "05d56023acc3b46f0cec0199e55376caa3908b2a2ef41e503f7a8ebd4b60510f",
+      "bytes": 8506,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/method-audit-20261025/original/full3257/standards-review.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/method-audit-20261025/original/full3257/summary.json",
+      "sha256": "0f97f53982ff2eece1e07a3647d9bf2f3f94178335dd9b99623d1eb936c19348",
+      "bytes": 183917,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/method-audit-20261025/original/full3257/summary.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/method-audit-20261025/original/full3257/verification.json",
+      "sha256": "13f2b9574538beb1babe8e518f092566e698564f06564d7719582c562754f640",
+      "bytes": 102,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/method-audit-20261025/original/full3257/verification.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/method-audit-20261025/original/module-samples/evas/tests/test_absdelay.py",
+      "sha256": "dd1198c024fe5deb4bd54b40f84652c645b8e73b8a647a7bed1babc0d9e6a4e5",
+      "bytes": 11887,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/method-audit-20261025/original/module-samples/evas/tests/test_absdelay.py",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/method-audit-20261025/original/module-samples/evas/tests/test_bound_step.py",
+      "sha256": "1ff7d706256e24fd7a3276e6c743517e38b70c6ad1260d6ba6210ef8d51b0330",
+      "bytes": 11826,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/method-audit-20261025/original/module-samples/evas/tests/test_bound_step.py",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/method-audit-20261025/original/module-samples/evas/tests/test_deferred_rdist.py",
+      "sha256": "326742fc00de3692715da1827b8a076513d09af573906c09ed51d17ff49a7184",
+      "bytes": 15568,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/method-audit-20261025/original/module-samples/evas/tests/test_deferred_rdist.py",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/method-audit-20261025/original/module-samples/evas/tests/test_source_math.py",
+      "sha256": "6046d9972325d51df1ccecda1be3dc3b7216a605c7cb1f2eddec2573473f432d",
+      "bytes": 9625,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/method-audit-20261025/original/module-samples/evas/tests/test_source_math.py",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/passing-detector-receipts.json",
+      "sha256": "9d04a3f1bd90fe8839a7d2d87d4a972b2fd06ae716c0cfaae16944b84d5ab2e2",
+      "bytes": 14081,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/passing-detector-receipts.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/assessment.json",
+      "sha256": "97ea8e5ecd60a8dc5a9d64ceafa1caac5e36283ce839fd98aef5d56bae39d665",
+      "bytes": 8908,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/assessment.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-negative/calibration.json",
+      "sha256": "e91b9d2b3c3f2a5c1cfc0915b7e4bf93a8a8d7c5e98cd4010723d346e9f8eae7",
+      "bytes": 8831,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-negative/calibration.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-negative/findings.json",
+      "sha256": "e828e67e79584279b5c9da84f2007a3332ffcf6184383934f555e8898fc9d88b",
+      "bytes": 9781,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-negative/findings.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-negative/probe.py",
+      "sha256": "6dec7d55f0b546254119fcbffd831b6e6ac5f1972a5bd919b894b2c71f5cf049",
+      "bytes": 5227,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-negative/probe.py",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-negative/raw-output.txt",
+      "sha256": "224fb04f3de397738a29f9311dc8c26b005cf3d3216108fbe6ff2955de908738",
+      "bytes": 144498,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-negative/raw-output.txt",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-negative/raw.json",
+      "sha256": "051f2a88cf46c502e2132e4c0217eabcad8660f9073045e93d718eea55080d69",
+      "bytes": 144236,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-negative/raw.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-negative/resource-raw-output.txt",
+      "sha256": "3956923dc9d264a28c25020a99c39135d22047ee2affe86814cd6af1b2a04f90",
+      "bytes": 33914,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-negative/resource-raw-output.txt",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-oracles/calibrate.py",
+      "sha256": "09ab6878e0693a902a026c36145e51d4c7137f89058f6328fce93a87185777c5",
+      "bytes": 2262,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-oracles/calibrate.py",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-oracles/calibrate_source_math.py",
+      "sha256": "fc4c4d8547206a6789fb70dddd4203a09621e96f03b20b15962e6d9f46b0693f",
+      "bytes": 2519,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-oracles/calibrate_source_math.py",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-oracles/calibration-raw.json",
+      "sha256": "53d95ee794d8878a2aa22ed4093886fd82187e9ec31e180551d17fd85c0526d0",
+      "bytes": 93714,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-oracles/calibration-raw.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-oracles/findings.json",
+      "sha256": "08b2a257ed7eb1a728d71fc91c2ecc77a7e98b3e76eadbdb644d79f2ad7bdb10",
+      "bytes": 7113,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-oracles/findings.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-oracles/source-math-calibration-raw.json",
+      "sha256": "df37480f11c3ea73786790931a0f1cb7bfc1e40ae2e41f6cc45abab570501054",
+      "bytes": 92773,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-oracles/source-math-calibration-raw.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/findings.json",
+      "sha256": "176da08b282e48137f873e79feef29f6ef5b3e7453d66f4d5596698df03d579b",
+      "bytes": 17774,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/findings.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/probe.py",
+      "sha256": "811ada50de001aae1041ec5e44b1ccaa565c2987b0468dabb95c4e3ef6e4fcd2",
+      "bytes": 4680,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/probe.py",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/raw-results.json",
+      "sha256": "4760e8661d5ffbf6a684e040d75ab5c3c48f8d409023a2f6d77d85a2aff84461",
+      "bytes": 12733,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/raw-results.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/stdout.jsonl",
+      "sha256": "392420376a47eeaaccfef818ab239435e0bb167a7daaf4084c968512ee6bcfc0",
+      "bytes": 1807,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/stdout.jsonl",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--drop_initial_solution--0.diagnostics.json",
+      "sha256": "037c1dace2d2a0572433352e347d87028ed31e8e110b4d56b4352761de206efa",
+      "bytes": 21576,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--drop_initial_solution--0.diagnostics.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--drop_initial_solution--0.mutated-response.json",
+      "sha256": "86f2d94d2cf07f8fd6df9c9c19a93ce1f76611e5ab821eb022b02b9f462a88ba",
+      "bytes": 1302,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--drop_initial_solution--0.mutated-response.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--drop_initial_solution--0.original-response.json",
+      "sha256": "c20ae003b5b5dc1699cdfd443fe38fcc49941c1a3ab1a896d8e6a07eb0acd018",
+      "bytes": 1443,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--drop_initial_solution--0.original-response.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--drop_initial_solution--0.request.json",
+      "sha256": "a1a1f1cb70986036d3df960c27d0009e78681af622a9261005df918151df20b8",
+      "bytes": 3029,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--drop_initial_solution--0.request.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--identity--0.diagnostics.json",
+      "sha256": "41962db96770dac82f8f8f29f6872630d41cd1848a47020987d916831de99d2d",
+      "bytes": 21578,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--identity--0.diagnostics.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--identity--0.mutated-response.json",
+      "sha256": "c20ae003b5b5dc1699cdfd443fe38fcc49941c1a3ab1a896d8e6a07eb0acd018",
+      "bytes": 1443,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--identity--0.mutated-response.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--identity--0.original-response.json",
+      "sha256": "c20ae003b5b5dc1699cdfd443fe38fcc49941c1a3ab1a896d8e6a07eb0acd018",
+      "bytes": 1443,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--identity--0.original-response.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--identity--0.request.json",
+      "sha256": "a1a1f1cb70986036d3df960c27d0009e78681af622a9261005df918151df20b8",
+      "bytes": 3029,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--identity--0.request.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_final_voltage--0.diagnostics.json",
+      "sha256": "0de635542aabc876271c5c91c006748b790c071d8d1288d02edf83d6aad36874",
+      "bytes": 21577,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_final_voltage--0.diagnostics.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_final_voltage--0.mutated-response.json",
+      "sha256": "2e6e76fa954d156e1ce19c62f83ef9ae61604194483e11cdb5902a727d1bd9fe",
+      "bytes": 1406,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_final_voltage--0.mutated-response.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_final_voltage--0.original-response.json",
+      "sha256": "c20ae003b5b5dc1699cdfd443fe38fcc49941c1a3ab1a896d8e6a07eb0acd018",
+      "bytes": 1443,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_final_voltage--0.original-response.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_final_voltage--0.request.json",
+      "sha256": "a1a1f1cb70986036d3df960c27d0009e78681af622a9261005df918151df20b8",
+      "bytes": 3029,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_final_voltage--0.request.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_initial_voltage--0.diagnostics.json",
+      "sha256": "fed17a78b914ee8b4a7b50c05ea53f3fcf61175bed64beaa102ad4288fd667b8",
+      "bytes": 21578,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_initial_voltage--0.diagnostics.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_initial_voltage--0.mutated-response.json",
+      "sha256": "1df627241fd15b32f0f1bcf4465769330406401cd8f68b5c8e0bdb8b38840e8e",
+      "bytes": 1449,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_initial_voltage--0.mutated-response.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_initial_voltage--0.original-response.json",
+      "sha256": "c20ae003b5b5dc1699cdfd443fe38fcc49941c1a3ab1a896d8e6a07eb0acd018",
+      "bytes": 1443,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_initial_voltage--0.original-response.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_initial_voltage--0.request.json",
+      "sha256": "a1a1f1cb70986036d3df960c27d0009e78681af622a9261005df918151df20b8",
+      "bytes": 3029,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--wrong_initial_voltage--0.request.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--0.diagnostics.json",
+      "sha256": "fb748a3babf17032970b0477324aa825da9497196d52bc70cc93e53c4e072edb",
+      "bytes": 19018,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--0.diagnostics.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--0.mutated-response.json",
+      "sha256": "4b453c67d7b28f7fcf552f610bf4c6a338fcbf1375a1e383a298f454f0797500",
+      "bytes": 3970,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--0.mutated-response.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--0.original-response.json",
+      "sha256": "3c0e0e000fc529f0f5ae804398fa25f04890ca7603b0ced42e117e935cf03404",
+      "bytes": 4350,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--0.original-response.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--0.request.json",
+      "sha256": "64f1a1a50d75f2af0094da9b201c496e19d5541ac2196ed6c9fb2f7224d8f618",
+      "bytes": 9904,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--0.request.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--1.mutated-response.json",
+      "sha256": "8d5d34bbeea8e8ad938b3917263a8dac5268a4b78574f0ea00930776674ae561",
+      "bytes": 23188,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--1.mutated-response.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--1.original-response.json",
+      "sha256": "8d5d34bbeea8e8ad938b3917263a8dac5268a4b78574f0ea00930776674ae561",
+      "bytes": 23188,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--1.original-response.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--1.request.json",
+      "sha256": "ff4cef8bbf8e2e5ea83dc548f7e15651edaf101960c60e99c2b18a674cf08f8b",
+      "bytes": 10402,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--drop_cross_event--1.request.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.diagnostics.json",
+      "sha256": "a819c9b451681a232fa33d83d3ca3675facc09bd8ef8c1e02b4627fd7fd3ebf4",
+      "bytes": 19018,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.diagnostics.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.mutated-response.json",
+      "sha256": "3c0e0e000fc529f0f5ae804398fa25f04890ca7603b0ced42e117e935cf03404",
+      "bytes": 4350,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.mutated-response.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.original-response.json",
+      "sha256": "3c0e0e000fc529f0f5ae804398fa25f04890ca7603b0ced42e117e935cf03404",
+      "bytes": 4350,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.original-response.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.request.json",
+      "sha256": "64f1a1a50d75f2af0094da9b201c496e19d5541ac2196ed6c9fb2f7224d8f618",
+      "bytes": 9904,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.request.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.mutated-response.json",
+      "sha256": "8d5d34bbeea8e8ad938b3917263a8dac5268a4b78574f0ea00930776674ae561",
+      "bytes": 23188,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.mutated-response.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.original-response.json",
+      "sha256": "8d5d34bbeea8e8ad938b3917263a8dac5268a4b78574f0ea00930776674ae561",
+      "bytes": 23188,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.original-response.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.request.json",
+      "sha256": "ff4cef8bbf8e2e5ea83dc548f7e15651edaf101960c60e99c2b18a674cf08f8b",
+      "bytes": 10402,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.request.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--0.diagnostics.json",
+      "sha256": "339de75d79a11e154f93022daebdac6dd49ee91c33252a0e683ea0b61420dc75",
+      "bytes": 19018,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--0.diagnostics.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--0.mutated-response.json",
+      "sha256": "6abd5fc39bef35d1d0fccabe4d088d2497152a4d8b8254e954718fca6012811f",
+      "bytes": 4336,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--0.mutated-response.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--0.original-response.json",
+      "sha256": "3c0e0e000fc529f0f5ae804398fa25f04890ca7603b0ced42e117e935cf03404",
+      "bytes": 4350,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--0.original-response.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--0.request.json",
+      "sha256": "64f1a1a50d75f2af0094da9b201c496e19d5541ac2196ed6c9fb2f7224d8f618",
+      "bytes": 9904,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--0.request.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--1.mutated-response.json",
+      "sha256": "8d5d34bbeea8e8ad938b3917263a8dac5268a4b78574f0ea00930776674ae561",
+      "bytes": 23188,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--1.mutated-response.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--1.original-response.json",
+      "sha256": "8d5d34bbeea8e8ad938b3917263a8dac5268a4b78574f0ea00930776674ae561",
+      "bytes": 23188,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--1.original-response.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--1.request.json",
+      "sha256": "ff4cef8bbf8e2e5ea83dc548f7e15651edaf101960c60e99c2b18a674cf08f8b",
+      "bytes": 10402,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_cross_after--1.request.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_final_voltage--0.diagnostics.json",
+      "sha256": "60c1b2aa236d1034d59528c06a91fa58e827114cddba9a3eb2ba562adfc9040b",
+      "bytes": 19018,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_final_voltage--0.diagnostics.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_final_voltage--0.mutated-response.json",
+      "sha256": "ae06149981dd4fa08f1ec849ee66fce0aaf425707bae030fe1a2f161d30cdef2",
+      "bytes": 4309,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_final_voltage--0.mutated-response.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_final_voltage--0.original-response.json",
+      "sha256": "3c0e0e000fc529f0f5ae804398fa25f04890ca7603b0ced42e117e935cf03404",
+      "bytes": 4350,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_final_voltage--0.original-response.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_final_voltage--0.request.json",
+      "sha256": "64f1a1a50d75f2af0094da9b201c496e19d5541ac2196ed6c9fb2f7224d8f618",
+      "bytes": 9904,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_final_voltage--0.request.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--0.diagnostics.json",
+      "sha256": "e22f9b8c23d659e2588183e0a291da55b4208fc06d63a1fc7fa27e37d380e3e1",
+      "bytes": 19018,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--0.diagnostics.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--0.mutated-response.json",
+      "sha256": "552d1fee7a0028d0dfabdcf151d430469fc3bf4235b8eb0f8e5a6c428b2b86a0",
+      "bytes": 4351,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--0.mutated-response.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--0.original-response.json",
+      "sha256": "3c0e0e000fc529f0f5ae804398fa25f04890ca7603b0ced42e117e935cf03404",
+      "bytes": 4350,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--0.original-response.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--0.request.json",
+      "sha256": "64f1a1a50d75f2af0094da9b201c496e19d5541ac2196ed6c9fb2f7224d8f618",
+      "bytes": 9904,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--0.request.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--1.mutated-response.json",
+      "sha256": "8d5d34bbeea8e8ad938b3917263a8dac5268a4b78574f0ea00930776674ae561",
+      "bytes": 23188,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--1.mutated-response.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--1.original-response.json",
+      "sha256": "8d5d34bbeea8e8ad938b3917263a8dac5268a4b78574f0ea00930776674ae561",
+      "bytes": 23188,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--1.original-response.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--1.request.json",
+      "sha256": "ff4cef8bbf8e2e5ea83dc548f7e15651edaf101960c60e99c2b18a674cf08f8b",
+      "bytes": 10402,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/passing-detectors-20261025/original/test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--wrong_times--1.request.json",
+      "role": "frozen-original-audit-or-discovery"
+    },
+    {
+      "path": "evas/capabilities/history/source-manifest.json",
+      "sha256": "843462035eeac5451dde8e2c0cabd6fdcfe0d9b89cde7d48a8e676fbb2a78e4f",
+      "bytes": 162818,
+      "git_mode": "100644",
+      "source_receipt_path": "generated/portable-sample/evas/capabilities/history/source-manifest.json",
+      "role": "preparation-provenance-manifest"
+    }
+  ],
+  "copied_file_count": 114,
+  "preparation_manifest_count": 1
+}
