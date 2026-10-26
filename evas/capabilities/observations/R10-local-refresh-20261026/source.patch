@@ -1,0 +1,139 @@
+diff --git a/scripts/capabilities/generate_catalog.py b/scripts/capabilities/generate_catalog.py
+index 8823b5377acc13454965ab3399e9b31da440fae7..696c9dffdf8f22614d1522fd47d45b32191a2f3b 100644
+--- a/scripts/capabilities/generate_catalog.py
++++ b/scripts/capabilities/generate_catalog.py
+@@ -32,6 +32,27 @@ def source(logical,path,locator=None):
+   'locator':locator or {'kind':'pending-archive','repository':'vaevas-evidence','revision':None,'path':'discovery/'+rawsha+'.json'},
+   'sha256':rawsha,'dependencies':[]})
+ 
++def select_audited_method(row,current,previous_objects,current_assets):
++ """Bind original path/runtime/bytes before considering current selection."""
++ owners={(o['id'],o['version']):o for o in previous_objects if o['kind']=='asset'}
++ owners.update({(o['id'],o['version']):o for o in current_assets})
++ def identity(method):
++  if method is None or method.get('namespace')!='python-regression' or method.get('runtime_id')!=row['id']:return None
++  owner=owners.get((method['module']['id'],method['module']['version']))
++  return owner if owner and ref(owner)==method['module'] and owner['current_path']==row.get('source_file') else None
++ def exact(method):
++  owner=identity(method)
++  return owner if owner and method['definition']['sha256']==row.get('source_method_sha256') and owner['content'].get('value')==row.get('source_module_sha256') else None
++ owner=exact(current)
++ if owner is not None:return current,owner,'current-observed-method'
++ candidates=[o for o in previous_objects if o['kind']=='method' and o.get('namespace')=='python-regression' and o.get('runtime_id')==row['id']]
++ for method in sorted(candidates,key=lambda o:(o['id'],o['version'])):
++  owner=exact(method)
++  if owner is not None:return method,owner,'retained-original-method-version'
++ owner=identity(current)
++ if owner is not None:return current,owner,'current-observed-method'
++ raise ValueError('historical original source identity unavailable; explicit unbound migration required: '+row['id'])
++
+ def entry_inputs(config):
+  result=[]
+  for item in config['discoveries']:
+@@ -251,16 +272,12 @@ def build(config,out):
+  audit,s=original('original-method-audit-3257',prefix+'method-audit-20261025/original/full3257/audit.json')
+  by_runtime={m['runtime_id']:m for m in methods.values() if m['namespace']=='python-regression'}
+  for index,row in enumerate(audit['rows']):
+-  m=by_runtime.get(row['id'])
+-  if m is None:
+-   candidates=[o for o in previous_objects if o['kind']=='method' and o['namespace']=='python-regression' and o['runtime_id']==row['id']]
+-   m=next((o for o in candidates if o['definition']['sha256']==row.get('source_method_sha256')),None)
+-   if m is None:raise ValueError('historical method no longer discovered and no prior bound version; explicit unbound migration required: '+row['id'])
+-  owner=next((o for o in assets.values() if o['id']==m['module']['id'] and o['version']==m['module']['version']),None) or next(o for o in previous_objects if o['id']==m['module']['id'] and o['version']==m['module']['version']);matched=row.get('source_method_sha256')==m['definition']['sha256'] and row.get('source_module_sha256')==owner['content'].get('value')
++  m,owner,alignment_scope=select_audited_method(row,by_runtime.get(row['id']),previous_objects,assets.values())
++  matched=row.get('source_method_sha256')==m['definition']['sha256'] and row.get('source_module_sha256')==owner['content'].get('value')
+   histories.append({'schema_version':1,'id':sid('history-audit',row['id']),'version':s['sha256'],'kind':'historical-audit-record','status':'active',
+    'source':ref(s),'row_pointer':'/rows/'+str(index),'original_row_sha256':canonical(row),'scope_pointer':'/summary/scope','scope_sha256':canonical(audit['summary']['scope']),
+    'identity_binding':'bound','history_protocol':'evas-method-audit-3257-v1','method':ref(m),
+-   'alignment':{'status':'matched' if matched else 'pending','scope':'current-observed-method' if row['id'] in by_runtime else 'retained-original-method-version','reason':'owned method/module bytes compared to original row; not semantic qualification'},
++   'alignment':{'status':'matched' if matched else 'pending','scope':alignment_scope,'reason':'owned method/module bytes compared to original row; not semantic qualification'},
+    'original_verdict':row['verdict'],'source_method_sha256':row['source_method_sha256'],'source_module_sha256':row['source_module_sha256'],
+    'original_execution_outcome':row.get('execution_outcome'),'qualification_status':'not-granted','dependencies':[ref(s)]})
+  specs=[('passing-oracles','evas-passing-oracles-v1','confirmed','/scope'),('passing-negative','evas-passing-negative-v1','findings',''),('passing-raw','evas-passing-raw-v1','findings','')]
+diff --git a/scripts/tests/test_catalog_history_selection.py b/scripts/tests/test_catalog_history_selection.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..ab616cad874337e48bd17c6a3e867a4b20c6f822
+--- /dev/null
++++ b/scripts/tests/test_catalog_history_selection.py
+@@ -0,0 +1,81 @@
++"""Historical identity survives a move without reinterpreting the real audit."""
++import copy
++import ast
++import importlib.util
++import json
++from pathlib import Path
++import types
++import unittest
++
++ROOT = Path(__file__).resolve().parents[2]
++
++
++def module(name, path):
++    spec = importlib.util.spec_from_file_location(name, path)
++    result = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(result)
++    return result
++
++
++class HistoricalMethodSelectionTests(unittest.TestCase):
++    @classmethod
++    def setUpClass(cls):
++        cls.api = module('history_selection_registry', ROOT / 'evas/capabilities/registry.py')
++        cls.generator = module('history_selection_generator', ROOT / 'scripts/capabilities/generate_catalog.py')
++        registry = cls.api.load(ROOT / 'evas/capabilities/data', root=ROOT, repositories={'vaevas': ROOT})
++        catalog = registry.catalog()
++        cls.history = catalog.current('historical-audit-record')[0]
++        cls.old_method = catalog.bound(cls.history['method'])
++        cls.old_owner = catalog.bound(cls.old_method['module'])
++        cls.source = catalog.bound(cls.history['source'])
++        cls.row = catalog.read_history(cls.history)
++        cls.audit_scope = json.loads(registry.read_source(cls.source))['summary']['scope']
++
++    def moved(self):
++        owner = copy.deepcopy(self.old_owner)
++        owner.update(version='moved-owner', current_path='evas/tests/review_moved/' + Path(owner['current_path']).name)
++        method = copy.deepcopy(self.old_method)
++        method.update(version='moved-method', module=self.api.reference(owner))
++        method['definition']['path'] = owner['current_path']
++        return owner, method
++
++    def test_move_or_runtime_rename_keeps_exact_original_version_and_raw_row(self):
++        for renamed in (False, True):
++            with self.subTest(runtime_renamed=renamed):
++                owner, current = self.moved()
++                if renamed:
++                    current['runtime_id'] += '_renamed'
++                selected, selected_owner, scope = self.generator.select_audited_method(
++                    self.row, current, [self.old_owner, self.old_method], [owner])
++                self.assertEqual(selected, self.old_method)
++                self.assertEqual(selected_owner, self.old_owner)
++                self.assertEqual(scope, 'retained-original-method-version')
++                tree = ast.parse((ROOT / 'scripts/capabilities/generate_catalog.py').read_text())
++                build = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == 'build')
++                loop = next(node for node in build.body if isinstance(node, ast.For)
++                            and isinstance(node.target, ast.Tuple)
++                            and [item.id for item in node.target.elts] == ['index', 'row'])
++                context = dict(self.generator.__dict__, audit={'rows': [self.row],
++                    'summary': {'scope': self.audit_scope}}, by_runtime={current['runtime_id']: current},
++                    assets={owner['current_path']: owner}, previous_objects=[self.old_owner, self.old_method],
++                    histories=[], s=self.source)
++                exec(compile(ast.Module(body=[loop], type_ignores=[]), 'actual-generator-audit-loop', 'exec'), context)
++                history = context['histories'][0]
++                history['row_pointer'] = self.history['row_pointer']
++                self.assertEqual(history['method'], self.api.reference(self.old_method))
++                self.assertEqual(history['alignment']['scope'], scope)
++                objects = [self.source, self.old_owner, self.old_method, owner, current]
++                registry = types.SimpleNamespace(objects={(o['id'], o['version']): o for o in objects},
++                    root=ROOT, repositories={'vaevas': ROOT})
++                self.assertEqual(self.api._owned('asset_catalog').Catalog(registry).read_history(history), self.row)
++
++    def test_equal_method_hash_cannot_borrow_wrong_module_identity(self):
++        owner, current = self.moved()
++        wrong_owner = copy.deepcopy(self.old_owner)
++        wrong_owner['version'] = 'wrong-owner'
++        wrong_owner['content']['value'] = '0' * 64
++        wrong_method = copy.deepcopy(self.old_method)
++        wrong_method['module'] = self.api.reference(wrong_owner)
++        with self.assertRaisesRegex(ValueError, 'original source identity'):
++            self.generator.select_audited_method(self.row, current,
++                [wrong_owner, wrong_method], [owner])
