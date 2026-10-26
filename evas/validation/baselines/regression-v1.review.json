@@ -33,5 +33,62 @@
   "semantic_status": "pending",
   "semantic_qualification": false,
   "recorded_by": "implementation-thread:01a17428-2b0c-79e3-8db7-1662b3566ccd",
-  "raw_availability": "local-only retained full raw; expiring CI artifact in baseline source_identity"
+  "raw_availability": "local-only retained full raw; expiring CI artifact in baseline source_identity",
+  "additional_context_reviews": [
+    {
+      "schema_version": 1,
+      "reviewed_at": "2026-10-26T01:57:33.884339+00:00",
+      "candidate": "PR2a-12-new-context-pending",
+      "candidate_identity": "417662a363614573737e235c9c238e18327f82c5d9d8579def5dd5d15c84e487",
+      "base": "b8df780d37ba01529b1b4fd152859ead4eb1263c",
+      "baseline_subject_sha256": "2fa79c323f5288162e0b93516fe0cade430ae33590b717abdf7e4189addb7b0b",
+      "decision": "new_context_baseline_content_provenance_and_execution_subject_accepted",
+      "method": "direct independent read-only review; original raw/shard reanalysis and focused synthetic comparator controls, no simulator or fullregression execution",
+      "findings": [],
+      "approved_scope": "New known regression observations for the exact candidate12 declared criteria/language/collector/runtime and complete noncircular execution subject, from actual CI40254619344 headb8df. Acceptance records observed baseline content and provenance only; semantic/capability qualification, final merge and activation remain pending.",
+      "subject_state": "Reviewed snapshot remains pending; reviewer did not edit baseline/receipt or shared log. Executor may append this real independent approval identity/reference for exact new context while preserving original context/receipt.",
+      "independent_checks": {
+        "identity": "Manifest identity and16SHA match;onlybaseline differs from11;15source/receipt files unchanged. Old context JSON exactly preserved.",
+        "raw": "ActualbytesSHA0ae450f650d9a1d5f84ad7f97a5430daa7b0dfcbc5db9e86fbcd0b6e8adb339e and canonicalSHAa4313257fedf926c2dd63f8d8de977b9ce6fa04c901c147bc4344eb9ecf14be1 match source proposal. Full new entry equals direct unique proposer output.",
+        "scope": "3257methods2617pass/423failed/214error/3xfail;7737conditions6841pass/597failed/296error/3xfail. All methodIDs/outcomes and eventphase/kind/site/outcome positions match verified historical second fullCI.",
+        "shards": "All4originalreports818/831/823/785 valid;bound_report matches separately retained executionidentity/inputidentity;collectionSHA matches reportbytes;all merged.parts fields match rawshards;independent merge reproduces entire mergedJSON exactly.",
+        "projection": "389-value-pool expansion valid;all7737signatures, identity/comparison/context flags and complete direct proposal match actual raw;896nonpass all matchable;58opaque passes retain false flags and confer no qualification.",
+        "subject": "Independently hash25497distinct Git blobs across49507regular inputentries at exact publishedb8df, preserving Gitmode and checkoutmode. Each of4full executionfingerprints and noncircular49505entry subjects matches exactly. Only2fixed baseline paths separated. Every declared DUT/criteriafile SHA and6source tree identities match Git. Actual subject equals new baseline execution_subject.",
+        "negative_controls": "Pending newcontext denied. Temporary in-memory synthetic review permits exactsame rawfalse observations only. Nine valid report mutations(actual,expected,failureclass,semanticdiagnostic,structuredfailurekind,unknown identity,A->B,missingpass,newopaque failure) all denied. No actual pending artifact or raw rewritten.",
+        "provenance": "Run snapshot completed/success exactb8df;all5artifact head/run bindings match. Mergedartifact12621633792 expiry2026-11-09T01:37:04Z/URL/id match proposedsource. Canonical current retainedraw resolves and hashes correctly;local-only/expiring availability explicit. CIcollection admission rawfalse/gateinactive/manualrequired/nullmerge preserved.",
+        "reuse": "candidate09 retained actual8-run tempGit transitionchain evidence and independent reanalysis remain valid because standalonegate/producer hashes unchanged. R8 closure from10 and EOF-only11 review reused. Actual PR2bworkflow wiring/integration not yet exercised.",
+        "trail": "Accessible latest candidate12 log checkpoint matches retained artifacts and pendingstatus;prior R8 evidence correction retained. Full other-thread transcript audit not claimed.",
+        "workspace": "PASS;14worktrees;0errors"
+      },
+      "required_next": [
+        "Record exact independent newcontext approval and append durable receipt without changing oldcontext/receipt or semanticpending/false",
+        "Freeze final metadata candidate for incremental review; any observation/context/subject/source change invalidates affected approval",
+        "Publish exact finalhead, run genuinely repeated finalCI, verify newraw against approved observation context and subject before final merge review",
+        "PR2a actual main integration thenPR2b trustedworkflow activation/retention-chain integration review; both required before batch2completion"
+      ],
+      "not_closed": [
+        "PR2a final merge",
+        "PR2b activation",
+        "DR01",
+        "DR02",
+        "Six-batch delivery"
+      ],
+      "semantic_status": "pending",
+      "semantic_qualification": false,
+      "spectre": "pending;noSSH",
+      "evidence": [
+        "full-raw-projection-shards-check.json",
+        "input-subject-independent-git-check.json",
+        "full-raw-negative-controls.json",
+        "source-artifact-check.json",
+        "../pr2a-candidate-09-review/retained-chain-independent-check.json"
+      ],
+      "reviewer": "independent-review-thread:01a1743b-0588-70e2-bbb3-b7ef61db0bd9",
+      "review_thread": "codex://threads/01a1743b-0588-70e2-bbb3-b7ef61db0bd9",
+      "original_review_sha256": "6155a8c4e85fee31074d0b97b8277f0920f90e1d3b7b206e57373f78c2ac3df6",
+      "original_review_availability": "local-only task record; this versioned receipt retains the accepted scope and checks",
+      "recorded_by": "implementation-thread:01a17428-2b0c-79e3-8db7-1662b3566ccd",
+      "raw_availability": "local-only retained full raw; expiring CI artifact in baseline source_identity"
+    }
+  ]
 }
