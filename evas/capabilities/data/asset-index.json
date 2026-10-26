@@ -939,6 +939,47 @@
       "consumers": [
         {
           "id": "entry:af5ec5e7df18539c1f0109d7",
+          "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+          "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+        }
+      ],
+      "content": {
+        "algorithm": "sha256",
+        "value": "1a0aaa5587f6651bc460825a1d7479a0f090f1c9b0fa774f57133638ef45e7d4"
+      },
+      "current_path": "scripts/tests/test_context_registration.py",
+      "dependencies": [],
+      "id": "asset:0173f36c4bd2432ed13f094e",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "qualification_status": "not-granted",
+      "role": {
+        "facts": [
+          {
+            "entrypoint": {
+              "id": "entry:af5ec5e7df18539c1f0109d7",
+              "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+              "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+            },
+            "proof": "actual-discovery-owner-module"
+          }
+        ],
+        "reason": "actual TestLoader owner module; no semantic qualification",
+        "status": "confirmed",
+        "value": "actual-unittest-owner"
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "342d62688e517c65badea6cd693b0135020b119a84ddeb84f0fa21189aa643b3"
+    },
+    {
+      "consumer_status": "partial",
+      "consumers": [
+        {
+          "id": "entry:af5ec5e7df18539c1f0109d7",
           "sha256": "56c57111ff0d787c90e011975b68d5a5d9d4e6fd7c9bf82528746b3c48a4a4cd",
           "version": "e5f70371c0fa4ee1f76c56df47eb4b397c224bd92c5aa174e37e2496552ba50b"
         }
@@ -3828,6 +3869,47 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "e23217f8a3f8659393a82ea191bc16c2e4b5ee11876e9a1d4fd0f9652bbbe819"
+    },
+    {
+      "consumer_status": "partial",
+      "consumers": [
+        {
+          "id": "entry:af5ec5e7df18539c1f0109d7",
+          "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+          "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+        }
+      ],
+      "content": {
+        "algorithm": "sha256",
+        "value": "648f8e17e8a75a65d9e8ec7309e4569936d7f8e311a38c7c142d831f5028d7c2"
+      },
+      "current_path": "scripts/tests/test_trusted_regression_gate.py",
+      "dependencies": [],
+      "id": "asset:0540764a9431232ec4bdaed3",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "qualification_status": "not-granted",
+      "role": {
+        "facts": [
+          {
+            "entrypoint": {
+              "id": "entry:af5ec5e7df18539c1f0109d7",
+              "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+              "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+            },
+            "proof": "actual-discovery-owner-module"
+          }
+        ],
+        "reason": "actual TestLoader owner module; no semantic qualification",
+        "status": "confirmed",
+        "value": "actual-unittest-owner"
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "ef99e6a1c1edd0b88a018dcc99959d6abb17c1682ce4695ff3598d8f25dfbe6f"
     },
     {
       "consumer_status": "pending",
@@ -6990,6 +7072,47 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "6534f508f1689daf8510e39777f40b7245626ce3857a8b7a56b53b751ba97de0"
+    },
+    {
+      "consumer_status": "partial",
+      "consumers": [
+        {
+          "id": "entry:af5ec5e7df18539c1f0109d7",
+          "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+          "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+        }
+      ],
+      "content": {
+        "algorithm": "sha256",
+        "value": "aa7aafae24d4df376e704df84980e0af7fcb09c0f0700c447adc10a0d3151850"
+      },
+      "current_path": "scripts/tests/test_regression_reason_identity.py",
+      "dependencies": [],
+      "id": "asset:086e19ac884eb40d8e5f9c1f",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "qualification_status": "not-granted",
+      "role": {
+        "facts": [
+          {
+            "entrypoint": {
+              "id": "entry:af5ec5e7df18539c1f0109d7",
+              "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+              "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+            },
+            "proof": "actual-discovery-owner-module"
+          }
+        ],
+        "reason": "actual TestLoader owner module; no semantic qualification",
+        "status": "confirmed",
+        "value": "actual-unittest-owner"
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "125b0f6a6df8f813e96de85abcf45b8b41259e4f2b1d0e9321e3ae47b7a04219"
     },
     {
       "consumer_status": "partial",
@@ -10172,6 +10295,47 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "e731a716fbc30f6bc2e3033a2becb22d34360bcc2d9f99666a59ef616977a7f1"
+    },
+    {
+      "consumer_status": "partial",
+      "consumers": [
+        {
+          "id": "entry:af5ec5e7df18539c1f0109d7",
+          "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+          "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+        }
+      ],
+      "content": {
+        "algorithm": "sha256",
+        "value": "f1967cc7c2f6ff67f327b2fb9b9c4c0cc8d59822c8205664ecc7dc4444593330"
+      },
+      "current_path": "scripts/tests/test_rust_catalog_reconcile.py",
+      "dependencies": [],
+      "id": "asset:0cbac8bb5b50da366989d7ea",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "qualification_status": "not-granted",
+      "role": {
+        "facts": [
+          {
+            "entrypoint": {
+              "id": "entry:af5ec5e7df18539c1f0109d7",
+              "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+              "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+            },
+            "proof": "actual-discovery-owner-module"
+          }
+        ],
+        "reason": "actual TestLoader owner module; no semantic qualification",
+        "status": "confirmed",
+        "value": "actual-unittest-owner"
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "fbb2dab716971ba08cd840276e88ee4c842788155afeef1283d2709b97c04538"
     },
     {
       "consumer_status": "partial",
@@ -23749,6 +23913,47 @@
       "consumers": [
         {
           "id": "entry:af5ec5e7df18539c1f0109d7",
+          "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+          "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+        }
+      ],
+      "content": {
+        "algorithm": "sha256",
+        "value": "d9abf610f078a9fd37b4c6805ef9622fd9610199d9df16b63b8162b12f4ca107"
+      },
+      "current_path": "scripts/tests/test_discover_methods.py",
+      "dependencies": [],
+      "id": "asset:1e650510e4350b716c40b293",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "qualification_status": "not-granted",
+      "role": {
+        "facts": [
+          {
+            "entrypoint": {
+              "id": "entry:af5ec5e7df18539c1f0109d7",
+              "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+              "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+            },
+            "proof": "actual-discovery-owner-module"
+          }
+        ],
+        "reason": "actual TestLoader owner module; no semantic qualification",
+        "status": "confirmed",
+        "value": "actual-unittest-owner"
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "0e28a874fb91a8cfa692a47a87881b13156dfb29950735937c38ec4af27d0b6a"
+    },
+    {
+      "consumer_status": "partial",
+      "consumers": [
+        {
+          "id": "entry:af5ec5e7df18539c1f0109d7",
           "sha256": "41279b8480709f4b4a39c6b0f99cb9a775e746266c370b8e4bd6c1a1336244fd",
           "version": "d720a1869ced672607d738bd2f8850fc6397049eb179fbb68ee471ffbd0462ac"
         }
@@ -25110,6 +25315,47 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "4479f8fc5e2c2b958ca7cb84e7192d9cba0326597335b2f9fdb8921ce36e9393"
+    },
+    {
+      "consumer_status": "partial",
+      "consumers": [
+        {
+          "id": "entry:af5ec5e7df18539c1f0109d7",
+          "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+          "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+        }
+      ],
+      "content": {
+        "algorithm": "sha256",
+        "value": "ca4db27b3565afa2a9b174c02c8e28b7b46e73977d2ee8f75036842007ba2be5"
+      },
+      "current_path": "scripts/tests/test_benchmark_workbench.py",
+      "dependencies": [],
+      "id": "asset:20e0a5945c6518970975b490",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "qualification_status": "not-granted",
+      "role": {
+        "facts": [
+          {
+            "entrypoint": {
+              "id": "entry:af5ec5e7df18539c1f0109d7",
+              "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+              "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+            },
+            "proof": "actual-discovery-owner-module"
+          }
+        ],
+        "reason": "actual TestLoader owner module; no semantic qualification",
+        "status": "confirmed",
+        "value": "actual-unittest-owner"
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "89bd0cbec3956fa235f32b725df7a45d631593e333ce391de773f4f701dff3ea"
     },
     {
       "consumer_status": "pending",
@@ -28664,6 +28910,47 @@
       "consumers": [
         {
           "id": "entry:af5ec5e7df18539c1f0109d7",
+          "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+          "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+        }
+      ],
+      "content": {
+        "algorithm": "sha256",
+        "value": "c42b787dda938e321a425b6c096f3c21eff07c486ca514f65c86bc1fb15f9a34"
+      },
+      "current_path": "scripts/tests/test_task_continuation_execution.py",
+      "dependencies": [],
+      "id": "asset:269dc5839e76fa8e61d3dd35",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "qualification_status": "not-granted",
+      "role": {
+        "facts": [
+          {
+            "entrypoint": {
+              "id": "entry:af5ec5e7df18539c1f0109d7",
+              "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+              "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+            },
+            "proof": "actual-discovery-owner-module"
+          }
+        ],
+        "reason": "actual TestLoader owner module; no semantic qualification",
+        "status": "confirmed",
+        "value": "actual-unittest-owner"
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "038f1909b7e652c3a65a1491425cb669837abf36cd9d63ca7a997426c2d9c2df"
+    },
+    {
+      "consumer_status": "partial",
+      "consumers": [
+        {
+          "id": "entry:af5ec5e7df18539c1f0109d7",
           "sha256": "56c57111ff0d787c90e011975b68d5a5d9d4e6fd7c9bf82528746b3c48a4a4cd",
           "version": "e5f70371c0fa4ee1f76c56df47eb4b397c224bd92c5aa174e37e2496552ba50b"
         }
@@ -30578,6 +30865,47 @@
       "version": "56abdcb630f6f59cc233b70db5edffead4ceefdfbdc6fe840fbff183e97909ff"
     },
     {
+      "consumer_status": "partial",
+      "consumers": [
+        {
+          "id": "entry:af5ec5e7df18539c1f0109d7",
+          "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+          "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+        }
+      ],
+      "content": {
+        "algorithm": "sha256",
+        "value": "96328916b2d6e02c84f43c3f326f98acf70b5195744d12bd76840a0fe948494a"
+      },
+      "current_path": "scripts/tests/test_traceability.py",
+      "dependencies": [],
+      "id": "asset:29dcd6bb05434065dfe5ddb1",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "qualification_status": "not-granted",
+      "role": {
+        "facts": [
+          {
+            "entrypoint": {
+              "id": "entry:af5ec5e7df18539c1f0109d7",
+              "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+              "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+            },
+            "proof": "actual-discovery-owner-module"
+          }
+        ],
+        "reason": "actual TestLoader owner module; no semantic qualification",
+        "status": "confirmed",
+        "value": "actual-unittest-owner"
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "edbde7112b5f6cbf9df4b99ac50908ea2a429b771d10e4285f254c4da90ca293"
+    },
+    {
       "consumer_status": "pending",
       "consumers": [],
       "content": {
@@ -32236,6 +32564,47 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "3a7615f4a328cf232cd4253e1001f1d1fbddce060ba70330a4bda6356ad06f12"
+    },
+    {
+      "consumer_status": "partial",
+      "consumers": [
+        {
+          "id": "entry:af5ec5e7df18539c1f0109d7",
+          "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+          "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+        }
+      ],
+      "content": {
+        "algorithm": "sha256",
+        "value": "caa9cbcbd24889e99267c950b37cd3f0dc6057083f7cf45021ad915ac81022a0"
+      },
+      "current_path": "scripts/tests/test_asset_observer.py",
+      "dependencies": [],
+      "id": "asset:2c33c417d1c1556dad61f25b",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "qualification_status": "not-granted",
+      "role": {
+        "facts": [
+          {
+            "entrypoint": {
+              "id": "entry:af5ec5e7df18539c1f0109d7",
+              "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+              "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+            },
+            "proof": "actual-discovery-owner-module"
+          }
+        ],
+        "reason": "actual TestLoader owner module; no semantic qualification",
+        "status": "confirmed",
+        "value": "actual-unittest-owner"
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "f09f4518bd4f8262a36b6fd25171e252efb3a272c7f8f0bf80133ac794e694b1"
     },
     {
       "consumer_status": "pending",
@@ -38938,6 +39307,47 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "6922182244fc43f33d077c83956c5a2a93c47af594fbbae1d25875c056bf18a6"
+    },
+    {
+      "consumer_status": "partial",
+      "consumers": [
+        {
+          "id": "entry:af5ec5e7df18539c1f0109d7",
+          "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+          "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+        }
+      ],
+      "content": {
+        "algorithm": "sha256",
+        "value": "4e82fb882e1d65ba2dbf7639a38cdc3e7900005f2619b2a4acd61a4a51a837d6"
+      },
+      "current_path": "scripts/tests/test_diagnostic_inventory.py",
+      "dependencies": [],
+      "id": "asset:35d9dc239906725a4a8611b9",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "qualification_status": "not-granted",
+      "role": {
+        "facts": [
+          {
+            "entrypoint": {
+              "id": "entry:af5ec5e7df18539c1f0109d7",
+              "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+              "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+            },
+            "proof": "actual-discovery-owner-module"
+          }
+        ],
+        "reason": "actual TestLoader owner module; no semantic qualification",
+        "status": "confirmed",
+        "value": "actual-unittest-owner"
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "4ed991ed2e50329cbf8f85b7811bbfa99fde1ebd7aeae0d1c5f609281f03cb8c"
     },
     {
       "consumer_status": "partial",
@@ -46579,6 +46989,47 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "26deb56ad693b1df4babd18028522438bf766daf40aaae6a1c82d1a20a82d347"
+    },
+    {
+      "consumer_status": "partial",
+      "consumers": [
+        {
+          "id": "entry:af5ec5e7df18539c1f0109d7",
+          "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+          "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+        }
+      ],
+      "content": {
+        "algorithm": "sha256",
+        "value": "602a9d1f4d4bb76fa1e30d0faa87699461fcc7445138c819929419988f02f02c"
+      },
+      "current_path": "scripts/tests/test_regression_gate.py",
+      "dependencies": [],
+      "id": "asset:405d975ff1b1e1ad96e030e4",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "qualification_status": "not-granted",
+      "role": {
+        "facts": [
+          {
+            "entrypoint": {
+              "id": "entry:af5ec5e7df18539c1f0109d7",
+              "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+              "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+            },
+            "proof": "actual-discovery-owner-module"
+          }
+        ],
+        "reason": "actual TestLoader owner module; no semantic qualification",
+        "status": "confirmed",
+        "value": "actual-unittest-owner"
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "591859467ec0324fa2be7a9b6b327df52312593c3e3c28374c0b7f6898578027"
     },
     {
       "consumer_status": "partial",
@@ -55495,6 +55946,60 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "755dd35fcedf866840d2a6b09b2d9730153e7c5a03b0d93bd80957341080bc8e"
+    },
+    {
+      "consumer_status": "partial",
+      "consumers": [
+        {
+          "id": "entry:342344cdea14aea9569d9fe5",
+          "sha256": "f723fdad77054440f4eeda4cf33416902ea6414652a7cd58c7034bbc3a1be70f",
+          "version": "41d0ad2e84f3eda88739123b811b78d9aa9b6462b363313fbab7e757a7f323ae"
+        },
+        {
+          "id": "entry:af5ec5e7df18539c1f0109d7",
+          "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+          "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+        }
+      ],
+      "content": {
+        "algorithm": "sha256",
+        "value": "73e280fc9c732e1a3cec6f8408adcce071d3ea4a44bd8fb393540e8b761df65e"
+      },
+      "current_path": "scripts/tests/test_independent_ci.py",
+      "dependencies": [],
+      "id": "asset:4cc1a8eceec65e76839bccc0",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "qualification_status": "not-granted",
+      "role": {
+        "facts": [
+          {
+            "entrypoint": {
+              "id": "entry:342344cdea14aea9569d9fe5",
+              "sha256": "f723fdad77054440f4eeda4cf33416902ea6414652a7cd58c7034bbc3a1be70f",
+              "version": "41d0ad2e84f3eda88739123b811b78d9aa9b6462b363313fbab7e757a7f323ae"
+            },
+            "proof": "actual-discovery-owner-module"
+          },
+          {
+            "entrypoint": {
+              "id": "entry:af5ec5e7df18539c1f0109d7",
+              "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+              "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+            },
+            "proof": "actual-discovery-owner-module"
+          }
+        ],
+        "reason": "actual TestLoader owner module; no semantic qualification",
+        "status": "confirmed",
+        "value": "actual-unittest-owner"
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "662449fe824504e28e11544ac46be21a2630fe5bf704bc08409e6d26fd8ecc5e"
     },
     {
       "consumer_status": "partial",
@@ -64634,6 +65139,47 @@
       "consumers": [
         {
           "id": "entry:af5ec5e7df18539c1f0109d7",
+          "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+          "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+        }
+      ],
+      "content": {
+        "algorithm": "sha256",
+        "value": "d36d17bff42fee4ffc25987a9dcfeb9262e8b49668341f9c08f3e275d110ab9d"
+      },
+      "current_path": "scripts/tests/test_task_continuation_checkpoints.py",
+      "dependencies": [],
+      "id": "asset:57f504adffbe8e8892ecd9c3",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "qualification_status": "not-granted",
+      "role": {
+        "facts": [
+          {
+            "entrypoint": {
+              "id": "entry:af5ec5e7df18539c1f0109d7",
+              "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+              "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+            },
+            "proof": "actual-discovery-owner-module"
+          }
+        ],
+        "reason": "actual TestLoader owner module; no semantic qualification",
+        "status": "confirmed",
+        "value": "actual-unittest-owner"
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "84336c481fbc8a3b537849a9993567a827421ac73daf95b15ff8ae359bef6014"
+    },
+    {
+      "consumer_status": "partial",
+      "consumers": [
+        {
+          "id": "entry:af5ec5e7df18539c1f0109d7",
           "sha256": "56c57111ff0d787c90e011975b68d5a5d9d4e6fd7c9bf82528746b3c48a4a4cd",
           "version": "e5f70371c0fa4ee1f76c56df47eb4b397c224bd92c5aa174e37e2496552ba50b"
         }
@@ -70757,6 +71303,47 @@
       "version": "6621d3fb2c7e29ff11c551d5cc09faf67c63dea019bc633d0c5d094f1b8e7bd3"
     },
     {
+      "consumer_status": "partial",
+      "consumers": [
+        {
+          "id": "entry:af5ec5e7df18539c1f0109d7",
+          "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+          "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+        }
+      ],
+      "content": {
+        "algorithm": "sha256",
+        "value": "32380caa2ebc359a9afc3804ce1ecc85195eb0d874d60916beb5020b7ed807b5"
+      },
+      "current_path": "scripts/tests/test_regression_input_subject.py",
+      "dependencies": [],
+      "id": "asset:60a00d0936f367dd22d4ad96",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "qualification_status": "not-granted",
+      "role": {
+        "facts": [
+          {
+            "entrypoint": {
+              "id": "entry:af5ec5e7df18539c1f0109d7",
+              "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+              "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+            },
+            "proof": "actual-discovery-owner-module"
+          }
+        ],
+        "reason": "actual TestLoader owner module; no semantic qualification",
+        "status": "confirmed",
+        "value": "actual-unittest-owner"
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "806840880f9eba0f70c68d4321e965942e69134a841a99fa93085005e14cefc1"
+    },
+    {
       "consumer_status": "pending",
       "consumers": [],
       "content": {
@@ -70996,6 +71583,47 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "fe28e346a04ff7d81d5e6e7b88aa57cc059b3c770d4f190f20596faa951c0203"
+    },
+    {
+      "consumer_status": "partial",
+      "consumers": [
+        {
+          "id": "entry:af5ec5e7df18539c1f0109d7",
+          "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+          "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+        }
+      ],
+      "content": {
+        "algorithm": "sha256",
+        "value": "1029f0dda44a4a1bd44d0df288a0042e16219896e991cbd0170094cfcecc5816"
+      },
+      "current_path": "scripts/tests/test_regression_transition.py",
+      "dependencies": [],
+      "id": "asset:60d1af8d8e2a2df01ea15fb3",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "qualification_status": "not-granted",
+      "role": {
+        "facts": [
+          {
+            "entrypoint": {
+              "id": "entry:af5ec5e7df18539c1f0109d7",
+              "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+              "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+            },
+            "proof": "actual-discovery-owner-module"
+          }
+        ],
+        "reason": "actual TestLoader owner module; no semantic qualification",
+        "status": "confirmed",
+        "value": "actual-unittest-owner"
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "188b7e7bda250911be3ad711fb1d5fb2811844b05de16048f2ca8936d2c503ba"
     },
     {
       "consumer_status": "partial",
@@ -73317,6 +73945,60 @@
       "consumers": [
         {
           "id": "entry:af5ec5e7df18539c1f0109d7",
+          "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+          "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+        },
+        {
+          "id": "entry:ea9ea19993aa5449b3a376c8",
+          "sha256": "a11aa85f9b9c5f9e4df12409bd8c493af0c91fd9c52706914bc3ee135955e9ee",
+          "version": "141c8e3b2b47fb20343a9f185dc19c32467c18b3866ec42f0cdb85501388d342"
+        }
+      ],
+      "content": {
+        "algorithm": "sha256",
+        "value": "d3d4d23bc95d56f21e9f9a3e3b5c5e4e2b9f9552e48b89dc728b73d70016ca3d"
+      },
+      "current_path": "scripts/tests/test_fast_feedback.py",
+      "dependencies": [],
+      "id": "asset:63ed56d88fb966240356677d",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "qualification_status": "not-granted",
+      "role": {
+        "facts": [
+          {
+            "entrypoint": {
+              "id": "entry:af5ec5e7df18539c1f0109d7",
+              "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+              "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+            },
+            "proof": "actual-discovery-owner-module"
+          },
+          {
+            "entrypoint": {
+              "id": "entry:ea9ea19993aa5449b3a376c8",
+              "sha256": "a11aa85f9b9c5f9e4df12409bd8c493af0c91fd9c52706914bc3ee135955e9ee",
+              "version": "141c8e3b2b47fb20343a9f185dc19c32467c18b3866ec42f0cdb85501388d342"
+            },
+            "proof": "actual-discovery-owner-module"
+          }
+        ],
+        "reason": "actual TestLoader owner module; no semantic qualification",
+        "status": "confirmed",
+        "value": "actual-unittest-owner"
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "8fab1b9666f0846e71794c162fc3a2c14f9cc37ba79a94e89127327b99d05f93"
+    },
+    {
+      "consumer_status": "partial",
+      "consumers": [
+        {
+          "id": "entry:af5ec5e7df18539c1f0109d7",
           "sha256": "41279b8480709f4b4a39c6b0f99cb9a775e746266c370b8e4bd6c1a1336244fd",
           "version": "d720a1869ced672607d738bd2f8850fc6397049eb179fbb68ee471ffbd0462ac"
         },
@@ -75544,6 +76226,47 @@
       "version": "6e3c855ebcf33500c21ebc031a06faaf26751b51822adde9e68bdc4a35c762d3"
     },
     {
+      "consumer_status": "partial",
+      "consumers": [
+        {
+          "id": "entry:af5ec5e7df18539c1f0109d7",
+          "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+          "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+        }
+      ],
+      "content": {
+        "algorithm": "sha256",
+        "value": "2458f5b992e1434620c334706402b6972ac9d7afb8f72c537cc337154b075e2c"
+      },
+      "current_path": "scripts/tests/test_installed_evas_package.py",
+      "dependencies": [],
+      "id": "asset:666f11500e821bd0328772f1",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "qualification_status": "not-granted",
+      "role": {
+        "facts": [
+          {
+            "entrypoint": {
+              "id": "entry:af5ec5e7df18539c1f0109d7",
+              "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+              "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+            },
+            "proof": "actual-discovery-owner-module"
+          }
+        ],
+        "reason": "actual TestLoader owner module; no semantic qualification",
+        "status": "confirmed",
+        "value": "actual-unittest-owner"
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "d8f03574ff0aa8fcfb5ad393a4118c32a49643e48c5ccb6fda2c115d183828df"
+    },
+    {
       "consumer_status": "pending",
       "consumers": [],
       "content": {
@@ -77356,6 +78079,47 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "1962f9e11a4668a03b96eaa56d535de960edb3cf2e7943b889a08c96419e048d"
+    },
+    {
+      "consumer_status": "partial",
+      "consumers": [
+        {
+          "id": "entry:af5ec5e7df18539c1f0109d7",
+          "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+          "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+        }
+      ],
+      "content": {
+        "algorithm": "sha256",
+        "value": "18fdc05ac54b4eed844d2b038b537dcf0a48a1f28cafe59d1281b99302f15648"
+      },
+      "current_path": "scripts/tests/test_task_continuation_review_execution.py",
+      "dependencies": [],
+      "id": "asset:693cd5575e42d7d4bcd1faf1",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "qualification_status": "not-granted",
+      "role": {
+        "facts": [
+          {
+            "entrypoint": {
+              "id": "entry:af5ec5e7df18539c1f0109d7",
+              "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+              "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+            },
+            "proof": "actual-discovery-owner-module"
+          }
+        ],
+        "reason": "actual TestLoader owner module; no semantic qualification",
+        "status": "confirmed",
+        "value": "actual-unittest-owner"
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "7d7051be0c1654b4454b8d55cd8d204481c519f1b8866015ba35511779f7b1f4"
     },
     {
       "consumer_status": "partial",
@@ -80544,6 +81308,60 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "4c8b62040209b4c92db8627c1ad50879a4fb3cd7074db5f1b6da1ea60ea6ecc8"
+    },
+    {
+      "consumer_status": "partial",
+      "consumers": [
+        {
+          "id": "entry:33d79f4622ba12bd64197c56",
+          "sha256": "506f7ac41456fee94c8039aa8f43e3ed49c8c9fbb6f49f0e70e091787cf7d684",
+          "version": "f0e9d5de158500f76248312ae49514df25b1d37ca71a0a56991dfd6764041b53"
+        },
+        {
+          "id": "entry:af5ec5e7df18539c1f0109d7",
+          "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+          "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+        }
+      ],
+      "content": {
+        "algorithm": "sha256",
+        "value": "d755995d64b65cf296ce5b27996e4ec525b702ec039df21ad69e98dc4ffa2042"
+      },
+      "current_path": "scripts/tests/test_ci_selection.py",
+      "dependencies": [],
+      "id": "asset:6e10e21596e26daaf68e1f62",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "qualification_status": "not-granted",
+      "role": {
+        "facts": [
+          {
+            "entrypoint": {
+              "id": "entry:33d79f4622ba12bd64197c56",
+              "sha256": "506f7ac41456fee94c8039aa8f43e3ed49c8c9fbb6f49f0e70e091787cf7d684",
+              "version": "f0e9d5de158500f76248312ae49514df25b1d37ca71a0a56991dfd6764041b53"
+            },
+            "proof": "actual-discovery-owner-module"
+          },
+          {
+            "entrypoint": {
+              "id": "entry:af5ec5e7df18539c1f0109d7",
+              "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+              "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+            },
+            "proof": "actual-discovery-owner-module"
+          }
+        ],
+        "reason": "actual TestLoader owner module; no semantic qualification",
+        "status": "confirmed",
+        "value": "actual-unittest-owner"
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "b4a592c4a16bb2ffa765695f2351554c4241e90e9001e4d1e970aa615b481c3e"
     },
     {
       "consumer_status": "partial",
@@ -98153,6 +98971,60 @@
         },
         {
           "id": "entry:af5ec5e7df18539c1f0109d7",
+          "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+          "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+        }
+      ],
+      "content": {
+        "algorithm": "sha256",
+        "value": "72e31b32215213c6a5b37bc81a0a00df7e0e759e140fed1a6b184d3f1f0f9903"
+      },
+      "current_path": "scripts/tests/test_evas_check_policy.py",
+      "dependencies": [],
+      "id": "asset:849115630211879bc48c590a",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "qualification_status": "not-granted",
+      "role": {
+        "facts": [
+          {
+            "entrypoint": {
+              "id": "entry:1054d63511b4f51016ebdde3",
+              "sha256": "d39a7b8be92bfbca5502db2a2248c9293b9f05d3c2f2aae20be0515ef0e94f4f",
+              "version": "9b98f6fa8397f334a15d35a6698d8ad904a110cc4bc24ea8f6d64deb71d5186f"
+            },
+            "proof": "actual-discovery-owner-module"
+          },
+          {
+            "entrypoint": {
+              "id": "entry:af5ec5e7df18539c1f0109d7",
+              "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+              "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+            },
+            "proof": "actual-discovery-owner-module"
+          }
+        ],
+        "reason": "actual TestLoader owner module; no semantic qualification",
+        "status": "confirmed",
+        "value": "actual-unittest-owner"
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "33278076b1db89fd8a6671116d623df94ad22d57ae7dd7f56071162eaec1f886"
+    },
+    {
+      "consumer_status": "partial",
+      "consumers": [
+        {
+          "id": "entry:1054d63511b4f51016ebdde3",
+          "sha256": "d39a7b8be92bfbca5502db2a2248c9293b9f05d3c2f2aae20be0515ef0e94f4f",
+          "version": "9b98f6fa8397f334a15d35a6698d8ad904a110cc4bc24ea8f6d64deb71d5186f"
+        },
+        {
+          "id": "entry:af5ec5e7df18539c1f0109d7",
           "sha256": "56c57111ff0d787c90e011975b68d5a5d9d4e6fd7c9bf82528746b3c48a4a4cd",
           "version": "e5f70371c0fa4ee1f76c56df47eb4b397c224bd92c5aa174e37e2496552ba50b"
         }
@@ -99808,6 +100680,53 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "ac3e40b50645bcc578170478a0b84c87b724772c8bb5b5f4f4dfd21f732a62d3"
+    },
+    {
+      "consumer_status": "partial",
+      "consumers": [
+        {
+          "id": "entry:af5ec5e7df18539c1f0109d7",
+          "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+          "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+        }
+      ],
+      "content": {
+        "algorithm": "sha256",
+        "value": "e004a00578c28d99cac4cbed349680c0bbc45f2e00008c8d9a31b8d418df1e48"
+      },
+      "current_path": "benchmark/material/draftbench/templates/INSTRUCTION.md",
+      "dependencies": [
+        {
+          "id": "source:00d50af6575865e6452d0e81",
+          "sha256": "bf0bed2eaa0e7942874fd026cf242a4d14a4e34bca35a4da57bf692c7fe97cc7",
+          "version": "cba39dff1a0cd435ed721451a23e38ca99aebb9c4878904106ba84f114c0a65f"
+        }
+      ],
+      "id": "asset:869124dce4c6000aba289b43",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "qualification_status": "not-granted",
+      "role": {
+        "facts": [
+          {
+            "entrypoint": {
+              "id": "entry:af5ec5e7df18539c1f0109d7",
+              "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+              "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+            },
+            "proof": "source-bound-external-read-partial-consumer"
+          }
+        ],
+        "reason": "exact source-bound external read; partial consumers only",
+        "status": "confirmed",
+        "value": "cross-component-source-read"
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "be8b72af535a965a37705c25ad920c0115aba5590d8991bdb9465876206945cf"
     },
     {
       "consumer_status": "pending",
@@ -107638,6 +108557,47 @@
       "consumers": [
         {
           "id": "entry:af5ec5e7df18539c1f0109d7",
+          "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+          "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+        }
+      ],
+      "content": {
+        "algorithm": "sha256",
+        "value": "60477b5e628f2cc6bf5b8b12dfe2cb588c841b4415e45d70049fe89ec40a4079"
+      },
+      "current_path": "scripts/tests/test_catalog_history_selection.py",
+      "dependencies": [],
+      "id": "asset:923486e0299ef01a397ccd2a",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "qualification_status": "not-granted",
+      "role": {
+        "facts": [
+          {
+            "entrypoint": {
+              "id": "entry:af5ec5e7df18539c1f0109d7",
+              "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+              "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+            },
+            "proof": "actual-discovery-owner-module"
+          }
+        ],
+        "reason": "actual TestLoader owner module; no semantic qualification",
+        "status": "confirmed",
+        "value": "actual-unittest-owner"
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "503c9bd07441405de7ee48508e6263bcc7098351403793ab2969a83cd2114cd2"
+    },
+    {
+      "consumer_status": "partial",
+      "consumers": [
+        {
+          "id": "entry:af5ec5e7df18539c1f0109d7",
           "sha256": "41279b8480709f4b4a39c6b0f99cb9a775e746266c370b8e4bd6c1a1336244fd",
           "version": "d720a1869ced672607d738bd2f8850fc6397049eb179fbb68ee471ffbd0462ac"
         }
@@ -108480,6 +109440,47 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "2a15614d176e82d135acbf650814467dc0d8cb87200ae6b9febff6bfd8303b95"
+    },
+    {
+      "consumer_status": "partial",
+      "consumers": [
+        {
+          "id": "entry:af5ec5e7df18539c1f0109d7",
+          "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+          "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+        }
+      ],
+      "content": {
+        "algorithm": "sha256",
+        "value": "33e6fe955e0b43265b69d319fe51cf7980807e1c00f37e3cf681e6e607368781"
+      },
+      "current_path": "scripts/tests/test_workspaces.py",
+      "dependencies": [],
+      "id": "asset:9346558cd6aaa1967c544a44",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "qualification_status": "not-granted",
+      "role": {
+        "facts": [
+          {
+            "entrypoint": {
+              "id": "entry:af5ec5e7df18539c1f0109d7",
+              "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+              "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+            },
+            "proof": "actual-discovery-owner-module"
+          }
+        ],
+        "reason": "actual TestLoader owner module; no semantic qualification",
+        "status": "confirmed",
+        "value": "actual-unittest-owner"
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "c9c957a305503748512a9027e6b06b2b76c776c4a20a8372907245f657df41ee"
     },
     {
       "consumer_status": "pending",
@@ -110377,6 +111378,47 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "776383a87c1de9ddc1f377208c0862a87f50b1014c190656523c2473fbb3d84b"
+    },
+    {
+      "consumer_status": "partial",
+      "consumers": [
+        {
+          "id": "entry:af5ec5e7df18539c1f0109d7",
+          "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+          "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+        }
+      ],
+      "content": {
+        "algorithm": "sha256",
+        "value": "9087939b89a21811f11d4e397d2c22a1acdfdb263f60291a22b26fe8f621b166"
+      },
+      "current_path": "scripts/tests/test_evas_integration_checks.py",
+      "dependencies": [],
+      "id": "asset:96bfa8d845a5f2f86b024b8b",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "qualification_status": "not-granted",
+      "role": {
+        "facts": [
+          {
+            "entrypoint": {
+              "id": "entry:af5ec5e7df18539c1f0109d7",
+              "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+              "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+            },
+            "proof": "actual-discovery-owner-module"
+          }
+        ],
+        "reason": "actual TestLoader owner module; no semantic qualification",
+        "status": "confirmed",
+        "value": "actual-unittest-owner"
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "795a65ed6fe4e7a5b76459f6860de0a74d0c3f8dd056f753f26b5bba40992fee"
     },
     {
       "consumer_status": "partial",
@@ -123857,6 +124899,47 @@
       "consumers": [
         {
           "id": "entry:af5ec5e7df18539c1f0109d7",
+          "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+          "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+        }
+      ],
+      "content": {
+        "algorithm": "sha256",
+        "value": "ef514d9eda880ba46c19c87d331f6e07bf20ac783cac88f1aaf83e2cb454520e"
+      },
+      "current_path": "scripts/tests/test_task_continuation_policy.py",
+      "dependencies": [],
+      "id": "asset:aa85b613e5cdf7a7cf656d44",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "qualification_status": "not-granted",
+      "role": {
+        "facts": [
+          {
+            "entrypoint": {
+              "id": "entry:af5ec5e7df18539c1f0109d7",
+              "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+              "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+            },
+            "proof": "actual-discovery-owner-module"
+          }
+        ],
+        "reason": "actual TestLoader owner module; no semantic qualification",
+        "status": "confirmed",
+        "value": "actual-unittest-owner"
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "0faa10e5bdc48dc5068431dde1e772ae4c895bd7dbd3de4b91645903e635fef8"
+    },
+    {
+      "consumer_status": "partial",
+      "consumers": [
+        {
+          "id": "entry:af5ec5e7df18539c1f0109d7",
           "sha256": "41279b8480709f4b4a39c6b0f99cb9a775e746266c370b8e4bd6c1a1336244fd",
           "version": "d720a1869ced672607d738bd2f8850fc6397049eb179fbb68ee471ffbd0462ac"
         }
@@ -124093,6 +125176,47 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "68569c5ca1aef7308189eabd0a7efe2543e578860e6ae919377ec1ede96409d7"
+    },
+    {
+      "consumer_status": "partial",
+      "consumers": [
+        {
+          "id": "entry:af5ec5e7df18539c1f0109d7",
+          "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+          "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+        }
+      ],
+      "content": {
+        "algorithm": "sha256",
+        "value": "a9296272fad4881f0d269bfa284b62d4dd03bcbedeeeb1b70f02e91c2d57461a"
+      },
+      "current_path": "scripts/tests/test_task_continuation.py",
+      "dependencies": [],
+      "id": "asset:ab05e4a9526d157d6707fbcb",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "qualification_status": "not-granted",
+      "role": {
+        "facts": [
+          {
+            "entrypoint": {
+              "id": "entry:af5ec5e7df18539c1f0109d7",
+              "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+              "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+            },
+            "proof": "actual-discovery-owner-module"
+          }
+        ],
+        "reason": "actual TestLoader owner module; no semantic qualification",
+        "status": "confirmed",
+        "value": "actual-unittest-owner"
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "1f5a8ccd12631532c6fa5aa46353c43a489c14c226a47bb5d3415f2e563ea17e"
     },
     {
       "consumer_status": "partial",
@@ -134801,6 +135925,47 @@
       "consumers": [
         {
           "id": "entry:af5ec5e7df18539c1f0109d7",
+          "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+          "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+        }
+      ],
+      "content": {
+        "algorithm": "sha256",
+        "value": "65755ccd2feb1e62176a1195730fcc379ade83925fe3213fd21ff559969c85a4"
+      },
+      "current_path": "scripts/tests/test_ci_inventory.py",
+      "dependencies": [],
+      "id": "asset:ba7bee72ebc49c16bd2a5bde",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "qualification_status": "not-granted",
+      "role": {
+        "facts": [
+          {
+            "entrypoint": {
+              "id": "entry:af5ec5e7df18539c1f0109d7",
+              "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+              "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+            },
+            "proof": "actual-discovery-owner-module"
+          }
+        ],
+        "reason": "actual TestLoader owner module; no semantic qualification",
+        "status": "confirmed",
+        "value": "actual-unittest-owner"
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "9b0ccddb93ff331a6ba29b5ac6bbf63cf66790d716c366df39f34d0c52e3fb26"
+    },
+    {
+      "consumer_status": "partial",
+      "consumers": [
+        {
+          "id": "entry:af5ec5e7df18539c1f0109d7",
           "sha256": "41279b8480709f4b4a39c6b0f99cb9a775e746266c370b8e4bd6c1a1336244fd",
           "version": "d720a1869ced672607d738bd2f8850fc6397049eb179fbb68ee471ffbd0462ac"
         }
@@ -135259,6 +136424,60 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "f6c2866b18089bc4af701ba6842209e4c086ec7258d541c79ec25d44c0d045ac"
+    },
+    {
+      "consumer_status": "partial",
+      "consumers": [
+        {
+          "id": "entry:44a79bc32823e90278b8e1c9",
+          "sha256": "541ac3bee3f04f98de5b2022e229006ff9ba87285b410b8dce45491befbc2d87",
+          "version": "73c2e3f5e9135677f5959f11ab5a259b1a22a8e1d2547286f18c9841609dde0a"
+        },
+        {
+          "id": "entry:af5ec5e7df18539c1f0109d7",
+          "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+          "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+        }
+      ],
+      "content": {
+        "algorithm": "sha256",
+        "value": "62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e"
+      },
+      "current_path": "scripts/tests/test_regression_runner.py",
+      "dependencies": [],
+      "id": "asset:baf92e7358044cda62508fdc",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "qualification_status": "not-granted",
+      "role": {
+        "facts": [
+          {
+            "entrypoint": {
+              "id": "entry:44a79bc32823e90278b8e1c9",
+              "sha256": "541ac3bee3f04f98de5b2022e229006ff9ba87285b410b8dce45491befbc2d87",
+              "version": "73c2e3f5e9135677f5959f11ab5a259b1a22a8e1d2547286f18c9841609dde0a"
+            },
+            "proof": "actual-discovery-owner-module"
+          },
+          {
+            "entrypoint": {
+              "id": "entry:af5ec5e7df18539c1f0109d7",
+              "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+              "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+            },
+            "proof": "actual-discovery-owner-module"
+          }
+        ],
+        "reason": "actual TestLoader owner module; no semantic qualification",
+        "status": "confirmed",
+        "value": "actual-unittest-owner"
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "fda5e14f0f05bc73e49392088b7988d3765ba0d12005725c673a909123b20e94"
     },
     {
       "consumer_status": "pending",
@@ -141510,6 +142729,47 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "96677d730f940b8fbb6b2e5523bcc6f768c5df29798dcd32d46db5981301ab33"
+    },
+    {
+      "consumer_status": "partial",
+      "consumers": [
+        {
+          "id": "entry:af5ec5e7df18539c1f0109d7",
+          "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+          "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+        }
+      ],
+      "content": {
+        "algorithm": "sha256",
+        "value": "3f269d154ff201b53746ca98f49f4a0270a21070428ee9176cc3617e9cdfc6e0"
+      },
+      "current_path": "scripts/tests/test_discover_rust.py",
+      "dependencies": [],
+      "id": "asset:c32e0f068c2b34ed45b31619",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "qualification_status": "not-granted",
+      "role": {
+        "facts": [
+          {
+            "entrypoint": {
+              "id": "entry:af5ec5e7df18539c1f0109d7",
+              "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+              "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+            },
+            "proof": "actual-discovery-owner-module"
+          }
+        ],
+        "reason": "actual TestLoader owner module; no semantic qualification",
+        "status": "confirmed",
+        "value": "actual-unittest-owner"
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "12bfb8650a7c4ef35eabc535a9e623e22aa86eb1583d1e6c97af065e31a35133"
     },
     {
       "consumer_status": "partial",
@@ -153741,6 +155001,47 @@
       "version": "7c3b10ad5863095bdce562bd8deac95784cb4ca6debc428c7e104e128680c91d"
     },
     {
+      "consumer_status": "partial",
+      "consumers": [
+        {
+          "id": "entry:af5ec5e7df18539c1f0109d7",
+          "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+          "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+        }
+      ],
+      "content": {
+        "algorithm": "sha256",
+        "value": "0e016c33e42eadf4f2b82ec0daef2f4c164505bbd73d3010282fe655e6ed8d85"
+      },
+      "current_path": "scripts/tests/test_benchmark_package.py",
+      "dependencies": [],
+      "id": "asset:d4f485ccf350ac812ada5787",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "qualification_status": "not-granted",
+      "role": {
+        "facts": [
+          {
+            "entrypoint": {
+              "id": "entry:af5ec5e7df18539c1f0109d7",
+              "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+              "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+            },
+            "proof": "actual-discovery-owner-module"
+          }
+        ],
+        "reason": "actual TestLoader owner module; no semantic qualification",
+        "status": "confirmed",
+        "value": "actual-unittest-owner"
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "f0e99989a535b2e5b6149c18ec8f9deb5b7d775ae1637235c82ba5741ceca459"
+    },
+    {
       "consumer_status": "pending",
       "consumers": [],
       "content": {
@@ -160496,6 +161797,47 @@
       "consumers": [
         {
           "id": "entry:af5ec5e7df18539c1f0109d7",
+          "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+          "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+        }
+      ],
+      "content": {
+        "algorithm": "sha256",
+        "value": "a9599beaa6398d494ff05650079c8051f3874de8843d606eb4ac5fe95df86596"
+      },
+      "current_path": "scripts/tests/test_development_records.py",
+      "dependencies": [],
+      "id": "asset:de30cb6f782b8c2b02f418ed",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "qualification_status": "not-granted",
+      "role": {
+        "facts": [
+          {
+            "entrypoint": {
+              "id": "entry:af5ec5e7df18539c1f0109d7",
+              "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+              "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+            },
+            "proof": "actual-discovery-owner-module"
+          }
+        ],
+        "reason": "actual TestLoader owner module; no semantic qualification",
+        "status": "confirmed",
+        "value": "actual-unittest-owner"
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "022f099b87efeeeae9333aaee6042d9f1db0f1bad9bdb3a171d13e329404aaae"
+    },
+    {
+      "consumer_status": "partial",
+      "consumers": [
+        {
+          "id": "entry:af5ec5e7df18539c1f0109d7",
           "sha256": "41279b8480709f4b4a39c6b0f99cb9a775e746266c370b8e4bd6c1a1336244fd",
           "version": "d720a1869ced672607d738bd2f8850fc6397049eb179fbb68ee471ffbd0462ac"
         }
@@ -164272,6 +165614,47 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "0bd37a6ac0f1eec3626781d01b1b3c4fe6a0c14f8124db9ad4ca9d02e4a6d87d"
+    },
+    {
+      "consumer_status": "partial",
+      "consumers": [
+        {
+          "id": "entry:af5ec5e7df18539c1f0109d7",
+          "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+          "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+        }
+      ],
+      "content": {
+        "algorithm": "sha256",
+        "value": "9a31d53684514fc0fc69912e807ccd0e4f939ca4d7bb16e4201aa51fcf58ab59"
+      },
+      "current_path": "scripts/tests/test_regression_admission.py",
+      "dependencies": [],
+      "id": "asset:e190a5b3618405c738c6a323",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "qualification_status": "not-granted",
+      "role": {
+        "facts": [
+          {
+            "entrypoint": {
+              "id": "entry:af5ec5e7df18539c1f0109d7",
+              "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+              "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+            },
+            "proof": "actual-discovery-owner-module"
+          }
+        ],
+        "reason": "actual TestLoader owner module; no semantic qualification",
+        "status": "confirmed",
+        "value": "actual-unittest-owner"
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "571434e9abd3ac869cbb097b1846cbbb50dba610efdb45cb6535a74ae0c5953c"
     },
     {
       "consumer_status": "partial",
@@ -181541,6 +182924,47 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "95aaa471d510c14b4c22611cec7c82e3cdd856e2ad1e2d7f4c840c21b42bb0dd"
+    },
+    {
+      "consumer_status": "partial",
+      "consumers": [
+        {
+          "id": "entry:af5ec5e7df18539c1f0109d7",
+          "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+          "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+        }
+      ],
+      "content": {
+        "algorithm": "sha256",
+        "value": "45d58dec2a006cfae7e3c968044d6db8b35c9644b50b8fa5aacb399ce7493f58"
+      },
+      "current_path": "scripts/tests/test_ci_evidence_v3.py",
+      "dependencies": [],
+      "id": "asset:f8e8b7c2946ff140e6260e84",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "qualification_status": "not-granted",
+      "role": {
+        "facts": [
+          {
+            "entrypoint": {
+              "id": "entry:af5ec5e7df18539c1f0109d7",
+              "sha256": "160b297c8d68dd3e4da56b4df217d4b9d4c29b07a080eeb3ebc844c3bc3f1916",
+              "version": "a90621f5e5619eaf96a75cfb6aca3a97244ac52b1b582ce9228fa0fade5ef967"
+            },
+            "proof": "actual-discovery-owner-module"
+          }
+        ],
+        "reason": "actual TestLoader owner module; no semantic qualification",
+        "status": "confirmed",
+        "value": "actual-unittest-owner"
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "98e3724b1fd8940a9cb59d6e05b6614f983e9b07ec2425fcd4d1884968826566"
     },
     {
       "consumer_status": "pending",
