@@ -1,0 +1,108 @@
+COMMAND ['/opt/homebrew/bin/python3.12', '-B', '-m', 'unittest', 'discover', '-s', 'scripts/tests', '-p', 'test_registration_bundle.py', '-k', 'partial_clone', '-v']
+test_partial_clone_missing_blobs_are_not_fetched (test_registration_bundle.BundleMaterializationTests.test_partial_clone_missing_blobs_are_not_fetched) ... FAIL
+
+======================================================================
+FAIL: test_partial_clone_missing_blobs_are_not_fetched (test_registration_bundle.BundleMaterializationTests.test_partial_clone_missing_blobs_are_not_fetched)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/scripts/tests/test_registration_bundle.py", line 273, in test_partial_clone_missing_blobs_are_not_fetched
+    self.assertEqual(process.returncode, 2, process.stdout+process.stderr)
+AssertionError: 0 != 2 : {
+  "commit": "460e740dd62da5a7bb5abaeffb6194686517c283",
+  "files": [
+    {
+      "blob": "2d2c70d853e0142812fba99b24c11430e135c5da",
+      "byte_count": 28,
+      "mode": "100644",
+      "name": "report.json",
+      "path": "archive/report.json",
+      "sha256": "b1b810ef63306993eac7a3926e6a873e1d6e28f79e425acd8922d02ac1aa237f"
+    },
+    {
+      "blob": "90474491274f3f10c837165d8012d63c6d34cebb",
+      "byte_count": 35,
+      "mode": "100644",
+      "name": "composition_recipe",
+      "path": "archive/composition_recipe",
+      "sha256": "1a81a42d118e0ae9d1924b50b729227fe8c21cc6a9966736ead427766fd7dc93"
+    },
+    {
+      "blob": "2e51fc3db72c446345c8360e5ca73a7aa7f14255",
+      "byte_count": 34,
+      "mode": "100644",
+      "name": "snapshot_manifest",
+      "path": "archive/snapshot_manifest",
+      "sha256": "685f18590c252ce2a26f7faffd08f65962c0a68a6516bf66322de4dcc597c3e1"
+    },
+    {
+      "blob": "bf5bae6c0c4469074118015092c4a0e57610b04d",
+      "byte_count": 26,
+      "mode": "100644",
+      "name": "dut_build",
+      "path": "archive/dut_build",
+      "sha256": "5044370807c59f64bfb3d7891db357e2d0f4e5d96d617e8cfe3780b29bb8a54c"
+    },
+    {
+      "blob": "3503f375790f0dc2a35371856d0f16f495029a80",
+      "byte_count": 30,
+      "mode": "100644",
+      "name": "kernel_binary",
+      "path": "archive/kernel_binary",
+      "sha256": "7944d6c28b53a3e22da9cb013b8cd42d8a927328cf517a09bc5a0db597ef07ef"
+    },
+    {
+      "blob": "40f55f9944d3bd8bc826c65cb5ff45c57aa11e30",
+      "byte_count": 35,
+      "mode": "100644",
+      "name": "collector_manifest",
+      "path": "archive/collector_manifest",
+      "sha256": "5863f2efe6d3b2ab537167ee193b5adf03568928968843e652c78006655483bd"
+    },
+    {
+      "blob": "f9f2091899b8b4db87ff0aa0e878430d22801a9a",
+      "byte_count": 34,
+      "mode": "100644",
+      "name": "artifact_manifest",
+      "path": "archive/artifact_manifest",
+      "sha256": "978e33d071b7f2f2779922dda0482ea4aba939cc4e0288171af1a0820bd49280"
+    },
+    {
+      "blob": "fe379cbc875eb69cf002f9b7303d9ef4230a037a",
+      "byte_count": 23,
+      "mode": "100644",
+      "name": "stdout",
+      "path": "archive/stdout",
+      "sha256": "da3444b8334e50cb81853e6a6d1b95def5dd9f77947f700ea73cf21391666ae4"
+    },
+    {
+      "blob": "2ff7bf90bcc9e22fb4b74d53b65e57dbb7e2581a",
+      "byte_count": 23,
+      "mode": "100644",
+      "name": "stderr",
+      "path": "archive/stderr",
+      "sha256": "b78cb6117f4b9746f5e5369ce7645926e5495df7ad856744fa7570966ab472de"
+    },
+    {
+      "blob": "3447e0041a75d07bfa44d6dec137e9b0f38483ad",
+      "byte_count": 30,
+      "mode": "100644",
+      "name": "shard_reports",
+      "path": "archive/shard_reports",
+      "sha256": "d908b8139293960daeaec32d80c6195ef30285391b97cee70a9ac3568de2aa21"
+    }
+  ],
+  "kind": "registration-bundle-materialization",
+  "materialized": true,
+  "output": "/var/folders/y2/l5_3_fm108z7rq5gjtlpy_lw0000gn/T/tmpt0kp7yn8/materialized",
+  "prefix": "archive",
+  "schema_version": 1,
+  "tree": "4bf35e56b428fcd4424a919a943c63e4aca9c937"
+}
+
+
+----------------------------------------------------------------------
+Ran 1 test in 1.519s
+
+FAILED (failures=1)
+
+returncode=1

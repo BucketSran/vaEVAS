@@ -1,0 +1,19 @@
+COMMAND ['/opt/homebrew/bin/python3.12', '-B', '-m', 'unittest', 'discover', '-s', 'scripts/tests', '-p', 'test_registration_bundle.py', '-v']
+test_exact_bytes_and_git_identity_are_retained (test_registration_bundle.BundleMaterializationTests.test_exact_bytes_and_git_identity_are_retained) ... ok
+test_failed_publish_preserves_another_output_owner (test_registration_bundle.BundleMaterializationTests.test_failed_publish_preserves_another_output_owner) ... ok
+test_manifest_cannot_select_floating_refs_or_escaping_paths (test_registration_bundle.BundleMaterializationTests.test_manifest_cannot_select_floating_refs_or_escaping_paths) ... ok
+test_missing_symlink_and_tree_are_rejected_without_partial_output (test_registration_bundle.BundleMaterializationTests.test_missing_symlink_and_tree_are_rejected_without_partial_output) ... ok
+test_partial_clone_missing_blobs_are_not_fetched (test_registration_bundle.BundleMaterializationTests.test_partial_clone_missing_blobs_are_not_fetched) ... ok
+test_c0_refusal_precedes_pointer_and_helper_reads (test_registration_bundle.BundleWorkflowTests.test_c0_refusal_precedes_pointer_and_helper_reads) ... ok
+test_changed_bundle_bytes_cannot_register (test_registration_bundle.BundleWorkflowTests.test_changed_bundle_bytes_cannot_register) ... ok
+test_head_pointer_and_helper_cannot_replace_base_authority (test_registration_bundle.BundleWorkflowTests.test_head_pointer_and_helper_cannot_replace_base_authority) ... ok
+test_missing_or_nonregular_base_data_fails_without_head_fallback (test_registration_bundle.BundleWorkflowTests.test_missing_or_nonregular_base_data_fails_without_head_fallback) ... ok
+test_no_append_does_not_read_pointer_or_execute_helper (test_registration_bundle.BundleWorkflowTests.test_no_append_does_not_read_pointer_or_execute_helper) ... ok
+test_trusted_pointer_registers_for_each_supported_event (test_registration_bundle.BundleWorkflowTests.test_trusted_pointer_registers_for_each_supported_event) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 20.913s
+
+OK
+
+returncode=0
