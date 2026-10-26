@@ -1,0 +1,66 @@
+{
+  "run": 40274116394,
+  "source_commit": "00736351cdd7baf691e2e79cc49c8be1efdb9ebd",
+  "actual_native_listing_tests": 904,
+  "ignored": 1,
+  "binaries": [
+    {
+      "package": "evas-kernel",
+      "target": "evas-kernel",
+      "kind": [
+        "bin"
+      ],
+      "tests": 0,
+      "ignored": 0,
+      "observed_binary_sha256": "5a841fe3ee7ea99ba2578594b1d0891dad6e9bf728a6fb260284ae9c54de8d93"
+    },
+    {
+      "package": "evas-kernel",
+      "target": "evas_kernel",
+      "kind": [
+        "lib"
+      ],
+      "tests": 884,
+      "ignored": 1,
+      "observed_binary_sha256": "0066801db3cfdc7c760a8b0a51ba510d6967677afdc1b7c92959735bfda2eb6a"
+    },
+    {
+      "package": "evas-kernel",
+      "target": "history_consumer",
+      "kind": [
+        "test"
+      ],
+      "tests": 9,
+      "ignored": 0,
+      "observed_binary_sha256": "cdabcb10e0232bf785ae2a4043888739726f3bd1604977acc9d85c5ad03d7852"
+    },
+    {
+      "package": "evas-ir",
+      "target": "evas_ir",
+      "kind": [
+        "lib"
+      ],
+      "tests": 5,
+      "ignored": 0,
+      "observed_binary_sha256": "d24001104106e7f2819a27159a6652f27a9d62105e2cad5b183f06a05bf40130"
+    },
+    {
+      "package": "evas-ir",
+      "target": "transport",
+      "kind": [
+        "test"
+      ],
+      "tests": 6,
+      "ignored": 0,
+      "observed_binary_sha256": "277043a19fc3b9ab205d86e68a9fe5daeb6532e036741ffeba9cce6030f597d6"
+    }
+  ],
+  "raw_commands_verified": 13,
+  "source_files_verified": 247,
+  "source_binding": "all Rust source rows match independently Git-verified actual asset receipt",
+  "report_sha256": "f37f2f25473f3b0a445e5a8aeaa85818953e4b4f42925b745b5761907c04f75c",
+  "listing_only": true,
+  "native_binary_bytes_retained": false,
+  "native_binary_SHA_independently_rehashed_by_this_verifier": false,
+  "qualification": false
+}

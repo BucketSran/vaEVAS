@@ -1,0 +1,1893 @@
+{
+  "entry": {
+    "collector": "unittest",
+    "command": "python3 -B -m unittest discover -s experiments/backends/dvs2-spectre-validation -p 'test_*.py' -v",
+    "declared_python_versions": [
+      "3.12"
+    ],
+    "entry_id": "b480bd82ea6083ed2add3fc171c566f4ef8767aa19d5aea8acbb28d1b250b305",
+    "environment_overrides": {},
+    "job": "static-checks",
+    "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+    "line": 184,
+    "mode": "declared-ci-literal",
+    "namespace": "validation",
+    "pattern": "test_*.py",
+    "purpose": "role-not-semantic-qualification",
+    "start": "experiments/backends/dvs2-spectre-validation",
+    "step": "Independent mathematics and checker calibration (no simulator)",
+    "step_if": "needs.selection.outputs.calibration == 'true'",
+    "workflow": ".github/workflows/numerical-assurance.yml"
+  },
+  "receipt": {
+    "collector": {
+      "definition_profile": "actual-code-or-registered-native-skip-v1",
+      "native_skip_authority": {
+        "factory_span_sha256": "a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad",
+        "profile": "registered-native-unittest-skip-v1",
+        "runtime_file_sha256": "45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987",
+        "runtime_source": "unittest/case.py",
+        "wrapper_span_sha256": "96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda"
+      },
+      "path": "scripts/capabilities/discover_methods.py",
+      "sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "source_relationship": "owned-source-root"
+    },
+    "complete": true,
+    "discovered_instances": 100,
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONPATH": null,
+      "bytecode_disabled": true,
+      "cache_tag": "cpython-312",
+      "environment_scope": "python-runtime-and-import-path-only",
+      "executable": "/opt/hostedtoolcache/Python/3.12.15/x64/bin/python3",
+      "implementation": "cpython",
+      "platform": "linux",
+      "python_version": "3.12.15 (main, Oct  1 2026, 02:35:59) [GCC 13.3.0]",
+      "sys_path_before_selected_imports": [
+        "/home/runner/work/vaEVAS/vaEVAS",
+        "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python312.zip",
+        "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12",
+        "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/lib-dynload",
+        "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages"
+      ]
+    },
+    "error_count": 0,
+    "errors": [],
+    "loader_error_count": 0,
+    "methods": [
+      {
+        "definition": {
+          "line": 56,
+          "name": "test_all_new_positive_and_missing_observation_controls",
+          "path": "experiments/backends/dvs2-spectre-validation/test_checks.py",
+          "sha256": "831e6fd8611110ba51101776de2d973706b6e5ba75afefd9c45fe67a0178662a"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_checks.py",
+        "module_sha256": "7cdea4984ab86dbaaa875feee1e185e18c6b785456ec49c7590a79f403600c14",
+        "runtime_id": "test_checks.Calibration.test_all_new_positive_and_missing_observation_controls",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 106,
+          "name": "test_c2_linearization_reserve",
+          "path": "experiments/backends/dvs2-spectre-validation/test_checks.py",
+          "sha256": "d8ccafad0f4013ad31e4d500dff2f277b0ea4558bc44a5a9fe9a84ec90e9e2c7"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_checks.py",
+        "module_sha256": "7cdea4984ab86dbaaa875feee1e185e18c6b785456ec49c7590a79f403600c14",
+        "runtime_id": "test_checks.Calibration.test_c2_linearization_reserve",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 32,
+          "name": "test_hand_anchors",
+          "path": "experiments/backends/dvs2-spectre-validation/test_checks.py",
+          "sha256": "3a1675181f977441959e195b68b9553f1d2db34eba04996ee64a5eb98bb66854"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_checks.py",
+        "module_sha256": "7cdea4984ab86dbaaa875feee1e185e18c6b785456ec49c7590a79f403600c14",
+        "runtime_id": "test_checks.Calibration.test_hand_anchors",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 21,
+          "name": "test_manifest_identity_and_real_parameter_override",
+          "path": "experiments/backends/dvs2-spectre-validation/test_checks.py",
+          "sha256": "3f06d9650cc10cae2db878f2a5698a61927026c80d01218bdb0e3c56610fc40b"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_checks.py",
+        "module_sha256": "7cdea4984ab86dbaaa875feee1e185e18c6b785456ec49c7590a79f403600c14",
+        "runtime_id": "test_checks.Calibration.test_manifest_identity_and_real_parameter_override",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 88,
+          "name": "test_nonfinite_time_order_density_and_input",
+          "path": "experiments/backends/dvs2-spectre-validation/test_checks.py",
+          "sha256": "5106ef612e1fe2826aae6b9ebd6daeef5f679ac9119ec35a2e0e0ed764f6148a"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_checks.py",
+        "module_sha256": "7cdea4984ab86dbaaa875feee1e185e18c6b785456ec49c7590a79f403600c14",
+        "runtime_id": "test_checks.Calibration.test_nonfinite_time_order_density_and_input",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 80,
+          "name": "test_phase_range_and_whole_cycle_not_hidden_by_sine",
+          "path": "experiments/backends/dvs2-spectre-validation/test_checks.py",
+          "sha256": "fe0d43ff4b291b1c7a6de941633316de5ba82a153c5b8a16e3a01212e7dfaa3d"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_checks.py",
+        "module_sha256": "7cdea4984ab86dbaaa875feee1e185e18c6b785456ec49c7590a79f403600c14",
+        "runtime_id": "test_checks.Calibration.test_phase_range_and_whole_cycle_not_hidden_by_sine",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 64,
+          "name": "test_seven_distinguishing_semantic_faults",
+          "path": "experiments/backends/dvs2-spectre-validation/test_checks.py",
+          "sha256": "9cb509d180b03c2d7c2ad84d284c92031d9e54a3306e0d7c407b1c532dd95b2b"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_checks.py",
+        "module_sha256": "7cdea4984ab86dbaaa875feee1e185e18c6b785456ec49c7590a79f403600c14",
+        "runtime_id": "test_checks.Calibration.test_seven_distinguishing_semantic_faults",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 96,
+          "name": "test_uncertainty_is_not_forced_to_pass_or_fail",
+          "path": "experiments/backends/dvs2-spectre-validation/test_checks.py",
+          "sha256": "dfe142765ee8fd63f2a4bf1963820c1c4017a25cf37bf2c62c74acc883d501eb"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_checks.py",
+        "module_sha256": "7cdea4984ab86dbaaa875feee1e185e18c6b785456ec49c7590a79f403600c14",
+        "runtime_id": "test_checks.Calibration.test_uncertainty_is_not_forced_to_pass_or_fail",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 23,
+          "name": "test_hand_counts_and_full_candidate",
+          "path": "experiments/backends/dvs2-spectre-validation/test_cross_boundaries.py",
+          "sha256": "c6b678b3eed95566b2690ac2963bea43f2285ea25d4dba81faa9f68d0be54e04"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_cross_boundaries.py",
+        "module_sha256": "12d9a1063e9086f3e85718c12de6428cdc7d2940c7d6ef1291f618e7cbe7594f",
+        "runtime_id": "test_cross_boundaries.BoundaryCalibration.test_hand_counts_and_full_candidate",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 64,
+          "name": "test_invalid_observations_fail",
+          "path": "experiments/backends/dvs2-spectre-validation/test_cross_boundaries.py",
+          "sha256": "ccb54b9cd8c97d45bafcf1426ad2a3eb1936643dad279e0e89791377324551f8"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_cross_boundaries.py",
+        "module_sha256": "12d9a1063e9086f3e85718c12de6428cdc7d2940c7d6ef1291f618e7cbe7594f",
+        "runtime_id": "test_cross_boundaries.BoundaryCalibration.test_invalid_observations_fail",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 34,
+          "name": "test_missing_extra_wrong_direction_and_departure_are_visible",
+          "path": "experiments/backends/dvs2-spectre-validation/test_cross_boundaries.py",
+          "sha256": "ac6df5b8d638b9494c8f42641ffc684bd1074865ff0976ba1072ddc0c84db945"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_cross_boundaries.py",
+        "module_sha256": "12d9a1063e9086f3e85718c12de6428cdc7d2940c7d6ef1291f618e7cbe7594f",
+        "runtime_id": "test_cross_boundaries.BoundaryCalibration.test_missing_extra_wrong_direction_and_departure_are_visible",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 47,
+          "name": "test_samples_and_history_are_checked",
+          "path": "experiments/backends/dvs2-spectre-validation/test_cross_boundaries.py",
+          "sha256": "cfdc718c82f10dfe09dd88e6dd6846dee73e863b2f710c67a80ecebf6e85190e"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_cross_boundaries.py",
+        "module_sha256": "12d9a1063e9086f3e85718c12de6428cdc7d2940c7d6ef1291f618e7cbe7594f",
+        "runtime_id": "test_cross_boundaries.BoundaryCalibration.test_samples_and_history_are_checked",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 21,
+          "name": "test_hand_anchors_and_nominal_observations",
+          "path": "experiments/backends/dvs2-spectre-validation/test_cross_reference.py",
+          "sha256": "eae66c0d8959ddf7c3ef1bdfff998649ebd12a1b0ff5aee6ab44c54a56447149"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_cross_reference.py",
+        "module_sha256": "d82f59a435263e9e70e3f70ab2f7c77c99f579d02e1f5c91c8d25c3041d2c65a",
+        "runtime_id": "test_cross_reference.CrossReferenceCalibration.test_hand_anchors_and_nominal_observations",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 54,
+          "name": "test_invalid_observations_are_rejected",
+          "path": "experiments/backends/dvs2-spectre-validation/test_cross_reference.py",
+          "sha256": "eaca045756158cde1cb8446cf7410ae22b60523dda6bd67839bfa8ff56381c40"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_cross_reference.py",
+        "module_sha256": "d82f59a435263e9e70e3f70ab2f7c77c99f579d02e1f5c91c8d25c3041d2c65a",
+        "runtime_id": "test_cross_reference.CrossReferenceCalibration.test_invalid_observations_are_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 31,
+          "name": "test_known_legal_delays_are_accepted",
+          "path": "experiments/backends/dvs2-spectre-validation/test_cross_reference.py",
+          "sha256": "ff333bd5888af177474928d9ce7e0f385ad01fd0590719c20baacb9c421a6284"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_cross_reference.py",
+        "module_sha256": "d82f59a435263e9e70e3f70ab2f7c77c99f579d02e1f5c91c8d25c3041d2c65a",
+        "runtime_id": "test_cross_reference.CrossReferenceCalibration.test_known_legal_delays_are_accepted",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 39,
+          "name": "test_shared_wrong_backend_results_cannot_pass",
+          "path": "experiments/backends/dvs2-spectre-validation/test_cross_reference.py",
+          "sha256": "87133898773ab656f55064d4b20a7cf41e27def3cbdf900529fa9262a690f10d"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_cross_reference.py",
+        "module_sha256": "d82f59a435263e9e70e3f70ab2f7c77c99f579d02e1f5c91c8d25c3041d2c65a",
+        "runtime_id": "test_cross_reference.CrossReferenceCalibration.test_shared_wrong_backend_results_cannot_pass",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 14,
+          "name": "test_exact_control_and_distinct_faults",
+          "path": "experiments/backends/dvs2-spectre-validation/test_cross_restart_diagnostic.py",
+          "sha256": "68d7c74ea5277fbef2e6b9a22aee1a349471c286aba5cceac6ef170f6a827184"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_cross_restart_diagnostic.py",
+        "module_sha256": "4548967b04f6706c5aa8efde47e7fb950d20a839458199073dc29ca04d1f5b9f",
+        "runtime_id": "test_cross_restart_diagnostic.RestartMeasurements.test_exact_control_and_distinct_faults",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 24,
+          "name": "test_execution_delay_separate_from_history_error",
+          "path": "experiments/backends/dvs2-spectre-validation/test_cross_restart_diagnostic.py",
+          "sha256": "e21c6a6670ef33ce743454799961e929e6062d669bc18828280aa5ac6d3e9539"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_cross_restart_diagnostic.py",
+        "module_sha256": "4548967b04f6706c5aa8efde47e7fb950d20a839458199073dc29ca04d1f5b9f",
+        "runtime_id": "test_cross_restart_diagnostic.RestartMeasurements.test_execution_delay_separate_from_history_error",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 35,
+          "name": "test_original_model_has_no_triangle_oracle",
+          "path": "experiments/backends/dvs2-spectre-validation/test_cross_restart_diagnostic.py",
+          "sha256": "82e5697d2d33159d29bf0b936eef6dc3fa025250ed8b1a12028515e380e06d0c"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_cross_restart_diagnostic.py",
+        "module_sha256": "4548967b04f6706c5aa8efde47e7fb950d20a839458199073dc29ca04d1f5b9f",
+        "runtime_id": "test_cross_restart_diagnostic.RestartMeasurements.test_original_model_has_no_triangle_oracle",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 41,
+          "name": "test_sparse_outputs_use_event_log_and_check_it_against_counter",
+          "path": "experiments/backends/dvs2-spectre-validation/test_cross_restart_diagnostic.py",
+          "sha256": "f067aa227993e12e6f1534aba7a1ed7d97bf26fe6b342bfbeb4fceaa0ad23138"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_cross_restart_diagnostic.py",
+        "module_sha256": "4548967b04f6706c5aa8efde47e7fb950d20a839458199073dc29ca04d1f5b9f",
+        "runtime_id": "test_cross_restart_diagnostic.RestartMeasurements.test_sparse_outputs_use_event_log_and_check_it_against_counter",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 30,
+          "name": "test_arrival_contract_accepts_both_polarities",
+          "path": "experiments/backends/dvs2-spectre-validation/test_cross_touch.py",
+          "sha256": "e344c2cfeb2af44af84939087547548863a1cfac13afce08775dc6885597bb72"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_cross_touch.py",
+        "module_sha256": "66a78a2d31d91f76ee29f828c6ce77561278a621a002902b8e8dfbf58ec96d3d",
+        "runtime_id": "test_cross_touch.TouchCalibration.test_arrival_contract_accepts_both_polarities",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 43,
+          "name": "test_arrival_contract_checks_touch_history_and_samples",
+          "path": "experiments/backends/dvs2-spectre-validation/test_cross_touch.py",
+          "sha256": "8f8a1f1948829ad60733e6fdf0e97374d141315b9f8b980fa9302cc5c2108725"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_cross_touch.py",
+        "module_sha256": "66a78a2d31d91f76ee29f828c6ce77561278a621a002902b8e8dfbf58ec96d3d",
+        "runtime_id": "test_cross_touch.TouchCalibration.test_arrival_contract_checks_touch_history_and_samples",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 36,
+          "name": "test_arrival_contract_rejects_other_touch_hypotheses",
+          "path": "experiments/backends/dvs2-spectre-validation/test_cross_touch.py",
+          "sha256": "a57db6b3a815e0ec08126fcd2c306060bb5dfd14d26d3e94e31c64fc208ecc2e"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_cross_touch.py",
+        "module_sha256": "66a78a2d31d91f76ee29f828c6ce77561278a621a002902b8e8dfbf58ec96d3d",
+        "runtime_id": "test_cross_touch.TouchCalibration.test_arrival_contract_rejects_other_touch_hypotheses",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 76,
+          "name": "test_hand_answers_and_root_separation",
+          "path": "experiments/backends/dvs2-spectre-validation/test_cross_touch.py",
+          "sha256": "60482cef7ee0d7059fe33918181220e043a095bef3839e04667ea731c74994aa"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_cross_touch.py",
+        "module_sha256": "66a78a2d31d91f76ee29f828c6ce77561278a621a002902b8e8dfbf58ec96d3d",
+        "runtime_id": "test_cross_touch.TouchCalibration.test_hand_answers_and_root_separation",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 112,
+          "name": "test_invalid_observation_sets_fail",
+          "path": "experiments/backends/dvs2-spectre-validation/test_cross_touch.py",
+          "sha256": "15cf5baeb010053d5ae0eae36c6fa12b5f7a046409332049f36e48277d3913c3"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_cross_touch.py",
+        "module_sha256": "66a78a2d31d91f76ee29f828c6ce77561278a621a002902b8e8dfbf58ec96d3d",
+        "runtime_id": "test_cross_touch.TouchCalibration.test_invalid_observation_sets_fail",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 69,
+          "name": "test_metadata_repair_does_not_accept_wrong_settings",
+          "path": "experiments/backends/dvs2-spectre-validation/test_cross_touch.py",
+          "sha256": "f0610479aed602330e71ef0c1fcdbc0f6a106b5096702d1c13ea15d05f77f246"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_cross_touch.py",
+        "module_sha256": "66a78a2d31d91f76ee29f828c6ce77561278a621a002902b8e8dfbf58ec96d3d",
+        "runtime_id": "test_cross_touch.TouchCalibration.test_metadata_repair_does_not_accept_wrong_settings",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 60,
+          "name": "test_rounded_stop_log_requires_matching_waveform_endpoint",
+          "path": "experiments/backends/dvs2-spectre-validation/test_cross_touch.py",
+          "sha256": "7aa6a81b8f00c2cfec462d89862b0b0be3457e06b3015bf8f8a04ca796d29466"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_cross_touch.py",
+        "module_sha256": "66a78a2d31d91f76ee29f828c6ce77561278a621a002902b8e8dfbf58ec96d3d",
+        "runtime_id": "test_cross_touch.TouchCalibration.test_rounded_stop_log_requires_matching_waveform_endpoint",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 89,
+          "name": "test_touch_hypotheses_are_classified_without_selecting_a_winner",
+          "path": "experiments/backends/dvs2-spectre-validation/test_cross_touch.py",
+          "sha256": "4c653f6c333cd2491856f8b837b5d4594e73b30ce8e793786df5abac9a39078b"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_cross_touch.py",
+        "module_sha256": "66a78a2d31d91f76ee29f828c6ce77561278a621a002902b8e8dfbf58ec96d3d",
+        "runtime_id": "test_cross_touch.TouchCalibration.test_touch_hypotheses_are_classified_without_selecting_a_winner",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 99,
+          "name": "test_wrong_histories_and_timing_fail",
+          "path": "experiments/backends/dvs2-spectre-validation/test_cross_touch.py",
+          "sha256": "11e73da27c500df066d28bc5df654cbd89643ae4f938ba1c286cdde679824dd8"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_cross_touch.py",
+        "module_sha256": "66a78a2d31d91f76ee29f828c6ce77561278a621a002902b8e8dfbf58ec96d3d",
+        "runtime_id": "test_cross_touch.TouchCalibration.test_wrong_histories_and_timing_fail",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 45,
+          "name": "test_duplicate_missing_merged_and_extra_updates_are_rejected",
+          "path": "experiments/backends/dvs2-spectre-validation/test_event_or_reference.py",
+          "sha256": "bc27b0f56b39b9cebbf43241f7c2cc741752f758434ded593b909ee69161fad2"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_event_or_reference.py",
+        "module_sha256": "50d5fda22d5a6bc09038e7de68306a44b654a05aec78a38b4326c6e97aa4abe9",
+        "runtime_id": "test_event_or_reference.EventOrReference.test_duplicate_missing_merged_and_extra_updates_are_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 33,
+          "name": "test_explicit_tables_and_positive_controls",
+          "path": "experiments/backends/dvs2-spectre-validation/test_event_or_reference.py",
+          "sha256": "8b6512b6ce3b9284db96ccd662465405251801a650b14cfc0d435b4eaa9182f0"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_event_or_reference.py",
+        "module_sha256": "50d5fda22d5a6bc09038e7de68306a44b654a05aec78a38b4326c6e97aa4abe9",
+        "runtime_id": "test_event_or_reference.EventOrReference.test_explicit_tables_and_positive_controls",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 61,
+          "name": "test_invalid_observations_cannot_pass",
+          "path": "experiments/backends/dvs2-spectre-validation/test_event_or_reference.py",
+          "sha256": "1aa6a02f586f55b6847bb3e9c54a53a6cd7f379d7a723f81216d3c8d756ccee6"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_event_or_reference.py",
+        "module_sha256": "50d5fda22d5a6bc09038e7de68306a44b654a05aec78a38b4326c6e97aa4abe9",
+        "runtime_id": "test_event_or_reference.EventOrReference.test_invalid_observations_cannot_pass",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 27,
+          "name": "test_numeric_literals_include_required_integer_part",
+          "path": "experiments/backends/dvs2-spectre-validation/test_event_or_reference.py",
+          "sha256": "a0c270239932f609775b60784b659d689a3dc24d52d6b4c7e4b97851f5afeff9"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_event_or_reference.py",
+        "module_sha256": "50d5fda22d5a6bc09038e7de68306a44b654a05aec78a38b4326c6e97aa4abe9",
+        "runtime_id": "test_event_or_reference.EventOrReference.test_numeric_literals_include_required_integer_part",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 54,
+          "name": "test_reset_priority_and_sampled_stamp_are_checked",
+          "path": "experiments/backends/dvs2-spectre-validation/test_event_or_reference.py",
+          "sha256": "92facbcbc3b7bb171ccfadf597bf7b086559844f035d05acc0a1e2f47b8df065"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_event_or_reference.py",
+        "module_sha256": "50d5fda22d5a6bc09038e7de68306a44b654a05aec78a38b4326c6e97aa4abe9",
+        "runtime_id": "test_event_or_reference.EventOrReference.test_reset_priority_and_sampled_stamp_are_checked",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 64,
+          "name": "test_fixture_has_no_production_oracle_dependency",
+          "path": "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+          "sha256": "d998673ebd625b1adfd66b699c2139291f4b3cd56183ddd6fa9630134206237c"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+        "module_sha256": "910436a8d2649bc36c5b1bbd690a8262d5ee0560c7b18d3a4d19e5b8cc9b8bb5",
+        "runtime_id": "test_event_review.IndependentEventReview.test_fixture_has_no_production_oracle_dependency",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 58,
+          "name": "test_hand_worked_positive_controls",
+          "path": "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+          "sha256": "a615d0dcbe243f39f6c5395db1ded7c86cae263020f1e0984bff72f5b914e65c"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+        "module_sha256": "910436a8d2649bc36c5b1bbd690a8262d5ee0560c7b18d3a4d19e5b8cc9b8bb5",
+        "runtime_id": "test_event_review.IndependentEventReview.test_hand_worked_positive_controls",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 94,
+          "name": "test_high_initial_clock_does_not_justify_initial_sample",
+          "path": "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+          "sha256": "f91503d94a85da4956ab9266ce7f9aecfef78518591f5a95d30bf7ece4976c23"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+        "module_sha256": "910436a8d2649bc36c5b1bbd690a8262d5ee0560c7b18d3a4d19e5b8cc9b8bb5",
+        "runtime_id": "test_event_review.IndependentEventReview.test_high_initial_clock_does_not_justify_initial_sample",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 72,
+          "name": "test_independence_guard_rejects_a_checker_coupled_control",
+          "path": "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+          "sha256": "fbc80f6b5e42811dd8063524a037d7822ea270601490e28dd9c49869a23f189e"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+        "module_sha256": "910436a8d2649bc36c5b1bbd690a8262d5ee0560c7b18d3a4d19e5b8cc9b8bb5",
+        "runtime_id": "test_event_review.IndependentEventReview.test_independence_guard_rejects_a_checker_coupled_control",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 109,
+          "name": "test_instance_crosstalk_and_extra_effective_update_are_rejected",
+          "path": "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+          "sha256": "e77614b3a7803981e0763ccabe21909852c6c8f357f41837fe25115678dea749"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+        "module_sha256": "910436a8d2649bc36c5b1bbd690a8262d5ee0560c7b18d3a4d19e5b8cc9b8bb5",
+        "runtime_id": "test_event_review.IndependentEventReview.test_instance_crosstalk_and_extra_effective_update_are_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 126,
+          "name": "test_invalid_observations_stay_invalid",
+          "path": "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+          "sha256": "d8dfc545a9b22ff75981091b675dab758e224109b4df368fee593654cbc9ea95"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+        "module_sha256": "910436a8d2649bc36c5b1bbd690a8262d5ee0560c7b18d3a4d19e5b8cc9b8bb5",
+        "runtime_id": "test_event_review.IndependentEventReview.test_invalid_observations_stay_invalid",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 84,
+          "name": "test_missing_duplicate_and_wrong_direction_counts_are_rejected",
+          "path": "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+          "sha256": "52f600b9d41a37415bb32d561485fa041380a71ac0c3e3f16293d1de15c88c86"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+        "module_sha256": "910436a8d2649bc36c5b1bbd690a8262d5ee0560c7b18d3a4d19e5b8cc9b8bb5",
+        "runtime_id": "test_event_review.IndependentEventReview.test_missing_duplicate_and_wrong_direction_counts_are_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 78,
+          "name": "test_missing_first_sample_is_rejected",
+          "path": "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+          "sha256": "0615ecd6f957ecd4545983e59cb1ef6a601a8dd466a51aca0188ad5ce75aec3f"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+        "module_sha256": "910436a8d2649bc36c5b1bbd690a8262d5ee0560c7b18d3a4d19e5b8cc9b8bb5",
+        "runtime_id": "test_event_review.IndependentEventReview.test_missing_first_sample_is_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 100,
+          "name": "test_reset_priority_and_extra_release_sample_are_rejected",
+          "path": "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+          "sha256": "14790a2c3b420b5ca3dccaa60b2b41cf03158c5e44429ad2b3428a42adc7af92"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+        "module_sha256": "910436a8d2649bc36c5b1bbd690a8262d5ee0560c7b18d3a4d19e5b8cc9b8bb5",
+        "runtime_id": "test_event_review.IndependentEventReview.test_reset_priority_and_extra_release_sample_are_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 118,
+          "name": "test_tolerance_margins_on_plateaus",
+          "path": "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+          "sha256": "f7fd89d9698f95c1fe2fc6cc5765ee4f5070cb358e2097531775195e744d1298"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_event_review.py",
+        "module_sha256": "910436a8d2649bc36c5b1bbd690a8262d5ee0560c7b18d3a4d19e5b8cc9b8bb5",
+        "runtime_id": "test_event_review.IndependentEventReview.test_tolerance_margins_on_plateaus",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 13,
+          "name": "test_all_exact_answers",
+          "path": "experiments/backends/dvs2-spectre-validation/test_history_relocalization_reference.py",
+          "sha256": "fc53bad238fab791e410fd9b1d9fd3b8bc11ae1989b615c9be79f3a9090d364d"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_history_relocalization_reference.py",
+        "module_sha256": "b08147bd2f3bca48dee811f062d5c06c2eda4c0eabc4659784182cd3ee30e1c6",
+        "runtime_id": "test_history_relocalization_reference.HistoryReference.test_all_exact_answers",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 17,
+          "name": "test_spectre_real_literals_have_a_leading_digit",
+          "path": "experiments/backends/dvs2-spectre-validation/test_history_relocalization_reference.py",
+          "sha256": "e8e1600ba6c45d97bbc5ba64f85ce934457f4fc970e8b11517b28d2cb688c542"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_history_relocalization_reference.py",
+        "module_sha256": "b08147bd2f3bca48dee811f062d5c06c2eda4c0eabc4659784182cd3ee30e1c6",
+        "runtime_id": "test_history_relocalization_reference.HistoryReference.test_spectre_real_literals_have_a_leading_digit",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 21,
+          "name": "test_wrong_history_and_missing_extra_or_shifted_events",
+          "path": "experiments/backends/dvs2-spectre-validation/test_history_relocalization_reference.py",
+          "sha256": "09d786c16691b0b8826fa0e5a675bf0583aa2ccbb1e06eeb3e744febc053d502"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_history_relocalization_reference.py",
+        "module_sha256": "b08147bd2f3bca48dee811f062d5c06c2eda4c0eabc4659784182cd3ee30e1c6",
+        "runtime_id": "test_history_relocalization_reference.HistoryReference.test_wrong_history_and_missing_extra_or_shifted_events",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 121,
+          "name": "test_dut_reorders_only_the_three_contributions",
+          "path": "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+          "sha256": "93acb1557bc2fb262669163f113e8da96c88fe7fe1c9f36eaad5acf2ee558b23"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+        "module_sha256": "7e43268f747030c6f666edcdfd1f9059ba346d6969e0d6fddde7a062799d98fb",
+        "runtime_id": "test_s1_review.S1Review.test_dut_reorders_only_the_three_contributions",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 50,
+          "name": "test_fixture_does_not_use_production_oracle",
+          "path": "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+          "sha256": "6cfe1223165ae88be612226a59a31cf54345114673e8f6432da29c9bf5e88e91"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+        "module_sha256": "7e43268f747030c6f666edcdfd1f9059ba346d6969e0d6fddde7a062799d98fb",
+        "runtime_id": "test_s1_review.S1Review.test_fixture_does_not_use_production_oracle",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 65,
+          "name": "test_freezing_either_input_is_rejected",
+          "path": "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+          "sha256": "db26549070a47ace19556eda88909af5575201a3430aa6f165585be279440afe"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+        "module_sha256": "7e43268f747030c6f666edcdfd1f9059ba346d6969e0d6fddde7a062799d98fb",
+        "runtime_id": "test_s1_review.S1Review.test_freezing_either_input_is_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 77,
+          "name": "test_ignored_parameter_override_is_rejected",
+          "path": "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+          "sha256": "8ff3fb41c066e88fd44237f6a881db7174f45f90d2568d5963690bac38203b52"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+        "module_sha256": "7e43268f747030c6f666edcdfd1f9059ba346d6969e0d6fddde7a062799d98fb",
+        "runtime_id": "test_s1_review.S1Review.test_ignored_parameter_override_is_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 56,
+          "name": "test_independence_guard_rejects_checker_coupled_controls",
+          "path": "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+          "sha256": "d843f7d012f44d1f9339e02c1144e8042b3956bc03548794ad0af4d972ce6e23"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+        "module_sha256": "7e43268f747030c6f666edcdfd1f9059ba346d6969e0d6fddde7a062799d98fb",
+        "runtime_id": "test_s1_review.S1Review.test_independence_guard_rejects_checker_coupled_controls",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 82,
+          "name": "test_last_contribution_wins_is_rejected",
+          "path": "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+          "sha256": "d0cb267e2de20f1dc75fd18ad8a487eef0d54d21f66207f7ba08fbe06fa81a29"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+        "module_sha256": "7e43268f747030c6f666edcdfd1f9059ba346d6969e0d6fddde7a062799d98fb",
+        "runtime_id": "test_s1_review.S1Review.test_last_contribution_wins_is_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 43,
+          "name": "test_rational_positive_controls",
+          "path": "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+          "sha256": "080d9f239793d3c96884d87344bbc85bb00cdb8fa6804fa3844b683691f8aeea"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+        "module_sha256": "7e43268f747030c6f666edcdfd1f9059ba346d6969e0d6fddde7a062799d98fb",
+        "runtime_id": "test_s1_review.S1Review.test_rational_positive_controls",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 103,
+          "name": "test_reordered_condition_changes_only_source_identity",
+          "path": "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+          "sha256": "613714e50c2dea8a35b2eba6282cd45d05739213c5d2c33b911f35c5a76067e2"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+        "module_sha256": "7e43268f747030c6f666edcdfd1f9059ba346d6969e0d6fddde7a062799d98fb",
+        "runtime_id": "test_s1_review.S1Review.test_reordered_condition_changes_only_source_identity",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 133,
+          "name": "test_reordered_oracle_cannot_pass_two_equal_wrong_outputs",
+          "path": "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+          "sha256": "420ce1ebe2677b30091a770400d95f326e5598ae2e01fdb73530570bfc9d3ff0"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+        "module_sha256": "7e43268f747030c6f666edcdfd1f9059ba346d6969e0d6fddde7a062799d98fb",
+        "runtime_id": "test_s1_review.S1Review.test_reordered_oracle_cannot_pass_two_equal_wrong_outputs",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 90,
+          "name": "test_signed_tolerance_margins",
+          "path": "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+          "sha256": "be2f4111491b26a8a6e6a1f38145469d811ab54c3cc0b3a5696e9d8c1bae1742"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_s1_review.py",
+        "module_sha256": "7e43268f747030c6f666edcdfd1f9059ba346d6969e0d6fddde7a062799d98fb",
+        "runtime_id": "test_s1_review.S1Review.test_signed_tolerance_margins",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 64,
+          "name": "test_new_input_freeze_binds_shared_scientific_sources",
+          "path": "experiments/backends/dvs2-spectre-validation/test_science_contract.py",
+          "sha256": "5c7167a39637ad4f337491a47784d2536d601f34e5b8c76cb50abf957f7a60bc"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_science_contract.py",
+        "module_sha256": "f3335becc06f4ff4b3b42e75f56b2e63eaba15bb19e0279f4752abdd891bcb94",
+        "runtime_id": "test_science_contract.SharedScience.test_new_input_freeze_binds_shared_scientific_sources",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 31,
+          "name": "test_original_conditions_profiles_and_decks_remain_fixed",
+          "path": "experiments/backends/dvs2-spectre-validation/test_science_contract.py",
+          "sha256": "73b990b2bbbac55f931498ab1f0962571ff77b63beafd2fe286985e234c5dc11"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_science_contract.py",
+        "module_sha256": "f3335becc06f4ff4b3b42e75f56b2e63eaba15bb19e0279f4752abdd891bcb94",
+        "runtime_id": "test_science_contract.SharedScience.test_original_conditions_profiles_and_decks_remain_fixed",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 42,
+          "name": "test_scientific_import_needs_no_backend_archive_or_solver",
+          "path": "experiments/backends/dvs2-spectre-validation/test_science_contract.py",
+          "sha256": "17319bde6962bea335067ed944abed33535d7a0ab18a4e1fca8056b9b47f218a"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_science_contract.py",
+        "module_sha256": "f3335becc06f4ff4b3b42e75f56b2e63eaba15bb19e0279f4752abdd891bcb94",
+        "runtime_id": "test_science_contract.SharedScience.test_scientific_import_needs_no_backend_archive_or_solver",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 21,
+          "name": "test_source_identity_includes_new_scientific_modules",
+          "path": "experiments/backends/dvs2-spectre-validation/test_science_contract.py",
+          "sha256": "eabd7584c5f8439695dc438c3e56a3c2779ba54bab51a7060c5bdb0b9cfe72cc"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_science_contract.py",
+        "module_sha256": "f3335becc06f4ff4b3b42e75f56b2e63eaba15bb19e0279f4752abdd891bcb94",
+        "runtime_id": "test_science_contract.SharedScience.test_source_identity_includes_new_scientific_modules",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 101,
+          "name": "test_cross_window_is_one_sided",
+          "path": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+          "sha256": "2314a96688b959a36505836ef5a18835d45026001a9f8ac862bd6bdca5874ffb"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+        "module_sha256": "26b7467fd07a0b078953408f244152afec3bb3c839b6e4749fafc1d2732334ab",
+        "runtime_id": "test_timer_reference.TimerReferenceTests.test_cross_window_is_one_sided",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 23,
+          "name": "test_independent_legal_shift_and_all_observations",
+          "path": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+          "sha256": "63ec567c1f1ae4db177897c55337abdf804eb39855138160ba03cbbb56cf48a4"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+        "module_sha256": "26b7467fd07a0b078953408f244152afec3bb3c839b6e4749fafc1d2732334ab",
+        "runtime_id": "test_timer_reference.TimerReferenceTests.test_independent_legal_shift_and_all_observations",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 41,
+          "name": "test_individually_legal_stamps_without_common_history_fail",
+          "path": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+          "sha256": "d64a20f6e30a9cc4b54d2d8ac4c517797372190b54ad3e489fd37a990dea5afd"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+        "module_sha256": "26b7467fd07a0b078953408f244152afec3bb3c839b6e4749fafc1d2732334ab",
+        "runtime_id": "test_timer_reference.TimerReferenceTests.test_individually_legal_stamps_without_common_history_fail",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 50,
+          "name": "test_initial_sentinel_and_missed_intermediate_history",
+          "path": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+          "sha256": "40603823339030ec75cc44d91e7dbab4336397dc9ae9950ec4c1a28d8a83067b"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+        "module_sha256": "26b7467fd07a0b078953408f244152afec3bb3c839b6e4749fafc1d2732334ab",
+        "runtime_id": "test_timer_reference.TimerReferenceTests.test_initial_sentinel_and_missed_intermediate_history",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 70,
+          "name": "test_invalid_observations_do_not_pass",
+          "path": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+          "sha256": "6779a02b03a657931eb62a1f21f839638be39f46e2b94c3c33f4e94768002de6"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+        "module_sha256": "26b7467fd07a0b078953408f244152afec3bb3c839b6e4749fafc1d2732334ab",
+        "runtime_id": "test_timer_reference.TimerReferenceTests.test_invalid_observations_do_not_pass",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 108,
+          "name": "test_isolation_retains_every_original_probe_and_parameter",
+          "path": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+          "sha256": "572c6d0e884a2e99e867489605992cc5a67d6e0e32fd46893e1394b07f4128e7"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+        "module_sha256": "26b7467fd07a0b078953408f244152afec3bb3c839b6e4749fafc1d2732334ab",
+        "runtime_id": "test_timer_reference.TimerReferenceTests.test_isolation_retains_every_original_probe_and_parameter",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 77,
+          "name": "test_long_schedule_and_single_shot_variants",
+          "path": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+          "sha256": "0f2ddf1fa90cebfda4988e781f81a12a49c4c9748f8bfd609477341de2a36c1a"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+        "module_sha256": "26b7467fd07a0b078953408f244152afec3bb3c839b6e4749fafc1d2732334ab",
+        "runtime_id": "test_timer_reference.TimerReferenceTests.test_long_schedule_and_single_shot_variants",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 28,
+          "name": "test_missing_duplicate_and_fractional_counts",
+          "path": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+          "sha256": "70c2af6d55ffce371b989d3c9966038061c77c571d7ae88b152f8ace44a34416"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+        "module_sha256": "26b7467fd07a0b078953408f244152afec3bb3c839b6e4749fafc1d2732334ab",
+        "runtime_id": "test_timer_reference.TimerReferenceTests.test_missing_duplicate_and_fractional_counts",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 121,
+          "name": "test_pwl_endpoint_hold_preserves_raw_timestamp_and_strict_gates",
+          "path": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+          "sha256": "448fe39294b023cd444175634483284010058eea53887a0a59b6ae6a91e437ae"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+        "module_sha256": "26b7467fd07a0b078953408f244152afec3bb3c839b6e4749fafc1d2732334ab",
+        "runtime_id": "test_timer_reference.TimerReferenceTests.test_pwl_endpoint_hold_preserves_raw_timestamp_and_strict_gates",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 46,
+          "name": "test_sample_must_share_event_time_with_stamp",
+          "path": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+          "sha256": "63eaa220a0982882876e595c778044f5ae625564616900d46bf36a8560be8bee"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+        "module_sha256": "26b7467fd07a0b078953408f244152afec3bb3c839b6e4749fafc1d2732334ab",
+        "runtime_id": "test_timer_reference.TimerReferenceTests.test_sample_must_share_event_time_with_stamp",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 90,
+          "name": "test_simultaneous_state_read_is_classified_not_assumed",
+          "path": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+          "sha256": "c582dec8a5bcd61be30d326d2e42a6291e985584fa0a5cbc200b38c693172af3"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+        "module_sha256": "26b7467fd07a0b078953408f244152afec3bb3c839b6e4749fafc1d2732334ab",
+        "runtime_id": "test_timer_reference.TimerReferenceTests.test_simultaneous_state_read_is_classified_not_assumed",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 56,
+          "name": "test_stop_window_is_not_clipped",
+          "path": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+          "sha256": "d4f76e37dd57ea845cb2f64e3c038c7b14594db60c61411cdc2664c2d568a564"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+        "module_sha256": "26b7467fd07a0b078953408f244152afec3bb3c839b6e4749fafc1d2732334ab",
+        "runtime_id": "test_timer_reference.TimerReferenceTests.test_stop_window_is_not_clipped",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 63,
+          "name": "test_timer_zero_accepts_post_initial_step_and_left_right_exports",
+          "path": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+          "sha256": "f3bde3509397a18bf0ef4b6c3079b1340c17ab26afb12bf6db76ef0ec24cc935"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+        "module_sha256": "26b7467fd07a0b078953408f244152afec3bb3c839b6e4749fafc1d2732334ab",
+        "runtime_id": "test_timer_reference.TimerReferenceTests.test_timer_zero_accepts_post_initial_step_and_left_right_exports",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 34,
+          "name": "test_wrong_phase_and_future_stamp",
+          "path": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+          "sha256": "8cbcbb290196f6f45ecc44075cb126e95861c6e0ba01a5d6f6639cad5e9b1185"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_timer_reference.py",
+        "module_sha256": "26b7467fd07a0b078953408f244152afec3bb3c839b6e4749fafc1d2732334ab",
+        "runtime_id": "test_timer_reference.TimerReferenceTests.test_wrong_phase_and_future_stamp",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 21,
+          "name": "test_analytic_closure_and_finite_time_shift",
+          "path": "experiments/backends/dvs2-spectre-validation/test_timer_settlement.py",
+          "sha256": "fc2fcb373ff8ab533f5b56bb49efc6a38a843793591e7821b154c8f48ec07367"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_timer_settlement.py",
+        "module_sha256": "91db96eefbc581d70ae507bbcd034e1e733eb1dfd8af21620e86151a87f53429",
+        "runtime_id": "test_timer_settlement.SettlementChecker.test_analytic_closure_and_finite_time_shift",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 41,
+          "name": "test_bad_input_missing_nonfinite_and_truncated_are_rejected",
+          "path": "experiments/backends/dvs2-spectre-validation/test_timer_settlement.py",
+          "sha256": "98913cf8107ab9a49bd55368510216d9cde504f3a7a06c4e29b3750daedc3404"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_timer_settlement.py",
+        "module_sha256": "91db96eefbc581d70ae507bbcd034e1e733eb1dfd8af21620e86151a87f53429",
+        "runtime_id": "test_timer_settlement.SettlementChecker.test_bad_input_missing_nonfinite_and_truncated_are_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 35,
+          "name": "test_duplicate_missing_and_unheld_samples_are_rejected",
+          "path": "experiments/backends/dvs2-spectre-validation/test_timer_settlement.py",
+          "sha256": "be5a37ae748162baa0eae30dba865387a236eb509b837b7516f1a48c1c3be9af"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_timer_settlement.py",
+        "module_sha256": "91db96eefbc581d70ae507bbcd034e1e733eb1dfd8af21620e86151a87f53429",
+        "runtime_id": "test_timer_settlement.SettlementChecker.test_duplicate_missing_and_unheld_samples_are_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 50,
+          "name": "test_extended_analytic_candidates_and_wrong_sequence_result",
+          "path": "experiments/backends/dvs2-spectre-validation/test_timer_settlement.py",
+          "sha256": "e80b8d64e9c34cd71fe20e3c909063c9a416ad60dad9c5d81a3ba534742cc1a5"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_timer_settlement.py",
+        "module_sha256": "91db96eefbc581d70ae507bbcd034e1e733eb1dfd8af21620e86151a87f53429",
+        "runtime_id": "test_timer_settlement.SettlementChecker.test_extended_analytic_candidates_and_wrong_sequence_result",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 29,
+          "name": "test_old_snapshot_is_a_difference_not_invalid_history",
+          "path": "experiments/backends/dvs2-spectre-validation/test_timer_settlement.py",
+          "sha256": "4407cbceffc69897e837049d9f76056c84aada32a369e9f976c8c481a0634122"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_timer_settlement.py",
+        "module_sha256": "91db96eefbc581d70ae507bbcd034e1e733eb1dfd8af21620e86151a87f53429",
+        "runtime_id": "test_timer_settlement.SettlementChecker.test_old_snapshot_is_a_difference_not_invalid_history",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 17,
+          "name": "test_common_grid_requires_each_requested_time",
+          "path": "experiments/backends/dvs2-spectre-validation/test_transition_reference.py",
+          "sha256": "cd85ea0d37a797c24545b2371e8c6c9e0d9ec38f9509ebef7f33f2c1717b09a5"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_transition_reference.py",
+        "module_sha256": "0ab4351e59309b74b6122c3dc1da141bfef3a2151a15a6baec7c6bb4d79e2451",
+        "runtime_id": "test_transition_reference.TransitionChecker.test_common_grid_requires_each_requested_time",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 25,
+          "name": "test_independent_knots_and_reflection",
+          "path": "experiments/backends/dvs2-spectre-validation/test_transition_reference.py",
+          "sha256": "3c27e76896644a9bebf38073da92b68bc6b2f3bba8642474d09544a6e528c467"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_transition_reference.py",
+        "module_sha256": "0ab4351e59309b74b6122c3dc1da141bfef3a2151a15a6baec7c6bb4d79e2451",
+        "runtime_id": "test_transition_reference.TransitionChecker.test_independent_knots_and_reflection",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 33,
+          "name": "test_rejects_amplitude_target_stamp_loss_and_missing_edge",
+          "path": "experiments/backends/dvs2-spectre-validation/test_transition_reference.py",
+          "sha256": "a9d864b06ec63440df58d2ab04827390949b80ecbc5fc308fde55906e7c06032"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_transition_reference.py",
+        "module_sha256": "0ab4351e59309b74b6122c3dc1da141bfef3a2151a15a6baec7c6bb4d79e2451",
+        "runtime_id": "test_transition_reference.TransitionChecker.test_rejects_amplitude_target_stamp_loss_and_missing_edge",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 42,
+          "name": "test_small_phase_shift_inside_frozen_allowance",
+          "path": "experiments/backends/dvs2-spectre-validation/test_transition_reference.py",
+          "sha256": "9e8b27d8da88517cf5422294a75ef34f05225b767a9a2d9389c5e4dbbbdfb208"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_transition_reference.py",
+        "module_sha256": "0ab4351e59309b74b6122c3dc1da141bfef3a2151a15a6baec7c6bb4d79e2451",
+        "runtime_id": "test_transition_reference.TransitionChecker.test_small_phase_shift_inside_frozen_allowance",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 218,
+          "name": "test_evas_uses_transient_time_axis",
+          "path": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+          "sha256": "d0efc57b89f58183bcc4697038afcfecc7e337aa9ea387737799731efb1b0c60"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+        "module_sha256": "c78ce0b6f43244101a96e5231155737e5d7e6b43f01192e5028db803ae5e83ee",
+        "runtime_id": "test_triangle_oscillator.ExperimentAdapter.test_evas_uses_transient_time_axis",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 54,
+          "name": "test_bad_waveform_rejected",
+          "path": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+          "sha256": "248e24a5d98e9542857fe88d8d26b8916a5d016abdd90921c42ae76b02f09ac5"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+        "module_sha256": "c78ce0b6f43244101a96e5231155737e5d7e6b43f01192e5028db803ae5e83ee",
+        "runtime_id": "test_triangle_oscillator.TriangleOracle.test_bad_waveform_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 29,
+          "name": "test_constant",
+          "path": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+          "sha256": "0928d13fec56a16cb6f6e792f6fa60f9d0d4570a3cf8c4fdd90eab4b598fec38"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+        "module_sha256": "c78ce0b6f43244101a96e5231155737e5d7e6b43f01192e5028db803ae5e83ee",
+        "runtime_id": "test_triangle_oscillator.TriangleOracle.test_constant",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 61,
+          "name": "test_corrupted_histories_rejected",
+          "path": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+          "sha256": "668115c4ca4dbca70b0a44d1502239ddfc73958ae6a2a48226d5ac644ff443d9"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+        "module_sha256": "c78ce0b6f43244101a96e5231155737e5d7e6b43f01192e5028db803ae5e83ee",
+        "runtime_id": "test_triangle_oscillator.TriangleOracle.test_corrupted_histories_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 58,
+          "name": "test_late_explicit_event_rejected",
+          "path": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+          "sha256": "26c719760d24199748333e9c151760c972298f4cf8f4c7017219581476728ce9"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+        "module_sha256": "c78ce0b6f43244101a96e5231155737e5d7e6b43f01192e5028db803ae5e83ee",
+        "runtime_id": "test_triangle_oscillator.TriangleOracle.test_late_explicit_event_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 33,
+          "name": "test_nonzero_initial_descending",
+          "path": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+          "sha256": "bf155bcc6ec6e04f35afd9d6d8232ce3e6ac06bee2313e721b89ba0e450c20c1"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+        "module_sha256": "c78ce0b6f43244101a96e5231155737e5d7e6b43f01192e5028db803ae5e83ee",
+        "runtime_id": "test_triangle_oscillator.TriangleOracle.test_nonzero_initial_descending",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 47,
+          "name": "test_piecewise_area",
+          "path": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+          "sha256": "e7b98c90594bea5a177fbe1ee8d97f81cf89d1dcc870835eefd13ae834490ade"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+        "module_sha256": "c78ce0b6f43244101a96e5231155737e5d7e6b43f01192e5028db803ae5e83ee",
+        "runtime_id": "test_triangle_oscillator.TriangleOracle.test_piecewise_area",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 74,
+          "name": "test_psf_requires_end_and_unique_signals",
+          "path": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+          "sha256": "3d14c3c917d5ed7e073751290120b45eab12c92c58f17ac07e849812507db34f"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+        "module_sha256": "c78ce0b6f43244101a96e5231155737e5d7e6b43f01192e5028db803ae5e83ee",
+        "runtime_id": "test_triangle_oscillator.TriangleOracle.test_psf_requires_end_and_unique_signals",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 40,
+          "name": "test_ramp_closed_form",
+          "path": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+          "sha256": "a7ff4a49d5296b3c0b1811c93f5adf8ddd0ef784815859dad616b4e4eed13c31"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+        "module_sha256": "c78ce0b6f43244101a96e5231155737e5d7e6b43f01192e5028db803ae5e83ee",
+        "runtime_id": "test_triangle_oscillator.TriangleOracle.test_ramp_closed_form",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 81,
+          "name": "test_task_checker_is_identical",
+          "path": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+          "sha256": "5c54a299671d1f1cbf1f3dc82a99a770e7f78c702a6ee7778da6092d2909cd1e"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+        "module_sha256": "c78ce0b6f43244101a96e5231155737e5d7e6b43f01192e5028db803ae5e83ee",
+        "runtime_id": "test_triangle_oscillator.TriangleOracle.test_task_checker_is_identical",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 144,
+          "name": "test_complete_reference_is_graded_pass",
+          "path": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+          "sha256": "142d1f4f925a2d19bf104cd4e77436c9d26908befd19bea3bb5d0828e1669e62"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+        "module_sha256": "c78ce0b6f43244101a96e5231155737e5d7e6b43f01192e5028db803ae5e83ee",
+        "runtime_id": "test_triangle_oscillator.TriangleVerifier.test_complete_reference_is_graded_pass",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 151,
+          "name": "test_complete_semantic_rejections_remain_zero_score",
+          "path": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+          "sha256": "14fd5f998f5ee67b134cc1a9ff35f8909b56a6ed73c6091ac6193e334fea3028"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+        "module_sha256": "c78ce0b6f43244101a96e5231155737e5d7e6b43f01192e5028db803ae5e83ee",
+        "runtime_id": "test_triangle_oscillator.TriangleVerifier.test_complete_semantic_rejections_remain_zero_score",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 168,
+          "name": "test_complete_voltage_error_remains_graded_failure",
+          "path": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+          "sha256": "b109d074c7b8a6029ca9e2b3928b9b9c27027f23f31378eb23af081d615cafa3"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+        "module_sha256": "c78ce0b6f43244101a96e5231155737e5d7e6b43f01192e5028db803ae5e83ee",
+        "runtime_id": "test_triangle_oscillator.TriangleVerifier.test_complete_voltage_error_remains_graded_failure",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 128,
+          "name": "test_complete_wrong_count_is_graded_failure_with_waveform_identity",
+          "path": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+          "sha256": "e5428e6136b27de3803e8fcfec179c568494ab3034b26d74592dbcf57cd5a87e"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+        "module_sha256": "c78ce0b6f43244101a96e5231155737e5d7e6b43f01192e5028db803ae5e83ee",
+        "runtime_id": "test_triangle_oscillator.TriangleVerifier.test_complete_wrong_count_is_graded_failure_with_waveform_identity",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 187,
+          "name": "test_corrupt_or_incomplete_waveform_has_no_grade_or_reward",
+          "path": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+          "sha256": "7dbdb00ebcac4224c78f20f385e10a154b77f3859cac065de4f9dc0fad1d5938"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+        "module_sha256": "c78ce0b6f43244101a96e5231155737e5d7e6b43f01192e5028db803ae5e83ee",
+        "runtime_id": "test_triangle_oscillator.TriangleVerifier.test_corrupt_or_incomplete_waveform_has_no_grade_or_reward",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 176,
+          "name": "test_graded_failures_keep_every_case_in_the_report",
+          "path": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+          "sha256": "76a83f08eac55865627ee2ccb7af5cb74579e6e8e20a12027997512d12bec93b"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py",
+        "module_sha256": "c78ce0b6f43244101a96e5231155737e5d7e6b43f01192e5028db803ae5e83ee",
+        "runtime_id": "test_triangle_oscillator.TriangleVerifier.test_graded_failures_keep_every_case_in_the_report",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      }
+    ],
+    "namespace": "validation",
+    "schema_version": 1,
+    "skipped_declarations": 0,
+    "transport": {
+      "actual_resolved_overrides": {},
+      "argv": [
+        "/opt/hostedtoolcache/Python/3.12.15/x64/bin/python3",
+        "-B",
+        "-c",
+        "import os,runpy,sys; sys.path[0]=os.getcwd(); tool=sys.argv[1]; sys.argv=sys.argv[1:]; runpy.run_path(tool,run_name=\"__main__\")",
+        "/home/runner/work/vaEVAS/vaEVAS/scripts/capabilities/discover_methods.py",
+        "--worker",
+        "--root",
+        "/home/runner/work/vaEVAS/vaEVAS",
+        "--start",
+        "experiments/backends/dvs2-spectre-validation",
+        "--pattern",
+        "test_*.py",
+        "--namespace",
+        "validation"
+      ],
+      "collection_profile": "inventory-child runtime; not original phase execution/skip results",
+      "cwd": "/home/runner/work/vaEVAS/vaEVAS",
+      "environment_overrides": {},
+      "original_python_equivalence": "major-minor-declared-only",
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "{\"collector\": {\"definition_profile\": \"actual-code-or-registered-native-skip-v1\", \"native_skip_authority\": {\"factory_span_sha256\": \"a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad\", \"profile\": \"registered-native-unittest-skip-v1\", \"runtime_file_sha256\": \"45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987\", \"runtime_source\": \"unittest/case.py\", \"wrapper_span_sha256\": \"96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda\"}, \"path\": \"scripts/capabilities/discover_methods.py\", \"sha256\": \"aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17\", \"source_relationship\": \"owned-source-root\"}, \"complete\": true, \"discovered_instances\": 100, \"environment\": {\"PYTHONDONTWRITEBYTECODE\": \"1\", \"PYTHONPATH\": null, \"bytecode_disabled\": true, \"cache_tag\": \"cpython-312\", \"environment_scope\": \"python-runtime-and-import-path-only\", \"executable\": \"/opt/hostedtoolcache/Python/3.12.15/x64/bin/python3\", \"implementation\": \"cpython\", \"platform\": \"linux\", \"python_version\": \"3.12.15 (main, Oct  1 2026, 02:35:59) [GCC 13.3.0]\", \"sys_path_before_selected_imports\": [\"/home/runner/work/vaEVAS/vaEVAS\", \"/opt/hostedtoolcache/Python/3.12.15/x64/lib/python312.zip\", \"/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12\", \"/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/lib-dynload\", \"/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages\"]}, \"error_count\": 0, \"errors\": [], \"loader_error_count\": 0, \"methods\": [{\"definition\": {\"line\": 56, \"name\": \"test_all_new_positive_and_missing_observation_controls\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_checks.py\", \"sha256\": \"831e6fd8611110ba51101776de2d973706b6e5ba75afefd9c45fe67a0178662a\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_checks.py\", \"module_sha256\": \"7cdea4984ab86dbaaa875feee1e185e18c6b785456ec49c7590a79f403600c14\", \"runtime_id\": \"test_checks.Calibration.test_all_new_positive_and_missing_observation_controls\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 106, \"name\": \"test_c2_linearization_reserve\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_checks.py\", \"sha256\": \"d8ccafad0f4013ad31e4d500dff2f277b0ea4558bc44a5a9fe9a84ec90e9e2c7\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_checks.py\", \"module_sha256\": \"7cdea4984ab86dbaaa875feee1e185e18c6b785456ec49c7590a79f403600c14\", \"runtime_id\": \"test_checks.Calibration.test_c2_linearization_reserve\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 32, \"name\": \"test_hand_anchors\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_checks.py\", \"sha256\": \"3a1675181f977441959e195b68b9553f1d2db34eba04996ee64a5eb98bb66854\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_checks.py\", \"module_sha256\": \"7cdea4984ab86dbaaa875feee1e185e18c6b785456ec49c7590a79f403600c14\", \"runtime_id\": \"test_checks.Calibration.test_hand_anchors\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 21, \"name\": \"test_manifest_identity_and_real_parameter_override\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_checks.py\", \"sha256\": \"3f06d9650cc10cae2db878f2a5698a61927026c80d01218bdb0e3c56610fc40b\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_checks.py\", \"module_sha256\": \"7cdea4984ab86dbaaa875feee1e185e18c6b785456ec49c7590a79f403600c14\", \"runtime_id\": \"test_checks.Calibration.test_manifest_identity_and_real_parameter_override\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 88, \"name\": \"test_nonfinite_time_order_density_and_input\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_checks.py\", \"sha256\": \"5106ef612e1fe2826aae6b9ebd6daeef5f679ac9119ec35a2e0e0ed764f6148a\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_checks.py\", \"module_sha256\": \"7cdea4984ab86dbaaa875feee1e185e18c6b785456ec49c7590a79f403600c14\", \"runtime_id\": \"test_checks.Calibration.test_nonfinite_time_order_density_and_input\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 80, \"name\": \"test_phase_range_and_whole_cycle_not_hidden_by_sine\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_checks.py\", \"sha256\": \"fe0d43ff4b291b1c7a6de941633316de5ba82a153c5b8a16e3a01212e7dfaa3d\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_checks.py\", \"module_sha256\": \"7cdea4984ab86dbaaa875feee1e185e18c6b785456ec49c7590a79f403600c14\", \"runtime_id\": \"test_checks.Calibration.test_phase_range_and_whole_cycle_not_hidden_by_sine\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 64, \"name\": \"test_seven_distinguishing_semantic_faults\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_checks.py\", \"sha256\": \"9cb509d180b03c2d7c2ad84d284c92031d9e54a3306e0d7c407b1c532dd95b2b\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_checks.py\", \"module_sha256\": \"7cdea4984ab86dbaaa875feee1e185e18c6b785456ec49c7590a79f403600c14\", \"runtime_id\": \"test_checks.Calibration.test_seven_distinguishing_semantic_faults\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 96, \"name\": \"test_uncertainty_is_not_forced_to_pass_or_fail\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_checks.py\", \"sha256\": \"dfe142765ee8fd63f2a4bf1963820c1c4017a25cf37bf2c62c74acc883d501eb\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_checks.py\", \"module_sha256\": \"7cdea4984ab86dbaaa875feee1e185e18c6b785456ec49c7590a79f403600c14\", \"runtime_id\": \"test_checks.Calibration.test_uncertainty_is_not_forced_to_pass_or_fail\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 23, \"name\": \"test_hand_counts_and_full_candidate\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_cross_boundaries.py\", \"sha256\": \"c6b678b3eed95566b2690ac2963bea43f2285ea25d4dba81faa9f68d0be54e04\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_cross_boundaries.py\", \"module_sha256\": \"12d9a1063e9086f3e85718c12de6428cdc7d2940c7d6ef1291f618e7cbe7594f\", \"runtime_id\": \"test_cross_boundaries.BoundaryCalibration.test_hand_counts_and_full_candidate\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 64, \"name\": \"test_invalid_observations_fail\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_cross_boundaries.py\", \"sha256\": \"ccb54b9cd8c97d45bafcf1426ad2a3eb1936643dad279e0e89791377324551f8\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_cross_boundaries.py\", \"module_sha256\": \"12d9a1063e9086f3e85718c12de6428cdc7d2940c7d6ef1291f618e7cbe7594f\", \"runtime_id\": \"test_cross_boundaries.BoundaryCalibration.test_invalid_observations_fail\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 34, \"name\": \"test_missing_extra_wrong_direction_and_departure_are_visible\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_cross_boundaries.py\", \"sha256\": \"ac6df5b8d638b9494c8f42641ffc684bd1074865ff0976ba1072ddc0c84db945\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_cross_boundaries.py\", \"module_sha256\": \"12d9a1063e9086f3e85718c12de6428cdc7d2940c7d6ef1291f618e7cbe7594f\", \"runtime_id\": \"test_cross_boundaries.BoundaryCalibration.test_missing_extra_wrong_direction_and_departure_are_visible\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 47, \"name\": \"test_samples_and_history_are_checked\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_cross_boundaries.py\", \"sha256\": \"cfdc718c82f10dfe09dd88e6dd6846dee73e863b2f710c67a80ecebf6e85190e\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_cross_boundaries.py\", \"module_sha256\": \"12d9a1063e9086f3e85718c12de6428cdc7d2940c7d6ef1291f618e7cbe7594f\", \"runtime_id\": \"test_cross_boundaries.BoundaryCalibration.test_samples_and_history_are_checked\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 21, \"name\": \"test_hand_anchors_and_nominal_observations\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_cross_reference.py\", \"sha256\": \"eae66c0d8959ddf7c3ef1bdfff998649ebd12a1b0ff5aee6ab44c54a56447149\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_cross_reference.py\", \"module_sha256\": \"d82f59a435263e9e70e3f70ab2f7c77c99f579d02e1f5c91c8d25c3041d2c65a\", \"runtime_id\": \"test_cross_reference.CrossReferenceCalibration.test_hand_anchors_and_nominal_observations\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 54, \"name\": \"test_invalid_observations_are_rejected\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_cross_reference.py\", \"sha256\": \"eaca045756158cde1cb8446cf7410ae22b60523dda6bd67839bfa8ff56381c40\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_cross_reference.py\", \"module_sha256\": \"d82f59a435263e9e70e3f70ab2f7c77c99f579d02e1f5c91c8d25c3041d2c65a\", \"runtime_id\": \"test_cross_reference.CrossReferenceCalibration.test_invalid_observations_are_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 31, \"name\": \"test_known_legal_delays_are_accepted\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_cross_reference.py\", \"sha256\": \"ff333bd5888af177474928d9ce7e0f385ad01fd0590719c20baacb9c421a6284\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_cross_reference.py\", \"module_sha256\": \"d82f59a435263e9e70e3f70ab2f7c77c99f579d02e1f5c91c8d25c3041d2c65a\", \"runtime_id\": \"test_cross_reference.CrossReferenceCalibration.test_known_legal_delays_are_accepted\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 39, \"name\": \"test_shared_wrong_backend_results_cannot_pass\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_cross_reference.py\", \"sha256\": \"87133898773ab656f55064d4b20a7cf41e27def3cbdf900529fa9262a690f10d\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_cross_reference.py\", \"module_sha256\": \"d82f59a435263e9e70e3f70ab2f7c77c99f579d02e1f5c91c8d25c3041d2c65a\", \"runtime_id\": \"test_cross_reference.CrossReferenceCalibration.test_shared_wrong_backend_results_cannot_pass\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 14, \"name\": \"test_exact_control_and_distinct_faults\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_cross_restart_diagnostic.py\", \"sha256\": \"68d7c74ea5277fbef2e6b9a22aee1a349471c286aba5cceac6ef170f6a827184\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_cross_restart_diagnostic.py\", \"module_sha256\": \"4548967b04f6706c5aa8efde47e7fb950d20a839458199073dc29ca04d1f5b9f\", \"runtime_id\": \"test_cross_restart_diagnostic.RestartMeasurements.test_exact_control_and_distinct_faults\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 24, \"name\": \"test_execution_delay_separate_from_history_error\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_cross_restart_diagnostic.py\", \"sha256\": \"e21c6a6670ef33ce743454799961e929e6062d669bc18828280aa5ac6d3e9539\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_cross_restart_diagnostic.py\", \"module_sha256\": \"4548967b04f6706c5aa8efde47e7fb950d20a839458199073dc29ca04d1f5b9f\", \"runtime_id\": \"test_cross_restart_diagnostic.RestartMeasurements.test_execution_delay_separate_from_history_error\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 35, \"name\": \"test_original_model_has_no_triangle_oracle\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_cross_restart_diagnostic.py\", \"sha256\": \"82e5697d2d33159d29bf0b936eef6dc3fa025250ed8b1a12028515e380e06d0c\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_cross_restart_diagnostic.py\", \"module_sha256\": \"4548967b04f6706c5aa8efde47e7fb950d20a839458199073dc29ca04d1f5b9f\", \"runtime_id\": \"test_cross_restart_diagnostic.RestartMeasurements.test_original_model_has_no_triangle_oracle\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 41, \"name\": \"test_sparse_outputs_use_event_log_and_check_it_against_counter\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_cross_restart_diagnostic.py\", \"sha256\": \"f067aa227993e12e6f1534aba7a1ed7d97bf26fe6b342bfbeb4fceaa0ad23138\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_cross_restart_diagnostic.py\", \"module_sha256\": \"4548967b04f6706c5aa8efde47e7fb950d20a839458199073dc29ca04d1f5b9f\", \"runtime_id\": \"test_cross_restart_diagnostic.RestartMeasurements.test_sparse_outputs_use_event_log_and_check_it_against_counter\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 30, \"name\": \"test_arrival_contract_accepts_both_polarities\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_cross_touch.py\", \"sha256\": \"e344c2cfeb2af44af84939087547548863a1cfac13afce08775dc6885597bb72\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_cross_touch.py\", \"module_sha256\": \"66a78a2d31d91f76ee29f828c6ce77561278a621a002902b8e8dfbf58ec96d3d\", \"runtime_id\": \"test_cross_touch.TouchCalibration.test_arrival_contract_accepts_both_polarities\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 43, \"name\": \"test_arrival_contract_checks_touch_history_and_samples\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_cross_touch.py\", \"sha256\": \"8f8a1f1948829ad60733e6fdf0e97374d141315b9f8b980fa9302cc5c2108725\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_cross_touch.py\", \"module_sha256\": \"66a78a2d31d91f76ee29f828c6ce77561278a621a002902b8e8dfbf58ec96d3d\", \"runtime_id\": \"test_cross_touch.TouchCalibration.test_arrival_contract_checks_touch_history_and_samples\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 36, \"name\": \"test_arrival_contract_rejects_other_touch_hypotheses\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_cross_touch.py\", \"sha256\": \"a57db6b3a815e0ec08126fcd2c306060bb5dfd14d26d3e94e31c64fc208ecc2e\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_cross_touch.py\", \"module_sha256\": \"66a78a2d31d91f76ee29f828c6ce77561278a621a002902b8e8dfbf58ec96d3d\", \"runtime_id\": \"test_cross_touch.TouchCalibration.test_arrival_contract_rejects_other_touch_hypotheses\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 76, \"name\": \"test_hand_answers_and_root_separation\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_cross_touch.py\", \"sha256\": \"60482cef7ee0d7059fe33918181220e043a095bef3839e04667ea731c74994aa\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_cross_touch.py\", \"module_sha256\": \"66a78a2d31d91f76ee29f828c6ce77561278a621a002902b8e8dfbf58ec96d3d\", \"runtime_id\": \"test_cross_touch.TouchCalibration.test_hand_answers_and_root_separation\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 112, \"name\": \"test_invalid_observation_sets_fail\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_cross_touch.py\", \"sha256\": \"15cf5baeb010053d5ae0eae36c6fa12b5f7a046409332049f36e48277d3913c3\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_cross_touch.py\", \"module_sha256\": \"66a78a2d31d91f76ee29f828c6ce77561278a621a002902b8e8dfbf58ec96d3d\", \"runtime_id\": \"test_cross_touch.TouchCalibration.test_invalid_observation_sets_fail\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 69, \"name\": \"test_metadata_repair_does_not_accept_wrong_settings\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_cross_touch.py\", \"sha256\": \"f0610479aed602330e71ef0c1fcdbc0f6a106b5096702d1c13ea15d05f77f246\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_cross_touch.py\", \"module_sha256\": \"66a78a2d31d91f76ee29f828c6ce77561278a621a002902b8e8dfbf58ec96d3d\", \"runtime_id\": \"test_cross_touch.TouchCalibration.test_metadata_repair_does_not_accept_wrong_settings\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 60, \"name\": \"test_rounded_stop_log_requires_matching_waveform_endpoint\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_cross_touch.py\", \"sha256\": \"7aa6a81b8f00c2cfec462d89862b0b0be3457e06b3015bf8f8a04ca796d29466\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_cross_touch.py\", \"module_sha256\": \"66a78a2d31d91f76ee29f828c6ce77561278a621a002902b8e8dfbf58ec96d3d\", \"runtime_id\": \"test_cross_touch.TouchCalibration.test_rounded_stop_log_requires_matching_waveform_endpoint\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 89, \"name\": \"test_touch_hypotheses_are_classified_without_selecting_a_winner\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_cross_touch.py\", \"sha256\": \"4c653f6c333cd2491856f8b837b5d4594e73b30ce8e793786df5abac9a39078b\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_cross_touch.py\", \"module_sha256\": \"66a78a2d31d91f76ee29f828c6ce77561278a621a002902b8e8dfbf58ec96d3d\", \"runtime_id\": \"test_cross_touch.TouchCalibration.test_touch_hypotheses_are_classified_without_selecting_a_winner\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 99, \"name\": \"test_wrong_histories_and_timing_fail\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_cross_touch.py\", \"sha256\": \"11e73da27c500df066d28bc5df654cbd89643ae4f938ba1c286cdde679824dd8\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_cross_touch.py\", \"module_sha256\": \"66a78a2d31d91f76ee29f828c6ce77561278a621a002902b8e8dfbf58ec96d3d\", \"runtime_id\": \"test_cross_touch.TouchCalibration.test_wrong_histories_and_timing_fail\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 45, \"name\": \"test_duplicate_missing_merged_and_extra_updates_are_rejected\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_event_or_reference.py\", \"sha256\": \"bc27b0f56b39b9cebbf43241f7c2cc741752f758434ded593b909ee69161fad2\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_event_or_reference.py\", \"module_sha256\": \"50d5fda22d5a6bc09038e7de68306a44b654a05aec78a38b4326c6e97aa4abe9\", \"runtime_id\": \"test_event_or_reference.EventOrReference.test_duplicate_missing_merged_and_extra_updates_are_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 33, \"name\": \"test_explicit_tables_and_positive_controls\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_event_or_reference.py\", \"sha256\": \"8b6512b6ce3b9284db96ccd662465405251801a650b14cfc0d435b4eaa9182f0\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_event_or_reference.py\", \"module_sha256\": \"50d5fda22d5a6bc09038e7de68306a44b654a05aec78a38b4326c6e97aa4abe9\", \"runtime_id\": \"test_event_or_reference.EventOrReference.test_explicit_tables_and_positive_controls\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 61, \"name\": \"test_invalid_observations_cannot_pass\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_event_or_reference.py\", \"sha256\": \"1aa6a02f586f55b6847bb3e9c54a53a6cd7f379d7a723f81216d3c8d756ccee6\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_event_or_reference.py\", \"module_sha256\": \"50d5fda22d5a6bc09038e7de68306a44b654a05aec78a38b4326c6e97aa4abe9\", \"runtime_id\": \"test_event_or_reference.EventOrReference.test_invalid_observations_cannot_pass\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 27, \"name\": \"test_numeric_literals_include_required_integer_part\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_event_or_reference.py\", \"sha256\": \"a0c270239932f609775b60784b659d689a3dc24d52d6b4c7e4b97851f5afeff9\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_event_or_reference.py\", \"module_sha256\": \"50d5fda22d5a6bc09038e7de68306a44b654a05aec78a38b4326c6e97aa4abe9\", \"runtime_id\": \"test_event_or_reference.EventOrReference.test_numeric_literals_include_required_integer_part\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 54, \"name\": \"test_reset_priority_and_sampled_stamp_are_checked\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_event_or_reference.py\", \"sha256\": \"92facbcbc3b7bb171ccfadf597bf7b086559844f035d05acc0a1e2f47b8df065\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_event_or_reference.py\", \"module_sha256\": \"50d5fda22d5a6bc09038e7de68306a44b654a05aec78a38b4326c6e97aa4abe9\", \"runtime_id\": \"test_event_or_reference.EventOrReference.test_reset_priority_and_sampled_stamp_are_checked\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 64, \"name\": \"test_fixture_has_no_production_oracle_dependency\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_event_review.py\", \"sha256\": \"d998673ebd625b1adfd66b699c2139291f4b3cd56183ddd6fa9630134206237c\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_event_review.py\", \"module_sha256\": \"910436a8d2649bc36c5b1bbd690a8262d5ee0560c7b18d3a4d19e5b8cc9b8bb5\", \"runtime_id\": \"test_event_review.IndependentEventReview.test_fixture_has_no_production_oracle_dependency\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 58, \"name\": \"test_hand_worked_positive_controls\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_event_review.py\", \"sha256\": \"a615d0dcbe243f39f6c5395db1ded7c86cae263020f1e0984bff72f5b914e65c\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_event_review.py\", \"module_sha256\": \"910436a8d2649bc36c5b1bbd690a8262d5ee0560c7b18d3a4d19e5b8cc9b8bb5\", \"runtime_id\": \"test_event_review.IndependentEventReview.test_hand_worked_positive_controls\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 94, \"name\": \"test_high_initial_clock_does_not_justify_initial_sample\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_event_review.py\", \"sha256\": \"f91503d94a85da4956ab9266ce7f9aecfef78518591f5a95d30bf7ece4976c23\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_event_review.py\", \"module_sha256\": \"910436a8d2649bc36c5b1bbd690a8262d5ee0560c7b18d3a4d19e5b8cc9b8bb5\", \"runtime_id\": \"test_event_review.IndependentEventReview.test_high_initial_clock_does_not_justify_initial_sample\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 72, \"name\": \"test_independence_guard_rejects_a_checker_coupled_control\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_event_review.py\", \"sha256\": \"fbc80f6b5e42811dd8063524a037d7822ea270601490e28dd9c49869a23f189e\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_event_review.py\", \"module_sha256\": \"910436a8d2649bc36c5b1bbd690a8262d5ee0560c7b18d3a4d19e5b8cc9b8bb5\", \"runtime_id\": \"test_event_review.IndependentEventReview.test_independence_guard_rejects_a_checker_coupled_control\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 109, \"name\": \"test_instance_crosstalk_and_extra_effective_update_are_rejected\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_event_review.py\", \"sha256\": \"e77614b3a7803981e0763ccabe21909852c6c8f357f41837fe25115678dea749\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_event_review.py\", \"module_sha256\": \"910436a8d2649bc36c5b1bbd690a8262d5ee0560c7b18d3a4d19e5b8cc9b8bb5\", \"runtime_id\": \"test_event_review.IndependentEventReview.test_instance_crosstalk_and_extra_effective_update_are_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 126, \"name\": \"test_invalid_observations_stay_invalid\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_event_review.py\", \"sha256\": \"d8dfc545a9b22ff75981091b675dab758e224109b4df368fee593654cbc9ea95\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_event_review.py\", \"module_sha256\": \"910436a8d2649bc36c5b1bbd690a8262d5ee0560c7b18d3a4d19e5b8cc9b8bb5\", \"runtime_id\": \"test_event_review.IndependentEventReview.test_invalid_observations_stay_invalid\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 84, \"name\": \"test_missing_duplicate_and_wrong_direction_counts_are_rejected\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_event_review.py\", \"sha256\": \"52f600b9d41a37415bb32d561485fa041380a71ac0c3e3f16293d1de15c88c86\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_event_review.py\", \"module_sha256\": \"910436a8d2649bc36c5b1bbd690a8262d5ee0560c7b18d3a4d19e5b8cc9b8bb5\", \"runtime_id\": \"test_event_review.IndependentEventReview.test_missing_duplicate_and_wrong_direction_counts_are_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 78, \"name\": \"test_missing_first_sample_is_rejected\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_event_review.py\", \"sha256\": \"0615ecd6f957ecd4545983e59cb1ef6a601a8dd466a51aca0188ad5ce75aec3f\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_event_review.py\", \"module_sha256\": \"910436a8d2649bc36c5b1bbd690a8262d5ee0560c7b18d3a4d19e5b8cc9b8bb5\", \"runtime_id\": \"test_event_review.IndependentEventReview.test_missing_first_sample_is_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 100, \"name\": \"test_reset_priority_and_extra_release_sample_are_rejected\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_event_review.py\", \"sha256\": \"14790a2c3b420b5ca3dccaa60b2b41cf03158c5e44429ad2b3428a42adc7af92\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_event_review.py\", \"module_sha256\": \"910436a8d2649bc36c5b1bbd690a8262d5ee0560c7b18d3a4d19e5b8cc9b8bb5\", \"runtime_id\": \"test_event_review.IndependentEventReview.test_reset_priority_and_extra_release_sample_are_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 118, \"name\": \"test_tolerance_margins_on_plateaus\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_event_review.py\", \"sha256\": \"f7fd89d9698f95c1fe2fc6cc5765ee4f5070cb358e2097531775195e744d1298\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_event_review.py\", \"module_sha256\": \"910436a8d2649bc36c5b1bbd690a8262d5ee0560c7b18d3a4d19e5b8cc9b8bb5\", \"runtime_id\": \"test_event_review.IndependentEventReview.test_tolerance_margins_on_plateaus\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 13, \"name\": \"test_all_exact_answers\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_history_relocalization_reference.py\", \"sha256\": \"fc53bad238fab791e410fd9b1d9fd3b8bc11ae1989b615c9be79f3a9090d364d\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_history_relocalization_reference.py\", \"module_sha256\": \"b08147bd2f3bca48dee811f062d5c06c2eda4c0eabc4659784182cd3ee30e1c6\", \"runtime_id\": \"test_history_relocalization_reference.HistoryReference.test_all_exact_answers\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 17, \"name\": \"test_spectre_real_literals_have_a_leading_digit\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_history_relocalization_reference.py\", \"sha256\": \"e8e1600ba6c45d97bbc5ba64f85ce934457f4fc970e8b11517b28d2cb688c542\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_history_relocalization_reference.py\", \"module_sha256\": \"b08147bd2f3bca48dee811f062d5c06c2eda4c0eabc4659784182cd3ee30e1c6\", \"runtime_id\": \"test_history_relocalization_reference.HistoryReference.test_spectre_real_literals_have_a_leading_digit\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 21, \"name\": \"test_wrong_history_and_missing_extra_or_shifted_events\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_history_relocalization_reference.py\", \"sha256\": \"09d786c16691b0b8826fa0e5a675bf0583aa2ccbb1e06eeb3e744febc053d502\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_history_relocalization_reference.py\", \"module_sha256\": \"b08147bd2f3bca48dee811f062d5c06c2eda4c0eabc4659784182cd3ee30e1c6\", \"runtime_id\": \"test_history_relocalization_reference.HistoryReference.test_wrong_history_and_missing_extra_or_shifted_events\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 121, \"name\": \"test_dut_reorders_only_the_three_contributions\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_s1_review.py\", \"sha256\": \"93acb1557bc2fb262669163f113e8da96c88fe7fe1c9f36eaad5acf2ee558b23\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_s1_review.py\", \"module_sha256\": \"7e43268f747030c6f666edcdfd1f9059ba346d6969e0d6fddde7a062799d98fb\", \"runtime_id\": \"test_s1_review.S1Review.test_dut_reorders_only_the_three_contributions\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 50, \"name\": \"test_fixture_does_not_use_production_oracle\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_s1_review.py\", \"sha256\": \"6cfe1223165ae88be612226a59a31cf54345114673e8f6432da29c9bf5e88e91\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_s1_review.py\", \"module_sha256\": \"7e43268f747030c6f666edcdfd1f9059ba346d6969e0d6fddde7a062799d98fb\", \"runtime_id\": \"test_s1_review.S1Review.test_fixture_does_not_use_production_oracle\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 65, \"name\": \"test_freezing_either_input_is_rejected\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_s1_review.py\", \"sha256\": \"db26549070a47ace19556eda88909af5575201a3430aa6f165585be279440afe\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_s1_review.py\", \"module_sha256\": \"7e43268f747030c6f666edcdfd1f9059ba346d6969e0d6fddde7a062799d98fb\", \"runtime_id\": \"test_s1_review.S1Review.test_freezing_either_input_is_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 77, \"name\": \"test_ignored_parameter_override_is_rejected\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_s1_review.py\", \"sha256\": \"8ff3fb41c066e88fd44237f6a881db7174f45f90d2568d5963690bac38203b52\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_s1_review.py\", \"module_sha256\": \"7e43268f747030c6f666edcdfd1f9059ba346d6969e0d6fddde7a062799d98fb\", \"runtime_id\": \"test_s1_review.S1Review.test_ignored_parameter_override_is_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 56, \"name\": \"test_independence_guard_rejects_checker_coupled_controls\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_s1_review.py\", \"sha256\": \"d843f7d012f44d1f9339e02c1144e8042b3956bc03548794ad0af4d972ce6e23\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_s1_review.py\", \"module_sha256\": \"7e43268f747030c6f666edcdfd1f9059ba346d6969e0d6fddde7a062799d98fb\", \"runtime_id\": \"test_s1_review.S1Review.test_independence_guard_rejects_checker_coupled_controls\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 82, \"name\": \"test_last_contribution_wins_is_rejected\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_s1_review.py\", \"sha256\": \"d0cb267e2de20f1dc75fd18ad8a487eef0d54d21f66207f7ba08fbe06fa81a29\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_s1_review.py\", \"module_sha256\": \"7e43268f747030c6f666edcdfd1f9059ba346d6969e0d6fddde7a062799d98fb\", \"runtime_id\": \"test_s1_review.S1Review.test_last_contribution_wins_is_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 43, \"name\": \"test_rational_positive_controls\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_s1_review.py\", \"sha256\": \"080d9f239793d3c96884d87344bbc85bb00cdb8fa6804fa3844b683691f8aeea\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_s1_review.py\", \"module_sha256\": \"7e43268f747030c6f666edcdfd1f9059ba346d6969e0d6fddde7a062799d98fb\", \"runtime_id\": \"test_s1_review.S1Review.test_rational_positive_controls\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 103, \"name\": \"test_reordered_condition_changes_only_source_identity\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_s1_review.py\", \"sha256\": \"613714e50c2dea8a35b2eba6282cd45d05739213c5d2c33b911f35c5a76067e2\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_s1_review.py\", \"module_sha256\": \"7e43268f747030c6f666edcdfd1f9059ba346d6969e0d6fddde7a062799d98fb\", \"runtime_id\": \"test_s1_review.S1Review.test_reordered_condition_changes_only_source_identity\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 133, \"name\": \"test_reordered_oracle_cannot_pass_two_equal_wrong_outputs\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_s1_review.py\", \"sha256\": \"420ce1ebe2677b30091a770400d95f326e5598ae2e01fdb73530570bfc9d3ff0\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_s1_review.py\", \"module_sha256\": \"7e43268f747030c6f666edcdfd1f9059ba346d6969e0d6fddde7a062799d98fb\", \"runtime_id\": \"test_s1_review.S1Review.test_reordered_oracle_cannot_pass_two_equal_wrong_outputs\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 90, \"name\": \"test_signed_tolerance_margins\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_s1_review.py\", \"sha256\": \"be2f4111491b26a8a6e6a1f38145469d811ab54c3cc0b3a5696e9d8c1bae1742\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_s1_review.py\", \"module_sha256\": \"7e43268f747030c6f666edcdfd1f9059ba346d6969e0d6fddde7a062799d98fb\", \"runtime_id\": \"test_s1_review.S1Review.test_signed_tolerance_margins\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 64, \"name\": \"test_new_input_freeze_binds_shared_scientific_sources\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_science_contract.py\", \"sha256\": \"5c7167a39637ad4f337491a47784d2536d601f34e5b8c76cb50abf957f7a60bc\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_science_contract.py\", \"module_sha256\": \"f3335becc06f4ff4b3b42e75f56b2e63eaba15bb19e0279f4752abdd891bcb94\", \"runtime_id\": \"test_science_contract.SharedScience.test_new_input_freeze_binds_shared_scientific_sources\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 31, \"name\": \"test_original_conditions_profiles_and_decks_remain_fixed\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_science_contract.py\", \"sha256\": \"73b990b2bbbac55f931498ab1f0962571ff77b63beafd2fe286985e234c5dc11\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_science_contract.py\", \"module_sha256\": \"f3335becc06f4ff4b3b42e75f56b2e63eaba15bb19e0279f4752abdd891bcb94\", \"runtime_id\": \"test_science_contract.SharedScience.test_original_conditions_profiles_and_decks_remain_fixed\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 42, \"name\": \"test_scientific_import_needs_no_backend_archive_or_solver\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_science_contract.py\", \"sha256\": \"17319bde6962bea335067ed944abed33535d7a0ab18a4e1fca8056b9b47f218a\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_science_contract.py\", \"module_sha256\": \"f3335becc06f4ff4b3b42e75f56b2e63eaba15bb19e0279f4752abdd891bcb94\", \"runtime_id\": \"test_science_contract.SharedScience.test_scientific_import_needs_no_backend_archive_or_solver\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 21, \"name\": \"test_source_identity_includes_new_scientific_modules\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_science_contract.py\", \"sha256\": \"eabd7584c5f8439695dc438c3e56a3c2779ba54bab51a7060c5bdb0b9cfe72cc\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_science_contract.py\", \"module_sha256\": \"f3335becc06f4ff4b3b42e75f56b2e63eaba15bb19e0279f4752abdd891bcb94\", \"runtime_id\": \"test_science_contract.SharedScience.test_source_identity_includes_new_scientific_modules\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 101, \"name\": \"test_cross_window_is_one_sided\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_timer_reference.py\", \"sha256\": \"2314a96688b959a36505836ef5a18835d45026001a9f8ac862bd6bdca5874ffb\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_timer_reference.py\", \"module_sha256\": \"26b7467fd07a0b078953408f244152afec3bb3c839b6e4749fafc1d2732334ab\", \"runtime_id\": \"test_timer_reference.TimerReferenceTests.test_cross_window_is_one_sided\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 23, \"name\": \"test_independent_legal_shift_and_all_observations\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_timer_reference.py\", \"sha256\": \"63ec567c1f1ae4db177897c55337abdf804eb39855138160ba03cbbb56cf48a4\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_timer_reference.py\", \"module_sha256\": \"26b7467fd07a0b078953408f244152afec3bb3c839b6e4749fafc1d2732334ab\", \"runtime_id\": \"test_timer_reference.TimerReferenceTests.test_independent_legal_shift_and_all_observations\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 41, \"name\": \"test_individually_legal_stamps_without_common_history_fail\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_timer_reference.py\", \"sha256\": \"d64a20f6e30a9cc4b54d2d8ac4c517797372190b54ad3e489fd37a990dea5afd\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_timer_reference.py\", \"module_sha256\": \"26b7467fd07a0b078953408f244152afec3bb3c839b6e4749fafc1d2732334ab\", \"runtime_id\": \"test_timer_reference.TimerReferenceTests.test_individually_legal_stamps_without_common_history_fail\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 50, \"name\": \"test_initial_sentinel_and_missed_intermediate_history\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_timer_reference.py\", \"sha256\": \"40603823339030ec75cc44d91e7dbab4336397dc9ae9950ec4c1a28d8a83067b\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_timer_reference.py\", \"module_sha256\": \"26b7467fd07a0b078953408f244152afec3bb3c839b6e4749fafc1d2732334ab\", \"runtime_id\": \"test_timer_reference.TimerReferenceTests.test_initial_sentinel_and_missed_intermediate_history\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 70, \"name\": \"test_invalid_observations_do_not_pass\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_timer_reference.py\", \"sha256\": \"6779a02b03a657931eb62a1f21f839638be39f46e2b94c3c33f4e94768002de6\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_timer_reference.py\", \"module_sha256\": \"26b7467fd07a0b078953408f244152afec3bb3c839b6e4749fafc1d2732334ab\", \"runtime_id\": \"test_timer_reference.TimerReferenceTests.test_invalid_observations_do_not_pass\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 108, \"name\": \"test_isolation_retains_every_original_probe_and_parameter\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_timer_reference.py\", \"sha256\": \"572c6d0e884a2e99e867489605992cc5a67d6e0e32fd46893e1394b07f4128e7\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_timer_reference.py\", \"module_sha256\": \"26b7467fd07a0b078953408f244152afec3bb3c839b6e4749fafc1d2732334ab\", \"runtime_id\": \"test_timer_reference.TimerReferenceTests.test_isolation_retains_every_original_probe_and_parameter\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 77, \"name\": \"test_long_schedule_and_single_shot_variants\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_timer_reference.py\", \"sha256\": \"0f2ddf1fa90cebfda4988e781f81a12a49c4c9748f8bfd609477341de2a36c1a\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_timer_reference.py\", \"module_sha256\": \"26b7467fd07a0b078953408f244152afec3bb3c839b6e4749fafc1d2732334ab\", \"runtime_id\": \"test_timer_reference.TimerReferenceTests.test_long_schedule_and_single_shot_variants\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 28, \"name\": \"test_missing_duplicate_and_fractional_counts\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_timer_reference.py\", \"sha256\": \"70c2af6d55ffce371b989d3c9966038061c77c571d7ae88b152f8ace44a34416\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_timer_reference.py\", \"module_sha256\": \"26b7467fd07a0b078953408f244152afec3bb3c839b6e4749fafc1d2732334ab\", \"runtime_id\": \"test_timer_reference.TimerReferenceTests.test_missing_duplicate_and_fractional_counts\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 121, \"name\": \"test_pwl_endpoint_hold_preserves_raw_timestamp_and_strict_gates\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_timer_reference.py\", \"sha256\": \"448fe39294b023cd444175634483284010058eea53887a0a59b6ae6a91e437ae\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_timer_reference.py\", \"module_sha256\": \"26b7467fd07a0b078953408f244152afec3bb3c839b6e4749fafc1d2732334ab\", \"runtime_id\": \"test_timer_reference.TimerReferenceTests.test_pwl_endpoint_hold_preserves_raw_timestamp_and_strict_gates\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 46, \"name\": \"test_sample_must_share_event_time_with_stamp\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_timer_reference.py\", \"sha256\": \"63eaa220a0982882876e595c778044f5ae625564616900d46bf36a8560be8bee\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_timer_reference.py\", \"module_sha256\": \"26b7467fd07a0b078953408f244152afec3bb3c839b6e4749fafc1d2732334ab\", \"runtime_id\": \"test_timer_reference.TimerReferenceTests.test_sample_must_share_event_time_with_stamp\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 90, \"name\": \"test_simultaneous_state_read_is_classified_not_assumed\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_timer_reference.py\", \"sha256\": \"c582dec8a5bcd61be30d326d2e42a6291e985584fa0a5cbc200b38c693172af3\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_timer_reference.py\", \"module_sha256\": \"26b7467fd07a0b078953408f244152afec3bb3c839b6e4749fafc1d2732334ab\", \"runtime_id\": \"test_timer_reference.TimerReferenceTests.test_simultaneous_state_read_is_classified_not_assumed\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 56, \"name\": \"test_stop_window_is_not_clipped\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_timer_reference.py\", \"sha256\": \"d4f76e37dd57ea845cb2f64e3c038c7b14594db60c61411cdc2664c2d568a564\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_timer_reference.py\", \"module_sha256\": \"26b7467fd07a0b078953408f244152afec3bb3c839b6e4749fafc1d2732334ab\", \"runtime_id\": \"test_timer_reference.TimerReferenceTests.test_stop_window_is_not_clipped\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 63, \"name\": \"test_timer_zero_accepts_post_initial_step_and_left_right_exports\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_timer_reference.py\", \"sha256\": \"f3bde3509397a18bf0ef4b6c3079b1340c17ab26afb12bf6db76ef0ec24cc935\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_timer_reference.py\", \"module_sha256\": \"26b7467fd07a0b078953408f244152afec3bb3c839b6e4749fafc1d2732334ab\", \"runtime_id\": \"test_timer_reference.TimerReferenceTests.test_timer_zero_accepts_post_initial_step_and_left_right_exports\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 34, \"name\": \"test_wrong_phase_and_future_stamp\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_timer_reference.py\", \"sha256\": \"8cbcbb290196f6f45ecc44075cb126e95861c6e0ba01a5d6f6639cad5e9b1185\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_timer_reference.py\", \"module_sha256\": \"26b7467fd07a0b078953408f244152afec3bb3c839b6e4749fafc1d2732334ab\", \"runtime_id\": \"test_timer_reference.TimerReferenceTests.test_wrong_phase_and_future_stamp\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 21, \"name\": \"test_analytic_closure_and_finite_time_shift\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_timer_settlement.py\", \"sha256\": \"fc2fcb373ff8ab533f5b56bb49efc6a38a843793591e7821b154c8f48ec07367\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_timer_settlement.py\", \"module_sha256\": \"91db96eefbc581d70ae507bbcd034e1e733eb1dfd8af21620e86151a87f53429\", \"runtime_id\": \"test_timer_settlement.SettlementChecker.test_analytic_closure_and_finite_time_shift\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 41, \"name\": \"test_bad_input_missing_nonfinite_and_truncated_are_rejected\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_timer_settlement.py\", \"sha256\": \"98913cf8107ab9a49bd55368510216d9cde504f3a7a06c4e29b3750daedc3404\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_timer_settlement.py\", \"module_sha256\": \"91db96eefbc581d70ae507bbcd034e1e733eb1dfd8af21620e86151a87f53429\", \"runtime_id\": \"test_timer_settlement.SettlementChecker.test_bad_input_missing_nonfinite_and_truncated_are_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 35, \"name\": \"test_duplicate_missing_and_unheld_samples_are_rejected\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_timer_settlement.py\", \"sha256\": \"be5a37ae748162baa0eae30dba865387a236eb509b837b7516f1a48c1c3be9af\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_timer_settlement.py\", \"module_sha256\": \"91db96eefbc581d70ae507bbcd034e1e733eb1dfd8af21620e86151a87f53429\", \"runtime_id\": \"test_timer_settlement.SettlementChecker.test_duplicate_missing_and_unheld_samples_are_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 50, \"name\": \"test_extended_analytic_candidates_and_wrong_sequence_result\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_timer_settlement.py\", \"sha256\": \"e80b8d64e9c34cd71fe20e3c909063c9a416ad60dad9c5d81a3ba534742cc1a5\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_timer_settlement.py\", \"module_sha256\": \"91db96eefbc581d70ae507bbcd034e1e733eb1dfd8af21620e86151a87f53429\", \"runtime_id\": \"test_timer_settlement.SettlementChecker.test_extended_analytic_candidates_and_wrong_sequence_result\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 29, \"name\": \"test_old_snapshot_is_a_difference_not_invalid_history\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_timer_settlement.py\", \"sha256\": \"4407cbceffc69897e837049d9f76056c84aada32a369e9f976c8c481a0634122\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_timer_settlement.py\", \"module_sha256\": \"91db96eefbc581d70ae507bbcd034e1e733eb1dfd8af21620e86151a87f53429\", \"runtime_id\": \"test_timer_settlement.SettlementChecker.test_old_snapshot_is_a_difference_not_invalid_history\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 17, \"name\": \"test_common_grid_requires_each_requested_time\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_transition_reference.py\", \"sha256\": \"cd85ea0d37a797c24545b2371e8c6c9e0d9ec38f9509ebef7f33f2c1717b09a5\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_transition_reference.py\", \"module_sha256\": \"0ab4351e59309b74b6122c3dc1da141bfef3a2151a15a6baec7c6bb4d79e2451\", \"runtime_id\": \"test_transition_reference.TransitionChecker.test_common_grid_requires_each_requested_time\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 25, \"name\": \"test_independent_knots_and_reflection\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_transition_reference.py\", \"sha256\": \"3c27e76896644a9bebf38073da92b68bc6b2f3bba8642474d09544a6e528c467\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_transition_reference.py\", \"module_sha256\": \"0ab4351e59309b74b6122c3dc1da141bfef3a2151a15a6baec7c6bb4d79e2451\", \"runtime_id\": \"test_transition_reference.TransitionChecker.test_independent_knots_and_reflection\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 33, \"name\": \"test_rejects_amplitude_target_stamp_loss_and_missing_edge\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_transition_reference.py\", \"sha256\": \"a9d864b06ec63440df58d2ab04827390949b80ecbc5fc308fde55906e7c06032\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_transition_reference.py\", \"module_sha256\": \"0ab4351e59309b74b6122c3dc1da141bfef3a2151a15a6baec7c6bb4d79e2451\", \"runtime_id\": \"test_transition_reference.TransitionChecker.test_rejects_amplitude_target_stamp_loss_and_missing_edge\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 42, \"name\": \"test_small_phase_shift_inside_frozen_allowance\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_transition_reference.py\", \"sha256\": \"9e8b27d8da88517cf5422294a75ef34f05225b767a9a2d9389c5e4dbbbdfb208\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_transition_reference.py\", \"module_sha256\": \"0ab4351e59309b74b6122c3dc1da141bfef3a2151a15a6baec7c6bb4d79e2451\", \"runtime_id\": \"test_transition_reference.TransitionChecker.test_small_phase_shift_inside_frozen_allowance\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 218, \"name\": \"test_evas_uses_transient_time_axis\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py\", \"sha256\": \"d0efc57b89f58183bcc4697038afcfecc7e337aa9ea387737799731efb1b0c60\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py\", \"module_sha256\": \"c78ce0b6f43244101a96e5231155737e5d7e6b43f01192e5028db803ae5e83ee\", \"runtime_id\": \"test_triangle_oscillator.ExperimentAdapter.test_evas_uses_transient_time_axis\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 54, \"name\": \"test_bad_waveform_rejected\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py\", \"sha256\": \"248e24a5d98e9542857fe88d8d26b8916a5d016abdd90921c42ae76b02f09ac5\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py\", \"module_sha256\": \"c78ce0b6f43244101a96e5231155737e5d7e6b43f01192e5028db803ae5e83ee\", \"runtime_id\": \"test_triangle_oscillator.TriangleOracle.test_bad_waveform_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 29, \"name\": \"test_constant\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py\", \"sha256\": \"0928d13fec56a16cb6f6e792f6fa60f9d0d4570a3cf8c4fdd90eab4b598fec38\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py\", \"module_sha256\": \"c78ce0b6f43244101a96e5231155737e5d7e6b43f01192e5028db803ae5e83ee\", \"runtime_id\": \"test_triangle_oscillator.TriangleOracle.test_constant\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 61, \"name\": \"test_corrupted_histories_rejected\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py\", \"sha256\": \"668115c4ca4dbca70b0a44d1502239ddfc73958ae6a2a48226d5ac644ff443d9\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py\", \"module_sha256\": \"c78ce0b6f43244101a96e5231155737e5d7e6b43f01192e5028db803ae5e83ee\", \"runtime_id\": \"test_triangle_oscillator.TriangleOracle.test_corrupted_histories_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 58, \"name\": \"test_late_explicit_event_rejected\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py\", \"sha256\": \"26c719760d24199748333e9c151760c972298f4cf8f4c7017219581476728ce9\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py\", \"module_sha256\": \"c78ce0b6f43244101a96e5231155737e5d7e6b43f01192e5028db803ae5e83ee\", \"runtime_id\": \"test_triangle_oscillator.TriangleOracle.test_late_explicit_event_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 33, \"name\": \"test_nonzero_initial_descending\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py\", \"sha256\": \"bf155bcc6ec6e04f35afd9d6d8232ce3e6ac06bee2313e721b89ba0e450c20c1\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py\", \"module_sha256\": \"c78ce0b6f43244101a96e5231155737e5d7e6b43f01192e5028db803ae5e83ee\", \"runtime_id\": \"test_triangle_oscillator.TriangleOracle.test_nonzero_initial_descending\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 47, \"name\": \"test_piecewise_area\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py\", \"sha256\": \"e7b98c90594bea5a177fbe1ee8d97f81cf89d1dcc870835eefd13ae834490ade\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py\", \"module_sha256\": \"c78ce0b6f43244101a96e5231155737e5d7e6b43f01192e5028db803ae5e83ee\", \"runtime_id\": \"test_triangle_oscillator.TriangleOracle.test_piecewise_area\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 74, \"name\": \"test_psf_requires_end_and_unique_signals\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py\", \"sha256\": \"3d14c3c917d5ed7e073751290120b45eab12c92c58f17ac07e849812507db34f\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py\", \"module_sha256\": \"c78ce0b6f43244101a96e5231155737e5d7e6b43f01192e5028db803ae5e83ee\", \"runtime_id\": \"test_triangle_oscillator.TriangleOracle.test_psf_requires_end_and_unique_signals\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 40, \"name\": \"test_ramp_closed_form\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py\", \"sha256\": \"a7ff4a49d5296b3c0b1811c93f5adf8ddd0ef784815859dad616b4e4eed13c31\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py\", \"module_sha256\": \"c78ce0b6f43244101a96e5231155737e5d7e6b43f01192e5028db803ae5e83ee\", \"runtime_id\": \"test_triangle_oscillator.TriangleOracle.test_ramp_closed_form\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 81, \"name\": \"test_task_checker_is_identical\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py\", \"sha256\": \"5c54a299671d1f1cbf1f3dc82a99a770e7f78c702a6ee7778da6092d2909cd1e\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py\", \"module_sha256\": \"c78ce0b6f43244101a96e5231155737e5d7e6b43f01192e5028db803ae5e83ee\", \"runtime_id\": \"test_triangle_oscillator.TriangleOracle.test_task_checker_is_identical\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 144, \"name\": \"test_complete_reference_is_graded_pass\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py\", \"sha256\": \"142d1f4f925a2d19bf104cd4e77436c9d26908befd19bea3bb5d0828e1669e62\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py\", \"module_sha256\": \"c78ce0b6f43244101a96e5231155737e5d7e6b43f01192e5028db803ae5e83ee\", \"runtime_id\": \"test_triangle_oscillator.TriangleVerifier.test_complete_reference_is_graded_pass\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 151, \"name\": \"test_complete_semantic_rejections_remain_zero_score\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py\", \"sha256\": \"14fd5f998f5ee67b134cc1a9ff35f8909b56a6ed73c6091ac6193e334fea3028\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py\", \"module_sha256\": \"c78ce0b6f43244101a96e5231155737e5d7e6b43f01192e5028db803ae5e83ee\", \"runtime_id\": \"test_triangle_oscillator.TriangleVerifier.test_complete_semantic_rejections_remain_zero_score\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 168, \"name\": \"test_complete_voltage_error_remains_graded_failure\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py\", \"sha256\": \"b109d074c7b8a6029ca9e2b3928b9b9c27027f23f31378eb23af081d615cafa3\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py\", \"module_sha256\": \"c78ce0b6f43244101a96e5231155737e5d7e6b43f01192e5028db803ae5e83ee\", \"runtime_id\": \"test_triangle_oscillator.TriangleVerifier.test_complete_voltage_error_remains_graded_failure\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 128, \"name\": \"test_complete_wrong_count_is_graded_failure_with_waveform_identity\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py\", \"sha256\": \"e5428e6136b27de3803e8fcfec179c568494ab3034b26d74592dbcf57cd5a87e\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py\", \"module_sha256\": \"c78ce0b6f43244101a96e5231155737e5d7e6b43f01192e5028db803ae5e83ee\", \"runtime_id\": \"test_triangle_oscillator.TriangleVerifier.test_complete_wrong_count_is_graded_failure_with_waveform_identity\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 187, \"name\": \"test_corrupt_or_incomplete_waveform_has_no_grade_or_reward\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py\", \"sha256\": \"7dbdb00ebcac4224c78f20f385e10a154b77f3859cac065de4f9dc0fad1d5938\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py\", \"module_sha256\": \"c78ce0b6f43244101a96e5231155737e5d7e6b43f01192e5028db803ae5e83ee\", \"runtime_id\": \"test_triangle_oscillator.TriangleVerifier.test_corrupt_or_incomplete_waveform_has_no_grade_or_reward\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 176, \"name\": \"test_graded_failures_keep_every_case_in_the_report\", \"path\": \"experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py\", \"sha256\": \"76a83f08eac55865627ee2ccb7af5cb74579e6e8e20a12027997512d12bec93b\"}, \"generated\": false, \"module_path\": \"experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py\", \"module_sha256\": \"c78ce0b6f43244101a96e5231155737e5d7e6b43f01192e5028db803ae5e83ee\", \"runtime_id\": \"test_triangle_oscillator.TriangleVerifier.test_graded_failures_keep_every_case_in_the_report\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}], \"namespace\": \"validation\", \"schema_version\": 1, \"skipped_declarations\": 0, \"unresolved_instances\": []}\n",
+      "sys_path_contract": "repository-cwd first, then literal phase PYTHONPATH; TestLoader adds start directory"
+    },
+    "unresolved_instances": []
+  }
+}

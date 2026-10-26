@@ -1,0 +1,53 @@
+{
+  "actual_python": {
+    "bytecode_disabled": true,
+    "executable": "/opt/hostedtoolcache/Python/3.12.15/x64/bin/python3",
+    "version": "3.12.15 (main, Oct  1 2026, 02:35:59) [GCC 13.3.0]"
+  },
+  "catalog": {
+    "reconciled": false,
+    "status": "construction-only; full data/history reconciliation not requested"
+  },
+  "construction_complete": true,
+  "coordinator": {
+    "path": "/home/runner/work/vaEVAS/vaEVAS/scripts/capabilities/collect_ci_inventory.py",
+    "sha256": "7a20f0649493155b895426a345ef599b251bae02027c660b9baca6391bcb7484"
+  },
+  "denominators": {
+    "maintenance": {
+      "generated_count": 0,
+      "instance_count": 636,
+      "unique_method_count": 543
+    },
+    "python-regression": {
+      "generated_count": 12,
+      "instance_count": 3257,
+      "unique_method_count": 3257
+    },
+    "validation": {
+      "generated_count": 0,
+      "instance_count": 691,
+      "unique_method_count": 691
+    }
+  },
+  "entry_count": 24,
+  "errors": [],
+  "mode": "observe-only",
+  "producer": "capabilities.collect-ci-inventory-v1",
+  "reconciled": false,
+  "schema_version": 1,
+  "scientific_execution": false,
+  "source": {
+    "dirty_paths": [],
+    "source_commit": "00736351cdd7baf691e2e79cc49c8be1efdb9ebd",
+    "source_kind": "worktree",
+    "source_profile": "git-index-regular-files-v1",
+    "source_tree": "12eacd859c92f3f894ade88c4a34f52c5180e9a6"
+  },
+  "success": true,
+  "tool_sources": {
+    "scripts/capabilities/collect_ci_inventory.py": "7a20f0649493155b895426a345ef599b251bae02027c660b9baca6391bcb7484",
+    "scripts/capabilities/discover_methods.py": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+    "scripts/capabilities/observe_assets.py": "359fdf080c0df7b1a1c2d3fb4f16395d607713a1e30f1ba61c8ce273262a70f6"
+  }
+}

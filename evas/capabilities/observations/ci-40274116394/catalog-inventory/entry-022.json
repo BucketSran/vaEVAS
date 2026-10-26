@@ -1,0 +1,255 @@
+{
+  "entry": {
+    "collector": "unittest",
+    "command": "python3 -B -m unittest discover -s evas/validation/differential -v",
+    "declared_python_versions": [
+      "3.12"
+    ],
+    "entry_id": "c8e0438d0730713aaa71a5d02da0513b6c1ad313c264226da31403d62220fa78",
+    "environment_overrides": {},
+    "job": "properties-and-ngspice",
+    "job_if": "needs.selection.outputs.differential == 'true'",
+    "line": 552,
+    "mode": "declared-ci-literal",
+    "namespace": "validation",
+    "pattern": "test*.py",
+    "purpose": "role-not-semantic-qualification",
+    "start": "evas/validation/differential",
+    "step": null,
+    "step_if": null,
+    "workflow": ".github/workflows/numerical-assurance.yml"
+  },
+  "receipt": {
+    "collector": {
+      "definition_profile": "actual-code-or-registered-native-skip-v1",
+      "native_skip_authority": {
+        "factory_span_sha256": "a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad",
+        "profile": "registered-native-unittest-skip-v1",
+        "runtime_file_sha256": "45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987",
+        "runtime_source": "unittest/case.py",
+        "wrapper_span_sha256": "96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda"
+      },
+      "path": "scripts/capabilities/discover_methods.py",
+      "sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "source_relationship": "owned-source-root"
+    },
+    "complete": true,
+    "discovered_instances": 9,
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONPATH": null,
+      "bytecode_disabled": true,
+      "cache_tag": "cpython-312",
+      "environment_scope": "python-runtime-and-import-path-only",
+      "executable": "/opt/hostedtoolcache/Python/3.12.15/x64/bin/python3",
+      "implementation": "cpython",
+      "platform": "linux",
+      "python_version": "3.12.15 (main, Oct  1 2026, 02:35:59) [GCC 13.3.0]",
+      "sys_path_before_selected_imports": [
+        "/home/runner/work/vaEVAS/vaEVAS",
+        "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python312.zip",
+        "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12",
+        "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/lib-dynload",
+        "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages"
+      ]
+    },
+    "error_count": 0,
+    "errors": [],
+    "loader_error_count": 0,
+    "methods": [
+      {
+        "definition": {
+          "line": 68,
+          "name": "test_actual_suite_sources_reach_their_intended_export_paths",
+          "path": "evas/validation/differential/test_ngspice_compare.py",
+          "sha256": "1ecda346a35babac78c08bb0a75f6af0fd76619142e10b10371e554eb302c7d5"
+        },
+        "generated": false,
+        "module_path": "evas/validation/differential/test_ngspice_compare.py",
+        "module_sha256": "c92403a41dd86e9731b934e71cca4fb1d04accc6977099d7761682bcc56ed472",
+        "runtime_id": "test_ngspice_compare.DifferentialCalibration.test_actual_suite_sources_reach_their_intended_export_paths",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 38,
+          "name": "test_contributions_sum_within_branch",
+          "path": "evas/validation/differential/test_ngspice_compare.py",
+          "sha256": "11f1b326fe3c68cbf447cd04be33cd1bdebcd662993ba407212de9dd6eca2be8"
+        },
+        "generated": false,
+        "module_path": "evas/validation/differential/test_ngspice_compare.py",
+        "module_sha256": "c92403a41dd86e9731b934e71cca4fb1d04accc6977099d7761682bcc56ed472",
+        "runtime_id": "test_ngspice_compare.DifferentialCalibration.test_contributions_sum_within_branch",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 47,
+          "name": "test_exporter_rejects_two_independent_ideal_sources_on_same_node",
+          "path": "evas/validation/differential/test_ngspice_compare.py",
+          "sha256": "6af2d00a6cc31efe0863108bec633c5450ef28afd51cabd62d54b5928dabf31e"
+        },
+        "generated": false,
+        "module_path": "evas/validation/differential/test_ngspice_compare.py",
+        "module_sha256": "c92403a41dd86e9731b934e71cca4fb1d04accc6977099d7761682bcc56ed472",
+        "runtime_id": "test_ngspice_compare.DifferentialCalibration.test_exporter_rejects_two_independent_ideal_sources_on_same_node",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 79,
+          "name": "test_generated_cases_are_deterministic",
+          "path": "evas/validation/differential/test_ngspice_compare.py",
+          "sha256": "037f62bc26eb863c604aa3380067aff7743f00f29df288999932df93480c479e"
+        },
+        "generated": false,
+        "module_path": "evas/validation/differential/test_ngspice_compare.py",
+        "module_sha256": "c92403a41dd86e9731b934e71cca4fb1d04accc6977099d7761682bcc56ed472",
+        "runtime_id": "test_ngspice_compare.DifferentialCalibration.test_generated_cases_are_deterministic",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 33,
+          "name": "test_negative_integer_power_uses_polynomial_multiplication",
+          "path": "evas/validation/differential/test_ngspice_compare.py",
+          "sha256": "d7d42d682a5800383377eb962128e3d208a33da64054f992eda368b9bb07290c"
+        },
+        "generated": false,
+        "module_path": "evas/validation/differential/test_ngspice_compare.py",
+        "module_sha256": "c92403a41dd86e9731b934e71cca4fb1d04accc6977099d7761682bcc56ed472",
+        "runtime_id": "test_ngspice_compare.DifferentialCalibration.test_negative_integer_power_uses_polynomial_multiplication",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 53,
+          "name": "test_original_smoke_admission_outcomes_remain_explicit",
+          "path": "evas/validation/differential/test_ngspice_compare.py",
+          "sha256": "4757c7beeb21b2a9a3a3305356cdf4b22ba9a93798ad697a3674e092e4acbbc6"
+        },
+        "generated": false,
+        "module_path": "evas/validation/differential/test_ngspice_compare.py",
+        "module_sha256": "c92403a41dd86e9731b934e71cca4fb1d04accc6977099d7761682bcc56ed472",
+        "runtime_id": "test_ngspice_compare.DifferentialCalibration.test_original_smoke_admission_outcomes_remain_explicit",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 22,
+          "name": "test_piecewise_interpolation_has_no_extrapolation",
+          "path": "evas/validation/differential/test_ngspice_compare.py",
+          "sha256": "289f63a14e5312d4799431bb5f064d34580060302b1a43ffc7857aa732f742fe"
+        },
+        "generated": false,
+        "module_path": "evas/validation/differential/test_ngspice_compare.py",
+        "module_sha256": "c92403a41dd86e9731b934e71cca4fb1d04accc6977099d7761682bcc56ed472",
+        "runtime_id": "test_ngspice_compare.DifferentialCalibration.test_piecewise_interpolation_has_no_extrapolation",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 17,
+          "name": "test_shape_and_nonfinite_cannot_pass",
+          "path": "evas/validation/differential/test_ngspice_compare.py",
+          "sha256": "767376b8e5e161f1012b5522850f01aaa23d2b476bf5c5b1f7bd7c91c2ed90e5"
+        },
+        "generated": false,
+        "module_path": "evas/validation/differential/test_ngspice_compare.py",
+        "module_sha256": "c92403a41dd86e9731b934e71cca4fb1d04accc6977099d7761682bcc56ed472",
+        "runtime_id": "test_ngspice_compare.DifferentialCalibration.test_shape_and_nonfinite_cannot_pass",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 12,
+          "name": "test_voltage_budget_accepts_boundary_and_rejects_perturbation",
+          "path": "evas/validation/differential/test_ngspice_compare.py",
+          "sha256": "c84b8c6f009d4b82fe91d27e25e500f15630067e28d95013a052f3b1a06c70a9"
+        },
+        "generated": false,
+        "module_path": "evas/validation/differential/test_ngspice_compare.py",
+        "module_sha256": "c92403a41dd86e9731b934e71cca4fb1d04accc6977099d7761682bcc56ed472",
+        "runtime_id": "test_ngspice_compare.DifferentialCalibration.test_voltage_budget_accepts_boundary_and_rejects_perturbation",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      }
+    ],
+    "namespace": "validation",
+    "schema_version": 1,
+    "skipped_declarations": 0,
+    "transport": {
+      "actual_resolved_overrides": {},
+      "argv": [
+        "/opt/hostedtoolcache/Python/3.12.15/x64/bin/python3",
+        "-B",
+        "-c",
+        "import os,runpy,sys; sys.path[0]=os.getcwd(); tool=sys.argv[1]; sys.argv=sys.argv[1:]; runpy.run_path(tool,run_name=\"__main__\")",
+        "/home/runner/work/vaEVAS/vaEVAS/scripts/capabilities/discover_methods.py",
+        "--worker",
+        "--root",
+        "/home/runner/work/vaEVAS/vaEVAS",
+        "--start",
+        "evas/validation/differential",
+        "--pattern",
+        "test*.py",
+        "--namespace",
+        "validation"
+      ],
+      "collection_profile": "inventory-child runtime; not original phase execution/skip results",
+      "cwd": "/home/runner/work/vaEVAS/vaEVAS",
+      "environment_overrides": {},
+      "original_python_equivalence": "major-minor-declared-only",
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "{\"collector\": {\"definition_profile\": \"actual-code-or-registered-native-skip-v1\", \"native_skip_authority\": {\"factory_span_sha256\": \"a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad\", \"profile\": \"registered-native-unittest-skip-v1\", \"runtime_file_sha256\": \"45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987\", \"runtime_source\": \"unittest/case.py\", \"wrapper_span_sha256\": \"96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda\"}, \"path\": \"scripts/capabilities/discover_methods.py\", \"sha256\": \"aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17\", \"source_relationship\": \"owned-source-root\"}, \"complete\": true, \"discovered_instances\": 9, \"environment\": {\"PYTHONDONTWRITEBYTECODE\": \"1\", \"PYTHONPATH\": null, \"bytecode_disabled\": true, \"cache_tag\": \"cpython-312\", \"environment_scope\": \"python-runtime-and-import-path-only\", \"executable\": \"/opt/hostedtoolcache/Python/3.12.15/x64/bin/python3\", \"implementation\": \"cpython\", \"platform\": \"linux\", \"python_version\": \"3.12.15 (main, Oct  1 2026, 02:35:59) [GCC 13.3.0]\", \"sys_path_before_selected_imports\": [\"/home/runner/work/vaEVAS/vaEVAS\", \"/opt/hostedtoolcache/Python/3.12.15/x64/lib/python312.zip\", \"/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12\", \"/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/lib-dynload\", \"/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages\"]}, \"error_count\": 0, \"errors\": [], \"loader_error_count\": 0, \"methods\": [{\"definition\": {\"line\": 68, \"name\": \"test_actual_suite_sources_reach_their_intended_export_paths\", \"path\": \"evas/validation/differential/test_ngspice_compare.py\", \"sha256\": \"1ecda346a35babac78c08bb0a75f6af0fd76619142e10b10371e554eb302c7d5\"}, \"generated\": false, \"module_path\": \"evas/validation/differential/test_ngspice_compare.py\", \"module_sha256\": \"c92403a41dd86e9731b934e71cca4fb1d04accc6977099d7761682bcc56ed472\", \"runtime_id\": \"test_ngspice_compare.DifferentialCalibration.test_actual_suite_sources_reach_their_intended_export_paths\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 38, \"name\": \"test_contributions_sum_within_branch\", \"path\": \"evas/validation/differential/test_ngspice_compare.py\", \"sha256\": \"11f1b326fe3c68cbf447cd04be33cd1bdebcd662993ba407212de9dd6eca2be8\"}, \"generated\": false, \"module_path\": \"evas/validation/differential/test_ngspice_compare.py\", \"module_sha256\": \"c92403a41dd86e9731b934e71cca4fb1d04accc6977099d7761682bcc56ed472\", \"runtime_id\": \"test_ngspice_compare.DifferentialCalibration.test_contributions_sum_within_branch\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 47, \"name\": \"test_exporter_rejects_two_independent_ideal_sources_on_same_node\", \"path\": \"evas/validation/differential/test_ngspice_compare.py\", \"sha256\": \"6af2d00a6cc31efe0863108bec633c5450ef28afd51cabd62d54b5928dabf31e\"}, \"generated\": false, \"module_path\": \"evas/validation/differential/test_ngspice_compare.py\", \"module_sha256\": \"c92403a41dd86e9731b934e71cca4fb1d04accc6977099d7761682bcc56ed472\", \"runtime_id\": \"test_ngspice_compare.DifferentialCalibration.test_exporter_rejects_two_independent_ideal_sources_on_same_node\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 79, \"name\": \"test_generated_cases_are_deterministic\", \"path\": \"evas/validation/differential/test_ngspice_compare.py\", \"sha256\": \"037f62bc26eb863c604aa3380067aff7743f00f29df288999932df93480c479e\"}, \"generated\": false, \"module_path\": \"evas/validation/differential/test_ngspice_compare.py\", \"module_sha256\": \"c92403a41dd86e9731b934e71cca4fb1d04accc6977099d7761682bcc56ed472\", \"runtime_id\": \"test_ngspice_compare.DifferentialCalibration.test_generated_cases_are_deterministic\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 33, \"name\": \"test_negative_integer_power_uses_polynomial_multiplication\", \"path\": \"evas/validation/differential/test_ngspice_compare.py\", \"sha256\": \"d7d42d682a5800383377eb962128e3d208a33da64054f992eda368b9bb07290c\"}, \"generated\": false, \"module_path\": \"evas/validation/differential/test_ngspice_compare.py\", \"module_sha256\": \"c92403a41dd86e9731b934e71cca4fb1d04accc6977099d7761682bcc56ed472\", \"runtime_id\": \"test_ngspice_compare.DifferentialCalibration.test_negative_integer_power_uses_polynomial_multiplication\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 53, \"name\": \"test_original_smoke_admission_outcomes_remain_explicit\", \"path\": \"evas/validation/differential/test_ngspice_compare.py\", \"sha256\": \"4757c7beeb21b2a9a3a3305356cdf4b22ba9a93798ad697a3674e092e4acbbc6\"}, \"generated\": false, \"module_path\": \"evas/validation/differential/test_ngspice_compare.py\", \"module_sha256\": \"c92403a41dd86e9731b934e71cca4fb1d04accc6977099d7761682bcc56ed472\", \"runtime_id\": \"test_ngspice_compare.DifferentialCalibration.test_original_smoke_admission_outcomes_remain_explicit\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 22, \"name\": \"test_piecewise_interpolation_has_no_extrapolation\", \"path\": \"evas/validation/differential/test_ngspice_compare.py\", \"sha256\": \"289f63a14e5312d4799431bb5f064d34580060302b1a43ffc7857aa732f742fe\"}, \"generated\": false, \"module_path\": \"evas/validation/differential/test_ngspice_compare.py\", \"module_sha256\": \"c92403a41dd86e9731b934e71cca4fb1d04accc6977099d7761682bcc56ed472\", \"runtime_id\": \"test_ngspice_compare.DifferentialCalibration.test_piecewise_interpolation_has_no_extrapolation\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 17, \"name\": \"test_shape_and_nonfinite_cannot_pass\", \"path\": \"evas/validation/differential/test_ngspice_compare.py\", \"sha256\": \"767376b8e5e161f1012b5522850f01aaa23d2b476bf5c5b1f7bd7c91c2ed90e5\"}, \"generated\": false, \"module_path\": \"evas/validation/differential/test_ngspice_compare.py\", \"module_sha256\": \"c92403a41dd86e9731b934e71cca4fb1d04accc6977099d7761682bcc56ed472\", \"runtime_id\": \"test_ngspice_compare.DifferentialCalibration.test_shape_and_nonfinite_cannot_pass\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 12, \"name\": \"test_voltage_budget_accepts_boundary_and_rejects_perturbation\", \"path\": \"evas/validation/differential/test_ngspice_compare.py\", \"sha256\": \"c84b8c6f009d4b82fe91d27e25e500f15630067e28d95013a052f3b1a06c70a9\"}, \"generated\": false, \"module_path\": \"evas/validation/differential/test_ngspice_compare.py\", \"module_sha256\": \"c92403a41dd86e9731b934e71cca4fb1d04accc6977099d7761682bcc56ed472\", \"runtime_id\": \"test_ngspice_compare.DifferentialCalibration.test_voltage_budget_accepts_boundary_and_rejects_perturbation\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}], \"namespace\": \"validation\", \"schema_version\": 1, \"skipped_declarations\": 0, \"unresolved_instances\": []}\n",
+      "sys_path_contract": "repository-cwd first, then literal phase PYTHONPATH; TestLoader adds start directory"
+    },
+    "unresolved_instances": []
+  }
+}
