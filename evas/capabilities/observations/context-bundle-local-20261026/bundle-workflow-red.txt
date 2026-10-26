@@ -1,0 +1,46 @@
+test_trusted_pointer_registers_for_each_supported_event (test_registration_bundle.BundleWorkflowTests.test_trusted_pointer_registers_for_each_supported_event) ... 
+  test_trusted_pointer_registers_for_each_supported_event (test_registration_bundle.BundleWorkflowTests.test_trusted_pointer_registers_for_each_supported_event) (event='pull_request') ... FAIL
+  test_trusted_pointer_registers_for_each_supported_event (test_registration_bundle.BundleWorkflowTests.test_trusted_pointer_registers_for_each_supported_event) (event='push') ... FAIL
+  test_trusted_pointer_registers_for_each_supported_event (test_registration_bundle.BundleWorkflowTests.test_trusted_pointer_registers_for_each_supported_event) (event='schedule') ... FAIL
+  test_trusted_pointer_registers_for_each_supported_event (test_registration_bundle.BundleWorkflowTests.test_trusted_pointer_registers_for_each_supported_event) (event='workflow_dispatch') ... FAIL
+
+======================================================================
+FAIL: test_trusted_pointer_registers_for_each_supported_event (test_registration_bundle.BundleWorkflowTests.test_trusted_pointer_registers_for_each_supported_event) (event='pull_request')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/scripts/tests/test_registration_bundle.py", line 98, in test_trusted_pointer_registers_for_each_supported_event
+    self.assertEqual(result.returncode,0,result.stdout+result.stderr)
+AssertionError: 2 != 0 : {"schema_version": 1, "source": "fixed-reviewed-main-commit", "bootstrap_commit": "38c3da7076ab5281dcec8053c52811f936595a0b", "bootstrap_path": "scripts/run_trusted_regression_gate.py", "expected_loader_sha256": "30cb19e469db4ea26b00ca4959e68c4aa1196be15a9051452ff491210619aa63", "loaded": true, "execution_cwd": "isolated-temporary-directory", "bootstrap_blob": "f89e547183f3ac554dc9a76e1c0d3b7c6f231c70", "bootstrap_mode": "100644", "loader_sha256": "30cb19e469db4ea26b00ca4959e68c4aa1196be15a9051452ff491210619aa63", "bootstrap_exit": 2}
+
+
+======================================================================
+FAIL: test_trusted_pointer_registers_for_each_supported_event (test_registration_bundle.BundleWorkflowTests.test_trusted_pointer_registers_for_each_supported_event) (event='push')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/scripts/tests/test_registration_bundle.py", line 98, in test_trusted_pointer_registers_for_each_supported_event
+    self.assertEqual(result.returncode,0,result.stdout+result.stderr)
+AssertionError: 2 != 0 : {"schema_version": 1, "source": "fixed-reviewed-main-commit", "bootstrap_commit": "38c3da7076ab5281dcec8053c52811f936595a0b", "bootstrap_path": "scripts/run_trusted_regression_gate.py", "expected_loader_sha256": "30cb19e469db4ea26b00ca4959e68c4aa1196be15a9051452ff491210619aa63", "loaded": true, "execution_cwd": "isolated-temporary-directory", "bootstrap_blob": "f89e547183f3ac554dc9a76e1c0d3b7c6f231c70", "bootstrap_mode": "100644", "loader_sha256": "30cb19e469db4ea26b00ca4959e68c4aa1196be15a9051452ff491210619aa63", "bootstrap_exit": 2}
+
+
+======================================================================
+FAIL: test_trusted_pointer_registers_for_each_supported_event (test_registration_bundle.BundleWorkflowTests.test_trusted_pointer_registers_for_each_supported_event) (event='schedule')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/scripts/tests/test_registration_bundle.py", line 98, in test_trusted_pointer_registers_for_each_supported_event
+    self.assertEqual(result.returncode,0,result.stdout+result.stderr)
+AssertionError: 2 != 0 : {"schema_version": 1, "source": "fixed-reviewed-main-commit", "bootstrap_commit": "38c3da7076ab5281dcec8053c52811f936595a0b", "bootstrap_path": "scripts/run_trusted_regression_gate.py", "expected_loader_sha256": "30cb19e469db4ea26b00ca4959e68c4aa1196be15a9051452ff491210619aa63", "loaded": true, "execution_cwd": "isolated-temporary-directory", "bootstrap_blob": "f89e547183f3ac554dc9a76e1c0d3b7c6f231c70", "bootstrap_mode": "100644", "loader_sha256": "30cb19e469db4ea26b00ca4959e68c4aa1196be15a9051452ff491210619aa63", "bootstrap_exit": 2}
+
+
+======================================================================
+FAIL: test_trusted_pointer_registers_for_each_supported_event (test_registration_bundle.BundleWorkflowTests.test_trusted_pointer_registers_for_each_supported_event) (event='workflow_dispatch')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/scripts/tests/test_registration_bundle.py", line 98, in test_trusted_pointer_registers_for_each_supported_event
+    self.assertEqual(result.returncode,0,result.stdout+result.stderr)
+AssertionError: 2 != 0 : {"schema_version": 1, "source": "fixed-reviewed-main-commit", "bootstrap_commit": "38c3da7076ab5281dcec8053c52811f936595a0b", "bootstrap_path": "scripts/run_trusted_regression_gate.py", "expected_loader_sha256": "30cb19e469db4ea26b00ca4959e68c4aa1196be15a9051452ff491210619aa63", "loaded": true, "execution_cwd": "isolated-temporary-directory", "bootstrap_blob": "f89e547183f3ac554dc9a76e1c0d3b7c6f231c70", "bootstrap_mode": "100644", "loader_sha256": "30cb19e469db4ea26b00ca4959e68c4aa1196be15a9051452ff491210619aa63", "bootstrap_exit": 2}
+
+
+----------------------------------------------------------------------
+Ran 1 test in 2.988s
+
+FAILED (failures=4)

@@ -1,0 +1,22 @@
+Original retained Grok helper; injected filesystem publish collision, no real concurrency or science.
+test_failed_publish_preserves_another_output_owner (test_registration_bundle.BundleMaterializationTests.test_failed_publish_preserves_another_output_owner) ... ERROR
+
+======================================================================
+ERROR: test_failed_publish_preserves_another_output_owner (test_registration_bundle.BundleMaterializationTests.test_failed_publish_preserves_another_output_owner)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/scripts/tests/test_registration_bundle.py", line 251, in test_failed_publish_preserves_another_output_owner
+    self.assertEqual((output/'other-owner').read_text(), 'preserve')
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/pathlib.py", line 1027, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/var/folders/y2/l5_3_fm108z7rq5gjtlpy_lw0000gn/T/tmppqq46i1_/materialized/other-owner'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.691s
+
+FAILED (errors=1)

@@ -1,0 +1,13 @@
+COMMAND ['/opt/homebrew/bin/python3.12', '-B', '-m', 'unittest', 'discover', '-s', 'scripts/tests', '-p', 'test_registration_bundle.py', '-v']
+test_c0_refusal_precedes_pointer_and_helper_reads (test_registration_bundle.BundleWorkflowTests.test_c0_refusal_precedes_pointer_and_helper_reads) ... ok
+test_changed_bundle_bytes_cannot_register (test_registration_bundle.BundleWorkflowTests.test_changed_bundle_bytes_cannot_register) ... ok
+test_head_pointer_and_helper_cannot_replace_base_authority (test_registration_bundle.BundleWorkflowTests.test_head_pointer_and_helper_cannot_replace_base_authority) ... ok
+test_no_append_does_not_read_pointer_or_execute_helper (test_registration_bundle.BundleWorkflowTests.test_no_append_does_not_read_pointer_or_execute_helper) ... ok
+test_trusted_pointer_registers_for_each_supported_event (test_registration_bundle.BundleWorkflowTests.test_trusted_pointer_registers_for_each_supported_event) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 13.101s
+
+OK
+
+returncode=0
