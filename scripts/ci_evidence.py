@@ -94,6 +94,23 @@ ENVIRONMENT = (
 )
 
 
+# Fixed non-circular comparison policy. Cache/full fingerprint keeps both files.
+COMPARISON_BASELINE_PATHS = (
+    'evas/validation/baselines/regression-v1.json',
+    'evas/validation/baselines/regression-v1.review.json',
+)
+
+
+def comparison_subject(entries, environment):
+    retained = [entry for entry in entries if entry[0] not in COMPARISON_BASELINE_PATHS]
+    encoded = json.dumps(retained, sort_keys=True, separators=(',', ':'), allow_nan=False).encode()
+    return dict(schema_version=1, report_schema_version=REPORT_SCHEMA_VERSION,
+                evidence_schema_version=EVIDENCE_SCHEMA_VERSION,
+                files_sha256=hashlib.sha256(encoded).hexdigest(), input_count=len(retained),
+                environment={key: value for key, value in environment.items() if key != 'shard'},
+                excluded_baseline_paths=list(COMPARISON_BASELINE_PATHS))
+
+
 def fingerprint(repo, environment):
     raw = subprocess.check_output(["git", "ls-files", "--stage", "-z"], cwd=repo)
     entries = []
@@ -128,6 +145,7 @@ def fingerprint(repo, environment):
     ).hexdigest()
     return dict(
         key=digest,
+        comparison_subject=comparison_subject(entries, environment),
         report_schema_version=REPORT_SCHEMA_VERSION,
         evidence_schema_version=EVIDENCE_SCHEMA_VERSION,
         input_count=len(entries),

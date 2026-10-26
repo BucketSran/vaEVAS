@@ -81,6 +81,30 @@ def sibling_module(name):
     return module
 
 
+def load_reason_policies():
+    data = json.loads(Path(__file__).with_name('regression_observation_policy.json').read_text())
+    if (not isinstance(data, dict) or set(data) != {'schema_version', 'targets'}
+            or type(data['schema_version']) is not int or data['schema_version'] != 1
+            or not isinstance(data['targets'], list)):
+        raise ValueError('unknown diagnostic observation policy schema')
+    seen = set()
+    for target in data['targets']:
+        if (not isinstance(target, dict) or not {'source_path', 'site_policy'} <= set(target)
+                or set(target) - {'source_path', 'site_policy', 'timing_policy', 'tempdir_policy'}
+                or not isinstance(target['source_path'], str)
+                or Path(target['source_path']).is_absolute()
+                or '..' in Path(target['source_path']).parts):
+            raise ValueError('invalid diagnostic observation target')
+        site = target['site_policy']
+        if not isinstance(site, dict):
+            raise ValueError('diagnostic target lacks a native assertion policy')
+        key = (target['source_path'], site.get('source_sha256'), site.get('function'))
+        if any(not isinstance(value, str) or not value for value in key) or key in seen:
+            raise ValueError('missing or duplicate diagnostic source target')
+        seen.add(key)
+    return data['targets']
+
+
 def merge_v3(reports):
     gate = sibling_module('regression_gate')
     first = reports[0]
@@ -156,7 +180,9 @@ def observation_identity(start_directory, source_root, modules, pattern):
     policy = sibling_module('ci_evidence')
     metadata = dict(criteria_id=json_digest(criteria), language_profile=hashlib.sha256(profile.read_bytes()).hexdigest(),
                     collector_sha256=json_digest(dict(runner=source_digest(__file__),
-                                                       environment_policy=source_digest(policy.__file__))),
+                        environment_policy=source_digest(policy.__file__),
+                        assertion_capture=source_digest(Path(__file__).with_name('regression_reason_identity.py')),
+                        assertion_policy=source_digest(Path(__file__).with_name('regression_observation_policy.json')))),
                     runtime_profile=dict(python=sys.version, platform=platform.platform(), machine=platform.machine(),
                          variables={key: os.environ.get(key) for key in policy.ENVIRONMENT}),
                     invocation=dict(modules=sorted(set(modules)), pattern=pattern))
@@ -497,13 +523,16 @@ def condition_context(test):
 
 
 class TimedResult(unittest.TextTestResult):
-    def __init__(self, *args, journal, **kwargs):
+    def __init__(self, *args, journal, reason_policies=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.journal = journal
         self.timings = []
         self.active = None
         self.setup_skips = []
         self.fixture_events = []
+        self.reason_policies = load_reason_policies() if reason_policies is None else reason_policies
+        self.reason_session = None
+        self.reason_module = None
 
     def emit(self, event, **fields):
         self.journal.write(json.dumps(dict(event=event, **fields)) + "\n")
@@ -512,15 +541,45 @@ class TimedResult(unittest.TextTestResult):
     def startTest(self, test):
         self.started = time.perf_counter()
         self.active = dict(id=test.id(), outcome="interrupted", conditions=[])
+        site = method_site(test)
+        method = inspect.getattr_static(test, getattr(test, '_testMethodName', ''), None)
+        code = method.__code__ if type(method) is types.FunctionType else None
+        for policy in self.reason_policies:
+            selected = policy['site_policy']
+            path = Path(policy['source_path']).parts
+            if (site and code and site['source_sha256'] == selected['source_sha256']
+                    and site['function'] == selected['function']
+                    and Path(code.co_filename).parts[-len(path):] == path):
+                if self.reason_module is None:
+                    self.reason_module = sibling_module('regression_reason_identity')
+                self.reason_session = self.reason_module.ObservationSession(
+                    **{key: policy[key] for key in ('site_policy', 'timing_policy', 'tempdir_policy') if key in policy})
+                self.reason_session.__enter__()
+                break
         self.emit("start", id=test.id())
         super().startTest(test)
 
     def stopTest(self, test):
+        if self.reason_session is not None:
+            self.reason_session.__exit__(None, None, None)
+            self.reason_session = None
         self.active["seconds"] = time.perf_counter() - self.started
         self.timings.append(self.active)
         self.emit("stop", **self.active)
         self.active = None
         super().stopTest(test)
+
+    def error_observation(self, test, err):
+        phase, site, reason = error_details(test, err)
+        if self.reason_session is not None:
+            observed = self.reason_session.capture(err)
+            if observed['comparison_state'] != 'unselected':
+                for key in ('comparison_identity', 'comparison_complete', 'comparison_state',
+                            'comparison_error', 'assertion_observation'):
+                    if key in observed:
+                        reason[key] = observed[key]
+                reason['context_complete'] = reason['context_complete'] and observed['comparison_complete']
+        return phase, site, reason
 
     def outcome(self, value):
         # Class/module setup errors have no individual startTest call. unittest
@@ -565,7 +624,7 @@ class TimedResult(unittest.TextTestResult):
         self.append_condition(test, condition)
 
     def record_error(self, test, err, outcome):
-        phase, site, reason = error_details(test, err)
+        phase, site, reason = self.error_observation(test, err)
         identity = dict(method=test.id(), phase=phase, site=site, context=reason['context'])
         condition = dict(id=hashlib.sha256(json.dumps(identity, sort_keys=True).encode()).hexdigest(),
                          phase=phase, site=site, reason=reason, outcome=outcome,
@@ -626,7 +685,7 @@ class TimedResult(unittest.TextTestResult):
                                                 and site and site.get("source_sha256")),
                          kind='subtest', outcome=outcome)
         if err is not None:
-            _, _, condition['reason'] = error_details(test, err)
+            _, _, condition['reason'] = self.error_observation(test, err)
             condition['identity_complete'] = condition['identity_complete'] and condition['reason']['context_complete']
         if skip_reason is not None:
             condition['reason'] = dict(kind='skip', message=skip_reason, site=site)

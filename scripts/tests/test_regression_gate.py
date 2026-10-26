@@ -81,6 +81,46 @@ class GateTests(unittest.TestCase):
         changed['tests'][0]['conditions'][0]['reason']['message']='changed failure condition'
         self.assertFalse(self.gate.compare_report(changed,baseline)['merge_allowed'])
 
+    def test_structured_assertion_identity_preserves_operands_and_raw_diagnostic(self):
+        observed = copy.deepcopy(self.old)
+        reason = observed['tests'][0]['conditions'][0]['reason']
+        reason['comparison_identity'] = dict(
+            schema_version=1, kind='unittest-assertion', operation='assertGreaterEqual',
+            operation_source_sha256='4' * 64,
+            operands={'a': {'type': 'int', 'hex': '0x1'},
+                      'b': {'type': 'int', 'hex': '0x2'}},
+            message={'type': 'none'}, policies=[
+                {'id': 'native-site', 'version': 1, 'source_sha256': 'a' * 64}])
+        reason['message'] = '1 not greater than or equal to <Fraction at 0x111>'
+        baseline = self.gate.propose_baseline(observed, {'commit': 'a' * 40}, REVIEW)
+        changed = copy.deepcopy(observed)
+        changed['tests'][0]['conditions'][0]['reason']['message'] = (
+            '1 not greater than or equal to <Fraction at 0x222>')
+        result = self.gate.compare_report(changed, baseline)
+        self.assertTrue(result['merge_allowed'], result)
+        self.assertEqual(baseline['contexts'][0]['observations']['tests'][0]
+                         ['conditions'][0]['reason']['message'], reason['message'])
+        for field, value in [('operands', {'a': {'type': 'int', 'hex': '0x1'},
+                                          'b': {'type': 'int', 'hex': '0x3'}}),
+                             ('operation', 'assertEqual'),
+                             ('message', {'type': 'str', 'value': 'semantic diagnostic'})]:
+            variant = copy.deepcopy(changed)
+            variant['tests'][0]['conditions'][0]['reason']['comparison_identity'][field] = value
+            self.assertFalse(self.gate.compare_report(variant, baseline)['merge_allowed'])
+        for field, value in [('schema_version', 99), ('operation_source_sha256', 'missing')]:
+            variant = copy.deepcopy(changed)
+            variant['tests'][0]['conditions'][0]['reason']['comparison_identity'][field] = value
+            self.assertFalse(self.gate.validate_report(variant)['valid'])
+        for operand in ({'type': 'opaque', 'name': 'unknown'},
+                        {'type': 'int', 'hex': '0x2', 'complete': False},
+                        {'type': 'future-encoding', 'value': 2}):
+            variant = copy.deepcopy(changed)
+            variant['tests'][0]['conditions'][0]['reason']['comparison_identity']['operands']['b'] = operand
+            self.assertFalse(self.gate.validate_report(variant)['valid'])
+        incomplete = copy.deepcopy(changed)
+        incomplete['tests'][0]['conditions'][0]['reason']['comparison_complete'] = False
+        self.assertFalse(self.gate.compare_report(incomplete, baseline)['merge_allowed'])
+
     def test_repeated_large_context_is_losslessly_pooled_and_tampering_blocks(self):
         observed=copy.deepcopy(self.old)
         context=[dict(function='case',line=12,values={'grid':list(range(1000)),'case':'A'})]

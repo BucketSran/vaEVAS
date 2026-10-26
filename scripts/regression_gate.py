@@ -48,6 +48,77 @@ def _context(report):
     return context
 
 
+def _assertion_value(value, *, diagnostic_policy=False, depth=0):
+    """Validate the bounded assertion-value encoding, never execute its data."""
+    if not isinstance(value, dict) or depth > 64 or not isinstance(value.get('type'), str):
+        raise ValueError('unknown or incomplete typed assertion value')
+    kind = value['type']
+    fields = {
+        'none': {'type'}, 'bool': {'type', 'value'}, 'int': {'type', 'hex'},
+        'float': {'type', 'hex'}, 'str': {'type', 'value'}, 'bytes': {'type', 'hex'},
+        'fraction': {'type', 'numerator', 'denominator'},
+        'list': {'type', 'items'}, 'tuple': {'type', 'items'}, 'dict': {'type', 'items'},
+        'str-parts': {'type', 'items'}, 'diagnostic-role': {'type', 'role', 'value_type'},
+    }
+    if kind not in fields or set(value) != fields[kind]:
+        raise ValueError('unknown or incomplete typed assertion value')
+
+    def integer(text):
+        if not isinstance(text, str):
+            raise ValueError('invalid hexadecimal assertion integer')
+        number = int(text, 16)
+        if hex(number) != text:
+            raise ValueError('noncanonical hexadecimal assertion integer')
+        return number
+
+    if kind == 'bool' and type(value['value']) is not bool:
+        raise ValueError('invalid assertion boolean')
+    if kind == 'str' and not isinstance(value['value'], str):
+        raise ValueError('invalid assertion string')
+    if kind == 'int':
+        integer(value['hex'])
+    if kind == 'float':
+        if not isinstance(value['hex'], str):
+            raise ValueError('invalid assertion float')
+        number = float.fromhex(value['hex'])
+        if not math.isfinite(number) or number.hex() != value['hex']:
+            raise ValueError('invalid or noncanonical assertion float')
+    if kind == 'bytes':
+        if not isinstance(value['hex'], str) or bytes.fromhex(value['hex']).hex() != value['hex']:
+            raise ValueError('invalid assertion bytes')
+    if kind == 'fraction':
+        numerator, denominator = integer(value['numerator']), integer(value['denominator'])
+        if denominator <= 0 or math.gcd(numerator, denominator) != 1:
+            raise ValueError('noncanonical assertion Fraction')
+    if kind in ('list', 'tuple', 'dict', 'str-parts'):
+        if not isinstance(value['items'], list):
+            raise ValueError('invalid assertion sequence')
+        for item in value['items']:
+            if kind == 'dict':
+                if not isinstance(item, list) or len(item) != 2:
+                    raise ValueError('invalid typed assertion mapping')
+                for part in item:
+                    _assertion_value(part, diagnostic_policy=diagnostic_policy, depth=depth + 1)
+            elif kind == 'str-parts':
+                if isinstance(item, str):
+                    continue
+                if (not diagnostic_policy or not isinstance(item, dict)
+                        or set(item) != {'type', 'symbol', 'with_line'}
+                        or item['type'] != 'temporary-directory-root'
+                        or not isinstance(item['symbol'], str) or not item['symbol']
+                        or type(item['with_line']) is not int or item['with_line'] <= 0):
+                    raise ValueError('unbound temporary-directory assertion token')
+            else:
+                _assertion_value(item, diagnostic_policy=diagnostic_policy, depth=depth + 1)
+        if kind == 'dict':
+            keys = [_json(item[0]) for item in value['items']]
+            if len(keys) != len(set(keys)):
+                raise ValueError('duplicate typed assertion mapping key')
+    if kind == 'diagnostic-role' and (not diagnostic_policy or value['role'] != 'duration-seconds'
+                                      or value['value_type'] != 'float'):
+        raise ValueError('unknown or unbound assertion diagnostic role')
+
+
 def _condition(row):
     if not isinstance(row, dict):
         raise ValueError('condition must be an object')
@@ -61,6 +132,38 @@ def _condition(row):
         raise ValueError('unknown or interrupted condition outcome')
     if 'reason' in row and not isinstance(row['reason'], dict):
         raise ValueError('condition reason must be an object')
+    if ('comparison_complete' in row.get('reason', {})
+            and type(row['reason']['comparison_complete']) is not bool):
+        raise ValueError('invalid assertion comparison completeness')
+    if 'comparison_identity' in row.get('reason', {}):
+        identity = row['reason']['comparison_identity']
+        operands = {'assertEqual': {'first', 'second'},
+                    'assertIn': {'member', 'container'},
+                    'assertGreaterEqual': {'a', 'b'}}
+        fields = {'schema_version', 'kind', 'operation', 'operation_source_sha256',
+                  'operands', 'message', 'policies'}
+        if (not isinstance(identity, dict) or set(identity) != fields
+                or type(identity.get('schema_version')) is not int
+                or identity['schema_version'] != 1 or identity['kind'] != 'unittest-assertion'
+                or not isinstance(identity['operation'], str)
+                or identity['operation'] not in operands
+                or not isinstance(identity['operation_source_sha256'], str)
+                or not re.fullmatch('[0-9a-f]{64}', identity['operation_source_sha256'])
+                or not isinstance(identity['operands'], dict)
+                or set(identity['operands']) != operands[identity['operation']]
+                or not isinstance(identity['policies'], list) or not identity['policies']):
+            raise ValueError('unknown or incomplete assertion comparison identity')
+        for policy in identity['policies']:
+            if (not isinstance(policy, dict) or set(policy) != {'id', 'version', 'source_sha256'}
+                    or any(not isinstance(policy[key], str) or not policy[key]
+                           for key in ('id', 'source_sha256'))
+                    or type(policy['version']) is not int or policy['version'] != 1
+                    or not re.fullmatch('[0-9a-f]{64}', policy['source_sha256'])):
+                raise ValueError('assertion identity lacks a version-bound diagnostic policy')
+        if len({policy['id'] for policy in identity['policies']}) != len(identity['policies']):
+            raise ValueError('duplicate assertion diagnostic policy')
+        for value in [*identity['operands'].values(), identity['message']]:
+            _assertion_value(value, diagnostic_policy=bool(identity['policies']))
     if row['outcome'] != 'passed':
         reason = row.get('reason')
         # unittest supplies no exception for an unexpected success.
@@ -218,7 +321,8 @@ def _baseline_observations(report):
         if 'reason' in row:
             retained['reason'] = {key: copy.deepcopy(row['reason'][key]) for key in
                 ('kind', 'exception_type', 'message', 'site', 'context',
-                 'context_complete', 'attribution') if key in row['reason']}
+                 'context_complete', 'attribution', 'comparison_identity',
+                 'comparison_complete', 'comparison_state') if key in row['reason']}
         return retained
 
     observations['tests'] = [dict(id=row['id'], outcome=row['outcome'], seconds=row['seconds'],
@@ -307,32 +411,38 @@ def propose_baseline(report, source_identity, review=None):
         raise ValueError('review must be an object')
     observations = _baseline_observations(report)
     value_pool = _pool_context_values(observations)
-    return dict(schema_version=1, contexts=[dict(
+    proposal = dict(schema_version=1, contexts=[dict(
         context=copy.deepcopy(_context(report)), source_identity=copy.deepcopy(source_identity),
         review=copy.deepcopy(review), semantic_qualification=False,
         observation_format='regression-observations-v1', observation_encoding='pooled-context-v1',
         value_pool=value_pool,
         canonical_report_sha256=hashlib.sha256(_json(report).encode()).hexdigest(),
         observations=observations)])
+    if _has_comparison_subject(report):
+        proposal['contexts'][0]['execution_subject'] = execution_subject(report)
+    return proposal
 
 
 def _matchable(condition):
     site = condition.get('site') or condition.get('reason', {}).get('site')
     return (condition['identity_complete']
             and condition.get('reason', {}).get('context_complete', True) is True
+            and condition.get('reason', {}).get('comparison_complete', True) is True
             and isinstance(site, dict)
             and isinstance(site.get('source_sha256'), str)
             and bool(re.fullmatch('[0-9a-f]{64}', site['source_sha256'])))
 
 
 def _signature(condition):
-    # Keep diagnostic text unchanged. No heuristic guesses about root cause or
-    # broad removal of paths that could accidentally equate distinct failures.
+    # Raw diagnostics remain unchanged. Only a validated, source-bound capture
+    # can supply structured comparison evidence instead of generated repr text.
     reason = condition.get('reason', {})
+    diagnostic = ({'comparison_identity': reason['comparison_identity']}
+                  if 'comparison_identity' in reason else {'message': reason.get('message')})
     return _json({key: condition.get(key) for key in ('id', 'phase', 'kind', 'site', 'params', 'context')} | {
         'outcome': condition['outcome'],
         'reason': {key: reason.get(key) for key in
-                   ('kind', 'exception_type', 'message', 'site', 'context', 'context_complete')}})
+                   ('kind', 'exception_type', 'site', 'context', 'context_complete')} | diagnostic})
 
 
 def compare_report(report, baseline):
@@ -463,6 +573,192 @@ def main(argv=None):
         print(json.dumps(dict(error=str(error), merge_allowed=None if getattr(args, 'inactive', False)
                               else False)), file=sys.stderr)
         return 2
+
+
+
+# PROTOTYPE ADDITION: keep one comparator, then validate baseline evolution.
+
+COMPARISON_BASELINE_PATHS = (
+    'evas/validation/baselines/regression-v1.json',
+    'evas/validation/baselines/regression-v1.review.json',
+)
+
+
+def _checked_comparison_subject(value):
+    fields = {'schema_version', 'report_schema_version', 'evidence_schema_version',
+              'files_sha256', 'input_count', 'environment', 'excluded_baseline_paths'}
+    if (not isinstance(value, dict) or set(value) != fields
+            or type(value.get('schema_version')) is not int or value['schema_version'] != 1
+            or type(value.get('report_schema_version')) is not int or value['report_schema_version'] != 3
+            or type(value.get('evidence_schema_version')) is not int or value['evidence_schema_version'] != 3
+            or not isinstance(value.get('files_sha256'), str)
+            or not re.fullmatch('[0-9a-f]{64}', value['files_sha256'])
+            or type(value.get('input_count')) is not int or value['input_count'] <= 0
+            or not isinstance(value.get('environment'), dict) or 'shard' in value['environment']
+            or value.get('excluded_baseline_paths') != list(COMPARISON_BASELINE_PATHS)):
+        raise ValueError('unknown or incomplete all-input comparison subject, or exclusion policy changed')
+    _json(value)
+    return value
+
+
+def _actual_comparison_subject(report):
+    if report.get('merged') is True:
+        identities = [part['source_identity']['execution_identity'] for part in report['parts']]
+    else:
+        identities = [report['source_identity']['execution_identity']]
+    checked = []
+    for identity in identities:
+        value = _checked_comparison_subject(identity['comparison_subject'])
+        environment = identity.get('environment')
+        if (not isinstance(identity.get('key'), str) or not re.fullmatch('[0-9a-f]{64}', identity['key'])
+                or type(identity.get('report_schema_version')) is not int or identity['report_schema_version'] != 3
+                or type(identity.get('evidence_schema_version')) is not int or identity['evidence_schema_version'] != 3
+                or type(identity.get('input_count')) is not int
+                or not 0 <= identity['input_count'] - value['input_count'] <= len(COMPARISON_BASELINE_PATHS)
+                or not isinstance(environment, dict)
+                or _json({k:v for k,v in environment.items() if k != 'shard'}) != _json(value['environment'])):
+            raise ValueError('all-input subject disagrees with its actual full execution identity')
+        checked.append(value)
+    if not checked or len({_json(v) for v in checked}) != 1:
+        raise ValueError('merged actual parts have different all-input comparison subjects')
+    return copy.deepcopy(checked[0])
+
+
+def _has_comparison_subject(report):
+    sources = [p.get('source_identity', {}) for p in report.get('parts', [])] if report.get('merged') is True else [report.get('source_identity', {})]
+    return any(isinstance(s, dict) and isinstance(s.get('execution_identity'), dict)
+               and 'comparison_subject' in s['execution_identity'] for s in sources)
+
+
+def execution_subject(report):
+    """Bind scientific inputs without including the baseline-containing CI fingerprint."""
+    context = _context(report)
+    try:
+        comparison = _actual_comparison_subject(report)
+    except (KeyError, TypeError, IndexError) as error:
+        raise ValueError("actual raw predates the required all-input subject producer") from error
+    source = report.get('source_identity')
+    if not isinstance(source, dict) or 'kernel_sha256' not in source:
+        raise ValueError('actual report lacks execution subject source identity')
+    files = source.get('dut_files')
+    if not isinstance(files, list) or not files:
+        raise ValueError('actual report lacks selected DUT file identities')
+    paths = []
+    for item in files:
+        if (not isinstance(item, list) or len(item) != 2 or not isinstance(item[0], str)
+                or not item[0].startswith(('evas/src/', 'evas/rust_core/'))
+                or any(part in ('..', 'baselines', '__pycache__', 'target') for part in item[0].split('/'))
+                or not isinstance(item[1], str) or not re.fullmatch('[0-9a-f]{64}', item[1])):
+            raise ValueError('unknown or incomplete actual DUT file identity')
+        paths.append(item[0])
+    if len(paths) != len(set(paths)):
+        raise ValueError('actual DUT manifest must preserve unique producer entries')
+    kernel = source['kernel_sha256']
+    if kernel is not None and (not isinstance(kernel, str) or not re.fullmatch('[0-9a-f]{64}', kernel)):
+        raise ValueError('unknown actual kernel identity')
+    return dict(schema_version=1, comparison_subject=comparison, metadata=context,
+                dut_files_sha256=hashlib.sha256(_json(files).encode()).hexdigest(),
+                kernel_sha256=kernel)
+
+
+def _retention_condition(condition):
+    # Opaque passes remain observations with false identity flags, never qualification.
+    return dict(signature=_signature(condition), identity_complete=condition['identity_complete'],
+                repeated_identity=condition.get('repeated_identity'),
+                context_complete=condition.get('reason', {}).get('context_complete', True),
+                comparison_complete=condition.get('reason', {}).get('comparison_complete', True))
+
+
+def _retention_observations(report):
+    """Compare every projected observation, omitting execution duration and raw bulk."""
+    projected = _baseline_observations(report)
+    for row in projected['tests']:
+        row.pop('seconds')
+        row['conditions'] = [_retention_condition(c) for c in row['conditions']]
+    projected['fixtures'] = [dict(scope=c.get('scope'), **_retention_condition(c))
+                             for c in projected['fixtures']]
+    return projected
+
+
+def _passed_observations(report):
+    return {(row['id'], c['id'], _json(_retention_condition(c)))
+            for row in report['tests'] for c in row['conditions'] if c['outcome'] == 'passed'} | {
+        ('fixture:' + c['scope'], c['id'], _json(_retention_condition(c)))
+        for c in report['fixtures'] if c['outcome'] == 'passed'}
+
+
+def validate_baseline_transition(report, trusted_baseline, head_proposal):
+    """Retain improvements only after old trusted comparison permits the candidate.
+
+    Head data cannot waive current differences. Approval fields record independent
+    review identity; the workflow still owns who may provide that approval.
+    """
+    trusted = compare_report(report, trusted_baseline)
+    result = dict(valid=trusted['valid'], raw_successful=trusted['raw_successful'],
+                  merge_allowed=False, differences=list(trusted['differences']),
+                  semantic_qualification=False, trusted_comparison=trusted,
+                  transition=dict(proposal_evaluated=False, refresh_required=None,
+                                  accepted=False, differences=[]))
+    # Do not even inspect head data when the authority comparison rejected.
+    if not trusted['merge_allowed']:
+        return result
+    differences = result['transition']['differences']
+    try:
+        context = _context(report)
+        old_entry = next(e for e in trusted_baseline['contexts'] if _json(e['context']) == _json(context))
+        old = _expand_baseline_observations(old_entry)
+        actual_conditions = [c for row in report['tests'] for c in row['conditions']] + report['fixtures']
+        if any(c['outcome'] != 'passed' and not _matchable(c) for c in actual_conditions):
+            raise ValueError('unknown or incomplete actual condition identity')
+        newly_passed = _passed_observations(report) - _passed_observations(old)
+        result['transition']['refresh_required'] = bool(newly_passed)
+        result['transition']['new_passed_observations'] = [dict(owner=o, condition=c) for o,c,_ in sorted(newly_passed)]
+        unchanged = _json(head_proposal) == _json(trusted_baseline)
+        if unchanged and not newly_passed:
+            result['transition'].update(accepted=True, reused_trusted_baseline=True)
+            result['merge_allowed'] = True
+            return result
+        if unchanged:
+            raise ValueError('newly passed observations require a reviewed refreshed baseline')
+        result['transition']['proposal_evaluated'] = True
+        if (not isinstance(head_proposal, dict) or type(head_proposal.get('schema_version')) is not int
+                or head_proposal['schema_version'] != 1 or not isinstance(head_proposal.get('contexts'), list)):
+            raise ValueError('unknown or incomplete head baseline proposal')
+        _json(head_proposal)
+        matches = [e for e in head_proposal['contexts'] if isinstance(e, dict)
+                   and _json(e.get('context')) == _json(context)]
+        if len(matches) != 1:
+            raise ValueError('head proposal must retain exactly one current context')
+        proposed_entry = matches[0]
+        before_other = [e for e in trusted_baseline['contexts'] if e is not old_entry]
+        after_other = [e for e in head_proposal['contexts'] if e is not proposed_entry]
+        if _json(before_other) != _json(after_other):
+            raise ValueError('head proposal changed an unrelated trusted context')
+        # Reuse the existing public comparator for proposal shape/review validation;
+        # it never replaces the earlier comparison against old authority.
+        proposed_check = compare_report(report, head_proposal)
+        if not proposed_check['merge_allowed']:
+            raise ValueError('head proposal is not reviewed complete observations: ' + '; '.join(proposed_check['differences']))
+        proposed = _expand_baseline_observations(proposed_entry)
+        proposed_conditions = [c for row in proposed['tests'] for c in row['conditions']] + proposed['fixtures']
+        if any(c['outcome'] != 'passed' and not _matchable(c) for c in proposed_conditions):
+            raise ValueError('unknown or incomplete proposed condition identity')
+        if _json(_retention_observations(proposed)) != _json(_retention_observations(report)):
+            raise ValueError('head proposal does not retain every actual observation and context')
+        subject = execution_subject(report)
+        if _json(proposed_entry.get('execution_subject')) != _json(subject):
+            raise ValueError('head proposal execution subject differs from actual selected DUT/kernel/context')
+        result['transition'].update(accepted=True, execution_subject=subject,
+            proposal_canonical_source_sha256=proposed_entry['canonical_report_sha256'],
+            current_canonical_report_sha256=hashlib.sha256(_json(report).encode()).hexdigest(),
+            review=copy.deepcopy(proposed_entry['review']))
+        result['merge_allowed'] = True
+    except (KeyError, TypeError, ValueError, StopIteration, OverflowError) as error:
+        differences.append(str(error))
+        result['differences'].append('baseline transition: ' + str(error))
+    return result
+
+
 
 
 if __name__ == '__main__':
