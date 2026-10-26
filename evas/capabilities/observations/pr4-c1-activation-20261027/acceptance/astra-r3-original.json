@@ -1,0 +1,781 @@
+{
+  "schema_version": 1,
+  "review_status": "completed_no_actionable_findings",
+  "reviewed_at_utc": "2026-10-26T22:14:17.636050+00:00",
+  "reviewer": {
+    "provider": "codex",
+    "model": "gpt-6-astra",
+    "options": [
+      {
+        "id": "reasoningEffort",
+        "value": "max"
+      },
+      {
+        "id": "serviceTier",
+        "value": "default"
+      }
+    ],
+    "parentThreadId": "thread:delegated-task:command%3Amcp%3A77237e4d-3f1a-49ed-b46c-0984553f1454%3Adelegate-task%3Aevas-pr264-maintenance-timeout-astra-r3-20261027",
+    "runtimeMode": "full-access",
+    "source": "mcp__t3_code__orchestrator_capabilities",
+    "observed_at_utc": "2026-10-26T22:04:10.393Z",
+    "independent_fresh_context": true,
+    "single_round_combined_standards_spec": true,
+    "runtime_evidence": "runtime.json",
+    "delegated_again": false
+  },
+  "scope": {
+    "PR": "https://github.com/BucketSran/vaEVAS/pull/264",
+    "comparison": "explicit incremental endpoints, not worktree HEAD or PR main-to-head re-review",
+    "increment_base": "bd0fd88494d40826b30becfdb055729f5661952a",
+    "increment_base_tree": "0c6ef20aadb8a8f55965a7fd606702c9938b30db",
+    "head": "98b45a347c05b8868cb8d776c5fee7dcc3e8fb3d",
+    "tree": "60d107907a39d5ac4da23c3e274572ee4153d42e",
+    "direct_parent": "5fc7affa21bc64adac2a2b364167caa1348880f6",
+    "source_capture_tree": "1cabdc891505687da9eb510269b187a256b24f20",
+    "PR_base_main": "842bde7101164330fa03e7aee58b45d1789cbed1",
+    "PR_base_main_tree": "ef8b67599920019218ad28953df572b35c65be42",
+    "ancestry_verified": [
+      "842bde7101164330fa03e7aee58b45d1789cbed1",
+      "bd0fd88494d40826b30becfdb055729f5661952a",
+      "5fc7affa21bc64adac2a2b364167caa1348880f6",
+      "98b45a347c05b8868cb8d776c5fee7dcc3e8fb3d"
+    ],
+    "paths": [
+      ".github/workflows/numerical-assurance.yml",
+      "evas/capabilities/data/asset-index.json",
+      "evas/capabilities/data/entrypoint-index.json",
+      "evas/capabilities/data/historical-index.json",
+      "evas/capabilities/data/method-index.json",
+      "evas/capabilities/data/registry.json"
+    ],
+    "path_count": 6,
+    "coverage": [
+      {
+        "path": ".github/workflows/numerical-assurance.yml",
+        "base_blob": "f265daeff16f2f49d1e5a43fb60a95ab3ab54461",
+        "head_blob": "aaa4e66407d1ce6cb0dc3c0d75d30af967176891",
+        "mode": "100644",
+        "base_sha256": "74e97b41f0312d1769f8a93757fb073158a890095c431351c4956cdbaabf4cec",
+        "head_sha256": "70dba1d0705b83d4811e2d79502cb96b891fe3cd8ea32cfb5c5ddf7b3f407dfa",
+        "base_bytes": 35700,
+        "head_bytes": 35700,
+        "line": 159,
+        "result": "static-checks 作业 timeout-minutes 仅由 10 改为 30；完整文件差异只有此行，命令、条件、行号、bootstrap pin 和科学预算不变。",
+        "reviewed": true
+      },
+      {
+        "path": "evas/capabilities/data/asset-index.json",
+        "base_blob": "06b40cbb4ab7f0902513dc1c8b73e8ae156e9a7c",
+        "head_blob": "74dc5a231fc0fc081e670b56227d5122aca01346",
+        "mode": "100644",
+        "base_sha256": "a08578cc6b47c881cad25e9da742a0e8e8a188b5791b62f582590ee980365ebf",
+        "head_sha256": "368acf57ab05eeaa5558883df68a5fb4da200eef9cf3ae34ea0072a6d66b5043",
+        "base_bytes": 10227803,
+        "head_bytes": 11332042,
+        "added_versions": 444,
+        "result": "一个 workflow 资产更新实际文件哈希；443 个资产仅传播消费者和 role.facts 中的入口引用版本。原职责、内容与资格字段无其他变化。",
+        "reviewed": true
+      },
+      {
+        "path": "evas/capabilities/data/entrypoint-index.json",
+        "base_blob": "76e1cc6043eb3c122c43ba8c14b87ec32389b839",
+        "head_blob": "ee231a23200c1ee3daa6bfc28af8b8802051ed20",
+        "mode": "100644",
+        "base_sha256": "f423463f2d2146082278e449b6d63de09324e43991c9f7364845ddb3dfa5f6fd",
+        "head_sha256": "18f820a5a67f419073558f1e5d89e82861dd528053b1a12dd76a31f8d393a42a",
+        "base_bytes": 181096,
+        "head_bytes": 236525,
+        "added_versions": 24,
+        "result": "24 个 Python 入口仅更新 workflow_sha256 及派生 version；命令、条件、环境、声明 Python 版本、行号和原 discovery 身份不变。5 个 Rust 入口不变。",
+        "reviewed": true
+      },
+      {
+        "path": "evas/capabilities/data/historical-index.json",
+        "base_blob": "193a6bb1da546a019f5ba26e85fd016c647454f4",
+        "head_blob": "35f710b382c2f09fb99498d32293c84d5a129e6e",
+        "mode": "100644",
+        "base_sha256": "122ad31075f544ceb117edaaaeca74eba4b0ef798986d97c334f76325c70bff0",
+        "head_sha256": "93ca528fc2c933970c2caad40936693b4e989dc635465a77fffb3da707c32e8f",
+        "base_bytes": 18644082,
+        "head_bytes": 24858754,
+        "added_versions": 3260,
+        "result": "3257 个历史 audit 和 3 个历史 finding 仅传播方法引用及 version；原来源、行哈希、执行结果、裁决、alignment 和资格不变。",
+        "reviewed": true
+      },
+      {
+        "path": "evas/capabilities/data/method-index.json",
+        "base_blob": "e2d3a66bc4c55a620818a4afd6beb1434b7118dc",
+        "head_blob": "51f40902f457e327e4495f1684d68c3f6874a0d2",
+        "mode": "100644",
+        "base_sha256": "8627747fa118e0c20d0a3a9ed873f3464603d732b7c0fa1753a768e3ecea87ad",
+        "head_sha256": "76a395bedfe721d90ce74caa0b1a2c87450f4da37abc4bf98ac4778d76baf9ff",
+        "base_bytes": 39867134,
+        "head_bytes": 51327721,
+        "added_versions": 4572,
+        "result": "仅传播 module、dependencies、entrypoints 的引用及 version；实际定义、runtime ID、discovery observations、skip 声明、语义状态和资格不变。",
+        "reviewed": true
+      },
+      {
+        "path": "evas/capabilities/data/registry.json",
+        "base_blob": "98f732b5b9446803a0ff78f99080ab15efdc5a68",
+        "head_blob": "52463f9439d7299ab88814f9ec614fe66e04d91c",
+        "mode": "100644",
+        "base_sha256": "a13b8e3921e666ee9bbabeb71a0a51855dfa68d600f19490f7f3af945d03250e",
+        "head_sha256": "9c9f9802b4a20e012a7287e347e0862c5c60ae18047ac6f09cd6637c93452f69",
+        "base_bytes": 1333931,
+        "head_bytes": 1333931,
+        "changed_current_selections": 8300,
+        "result": "current 仅选择上述新版本；asset_scope 仅传播既有跨组件 bridge 的消费者引用。current ID 集合、规范对象、object_parts、范围和资格不变。",
+        "reviewed": true
+      }
+    ],
+    "complete_tree_comparison": true,
+    "all_other_tracked_blobs_and_modes_identical": true,
+    "real_worktree_head_observed": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+    "real_worktree_HEAD_used_as_candidate": false,
+    "old_20_candidates_included": false,
+    "old_20_worktree_diff_read": false,
+    "write_directory": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr264-maintenance-timeout-astra-r3-20261027",
+    "resolved_write_directory": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/night-coordination/pr264-maintenance-timeout-astra-r3-20261027",
+    "git_argv_prefix": [
+      "/usr/bin/git",
+      "--no-lazy-fetch",
+      "--git-dir=/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/.git/worktrees/ir33-regression-night",
+      "--work-tree=/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night"
+    ],
+    "git_environment_boundary": "每次真实 Git 命令均显式使用固定 --git-dir/--work-tree 与 --no-lazy-fetch，子进程先清除继承的 GIT_*，只为该 Git 进程设置 GIT_OPTIONAL_LOCKS=0。解析和核查子进程无 GIT_*，没有创建 Git fixture 或更改 index/refs/config。",
+    "candidate_or_shared_source_modified": false,
+    "scientific_regression_DUT_kernel_compile_backend_SSH_executed": false,
+    "watch_or_PR_poll_performed": false
+  },
+  "Standards": {
+    "findings": [],
+    "conclusion": "本轮六文件增量无可操作 Standards 发现，可接受维护超时修正及对应确定性登记输出。",
+    "assessments": [
+      {
+        "area": "范围和证据身份",
+        "result": "实际完整树比较与两段父链 diff 均符合所报范围。六个文件 SHA 同时匹配固定 Git 对象、final/capture、precheck 收据；diff --check 通过。",
+        "evidence": "scope-audit.json"
+      },
+      {
+        "area": "原失败保留",
+        "result": "job.json 与原日志绑定旧 C0；GitHub 注释明确 10m0s 上限。557 项脚本方法完整结束为 523 通过、34 外部 Harness 跳过；能力组未结束，原 CI 整体仍不接受。",
+        "evidence": "evidence-audit.json#/old_cancelled_CI"
+      },
+      {
+        "area": "本轮预检复用",
+        "result": "逐结果行确认 evas/capabilities 67 方法全通过和 test_ci_inventory 20 方法全通过；完整 ci_lint --plan 日志包含诊断清单、追溯矩阵、冻结身份、Rustfmt/Clippy。25 个受影响文件及检查源的实际导出字节与固定候选 Git blob 一致。审核者没有重跑这些测试或编译。",
+        "evidence": "evidence-audit.json"
+      },
+      {
+        "area": "生成对象保留",
+        "result": "30929 个旧对象版本逐对象保留；只追加 8300 个 current 对应版本。生成文件与本轮 catalog/tree 输出逐字相等，序列化符合未改生成器。",
+        "evidence": "catalog-audit.json"
+      }
+    ]
+  },
+  "Spec": {
+    "findings": [],
+    "conclusion": "接受本次 job 总墙钟上限 10→30 分钟及其登记身份传播。它不改变科学判据、预算或资格，不授予新 CI 通过或合入资格。",
+    "assessments": [
+      {
+        "area": "必要检查仍存在",
+        "result": "唯一源码差异位于 static-checks timeout-minutes。实际固定 parser 对旧新 workflow 的全部 metadata 除整文件哈希外相等，primary AST metadata 也相等；23 literal 加单列 primary 共 24 Python 入口，另有 5 Rust 入口。",
+        "evidence": "catalog-audit.json"
+      },
+      {
+        "area": "确定性引用传播",
+        "result": "核对 8300 个新对象和 30013 个内容绑定引用。将新 workflow 哈希及对应完整引用恢复为旧身份后，每个对象都与旧对象相等，registry 也只传播 current 与既有 bridge 引用。没有语义、资格、原裁决或来源替换。",
+        "evidence": "catalog-audit.json"
+      },
+      {
+        "area": "真实 discovery 复用",
+        "result": "24 份原收据逐份与 08f0977e9a22357afa8cdeb9f64231fabab171fa 中的 Git blob 字节匹配，entry metadata 与新 parser 相等；4665 实例的 owner 哈希绑定一致。收据保持原执行身份，没有重新发现、重新执行或重标记。",
+        "evidence": "catalog-audit.json#/discovery_receipts"
+      },
+      {
+        "area": "生成源身份",
+        "result": "49553 行资产收据的 Git blob/mode 与源捕获 5fc7affa 的完整普通文件树一致；workflow SHA 独立核对。生成报告的输入哈希、迁移集合与当前分组数量均由实际对象复算匹配。",
+        "evidence": "catalog-audit.json"
+      },
+      {
+        "area": "R2 接受前提",
+        "result": "可信 loader/comparator/registration validator、codec、pointer、review authority、baseline 和语言配置的完整 Git 对象未变。R2 的 entry、authority、baseline append、review record、pointer 精确字节及治理 canonical SHA 均再次匹配，沿用原接受与顺序，不重开无变化原始材料审核。",
+        "evidence": "evidence-audit.json#/exact_governance"
+      }
+    ]
+  },
+  "increment_decision": {
+    "accepted": true,
+    "blocking_findings": 0,
+    "decision": "accept_fixed_maintenance_increment_with_required_CI_pending",
+    "no_new_scientific_condition": true,
+    "CI_timeout_sufficiency_proven": false,
+    "CI_timeout_limit": "30 分钟是所审 job 的运行上限。本地能力组 744.735 秒只描述该次执行，不能保证 GitHub 整个 job 在该上限内成功。",
+    "merge_readiness_certified": false,
+    "remaining_acceptance_owner": "主控",
+    "conditions": [
+      "主控核验固定新候选必要 CI 满足，不能把旧 CI 取消、本地预检或本轮审核视为 CI 通过。",
+      "随后按既有授权合入 C0 并核对实际合入树。",
+      "再单独提交并验收只改 baseline 的精确追加。",
+      "最后 PR263 作为 C1 消费者重绑、生成、预检并完成必要 CI 和第 4 批正式验收。"
+    ]
+  },
+  "catalog_identity": {
+    "current_catalog_counts": {
+      "assets": 4203,
+      "methods": 4572,
+      "entrypoints": 29,
+      "history": 3260,
+      "sources": 32
+    },
+    "namespace_counts": {
+      "calibration": {
+        "entrypoints": 0,
+        "methods": 0,
+        "generated": 0
+      },
+      "maintenance": {
+        "entrypoints": 7,
+        "methods": 624,
+        "generated": 0
+      },
+      "python-regression": {
+        "entrypoints": 1,
+        "methods": 3257,
+        "generated": 12
+      },
+      "rust-tests": {
+        "entrypoints": 5,
+        "methods": 0,
+        "generated": 0
+      },
+      "validation": {
+        "entrypoints": 16,
+        "methods": 691,
+        "generated": 0
+      }
+    },
+    "preserved_object_versions": 30929,
+    "added_object_versions": 8300,
+    "added_by_kind": {
+      "asset": 444,
+      "entrypoint": 24,
+      "historical-audit-record": 3257,
+      "historical-finding": 3,
+      "method": 4572
+    },
+    "changed_field_shapes": [
+      {
+        "kind": "asset",
+        "fields": [
+          "consumers",
+          "role",
+          "version"
+        ],
+        "count": 443
+      },
+      {
+        "kind": "asset",
+        "fields": [
+          "content",
+          "version"
+        ],
+        "count": 1
+      },
+      {
+        "kind": "entrypoint",
+        "fields": [
+          "version",
+          "workflow_sha256"
+        ],
+        "count": 24
+      },
+      {
+        "kind": "historical-audit-record",
+        "fields": [
+          "method",
+          "version"
+        ],
+        "count": 3257
+      },
+      {
+        "kind": "historical-finding",
+        "fields": [
+          "methods",
+          "version"
+        ],
+        "count": 3
+      },
+      {
+        "kind": "method",
+        "fields": [
+          "dependencies",
+          "entrypoints",
+          "module",
+          "version"
+        ],
+        "count": 4572
+      }
+    ],
+    "python_discovery_instances": 4665,
+    "unique_methods": 4572,
+    "counts_not_additive": "67 是本轮 evas/capabilities 维护组，不是 PR5 comparison 的另一个 67；20 库存方法已包含于 557 脚本组的覆盖，不合计成独立科学通过数；4665 是逐入口实例，4572 是唯一方法。",
+    "semantic_qualification": false
+  },
+  "prior_P2_closure": [
+    {
+      "id": "PR4-MAINT-01",
+      "priority": "P2",
+      "closed_in_exact_source_snapshot": true,
+      "revision": "307a30ef89ce843dba905b7942b39d9dce098190",
+      "file": "scripts/tests/test_ci_inventory.py",
+      "line": 89,
+      "basis": "明确 29 literal 的完整手写表、7 maintenance/22 validation、单独 primary 及六个新增入口；固定 parser 实际结果相同。匹配源码的 20 方法通过日志已校验。",
+      "production_parser_relaxed": false,
+      "remaining": "尚未作为最终 C1 交付集成或通过其 CI；不声称 PR263 的旧 head168 已修好。",
+      "R2_resolution_reused": true,
+      "current_increment_does_not_change_C0_test": true,
+      "current_C0_blob": "805b9ee84e4ddaec9dba6fab3542253f1b0d3bca",
+      "current_C0_is_not_C1_snapshot": true
+    },
+    {
+      "id": "PR4-MAINT-02",
+      "priority": "P2",
+      "closed_in_exact_source_snapshot": true,
+      "revision": "307a30ef89ce843dba905b7942b39d9dce098190",
+      "file": "scripts/tests/test_catalog_history_selection.py",
+      "line": 44,
+      "basis": "方法和 owner 以 (id,version) 保留；previous 包含所需旧 owner，移动按完整引用选择。三协议旧方法/原 row 保留；新增当前版本移动及缺旧身份拒绝控制。匹配源码的 4 方法通过日志已校验。",
+      "production_selector_or_reader_relaxed": false,
+      "remaining": "最终 C1 重生成后的相关检查和必要 CI 仍由主控验收。",
+      "R2_resolution_reused": true,
+      "current_increment_does_not_change_C0_test": true,
+      "current_C0_blob": "36d47c0ec447f0790d21efaaabc6ad61b0b57313",
+      "current_C0_is_not_C1_snapshot": true
+    }
+  ],
+  "exact_governance_decision": {
+    "acceptance_reused_from_R2": true,
+    "R2": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr4-context-increment-astra-r2-20261027/review-report.json",
+      "sha256": "fb6205de563079e02fd96f75ff1901f2fbe50ec70b3408de31f0cb43c963b7e9",
+      "bytes": 21409
+    },
+    "coordinator_acceptance": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/increment-review-acceptance.json",
+      "sha256": "dbd5581f50b11265ee7268c809d6d7c162a1c68be49bde6251b84b0a3785825e",
+      "bytes": 6553
+    },
+    "decisions": {
+      "entry": {
+        "accepted": true,
+        "decision": "accept_exact_content_for_sequenced_adoption",
+        "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/governance-draft/entry.json",
+        "file_sha256": "b944bbc82cbfd3c62bbf1c41b437c56d5b1504fba9d1c4996b881779168f60b8",
+        "canonical_sha256": "f161e106f9ad26365a2c701ee1074f85b78326276f71b8e922cc717d9f8c0742",
+        "exact_bytes_rechecked": true,
+        "acceptance_reused_from_R2": true
+      },
+      "authority": {
+        "accepted": true,
+        "decision": "accept_exact_content_for_sequenced_adoption",
+        "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/governance-draft/authority.json",
+        "file_sha256": "e9eb30681cf5efe67502c137374d3969a34c4ec0dbd623202fb939e72fa3fb0c",
+        "canonical_sha256": "c3e5e50ba62abc5c1f3c7ac3107d51c2d2c3edd5f8fbff566af05f677bed013e",
+        "exact_bytes_rechecked": true,
+        "acceptance_reused_from_R2": true
+      },
+      "baseline_append": {
+        "accepted": true,
+        "decision": "accept_exact_content_for_sequenced_adoption",
+        "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/governance-draft/baseline-append.json",
+        "file_sha256": "be742ae2ae69579fdd4bc7dd8d110e05a71803f387f9d0831b58a6bed97ceff7",
+        "canonical_sha256": "a61e1c4d88a1e523e5663294db0c277681fb1b2790caccf343941715c7bb3599",
+        "exact_bytes_rechecked": true,
+        "acceptance_reused_from_R2": true
+      },
+      "review_record": {
+        "accepted": true,
+        "decision": "accept_exact_content_for_sequenced_adoption",
+        "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/governance-draft/review.json",
+        "file_sha256": "5e8165654a3903c151d07e2f325eae26f98e8da242fbb745e99db0fb22df5518",
+        "canonical_sha256": "73ec3216e747acdf4e70996c373971ef2a199ee48a4ee42945baf568d0abffab",
+        "exact_bytes_rechecked": true,
+        "acceptance_reused_from_R2": true
+      },
+      "bundle_pointer": {
+        "accepted": true,
+        "decision": "accept_exact_content_for_sequenced_adoption",
+        "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/governance-draft/bundle-pointer.json",
+        "file_sha256": "929441a0bdf490cfccbab06e8934137e453026eda7d37139b336ffcd4fc91cb2",
+        "canonical_sha256": "d538b684968da1097193a8b5db912c5993c399cae9eb680c7590ea11668168b4",
+        "exact_bytes_rechecked": true,
+        "acceptance_reused_from_R2": true
+      }
+    },
+    "mapping": {
+      "accepted": true,
+      "rows": 7737,
+      "original_file_sha256": "72decd6082b3126157876e2c718ead5f1233e4aa15ce9605d3f0c0d30517de13",
+      "canonical_sha256": "73867a9d0fb3f148e559a1fb637fb9f0038585ad23e2c9bdc1a77270fc7ebf8f",
+      "only_change": "review_reference，全部科学身份、outcome 绑定和顺序与 R1 接受的映射相同",
+      "review_reference": "https://raw.githubusercontent.com/BucketSran/vaEVAS/ae1cd723c5b24bd17af866805d7e6ac742cd8b86/evas/capabilities/observations/pr4-e1-40384473617/review/review-report.json#E1_independent_decision"
+    },
+    "prior_semantic_review_reexecuted": false,
+    "accepted_for_sequenced_adoption": true,
+    "approved_field_is_not_review_evidence": true,
+    "effective_authority_at_this_review": false,
+    "baseline_append_adopted": false,
+    "R2_does_not_grant_new_CI_or_scientific_qualification": true,
+    "required_sequence": [
+      "C0 必要 CI 与本轮接受后合入并验树",
+      "独立 baseline-only 精确追加并验收合入",
+      "PR263 C1 重绑、生成、预检、必要 CI 与正式验收"
+    ]
+  },
+  "verification": {
+    "new_checks": [
+      {
+        "kind": "fixed Git objects, complete tree/path comparison, SHA256, parent chain and diff --check",
+        "rc": 0,
+        "command_receipt": "scope-audit-command.json",
+        "evidence": [
+          "scope-audit.json",
+          "git-commands.jsonl"
+        ]
+      },
+      {
+        "kind": "actual metadata parser, archive receipt bytes, incremental graph/version/reference/serialization checks",
+        "rc": 0,
+        "command_receipt": "catalog-audit-command.json",
+        "evidence": [
+          "catalog-audit.json",
+          "scratch/catalog-migrations-checked.json"
+        ]
+      },
+      {
+        "kind": "archived result-line/command/source binding, exact R2 governance and prior-review identity checks",
+        "rc": 0,
+        "command_receipt": "evidence-audit-command.json",
+        "evidence": [
+          "evidence-audit.json"
+        ]
+      }
+    ],
+    "reused_checks": [
+      {
+        "name": "traceability-generate.txt",
+        "argv": [
+          "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+          "-B",
+          "scripts/traceability.py",
+          "--catalog-data",
+          "evas/capabilities/data"
+        ],
+        "started_at": "2026-10-26T21:42:31.859081+00:00",
+        "finished_at": "2026-10-26T21:44:14.116597+00:00",
+        "returncode": 0,
+        "identity": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/maintenance-timeout-20261027/traceability-generate.txt",
+          "sha256": "c1ba51b056e87645e7f684c7bd35561d1c602dc1d1c14a6209728564e8138b49",
+          "bytes": 267
+        },
+        "result_verified_in_log": true
+      },
+      {
+        "name": "maintenance-fast-checks.txt",
+        "argv": [
+          "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+          "-B",
+          "scripts/ci_lint.py",
+          "--plan",
+          "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/maintenance-timeout-20261027/maintenance-plan.json"
+        ],
+        "started_at": "2026-10-26T21:44:14.121350+00:00",
+        "finished_at": "2026-10-26T21:46:27.522714+00:00",
+        "returncode": 0,
+        "identity": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/maintenance-timeout-20261027/maintenance-fast-checks.txt",
+          "sha256": "8b99f066ae3c11a76a6132b86770f37095918fc83a4641f4c35e2527f3ae2878",
+          "bytes": 1707
+        },
+        "result_verified_in_log": true
+      },
+      {
+        "name": "capability-suite.txt",
+        "argv": [
+          "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "evas/capabilities",
+          "-p",
+          "test_*.py",
+          "-v"
+        ],
+        "started_at": "2026-10-26T21:46:27.532370+00:00",
+        "finished_at": "2026-10-26T21:58:52.470832+00:00",
+        "returncode": 0,
+        "identity": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/maintenance-timeout-20261027/capability-suite.txt",
+          "sha256": "4cfa1eed24a9e214f63ae3b0727daa518e115e982c3c1d5e3689346aed7ecdf1",
+          "bytes": 11476
+        },
+        "result_verified_in_log": true
+      },
+      {
+        "name": "inventory-entry-tests.txt",
+        "argv": [
+          "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "scripts/tests",
+          "-p",
+          "test_ci_inventory.py",
+          "-v"
+        ],
+        "started_at": "2026-10-26T21:58:52.470988+00:00",
+        "finished_at": "2026-10-26T21:58:55.977227+00:00",
+        "returncode": 0,
+        "identity": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/maintenance-timeout-20261027/inventory-entry-tests.txt",
+          "sha256": "9df2d6454cde2b38495263ba0ca42f3a3b6dc98ba981cc63e030ad0f494c1401",
+          "bytes": 3725
+        },
+        "result_verified_in_log": true
+      }
+    ],
+    "reused_prior_reviews": {
+      "R1": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr4-168a9d7a-astra-r1-20261027/review-report.json",
+        "sha256": "523dec2ae1b146a82e060e15729331a08078c7f991f77e9bfcdd7cef67da8bd4",
+        "bytes": 39113
+      },
+      "R2": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr4-context-increment-astra-r2-20261027/review-report.json",
+        "sha256": "fb6205de563079e02fd96f75ff1901f2fbe50ec70b3408de31f0cb43c963b7e9",
+        "bytes": 21409
+      }
+    },
+    "old_failed_CI": {
+      "job": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/ci-40401293291/static-cancelled/job.json",
+        "sha256": "9cf4c8b02240602113aa89340455dcc412c4c2be19851f0803c7a82e9a622e1a",
+        "bytes": 2605
+      },
+      "annotations": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/ci-40401293291/static-cancelled/annotations.json",
+        "sha256": "cb17d23674a675b257c7b3ff5d2b77ad5efe1dd19581f087ee6340cb7944808b",
+        "bytes": 1701
+      },
+      "log": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/ci-40401293291/static-cancelled/job.log",
+        "sha256": "97282bc7d6431360ab5832c60866297e4bc1e300283a62c0fae0f6c441d4c40d",
+        "bytes": 152657
+      },
+      "diagnosis": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/ci-40401293291/static-cancelled/diagnosis.json",
+        "sha256": "5e4189e5720b2e5963005d024e58cc1bd031c1fa451a9de751e514ce8f4f452f",
+        "bytes": 1367
+      },
+      "run": 40401293291,
+      "head": "bd0fd88494d40826b30becfdb055729f5661952a",
+      "job_id": 121849922826,
+      "conclusion": "cancelled",
+      "timeout_annotation_verified": true,
+      "scripts": {
+        "methods": 557,
+        "passed": 523,
+        "skipped_external_harness": 34,
+        "seconds_from_log": "194.736",
+        "derivation": "terminal result lines including multiline positive controls, checked against unittest Ran/OK summary"
+      },
+      "capabilities_completed": false,
+      "assertion_failure_observed": false,
+      "whole_CI_accepted": false
+    },
+    "raw_material_not_reaudited": {
+      "identity": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/ci-40401293291/raw-verification.json",
+        "sha256": "0fd24f7ef6f9cdfbe4a1e50b63abd149e00c4812222051ef18a79e57a35190c3",
+        "bytes": 6140
+      },
+      "raw_successful": false,
+      "semantic_qualification": false,
+      "raw_material_reaudited": false,
+      "scientific_code_unchanged_by_complete_tree_comparison": true,
+      "prior_observed_method_outcomes": {
+        "passed": 2617,
+        "error": 214,
+        "failed": 423,
+        "expected_failure": 3
+      }
+    },
+    "reviewer_probe_corrections": [
+      {
+        "probe": "catalog layout inspection",
+        "result": "read-only FileNotFoundError",
+        "cause": "Initially read catalog/asset-index.json; generated files actually reside below catalog/tree/evas/capabilities/data.",
+        "candidate_defect": false
+      },
+      {
+        "probe": "catalog current source count",
+        "result": "independent assertion rejected reviewer projection",
+        "cause": "Counting source: prefix included eight normative header sources. Corrected to current versions in catalog-sources.json, matching generator values scope.",
+        "candidate_defect": false,
+        "evidence": "catalog-audit-command.json.probe-r1"
+      },
+      {
+        "probe": "archived CI log line parsing",
+        "result": "read-only StopIteration",
+        "cause": "Inline regex was overescaped and did not strip timestamps. Corrected to split the timestamp delimiter before matching result lines.",
+        "candidate_defect": false
+      },
+      {
+        "probe": "governance canonical digest",
+        "result": "reviewer projection rejected unchanged exact file",
+        "cause": "Applied catalog ensure_ascii=False encoding to governance. The governance protocol uses default ASCII escaping; exact file SHA already matched. Corrected the probe to the owning protocol.",
+        "candidate_defect": false,
+        "evidence": "evidence-audit-command.json.probe-r1"
+      },
+      {
+        "probe": "summary-check output decoding",
+        "result": "checker rc0; reviewer JSON decoding rejected plain text",
+        "cause": "The checker defaults to compact text unless --json is given. Preserved and reused its successful original stdout; did not rerun it.",
+        "candidate_defect": false,
+        "evidence": "review-output-check.stdout"
+      }
+    ],
+    "primary_temporary_tool_error": {
+      "candidate_defect": false,
+      "receipt": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/maintenance-timeout-20261027/primary-probe-correction.json",
+        "sha256": "7c0a5d3434d8639bbda43082b88b3a19808ee294776ed756109b7b297ac5e84d",
+        "bytes": 791
+      },
+      "failed_script": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/maintenance-timeout-20261027/prepare-r1-import-error.py",
+        "sha256": "0fd70b2ba51976f5220fb1621ac5eee2c11bbe88ca624e22c91e19a1b890d974",
+        "bytes": 12260
+      },
+      "stderr": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/timeout-prepare.stderr",
+        "sha256": "2ea0da61e5f23bceeffc58ac2595b02129a47540b00f92e13d5548fabf4ca8f5",
+        "bytes": 450
+      },
+      "actual_parser_verified_independently": "catalog-audit.json"
+    },
+    "full_catalog_generation_reexecuted": false,
+    "unchanged_scientific_regressions_or_tests_reexecuted": false,
+    "review_output_check": "review-output-check.json",
+    "report_consistency_check": {
+      "six_paths_covered": true,
+      "all_head_file_hashes_match_saved_fixed_objects": true,
+      "report_JSON_parseable": true,
+      "no_findings": true,
+      "CI_and_semantic_limits_explicit": true
+    }
+  },
+  "publication_and_CI": {
+    "PR": "https://github.com/BucketSran/vaEVAS/pull/264",
+    "head": "98b45a347c05b8868cb8d776c5fee7dcc3e8fb3d",
+    "tree": "60d107907a39d5ac4da23c3e274572ee4153d42e",
+    "publication_evidence": {
+      "receipt": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/maintenance-timeout-20261027/publication.json",
+        "sha256": "1fb3e78d38a2b95f14fbd05e4cb34939a72428416bb091ca7618ee9024f9e857",
+        "bytes": 798
+      },
+      "reported_published": true,
+      "archived_host_receipt": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/maintenance-timeout-20261027/initial-host-pr.json",
+        "sha256": "ce2f16a2e74df4a699fbecadf311e0ca4e83caf28c83f8e719bfe39b8380b04c",
+        "bytes": 742
+      },
+      "archived_host_snapshot": {
+        "state": "OPEN",
+        "headRefOid": "98b45a347c05b8868cb8d776c5fee7dcc3e8fb3d",
+        "mergeStateStatus": "UNSTABLE"
+      },
+      "live_remote_verification_performed": false
+    },
+    "thread_PR_registered": true,
+    "association_check": "pr-registration.json",
+    "new_candidate_necessary_CI_terminal_state_verified": false,
+    "old_CI_whole_accepted": false,
+    "new_candidate_merge_verified": false,
+    "watch_or_poll_performed": false,
+    "acceptance_owner": "主控"
+  },
+  "remaining_limits": [
+    "本轮只审核指定的六文件增量，不重新评价已接受且未变的 E1 raw、7737 映射或科学判据。",
+    "两项旧 P2 的闭合沿用 R2 对 C1 快照 307a30ef 的接受，不表示本 C0 启用了 C1 六个入口，也不表示最终 C1 集成或 CI 完成。",
+    "未执行科学回归、DUT/kernel 编译、真实 backend 或 SSH；没有重跑 557 脚本组或完整生成器。确定性输出由本轮对象关系核查与匹配收据支持。",
+    "新 head 的 CI 终态和合入结果未核验；只读本地已存发布/host 收据，没有 live PR 查询或轮询。",
+    "旧 E1 423 failed、214 error、3 xfail 及原 20 份候选保留，raw_successful 和 semantic_qualification 均为 false。"
+  ],
+  "raw_successful": false,
+  "semantic_qualification": false,
+  "scientific_qualification": false,
+  "artifacts": {
+    "review_report": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr264-maintenance-timeout-astra-r3-20261027/review-report.json",
+    "summary": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr264-maintenance-timeout-astra-r3-20261027/summary.txt",
+    "scope": "scope-audit.json",
+    "catalog": "catalog-audit.json",
+    "evidence": "evidence-audit.json"
+  },
+  "instructions_read": [
+    {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/AGENTS.md",
+      "sha256": "9ad768b094d781d0e610002fc0073ff436fb8a749509db96fcb5ee233140236a",
+      "applied_sections": "task routing, ownership and read-only review"
+    },
+    {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/CONTRIBUTING.md",
+      "sha256": "88a7136620ad0bd3841d151fc47cfc2eb6ed1637645007beef2f11d2d4cc381c",
+      "applied_sections": "scope and authorization; reviewing diffs; concise review delivery"
+    },
+    {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/scripts/README.md",
+      "sha256": "474015276936a59fce736aa86e3b6efab9d97b973f8b3b998ea00c13c2d012e5",
+      "applied_sections": "development records; compact output"
+    },
+    {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/.agents/skills/vaevas-review-pr/SKILL.md",
+      "sha256": "4a6dd9587c60f1d4614ff02b0f5184d26ca6f9af27e3892b842374825e206109",
+      "applied_sections": "review workflow"
+    },
+    {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/.agents/skills/evas-validate/SKILL.md",
+      "sha256": "5d434a2d915ad50ac7c5ce024cc01f780ac65e3288bae1846eafedb9894e9d6e",
+      "applied_sections": "revalidation, archived evidence reuse and count boundaries"
+    },
+    {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/evas/capabilities/README.md",
+      "sha256": "d3b2a3fc4526593172a656789fb1bde84ac770593b4ec3021d00f2d2e96a0735",
+      "applied_sections": "version identities, history, source binding and generation"
+    },
+    {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/README.md",
+      "sha256": "2035fc0ca5fc4401e9bb1f5b3dfb03afa8f8f72f8b21011c904c74ffb0d4e689",
+      "applied_sections": "T3 multimodel workflow and acceptance boundaries"
+    },
+    {
+      "path": "/Users/bucketsran/Documents/agent-skills/README.md",
+      "sha256": "3ee971db57fc3d1570ed7f795a794e625e9232915cdf1880be4621e16d6720d7",
+      "applied_sections": "shared collaboration workflow"
+    },
+    {
+      "path": "/Users/bucketsran/.codex/skills/unslop/SKILL.md",
+      "sha256": "195411d320b5b328f9f642baf59757ed19aaf0931c0838740e0aca273d538dc1",
+      "applied_sections": "plain-language report"
+    }
+  ]
+}

@@ -1,0 +1,279 @@
+{
+  "accepted_at_utc": "2026-10-26T23:56:05.881708+00:00",
+  "candidate": "2a0e173a2164f6f7a0b544e344e4463226ad26c1",
+  "tree": "97646c20beff0c4e098f066458714231d565cbd9",
+  "base": "cfe0ac45f75677fbd1e4dbf6243740b16d1caab0",
+  "new_independent_review": false,
+  "policy_basis": "Standing T3 rule: accepted source and evidence identity may be reused; pure deterministic generated changes are verified by the controller, not assigned a duplicate review.",
+  "reviews": [
+    {
+      "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/night-coordination/pr4-168a9d7a-astra-r1-20261027/review-report.json",
+      "sha256": "523dec2ae1b146a82e060e15729331a08078c7f991f77e9bfcdd7cef67da8bd4"
+    },
+    {
+      "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/night-coordination/pr4-context-increment-astra-r2-20261027/review-report.json",
+      "sha256": "fb6205de563079e02fd96f75ff1901f2fbe50ec70b3408de31f0cb43c963b7e9"
+    },
+    {
+      "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/night-coordination/pr264-maintenance-timeout-astra-r3-20261027/review-report.json",
+      "sha256": "8aa8e372d0bee6395c7b6bebe812ddcb94a031f321abc1032a13ec6e5347181f"
+    }
+  ],
+  "original_findings": [
+    "PR4-MAINT-01",
+    "PR4-MAINT-02"
+  ],
+  "closed_by_independent_R2": true,
+  "remaining_actionable_findings": [],
+  "source_files": [
+    {
+      "path": ".github/workflows/numerical-assurance.yml",
+      "sha256": "76c7387d4c8a3390edc2ba440f169c14794301867d1f277d3488b654cf585682",
+      "reviewed_source_snapshot": "307a30ef89ce843dba905b7942b39d9dce098190",
+      "composition": "Accepted C1 source plus accepted main maintenance timeout"
+    },
+    {
+      "path": "evas/tests/test_bound_step.py",
+      "sha256": "8bae51b61822f4a365766887e8793b9b024553fcc644289ce21092cdfbff7744",
+      "reviewed_source_snapshot": "307a30ef89ce843dba905b7942b39d9dce098190",
+      "composition": "Exact accepted C1 source"
+    },
+    {
+      "path": "evas/tests/test_deferred_rdist.py",
+      "sha256": "41ed77da87c25c4ac48d1ea3514702417febddc3f7df95aeceb7d50baaa7631b",
+      "reviewed_source_snapshot": "307a30ef89ce843dba905b7942b39d9dce098190",
+      "composition": "Exact accepted C1 source"
+    },
+    {
+      "path": "evas/tests/test_source_math.py",
+      "sha256": "ef2f50533a53b1fd9f588fc14c6bb6dc56c30da92fa5a33c5bbe7851c345ad54",
+      "reviewed_source_snapshot": "307a30ef89ce843dba905b7942b39d9dce098190",
+      "composition": "Exact accepted C1 source"
+    },
+    {
+      "path": "evas/validation/checker_calibration/README.md",
+      "sha256": "6a1d923f65be68306da57516af04d61e230f8bb4a09c6ad8436812bd741bde13",
+      "reviewed_source_snapshot": "307a30ef89ce843dba905b7942b39d9dce098190",
+      "composition": "Exact accepted C1 source"
+    },
+    {
+      "path": "evas/validation/checker_calibration/fixtures/provenance.json",
+      "sha256": "28b14e021b3ab5c563d3d5a4c7cbb5c379e260100fc606cab5d57743a05303c3",
+      "reviewed_source_snapshot": "307a30ef89ce843dba905b7942b39d9dce098190",
+      "composition": "Exact accepted C1 source"
+    },
+    {
+      "path": "evas/validation/checker_calibration/fixtures/source_math.json",
+      "sha256": "3c0a697b66055fc4c9124198ad15c55e896a87af70add85bd9f760c3cb34aad2",
+      "reviewed_source_snapshot": "307a30ef89ce843dba905b7942b39d9dce098190",
+      "composition": "Exact accepted C1 source"
+    },
+    {
+      "path": "evas/validation/checker_calibration/fixtures/test_bound_caps_actual_nonlinear_integration_segments--identity--0.diagnostics.json",
+      "sha256": "5cf94f240a17c45ea3a5d219e089471a86c458626c90e32c45b141ef42fb9a74",
+      "reviewed_source_snapshot": "307a30ef89ce843dba905b7942b39d9dce098190",
+      "composition": "Exact accepted C1 source"
+    },
+    {
+      "path": "evas/validation/checker_calibration/fixtures/test_bound_caps_actual_nonlinear_integration_segments--identity--0.original-response.json",
+      "sha256": "2bf0767fe7a6241813b047b662c2506447439ca83e8e1d89dac227b68e3211b5",
+      "reviewed_source_snapshot": "307a30ef89ce843dba905b7942b39d9dce098190",
+      "composition": "Exact accepted C1 source"
+    },
+    {
+      "path": "evas/validation/checker_calibration/fixtures/test_bound_caps_actual_nonlinear_integration_segments--identity--0.request.json",
+      "sha256": "d320c50b4d1a1889edda8bcc6fba79b80ce0a974e3dd299024ea29612abe9be2",
+      "reviewed_source_snapshot": "307a30ef89ce843dba905b7942b39d9dce098190",
+      "composition": "Exact accepted C1 source"
+    },
+    {
+      "path": "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.diagnostics.json",
+      "sha256": "a44dc5e299aa05830b9352d840bc252870f5fcb10b8f658b10fa72176bb76314",
+      "reviewed_source_snapshot": "307a30ef89ce843dba905b7942b39d9dce098190",
+      "composition": "Exact accepted C1 source"
+    },
+    {
+      "path": "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.original-response.json",
+      "sha256": "3616d402a8653ab2333e9ece3b9c204ce71eed0701b3b8336e7c4db866a8f510",
+      "reviewed_source_snapshot": "307a30ef89ce843dba905b7942b39d9dce098190",
+      "composition": "Exact accepted C1 source"
+    },
+    {
+      "path": "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.request.json",
+      "sha256": "c67d8e1b2ad4dd15db2fbe64937d86bf5fc078b1e66a01839979d5a619092efc",
+      "reviewed_source_snapshot": "307a30ef89ce843dba905b7942b39d9dce098190",
+      "composition": "Exact accepted C1 source"
+    },
+    {
+      "path": "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.original-response.json",
+      "sha256": "830d7dc4a8585b6cc71c36985ef6f7ce1228a710fee2f30ff87d116581c8ded6",
+      "reviewed_source_snapshot": "307a30ef89ce843dba905b7942b39d9dce098190",
+      "composition": "Exact accepted C1 source"
+    },
+    {
+      "path": "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.request.json",
+      "sha256": "77cd33129b13e93b6cde1c86b9936865ca2b51762857af4f25bd06b550fa5a90",
+      "reviewed_source_snapshot": "307a30ef89ce843dba905b7942b39d9dce098190",
+      "composition": "Exact accepted C1 source"
+    },
+    {
+      "path": "evas/validation/checker_calibration/fixtures/validator_predicates.json",
+      "sha256": "1e4e74c05dddaa010a49f3545bdd413f7f2ae68dcad635198c021eef1a928ecc",
+      "reviewed_source_snapshot": "307a30ef89ce843dba905b7942b39d9dce098190",
+      "composition": "Exact accepted C1 source"
+    },
+    {
+      "path": "evas/validation/checker_calibration/test_detector_controls.py",
+      "sha256": "2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661",
+      "reviewed_source_snapshot": "307a30ef89ce843dba905b7942b39d9dce098190",
+      "composition": "Exact accepted C1 source"
+    },
+    {
+      "path": "scripts/materialize_registration_bundle.py",
+      "sha256": "b3e821f65ef738d8611c0b021066a4b4b4bbd1632bbbcc48336d7e750d6ea305",
+      "reviewed_source_snapshot": "307a30ef89ce843dba905b7942b39d9dce098190",
+      "composition": "Exact accepted C1 source"
+    },
+    {
+      "path": "scripts/tests/git_fixture.py",
+      "sha256": "d1108193b8a3ad5e41acd1ecda5ac07f920245e351b1ea69a8779b4e76eae0d8",
+      "reviewed_source_snapshot": "307a30ef89ce843dba905b7942b39d9dce098190",
+      "composition": "Exact accepted C1 source"
+    },
+    {
+      "path": "scripts/tests/test_asset_observer.py",
+      "sha256": "9624d1833875b0d97e343c1054a5125bb88c1ff8e60ebd1694c3f0147936b8c6",
+      "reviewed_source_snapshot": "307a30ef89ce843dba905b7942b39d9dce098190",
+      "composition": "Exact accepted C1 source"
+    },
+    {
+      "path": "scripts/tests/test_catalog_history_selection.py",
+      "sha256": "56a20eb84fc607089a7d8176fc15646872fbc8b0708ea62bb9ec839d8abbf44d",
+      "reviewed_source_snapshot": "307a30ef89ce843dba905b7942b39d9dce098190",
+      "composition": "Exact accepted C1 source"
+    },
+    {
+      "path": "scripts/tests/test_ci_evidence_v3.py",
+      "sha256": "82ba35d3a2aae409546dda6534d1febd379ac57d47eacd47cbc9577c969b108c",
+      "reviewed_source_snapshot": "307a30ef89ce843dba905b7942b39d9dce098190",
+      "composition": "Exact accepted C1 source"
+    },
+    {
+      "path": "scripts/tests/test_ci_inventory.py",
+      "sha256": "7a201a97a28de706e6b5d8f73639eee1d4b44479f018f2d0d91defc14fc5fe43",
+      "reviewed_source_snapshot": "307a30ef89ce843dba905b7942b39d9dce098190",
+      "composition": "Exact accepted C1 source"
+    },
+    {
+      "path": "scripts/tests/test_ci_selection.py",
+      "sha256": "0ab29948f24541ddf54c66c4f7905a698e63110f373f72def7b2d4cdabfe7d53",
+      "reviewed_source_snapshot": "307a30ef89ce843dba905b7942b39d9dce098190",
+      "composition": "Exact accepted C1 source"
+    },
+    {
+      "path": "scripts/tests/test_discover_rust.py",
+      "sha256": "6071acf9b4de20ed9ea657b800ce0e839e8118772dc4c27148f6f6d79c1eb00d",
+      "reviewed_source_snapshot": "307a30ef89ce843dba905b7942b39d9dce098190",
+      "composition": "Exact accepted C1 source"
+    },
+    {
+      "path": "scripts/tests/test_fast_feedback.py",
+      "sha256": "1c98077c0ee72cde6ce8268e6d2f4adff5b968fece73d6184ce38f358c4b6fed",
+      "reviewed_source_snapshot": "307a30ef89ce843dba905b7942b39d9dce098190",
+      "composition": "Exact accepted C1 source"
+    },
+    {
+      "path": "scripts/tests/test_git_fixture_isolation.py",
+      "sha256": "c1111ef7be9b8fb0a45d2ce4350c28562d7dffa81dae04c9f88477d3b0ce4116",
+      "reviewed_source_snapshot": "307a30ef89ce843dba905b7942b39d9dce098190",
+      "composition": "Exact accepted C1 source"
+    },
+    {
+      "path": "scripts/tests/test_independent_ci.py",
+      "sha256": "00aa69f258fe131279622065a09b6cacd4727f935f2c566ab6354664996bc3ff",
+      "reviewed_source_snapshot": "307a30ef89ce843dba905b7942b39d9dce098190",
+      "composition": "Exact accepted C1 source"
+    },
+    {
+      "path": "scripts/tests/test_registration_bundle.py",
+      "sha256": "70ac1bfe2265918d482b1c263cfe1e7ef41b3d8a8e08ee1c0c489af521ed4530",
+      "reviewed_source_snapshot": "307a30ef89ce843dba905b7942b39d9dce098190",
+      "composition": "Exact accepted C1 source"
+    },
+    {
+      "path": "scripts/tests/test_regression_admission.py",
+      "sha256": "d804f6917b3cf08895fc43e87eff16239e97324d4f30148c8fbf80e8afe8e52d",
+      "reviewed_source_snapshot": "307a30ef89ce843dba905b7942b39d9dce098190",
+      "composition": "Exact accepted C1 source"
+    },
+    {
+      "path": "scripts/tests/test_regression_gate.py",
+      "sha256": "93f126aa0237d28a870e745981752522be5e731dd056d35acc6a3ddbbec1da16",
+      "reviewed_source_snapshot": "307a30ef89ce843dba905b7942b39d9dce098190",
+      "composition": "Exact accepted C1 source"
+    },
+    {
+      "path": "scripts/tests/test_regression_input_subject.py",
+      "sha256": "8c81e0e8b085e9e5a6e4cdf4f55191322563236dd2a15849adb7574057a3612d",
+      "reviewed_source_snapshot": "307a30ef89ce843dba905b7942b39d9dce098190",
+      "composition": "Exact accepted C1 source"
+    },
+    {
+      "path": "scripts/tests/test_rust_catalog_reconcile.py",
+      "sha256": "9ed4c2b0309c4fe8a15dbf91b81710a0eea902b408529e43fe3fa5531337ec7e",
+      "reviewed_source_snapshot": "307a30ef89ce843dba905b7942b39d9dce098190",
+      "composition": "Exact accepted C1 source"
+    },
+    {
+      "path": "scripts/tests/test_trusted_regression_gate.py",
+      "sha256": "a3d1a6e26e88924486ced360c12fac6cc4aab00b6e71a1cc8a1ebebe9352898d",
+      "reviewed_source_snapshot": "307a30ef89ce843dba905b7942b39d9dce098190",
+      "composition": "Exact accepted C1 source"
+    },
+    {
+      "path": "scripts/tests/test_workspaces.py",
+      "sha256": "ca0ddf9cf589361193151acb2455335557d7a5cd5d2e9f17ce3cf29765c52188",
+      "reviewed_source_snapshot": "307a30ef89ce843dba905b7942b39d9dce098190",
+      "composition": "Exact accepted C1 source"
+    }
+  ],
+  "changed_source_paths": [
+    ".github/workflows/numerical-assurance.yml",
+    "evas/tests/test_bound_step.py",
+    "evas/tests/test_deferred_rdist.py",
+    "evas/tests/test_source_math.py",
+    "evas/validation/checker_calibration/README.md",
+    "evas/validation/checker_calibration/fixtures/provenance.json",
+    "evas/validation/checker_calibration/fixtures/source_math.json",
+    "evas/validation/checker_calibration/fixtures/test_bound_caps_actual_nonlinear_integration_segments--identity--0.diagnostics.json",
+    "evas/validation/checker_calibration/fixtures/test_bound_caps_actual_nonlinear_integration_segments--identity--0.original-response.json",
+    "evas/validation/checker_calibration/fixtures/test_bound_caps_actual_nonlinear_integration_segments--identity--0.request.json",
+    "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.diagnostics.json",
+    "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.original-response.json",
+    "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.request.json",
+    "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.original-response.json",
+    "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.request.json",
+    "evas/validation/checker_calibration/fixtures/validator_predicates.json",
+    "evas/validation/checker_calibration/test_detector_controls.py",
+    "scripts/tests/test_catalog_history_selection.py",
+    "scripts/tests/test_ci_inventory.py"
+  ],
+  "deterministic_generated_paths": [
+    "evas/capabilities/data/asset-index.json",
+    "evas/capabilities/data/catalog-sources.json",
+    "evas/capabilities/data/entrypoint-index.json",
+    "evas/capabilities/data/historical-index.json",
+    "evas/capabilities/data/method-index.json",
+    "evas/capabilities/data/registry.json",
+    "evas/capabilities/generated/normative.md",
+    "evas/docs/development/TRACEABILITY.md"
+  ],
+  "generated_version_preservation": 39229,
+  "generation_acceptance": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/c1-rebind-20261027/generation-acceptance.json",
+  "precheck": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/c1-rebind-20261027/precheck-acceptance.json",
+  "trusted_main_workflow_check": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/c1-rebind-20261027/activation-workflow-acceptance.json",
+  "necessary_new_CI": "pending",
+  "merged": false,
+  "batch4_accepted": false,
+  "scientific_qualification": false
+}

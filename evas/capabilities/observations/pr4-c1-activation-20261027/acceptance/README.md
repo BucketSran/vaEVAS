@@ -1,0 +1,3 @@
+# Local acceptance before final candidate CI
+
+These are the final C1 generation, precheck and trusted-main admission records. The original R1, R2 and R3 Astra reports are retained unchanged; the controller reuse record binds their accepted source to the final candidate. The original R1 findings remain visible and were closed by R2. These files do not claim candidate CI or merged-tree acceptance. The constructor directory preserves its earlier script; the acceptance directory records the later actual-workflow check separately. The archive has the fixed R2 C1 review snapshot as an additional parent so that source remains publicly reachable. Scientific qualification is false.

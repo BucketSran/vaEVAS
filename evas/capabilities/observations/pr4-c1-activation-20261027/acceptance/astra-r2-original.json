@@ -1,0 +1,390 @@
+{
+  "schema_version": 1,
+  "review_status": "completed_no_actionable_findings",
+  "reviewed_at_utc": "2026-10-26T21:16:21.416685+00:00",
+  "reviewer": {
+    "independent_fresh_context": true,
+    "single_round_combined_standards_spec": true,
+    "provider": "codex",
+    "model": "gpt-6-astra",
+    "options": [
+      {
+        "id": "reasoningEffort",
+        "value": "max"
+      },
+      {
+        "id": "serviceTier",
+        "value": "default"
+      }
+    ],
+    "runtime_evidence": "runtime.json",
+    "delegated_again": false
+  },
+  "scope": {
+    "C0": {
+      "base": "842bde7101164330fa03e7aee58b45d1789cbed1",
+      "head": "bd0fd88494d40826b30becfdb055729f5661952a",
+      "tree": "0c6ef20aadb8a8f55965a7fd606702c9938b30db",
+      "paths": [
+        ".github/workflows/numerical-assurance.yml",
+        "evas/capabilities/data/asset-index.json",
+        "evas/capabilities/data/catalog-sources.json",
+        "evas/capabilities/data/entrypoint-index.json",
+        "evas/capabilities/data/historical-index.json",
+        "evas/capabilities/data/method-index.json",
+        "evas/capabilities/data/registry.json",
+        "evas/docs/development/TRACEABILITY.md",
+        "evas/validation/baselines/regression-v1.review.json",
+        "scripts/context-registration-bundle.json",
+        "scripts/materialize_registration_bundle.py",
+        "scripts/tests/git_fixture.py",
+        "scripts/tests/test_asset_observer.py",
+        "scripts/tests/test_ci_evidence_v3.py",
+        "scripts/tests/test_ci_selection.py",
+        "scripts/tests/test_discover_rust.py",
+        "scripts/tests/test_fast_feedback.py",
+        "scripts/tests/test_git_fixture_isolation.py",
+        "scripts/tests/test_independent_ci.py",
+        "scripts/tests/test_registration_bundle.py",
+        "scripts/tests/test_regression_admission.py",
+        "scripts/tests/test_regression_gate.py",
+        "scripts/tests/test_regression_input_subject.py",
+        "scripts/tests/test_rust_catalog_reconcile.py",
+        "scripts/tests/test_trusted_regression_gate.py",
+        "scripts/tests/test_workspaces.py"
+      ],
+      "path_count": 26,
+      "PR": "https://github.com/BucketSran/vaEVAS/pull/264",
+      "file_identity_evidence": "scope-audit.json#/c0",
+      "complete_base_to_head_diff": true,
+      "scientific_criteria_DUT_language_changed": false
+    },
+    "C1_increment": {
+      "base": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+      "head": "307a30ef89ce843dba905b7942b39d9dce098190",
+      "tree": "60e2dfd863a8d3c0c1bc4001ab6f81ca5d70b7a0",
+      "paths": [
+        "scripts/materialize_registration_bundle.py",
+        "scripts/tests/test_catalog_history_selection.py",
+        "scripts/tests/test_ci_inventory.py",
+        "scripts/tests/test_registration_bundle.py"
+      ],
+      "path_count": 4,
+      "delivery_candidate": false,
+      "generated_catalog_or_CI_claimed": false,
+      "consumer_PR": "https://github.com/BucketSran/vaEVAS/pull/263"
+    },
+    "prior_review": {
+      "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/night-coordination/pr4-168a9d7a-astra-r1-20261027/review-report.json",
+      "sha256": "523dec2ae1b146a82e060e15729331a08078c7f991f77e9bfcdd7cef67da8bd4",
+      "reused_scope": "固定 E1 十角色及 7737 映射的独审结论；逐字相同的 14 个隔离 fixture 文件和既有接线。没有重开旧科学范围。"
+    },
+    "read_only_git_argv_prefix": [
+      "/usr/bin/git",
+      "--no-lazy-fetch",
+      "--git-dir=/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/.git/worktrees/ir33-regression-night",
+      "--work-tree=/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night"
+    ],
+    "write_directory": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/night-coordination/pr4-context-increment-astra-r2-20261027",
+    "real_worktree_HEAD_used_as_candidate": false,
+    "old_20_candidates_included": false,
+    "old_20_worktree_diff_read": false,
+    "scientific_regression_simulator_compilation_SSH_backend_executed": false,
+    "new_git_fixture_created": false,
+    "git_environment_boundary": "子进程先清除 GIT_*；真实 Git 定位仅传给明确的只读对象命令，并使用 --no-lazy-fetch / GIT_OPTIONAL_LOCKS=0。没有把真实 Git 环境传给测试进程树。"
+  },
+  "instructions_read": [
+    {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/AGENTS.md",
+      "sha256": "9ad768b094d781d0e610002fc0073ff436fb8a749509db96fcb5ee233140236a"
+    },
+    {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/README.md",
+      "sha256": "0204fceb30b14bed154199320c11652cb845e0f659fe441ef5f6825e8fb477c5"
+    },
+    {
+      "path": "/Users/bucketsran/Documents/agent-skills/README.md",
+      "sha256": "3ee971db57fc3d1570ed7f795a794e625e9232915cdf1880be4621e16d6720d7"
+    },
+    {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/CONTRIBUTING.md",
+      "sha256": "88a7136620ad0bd3841d151fc47cfc2eb6ed1637645007beef2f11d2d4cc381c"
+    },
+    {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/docs/contributing/workspaces.md",
+      "sha256": "e4db0dcc68a7c92d85027131700e5c9da47eadd503c34aaa02f8e16d9c2c849c"
+    },
+    {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/scripts/README.md",
+      "sha256": "474015276936a59fce736aa86e3b6efab9d97b973f8b3b998ea00c13c2d012e5"
+    },
+    {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/.agents/skills/vaevas-review-pr/SKILL.md",
+      "sha256": "4a6dd9587c60f1d4614ff02b0f5184d26ca6f9af27e3892b842374825e206109"
+    },
+    {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/.agents/skills/evas-validate/SKILL.md",
+      "sha256": "5d434a2d915ad50ac7c5ce024cc01f780ac65e3288bae1846eafedb9894e9d6e"
+    },
+    {
+      "path": "/Users/bucketsran/.codex/skills/unslop/SKILL.md",
+      "sha256": "195411d320b5b328f9f642baf59757ed19aaf0931c0838740e0aca273d538dc1"
+    }
+  ],
+  "Standards": {
+    "findings": [],
+    "conclusion": "本轮固定范围无新的可操作 Standards 发现。两项旧 P2 的修正已在 C1 只读快照及匹配测试证据中闭合；最终 C1 集成和 CI 仍待主控完成。",
+    "assessments": [
+      {
+        "area": "固定范围和预检身份",
+        "result": "C0 26 文件、C1 4 文件及 tree 均由真实 Git 对象核对。C0 全部文件 SHA 与 final-candidate、precheck 一致；两个固定端点 diff --check 均通过。",
+        "evidence": "scope-audit.json"
+      },
+      {
+        "area": "先前已审隔离修正",
+        "result": "14 个 C0 fixture 文件与 R1 完全相同；registration_bundle 的 fixture 隔离部分保留，新 codec 单独核查。不宣称通用 Git 沙箱。",
+        "evidence": "scope-audit.json#/unchanged_r1_fixture_paths"
+      },
+      {
+        "area": "C0/C1 库存分离",
+        "result": "固定 parser 对 C0 得到 23 literal＝7 maintenance＋16 validation，C1 得到 29＝7＋22；primary 单列。C1 手写完整入口表与实际解析结果逐项相同。",
+        "evidence": "evidence-audit.json"
+      },
+      {
+        "area": "历史及生成登记",
+        "result": "22,602 个旧对象版本逐对象相等保留。C0 当前 4,203 assets、4,572 methods；24 个 Python 入口的 4,665 实例与唯一方法数分开，5 个 Rust 入口另列。未添加资格对象，新增对象资格仍为 not-granted。",
+        "evidence": "evidence-audit.json#/catalog"
+      },
+      {
+        "area": "预检复用",
+        "result": "核对完整 ci_lint --plan 日志，包含 diagnostic_inventory、traceability --check --catalog-data、冻结身份、Rustfmt/Clippy；82 视图、C0 历史 3 方法及库存 20 方法日志和最终源身份匹配。本轮没有重跑编译或全回归。",
+        "evidence": "evidence-audit.json#/C0_prechecks_reused"
+      }
+    ]
+  },
+  "Spec": {
+    "findings": [],
+    "conclusion": "接受固定 C0 的运输增量及本报告列出的精确治理内容。接受以实际源码、字节和原独审证据为依据，不以 JSON 的 approved 字段作为审核证明。该接受不授予科学资格，也不表示 CI 或合入完成。",
+    "assessments": [
+      {
+        "area": "schema 2 运输",
+        "result": "schema 1 原字节复制；schema 2 只解码 kernel_binary 单个 gzip member。descriptor 严格区分整数与 bool，校验长度/小写 SHA；有界解码拒绝超长、短、CRC/ISIZE、尾随和第二 member。其他九角色不自动探测压缩，库存区分 stored/materialized。",
+        "locations": [
+          "scripts/materialize_registration_bundle.py:68",
+          "scripts/materialize_registration_bundle.py:150",
+          "scripts/materialize_registration_bundle.py:198"
+        ],
+        "evidence": "evidence-audit.json"
+      },
+      {
+        "area": "真实运输字节",
+        "result": "固定 archive 的十个实际 Git blob 与库存逐一绑定；物化文件与 R1 原件的长度/SHA 全相同。kernel 存储 22,916,941 bytes，物化 105,862,328 bytes，原 SHA b9574603… 保留；未执行 kernel。",
+        "evidence": "governance-audit.json#/ten_roles"
+      },
+      {
+        "area": "精确治理绑定",
+        "result": "由固定 E1 用未改 propose_baseline 精确重建 entry；除 provenance/review 外与原 pending entry 完全相同。authority 绑定旧 baseline canonical SHA、唯一 C0 context、唯一 entry、D0/kernel、E1 原始/执行/source 身份、九角色和显式 mapping。旧 review 仅追加一个授权，旧两个 context 的内容和顺序完整保留。",
+        "evidence": "governance-audit.json"
+      },
+      {
+        "area": "映射与科学边界",
+        "result": "逐项比较 7737 条映射，仅 review_reference 改为实际 R1 归档引用。R1 报告本地和 archive 的原字节 SHA 一致。637 个 failed/error 方法与 3 个 xfail 保留；这些结果不能计为科学通过。",
+        "evidence": "governance-audit.json"
+      },
+      {
+        "area": "信任来源和执行顺序",
+        "result": "生产 loader、comparator、registration validator 未修改。bootstrap 72f1c2e4…/SHA 30cb19e4… 不变。真实 workflow shell 的已有预览使用事件 C0 base，普通比较先行，后从同一 base 读取 helper/pointer；该相关源与最终 C0 相同。预览复用旧 C0 raw，不能替代本候选 CI，也没有把未知 C1 改为放行。",
+        "evidence": "governance-audit.json#/workflow_preview_reused"
+      }
+    ]
+  },
+  "prior_P2_closure": [
+    {
+      "id": "PR4-MAINT-01",
+      "priority": "P2",
+      "closed_in_exact_source_snapshot": true,
+      "revision": "307a30ef89ce843dba905b7942b39d9dce098190",
+      "file": "scripts/tests/test_ci_inventory.py",
+      "line": 89,
+      "basis": "明确 29 literal 的完整手写表、7 maintenance/22 validation、单独 primary 及六个新增入口；固定 parser 实际结果相同。匹配源码的 20 方法通过日志已校验。",
+      "production_parser_relaxed": false,
+      "remaining": "尚未作为最终 C1 交付集成或通过其 CI；不声称 PR263 的旧 head168 已修好。"
+    },
+    {
+      "id": "PR4-MAINT-02",
+      "priority": "P2",
+      "closed_in_exact_source_snapshot": true,
+      "revision": "307a30ef89ce843dba905b7942b39d9dce098190",
+      "file": "scripts/tests/test_catalog_history_selection.py",
+      "line": 44,
+      "basis": "方法和 owner 以 (id,version) 保留；previous 包含所需旧 owner，移动按完整引用选择。三协议旧方法/原 row 保留；新增当前版本移动及缺旧身份拒绝控制。匹配源码的 4 方法通过日志已校验。",
+      "production_selector_or_reader_relaxed": false,
+      "remaining": "最终 C1 重生成后的相关检查和必要 CI 仍由主控验收。"
+    }
+  ],
+  "exact_governance_decision": {
+    "decisions": {
+      "entry": {
+        "accepted": true,
+        "decision": "accept_exact_content_for_sequenced_adoption",
+        "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/governance-draft/entry.json",
+        "file_sha256": "b944bbc82cbfd3c62bbf1c41b437c56d5b1504fba9d1c4996b881779168f60b8",
+        "canonical_sha256": "f161e106f9ad26365a2c701ee1074f85b78326276f71b8e922cc717d9f8c0742"
+      },
+      "authority": {
+        "accepted": true,
+        "decision": "accept_exact_content_for_sequenced_adoption",
+        "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/governance-draft/authority.json",
+        "file_sha256": "e9eb30681cf5efe67502c137374d3969a34c4ec0dbd623202fb939e72fa3fb0c",
+        "canonical_sha256": "c3e5e50ba62abc5c1f3c7ac3107d51c2d2c3edd5f8fbff566af05f677bed013e"
+      },
+      "baseline_append": {
+        "accepted": true,
+        "decision": "accept_exact_content_for_sequenced_adoption",
+        "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/governance-draft/baseline-append.json",
+        "file_sha256": "be742ae2ae69579fdd4bc7dd8d110e05a71803f387f9d0831b58a6bed97ceff7",
+        "canonical_sha256": "a61e1c4d88a1e523e5663294db0c277681fb1b2790caccf343941715c7bb3599"
+      },
+      "review_record": {
+        "accepted": true,
+        "decision": "accept_exact_content_for_sequenced_adoption",
+        "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/governance-draft/review.json",
+        "file_sha256": "5e8165654a3903c151d07e2f325eae26f98e8da242fbb745e99db0fb22df5518",
+        "canonical_sha256": "73ec3216e747acdf4e70996c373971ef2a199ee48a4ee42945baf568d0abffab"
+      },
+      "bundle_pointer": {
+        "accepted": true,
+        "decision": "accept_exact_content_for_sequenced_adoption",
+        "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/governance-draft/bundle-pointer.json",
+        "file_sha256": "929441a0bdf490cfccbab06e8934137e453026eda7d37139b336ffcd4fc91cb2",
+        "canonical_sha256": "d538b684968da1097193a8b5db912c5993c399cae9eb680c7590ea11668168b4"
+      },
+      "mapping": {
+        "accepted": true,
+        "rows": 7737,
+        "original_file_sha256": "72decd6082b3126157876e2c718ead5f1233e4aa15ce9605d3f0c0d30517de13",
+        "canonical_sha256": "73867a9d0fb3f148e559a1fb637fb9f0038585ad23e2c9bdc1a77270fc7ebf8f",
+        "only_change": "review_reference，全部科学身份、outcome 绑定和顺序与 R1 接受的映射相同",
+        "review_reference": "https://raw.githubusercontent.com/BucketSran/vaEVAS/ae1cd723c5b24bd17af866805d7e6ac742cd8b86/evas/capabilities/observations/pr4-e1-40384473617/review/review-report.json#E1_independent_decision"
+      }
+    },
+    "acceptance_basis": "本轮直接源码和精确 JSON/hash/projection 核查，加上身份匹配的 R1 E1 独审及维护/真实 workflow 预览证据。不是预先写入 approved 的自我认证。",
+    "approved_field_treated_as_proposed_state": true,
+    "effective_authority_at_review": false,
+    "effective_only_after": [
+      "本轮对 exact 内容接受",
+      "固定 C0 必要 CI 满足",
+      "主控按授权将 C0 合入事件会选取的可信主线"
+    ],
+    "required_sequence": [
+      "先完成 PR264 固定 C0 helper/authority/pointer 的必要 CI，并在本轮审核接受后合入。",
+      "再提交并验收单独事务，只改 evas/validation/baselines/regression-v1.json，精确追加本报告绑定的 baseline-append 内容；事件可信 base 必须已经包含 C0 授权。",
+      "追加事务合入后，PR263 才作为 C1 激活消费者重绑/生成/预检并跑必要 CI，完成第 4 批正式验收。"
+    ],
+    "baseline_append_authorized_to_bypass_C0": false,
+    "scientific_qualification": false
+  },
+  "verification": {
+    "new_checks": [
+      {
+        "kind": "fixed-object identities / hashes / endpoint whitespace / workspace visibility",
+        "rc": 0,
+        "evidence": [
+          "scope-audit.json",
+          "scope-commands.json",
+          "workspaces-start.json",
+          "end-checks.json"
+        ]
+      },
+      {
+        "kind": "exact governance / E1 projection / map / raw artifact hashes / workflow evidence binding",
+        "rc": 0,
+        "command_receipt": "governance-audit-command.json",
+        "evidence": "governance-audit.json",
+        "comparison_validator_executed": false
+      },
+      {
+        "kind": "matching receipt audit / old object preservation / actual workflow parser / bounded decoder probes",
+        "rc": 0,
+        "command_receipt": "evidence-audit-command.json",
+        "evidence": "evidence-audit.json",
+        "decoder_probe_scope": "4 payload lengths around 64-KiB windows; each exact payload accepted and overlong/short/second-member rejected; pure helper calls without Git or DUT."
+      }
+    ],
+    "reused_checks": {
+      "C1_maintenance_methods": {
+        "history": 4,
+        "inventory": 20
+      },
+      "codec_worker_methods": 21,
+      "primary_changed_method": 1,
+      "C0_history_methods": 3,
+      "C0_inventory_methods": 20,
+      "capability_views": 82,
+      "real_materialization_roles": 10,
+      "workflow_preview": true,
+      "counts_are_not_additive": "1 primary 方法是 21 方法之一；以上分别是维护控制、数据物化、生成检查和预览，不是新增科学通过数。"
+    },
+    "reviewer_probe_corrections": [
+      {
+        "probe": "scope path-set check",
+        "correction": "C1 receipt 的路径顺序与 git diff 不同但集合相同；改为比较精确集合和数量。",
+        "evidence": "audit-initial-order-assertion.json",
+        "candidate_defect": false
+      },
+      {
+        "probe": "consumer export",
+        "correction": "初次误用不存在的 regression_admission.py 文件名；按真实目录改读 run_trusted_regression_gate.py。Git show rc128，只读失败。",
+        "candidate_defect": false
+      },
+      {
+        "probe": "three-line adjustment matcher",
+        "correction": "原断言字面量是 2 而不是 2.0；改为核对三条实际删除行。",
+        "evidence": "evidence-audit.stderr.probe-r1",
+        "candidate_defect": false
+      },
+      {
+        "probe": "catalog qualification labels",
+        "correction": "资格字段的实际未授予值是 not-granted，不是 pending；按原 schema 核对，未改候选。",
+        "evidence": "evidence-audit.stderr.probe-r2",
+        "candidate_defect": false
+      }
+    ]
+  },
+  "publication_and_CI": {
+    "C0_PR": "https://github.com/BucketSran/vaEVAS/pull/264",
+    "C1_consumer_PR": "https://github.com/BucketSran/vaEVAS/pull/263",
+    "thread_PR_registration_checked": true,
+    "watch_or_poll_performed": false,
+    "publication_receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/c0-candidate/publication.json",
+    "publication_receipt_sha256": "61554f42fa5b8dfc6842073e56b2fa8446bfddf37a91a5e9b52e207a3f466546",
+    "published_state": "主控 publication 收据记录固定 C0 和两个 archive 已推送；准备阶段的 false 字段不作为当前发布结论。审核者未自行做远端对象可获取性核验。",
+    "reported_refs": {
+      "refs/heads/codex/evas-method-audit-archive-20261025": "08f0977e9a22357afa8cdeb9f64231fabab171fa",
+      "refs/heads/codex/pr4-context-authority": "bd0fd88494d40826b30becfdb055729f5661952a",
+      "refs/heads/codex/trusted-context-registration": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+      "refs/heads/main": "842bde7101164330fa03e7aee58b45d1789cbed1"
+    },
+    "C0_CI_run": 40401293291,
+    "C0_CI_snapshot_evidence": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/c0-candidate/pr-created.json",
+    "C0_CI_snapshot": "该收据仅含 selection 成功、fast-checks 进行中；不视为全部必要 CI 通过或当前终态。",
+    "necessary_CI_verified": false,
+    "CI_final_acceptance_owner": "主控",
+    "C1_snapshot_CI_verified": false,
+    "merge_verified": false
+  },
+  "remaining_limits": [
+    "完整必要 CI 终态未核验，不以旧 C0 workflow 预览、E1 原 CI 或本地快速预检代替。",
+    "本报告只接受列出的精确 C0、C1 四文件增量及治理内容；后续有实质变化时仅复核受影响增量。",
+    "C1 最终重绑、catalog 更新、预检、必要 CI 和激活验收尚未完成。",
+    "原 E1 仅提供已知观察及 context 登记证据；旧 637 非通过、3 xfail 和 20 份候选未解决，科学资格仍为 false。"
+  ],
+  "scientific_qualification": false,
+  "artifacts": {
+    "review_report": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/night-coordination/pr4-context-increment-astra-r2-20261027/review-report.json",
+    "summary": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/night-coordination/pr4-context-increment-astra-r2-20261027/summary.txt",
+    "source_and_hashes": "scope-audit.json",
+    "governance": "governance-audit.json",
+    "checks": "evidence-audit.json"
+  }
+}

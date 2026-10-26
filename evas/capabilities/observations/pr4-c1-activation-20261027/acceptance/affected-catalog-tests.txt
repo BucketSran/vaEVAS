@@ -1,0 +1,12 @@
+COMMAND ['/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python', '-B', '-m', 'unittest', 'discover', '-s', 'scripts/tests', '-p', 'test_catalog_history_selection.py', '-v']
+test_all_original_finding_protocols_keep_paths_after_file_moves (test_catalog_history_selection.HistoricalMethodSelectionTests.test_all_original_finding_protocols_keep_paths_after_file_moves) ... ok
+test_equal_method_hash_cannot_borrow_wrong_module_identity (test_catalog_history_selection.HistoricalMethodSelectionTests.test_equal_method_hash_cannot_borrow_wrong_module_identity) ... ok
+test_move_or_runtime_rename_keeps_exact_original_version_and_raw_row (test_catalog_history_selection.HistoricalMethodSelectionTests.test_move_or_runtime_rename_keeps_exact_original_version_and_raw_row) ... ok
+test_same_runtime_id_versions_remain_selectable_after_current_move (test_catalog_history_selection.HistoricalMethodSelectionTests.test_same_runtime_id_versions_remain_selectable_after_current_move) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 182.418s
+
+OK
+
+returncode=0
