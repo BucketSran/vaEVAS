@@ -1,0 +1,1 @@
+Local construction for a fixture-only pin fix. Actual Python3.12.13 single fullscripts TestLoader528 methods; no bodies/CI/E1/semantic qualification. Source patch and raw commit reconstruct one changed source file from public bc0ff97b. Original evidence disk temporarily unavailable; immutable prior source identities reused, no old records recreated.
