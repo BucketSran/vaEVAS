@@ -986,8 +986,8 @@
     {
       "actual_receipt": {
         "id": "source:190d1a46dc90c4060b1397bf",
-        "sha256": "9c492175c9e22a9f2ff4826d83b800ca7e14310369fbbf811bda58eafe592c63",
-        "version": "0c2d9667d89183736458e6468edb8b9fceeead7331c348c3ede2f0a38d8872cf"
+        "sha256": "c21a50ede6c30ea46f79298f58da3d3e4bf397e157c1ced1f796ade237e89031",
+        "version": "51a7b0c0b6d9cb09442699bd37e38b7dd0c58e4828b78c08a8d1b936f2828ce2"
       },
       "ci_entrypoint_ids": [
         "9d894bb3affa4eb59be6922a9b352d3e03f04462a91568b0411cc7a5ebadad35"
@@ -998,8 +998,8 @@
       "dependencies": [
         {
           "id": "source:190d1a46dc90c4060b1397bf",
-          "sha256": "9c492175c9e22a9f2ff4826d83b800ca7e14310369fbbf811bda58eafe592c63",
-          "version": "0c2d9667d89183736458e6468edb8b9fceeead7331c348c3ede2f0a38d8872cf"
+          "sha256": "c21a50ede6c30ea46f79298f58da3d3e4bf397e157c1ced1f796ade237e89031",
+          "version": "51a7b0c0b6d9cb09442699bd37e38b7dd0c58e4828b78c08a8d1b936f2828ce2"
         }
       ],
       "id": "entry:af5ec5e7df18539c1f0109d7",
@@ -1025,12 +1025,12 @@
         "step_if": "needs.selection.outputs.maintenance == 'true'",
         "workflow": ".github/workflows/numerical-assurance.yml"
       },
-      "receipt_canonical_sha256": "24aec120e17387671f13eb456344be524e2f682bad73e1fcd82504bd5a1e8eda",
+      "receipt_canonical_sha256": "6812645e25da050ba836f595961e6e57e8eba14eb5575a5f8ad5252e9612429f",
       "receipt_pointer": "/receipt",
       "schema_version": 1,
       "start": "scripts/tests",
       "status": "active",
-      "version": "52a68a842db9e610eaa2686b8c9618bd52d20e0093ee0d13fd50631bae137aea",
+      "version": "a5946b6f25c2fed6b491e38080ee8cf9fe739d7236b46d4d177d6e78207b8344",
       "workflow_sha256": "354b71b77cf7357d3999860b5fcae2fcb311ae3dcda89adc5253faf7ef6f89dc"
     },
     {

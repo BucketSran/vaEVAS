@@ -32,6 +32,27 @@ def source(logical,path,locator=None):
   'locator':locator or {'kind':'pending-archive','repository':'vaevas-evidence','revision':None,'path':'discovery/'+rawsha+'.json'},
   'sha256':rawsha,'dependencies':[]})
 
+def select_audited_method(row,current,previous_objects,current_assets):
+ """Bind original path/runtime/bytes before considering current selection."""
+ owners={(o['id'],o['version']):o for o in previous_objects if o['kind']=='asset'}
+ owners.update({(o['id'],o['version']):o for o in current_assets})
+ def identity(method):
+  if method is None or method.get('namespace')!='python-regression' or method.get('runtime_id')!=row['id']:return None
+  owner=owners.get((method['module']['id'],method['module']['version']))
+  return owner if owner and ref(owner)==method['module'] and owner['current_path']==row.get('source_file') else None
+ def exact(method):
+  owner=identity(method)
+  return owner if owner and method['definition']['sha256']==row.get('source_method_sha256') and owner['content'].get('value')==row.get('source_module_sha256') else None
+ owner=exact(current)
+ if owner is not None:return current,owner,'current-observed-method'
+ candidates=[o for o in previous_objects if o['kind']=='method' and o.get('namespace')=='python-regression' and o.get('runtime_id')==row['id']]
+ for method in sorted(candidates,key=lambda o:(o['id'],o['version'])):
+  owner=exact(method)
+  if owner is not None:return method,owner,'retained-original-method-version'
+ owner=identity(current)
+ if owner is not None:return current,owner,'current-observed-method'
+ raise ValueError('historical original source identity unavailable; explicit unbound migration required: '+row['id'])
+
 def entry_inputs(config):
  result=[]
  for item in config['discoveries']:
@@ -251,16 +272,12 @@ def build(config,out):
  audit,s=original('original-method-audit-3257',prefix+'method-audit-20261025/original/full3257/audit.json')
  by_runtime={m['runtime_id']:m for m in methods.values() if m['namespace']=='python-regression'}
  for index,row in enumerate(audit['rows']):
-  m=by_runtime.get(row['id'])
-  if m is None:
-   candidates=[o for o in previous_objects if o['kind']=='method' and o['namespace']=='python-regression' and o['runtime_id']==row['id']]
-   m=next((o for o in candidates if o['definition']['sha256']==row.get('source_method_sha256')),None)
-   if m is None:raise ValueError('historical method no longer discovered and no prior bound version; explicit unbound migration required: '+row['id'])
-  owner=next((o for o in assets.values() if o['id']==m['module']['id'] and o['version']==m['module']['version']),None) or next(o for o in previous_objects if o['id']==m['module']['id'] and o['version']==m['module']['version']);matched=row.get('source_method_sha256')==m['definition']['sha256'] and row.get('source_module_sha256')==owner['content'].get('value')
+  m,owner,alignment_scope=select_audited_method(row,by_runtime.get(row['id']),previous_objects,assets.values())
+  matched=row.get('source_method_sha256')==m['definition']['sha256'] and row.get('source_module_sha256')==owner['content'].get('value')
   histories.append({'schema_version':1,'id':sid('history-audit',row['id']),'version':s['sha256'],'kind':'historical-audit-record','status':'active',
    'source':ref(s),'row_pointer':'/rows/'+str(index),'original_row_sha256':canonical(row),'scope_pointer':'/summary/scope','scope_sha256':canonical(audit['summary']['scope']),
    'identity_binding':'bound','history_protocol':'evas-method-audit-3257-v1','method':ref(m),
-   'alignment':{'status':'matched' if matched else 'pending','scope':'current-observed-method' if row['id'] in by_runtime else 'retained-original-method-version','reason':'owned method/module bytes compared to original row; not semantic qualification'},
+   'alignment':{'status':'matched' if matched else 'pending','scope':alignment_scope,'reason':'owned method/module bytes compared to original row; not semantic qualification'},
    'original_verdict':row['verdict'],'source_method_sha256':row['source_method_sha256'],'source_module_sha256':row['source_module_sha256'],
    'original_execution_outcome':row.get('execution_outcome'),'qualification_status':'not-granted','dependencies':[ref(s)]})
  specs=[('passing-oracles','evas-passing-oracles-v1','confirmed','/scope'),('passing-negative','evas-passing-negative-v1','findings',''),('passing-raw','evas-passing-raw-v1','findings','')]
