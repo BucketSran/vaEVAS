@@ -1,0 +1,50 @@
+{
+  "checked_at_utc": "2026-10-26T17:16:17.634367+00:00",
+  "checks": [
+    {
+      "interpreter": "python312",
+      "command": [
+        "/opt/homebrew/bin/python3.12",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "evas/validation/checker_calibration",
+        "-v"
+      ],
+      "returncode": 0,
+      "stderr_sha256": "dab7d690b71cee9b078181211deb0319a3ec65a187a0f10eaad54493f9aff90c",
+      "tests": 22
+    },
+    {
+      "interpreter": "python314",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "evas/validation/checker_calibration",
+        "-v"
+      ],
+      "returncode": 0,
+      "stderr_sha256": "df716c3162532bb7001ebff884df78cbb04f56c14396fb58dabd385435f0256d",
+      "tests": 22
+    }
+  ],
+  "unique_calibration_methods": 22,
+  "accepted_controls": 9,
+  "expected_rejection_controls": 13,
+  "fixture_count": 10,
+  "fixture_bytes": 100181,
+  "changed_fixture": [
+    "validator_predicates.json"
+  ],
+  "other_fixture_bytes_unchanged": true,
+  "all_original_source_hashes_unchanged": true,
+  "scientific_execution": false,
+  "qualification_added": false,
+  "shared_git_writes": false
+}

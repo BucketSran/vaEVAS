@@ -1,0 +1,11 @@
+{
+  "finding": "PR4-CAL-01",
+  "priority": "P2",
+  "classification": "Worker fixture serialized interpreter-specific AST formatting; main CI-target Python3.12 check caught it before candidate freeze",
+  "red": "permanent-controls-python312.stderr",
+  "original_worker_python": "3.14.6",
+  "current_module_before_sha256": "f3a053cf929724b003de1f150f70f1811c25707bdb5f49ecce66b5554f640f72",
+  "change": "Serialize fixed predicates as parseable Python source, then compare exact ASTs on the current interpreter; no predicate or numerical condition change",
+  "original_delivery_preserved": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr4/permanent-calibration-sol-20261027",
+  "qualification_added": false
+}

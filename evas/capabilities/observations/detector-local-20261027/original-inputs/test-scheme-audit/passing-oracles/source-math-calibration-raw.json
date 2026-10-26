@@ -1,0 +1,3808 @@
+{
+  "results": [
+    {
+      "mutation": "correct",
+      "test": "test_source_math.SourceMath.test_product_contains_independent_decimal_root_in_reported_box",
+      "passed": true,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "mutation": "correct",
+      "test": "test_source_math.SourceMath.test_multinode_certificate_uses_same_original_constraint_system",
+      "passed": true,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "mutation": "wrong_representative_wide_box",
+      "test": "test_source_math.SourceMath.test_product_contains_independent_decimal_root_in_reported_box",
+      "passed": true,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "mutation": "wrong_representative_wide_box",
+      "test": "test_source_math.SourceMath.test_multinode_certificate_uses_same_original_constraint_system",
+      "passed": true,
+      "failures": [],
+      "errors": []
+    }
+  ],
+  "controls": [
+    {
+      "mutation": "correct",
+      "independent_answer": "0.949999999999999895947555966080948336339842390944103978874026867033049306201734425370817626507367575707871783789187652534",
+      "request": {
+        "program": {
+          "nodes": [
+            "0",
+            "u",
+            "y"
+          ],
+          "contributions": [
+            {
+              "branch": {
+                "instance": "dut",
+                "local_positive": "0",
+                "local_negative": "y",
+                "kind": "voltage"
+              },
+              "positive": 0,
+              "negative": 2,
+              "rhs": {
+                "op": "multiply",
+                "left": {
+                  "constant": -1.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "right": {
+                  "op": "multiply",
+                  "left": {
+                    "constant": 0.0,
+                    "terms": [
+                      {
+                        "node": 0,
+                        "coefficient": -1.0
+                      },
+                      {
+                        "node": 1,
+                        "coefficient": 1.0
+                      }
+                    ],
+                    "op": "affine"
+                  },
+                  "right": {
+                    "operator": 0,
+                    "op": "operator"
+                  }
+                }
+              },
+              "origin": {
+                "source": "math.va",
+                "line": 2,
+                "column": 106,
+                "instance": "dut",
+                "expansion": []
+              }
+            }
+          ],
+          "states": [],
+          "events": [],
+          "operators": [
+            {
+              "function": "tanh",
+              "input": {
+                "op": "multiply",
+                "left": {
+                  "constant": 20.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "right": {
+                  "constant": 0.0,
+                  "terms": [
+                    {
+                      "node": 0,
+                      "coefficient": -1.0
+                    },
+                    {
+                      "node": 1,
+                      "coefficient": 1.0
+                    }
+                  ],
+                  "op": "affine"
+                }
+              },
+              "origin": {
+                "source": "math.va",
+                "line": 2,
+                "column": 117,
+                "instance": "dut",
+                "expansion": []
+              },
+              "kind": "math"
+            }
+          ],
+          "schema_version": 33,
+          "step_bounds": [],
+          "procedures": [
+            {
+              "procedure_id": 0,
+              "instance": "dut",
+              "body": [
+                {
+                  "expanded_statement_ordinal": 0,
+                  "action": {
+                    "contribution": 0,
+                    "kind": "contribution_capture"
+                  }
+                }
+              ]
+            }
+          ],
+          "real_bindings": []
+        },
+        "driven": [
+          "u"
+        ],
+        "samples": [],
+        "transient": {
+          "pwl": [
+            [
+              [
+                0.0,
+                -0.95
+              ],
+              [
+                1.0,
+                -0.95
+              ]
+            ]
+          ],
+          "output_times": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "stop": 1.0,
+          "max_step": 0.1
+        },
+        "tolerances": {
+          "absolute": 1e-12,
+          "relative": 1e-10
+        }
+      },
+      "response": {
+        "schema_version": 33,
+        "engine": "independent-synthetic-control",
+        "nodes": [
+          "0",
+          "u",
+          "y"
+        ],
+        "solutions": [
+          {
+            "voltages": [
+              0.0,
+              -0.95,
+              0.9499999999999998
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              -0.95,
+              0.9499999999999998
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              -0.95,
+              0.9499999999999998
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          }
+        ],
+        "transient": {
+          "times": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "state_names": [],
+          "states": [
+            [],
+            [],
+            []
+          ],
+          "events": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0
+        },
+        "observation_evidence": {
+          "schema_version": 1,
+          "nodes": [
+            "0",
+            "u",
+            "y"
+          ],
+          "effective_controls": {
+            "absolute_V": 1e-12,
+            "relative": 1e-10,
+            "stop_s": 1.0,
+            "max_step_s": 0.1,
+            "max_step_applied": false
+          },
+          "sample_origins": [
+            "stateless_working_point",
+            "stateless_working_point",
+            "stateless_working_point"
+          ],
+          "initial_settled": true,
+          "voltage_bounds_V": [
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                -0.9500000000000001,
+                -0.9499999999999998
+              ],
+              [
+                0.9499999999999997,
+                0.95
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                -0.9500000000000001,
+                -0.9499999999999998
+              ],
+              [
+                0.9499999999999997,
+                0.95
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                -0.9500000000000001,
+                -0.9499999999999998
+              ],
+              [
+                0.9499999999999997,
+                0.95
+              ]
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "mutation": "correct",
+      "independent_answer": "0.0265614708107139584796395506658122197085144459781533751933515956746175011177431464334885285431308454891081127917834575311",
+      "request": {
+        "program": {
+          "nodes": [
+            "0",
+            "u",
+            "y"
+          ],
+          "contributions": [
+            {
+              "branch": {
+                "instance": "dut",
+                "local_positive": "0",
+                "local_negative": "y",
+                "kind": "voltage"
+              },
+              "positive": 0,
+              "negative": 2,
+              "rhs": {
+                "op": "multiply",
+                "left": {
+                  "constant": -1.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "right": {
+                  "op": "multiply",
+                  "left": {
+                    "constant": 0.0,
+                    "terms": [
+                      {
+                        "node": 0,
+                        "coefficient": -1.0
+                      },
+                      {
+                        "node": 1,
+                        "coefficient": 1.0
+                      }
+                    ],
+                    "op": "affine"
+                  },
+                  "right": {
+                    "operator": 0,
+                    "op": "operator"
+                  }
+                }
+              },
+              "origin": {
+                "source": "math.va",
+                "line": 2,
+                "column": 106,
+                "instance": "dut",
+                "expansion": []
+              }
+            }
+          ],
+          "states": [],
+          "events": [],
+          "operators": [
+            {
+              "function": "tanh",
+              "input": {
+                "op": "multiply",
+                "left": {
+                  "constant": 20.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "right": {
+                  "constant": 0.0,
+                  "terms": [
+                    {
+                      "node": 0,
+                      "coefficient": -1.0
+                    },
+                    {
+                      "node": 1,
+                      "coefficient": 1.0
+                    }
+                  ],
+                  "op": "affine"
+                }
+              },
+              "origin": {
+                "source": "math.va",
+                "line": 2,
+                "column": 117,
+                "instance": "dut",
+                "expansion": []
+              },
+              "kind": "math"
+            }
+          ],
+          "schema_version": 33,
+          "step_bounds": [],
+          "procedures": [
+            {
+              "procedure_id": 0,
+              "instance": "dut",
+              "body": [
+                {
+                  "expanded_statement_ordinal": 0,
+                  "action": {
+                    "contribution": 0,
+                    "kind": "contribution_capture"
+                  }
+                }
+              ]
+            }
+          ],
+          "real_bindings": []
+        },
+        "driven": [
+          "u"
+        ],
+        "samples": [],
+        "transient": {
+          "pwl": [
+            [
+              [
+                0.0,
+                -0.04
+              ],
+              [
+                1.0,
+                -0.04
+              ]
+            ]
+          ],
+          "output_times": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "stop": 1.0,
+          "max_step": 0.1
+        },
+        "tolerances": {
+          "absolute": 1e-12,
+          "relative": 1e-10
+        }
+      },
+      "response": {
+        "schema_version": 33,
+        "engine": "independent-synthetic-control",
+        "nodes": [
+          "0",
+          "u",
+          "y"
+        ],
+        "solutions": [
+          {
+            "voltages": [
+              0.0,
+              -0.04,
+              0.026561470810713958
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              -0.04,
+              0.026561470810713958
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              -0.04,
+              0.026561470810713958
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          }
+        ],
+        "transient": {
+          "times": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "state_names": [],
+          "states": [
+            [],
+            [],
+            []
+          ],
+          "events": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0
+        },
+        "observation_evidence": {
+          "schema_version": 1,
+          "nodes": [
+            "0",
+            "u",
+            "y"
+          ],
+          "effective_controls": {
+            "absolute_V": 1e-12,
+            "relative": 1e-10,
+            "stop_s": 1.0,
+            "max_step_s": 0.1,
+            "max_step_applied": false
+          },
+          "sample_origins": [
+            "stateless_working_point",
+            "stateless_working_point",
+            "stateless_working_point"
+          ],
+          "initial_settled": true,
+          "voltage_bounds_V": [
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                -0.04000000000000001,
+                -0.039999999999999994
+              ],
+              [
+                0.026561470810713955,
+                0.02656147081071396
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                -0.04000000000000001,
+                -0.039999999999999994
+              ],
+              [
+                0.026561470810713955,
+                0.02656147081071396
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                -0.04000000000000001,
+                -0.039999999999999994
+              ],
+              [
+                0.026561470810713955,
+                0.02656147081071396
+              ]
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "mutation": "correct",
+      "independent_answer": "0",
+      "request": {
+        "program": {
+          "nodes": [
+            "0",
+            "u",
+            "y"
+          ],
+          "contributions": [
+            {
+              "branch": {
+                "instance": "dut",
+                "local_positive": "0",
+                "local_negative": "y",
+                "kind": "voltage"
+              },
+              "positive": 0,
+              "negative": 2,
+              "rhs": {
+                "op": "multiply",
+                "left": {
+                  "constant": -1.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "right": {
+                  "op": "multiply",
+                  "left": {
+                    "constant": 0.0,
+                    "terms": [
+                      {
+                        "node": 0,
+                        "coefficient": -1.0
+                      },
+                      {
+                        "node": 1,
+                        "coefficient": 1.0
+                      }
+                    ],
+                    "op": "affine"
+                  },
+                  "right": {
+                    "operator": 0,
+                    "op": "operator"
+                  }
+                }
+              },
+              "origin": {
+                "source": "math.va",
+                "line": 2,
+                "column": 106,
+                "instance": "dut",
+                "expansion": []
+              }
+            }
+          ],
+          "states": [],
+          "events": [],
+          "operators": [
+            {
+              "function": "tanh",
+              "input": {
+                "op": "multiply",
+                "left": {
+                  "constant": 20.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "right": {
+                  "constant": 0.0,
+                  "terms": [
+                    {
+                      "node": 0,
+                      "coefficient": -1.0
+                    },
+                    {
+                      "node": 1,
+                      "coefficient": 1.0
+                    }
+                  ],
+                  "op": "affine"
+                }
+              },
+              "origin": {
+                "source": "math.va",
+                "line": 2,
+                "column": 117,
+                "instance": "dut",
+                "expansion": []
+              },
+              "kind": "math"
+            }
+          ],
+          "schema_version": 33,
+          "step_bounds": [],
+          "procedures": [
+            {
+              "procedure_id": 0,
+              "instance": "dut",
+              "body": [
+                {
+                  "expanded_statement_ordinal": 0,
+                  "action": {
+                    "contribution": 0,
+                    "kind": "contribution_capture"
+                  }
+                }
+              ]
+            }
+          ],
+          "real_bindings": []
+        },
+        "driven": [
+          "u"
+        ],
+        "samples": [],
+        "transient": {
+          "pwl": [
+            [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                1.0,
+                0.0
+              ]
+            ]
+          ],
+          "output_times": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "stop": 1.0,
+          "max_step": 0.1
+        },
+        "tolerances": {
+          "absolute": 1e-12,
+          "relative": 1e-10
+        }
+      },
+      "response": {
+        "schema_version": 33,
+        "engine": "independent-synthetic-control",
+        "nodes": [
+          "0",
+          "u",
+          "y"
+        ],
+        "solutions": [
+          {
+            "voltages": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          }
+        ],
+        "transient": {
+          "times": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "state_names": [],
+          "states": [
+            [],
+            [],
+            []
+          ],
+          "events": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0
+        },
+        "observation_evidence": {
+          "schema_version": 1,
+          "nodes": [
+            "0",
+            "u",
+            "y"
+          ],
+          "effective_controls": {
+            "absolute_V": 1e-12,
+            "relative": 1e-10,
+            "stop_s": 1.0,
+            "max_step_s": 0.1,
+            "max_step_applied": false
+          },
+          "sample_origins": [
+            "stateless_working_point",
+            "stateless_working_point",
+            "stateless_working_point"
+          ],
+          "initial_settled": true,
+          "voltage_bounds_V": [
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                -5e-324,
+                5e-324
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                -5e-324,
+                5e-324
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                -5e-324,
+                5e-324
+              ]
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "mutation": "correct",
+      "independent_answer": "0.00759897924510449762605302448984632873585794260909057949943487199540879749377962810013878653943174503951226023425338769070",
+      "request": {
+        "program": {
+          "nodes": [
+            "0",
+            "u",
+            "y"
+          ],
+          "contributions": [
+            {
+              "branch": {
+                "instance": "dut",
+                "local_positive": "0",
+                "local_negative": "y",
+                "kind": "voltage"
+              },
+              "positive": 0,
+              "negative": 2,
+              "rhs": {
+                "op": "multiply",
+                "left": {
+                  "constant": -1.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "right": {
+                  "op": "multiply",
+                  "left": {
+                    "constant": 0.0,
+                    "terms": [
+                      {
+                        "node": 0,
+                        "coefficient": -1.0
+                      },
+                      {
+                        "node": 1,
+                        "coefficient": 1.0
+                      }
+                    ],
+                    "op": "affine"
+                  },
+                  "right": {
+                    "operator": 0,
+                    "op": "operator"
+                  }
+                }
+              },
+              "origin": {
+                "source": "math.va",
+                "line": 2,
+                "column": 106,
+                "instance": "dut",
+                "expansion": []
+              }
+            }
+          ],
+          "states": [],
+          "events": [],
+          "operators": [
+            {
+              "function": "tanh",
+              "input": {
+                "op": "multiply",
+                "left": {
+                  "constant": 20.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "right": {
+                  "constant": 0.0,
+                  "terms": [
+                    {
+                      "node": 0,
+                      "coefficient": -1.0
+                    },
+                    {
+                      "node": 1,
+                      "coefficient": 1.0
+                    }
+                  ],
+                  "op": "affine"
+                }
+              },
+              "origin": {
+                "source": "math.va",
+                "line": 2,
+                "column": 117,
+                "instance": "dut",
+                "expansion": []
+              },
+              "kind": "math"
+            }
+          ],
+          "schema_version": 33,
+          "step_bounds": [],
+          "procedures": [
+            {
+              "procedure_id": 0,
+              "instance": "dut",
+              "body": [
+                {
+                  "expanded_statement_ordinal": 0,
+                  "action": {
+                    "contribution": 0,
+                    "kind": "contribution_capture"
+                  }
+                }
+              ]
+            }
+          ],
+          "real_bindings": []
+        },
+        "driven": [
+          "u"
+        ],
+        "samples": [],
+        "transient": {
+          "pwl": [
+            [
+              [
+                0.0,
+                0.02
+              ],
+              [
+                1.0,
+                0.02
+              ]
+            ]
+          ],
+          "output_times": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "stop": 1.0,
+          "max_step": 0.1
+        },
+        "tolerances": {
+          "absolute": 1e-12,
+          "relative": 1e-10
+        }
+      },
+      "response": {
+        "schema_version": 33,
+        "engine": "independent-synthetic-control",
+        "nodes": [
+          "0",
+          "u",
+          "y"
+        ],
+        "solutions": [
+          {
+            "voltages": [
+              0.0,
+              0.02,
+              0.007598979245104498
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              0.02,
+              0.007598979245104498
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              0.02,
+              0.007598979245104498
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          }
+        ],
+        "transient": {
+          "times": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "state_names": [],
+          "states": [
+            [],
+            [],
+            []
+          ],
+          "events": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0
+        },
+        "observation_evidence": {
+          "schema_version": 1,
+          "nodes": [
+            "0",
+            "u",
+            "y"
+          ],
+          "effective_controls": {
+            "absolute_V": 1e-12,
+            "relative": 1e-10,
+            "stop_s": 1.0,
+            "max_step_s": 0.1,
+            "max_step_applied": false
+          },
+          "sample_origins": [
+            "stateless_working_point",
+            "stateless_working_point",
+            "stateless_working_point"
+          ],
+          "initial_settled": true,
+          "voltage_bounds_V": [
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                0.019999999999999997,
+                0.020000000000000004
+              ],
+              [
+                0.007598979245104497,
+                0.007598979245104499
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                0.019999999999999997,
+                0.020000000000000004
+              ],
+              [
+                0.007598979245104497,
+                0.007598979245104499
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                0.019999999999999997,
+                0.020000000000000004
+              ],
+              [
+                0.007598979245104497,
+                0.007598979245104499
+              ]
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "mutation": "correct",
+      "independent_answer": "0.249977301065648782790147744141140666513679304435946031585792790431414528270937804256216675352717994721433213916570487696",
+      "request": {
+        "program": {
+          "nodes": [
+            "0",
+            "u",
+            "y"
+          ],
+          "contributions": [
+            {
+              "branch": {
+                "instance": "dut",
+                "local_positive": "0",
+                "local_negative": "y",
+                "kind": "voltage"
+              },
+              "positive": 0,
+              "negative": 2,
+              "rhs": {
+                "op": "multiply",
+                "left": {
+                  "constant": -1.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "right": {
+                  "op": "multiply",
+                  "left": {
+                    "constant": 0.0,
+                    "terms": [
+                      {
+                        "node": 0,
+                        "coefficient": -1.0
+                      },
+                      {
+                        "node": 1,
+                        "coefficient": 1.0
+                      }
+                    ],
+                    "op": "affine"
+                  },
+                  "right": {
+                    "operator": 0,
+                    "op": "operator"
+                  }
+                }
+              },
+              "origin": {
+                "source": "math.va",
+                "line": 2,
+                "column": 106,
+                "instance": "dut",
+                "expansion": []
+              }
+            }
+          ],
+          "states": [],
+          "events": [],
+          "operators": [
+            {
+              "function": "tanh",
+              "input": {
+                "op": "multiply",
+                "left": {
+                  "constant": 20.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "right": {
+                  "constant": 0.0,
+                  "terms": [
+                    {
+                      "node": 0,
+                      "coefficient": -1.0
+                    },
+                    {
+                      "node": 1,
+                      "coefficient": 1.0
+                    }
+                  ],
+                  "op": "affine"
+                }
+              },
+              "origin": {
+                "source": "math.va",
+                "line": 2,
+                "column": 117,
+                "instance": "dut",
+                "expansion": []
+              },
+              "kind": "math"
+            }
+          ],
+          "schema_version": 33,
+          "step_bounds": [],
+          "procedures": [
+            {
+              "procedure_id": 0,
+              "instance": "dut",
+              "body": [
+                {
+                  "expanded_statement_ordinal": 0,
+                  "action": {
+                    "contribution": 0,
+                    "kind": "contribution_capture"
+                  }
+                }
+              ]
+            }
+          ],
+          "real_bindings": []
+        },
+        "driven": [
+          "u"
+        ],
+        "samples": [],
+        "transient": {
+          "pwl": [
+            [
+              [
+                0.0,
+                0.25
+              ],
+              [
+                1.0,
+                0.25
+              ]
+            ]
+          ],
+          "output_times": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "stop": 1.0,
+          "max_step": 0.1
+        },
+        "tolerances": {
+          "absolute": 1e-12,
+          "relative": 1e-10
+        }
+      },
+      "response": {
+        "schema_version": 33,
+        "engine": "independent-synthetic-control",
+        "nodes": [
+          "0",
+          "u",
+          "y"
+        ],
+        "solutions": [
+          {
+            "voltages": [
+              0.0,
+              0.25,
+              0.24997730106564878
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              0.25,
+              0.24997730106564878
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              0.25,
+              0.24997730106564878
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          }
+        ],
+        "transient": {
+          "times": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "state_names": [],
+          "states": [
+            [],
+            [],
+            []
+          ],
+          "events": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0
+        },
+        "observation_evidence": {
+          "schema_version": 1,
+          "nodes": [
+            "0",
+            "u",
+            "y"
+          ],
+          "effective_controls": {
+            "absolute_V": 1e-12,
+            "relative": 1e-10,
+            "stop_s": 1.0,
+            "max_step_s": 0.1,
+            "max_step_applied": false
+          },
+          "sample_origins": [
+            "stateless_working_point",
+            "stateless_working_point",
+            "stateless_working_point"
+          ],
+          "initial_settled": true,
+          "voltage_bounds_V": [
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                0.24999999999999997,
+                0.25000000000000006
+              ],
+              [
+                0.24997730106564875,
+                0.2499773010656488
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                0.24999999999999997,
+                0.25000000000000006
+              ],
+              [
+                0.24997730106564875,
+                0.2499773010656488
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                0.24999999999999997,
+                0.25000000000000006
+              ],
+              [
+                0.24997730106564875,
+                0.2499773010656488
+              ]
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "mutation": "correct",
+      "independent_answer": "0.549999999693158554278931856341567163548161526755923387356178625350788676503200930658128942860882480217280645313153545022",
+      "request": {
+        "program": {
+          "nodes": [
+            "0",
+            "u",
+            "y"
+          ],
+          "contributions": [
+            {
+              "branch": {
+                "instance": "dut",
+                "local_positive": "0",
+                "local_negative": "y",
+                "kind": "voltage"
+              },
+              "positive": 0,
+              "negative": 2,
+              "rhs": {
+                "op": "multiply",
+                "left": {
+                  "constant": -1.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "right": {
+                  "op": "multiply",
+                  "left": {
+                    "constant": 0.0,
+                    "terms": [
+                      {
+                        "node": 0,
+                        "coefficient": -1.0
+                      },
+                      {
+                        "node": 1,
+                        "coefficient": 1.0
+                      }
+                    ],
+                    "op": "affine"
+                  },
+                  "right": {
+                    "operator": 0,
+                    "op": "operator"
+                  }
+                }
+              },
+              "origin": {
+                "source": "math.va",
+                "line": 2,
+                "column": 106,
+                "instance": "dut",
+                "expansion": []
+              }
+            }
+          ],
+          "states": [],
+          "events": [],
+          "operators": [
+            {
+              "function": "tanh",
+              "input": {
+                "op": "multiply",
+                "left": {
+                  "constant": 20.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "right": {
+                  "constant": 0.0,
+                  "terms": [
+                    {
+                      "node": 0,
+                      "coefficient": -1.0
+                    },
+                    {
+                      "node": 1,
+                      "coefficient": 1.0
+                    }
+                  ],
+                  "op": "affine"
+                }
+              },
+              "origin": {
+                "source": "math.va",
+                "line": 2,
+                "column": 117,
+                "instance": "dut",
+                "expansion": []
+              },
+              "kind": "math"
+            }
+          ],
+          "schema_version": 33,
+          "step_bounds": [],
+          "procedures": [
+            {
+              "procedure_id": 0,
+              "instance": "dut",
+              "body": [
+                {
+                  "expanded_statement_ordinal": 0,
+                  "action": {
+                    "contribution": 0,
+                    "kind": "contribution_capture"
+                  }
+                }
+              ]
+            }
+          ],
+          "real_bindings": []
+        },
+        "driven": [
+          "u"
+        ],
+        "samples": [],
+        "transient": {
+          "pwl": [
+            [
+              [
+                0.0,
+                0.55
+              ],
+              [
+                1.0,
+                0.55
+              ]
+            ]
+          ],
+          "output_times": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "stop": 1.0,
+          "max_step": 0.1
+        },
+        "tolerances": {
+          "absolute": 1e-12,
+          "relative": 1e-10
+        }
+      },
+      "response": {
+        "schema_version": 33,
+        "engine": "independent-synthetic-control",
+        "nodes": [
+          "0",
+          "u",
+          "y"
+        ],
+        "solutions": [
+          {
+            "voltages": [
+              0.0,
+              0.55,
+              0.5499999996931586
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              0.55,
+              0.5499999996931586
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              0.55,
+              0.5499999996931586
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          }
+        ],
+        "transient": {
+          "times": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "state_names": [],
+          "states": [
+            [],
+            [],
+            []
+          ],
+          "events": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0
+        },
+        "observation_evidence": {
+          "schema_version": 1,
+          "nodes": [
+            "0",
+            "u",
+            "y"
+          ],
+          "effective_controls": {
+            "absolute_V": 1e-12,
+            "relative": 1e-10,
+            "stop_s": 1.0,
+            "max_step_s": 0.1,
+            "max_step_applied": false
+          },
+          "sample_origins": [
+            "stateless_working_point",
+            "stateless_working_point",
+            "stateless_working_point"
+          ],
+          "initial_settled": true,
+          "voltage_bounds_V": [
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                0.5499999999999999,
+                0.5500000000000002
+              ],
+              [
+                0.5499999996931585,
+                0.5499999996931587
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                0.5499999999999999,
+                0.5500000000000002
+              ],
+              [
+                0.5499999996931585,
+                0.5499999996931587
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                0.5499999999999999,
+                0.5500000000000002
+              ],
+              [
+                0.5499999996931585,
+                0.5499999996931587
+              ]
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "mutation": "correct",
+      "independent_answer": "0.346402758007581693746069451279310900017541654629219924230224374261054891399851752325703053014593993184136101322967619626",
+      "request": {
+        "program": {
+          "nodes": [
+            "0",
+            "dut:z",
+            "u",
+            "y"
+          ],
+          "contributions": [
+            {
+              "branch": {
+                "instance": "dut",
+                "local_positive": "y",
+                "local_negative": "z",
+                "kind": "voltage"
+              },
+              "positive": 3,
+              "negative": 1,
+              "rhs": {
+                "op": "multiply",
+                "left": {
+                  "constant": 0.0,
+                  "terms": [
+                    {
+                      "node": 0,
+                      "coefficient": -1.0
+                    },
+                    {
+                      "node": 2,
+                      "coefficient": 1.0
+                    }
+                  ],
+                  "op": "affine"
+                },
+                "right": {
+                  "operator": 0,
+                  "op": "operator"
+                }
+              },
+              "origin": {
+                "source": "math.va",
+                "line": 2,
+                "column": 119,
+                "instance": "dut",
+                "expansion": []
+              }
+            },
+            {
+              "branch": {
+                "instance": "dut",
+                "local_positive": "0",
+                "local_negative": "z",
+                "kind": "voltage"
+              },
+              "positive": 0,
+              "negative": 1,
+              "rhs": {
+                "constant": -0.25,
+                "terms": [],
+                "op": "affine"
+              },
+              "origin": {
+                "source": "math.va",
+                "line": 2,
+                "column": 151,
+                "instance": "dut",
+                "expansion": []
+              }
+            }
+          ],
+          "states": [],
+          "events": [],
+          "operators": [
+            {
+              "function": "tanh",
+              "input": {
+                "op": "multiply",
+                "left": {
+                  "constant": 20.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "right": {
+                  "constant": 0.0,
+                  "terms": [
+                    {
+                      "node": 0,
+                      "coefficient": -1.0
+                    },
+                    {
+                      "node": 2,
+                      "coefficient": 1.0
+                    }
+                  ],
+                  "op": "affine"
+                }
+              },
+              "origin": {
+                "source": "math.va",
+                "line": 2,
+                "column": 132,
+                "instance": "dut",
+                "expansion": []
+              },
+              "kind": "math"
+            }
+          ],
+          "schema_version": 33,
+          "step_bounds": [],
+          "procedures": [
+            {
+              "procedure_id": 0,
+              "instance": "dut",
+              "body": [
+                {
+                  "expanded_statement_ordinal": 0,
+                  "action": {
+                    "contribution": 0,
+                    "kind": "contribution_capture"
+                  }
+                },
+                {
+                  "expanded_statement_ordinal": 1,
+                  "action": {
+                    "contribution": 1,
+                    "kind": "contribution_capture"
+                  }
+                }
+              ]
+            }
+          ],
+          "real_bindings": []
+        },
+        "driven": [
+          "u"
+        ],
+        "samples": [],
+        "transient": {
+          "pwl": [
+            [
+              [
+                0.0,
+                0.1
+              ],
+              [
+                1.0,
+                0.1
+              ]
+            ]
+          ],
+          "output_times": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "stop": 1.0,
+          "max_step": 0.1
+        },
+        "tolerances": {
+          "absolute": 1e-12,
+          "relative": 1e-10
+        }
+      },
+      "response": {
+        "schema_version": 33,
+        "engine": "independent-synthetic-control",
+        "nodes": [
+          "0",
+          "dut:z",
+          "u",
+          "y"
+        ],
+        "solutions": [
+          {
+            "voltages": [
+              0.0,
+              0.25,
+              0.1,
+              0.3464027580075817
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              0.25,
+              0.1,
+              0.3464027580075817
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              0.25,
+              0.1,
+              0.3464027580075817
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          }
+        ],
+        "transient": {
+          "times": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "state_names": [],
+          "states": [
+            [],
+            [],
+            []
+          ],
+          "events": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0
+        },
+        "observation_evidence": {
+          "schema_version": 1,
+          "nodes": [
+            "0",
+            "dut:z",
+            "u",
+            "y"
+          ],
+          "effective_controls": {
+            "absolute_V": 1e-12,
+            "relative": 1e-10,
+            "stop_s": 1.0,
+            "max_step_s": 0.1,
+            "max_step_applied": false
+          },
+          "sample_origins": [
+            "stateless_working_point",
+            "stateless_working_point",
+            "stateless_working_point"
+          ],
+          "initial_settled": true,
+          "voltage_bounds_V": [
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                0.24999999999999997,
+                0.25000000000000006
+              ],
+              [
+                0.09999999999999999,
+                0.10000000000000002
+              ],
+              [
+                0.34640275800758163,
+                0.34640275800758175
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                0.24999999999999997,
+                0.25000000000000006
+              ],
+              [
+                0.09999999999999999,
+                0.10000000000000002
+              ],
+              [
+                0.34640275800758163,
+                0.34640275800758175
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                0.24999999999999997,
+                0.25000000000000006
+              ],
+              [
+                0.09999999999999999,
+                0.10000000000000002
+              ],
+              [
+                0.34640275800758163,
+                0.34640275800758175
+              ]
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "mutation": "wrong_representative_wide_box",
+      "independent_answer": "0.949999999999999895947555966080948336339842390944103978874026867033049306201734425370817626507367575707871783789187652534",
+      "request": {
+        "program": {
+          "nodes": [
+            "0",
+            "u",
+            "y"
+          ],
+          "contributions": [
+            {
+              "branch": {
+                "instance": "dut",
+                "local_positive": "0",
+                "local_negative": "y",
+                "kind": "voltage"
+              },
+              "positive": 0,
+              "negative": 2,
+              "rhs": {
+                "op": "multiply",
+                "left": {
+                  "constant": -1.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "right": {
+                  "op": "multiply",
+                  "left": {
+                    "constant": 0.0,
+                    "terms": [
+                      {
+                        "node": 0,
+                        "coefficient": -1.0
+                      },
+                      {
+                        "node": 1,
+                        "coefficient": 1.0
+                      }
+                    ],
+                    "op": "affine"
+                  },
+                  "right": {
+                    "operator": 0,
+                    "op": "operator"
+                  }
+                }
+              },
+              "origin": {
+                "source": "math.va",
+                "line": 2,
+                "column": 106,
+                "instance": "dut",
+                "expansion": []
+              }
+            }
+          ],
+          "states": [],
+          "events": [],
+          "operators": [
+            {
+              "function": "tanh",
+              "input": {
+                "op": "multiply",
+                "left": {
+                  "constant": 20.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "right": {
+                  "constant": 0.0,
+                  "terms": [
+                    {
+                      "node": 0,
+                      "coefficient": -1.0
+                    },
+                    {
+                      "node": 1,
+                      "coefficient": 1.0
+                    }
+                  ],
+                  "op": "affine"
+                }
+              },
+              "origin": {
+                "source": "math.va",
+                "line": 2,
+                "column": 117,
+                "instance": "dut",
+                "expansion": []
+              },
+              "kind": "math"
+            }
+          ],
+          "schema_version": 33,
+          "step_bounds": [],
+          "procedures": [
+            {
+              "procedure_id": 0,
+              "instance": "dut",
+              "body": [
+                {
+                  "expanded_statement_ordinal": 0,
+                  "action": {
+                    "contribution": 0,
+                    "kind": "contribution_capture"
+                  }
+                }
+              ]
+            }
+          ],
+          "real_bindings": []
+        },
+        "driven": [
+          "u"
+        ],
+        "samples": [],
+        "transient": {
+          "pwl": [
+            [
+              [
+                0.0,
+                -0.95
+              ],
+              [
+                1.0,
+                -0.95
+              ]
+            ]
+          ],
+          "output_times": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "stop": 1.0,
+          "max_step": 0.1
+        },
+        "tolerances": {
+          "absolute": 1e-12,
+          "relative": 1e-10
+        }
+      },
+      "response": {
+        "schema_version": 33,
+        "engine": "independent-synthetic-control",
+        "nodes": [
+          "0",
+          "u",
+          "y"
+        ],
+        "solutions": [
+          {
+            "voltages": [
+              0.0,
+              -0.95,
+              0.9599999999999999
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              -0.95,
+              0.9599999999999999
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              -0.95,
+              0.9599999999999999
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          }
+        ],
+        "transient": {
+          "times": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "state_names": [],
+          "states": [
+            [],
+            [],
+            []
+          ],
+          "events": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0
+        },
+        "observation_evidence": {
+          "schema_version": 1,
+          "nodes": [
+            "0",
+            "u",
+            "y"
+          ],
+          "effective_controls": {
+            "absolute_V": 1e-12,
+            "relative": 1e-10,
+            "stop_s": 1.0,
+            "max_step_s": 0.1,
+            "max_step_applied": false
+          },
+          "sample_origins": [
+            "stateless_working_point",
+            "stateless_working_point",
+            "stateless_working_point"
+          ],
+          "initial_settled": true,
+          "voltage_bounds_V": [
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                -0.9500000000000001,
+                -0.9499999999999998
+              ],
+              [
+                -1000.0,
+                1000.0
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                -0.9500000000000001,
+                -0.9499999999999998
+              ],
+              [
+                -1000.0,
+                1000.0
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                -0.9500000000000001,
+                -0.9499999999999998
+              ],
+              [
+                -1000.0,
+                1000.0
+              ]
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "mutation": "wrong_representative_wide_box",
+      "independent_answer": "0.0265614708107139584796395506658122197085144459781533751933515956746175011177431464334885285431308454891081127917834575311",
+      "request": {
+        "program": {
+          "nodes": [
+            "0",
+            "u",
+            "y"
+          ],
+          "contributions": [
+            {
+              "branch": {
+                "instance": "dut",
+                "local_positive": "0",
+                "local_negative": "y",
+                "kind": "voltage"
+              },
+              "positive": 0,
+              "negative": 2,
+              "rhs": {
+                "op": "multiply",
+                "left": {
+                  "constant": -1.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "right": {
+                  "op": "multiply",
+                  "left": {
+                    "constant": 0.0,
+                    "terms": [
+                      {
+                        "node": 0,
+                        "coefficient": -1.0
+                      },
+                      {
+                        "node": 1,
+                        "coefficient": 1.0
+                      }
+                    ],
+                    "op": "affine"
+                  },
+                  "right": {
+                    "operator": 0,
+                    "op": "operator"
+                  }
+                }
+              },
+              "origin": {
+                "source": "math.va",
+                "line": 2,
+                "column": 106,
+                "instance": "dut",
+                "expansion": []
+              }
+            }
+          ],
+          "states": [],
+          "events": [],
+          "operators": [
+            {
+              "function": "tanh",
+              "input": {
+                "op": "multiply",
+                "left": {
+                  "constant": 20.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "right": {
+                  "constant": 0.0,
+                  "terms": [
+                    {
+                      "node": 0,
+                      "coefficient": -1.0
+                    },
+                    {
+                      "node": 1,
+                      "coefficient": 1.0
+                    }
+                  ],
+                  "op": "affine"
+                }
+              },
+              "origin": {
+                "source": "math.va",
+                "line": 2,
+                "column": 117,
+                "instance": "dut",
+                "expansion": []
+              },
+              "kind": "math"
+            }
+          ],
+          "schema_version": 33,
+          "step_bounds": [],
+          "procedures": [
+            {
+              "procedure_id": 0,
+              "instance": "dut",
+              "body": [
+                {
+                  "expanded_statement_ordinal": 0,
+                  "action": {
+                    "contribution": 0,
+                    "kind": "contribution_capture"
+                  }
+                }
+              ]
+            }
+          ],
+          "real_bindings": []
+        },
+        "driven": [
+          "u"
+        ],
+        "samples": [],
+        "transient": {
+          "pwl": [
+            [
+              [
+                0.0,
+                -0.04
+              ],
+              [
+                1.0,
+                -0.04
+              ]
+            ]
+          ],
+          "output_times": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "stop": 1.0,
+          "max_step": 0.1
+        },
+        "tolerances": {
+          "absolute": 1e-12,
+          "relative": 1e-10
+        }
+      },
+      "response": {
+        "schema_version": 33,
+        "engine": "independent-synthetic-control",
+        "nodes": [
+          "0",
+          "u",
+          "y"
+        ],
+        "solutions": [
+          {
+            "voltages": [
+              0.0,
+              -0.04,
+              0.03656147081071396
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              -0.04,
+              0.03656147081071396
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              -0.04,
+              0.03656147081071396
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          }
+        ],
+        "transient": {
+          "times": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "state_names": [],
+          "states": [
+            [],
+            [],
+            []
+          ],
+          "events": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0
+        },
+        "observation_evidence": {
+          "schema_version": 1,
+          "nodes": [
+            "0",
+            "u",
+            "y"
+          ],
+          "effective_controls": {
+            "absolute_V": 1e-12,
+            "relative": 1e-10,
+            "stop_s": 1.0,
+            "max_step_s": 0.1,
+            "max_step_applied": false
+          },
+          "sample_origins": [
+            "stateless_working_point",
+            "stateless_working_point",
+            "stateless_working_point"
+          ],
+          "initial_settled": true,
+          "voltage_bounds_V": [
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                -0.04000000000000001,
+                -0.039999999999999994
+              ],
+              [
+                -1000.0,
+                1000.0
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                -0.04000000000000001,
+                -0.039999999999999994
+              ],
+              [
+                -1000.0,
+                1000.0
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                -0.04000000000000001,
+                -0.039999999999999994
+              ],
+              [
+                -1000.0,
+                1000.0
+              ]
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "mutation": "wrong_representative_wide_box",
+      "independent_answer": "0",
+      "request": {
+        "program": {
+          "nodes": [
+            "0",
+            "u",
+            "y"
+          ],
+          "contributions": [
+            {
+              "branch": {
+                "instance": "dut",
+                "local_positive": "0",
+                "local_negative": "y",
+                "kind": "voltage"
+              },
+              "positive": 0,
+              "negative": 2,
+              "rhs": {
+                "op": "multiply",
+                "left": {
+                  "constant": -1.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "right": {
+                  "op": "multiply",
+                  "left": {
+                    "constant": 0.0,
+                    "terms": [
+                      {
+                        "node": 0,
+                        "coefficient": -1.0
+                      },
+                      {
+                        "node": 1,
+                        "coefficient": 1.0
+                      }
+                    ],
+                    "op": "affine"
+                  },
+                  "right": {
+                    "operator": 0,
+                    "op": "operator"
+                  }
+                }
+              },
+              "origin": {
+                "source": "math.va",
+                "line": 2,
+                "column": 106,
+                "instance": "dut",
+                "expansion": []
+              }
+            }
+          ],
+          "states": [],
+          "events": [],
+          "operators": [
+            {
+              "function": "tanh",
+              "input": {
+                "op": "multiply",
+                "left": {
+                  "constant": 20.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "right": {
+                  "constant": 0.0,
+                  "terms": [
+                    {
+                      "node": 0,
+                      "coefficient": -1.0
+                    },
+                    {
+                      "node": 1,
+                      "coefficient": 1.0
+                    }
+                  ],
+                  "op": "affine"
+                }
+              },
+              "origin": {
+                "source": "math.va",
+                "line": 2,
+                "column": 117,
+                "instance": "dut",
+                "expansion": []
+              },
+              "kind": "math"
+            }
+          ],
+          "schema_version": 33,
+          "step_bounds": [],
+          "procedures": [
+            {
+              "procedure_id": 0,
+              "instance": "dut",
+              "body": [
+                {
+                  "expanded_statement_ordinal": 0,
+                  "action": {
+                    "contribution": 0,
+                    "kind": "contribution_capture"
+                  }
+                }
+              ]
+            }
+          ],
+          "real_bindings": []
+        },
+        "driven": [
+          "u"
+        ],
+        "samples": [],
+        "transient": {
+          "pwl": [
+            [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                1.0,
+                0.0
+              ]
+            ]
+          ],
+          "output_times": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "stop": 1.0,
+          "max_step": 0.1
+        },
+        "tolerances": {
+          "absolute": 1e-12,
+          "relative": 1e-10
+        }
+      },
+      "response": {
+        "schema_version": 33,
+        "engine": "independent-synthetic-control",
+        "nodes": [
+          "0",
+          "u",
+          "y"
+        ],
+        "solutions": [
+          {
+            "voltages": [
+              0.0,
+              0.0,
+              0.01
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              0.0,
+              0.01
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              0.0,
+              0.01
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          }
+        ],
+        "transient": {
+          "times": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "state_names": [],
+          "states": [
+            [],
+            [],
+            []
+          ],
+          "events": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0
+        },
+        "observation_evidence": {
+          "schema_version": 1,
+          "nodes": [
+            "0",
+            "u",
+            "y"
+          ],
+          "effective_controls": {
+            "absolute_V": 1e-12,
+            "relative": 1e-10,
+            "stop_s": 1.0,
+            "max_step_s": 0.1,
+            "max_step_applied": false
+          },
+          "sample_origins": [
+            "stateless_working_point",
+            "stateless_working_point",
+            "stateless_working_point"
+          ],
+          "initial_settled": true,
+          "voltage_bounds_V": [
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                -1000.0,
+                1000.0
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                -1000.0,
+                1000.0
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                -1000.0,
+                1000.0
+              ]
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "mutation": "wrong_representative_wide_box",
+      "independent_answer": "0.00759897924510449762605302448984632873585794260909057949943487199540879749377962810013878653943174503951226023425338769070",
+      "request": {
+        "program": {
+          "nodes": [
+            "0",
+            "u",
+            "y"
+          ],
+          "contributions": [
+            {
+              "branch": {
+                "instance": "dut",
+                "local_positive": "0",
+                "local_negative": "y",
+                "kind": "voltage"
+              },
+              "positive": 0,
+              "negative": 2,
+              "rhs": {
+                "op": "multiply",
+                "left": {
+                  "constant": -1.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "right": {
+                  "op": "multiply",
+                  "left": {
+                    "constant": 0.0,
+                    "terms": [
+                      {
+                        "node": 0,
+                        "coefficient": -1.0
+                      },
+                      {
+                        "node": 1,
+                        "coefficient": 1.0
+                      }
+                    ],
+                    "op": "affine"
+                  },
+                  "right": {
+                    "operator": 0,
+                    "op": "operator"
+                  }
+                }
+              },
+              "origin": {
+                "source": "math.va",
+                "line": 2,
+                "column": 106,
+                "instance": "dut",
+                "expansion": []
+              }
+            }
+          ],
+          "states": [],
+          "events": [],
+          "operators": [
+            {
+              "function": "tanh",
+              "input": {
+                "op": "multiply",
+                "left": {
+                  "constant": 20.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "right": {
+                  "constant": 0.0,
+                  "terms": [
+                    {
+                      "node": 0,
+                      "coefficient": -1.0
+                    },
+                    {
+                      "node": 1,
+                      "coefficient": 1.0
+                    }
+                  ],
+                  "op": "affine"
+                }
+              },
+              "origin": {
+                "source": "math.va",
+                "line": 2,
+                "column": 117,
+                "instance": "dut",
+                "expansion": []
+              },
+              "kind": "math"
+            }
+          ],
+          "schema_version": 33,
+          "step_bounds": [],
+          "procedures": [
+            {
+              "procedure_id": 0,
+              "instance": "dut",
+              "body": [
+                {
+                  "expanded_statement_ordinal": 0,
+                  "action": {
+                    "contribution": 0,
+                    "kind": "contribution_capture"
+                  }
+                }
+              ]
+            }
+          ],
+          "real_bindings": []
+        },
+        "driven": [
+          "u"
+        ],
+        "samples": [],
+        "transient": {
+          "pwl": [
+            [
+              [
+                0.0,
+                0.02
+              ],
+              [
+                1.0,
+                0.02
+              ]
+            ]
+          ],
+          "output_times": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "stop": 1.0,
+          "max_step": 0.1
+        },
+        "tolerances": {
+          "absolute": 1e-12,
+          "relative": 1e-10
+        }
+      },
+      "response": {
+        "schema_version": 33,
+        "engine": "independent-synthetic-control",
+        "nodes": [
+          "0",
+          "u",
+          "y"
+        ],
+        "solutions": [
+          {
+            "voltages": [
+              0.0,
+              0.02,
+              0.0175989792451045
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              0.02,
+              0.0175989792451045
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              0.02,
+              0.0175989792451045
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          }
+        ],
+        "transient": {
+          "times": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "state_names": [],
+          "states": [
+            [],
+            [],
+            []
+          ],
+          "events": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0
+        },
+        "observation_evidence": {
+          "schema_version": 1,
+          "nodes": [
+            "0",
+            "u",
+            "y"
+          ],
+          "effective_controls": {
+            "absolute_V": 1e-12,
+            "relative": 1e-10,
+            "stop_s": 1.0,
+            "max_step_s": 0.1,
+            "max_step_applied": false
+          },
+          "sample_origins": [
+            "stateless_working_point",
+            "stateless_working_point",
+            "stateless_working_point"
+          ],
+          "initial_settled": true,
+          "voltage_bounds_V": [
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                0.019999999999999997,
+                0.020000000000000004
+              ],
+              [
+                -1000.0,
+                1000.0
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                0.019999999999999997,
+                0.020000000000000004
+              ],
+              [
+                -1000.0,
+                1000.0
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                0.019999999999999997,
+                0.020000000000000004
+              ],
+              [
+                -1000.0,
+                1000.0
+              ]
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "mutation": "wrong_representative_wide_box",
+      "independent_answer": "0.249977301065648782790147744141140666513679304435946031585792790431414528270937804256216675352717994721433213916570487696",
+      "request": {
+        "program": {
+          "nodes": [
+            "0",
+            "u",
+            "y"
+          ],
+          "contributions": [
+            {
+              "branch": {
+                "instance": "dut",
+                "local_positive": "0",
+                "local_negative": "y",
+                "kind": "voltage"
+              },
+              "positive": 0,
+              "negative": 2,
+              "rhs": {
+                "op": "multiply",
+                "left": {
+                  "constant": -1.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "right": {
+                  "op": "multiply",
+                  "left": {
+                    "constant": 0.0,
+                    "terms": [
+                      {
+                        "node": 0,
+                        "coefficient": -1.0
+                      },
+                      {
+                        "node": 1,
+                        "coefficient": 1.0
+                      }
+                    ],
+                    "op": "affine"
+                  },
+                  "right": {
+                    "operator": 0,
+                    "op": "operator"
+                  }
+                }
+              },
+              "origin": {
+                "source": "math.va",
+                "line": 2,
+                "column": 106,
+                "instance": "dut",
+                "expansion": []
+              }
+            }
+          ],
+          "states": [],
+          "events": [],
+          "operators": [
+            {
+              "function": "tanh",
+              "input": {
+                "op": "multiply",
+                "left": {
+                  "constant": 20.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "right": {
+                  "constant": 0.0,
+                  "terms": [
+                    {
+                      "node": 0,
+                      "coefficient": -1.0
+                    },
+                    {
+                      "node": 1,
+                      "coefficient": 1.0
+                    }
+                  ],
+                  "op": "affine"
+                }
+              },
+              "origin": {
+                "source": "math.va",
+                "line": 2,
+                "column": 117,
+                "instance": "dut",
+                "expansion": []
+              },
+              "kind": "math"
+            }
+          ],
+          "schema_version": 33,
+          "step_bounds": [],
+          "procedures": [
+            {
+              "procedure_id": 0,
+              "instance": "dut",
+              "body": [
+                {
+                  "expanded_statement_ordinal": 0,
+                  "action": {
+                    "contribution": 0,
+                    "kind": "contribution_capture"
+                  }
+                }
+              ]
+            }
+          ],
+          "real_bindings": []
+        },
+        "driven": [
+          "u"
+        ],
+        "samples": [],
+        "transient": {
+          "pwl": [
+            [
+              [
+                0.0,
+                0.25
+              ],
+              [
+                1.0,
+                0.25
+              ]
+            ]
+          ],
+          "output_times": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "stop": 1.0,
+          "max_step": 0.1
+        },
+        "tolerances": {
+          "absolute": 1e-12,
+          "relative": 1e-10
+        }
+      },
+      "response": {
+        "schema_version": 33,
+        "engine": "independent-synthetic-control",
+        "nodes": [
+          "0",
+          "u",
+          "y"
+        ],
+        "solutions": [
+          {
+            "voltages": [
+              0.0,
+              0.25,
+              0.25997730106564876
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              0.25,
+              0.25997730106564876
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              0.25,
+              0.25997730106564876
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          }
+        ],
+        "transient": {
+          "times": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "state_names": [],
+          "states": [
+            [],
+            [],
+            []
+          ],
+          "events": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0
+        },
+        "observation_evidence": {
+          "schema_version": 1,
+          "nodes": [
+            "0",
+            "u",
+            "y"
+          ],
+          "effective_controls": {
+            "absolute_V": 1e-12,
+            "relative": 1e-10,
+            "stop_s": 1.0,
+            "max_step_s": 0.1,
+            "max_step_applied": false
+          },
+          "sample_origins": [
+            "stateless_working_point",
+            "stateless_working_point",
+            "stateless_working_point"
+          ],
+          "initial_settled": true,
+          "voltage_bounds_V": [
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                0.24999999999999997,
+                0.25000000000000006
+              ],
+              [
+                -1000.0,
+                1000.0
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                0.24999999999999997,
+                0.25000000000000006
+              ],
+              [
+                -1000.0,
+                1000.0
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                0.24999999999999997,
+                0.25000000000000006
+              ],
+              [
+                -1000.0,
+                1000.0
+              ]
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "mutation": "wrong_representative_wide_box",
+      "independent_answer": "0.549999999693158554278931856341567163548161526755923387356178625350788676503200930658128942860882480217280645313153545022",
+      "request": {
+        "program": {
+          "nodes": [
+            "0",
+            "u",
+            "y"
+          ],
+          "contributions": [
+            {
+              "branch": {
+                "instance": "dut",
+                "local_positive": "0",
+                "local_negative": "y",
+                "kind": "voltage"
+              },
+              "positive": 0,
+              "negative": 2,
+              "rhs": {
+                "op": "multiply",
+                "left": {
+                  "constant": -1.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "right": {
+                  "op": "multiply",
+                  "left": {
+                    "constant": 0.0,
+                    "terms": [
+                      {
+                        "node": 0,
+                        "coefficient": -1.0
+                      },
+                      {
+                        "node": 1,
+                        "coefficient": 1.0
+                      }
+                    ],
+                    "op": "affine"
+                  },
+                  "right": {
+                    "operator": 0,
+                    "op": "operator"
+                  }
+                }
+              },
+              "origin": {
+                "source": "math.va",
+                "line": 2,
+                "column": 106,
+                "instance": "dut",
+                "expansion": []
+              }
+            }
+          ],
+          "states": [],
+          "events": [],
+          "operators": [
+            {
+              "function": "tanh",
+              "input": {
+                "op": "multiply",
+                "left": {
+                  "constant": 20.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "right": {
+                  "constant": 0.0,
+                  "terms": [
+                    {
+                      "node": 0,
+                      "coefficient": -1.0
+                    },
+                    {
+                      "node": 1,
+                      "coefficient": 1.0
+                    }
+                  ],
+                  "op": "affine"
+                }
+              },
+              "origin": {
+                "source": "math.va",
+                "line": 2,
+                "column": 117,
+                "instance": "dut",
+                "expansion": []
+              },
+              "kind": "math"
+            }
+          ],
+          "schema_version": 33,
+          "step_bounds": [],
+          "procedures": [
+            {
+              "procedure_id": 0,
+              "instance": "dut",
+              "body": [
+                {
+                  "expanded_statement_ordinal": 0,
+                  "action": {
+                    "contribution": 0,
+                    "kind": "contribution_capture"
+                  }
+                }
+              ]
+            }
+          ],
+          "real_bindings": []
+        },
+        "driven": [
+          "u"
+        ],
+        "samples": [],
+        "transient": {
+          "pwl": [
+            [
+              [
+                0.0,
+                0.55
+              ],
+              [
+                1.0,
+                0.55
+              ]
+            ]
+          ],
+          "output_times": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "stop": 1.0,
+          "max_step": 0.1
+        },
+        "tolerances": {
+          "absolute": 1e-12,
+          "relative": 1e-10
+        }
+      },
+      "response": {
+        "schema_version": 33,
+        "engine": "independent-synthetic-control",
+        "nodes": [
+          "0",
+          "u",
+          "y"
+        ],
+        "solutions": [
+          {
+            "voltages": [
+              0.0,
+              0.55,
+              0.5599999996931586
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              0.55,
+              0.5599999996931586
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              0.55,
+              0.5599999996931586
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          }
+        ],
+        "transient": {
+          "times": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "state_names": [],
+          "states": [
+            [],
+            [],
+            []
+          ],
+          "events": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0
+        },
+        "observation_evidence": {
+          "schema_version": 1,
+          "nodes": [
+            "0",
+            "u",
+            "y"
+          ],
+          "effective_controls": {
+            "absolute_V": 1e-12,
+            "relative": 1e-10,
+            "stop_s": 1.0,
+            "max_step_s": 0.1,
+            "max_step_applied": false
+          },
+          "sample_origins": [
+            "stateless_working_point",
+            "stateless_working_point",
+            "stateless_working_point"
+          ],
+          "initial_settled": true,
+          "voltage_bounds_V": [
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                0.5499999999999999,
+                0.5500000000000002
+              ],
+              [
+                -1000.0,
+                1000.0
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                0.5499999999999999,
+                0.5500000000000002
+              ],
+              [
+                -1000.0,
+                1000.0
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                0.5499999999999999,
+                0.5500000000000002
+              ],
+              [
+                -1000.0,
+                1000.0
+              ]
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "mutation": "wrong_representative_wide_box",
+      "independent_answer": "0.346402758007581693746069451279310900017541654629219924230224374261054891399851752325703053014593993184136101322967619626",
+      "request": {
+        "program": {
+          "nodes": [
+            "0",
+            "dut:z",
+            "u",
+            "y"
+          ],
+          "contributions": [
+            {
+              "branch": {
+                "instance": "dut",
+                "local_positive": "y",
+                "local_negative": "z",
+                "kind": "voltage"
+              },
+              "positive": 3,
+              "negative": 1,
+              "rhs": {
+                "op": "multiply",
+                "left": {
+                  "constant": 0.0,
+                  "terms": [
+                    {
+                      "node": 0,
+                      "coefficient": -1.0
+                    },
+                    {
+                      "node": 2,
+                      "coefficient": 1.0
+                    }
+                  ],
+                  "op": "affine"
+                },
+                "right": {
+                  "operator": 0,
+                  "op": "operator"
+                }
+              },
+              "origin": {
+                "source": "math.va",
+                "line": 2,
+                "column": 119,
+                "instance": "dut",
+                "expansion": []
+              }
+            },
+            {
+              "branch": {
+                "instance": "dut",
+                "local_positive": "0",
+                "local_negative": "z",
+                "kind": "voltage"
+              },
+              "positive": 0,
+              "negative": 1,
+              "rhs": {
+                "constant": -0.25,
+                "terms": [],
+                "op": "affine"
+              },
+              "origin": {
+                "source": "math.va",
+                "line": 2,
+                "column": 151,
+                "instance": "dut",
+                "expansion": []
+              }
+            }
+          ],
+          "states": [],
+          "events": [],
+          "operators": [
+            {
+              "function": "tanh",
+              "input": {
+                "op": "multiply",
+                "left": {
+                  "constant": 20.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "right": {
+                  "constant": 0.0,
+                  "terms": [
+                    {
+                      "node": 0,
+                      "coefficient": -1.0
+                    },
+                    {
+                      "node": 2,
+                      "coefficient": 1.0
+                    }
+                  ],
+                  "op": "affine"
+                }
+              },
+              "origin": {
+                "source": "math.va",
+                "line": 2,
+                "column": 132,
+                "instance": "dut",
+                "expansion": []
+              },
+              "kind": "math"
+            }
+          ],
+          "schema_version": 33,
+          "step_bounds": [],
+          "procedures": [
+            {
+              "procedure_id": 0,
+              "instance": "dut",
+              "body": [
+                {
+                  "expanded_statement_ordinal": 0,
+                  "action": {
+                    "contribution": 0,
+                    "kind": "contribution_capture"
+                  }
+                },
+                {
+                  "expanded_statement_ordinal": 1,
+                  "action": {
+                    "contribution": 1,
+                    "kind": "contribution_capture"
+                  }
+                }
+              ]
+            }
+          ],
+          "real_bindings": []
+        },
+        "driven": [
+          "u"
+        ],
+        "samples": [],
+        "transient": {
+          "pwl": [
+            [
+              [
+                0.0,
+                0.1
+              ],
+              [
+                1.0,
+                0.1
+              ]
+            ]
+          ],
+          "output_times": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "stop": 1.0,
+          "max_step": 0.1
+        },
+        "tolerances": {
+          "absolute": 1e-12,
+          "relative": 1e-10
+        }
+      },
+      "response": {
+        "schema_version": 33,
+        "engine": "independent-synthetic-control",
+        "nodes": [
+          "0",
+          "dut:z",
+          "u",
+          "y"
+        ],
+        "solutions": [
+          {
+            "voltages": [
+              0.0,
+              0.25,
+              0.1,
+              0.3564027580075817
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              0.25,
+              0.1,
+              0.3564027580075817
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              0.25,
+              0.1,
+              0.3564027580075817
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          }
+        ],
+        "transient": {
+          "times": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "state_names": [],
+          "states": [
+            [],
+            [],
+            []
+          ],
+          "events": [],
+          "accepted_steps": 0,
+          "discarded_trials": 0
+        },
+        "observation_evidence": {
+          "schema_version": 1,
+          "nodes": [
+            "0",
+            "dut:z",
+            "u",
+            "y"
+          ],
+          "effective_controls": {
+            "absolute_V": 1e-12,
+            "relative": 1e-10,
+            "stop_s": 1.0,
+            "max_step_s": 0.1,
+            "max_step_applied": false
+          },
+          "sample_origins": [
+            "stateless_working_point",
+            "stateless_working_point",
+            "stateless_working_point"
+          ],
+          "initial_settled": true,
+          "voltage_bounds_V": [
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                0.24999999999999997,
+                0.25000000000000006
+              ],
+              [
+                0.09999999999999999,
+                0.10000000000000002
+              ],
+              [
+                -1000.0,
+                1000.0
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                0.24999999999999997,
+                0.25000000000000006
+              ],
+              [
+                0.09999999999999999,
+                0.10000000000000002
+              ],
+              [
+                -1000.0,
+                1000.0
+              ]
+            ],
+            [
+              [
+                -5e-324,
+                5e-324
+              ],
+              [
+                0.24999999999999997,
+                0.25000000000000006
+              ],
+              [
+                0.09999999999999999,
+                0.10000000000000002
+              ],
+              [
+                -1000.0,
+                1000.0
+              ]
+            ]
+          ]
+        }
+      }
+    }
+  ]
+}

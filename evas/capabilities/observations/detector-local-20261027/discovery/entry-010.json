@@ -1,0 +1,435 @@
+{
+  "entry": {
+    "workflow": ".github/workflows/numerical-assurance.yml",
+    "line": 197,
+    "job": "static-checks",
+    "step": "Independent mathematics and checker calibration (no simulator)",
+    "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+    "step_if": "needs.selection.outputs.calibration == 'true'",
+    "command": "python3 -B -m unittest discover -s evas/validation/event_alignment -p 'test_checker.py' -v",
+    "environment_overrides": {},
+    "declared_python_versions": [
+      "3.12"
+    ],
+    "start": "evas/validation/event_alignment",
+    "pattern": "test_checker.py",
+    "namespace": "validation",
+    "collector": "unittest",
+    "mode": "declared-ci-literal",
+    "purpose": "role-not-semantic-qualification",
+    "entry_id": "62077e5d119f4265d3bbc0eb8bcbdb49b12cb38f0330fafa163849d7c2e63761"
+  },
+  "receipt": {
+    "collector": {
+      "definition_profile": "actual-code-or-registered-native-skip-v1",
+      "native_skip_authority": {
+        "factory_span_sha256": "a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad",
+        "profile": "registered-native-unittest-skip-v1",
+        "runtime_file_sha256": "45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987",
+        "runtime_source": "unittest/case.py",
+        "wrapper_span_sha256": "96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda"
+      },
+      "path": "scripts/capabilities/discover_methods.py",
+      "sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "source_relationship": "owned-source-root"
+    },
+    "complete": true,
+    "discovered_instances": 19,
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONPATH": null,
+      "bytecode_disabled": true,
+      "cache_tag": "cpython-312",
+      "environment_scope": "python-runtime-and-import-path-only",
+      "executable": "/opt/homebrew/opt/python@3.12/bin/python3.12",
+      "implementation": "cpython",
+      "platform": "darwin",
+      "python_version": "3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]",
+      "sys_path_before_selected_imports": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/source",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python312.zip",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload",
+        "/opt/homebrew/lib/python3.12/site-packages"
+      ]
+    },
+    "error_count": 0,
+    "errors": [],
+    "loader_error_count": 0,
+    "methods": [
+      {
+        "definition": {
+          "line": 140,
+          "name": "test_boundary_consumers_cannot_choose_conflicting_phases",
+          "path": "evas/validation/event_alignment/test_checker.py",
+          "sha256": "8e5f0250ba9d935448799cae7222c534231d7abc74084d615128722cc12f7c8a"
+        },
+        "generated": false,
+        "module_path": "evas/validation/event_alignment/test_checker.py",
+        "module_sha256": "93bc691893685462da8f3a76c89f11c9b7dc3815cceed6e60907032aee9262aa",
+        "runtime_id": "test_checker.CheckerCalibration.test_boundary_consumers_cannot_choose_conflicting_phases",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 146,
+          "name": "test_boundary_rows_cannot_refit_the_event_time_independently",
+          "path": "evas/validation/event_alignment/test_checker.py",
+          "sha256": "fd8f850855c07234332aad6bf07448613e1190fcc7bfaed232db8d33e00404e8"
+        },
+        "generated": false,
+        "module_path": "evas/validation/event_alignment/test_checker.py",
+        "module_sha256": "93bc691893685462da8f3a76c89f11c9b7dc3815cceed6e60907032aee9262aa",
+        "runtime_id": "test_checker.CheckerCalibration.test_boundary_rows_cannot_refit_the_event_time_independently",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 105,
+          "name": "test_cancelled_held_root_cannot_still_increment",
+          "path": "evas/validation/event_alignment/test_checker.py",
+          "sha256": "c60b5fbd89268342f9661108d0f05d9ab1200cb4fc0993475740989eb767d061"
+        },
+        "generated": false,
+        "module_path": "evas/validation/event_alignment/test_checker.py",
+        "module_sha256": "93bc691893685462da8f3a76c89f11c9b7dc3815cceed6e60907032aee9262aa",
+        "runtime_id": "test_checker.CheckerCalibration.test_cancelled_held_root_cannot_still_increment",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 88,
+          "name": "test_cross_sample_is_not_an_independently_fitted_target",
+          "path": "evas/validation/event_alignment/test_checker.py",
+          "sha256": "cf639784a635a87676c6aa719f07281e4e1d1102b42329b398c12e460e87acb5"
+        },
+        "generated": false,
+        "module_path": "evas/validation/event_alignment/test_checker.py",
+        "module_sha256": "93bc691893685462da8f3a76c89f11c9b7dc3815cceed6e60907032aee9262aa",
+        "runtime_id": "test_checker.CheckerCalibration.test_cross_sample_is_not_an_independently_fitted_target",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 169,
+          "name": "test_decimal_export_last_bit_is_not_exact_stop_failure",
+          "path": "evas/validation/event_alignment/test_checker.py",
+          "sha256": "3245c6988abe345aa168abfbd1aec3d403bec4cc78bf3d16019ed62ddd73ae2e"
+        },
+        "generated": false,
+        "module_path": "evas/validation/event_alignment/test_checker.py",
+        "module_sha256": "93bc691893685462da8f3a76c89f11c9b7dc3815cceed6e60907032aee9262aa",
+        "runtime_id": "test_checker.CheckerCalibration.test_decimal_export_last_bit_is_not_exact_stop_failure",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 76,
+          "name": "test_downstream_edge_cannot_choose_another_event_time",
+          "path": "evas/validation/event_alignment/test_checker.py",
+          "sha256": "36e72306083aab5ffbaa5039f11429d8f8e4f50241aecfd3d4c8c84e2bdecbb6"
+        },
+        "generated": false,
+        "module_path": "evas/validation/event_alignment/test_checker.py",
+        "module_sha256": "93bc691893685462da8f3a76c89f11c9b7dc3815cceed6e60907032aee9262aa",
+        "runtime_id": "test_checker.CheckerCalibration.test_downstream_edge_cannot_choose_another_event_time",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 100,
+          "name": "test_dropped_pulse_fails_even_with_correct_final_zero",
+          "path": "evas/validation/event_alignment/test_checker.py",
+          "sha256": "bff623147bbb0b29b19cf5c26f579b76bbcc49298d11712ac8841239c04e0a36"
+        },
+        "generated": false,
+        "module_path": "evas/validation/event_alignment/test_checker.py",
+        "module_sha256": "93bc691893685462da8f3a76c89f11c9b7dc3815cceed6e60907032aee9262aa",
+        "runtime_id": "test_checker.CheckerCalibration.test_dropped_pulse_fails_even_with_correct_final_zero",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 165,
+          "name": "test_incomplete_run_and_rejection_are_not_success",
+          "path": "evas/validation/event_alignment/test_checker.py",
+          "sha256": "a01a74c75725e362d3c2880ba82f277f46fc6128c0fc47e7dc6f7f3351d88204"
+        },
+        "generated": false,
+        "module_path": "evas/validation/event_alignment/test_checker.py",
+        "module_sha256": "93bc691893685462da8f3a76c89f11c9b7dc3815cceed6e60907032aee9262aa",
+        "runtime_id": "test_checker.CheckerCalibration.test_incomplete_run_and_rejection_are_not_success",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 82,
+          "name": "test_integral_area_cannot_choose_another_event_time",
+          "path": "evas/validation/event_alignment/test_checker.py",
+          "sha256": "0050c163b42ec1ae6fcd09dc80917242ccb5ce8e4720de98333b871d771cafd7"
+        },
+        "generated": false,
+        "module_path": "evas/validation/event_alignment/test_checker.py",
+        "module_sha256": "93bc691893685462da8f3a76c89f11c9b7dc3815cceed6e60907032aee9262aa",
+        "runtime_id": "test_checker.CheckerCalibration.test_integral_area_cannot_choose_another_event_time",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 94,
+          "name": "test_interruption_sample_is_checked_against_retained_edge",
+          "path": "evas/validation/event_alignment/test_checker.py",
+          "sha256": "ea6c229eb597d6bddd98c01b57d108dc8b22c9e53eee04eb579803a31e6d81fc"
+        },
+        "generated": false,
+        "module_path": "evas/validation/event_alignment/test_checker.py",
+        "module_sha256": "93bc691893685462da8f3a76c89f11c9b7dc3815cceed6e60907032aee9262aa",
+        "runtime_id": "test_checker.CheckerCalibration.test_interruption_sample_is_checked_against_retained_edge",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 155,
+          "name": "test_missing_common_point_fails",
+          "path": "evas/validation/event_alignment/test_checker.py",
+          "sha256": "8e760e65475fa26355eed5d725fbd703fc0ad8c8a94e4db5e9df4dbdce3e27de"
+        },
+        "generated": false,
+        "module_path": "evas/validation/event_alignment/test_checker.py",
+        "module_sha256": "93bc691893685462da8f3a76c89f11c9b7dc3815cceed6e60907032aee9262aa",
+        "runtime_id": "test_checker.CheckerCalibration.test_missing_common_point_fails",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 159,
+          "name": "test_missing_output_and_nonfinite_fail",
+          "path": "evas/validation/event_alignment/test_checker.py",
+          "sha256": "7cbf69b3aa9d0ad95bd658b57fadd2262bf4bf07330fab1cca87122c90d31f03"
+        },
+        "generated": false,
+        "module_path": "evas/validation/event_alignment/test_checker.py",
+        "module_sha256": "93bc691893685462da8f3a76c89f11c9b7dc3815cceed6e60907032aee9262aa",
+        "runtime_id": "test_checker.CheckerCalibration.test_missing_output_and_nonfinite_fail",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 118,
+          "name": "test_near_sources_must_each_be_observed",
+          "path": "evas/validation/event_alignment/test_checker.py",
+          "sha256": "e3f02342b29974a1be51bc54f954c0cbd152f6b1a3e891064d1b7aea1132b296"
+        },
+        "generated": false,
+        "module_path": "evas/validation/event_alignment/test_checker.py",
+        "module_sha256": "93bc691893685462da8f3a76c89f11c9b7dc3815cceed6e60907032aee9262aa",
+        "runtime_id": "test_checker.CheckerCalibration.test_near_sources_must_each_be_observed",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 111,
+          "name": "test_old_rescheduled_root_is_not_hidden_by_final_count",
+          "path": "evas/validation/event_alignment/test_checker.py",
+          "sha256": "e113568ebdabd1829f7914b089e0a30dbed130cd6f1459980d7ed6521e00a5f4"
+        },
+        "generated": false,
+        "module_path": "evas/validation/event_alignment/test_checker.py",
+        "module_sha256": "93bc691893685462da8f3a76c89f11c9b7dc3815cceed6e60907032aee9262aa",
+        "runtime_id": "test_checker.CheckerCalibration.test_old_rescheduled_root_is_not_hidden_by_final_count",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 71,
+          "name": "test_one_permitted_event_shift_is_shared_by_all_consumers",
+          "path": "evas/validation/event_alignment/test_checker.py",
+          "sha256": "b576835f3d29887f4195de8d506d8cc323fdddc703114d32499ae194f25f96e9"
+        },
+        "generated": false,
+        "module_path": "evas/validation/event_alignment/test_checker.py",
+        "module_sha256": "93bc691893685462da8f3a76c89f11c9b7dc3815cceed6e60907032aee9262aa",
+        "runtime_id": "test_checker.CheckerCalibration.test_one_permitted_event_shift_is_shared_by_all_consumers",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 65,
+          "name": "test_seven_independent_worked_positive_fixtures",
+          "path": "evas/validation/event_alignment/test_checker.py",
+          "sha256": "22a532e7eda95167f23cd4c4921371304ad4e75899142f554e5e400c09eec83d"
+        },
+        "generated": false,
+        "module_path": "evas/validation/event_alignment/test_checker.py",
+        "module_sha256": "93bc691893685462da8f3a76c89f11c9b7dc3815cceed6e60907032aee9262aa",
+        "runtime_id": "test_checker.CheckerCalibration.test_seven_independent_worked_positive_fixtures",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 134,
+          "name": "test_shared_boundary_can_use_the_common_pre_event_state",
+          "path": "evas/validation/event_alignment/test_checker.py",
+          "sha256": "cb1f7152a0d75af94e2641992f0dd61d11db376bc35d467015bc6e5a1b7b4532"
+        },
+        "generated": false,
+        "module_path": "evas/validation/event_alignment/test_checker.py",
+        "module_sha256": "93bc691893685462da8f3a76c89f11c9b7dc3815cceed6e60907032aee9262aa",
+        "runtime_id": "test_checker.CheckerCalibration.test_shared_boundary_can_use_the_common_pre_event_state",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 129,
+          "name": "test_stamp_must_remain_held",
+          "path": "evas/validation/event_alignment/test_checker.py",
+          "sha256": "56423d9fb1b78a1564c9dd6d2b203575ae19aedbd406a528d2e2ae96a0f5124a"
+        },
+        "generated": false,
+        "module_path": "evas/validation/event_alignment/test_checker.py",
+        "module_sha256": "93bc691893685462da8f3a76c89f11c9b7dc3815cceed6e60907032aee9262aa",
+        "runtime_id": "test_checker.CheckerCalibration.test_stamp_must_remain_held",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 124,
+          "name": "test_stamp_outside_window_fails",
+          "path": "evas/validation/event_alignment/test_checker.py",
+          "sha256": "703a094cbfe60077acd102f3877edf414678cb08ffb8279a82c636d1fda245af"
+        },
+        "generated": false,
+        "module_path": "evas/validation/event_alignment/test_checker.py",
+        "module_sha256": "93bc691893685462da8f3a76c89f11c9b7dc3815cceed6e60907032aee9262aa",
+        "runtime_id": "test_checker.CheckerCalibration.test_stamp_outside_window_fails",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      }
+    ],
+    "namespace": "validation",
+    "schema_version": 1,
+    "skipped_declarations": 0,
+    "unresolved_instances": [],
+    "transport": {
+      "argv": [
+        "/opt/homebrew/opt/python@3.12/bin/python3.12",
+        "-B",
+        "-c",
+        "import os,runpy,sys; sys.path[0]=os.getcwd(); tool=sys.argv[1]; sys.argv=sys.argv[1:]; runpy.run_path(tool,run_name=\"__main__\")",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/source/scripts/capabilities/discover_methods.py",
+        "--worker",
+        "--root",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/source",
+        "--start",
+        "evas/validation/event_alignment",
+        "--pattern",
+        "test_checker.py",
+        "--namespace",
+        "validation"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/source",
+      "returncode": 0,
+      "stdout": "{\"collector\": {\"definition_profile\": \"actual-code-or-registered-native-skip-v1\", \"native_skip_authority\": {\"factory_span_sha256\": \"a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad\", \"profile\": \"registered-native-unittest-skip-v1\", \"runtime_file_sha256\": \"45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987\", \"runtime_source\": \"unittest/case.py\", \"wrapper_span_sha256\": \"96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda\"}, \"path\": \"scripts/capabilities/discover_methods.py\", \"sha256\": \"aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17\", \"source_relationship\": \"owned-source-root\"}, \"complete\": true, \"discovered_instances\": 19, \"environment\": {\"PYTHONDONTWRITEBYTECODE\": \"1\", \"PYTHONPATH\": null, \"bytecode_disabled\": true, \"cache_tag\": \"cpython-312\", \"environment_scope\": \"python-runtime-and-import-path-only\", \"executable\": \"/opt/homebrew/opt/python@3.12/bin/python3.12\", \"implementation\": \"cpython\", \"platform\": \"darwin\", \"python_version\": \"3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"sys_path_before_selected_imports\": [\"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/source\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python312.zip\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload\", \"/opt/homebrew/lib/python3.12/site-packages\"]}, \"error_count\": 0, \"errors\": [], \"loader_error_count\": 0, \"methods\": [{\"definition\": {\"line\": 140, \"name\": \"test_boundary_consumers_cannot_choose_conflicting_phases\", \"path\": \"evas/validation/event_alignment/test_checker.py\", \"sha256\": \"8e5f0250ba9d935448799cae7222c534231d7abc74084d615128722cc12f7c8a\"}, \"generated\": false, \"module_path\": \"evas/validation/event_alignment/test_checker.py\", \"module_sha256\": \"93bc691893685462da8f3a76c89f11c9b7dc3815cceed6e60907032aee9262aa\", \"runtime_id\": \"test_checker.CheckerCalibration.test_boundary_consumers_cannot_choose_conflicting_phases\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 146, \"name\": \"test_boundary_rows_cannot_refit_the_event_time_independently\", \"path\": \"evas/validation/event_alignment/test_checker.py\", \"sha256\": \"fd8f850855c07234332aad6bf07448613e1190fcc7bfaed232db8d33e00404e8\"}, \"generated\": false, \"module_path\": \"evas/validation/event_alignment/test_checker.py\", \"module_sha256\": \"93bc691893685462da8f3a76c89f11c9b7dc3815cceed6e60907032aee9262aa\", \"runtime_id\": \"test_checker.CheckerCalibration.test_boundary_rows_cannot_refit_the_event_time_independently\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 105, \"name\": \"test_cancelled_held_root_cannot_still_increment\", \"path\": \"evas/validation/event_alignment/test_checker.py\", \"sha256\": \"c60b5fbd89268342f9661108d0f05d9ab1200cb4fc0993475740989eb767d061\"}, \"generated\": false, \"module_path\": \"evas/validation/event_alignment/test_checker.py\", \"module_sha256\": \"93bc691893685462da8f3a76c89f11c9b7dc3815cceed6e60907032aee9262aa\", \"runtime_id\": \"test_checker.CheckerCalibration.test_cancelled_held_root_cannot_still_increment\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 88, \"name\": \"test_cross_sample_is_not_an_independently_fitted_target\", \"path\": \"evas/validation/event_alignment/test_checker.py\", \"sha256\": \"cf639784a635a87676c6aa719f07281e4e1d1102b42329b398c12e460e87acb5\"}, \"generated\": false, \"module_path\": \"evas/validation/event_alignment/test_checker.py\", \"module_sha256\": \"93bc691893685462da8f3a76c89f11c9b7dc3815cceed6e60907032aee9262aa\", \"runtime_id\": \"test_checker.CheckerCalibration.test_cross_sample_is_not_an_independently_fitted_target\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 169, \"name\": \"test_decimal_export_last_bit_is_not_exact_stop_failure\", \"path\": \"evas/validation/event_alignment/test_checker.py\", \"sha256\": \"3245c6988abe345aa168abfbd1aec3d403bec4cc78bf3d16019ed62ddd73ae2e\"}, \"generated\": false, \"module_path\": \"evas/validation/event_alignment/test_checker.py\", \"module_sha256\": \"93bc691893685462da8f3a76c89f11c9b7dc3815cceed6e60907032aee9262aa\", \"runtime_id\": \"test_checker.CheckerCalibration.test_decimal_export_last_bit_is_not_exact_stop_failure\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 76, \"name\": \"test_downstream_edge_cannot_choose_another_event_time\", \"path\": \"evas/validation/event_alignment/test_checker.py\", \"sha256\": \"36e72306083aab5ffbaa5039f11429d8f8e4f50241aecfd3d4c8c84e2bdecbb6\"}, \"generated\": false, \"module_path\": \"evas/validation/event_alignment/test_checker.py\", \"module_sha256\": \"93bc691893685462da8f3a76c89f11c9b7dc3815cceed6e60907032aee9262aa\", \"runtime_id\": \"test_checker.CheckerCalibration.test_downstream_edge_cannot_choose_another_event_time\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 100, \"name\": \"test_dropped_pulse_fails_even_with_correct_final_zero\", \"path\": \"evas/validation/event_alignment/test_checker.py\", \"sha256\": \"bff623147bbb0b29b19cf5c26f579b76bbcc49298d11712ac8841239c04e0a36\"}, \"generated\": false, \"module_path\": \"evas/validation/event_alignment/test_checker.py\", \"module_sha256\": \"93bc691893685462da8f3a76c89f11c9b7dc3815cceed6e60907032aee9262aa\", \"runtime_id\": \"test_checker.CheckerCalibration.test_dropped_pulse_fails_even_with_correct_final_zero\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 165, \"name\": \"test_incomplete_run_and_rejection_are_not_success\", \"path\": \"evas/validation/event_alignment/test_checker.py\", \"sha256\": \"a01a74c75725e362d3c2880ba82f277f46fc6128c0fc47e7dc6f7f3351d88204\"}, \"generated\": false, \"module_path\": \"evas/validation/event_alignment/test_checker.py\", \"module_sha256\": \"93bc691893685462da8f3a76c89f11c9b7dc3815cceed6e60907032aee9262aa\", \"runtime_id\": \"test_checker.CheckerCalibration.test_incomplete_run_and_rejection_are_not_success\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 82, \"name\": \"test_integral_area_cannot_choose_another_event_time\", \"path\": \"evas/validation/event_alignment/test_checker.py\", \"sha256\": \"0050c163b42ec1ae6fcd09dc80917242ccb5ce8e4720de98333b871d771cafd7\"}, \"generated\": false, \"module_path\": \"evas/validation/event_alignment/test_checker.py\", \"module_sha256\": \"93bc691893685462da8f3a76c89f11c9b7dc3815cceed6e60907032aee9262aa\", \"runtime_id\": \"test_checker.CheckerCalibration.test_integral_area_cannot_choose_another_event_time\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 94, \"name\": \"test_interruption_sample_is_checked_against_retained_edge\", \"path\": \"evas/validation/event_alignment/test_checker.py\", \"sha256\": \"ea6c229eb597d6bddd98c01b57d108dc8b22c9e53eee04eb579803a31e6d81fc\"}, \"generated\": false, \"module_path\": \"evas/validation/event_alignment/test_checker.py\", \"module_sha256\": \"93bc691893685462da8f3a76c89f11c9b7dc3815cceed6e60907032aee9262aa\", \"runtime_id\": \"test_checker.CheckerCalibration.test_interruption_sample_is_checked_against_retained_edge\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 155, \"name\": \"test_missing_common_point_fails\", \"path\": \"evas/validation/event_alignment/test_checker.py\", \"sha256\": \"8e760e65475fa26355eed5d725fbd703fc0ad8c8a94e4db5e9df4dbdce3e27de\"}, \"generated\": false, \"module_path\": \"evas/validation/event_alignment/test_checker.py\", \"module_sha256\": \"93bc691893685462da8f3a76c89f11c9b7dc3815cceed6e60907032aee9262aa\", \"runtime_id\": \"test_checker.CheckerCalibration.test_missing_common_point_fails\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 159, \"name\": \"test_missing_output_and_nonfinite_fail\", \"path\": \"evas/validation/event_alignment/test_checker.py\", \"sha256\": \"7cbf69b3aa9d0ad95bd658b57fadd2262bf4bf07330fab1cca87122c90d31f03\"}, \"generated\": false, \"module_path\": \"evas/validation/event_alignment/test_checker.py\", \"module_sha256\": \"93bc691893685462da8f3a76c89f11c9b7dc3815cceed6e60907032aee9262aa\", \"runtime_id\": \"test_checker.CheckerCalibration.test_missing_output_and_nonfinite_fail\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 118, \"name\": \"test_near_sources_must_each_be_observed\", \"path\": \"evas/validation/event_alignment/test_checker.py\", \"sha256\": \"e3f02342b29974a1be51bc54f954c0cbd152f6b1a3e891064d1b7aea1132b296\"}, \"generated\": false, \"module_path\": \"evas/validation/event_alignment/test_checker.py\", \"module_sha256\": \"93bc691893685462da8f3a76c89f11c9b7dc3815cceed6e60907032aee9262aa\", \"runtime_id\": \"test_checker.CheckerCalibration.test_near_sources_must_each_be_observed\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 111, \"name\": \"test_old_rescheduled_root_is_not_hidden_by_final_count\", \"path\": \"evas/validation/event_alignment/test_checker.py\", \"sha256\": \"e113568ebdabd1829f7914b089e0a30dbed130cd6f1459980d7ed6521e00a5f4\"}, \"generated\": false, \"module_path\": \"evas/validation/event_alignment/test_checker.py\", \"module_sha256\": \"93bc691893685462da8f3a76c89f11c9b7dc3815cceed6e60907032aee9262aa\", \"runtime_id\": \"test_checker.CheckerCalibration.test_old_rescheduled_root_is_not_hidden_by_final_count\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 71, \"name\": \"test_one_permitted_event_shift_is_shared_by_all_consumers\", \"path\": \"evas/validation/event_alignment/test_checker.py\", \"sha256\": \"b576835f3d29887f4195de8d506d8cc323fdddc703114d32499ae194f25f96e9\"}, \"generated\": false, \"module_path\": \"evas/validation/event_alignment/test_checker.py\", \"module_sha256\": \"93bc691893685462da8f3a76c89f11c9b7dc3815cceed6e60907032aee9262aa\", \"runtime_id\": \"test_checker.CheckerCalibration.test_one_permitted_event_shift_is_shared_by_all_consumers\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 65, \"name\": \"test_seven_independent_worked_positive_fixtures\", \"path\": \"evas/validation/event_alignment/test_checker.py\", \"sha256\": \"22a532e7eda95167f23cd4c4921371304ad4e75899142f554e5e400c09eec83d\"}, \"generated\": false, \"module_path\": \"evas/validation/event_alignment/test_checker.py\", \"module_sha256\": \"93bc691893685462da8f3a76c89f11c9b7dc3815cceed6e60907032aee9262aa\", \"runtime_id\": \"test_checker.CheckerCalibration.test_seven_independent_worked_positive_fixtures\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 134, \"name\": \"test_shared_boundary_can_use_the_common_pre_event_state\", \"path\": \"evas/validation/event_alignment/test_checker.py\", \"sha256\": \"cb1f7152a0d75af94e2641992f0dd61d11db376bc35d467015bc6e5a1b7b4532\"}, \"generated\": false, \"module_path\": \"evas/validation/event_alignment/test_checker.py\", \"module_sha256\": \"93bc691893685462da8f3a76c89f11c9b7dc3815cceed6e60907032aee9262aa\", \"runtime_id\": \"test_checker.CheckerCalibration.test_shared_boundary_can_use_the_common_pre_event_state\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 129, \"name\": \"test_stamp_must_remain_held\", \"path\": \"evas/validation/event_alignment/test_checker.py\", \"sha256\": \"56423d9fb1b78a1564c9dd6d2b203575ae19aedbd406a528d2e2ae96a0f5124a\"}, \"generated\": false, \"module_path\": \"evas/validation/event_alignment/test_checker.py\", \"module_sha256\": \"93bc691893685462da8f3a76c89f11c9b7dc3815cceed6e60907032aee9262aa\", \"runtime_id\": \"test_checker.CheckerCalibration.test_stamp_must_remain_held\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 124, \"name\": \"test_stamp_outside_window_fails\", \"path\": \"evas/validation/event_alignment/test_checker.py\", \"sha256\": \"703a094cbfe60077acd102f3877edf414678cb08ffb8279a82c636d1fda245af\"}, \"generated\": false, \"module_path\": \"evas/validation/event_alignment/test_checker.py\", \"module_sha256\": \"93bc691893685462da8f3a76c89f11c9b7dc3815cceed6e60907032aee9262aa\", \"runtime_id\": \"test_checker.CheckerCalibration.test_stamp_outside_window_fails\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}], \"namespace\": \"validation\", \"schema_version\": 1, \"skipped_declarations\": 0, \"unresolved_instances\": []}\n",
+      "stderr": "",
+      "environment_overrides": {},
+      "actual_resolved_overrides": {},
+      "collection_profile": "inventory-child runtime; not original phase execution/skip results",
+      "original_python_equivalence": "major-minor-declared-only",
+      "sys_path_contract": "repository-cwd first, then literal phase PYTHONPATH; TestLoader adds start directory"
+    }
+  }
+}

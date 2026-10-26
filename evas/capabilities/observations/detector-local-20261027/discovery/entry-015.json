@@ -1,0 +1,561 @@
+{
+  "entry": {
+    "workflow": ".github/workflows/numerical-assurance.yml",
+    "line": 202,
+    "job": "static-checks",
+    "step": "Independent mathematics and checker calibration (no simulator)",
+    "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+    "step_if": "needs.selection.outputs.calibration == 'true'",
+    "command": "python3 -B -m unittest discover -s experiments/backends/implicit-event-restart -p 'test_check.py' -v",
+    "environment_overrides": {},
+    "declared_python_versions": [
+      "3.12"
+    ],
+    "start": "experiments/backends/implicit-event-restart",
+    "pattern": "test_check.py",
+    "namespace": "validation",
+    "collector": "unittest",
+    "mode": "declared-ci-literal",
+    "purpose": "role-not-semantic-qualification",
+    "entry_id": "642810224ed854fd1224a521b99c3e63f9c9c99c6b4c454caecc1eb0e50ab7b3"
+  },
+  "receipt": {
+    "collector": {
+      "definition_profile": "actual-code-or-registered-native-skip-v1",
+      "native_skip_authority": {
+        "factory_span_sha256": "a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad",
+        "profile": "registered-native-unittest-skip-v1",
+        "runtime_file_sha256": "45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987",
+        "runtime_source": "unittest/case.py",
+        "wrapper_span_sha256": "96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda"
+      },
+      "path": "scripts/capabilities/discover_methods.py",
+      "sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "source_relationship": "owned-source-root"
+    },
+    "complete": true,
+    "discovered_instances": 26,
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONPATH": null,
+      "bytecode_disabled": true,
+      "cache_tag": "cpython-312",
+      "environment_scope": "python-runtime-and-import-path-only",
+      "executable": "/opt/homebrew/opt/python@3.12/bin/python3.12",
+      "implementation": "cpython",
+      "platform": "darwin",
+      "python_version": "3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]",
+      "sys_path_before_selected_imports": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/source",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python312.zip",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload",
+        "/opt/homebrew/lib/python3.12/site-packages"
+      ]
+    },
+    "error_count": 0,
+    "errors": [],
+    "loader_error_count": 0,
+    "methods": [
+      {
+        "definition": {
+          "line": 112,
+          "name": "test_a_second_missing_negative_point_cannot_be_hidden",
+          "path": "experiments/backends/implicit-event-restart/test_check.py",
+          "sha256": "dd695756abf5fb888c66600c6eb0e2f6011e2f6ab56b60639d523b51566e12cd"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/implicit-event-restart/test_check.py",
+        "module_sha256": "68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28",
+        "runtime_id": "test_check.CheckerCalibration.test_a_second_missing_negative_point_cannot_be_hidden",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 28,
+          "name": "test_actual_positive_and_two_negative_completions_are_distinct",
+          "path": "experiments/backends/implicit-event-restart/test_check.py",
+          "sha256": "ebfe9dcb279bb039cff8a1fa1019fd4f78962a704abdb66b4ec6fdf341de12c5"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/implicit-event-restart/test_check.py",
+        "module_sha256": "68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28",
+        "runtime_id": "test_check.CheckerCalibration.test_actual_positive_and_two_negative_completions_are_distinct",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 148,
+          "name": "test_case_dictionary_order_does_not_change_physical_result",
+          "path": "experiments/backends/implicit-event-restart/test_check.py",
+          "sha256": "1624e72d5d4e2c878eed97753e4a04791517c819b50acd4232ffbaea60b711cf"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/implicit-event-restart/test_check.py",
+        "module_sha256": "68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28",
+        "runtime_id": "test_check.CheckerCalibration.test_case_dictionary_order_does_not_change_physical_result",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 136,
+          "name": "test_changed_retained_file_is_rejected",
+          "path": "experiments/backends/implicit-event-restart/test_check.py",
+          "sha256": "99328656c906c5422361da3439e0e999515888ef62fd96f975261a2ce75b0a4c"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/implicit-event-restart/test_check.py",
+        "module_sha256": "68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28",
+        "runtime_id": "test_check.CheckerCalibration.test_changed_retained_file_is_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 124,
+          "name": "test_effective_setting_change_is_rejected",
+          "path": "experiments/backends/implicit-event-restart/test_check.py",
+          "sha256": "dedf33a858c7b81b1b0f3cffd978b26ecfc8c2dcbbbd078098b2e520fd857ac7"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/implicit-event-restart/test_check.py",
+        "module_sha256": "68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28",
+        "runtime_id": "test_check.CheckerCalibration.test_effective_setting_change_is_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 99,
+          "name": "test_evas_acceptance_cannot_count_as_a_rejection_control",
+          "path": "experiments/backends/implicit-event-restart/test_check.py",
+          "sha256": "99b69241b547b9ada76f779112067a5f97729fe3ad8de986fb3df2ee419fd7a0"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/implicit-event-restart/test_check.py",
+        "module_sha256": "68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28",
+        "runtime_id": "test_check.CheckerCalibration.test_evas_acceptance_cannot_count_as_a_rejection_control",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 40,
+          "name": "test_evas_wrong_value_is_rejected",
+          "path": "experiments/backends/implicit-event-restart/test_check.py",
+          "sha256": "30cd6ebe88a6bfb5f8696f32e105638494b7cf8150e5f114cf05a3334d655ae5"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/implicit-event-restart/test_check.py",
+        "module_sha256": "68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28",
+        "runtime_id": "test_check.CheckerCalibration.test_evas_wrong_value_is_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 35,
+          "name": "test_independent_exact_synthetic_answers_are_accepted",
+          "path": "experiments/backends/implicit-event-restart/test_check.py",
+          "sha256": "ff32713132bccd8f2aaa956ba357ff49233ecbc7f7f6b73e21749c8589112b84"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/implicit-event-restart/test_check.py",
+        "module_sha256": "68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28",
+        "runtime_id": "test_check.CheckerCalibration.test_independent_exact_synthetic_answers_are_accepted",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 83,
+          "name": "test_lost_backend_matrix_entry_is_rejected",
+          "path": "experiments/backends/implicit-event-restart/test_check.py",
+          "sha256": "1d76a973a42f39f57ab6361c7b3a7e0b183568d184b1f1345b459f5b3ab0e4e4"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/implicit-event-restart/test_check.py",
+        "module_sha256": "68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28",
+        "runtime_id": "test_check.CheckerCalibration.test_lost_backend_matrix_entry_is_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 70,
+          "name": "test_missing_evas_observation_is_rejected",
+          "path": "experiments/backends/implicit-event-restart/test_check.py",
+          "sha256": "1639e0fc9f56343cebf30b25dd9f18758edfd8b08449f17f41a7bea46a1ef8e3"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/implicit-event-restart/test_check.py",
+        "module_sha256": "68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28",
+        "runtime_id": "test_check.CheckerCalibration.test_missing_evas_observation_is_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 62,
+          "name": "test_missing_event_observation_is_rejected",
+          "path": "experiments/backends/implicit-event-restart/test_check.py",
+          "sha256": "e04912b52a40b40c755ed81377d0166a9f9cee09a2b2b95f23dd4b648f0ca541"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/implicit-event-restart/test_check.py",
+        "module_sha256": "68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28",
+        "runtime_id": "test_check.CheckerCalibration.test_missing_event_observation_is_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 58,
+          "name": "test_missing_initial_observation_is_rejected",
+          "path": "experiments/backends/implicit-event-restart/test_check.py",
+          "sha256": "764e0fc77222a34e8dea351c9729996bbf148197256bf2d99cda3ff8405676c6"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/implicit-event-restart/test_check.py",
+        "module_sha256": "68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28",
+        "runtime_id": "test_check.CheckerCalibration.test_missing_initial_observation_is_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 66,
+          "name": "test_missing_stop_observation_is_rejected",
+          "path": "experiments/backends/implicit-event-restart/test_check.py",
+          "sha256": "d9196d730ccc860b913ba17917801c804144e51c87e996a6c2c6d42a98e619f8"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/implicit-event-restart/test_check.py",
+        "module_sha256": "68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28",
+        "runtime_id": "test_check.CheckerCalibration.test_missing_stop_observation_is_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 87,
+          "name": "test_negative_case_cannot_be_relabelled_as_a_positive",
+          "path": "experiments/backends/implicit-event-restart/test_check.py",
+          "sha256": "cc2e91fd4ccbff5a3ea0ee79f1a639a6891417dfdd1dc6d5a80ff33a920c68a9"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/implicit-event-restart/test_check.py",
+        "module_sha256": "68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28",
+        "runtime_id": "test_check.CheckerCalibration.test_negative_case_cannot_be_relabelled_as_a_positive",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 104,
+          "name": "test_negative_timeout_is_not_an_expected_rejection",
+          "path": "experiments/backends/implicit-event-restart/test_check.py",
+          "sha256": "8137b41d1e612e1491a2b4e0643167c4a57cdc82919fb414ca8b66d70940cee8"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/implicit-event-restart/test_check.py",
+        "module_sha256": "68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28",
+        "runtime_id": "test_check.CheckerCalibration.test_negative_timeout_is_not_an_expected_rejection",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 128,
+          "name": "test_nonfinite_token_is_rejected",
+          "path": "experiments/backends/implicit-event-restart/test_check.py",
+          "sha256": "181dd750c2c7ec5a49bdfc13eab881f8aaa328e0d44959b3cedc37625d5a1623"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/implicit-event-restart/test_check.py",
+        "module_sha256": "68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28",
+        "runtime_id": "test_check.CheckerCalibration.test_nonfinite_token_is_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 48,
+          "name": "test_paired_failure_is_not_hidden_by_two_individual_passes",
+          "path": "experiments/backends/implicit-event-restart/test_check.py",
+          "sha256": "920c4a8139848918d064aa1fd85448c5306fa1368b7318cef5a4fba9b578aa2a"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/implicit-event-restart/test_check.py",
+        "module_sha256": "68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28",
+        "runtime_id": "test_check.CheckerCalibration.test_paired_failure_is_not_hidden_by_two_individual_passes",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 91,
+          "name": "test_positive_flags_cannot_be_added_to_negative_case",
+          "path": "experiments/backends/implicit-event-restart/test_check.py",
+          "sha256": "9f030ed0bca8b9bc6b2d4d7d2becd4ce66d6007410e198597c2f37de2e98e36e"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/implicit-event-restart/test_check.py",
+        "module_sha256": "68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28",
+        "runtime_id": "test_check.CheckerCalibration.test_positive_flags_cannot_be_added_to_negative_case",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 95,
+          "name": "test_process_error_cannot_replace_the_required_mathematical_rejection",
+          "path": "experiments/backends/implicit-event-restart/test_check.py",
+          "sha256": "6496a9bda4bc9ae6cdbb1c71df1d355cd2d4d3e83424a6e9274d9e0d38f0d712"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/implicit-event-restart/test_check.py",
+        "module_sha256": "68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28",
+        "runtime_id": "test_check.CheckerCalibration.test_process_error_cannot_replace_the_required_mathematical_rejection",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 132,
+          "name": "test_qualification_cannot_be_promoted",
+          "path": "experiments/backends/implicit-event-restart/test_check.py",
+          "sha256": "4192c72912c3910dee5e258b4b676954f75af6993af417e98dc8ed9451f20f74"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/implicit-event-restart/test_check.py",
+        "module_sha256": "68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28",
+        "runtime_id": "test_check.CheckerCalibration.test_qualification_cannot_be_promoted",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 44,
+          "name": "test_reference_wrong_value_is_rejected",
+          "path": "experiments/backends/implicit-event-restart/test_check.py",
+          "sha256": "c2ccad79c44a073eeff9c560c0324090579f54f8a9a1e3f63213e13ac5a552fb"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/implicit-event-restart/test_check.py",
+        "module_sha256": "68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28",
+        "runtime_id": "test_check.CheckerCalibration.test_reference_wrong_value_is_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 74,
+          "name": "test_repeated_native_point_is_rejected",
+          "path": "experiments/backends/implicit-event-restart/test_check.py",
+          "sha256": "7690bedcc1d63f4a43eb5e7f928cdc0e0e6c5bf111ddd36e5669037b1bd1641f"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/implicit-event-restart/test_check.py",
+        "module_sha256": "68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28",
+        "runtime_id": "test_check.CheckerCalibration.test_repeated_native_point_is_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 108,
+          "name": "test_retained_disaster_recovery_warning_is_required",
+          "path": "experiments/backends/implicit-event-restart/test_check.py",
+          "sha256": "8ec1098386558c793721a7cca8b51a4ff94ffe25ce545a1142a8e4c16fe9433b"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/implicit-event-restart/test_check.py",
+        "module_sha256": "68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28",
+        "runtime_id": "test_check.CheckerCalibration.test_retained_disaster_recovery_warning_is_required",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 78,
+          "name": "test_unordered_native_points_are_rejected",
+          "path": "experiments/backends/implicit-event-restart/test_check.py",
+          "sha256": "0857bd99cadf9503515855fd068a0faa37586d8fc40a3d0670825ac5b500b4ec"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/implicit-event-restart/test_check.py",
+        "module_sha256": "68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28",
+        "runtime_id": "test_check.CheckerCalibration.test_unordered_native_points_are_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 120,
+          "name": "test_unrelated_history_corruption_is_rejected",
+          "path": "experiments/backends/implicit-event-restart/test_check.py",
+          "sha256": "8d85a4b35b3b3caab91f719fb6e7443c9c71112d8ea363dacb9571bd7328be97"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/implicit-event-restart/test_check.py",
+        "module_sha256": "68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28",
+        "runtime_id": "test_check.CheckerCalibration.test_unrelated_history_corruption_is_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 116,
+          "name": "test_wrong_singular_equilibrium_classification_is_rejected",
+          "path": "experiments/backends/implicit-event-restart/test_check.py",
+          "sha256": "d72a47628cd9572f527ca520eafaae79daca33f20a5d742ee5d5bd187b112160"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/implicit-event-restart/test_check.py",
+        "module_sha256": "68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28",
+        "runtime_id": "test_check.CheckerCalibration.test_wrong_singular_equilibrium_classification_is_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      }
+    ],
+    "namespace": "validation",
+    "schema_version": 1,
+    "skipped_declarations": 0,
+    "unresolved_instances": [],
+    "transport": {
+      "argv": [
+        "/opt/homebrew/opt/python@3.12/bin/python3.12",
+        "-B",
+        "-c",
+        "import os,runpy,sys; sys.path[0]=os.getcwd(); tool=sys.argv[1]; sys.argv=sys.argv[1:]; runpy.run_path(tool,run_name=\"__main__\")",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/source/scripts/capabilities/discover_methods.py",
+        "--worker",
+        "--root",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/source",
+        "--start",
+        "experiments/backends/implicit-event-restart",
+        "--pattern",
+        "test_check.py",
+        "--namespace",
+        "validation"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/source",
+      "returncode": 0,
+      "stdout": "{\"collector\": {\"definition_profile\": \"actual-code-or-registered-native-skip-v1\", \"native_skip_authority\": {\"factory_span_sha256\": \"a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad\", \"profile\": \"registered-native-unittest-skip-v1\", \"runtime_file_sha256\": \"45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987\", \"runtime_source\": \"unittest/case.py\", \"wrapper_span_sha256\": \"96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda\"}, \"path\": \"scripts/capabilities/discover_methods.py\", \"sha256\": \"aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17\", \"source_relationship\": \"owned-source-root\"}, \"complete\": true, \"discovered_instances\": 26, \"environment\": {\"PYTHONDONTWRITEBYTECODE\": \"1\", \"PYTHONPATH\": null, \"bytecode_disabled\": true, \"cache_tag\": \"cpython-312\", \"environment_scope\": \"python-runtime-and-import-path-only\", \"executable\": \"/opt/homebrew/opt/python@3.12/bin/python3.12\", \"implementation\": \"cpython\", \"platform\": \"darwin\", \"python_version\": \"3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"sys_path_before_selected_imports\": [\"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/source\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python312.zip\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload\", \"/opt/homebrew/lib/python3.12/site-packages\"]}, \"error_count\": 0, \"errors\": [], \"loader_error_count\": 0, \"methods\": [{\"definition\": {\"line\": 112, \"name\": \"test_a_second_missing_negative_point_cannot_be_hidden\", \"path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"sha256\": \"dd695756abf5fb888c66600c6eb0e2f6011e2f6ab56b60639d523b51566e12cd\"}, \"generated\": false, \"module_path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"module_sha256\": \"68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28\", \"runtime_id\": \"test_check.CheckerCalibration.test_a_second_missing_negative_point_cannot_be_hidden\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 28, \"name\": \"test_actual_positive_and_two_negative_completions_are_distinct\", \"path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"sha256\": \"ebfe9dcb279bb039cff8a1fa1019fd4f78962a704abdb66b4ec6fdf341de12c5\"}, \"generated\": false, \"module_path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"module_sha256\": \"68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28\", \"runtime_id\": \"test_check.CheckerCalibration.test_actual_positive_and_two_negative_completions_are_distinct\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 148, \"name\": \"test_case_dictionary_order_does_not_change_physical_result\", \"path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"sha256\": \"1624e72d5d4e2c878eed97753e4a04791517c819b50acd4232ffbaea60b711cf\"}, \"generated\": false, \"module_path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"module_sha256\": \"68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28\", \"runtime_id\": \"test_check.CheckerCalibration.test_case_dictionary_order_does_not_change_physical_result\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 136, \"name\": \"test_changed_retained_file_is_rejected\", \"path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"sha256\": \"99328656c906c5422361da3439e0e999515888ef62fd96f975261a2ce75b0a4c\"}, \"generated\": false, \"module_path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"module_sha256\": \"68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28\", \"runtime_id\": \"test_check.CheckerCalibration.test_changed_retained_file_is_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 124, \"name\": \"test_effective_setting_change_is_rejected\", \"path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"sha256\": \"dedf33a858c7b81b1b0f3cffd978b26ecfc8c2dcbbbd078098b2e520fd857ac7\"}, \"generated\": false, \"module_path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"module_sha256\": \"68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28\", \"runtime_id\": \"test_check.CheckerCalibration.test_effective_setting_change_is_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 99, \"name\": \"test_evas_acceptance_cannot_count_as_a_rejection_control\", \"path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"sha256\": \"99b69241b547b9ada76f779112067a5f97729fe3ad8de986fb3df2ee419fd7a0\"}, \"generated\": false, \"module_path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"module_sha256\": \"68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28\", \"runtime_id\": \"test_check.CheckerCalibration.test_evas_acceptance_cannot_count_as_a_rejection_control\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 40, \"name\": \"test_evas_wrong_value_is_rejected\", \"path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"sha256\": \"30cd6ebe88a6bfb5f8696f32e105638494b7cf8150e5f114cf05a3334d655ae5\"}, \"generated\": false, \"module_path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"module_sha256\": \"68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28\", \"runtime_id\": \"test_check.CheckerCalibration.test_evas_wrong_value_is_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 35, \"name\": \"test_independent_exact_synthetic_answers_are_accepted\", \"path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"sha256\": \"ff32713132bccd8f2aaa956ba357ff49233ecbc7f7f6b73e21749c8589112b84\"}, \"generated\": false, \"module_path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"module_sha256\": \"68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28\", \"runtime_id\": \"test_check.CheckerCalibration.test_independent_exact_synthetic_answers_are_accepted\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 83, \"name\": \"test_lost_backend_matrix_entry_is_rejected\", \"path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"sha256\": \"1d76a973a42f39f57ab6361c7b3a7e0b183568d184b1f1345b459f5b3ab0e4e4\"}, \"generated\": false, \"module_path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"module_sha256\": \"68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28\", \"runtime_id\": \"test_check.CheckerCalibration.test_lost_backend_matrix_entry_is_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 70, \"name\": \"test_missing_evas_observation_is_rejected\", \"path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"sha256\": \"1639e0fc9f56343cebf30b25dd9f18758edfd8b08449f17f41a7bea46a1ef8e3\"}, \"generated\": false, \"module_path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"module_sha256\": \"68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28\", \"runtime_id\": \"test_check.CheckerCalibration.test_missing_evas_observation_is_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 62, \"name\": \"test_missing_event_observation_is_rejected\", \"path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"sha256\": \"e04912b52a40b40c755ed81377d0166a9f9cee09a2b2b95f23dd4b648f0ca541\"}, \"generated\": false, \"module_path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"module_sha256\": \"68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28\", \"runtime_id\": \"test_check.CheckerCalibration.test_missing_event_observation_is_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 58, \"name\": \"test_missing_initial_observation_is_rejected\", \"path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"sha256\": \"764e0fc77222a34e8dea351c9729996bbf148197256bf2d99cda3ff8405676c6\"}, \"generated\": false, \"module_path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"module_sha256\": \"68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28\", \"runtime_id\": \"test_check.CheckerCalibration.test_missing_initial_observation_is_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 66, \"name\": \"test_missing_stop_observation_is_rejected\", \"path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"sha256\": \"d9196d730ccc860b913ba17917801c804144e51c87e996a6c2c6d42a98e619f8\"}, \"generated\": false, \"module_path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"module_sha256\": \"68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28\", \"runtime_id\": \"test_check.CheckerCalibration.test_missing_stop_observation_is_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 87, \"name\": \"test_negative_case_cannot_be_relabelled_as_a_positive\", \"path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"sha256\": \"cc2e91fd4ccbff5a3ea0ee79f1a639a6891417dfdd1dc6d5a80ff33a920c68a9\"}, \"generated\": false, \"module_path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"module_sha256\": \"68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28\", \"runtime_id\": \"test_check.CheckerCalibration.test_negative_case_cannot_be_relabelled_as_a_positive\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 104, \"name\": \"test_negative_timeout_is_not_an_expected_rejection\", \"path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"sha256\": \"8137b41d1e612e1491a2b4e0643167c4a57cdc82919fb414ca8b66d70940cee8\"}, \"generated\": false, \"module_path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"module_sha256\": \"68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28\", \"runtime_id\": \"test_check.CheckerCalibration.test_negative_timeout_is_not_an_expected_rejection\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 128, \"name\": \"test_nonfinite_token_is_rejected\", \"path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"sha256\": \"181dd750c2c7ec5a49bdfc13eab881f8aaa328e0d44959b3cedc37625d5a1623\"}, \"generated\": false, \"module_path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"module_sha256\": \"68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28\", \"runtime_id\": \"test_check.CheckerCalibration.test_nonfinite_token_is_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 48, \"name\": \"test_paired_failure_is_not_hidden_by_two_individual_passes\", \"path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"sha256\": \"920c4a8139848918d064aa1fd85448c5306fa1368b7318cef5a4fba9b578aa2a\"}, \"generated\": false, \"module_path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"module_sha256\": \"68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28\", \"runtime_id\": \"test_check.CheckerCalibration.test_paired_failure_is_not_hidden_by_two_individual_passes\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 91, \"name\": \"test_positive_flags_cannot_be_added_to_negative_case\", \"path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"sha256\": \"9f030ed0bca8b9bc6b2d4d7d2becd4ce66d6007410e198597c2f37de2e98e36e\"}, \"generated\": false, \"module_path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"module_sha256\": \"68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28\", \"runtime_id\": \"test_check.CheckerCalibration.test_positive_flags_cannot_be_added_to_negative_case\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 95, \"name\": \"test_process_error_cannot_replace_the_required_mathematical_rejection\", \"path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"sha256\": \"6496a9bda4bc9ae6cdbb1c71df1d355cd2d4d3e83424a6e9274d9e0d38f0d712\"}, \"generated\": false, \"module_path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"module_sha256\": \"68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28\", \"runtime_id\": \"test_check.CheckerCalibration.test_process_error_cannot_replace_the_required_mathematical_rejection\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 132, \"name\": \"test_qualification_cannot_be_promoted\", \"path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"sha256\": \"4192c72912c3910dee5e258b4b676954f75af6993af417e98dc8ed9451f20f74\"}, \"generated\": false, \"module_path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"module_sha256\": \"68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28\", \"runtime_id\": \"test_check.CheckerCalibration.test_qualification_cannot_be_promoted\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 44, \"name\": \"test_reference_wrong_value_is_rejected\", \"path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"sha256\": \"c2ccad79c44a073eeff9c560c0324090579f54f8a9a1e3f63213e13ac5a552fb\"}, \"generated\": false, \"module_path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"module_sha256\": \"68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28\", \"runtime_id\": \"test_check.CheckerCalibration.test_reference_wrong_value_is_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 74, \"name\": \"test_repeated_native_point_is_rejected\", \"path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"sha256\": \"7690bedcc1d63f4a43eb5e7f928cdc0e0e6c5bf111ddd36e5669037b1bd1641f\"}, \"generated\": false, \"module_path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"module_sha256\": \"68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28\", \"runtime_id\": \"test_check.CheckerCalibration.test_repeated_native_point_is_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 108, \"name\": \"test_retained_disaster_recovery_warning_is_required\", \"path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"sha256\": \"8ec1098386558c793721a7cca8b51a4ff94ffe25ce545a1142a8e4c16fe9433b\"}, \"generated\": false, \"module_path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"module_sha256\": \"68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28\", \"runtime_id\": \"test_check.CheckerCalibration.test_retained_disaster_recovery_warning_is_required\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 78, \"name\": \"test_unordered_native_points_are_rejected\", \"path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"sha256\": \"0857bd99cadf9503515855fd068a0faa37586d8fc40a3d0670825ac5b500b4ec\"}, \"generated\": false, \"module_path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"module_sha256\": \"68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28\", \"runtime_id\": \"test_check.CheckerCalibration.test_unordered_native_points_are_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 120, \"name\": \"test_unrelated_history_corruption_is_rejected\", \"path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"sha256\": \"8d85a4b35b3b3caab91f719fb6e7443c9c71112d8ea363dacb9571bd7328be97\"}, \"generated\": false, \"module_path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"module_sha256\": \"68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28\", \"runtime_id\": \"test_check.CheckerCalibration.test_unrelated_history_corruption_is_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 116, \"name\": \"test_wrong_singular_equilibrium_classification_is_rejected\", \"path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"sha256\": \"d72a47628cd9572f527ca520eafaae79daca33f20a5d742ee5d5bd187b112160\"}, \"generated\": false, \"module_path\": \"experiments/backends/implicit-event-restart/test_check.py\", \"module_sha256\": \"68ba4b741be60e122f4e544c4a2cd76f3fced32b59fb30ea761a5bfeae706f28\", \"runtime_id\": \"test_check.CheckerCalibration.test_wrong_singular_equilibrium_classification_is_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}], \"namespace\": \"validation\", \"schema_version\": 1, \"skipped_declarations\": 0, \"unresolved_instances\": []}\n",
+      "stderr": "",
+      "environment_overrides": {},
+      "actual_resolved_overrides": {},
+      "collection_profile": "inventory-child runtime; not original phase execution/skip results",
+      "original_python_equivalence": "major-minor-declared-only",
+      "sys_path_contract": "repository-cwd first, then literal phase PYTHONPATH; TestLoader adds start directory"
+    }
+  }
+}
