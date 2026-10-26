@@ -9,6 +9,8 @@ import sys
 import tempfile
 import unittest
 
+import git_fixture
+
 GATE = Path(__file__).resolve().parents[1] / 'regression_gate.py'
 
 
@@ -328,31 +330,35 @@ class GateTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             def git(*args):
-                return subprocess.run(['git', '-C', str(root), *args], check=True,
-                                      capture_output=True, text=True).stdout.strip()
-            git('init')
-            path = root / 'evas/validation/baselines/regression-v1.json'
-            path.parent.mkdir(parents=True)
-            path.write_text(json.dumps(self.baseline))
-            git('add', '.')
-            git('-c', 'user.name=Gate Test', '-c', 'user.email=gate@example.invalid', 'commit', '-m', 'trusted')
-            trusted = git('rev-parse', 'HEAD')
-            path.write_text(json.dumps({'schema_version': 1, 'contexts': []}))
-            self.assertEqual(self.gate.load_trusted_baseline(root, trusted), self.baseline)
-            candidate = root / 'report.json'
-            candidate.write_text(json.dumps(self.old))
-            command = [sys.executable, '-B', str(GATE), 'compare', str(candidate),
-                       '--repo', str(root), '--trusted-base', trusted]
-            result = subprocess.run(command, capture_output=True, text=True)
-            self.assertEqual(result.returncode, 0, result.stderr)
-            self.assertTrue(json.loads(result.stdout)['merge_allowed'])
-            inactive = subprocess.run(command + ['--inactive'], capture_output=True, text=True)
-            self.assertIsNone(json.loads(inactive.stdout)['merge_allowed'])
-            for ref in ['HEAD', trusted[:12], '0' * 40]:
-                denied = subprocess.run(command[:-1] + [ref], capture_output=True, text=True)
+                return git_fixture.run(['-C', str(root), *args], scratch=root, check=True,
+                                       capture_output=True, text=True).stdout.strip()
+            with git_fixture.isolate():
+                git('init')
+                path = root / 'evas/validation/baselines/regression-v1.json'
+                path.parent.mkdir(parents=True)
+                path.write_text(json.dumps(self.baseline))
+                git('add', '.')
+                git('-c', 'user.name=Gate Test', '-c', 'user.email=gate@example.invalid', 'commit', '-m', 'trusted')
+                trusted = git('rev-parse', 'HEAD')
+                path.write_text(json.dumps({'schema_version': 1, 'contexts': []}))
+                self.assertEqual(self.gate.load_trusted_baseline(root, trusted), self.baseline)
+                candidate = root / 'report.json'
+                candidate.write_text(json.dumps(self.old))
+                command = [sys.executable, '-B', str(GATE), 'compare', str(candidate),
+                           '--repo', str(root), '--trusted-base', trusted]
+                result = subprocess.run(command, env=git_fixture.child_env(), capture_output=True, text=True)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertTrue(json.loads(result.stdout)['merge_allowed'])
+                inactive = subprocess.run(command + ['--inactive'], env=git_fixture.child_env(),
+                                          capture_output=True, text=True)
+                self.assertIsNone(json.loads(inactive.stdout)['merge_allowed'])
+                for ref in ['HEAD', trusted[:12], '0' * 40]:
+                    denied = subprocess.run(command[:-1] + [ref], env=git_fixture.child_env(),
+                                            capture_output=True, text=True)
+                    self.assertNotEqual(denied.returncode, 0)
+                denied = subprocess.run(command + ['--baseline', str(path)], env=git_fixture.child_env(),
+                                        capture_output=True, text=True)
                 self.assertNotEqual(denied.returncode, 0)
-            denied = subprocess.run(command + ['--baseline', str(path)], capture_output=True, text=True)
-            self.assertNotEqual(denied.returncode, 0)
 
 
 if __name__ == '__main__':

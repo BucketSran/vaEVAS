@@ -11,6 +11,8 @@ import sys
 import tempfile
 import unittest
 
+import git_fixture
+
 ROOT = Path(__file__).resolve().parents[2]
 LOADER = ROOT / 'scripts/run_trusted_regression_gate.py'
 # Capture the maintained source once; temporary Git contains the trusted copy.
@@ -47,6 +49,7 @@ class TrustedLoaderTests(unittest.TestCase):
         self.temporary = tempfile.TemporaryDirectory()
         self.addCleanup(self.temporary.cleanup)
         self.root = Path(self.temporary.name)
+        git_fixture.bind(self, self.root)
         self.repo = self.root / 'checkout'
         self.repo.mkdir()
         self.git('init', '-b', 'main')
@@ -60,7 +63,8 @@ class TrustedLoaderTests(unittest.TestCase):
         self.event_path = self.root / 'event.json'
 
     def git(self, *args, check=True):
-        result = subprocess.run(['git','-C',str(self.repo),*args],capture_output=True,text=True)
+        result = git_fixture.run(['-C', str(self.repo), *args], scratch=self.root,
+                                 capture_output=True, text=True)
         if check and result.returncode:
             raise AssertionError(result.stderr)
         return result.stdout.strip()
@@ -81,7 +85,7 @@ class TrustedLoaderTests(unittest.TestCase):
                          pull_request={'base':{'sha':self.trusted,'ref':'main',
                                               'repo':{'full_name':'fixture/project'}}})
         self.event_path.write_text(json.dumps(event))
-        env = dict(os.environ, GITHUB_EVENT_NAME=name, GITHUB_EVENT_PATH=str(self.event_path))
+        env = git_fixture.child_env(GITHUB_EVENT_NAME=name, GITHUB_EVENT_PATH=str(self.event_path))
         return subprocess.run([sys.executable,'-I',str(LOADER),'--repo',str(self.repo),
                                '--report',str(self.report_path),*args],env=env,cwd=self.repo,
                               capture_output=True,text=True)
@@ -121,8 +125,8 @@ class TrustedLoaderTests(unittest.TestCase):
 
     def test_schedule_and_manual_fetch_origin_main_and_ignore_manual_base(self):
         origin = self.root / 'origin.git'
-        subprocess.run(['git','clone','--bare',str(self.repo),str(origin)],
-                       check=True,capture_output=True,text=True)
+        git_fixture.run(['clone', '--bare', str(self.repo), str(origin)], scratch=self.root,
+                        check=True, capture_output=True, text=True)
         self.git('remote','add','origin',str(origin))
         malicious = self.attack_head()
         for name in ('schedule','workflow_dispatch'):
@@ -184,9 +188,10 @@ class TrustedLoaderTests(unittest.TestCase):
             result=self.call(name,event)
             self.assertNotEqual(result.returncode,0,result.stdout)
         origin=self.root/'origin.git'
-        subprocess.run(['git','clone','--bare',str(self.repo),str(origin)],check=True,capture_output=True)
-        subprocess.run(['git','--git-dir',str(origin),'branch','-m','main','other'],
-                       check=True,capture_output=True)
+        git_fixture.run(['clone', '--bare', str(self.repo), str(origin)], scratch=self.root,
+                        check=True, capture_output=True)
+        git_fixture.run(['--git-dir', str(origin), 'branch', '-m', 'main', 'other'], scratch=self.root,
+                        check=True, capture_output=True)
         self.git('remote','add','origin',str(origin))
         self.git('fetch','--no-tags','origin','refs/heads/other')
         event['inputs']['base']=self.trusted
