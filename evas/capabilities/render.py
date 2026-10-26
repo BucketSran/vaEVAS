@@ -153,7 +153,8 @@ def normative_markdown(reg):
               '| 当前对象 | 类型 | 资格缺口数 |', '| --- | --- | ---: |']
     for name, version in sorted(reg.data['current'].items()):
         obj = reg.objects[(name, version)]
-        if obj['kind'] == 'source':
+        if obj['kind'] in {'source', 'asset', 'method', 'entrypoint',
+                           'historical-audit-record', 'historical-finding'}:
             continue
         lines.append(f"| `{name}@{version}` | {obj['kind']} | {len(reg.qualification_gaps(name))} |")
     lines += ['', '资格缺口来自固定版本的依赖、审核和来源检查，不把历史运行通过转授为当前支持。', '']

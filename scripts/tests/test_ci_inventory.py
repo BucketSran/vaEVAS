@@ -278,7 +278,7 @@ setattr(Main,'test_generated',factory())
                           workflow_sha256=inventory.sha((self.root / inventory.WORKFLOW).read_bytes()))
         catalog = types.SimpleNamespace(
             validate=lambda: calls.append('validate'),
-            current=lambda kind: [registered] if kind == 'entrypoint' else [{'fixture': kind}],
+            current=lambda kind: [registered] if kind == 'entrypoint' else [{'namespace': 'validation'}] if kind == 'method' else [{'fixture': kind}],
             read_history=lambda obj: calls.append(obj['id']),
             reconcile_assets=lambda rows, **kw: {'ok': True},
             reconcile_methods=lambda ns, receipt: calls.append(ns),
@@ -296,6 +296,20 @@ setattr(Main,'test_generated',factory())
         self.assertEqual(calls, ['validate', 'history1', 'history2', 'validation'])
         self.assertEqual(result['historical_rows_read'], 2)
         self.assertIn('pending', result['rust_status'])
+
+    def test_registered_namespace_without_actual_discovery_is_not_reconciled(self):
+        catalog = types.SimpleNamespace(
+            validate=lambda: None,
+            current=lambda kind: [{'namespace': 'calibration'}] if kind == 'method' else [{}] if kind == 'asset' else [],
+            read_history=lambda obj: {},
+            reconcile_assets=lambda rows, **kw: {'ok': True},
+            reconcile_methods=lambda ns, receipt: None,
+            namespace_counts=lambda: {'calibration': {'methods': 1}})
+        registry = types.SimpleNamespace(data={'asset_scope': {'id': 'EVAS-scope-v1'}},
+            objects={('h', '1'): {'kind': 'historical-audit-record'}}, catalog=lambda: catalog)
+        with patch.object(inventory, 'load', return_value=types.SimpleNamespace(load=lambda *a, **kw: registry)):
+            with self.assertRaisesRegex(ValueError, 'namespace has no actual discovery'):
+                inventory.require_catalog(self.root, self.root / 'data', self.observed(self.root), {}, [])
 
     def test_require_catalog_history_retrieval_failure_is_not_structure_success(self):
         def unavailable(obj):
@@ -348,7 +362,9 @@ class RequiredGateTests(unittest.TestCase):
         block = workflow.split('  catalog-inventory:\n')[1].split('  static-checks:\n')[0]
         self.assertIn('needs: [selection, fast-checks]', block)
         self.assertNotIn('outputs.maintenance', block)
-        self.assertIn('--observe-only', block)
+        self.assertIn('--require-catalog --registry-data evas/capabilities/data', block)
+        self.assertNotIn('--observe-only', block)
+        self.assertIn('scripts/traceability.py --check --catalog-data evas/capabilities/data', workflow)
         self.assertIn('if: always()', block)
         result = workflow.split('  ci-result:\n')[1]
         self.assertIn('catalog-inventory', result.split('    if: always()')[0])

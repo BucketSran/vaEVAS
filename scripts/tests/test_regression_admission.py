@@ -53,7 +53,8 @@ class AdmissionIntegrationTests(unittest.TestCase):
         flags=('maintenance','calibration','provenance','regression','differential','fuzz','package','benchmark')
         outputs={key:str(key=='regression' and regression).lower() for key in flags}
         outputs.update(plan_version='2',mode='delivery' if regression else 'iteration')
-        needs={'selection':{'result':'success','outputs':outputs}, 'fast-checks':{'result':'success'}}
+        needs={'selection':{'result':'success','outputs':outputs}, 'fast-checks':{'result':'success'},
+               'catalog-inventory':{'result':'success'}}
         jobs=('static-checks','provenance-paper','provenance-support','regression','rust-regression',
               'regression-coverage','regression-admission','properties-and-ngspice','fuzz-smoke','package','benchmark')
         for job in jobs:
@@ -66,7 +67,8 @@ class AdmissionIntegrationTests(unittest.TestCase):
                                env=dict(os.environ,CI_NEEDS=json.dumps(needs)),capture_output=True,text=True)
 
     def test_selected_admission_failure_skip_or_absence_blocks_total_gate(self):
-        self.assertEqual(self.ci_gate(self.needs()).returncode,0)
+        passing=self.ci_gate(self.needs())
+        self.assertEqual(passing.returncode,0,passing.stderr)
         for state in ('failure','skipped',None):
             needs=self.needs()
             if state is None:

@@ -144,7 +144,7 @@ jobs:
         env:
           CI_INVENTORY_BASE: ${{ needs.selection.outputs.base }}
           CI_INVENTORY_HEAD: ${{ needs.selection.outputs.head }}
-        run: python3 -B scripts/capabilities/collect_ci_inventory.py --root . --output runs/catalog-inventory --observe-only
+        run: python3 -B scripts/capabilities/collect_ci_inventory.py --root . --output runs/catalog-inventory --require-catalog --registry-data evas/capabilities/data
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
@@ -168,7 +168,7 @@ jobs:
       - name: Traceability and frozen validation identities
         if: needs.selection.outputs.maintenance == 'true'
         run: |
-          python3 -B scripts/traceability.py --check
+          python3 -B scripts/traceability.py --check --catalog-data evas/capabilities/data
           python3 -B scripts/diagnostic_inventory.py --check
           python3 -B scripts/verify_validation_version.py
           python3 -B -m unittest discover -s scripts/tests -v
@@ -268,7 +268,7 @@ jobs:
           cargo +stable test --locked --workspace --no-run --message-format=json --manifest-path evas/rust_core/Cargo.toml > runs/rust-test-build.jsonl 2> runs/rust-test-build.stderr.txt
           build_exit=$?
           set -e
-          python3 -B scripts/capabilities/discover_rust.py --repo . --build-messages runs/rust-test-build.jsonl --build-exit "$build_exit" --report runs/rust-test-listing.json --raw-directory runs/rust-test-listing
+          python3 -B scripts/capabilities/discover_rust.py --repo . --build-messages runs/rust-test-build.jsonl --build-exit "$build_exit" --report runs/rust-test-listing.json --raw-directory runs/rust-test-listing --require-catalog evas/capabilities/data --listing-profile linux-x86_64-regression-opt1-v1 --source-repository vaevas=.
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:

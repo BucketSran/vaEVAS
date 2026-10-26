@@ -267,3 +267,7 @@ class Catalog:
         if expected['binary_sha256'] != receipt['binary_sha256'] or set(expected['runtime_ids']) != set(receipt['runtime_ids']):
             raise ValueError('Rust listing missing/extra or binary drift')
         return len(receipt['runtime_ids'])
+
+    def reconcile_rust_listing(self, receipt, *, profile):
+        """Reconcile every owned native target against one registered profile."""
+        return self._history_module('rust_listing').reconcile(self, receipt, profile)

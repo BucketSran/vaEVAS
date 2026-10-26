@@ -143,6 +143,13 @@ main 推送使用推送前后的提交差异，不使用有文件数量上限的
 都不能通过。需要设置分支必需检查时使用 `ci-result`，它替代原来的三个 `*-result` 检查。
 草稿迭代只产生 `iteration-result`，不产生可供合并门禁使用的 `ci-result`；转为非草稿会触发完整验收。完整阶段的 `ci-result` 额外要求 `regression-coverage` 通过。本次没有修改 GitHub 分支保护配置。
 
+`catalog-inventory` 在两种模式中都是必需作业，独立记录真实 unittest 入口与全部跟踪资产。
+它区分入口实例数、去重方法数、生成方法及各命名空间，不运行测试体，也不取得语义资格。
+`--observe-only` 仅用于同一 PR 构建目录前的观察检查点；最终交付使用 `--require-catalog`，
+将实际发现与同一 Registry 双向对账，并逐条核对历史原文，失败不退回观察模式。
+Rust 原生 listing 由 `rust-regression` 单独采集，保留原完整测试步骤。
+协议和来源读取规则见[能力登记说明](../evas/capabilities/README.md#资产实际方法与历史来源)。
+
 同一 PR 的新推送会取消该 PR 的过期 CI。main 推送和手动运行互相独立，不自动取消，
 避免后来的文档推送取消前一版代码尚未完成的回归。
 CI 针对固定提交后台执行。主对话按[等待边界](../CONTRIBUTING.md#keep-iteration-feedback-short)
@@ -605,14 +612,16 @@ python3 -B -m unittest discover -s scripts/tests -p 'test_task_continuation*.py'
 ## 生成和检查追溯矩阵
 
 ```sh
-python3 -B scripts/traceability.py
-python3 -B scripts/traceability.py --check
+python3 -B scripts/traceability.py --catalog-data evas/capabilities/data
+python3 -B scripts/traceability.py --catalog-data evas/capabilities/data --check
 python3 -B -m unittest discover -s scripts/tests -v
 ```
 
 `traceability.py` 读取测试 GUARDS 标签、[能力 ID 与证据索引](../evas/docs/development/capability-evidence.md)和 DUT 目录，生成
 [追溯矩阵](../evas/docs/development/TRACEABILITY.md)。`--check` 不写文件，拒绝无效标签、
 失效本地目标和过期矩阵。它不执行测试，也不证明完整覆盖或验证资格。
+`--catalog-data` 增加同一 Registry 的资产、方法及历史来源导航，生成前逐条读取历史原文。
+不带该参数只生成原 GUARDS 视图，不能用于完整目录交付。
 维护工具的回归在 `scripts/tests/`，不计入 EVAS 测试或原矩阵分母。
 
 ## Benchmark 题卡与 review 索引

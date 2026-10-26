@@ -210,6 +210,9 @@ class RustListingTests(unittest.TestCase):
         self.assertNotIn('continue-on-error',job)
         self.assertIn('if: always()',job)
         self.assertNotIn('target/debug/deps',job)
+        self.assertIn('--require-catalog evas/capabilities/data',job)
+        self.assertIn('--listing-profile linux-x86_64-regression-opt1-v1',job)
+        self.assertIn('--source-repository vaevas=.',job)
         lines=job.splitlines()
         start=next(i for i,line in enumerate(lines) if line=='      - name: Collect actual owned Rust binary listing')
         run=next(i for i in range(start,len(lines)) if lines[i]=='        run: |')
@@ -220,12 +223,34 @@ class RustListingTests(unittest.TestCase):
         body=textwrap.dedent('\n'.join(body))+'\n'
         self.assertEqual(subprocess.run(['bash','-n'],input=body,text=True,capture_output=True).returncode,0)
         self.write('scripts/capabilities/discover_rust.py',HELPER.read_text())
-        for code in (0,9):
+        # This workflow plumbing fixture uses a labelled catalogue stub. The
+        # independent catalogue tests exercise the real immutable-source protocol.
+        self.write('evas/capabilities/registry.py', '''
+import os
+from pathlib import Path
+class StubCatalog:
+    def reconcile_rust_listing(self, receipt, *, profile):
+        assert profile == 'linux-x86_64-regression-opt1-v1'
+        if os.environ['FIXTURE_CATALOG_RECONCILED'] != 'true':
+            raise ValueError('explicit fixture catalogue refusal')
+        return {'reconciled': True, 'scope': 'fixture plumbing only'}
+class StubRegistry:
+    def catalog(self):
+        return StubCatalog()
+def load(data_dir, *, root, repositories):
+    assert Path(data_dir) == Path('evas/capabilities/data')
+    assert Path(root).resolve() == Path.cwd()
+    assert repositories == {'vaevas': Path('.')}
+    return StubRegistry()
+''')
+        for code, admitted in ((0,True),(9,True),(0,False)):
             result=subprocess.run(['bash','-e','-c',body],cwd=self.repo,
-                                  env=dict(self.env,FIXTURE_BUILD_EXIT=str(code)),capture_output=True,text=True)
+                                  env=dict(self.env,FIXTURE_BUILD_EXIT=str(code),
+                                           FIXTURE_CATALOG_RECONCILED=str(admitted).lower()),capture_output=True,text=True)
             report=json.loads((self.repo/'runs/rust-test-listing.json').read_text())
-            self.assertEqual(result.returncode,0 if code==0 else 1,result.stdout+result.stderr)
+            self.assertEqual(result.returncode,0 if code==0 and admitted else 1,result.stdout+result.stderr)
             self.assertEqual(report['complete'],code==0)
+            self.assertEqual(report['catalog_reconciliation']['reconciled'],code==0 and admitted)
             self.assertTrue((self.repo/'runs/rust-test-build.jsonl').exists())
             self.assertTrue((self.repo/'runs/rust-test-build.stderr.txt').exists())
             self.assertEqual(report['test_body_execution'],'not_observed_by_this_helper')

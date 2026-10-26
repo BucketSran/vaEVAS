@@ -4,15 +4,17 @@
 The matrix is a generated artifact: never hand-edit docs/development/TRACEABILITY.md.
 Run from the repository root:
 
-    python3 scripts/traceability.py            # write docs/development/TRACEABILITY.md
-    python3 scripts/traceability.py --check    # validate tags and matrix freshness
+    python3 scripts/traceability.py --catalog-data evas/capabilities/data
+    python3 scripts/traceability.py --catalog-data evas/capabilities/data --check
 
 Tags are reviewed file-level declarations, not proof of coverage or execution.
 Read source with AST; never import test modules. Invalid tags fail both modes.
 """
 import argparse
 import ast
+from collections import Counter
 import importlib.util
+import json
 import pathlib
 import re
 import sys
@@ -198,7 +200,7 @@ def main():
             result += '\n' + render_catalog_navigation(registry)
         if args.check:
             if not OUT.exists() or OUT.read_text() != result:
-                raise ValueError("TRACEABILITY.md is missing or stale; run python3 scripts/traceability.py")
+                raise ValueError("TRACEABILITY.md is missing or stale; rerun the same selection without --check")
             print(f"validated tags, targets and matrix freshness ({len(rows)} test files)")
         else:
             OUT.write_text(result)
@@ -212,15 +214,38 @@ def main():
 def render_catalog_navigation(registry):
     """Navigation only: pending and discovery counts are never normative coverage."""
     catalog = registry.catalog()
-    history = catalog.current('historical-audit-record') + catalog.current('historical-finding')
+    audits = catalog.current('historical-audit-record')
+    audit_ids = {obj['id'] for obj in audits}
+    history = audits + catalog.current('historical-finding')
+    historical_verdicts = Counter()
     for obj in history:
-        catalog.read_history(obj)
+        row = catalog.read_history(obj)
+        if obj['id'] in audit_ids:
+            historical_verdicts[str(row.get('verdict', 'unavailable'))] += 1
     counts = catalog.namespace_counts()
     lines = ['## Registry asset and method navigation', '',
              'Metadata navigation only; GUARDS remain AST navigation. No normative coverage or qualification is inferred.', '']
     for namespace, value in counts.items():
-        lines.append('- ' + namespace + ': ' + str(value['methods']) + ' registered methods; ' + str(value['generated']) + ' generated; ' + str(value['entrypoints']) + ' entrypoints')
+        if namespace != 'rust-tests':
+            lines.append('- ' + namespace + ': ' + str(value['methods']) + ' registered methods; ' + str(value['generated']) + ' generated; ' + str(value['entrypoints']) + ' entrypoints')
+    profiles = {}
+    for entry in catalog.current('entrypoint'):
+        if entry['collector'] == 'binary-listing':
+            profiles.setdefault(entry['listing_profile'], entry)
+    for profile, entry in sorted(profiles.items()):
+        source = catalog.bound(entry['listing_source'], 'source')
+        receipt = json.loads(registry.read_source(source))
+        facts = catalog.reconcile_rust_listing(receipt, profile=profile)
+        lines.append('- rust-tests (' + profile + '): ' + str(facts['tests_discovered'])
+                     + ' IDs in the archived native listing; ' + str(facts['ignored_tests_discovered'])
+                     + ' ignored; ' + str(len(facts['binaries'])) + ' binary entrypoints; listing only')
     lines.append('- ' + str(len(history)) + ' historical records verified against their original sources; no qualification is inferred')
+    reviews = Counter(method['semantic_status'] for method in catalog.current('method'))
+    lines.append('- Current method semantic review: ' + '; '.join(
+        state + '=' + str(reviews[state]) for state in ('reviewed', 'pending')))
+    if historical_verdicts:
+        lines.append('- Original historical audit verdicts (original scope only): ' + '; '.join(
+            verdict + '=' + str(count) for verdict, count in sorted(historical_verdicts.items())))
     assets = catalog.current('asset')
     lines.append('- Pending asset roles: ' + str(sum(a['role']['status'] == 'pending' for a in assets)))
     lines.append('- Consumer closure pending/partial: ' + str(sum(a['consumer_status'] != 'complete' for a in assets)))

@@ -5,6 +5,7 @@ actual metadata supplies expected targets; no executable glob or prior count is
 accepted. This observer is not a sandbox for malicious owned native binaries.
 """
 import argparse
+import importlib.util
 import hashlib
 import json
 import os
@@ -409,12 +410,41 @@ def main(argv=None):
     parser.add_argument('--build-exit', type=int, required=True)
     parser.add_argument('--report', type=Path, required=True)
     parser.add_argument('--raw-directory', type=Path, required=True)
+    parser.add_argument('--require-catalog', type=Path)
+    parser.add_argument('--listing-profile')
+    parser.add_argument('--source-repository', action='append', default=[], metavar='NAME=PATH')
     args = parser.parse_args(argv)
+    if bool(args.require_catalog) != bool(args.listing_profile):
+        parser.error('--require-catalog and --listing-profile must be used together')
+    if args.source_repository and not args.require_catalog:
+        parser.error('--source-repository requires --require-catalog')
+    repositories = {}
+    for binding in args.source_repository:
+        name, separator, path = binding.partition('=')
+        if not separator or not name or not path or name in repositories:
+            parser.error('invalid or duplicate --source-repository NAME=PATH')
+        repositories[name] = Path(path)
     result = discover(args.repo, args.build_messages, args.build_exit, args.raw_directory)
+    if args.require_catalog:
+        result['catalog_reconciliation'] = dict(reconciled=False, errors=[])
+        try:
+            if not result['complete']:
+                raise ValueError('cannot require an incomplete Rust listing')
+            path = Path(__file__).resolve().parents[2] / 'evas/capabilities/registry.py'
+            spec = importlib.util.spec_from_file_location('_rust_listing_registry', path)
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
+            catalog = module.load(args.require_catalog, root=args.repo, repositories=repositories).catalog()
+            result['catalog_reconciliation'] = catalog.reconcile_rust_listing(result, profile=args.listing_profile)
+        except (OSError, ValueError, TypeError, KeyError) as error:
+            result['catalog_reconciliation']['errors'].append(str(error))
     args.report.parent.mkdir(parents=True, exist_ok=True)
     args.report.write_text(json.dumps(result, indent=2, allow_nan=False) + '\n')
-    print(json.dumps({key: result[key] for key in ('complete', 'listing_only', 'errors')}))
-    return 0 if result['complete'] else 1
+    summary = {key: result[key] for key in ('complete', 'listing_only', 'errors')}
+    if args.require_catalog:
+        summary['catalog_reconciliation'] = result['catalog_reconciliation']
+    print(json.dumps(summary))
+    return 0 if result['complete'] and result.get('catalog_reconciliation', {'reconciled': True})['reconciled'] else 1
 
 
 if __name__ == '__main__':

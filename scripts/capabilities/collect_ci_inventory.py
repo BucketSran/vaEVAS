@@ -361,6 +361,9 @@ def require_catalog(root, data, observation, merged, entries):
         catalog.read_history(obj)
     rows = observation['assets']
     assets = catalog.reconcile_assets(rows, external_manifest={row['path']: row for row in rows})
+    unobserved = {obj['namespace'] for obj in catalog.current('method')} - set(merged)
+    if unobserved:
+        raise ValueError('registered Python namespace has no actual discovery: ' + ', '.join(sorted(unobserved)))
     for ns, receipt in merged.items():
         catalog.reconcile_methods(ns, receipt)
     expected = {(e['namespace'], e['start'], e.get('pattern', 'test*.py'))
@@ -389,7 +392,7 @@ def require_catalog(root, data, observation, merged, entries):
     return {'reconciled': True, 'assets': assets, 'historical_rows_read': len(histories),
             'namespace_counts': catalog.namespace_counts(),
             'reconciled_scope': ['Python namespaces', 'reviewed asset scope', 'declared historical source rows'],
-            'rust_status': 'not collected by this Python/assets job; independent reviewed receipt integration pending'}
+            'rust_status': 'not collected by this Python/assets job; native observation pending here and required independently by the selected rust-regression job'}
 
 
 def collect(root, output, *, mode, registry_data=None, timeout=30,
