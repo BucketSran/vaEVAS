@@ -9,6 +9,8 @@ import sys
 import tempfile
 import unittest
 
+import git_fixture
+
 FILE=Path(__file__).resolve().parents[1]/'capabilities/observe_assets.py'
 spec=importlib.util.spec_from_file_location('asset_observer_under_test',FILE)
 observer=importlib.util.module_from_spec(spec);spec.loader.exec_module(observer)
@@ -16,7 +18,7 @@ observer=importlib.util.module_from_spec(spec);spec.loader.exec_module(observer)
 class ImmutableObserverTests(unittest.TestCase):
     def setUp(self):
         self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup)
-        self.parent=Path(self.temp.name);self.repo=self.parent/'repository';self.repo.mkdir()
+        self.parent=Path(self.temp.name);git_fixture.bind(self,self.parent);self.repo=self.parent/'repository';self.repo.mkdir()
         self.git('init','-q')
         (self.repo/'input.txt').write_bytes(b'immutable fixture\n')
         (self.repo/'nested').mkdir();(self.repo/'nested/run.py').write_bytes(b'print("data only")\n')
@@ -24,7 +26,8 @@ class ImmutableObserverTests(unittest.TestCase):
         self.export=self.parent/'export';shutil.copytree(self.repo,self.export,ignore=shutil.ignore_patterns('.git'))
 
     def git(self,*args):
-        return subprocess.check_output(['git','-C',str(self.repo),*args],text=True,stderr=subprocess.DEVNULL)
+        return git_fixture.run(['-C',str(self.repo),*args],scratch=self.parent,stdout=subprocess.PIPE,
+                               stderr=subprocess.DEVNULL,text=True,check=True).stdout
 
     def observe(self,**kwargs):
         return observer.observe(self.export,source_repository=self.repo,source_revision=self.commit,**kwargs)
@@ -83,15 +86,15 @@ class ImmutableObserverTests(unittest.TestCase):
 
     def test_cli_export_mode_does_not_need_git_in_export_directory(self):
         self.assertFalse((self.export/'.git').exists())
-        result=subprocess.run([sys.executable,'-B',str(FILE),'--root',str(self.export),'--source-repository',str(self.repo),'--source-revision',self.commit],capture_output=True,text=True)
+        result=subprocess.run([sys.executable,'-B',str(FILE),'--root',str(self.export),'--source-repository',str(self.repo),'--source-revision',self.commit],env=git_fixture.child_env(),capture_output=True,text=True)
         self.assertEqual(result.returncode,0,result.stderr)
         self.assertEqual(json.loads(result.stdout)['source_commit'],self.commit)
-        invalid=subprocess.run([sys.executable,'-B',str(FILE),'--root',str(self.export),'--source-revision',self.commit],capture_output=True,text=True)
+        invalid=subprocess.run([sys.executable,'-B',str(FILE),'--root',str(self.export),'--source-revision',self.commit],env=git_fixture.child_env(),capture_output=True,text=True)
         self.assertNotEqual(invalid.returncode,0)
 
     def test_sha256_repository_object_format_is_used_for_actual_git_blob_verification(self):
         repo=self.parent/'sha256-repository'
-        result=subprocess.run(['git','init','-q','--object-format=sha256',str(repo)],capture_output=True,text=True)
+        result=git_fixture.run(['init','-q','--object-format=sha256',str(repo)],scratch=self.parent,capture_output=True,text=True)
         if result.returncode:self.skipTest('installed Git lacks SHA256 repository support')
         self.repo=repo
         (repo/'data.txt').write_bytes(b'sha256 object fixture\n')

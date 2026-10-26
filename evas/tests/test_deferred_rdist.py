@@ -160,11 +160,23 @@ class DeferredRdist(unittest.TestCase):
     def test_bad_raw_leaf_seed_and_signature_are_rejected(self):
         p=build(wire=False)
         from evas.ir import UnsupportedSystemCall
-        event=next(event for event in p.events if isinstance(event.body[0].rhs.value,UnsupportedSystemCall))
+        index,event=next((i,event) for i,event in enumerate(p.events)
+            if isinstance(event.body[0].rhs.value,UnsupportedSystemCall))
         assignment=event.body[0];boundary=assignment.rhs;leaf=boundary.value
-        for bad in (replace(leaf,function='rdist_uniform'),replace(leaf,seed=0),replace(leaf,args=leaf.args[:1])):
-            forged=replace(p,events=(*p.events[:-1],replace(event,body=(replace(assignment,rhs=replace(boundary,value=bad)),))))
-            with self.subTest(bad=bad),self.assertRaisesRegex(CompileError,'IR33:'):forged.to_dict()
+
+        def replace_leaf(value):
+            changed=replace(event,body=(replace(assignment,rhs=replace(boundary,value=value)),))
+            return replace(p,events=tuple(changed if i==index else item
+                for i,item in enumerate(p.events)))
+
+        # An unchanged legal leaf must survive the exact mutation placement.
+        self.assertEqual(replace_leaf(leaf).to_dict(),p.to_dict())
+        for name,bad,reason in (
+                ('function',replace(leaf,function='rdist_uniform'),'invalid deferred system function signature'),
+                ('seed',replace(leaf,seed=0),'system function seed requires same-instance integer state'),
+                ('arity',replace(leaf,args=leaf.args[:1]),'invalid deferred system function signature')):
+            with self.subTest(field=name),self.assertRaisesRegex(CompileError,reason):
+                replace_leaf(bad).to_dict()
 
     def test_caller_module_seed_in_function_argument_prefix_is_allowed(self):
         source=('`include "disciplines.vams"\nmodule m(y);output y;electrical y;integer seed=1;real q;'

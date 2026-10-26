@@ -10,6 +10,7 @@ import tempfile
 import unittest
 from evas import CompileError, KernelError, compile_sources, solve, transient
 from evas.runtime import _invoke
+from evas.protocol import validate_response
 from test_affine import KERNEL, instance, model
 
 
@@ -113,6 +114,7 @@ class BoundStepContracts(unittest.TestCase):
             path=Path(directory)/'diagnostics.json'
             result=_invoke(request,KERNEL,diagnostics_path=path)
             records=json.loads(path.read_text())['records']
+        validate_response(result,p,len(request['transient']['output_times']),request['transient']['output_times'])
         segments=[r for r in records if r['kind']=='nonlinear_candidate' and r['outcome']=='certified']
         self.assertTrue(segments)
         self.assertEqual(segments[-1]['end'],.5)
@@ -189,6 +191,7 @@ class BoundStepContracts(unittest.TestCase):
             path=Path(directory)/'diagnostics.json'
             r=_invoke(request,KERNEL,diagnostics_path=path)
             records=json.loads(path.read_text())['records']
+        validate_response(r,p,len(request['transient']['output_times']),request['transient']['output_times'])
         y=r['nodes'].index('y')
         for solution,t in zip(r['solutions'],times):
             self.assertAlmostEqual(solution['voltages'][y],math.atan(3*t)/3,places=8)

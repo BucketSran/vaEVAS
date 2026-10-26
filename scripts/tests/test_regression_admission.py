@@ -13,6 +13,8 @@ import tempfile
 import textwrap
 import unittest
 
+import git_fixture
+
 ROOT = Path(__file__).resolve().parents[2]
 _spec=importlib.util.spec_from_file_location('inactive_bootstrap_test_support',Path(__file__).with_name('test_trusted_regression_gate.py'))
 _support=importlib.util.module_from_spec(_spec)
@@ -132,7 +134,7 @@ class AdmissionIntegrationTests(unittest.TestCase):
                 path=root/'runs/shards'/str(index)/'report.json'
                 path.parent.mkdir(parents=True)
                 path.write_text(json.dumps(shard))
-            env=dict(os.environ,GITHUB_STEP_SUMMARY=str(root/'summary.md'))
+            env=git_fixture.child_env(GITHUB_STEP_SUMMARY=str(root/'summary.md'))
             coverage=self.run_body('regression-coverage','Verify complete raw coverage')
             result=subprocess.run(['bash','-e','-c',coverage],cwd=root,env=env,capture_output=True,text=True)
             self.assertEqual(result.returncode,0,result.stdout+result.stderr)
@@ -145,12 +147,13 @@ class AdmissionIntegrationTests(unittest.TestCase):
             path=root/BASELINE_PATH
             path.parent.mkdir(parents=True)
             path.write_text(json.dumps(baseline(merged)))
-            subprocess.run(['git','init','-b','main',str(root)],check=True,capture_output=True)
-            subprocess.run(['git','-C',str(root),'add','scripts','evas'],check=True,capture_output=True)
-            subprocess.run(['git','-C',str(root),'-c','user.name=Integration',
-                            '-c','user.email=test@example.invalid','commit','-m','trusted'],
-                           check=True,capture_output=True)
-            trusted=subprocess.check_output(['git','-C',str(root),'rev-parse','HEAD'],text=True).strip()
+            git_fixture.run(['init','-b','main',str(root)],scratch=root,check=True,capture_output=True)
+            git_fixture.run(['-C',str(root),'add','scripts','evas'],scratch=root,check=True,capture_output=True)
+            git_fixture.run(['-C',str(root),'-c','user.name=Integration',
+                             '-c','user.email=test@example.invalid','commit','-m','trusted'],
+                            scratch=root,check=True,capture_output=True)
+            trusted=git_fixture.run(['-C',str(root),'rev-parse','HEAD'],scratch=root,
+                                    check=True,capture_output=True,text=True).stdout.strip()
             event=root/'event.json'
             event.write_text(json.dumps({'repository':{'full_name':'fixture/project'},'pull_request':{
                 'base':{'sha':trusted,'ref':'main','repo':{'full_name':'fixture/project'}}}}))
@@ -168,11 +171,12 @@ class AdmissionIntegrationTests(unittest.TestCase):
             self.assertEqual(result.returncode,1,result.stdout+result.stderr)
             self.assertFalse(json.loads((root/'runs/regression-admission.json').read_text())['merge_allowed'])
             path.unlink()
-            subprocess.run(['git','-C',str(root),'add','evas'],check=True,capture_output=True)
-            subprocess.run(['git','-C',str(root),'-c','user.name=Integration',
-                            '-c','user.email=test@example.invalid','commit','-m','missing baseline'],
-                           check=True,capture_output=True)
-            missing=subprocess.check_output(['git','-C',str(root),'rev-parse','HEAD'],text=True).strip()
+            git_fixture.run(['-C',str(root),'add','evas'],scratch=root,check=True,capture_output=True)
+            git_fixture.run(['-C',str(root),'-c','user.name=Integration',
+                             '-c','user.email=test@example.invalid','commit','-m','missing baseline'],
+                            scratch=root,check=True,capture_output=True)
+            missing=git_fixture.run(['-C',str(root),'rev-parse','HEAD'],scratch=root,
+                                    check=True,capture_output=True,text=True).stdout.strip()
             payload=json.loads(event.read_text());payload['pull_request']['base']['sha']=missing
             event.write_text(json.dumps(payload))
             result=subprocess.run(['bash','-e','-c',admission],cwd=root,env=env,capture_output=True,text=True)
@@ -203,7 +207,7 @@ class BootstrapSourceTests(unittest.TestCase):
         self.write('runs/python-regression.json',json.dumps(changed))
         self.event_path.write_text(json.dumps({'repository':{'full_name':'fixture/project'},
             'pull_request':{'base':{'sha':self.trusted,'ref':'main','repo':{'full_name':'fixture/project'}}}}))
-        self.env=dict(os.environ,GITHUB_EVENT_NAME='pull_request',GITHUB_EVENT_PATH=str(self.event_path))
+        self.env=git_fixture.child_env(GITHUB_EVENT_NAME='pull_request',GITHUB_EVENT_PATH=str(self.event_path))
         self.evidence={'scope':'Actual workflow shell body; local Git and synthetic raw only, not EVAS/CI',
                        'bootstrap_commit':self.bootstrap,'event_base_commit':self.trusted,
                        'raw_sha256':hashlib.sha256((self.repo/'runs/python-regression.json').read_bytes()).hexdigest()}

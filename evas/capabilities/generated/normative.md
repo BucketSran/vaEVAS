@@ -24,7 +24,7 @@ EVAS 目标配置：`evas-voltage-domain-v1`，目标域 3 项，明确目标外
 | `calibration:sef@1` | calibration | 6 |
 | `checker:sef@1` | checker | 10 |
 | `example:existing-positive@1` | case | 14 |
-| `example:internal-budget@1` | internal-contract | 2 |
+| `example:internal-budget@1` | internal-contract | 3 |
 | `example:negative-control@1` | case | 14 |
 | `execution:sef-calibration-pr1@1` | execution | 16 |
 | `qualification:sef-registration-example@1` | qualification | 32 |

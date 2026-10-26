@@ -167,12 +167,23 @@ jobs:
           python-version: '3.12'
       - name: Traceability and frozen validation identities
         if: needs.selection.outputs.maintenance == 'true'
+        env:
+          GIT_FIXTURE_RETAIN_DIR: runs/git-fixture-isolation
         run: |
           python3 -B scripts/traceability.py --check --catalog-data evas/capabilities/data
           python3 -B scripts/diagnostic_inventory.py --check
           python3 -B scripts/verify_validation_version.py
           python3 -B -m unittest discover -s scripts/tests -v
           python3 -B -m unittest discover -s evas/capabilities -p 'test_*.py' -v
+      - name: Retain Git fixture incident controls
+        if: always() && needs.selection.outputs.maintenance == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: git-fixture-isolation
+          path: runs/git-fixture-isolation/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 14
       - name: Independent mathematics and checker calibration (no simulator)
         if: needs.selection.outputs.calibration == 'true'
         run: |
@@ -207,6 +218,12 @@ jobs:
           python3 -B evas/validation/paper/check_design.py
           python3 -B -m unittest discover -s evas/validation/paper -p 'test_criteria.py' -v
           python3 -B -m unittest discover -s evas/validation/paper -p 'test_*root*.py' -v
+          python3 -B -m unittest discover -s evas/validation/checker_calibration -v
+          python3 -B -m unittest discover -s evas/validation/paper -p 'test_coefficient_first_order.py' -v
+          python3 -B -m unittest discover -s evas/validation/paper -p 'test_precision.py' -v
+          python3 -B -m unittest discover -s evas/validation/paper -p 'test_precision_binding.py' -v
+          python3 -B -m unittest discover -s evas/validation/paper -p 'test_precision_v2.py' -v
+          python3 -B -m unittest discover -s evas/validation/paper -p 'test_primitives.py' -v
           python3 -B -m unittest discover -s experiments/backends/paper -p 'test_*.py' -v
           python3 -B -m unittest discover -s evas/validation/support -p 'test_*.py' -v
   provenance-support:
@@ -310,7 +327,10 @@ jobs:
           lane: regression-opt1
           targets: evas/rust_core/target
       - name: Build the kernel used by Python regressions
-        run: cargo +stable build --locked --manifest-path evas/rust_core/Cargo.toml
+        run: |
+          mkdir -p runs/regression-build
+          cargo +stable build --locked --manifest-path evas/rust_core/Cargo.toml > runs/regression-build/stdout.txt 2> runs/regression-build/stderr.txt
+          cp evas/rust_core/target/debug/evas-kernel runs/regression-build/evas-kernel
       - name: Identify complete regression inputs and actual toolchain
         id: evidence
         env:
@@ -340,7 +360,7 @@ jobs:
           PYTHONPATH: evas/src
         run: |
           set +e
-          python3 -B scripts/run_regression.py --shard-count 4 --shard-index ${{ matrix.shard }} --weights scripts/regression-weights.json --input-identity runs/regression-identity.json --report runs/regression-evidence/report.json
+          python3 -B scripts/run_regression.py --shard-count 4 --shard-index ${{ matrix.shard }} --weights scripts/regression-weights.json --input-identity runs/regression-identity.json --report runs/regression-evidence/report.json > runs/regression-evidence/stdout.txt 2> runs/regression-evidence/stderr.txt
           raw_exit=$?
           set -e
           python3 -B scripts/ci_evidence.py collect --identity runs/regression-identity.json --shard ${{ matrix.shard }}-of-4 --report runs/regression-evidence/report.json --raw-exit "$raw_exit" > runs/regression-evidence/collection.json
@@ -370,6 +390,7 @@ jobs:
           path: |
             runs/regression-evidence
             runs/regression-identity.json
+            runs/regression-build/
           if-no-files-found: error
           retention-days: 14
   regression-coverage:

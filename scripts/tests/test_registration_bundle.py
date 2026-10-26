@@ -10,6 +10,7 @@ import sys
 import unittest
 from unittest import mock
 
+import git_fixture
 import regression_registration_fixtures as fixtures
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -52,7 +53,8 @@ class BundleWorkflowTests(unittest.TestCase):
         self.trusted = self.commit('trusted pointer and exact synthetic authorization')
         self.bootstrap = self.trusted
         origin = self.root/'origin.git'
-        subprocess.run(['git','clone','--bare',str(self.repo),str(origin)],check=True,capture_output=True)
+        git_fixture.run(['clone','--bare',str(self.repo),str(origin)],scratch=self.root,
+                        check=True,capture_output=True)
         self.git('remote','add','origin',str(origin))
         self.append()
         (self.repo/'runs').mkdir()
@@ -85,8 +87,8 @@ class BundleWorkflowTests(unittest.TestCase):
         self.event_path.write_text(json.dumps(event))
         body = self.pin_body(self.run_body('regression-admission',
                             'Compare raw observations with the trusted comparator'), self.bootstrap)
-        env = dict(os.environ, GITHUB_EVENT_NAME=event_name, GITHUB_EVENT_PATH=str(self.event_path),
-                   PATH=str(self.bin)+os.pathsep+os.environ.get('PATH',''))
+        env = git_fixture.child_env(GITHUB_EVENT_NAME=event_name, GITHUB_EVENT_PATH=str(self.event_path),
+                                   PATH=str(self.bin)+os.pathsep+os.environ.get('PATH',''))
         process = subprocess.run(['bash','-e','-c',body],cwd=self.repo,env=env,capture_output=True,text=True)
         facts = json.loads((self.repo/'runs/regression-admission.json').read_text())
         source_path = self.repo/'runs/regression-bundle-source.json'
@@ -254,19 +256,20 @@ class BundleMaterializationTests(unittest.TestCase):
     def test_partial_clone_missing_blobs_are_not_fetched(self):
         self.git('config', 'uploadpack.allowFilter', 'true')
         clone = self.root/'partial-clone'
-        subprocess.run(['git', 'clone', '--filter=blob:none', '--no-checkout',
-                        self.repo.as_uri(), str(clone)], check=True, capture_output=True)
+        git_fixture.run(['clone', '--filter=blob:none', '--no-checkout',
+                         self.repo.as_uri(), str(clone)], scratch=self.root,
+                        check=True, capture_output=True)
 
         def missing():
-            output = subprocess.check_output(['git', '-C', str(clone), 'rev-list',
-                                              '--objects', '--missing=print', 'HEAD'], text=True)
+            output = git_fixture.run(['-C', str(clone), 'rev-list', '--objects', '--missing=print', 'HEAD'],
+                                     scratch=self.root, check=True, capture_output=True, text=True).stdout
             return {line for line in output.splitlines() if line.startswith('?')}
 
         before = missing()
         self.assertGreaterEqual(len(before), len(self.payloads))
         trace = self.root/'helper-git-trace.txt'
         # A caller's fetch preference cannot override the helper's local-only boundary.
-        env = dict(os.environ, GIT_NO_LAZY_FETCH='0', GIT_TRACE=str(trace))
+        env = git_fixture.child_env(GIT_NO_LAZY_FETCH='0', GIT_TRACE=str(trace))
         process = subprocess.run([sys.executable, '-I', str(ROOT/HELPER), '--repo', str(clone),
                                   '--manifest', str(self.manifest), '--output', str(self.output)],
                                  env=env, capture_output=True, text=True)
