@@ -1,0 +1,527 @@
+{
+  "prepared_at_utc": "2026-10-26T23:07:22.089670+00:00",
+  "source_only": true,
+  "prospective_base": "c306f54e8f333eab58deff9f3f8e0030bc4bd005",
+  "prospective_tree": "5f5fc7acfc9d430e7092a27a261508971f42920b",
+  "base_not_yet_accepted_main": true,
+  "source_snapshot": "307a30ef89ce843dba905b7942b39d9dce098190",
+  "source_paths": [
+    {
+      "path": ".github/workflows/numerical-assurance.yml",
+      "accepted_C1_sha256": "102ccd5667429113be62507794aa7f3b21c29631fc880c66738f88fc77a9ec32",
+      "resolved_sha256": "76c7387d4c8a3390edc2ba440f169c14794301867d1f277d3488b654cf585682",
+      "prospective_base_sha256": "70dba1d0705b83d4811e2d79502cb96b891fe3cd8ea32cfb5c5ddf7b3f407dfa",
+      "changed_from_base": true,
+      "resolution": "Accepted C1 source plus accepted main maintenance timeout"
+    },
+    {
+      "path": "evas/tests/test_bound_step.py",
+      "accepted_C1_sha256": "8bae51b61822f4a365766887e8793b9b024553fcc644289ce21092cdfbff7744",
+      "resolved_sha256": "8bae51b61822f4a365766887e8793b9b024553fcc644289ce21092cdfbff7744",
+      "prospective_base_sha256": "1ff7d706256e24fd7a3276e6c743517e38b70c6ad1260d6ba6210ef8d51b0330",
+      "changed_from_base": true,
+      "resolution": "Exact accepted C1 source"
+    },
+    {
+      "path": "evas/tests/test_deferred_rdist.py",
+      "accepted_C1_sha256": "41ed77da87c25c4ac48d1ea3514702417febddc3f7df95aeceb7d50baaa7631b",
+      "resolved_sha256": "41ed77da87c25c4ac48d1ea3514702417febddc3f7df95aeceb7d50baaa7631b",
+      "prospective_base_sha256": "326742fc00de3692715da1827b8a076513d09af573906c09ed51d17ff49a7184",
+      "changed_from_base": true,
+      "resolution": "Exact accepted C1 source"
+    },
+    {
+      "path": "evas/tests/test_source_math.py",
+      "accepted_C1_sha256": "ef2f50533a53b1fd9f588fc14c6bb6dc56c30da92fa5a33c5bbe7851c345ad54",
+      "resolved_sha256": "ef2f50533a53b1fd9f588fc14c6bb6dc56c30da92fa5a33c5bbe7851c345ad54",
+      "prospective_base_sha256": "6046d9972325d51df1ccecda1be3dc3b7216a605c7cb1f2eddec2573473f432d",
+      "changed_from_base": true,
+      "resolution": "Exact accepted C1 source"
+    },
+    {
+      "path": "evas/validation/checker_calibration/README.md",
+      "accepted_C1_sha256": "6a1d923f65be68306da57516af04d61e230f8bb4a09c6ad8436812bd741bde13",
+      "resolved_sha256": "6a1d923f65be68306da57516af04d61e230f8bb4a09c6ad8436812bd741bde13",
+      "prospective_base_sha256": null,
+      "changed_from_base": true,
+      "resolution": "Exact accepted C1 source"
+    },
+    {
+      "path": "evas/validation/checker_calibration/fixtures/provenance.json",
+      "accepted_C1_sha256": "28b14e021b3ab5c563d3d5a4c7cbb5c379e260100fc606cab5d57743a05303c3",
+      "resolved_sha256": "28b14e021b3ab5c563d3d5a4c7cbb5c379e260100fc606cab5d57743a05303c3",
+      "prospective_base_sha256": null,
+      "changed_from_base": true,
+      "resolution": "Exact accepted C1 source"
+    },
+    {
+      "path": "evas/validation/checker_calibration/fixtures/source_math.json",
+      "accepted_C1_sha256": "3c0a697b66055fc4c9124198ad15c55e896a87af70add85bd9f760c3cb34aad2",
+      "resolved_sha256": "3c0a697b66055fc4c9124198ad15c55e896a87af70add85bd9f760c3cb34aad2",
+      "prospective_base_sha256": null,
+      "changed_from_base": true,
+      "resolution": "Exact accepted C1 source"
+    },
+    {
+      "path": "evas/validation/checker_calibration/fixtures/test_bound_caps_actual_nonlinear_integration_segments--identity--0.diagnostics.json",
+      "accepted_C1_sha256": "5cf94f240a17c45ea3a5d219e089471a86c458626c90e32c45b141ef42fb9a74",
+      "resolved_sha256": "5cf94f240a17c45ea3a5d219e089471a86c458626c90e32c45b141ef42fb9a74",
+      "prospective_base_sha256": null,
+      "changed_from_base": true,
+      "resolution": "Exact accepted C1 source"
+    },
+    {
+      "path": "evas/validation/checker_calibration/fixtures/test_bound_caps_actual_nonlinear_integration_segments--identity--0.original-response.json",
+      "accepted_C1_sha256": "2bf0767fe7a6241813b047b662c2506447439ca83e8e1d89dac227b68e3211b5",
+      "resolved_sha256": "2bf0767fe7a6241813b047b662c2506447439ca83e8e1d89dac227b68e3211b5",
+      "prospective_base_sha256": null,
+      "changed_from_base": true,
+      "resolution": "Exact accepted C1 source"
+    },
+    {
+      "path": "evas/validation/checker_calibration/fixtures/test_bound_caps_actual_nonlinear_integration_segments--identity--0.request.json",
+      "accepted_C1_sha256": "d320c50b4d1a1889edda8bcc6fba79b80ce0a974e3dd299024ea29612abe9be2",
+      "resolved_sha256": "d320c50b4d1a1889edda8bcc6fba79b80ce0a974e3dd299024ea29612abe9be2",
+      "prospective_base_sha256": null,
+      "changed_from_base": true,
+      "resolution": "Exact accepted C1 source"
+    },
+    {
+      "path": "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.diagnostics.json",
+      "accepted_C1_sha256": "a44dc5e299aa05830b9352d840bc252870f5fcb10b8f658b10fa72176bb76314",
+      "resolved_sha256": "a44dc5e299aa05830b9352d840bc252870f5fcb10b8f658b10fa72176bb76314",
+      "prospective_base_sha256": null,
+      "changed_from_base": true,
+      "resolution": "Exact accepted C1 source"
+    },
+    {
+      "path": "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.original-response.json",
+      "accepted_C1_sha256": "3616d402a8653ab2333e9ece3b9c204ce71eed0701b3b8336e7c4db866a8f510",
+      "resolved_sha256": "3616d402a8653ab2333e9ece3b9c204ce71eed0701b3b8336e7c4db866a8f510",
+      "prospective_base_sha256": null,
+      "changed_from_base": true,
+      "resolution": "Exact accepted C1 source"
+    },
+    {
+      "path": "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.request.json",
+      "accepted_C1_sha256": "c67d8e1b2ad4dd15db2fbe64937d86bf5fc078b1e66a01839979d5a619092efc",
+      "resolved_sha256": "c67d8e1b2ad4dd15db2fbe64937d86bf5fc078b1e66a01839979d5a619092efc",
+      "prospective_base_sha256": null,
+      "changed_from_base": true,
+      "resolution": "Exact accepted C1 source"
+    },
+    {
+      "path": "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.original-response.json",
+      "accepted_C1_sha256": "830d7dc4a8585b6cc71c36985ef6f7ce1228a710fee2f30ff87d116581c8ded6",
+      "resolved_sha256": "830d7dc4a8585b6cc71c36985ef6f7ce1228a710fee2f30ff87d116581c8ded6",
+      "prospective_base_sha256": null,
+      "changed_from_base": true,
+      "resolution": "Exact accepted C1 source"
+    },
+    {
+      "path": "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.request.json",
+      "accepted_C1_sha256": "77cd33129b13e93b6cde1c86b9936865ca2b51762857af4f25bd06b550fa5a90",
+      "resolved_sha256": "77cd33129b13e93b6cde1c86b9936865ca2b51762857af4f25bd06b550fa5a90",
+      "prospective_base_sha256": null,
+      "changed_from_base": true,
+      "resolution": "Exact accepted C1 source"
+    },
+    {
+      "path": "evas/validation/checker_calibration/fixtures/validator_predicates.json",
+      "accepted_C1_sha256": "1e4e74c05dddaa010a49f3545bdd413f7f2ae68dcad635198c021eef1a928ecc",
+      "resolved_sha256": "1e4e74c05dddaa010a49f3545bdd413f7f2ae68dcad635198c021eef1a928ecc",
+      "prospective_base_sha256": null,
+      "changed_from_base": true,
+      "resolution": "Exact accepted C1 source"
+    },
+    {
+      "path": "evas/validation/checker_calibration/test_detector_controls.py",
+      "accepted_C1_sha256": "2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661",
+      "resolved_sha256": "2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661",
+      "prospective_base_sha256": null,
+      "changed_from_base": true,
+      "resolution": "Exact accepted C1 source"
+    },
+    {
+      "path": "scripts/materialize_registration_bundle.py",
+      "accepted_C1_sha256": "b3e821f65ef738d8611c0b021066a4b4b4bbd1632bbbcc48336d7e750d6ea305",
+      "resolved_sha256": "b3e821f65ef738d8611c0b021066a4b4b4bbd1632bbbcc48336d7e750d6ea305",
+      "prospective_base_sha256": "b3e821f65ef738d8611c0b021066a4b4b4bbd1632bbbcc48336d7e750d6ea305",
+      "changed_from_base": false,
+      "resolution": "Exact accepted C1 source"
+    },
+    {
+      "path": "scripts/tests/git_fixture.py",
+      "accepted_C1_sha256": "d1108193b8a3ad5e41acd1ecda5ac07f920245e351b1ea69a8779b4e76eae0d8",
+      "resolved_sha256": "d1108193b8a3ad5e41acd1ecda5ac07f920245e351b1ea69a8779b4e76eae0d8",
+      "prospective_base_sha256": "d1108193b8a3ad5e41acd1ecda5ac07f920245e351b1ea69a8779b4e76eae0d8",
+      "changed_from_base": false,
+      "resolution": "Exact accepted C1 source"
+    },
+    {
+      "path": "scripts/tests/test_asset_observer.py",
+      "accepted_C1_sha256": "9624d1833875b0d97e343c1054a5125bb88c1ff8e60ebd1694c3f0147936b8c6",
+      "resolved_sha256": "9624d1833875b0d97e343c1054a5125bb88c1ff8e60ebd1694c3f0147936b8c6",
+      "prospective_base_sha256": "9624d1833875b0d97e343c1054a5125bb88c1ff8e60ebd1694c3f0147936b8c6",
+      "changed_from_base": false,
+      "resolution": "Exact accepted C1 source"
+    },
+    {
+      "path": "scripts/tests/test_catalog_history_selection.py",
+      "accepted_C1_sha256": "56a20eb84fc607089a7d8176fc15646872fbc8b0708ea62bb9ec839d8abbf44d",
+      "resolved_sha256": "56a20eb84fc607089a7d8176fc15646872fbc8b0708ea62bb9ec839d8abbf44d",
+      "prospective_base_sha256": "60477b5e628f2cc6bf5b8b12dfe2cb588c841b4415e45d70049fe89ec40a4079",
+      "changed_from_base": true,
+      "resolution": "Exact accepted C1 source"
+    },
+    {
+      "path": "scripts/tests/test_ci_evidence_v3.py",
+      "accepted_C1_sha256": "82ba35d3a2aae409546dda6534d1febd379ac57d47eacd47cbc9577c969b108c",
+      "resolved_sha256": "82ba35d3a2aae409546dda6534d1febd379ac57d47eacd47cbc9577c969b108c",
+      "prospective_base_sha256": "82ba35d3a2aae409546dda6534d1febd379ac57d47eacd47cbc9577c969b108c",
+      "changed_from_base": false,
+      "resolution": "Exact accepted C1 source"
+    },
+    {
+      "path": "scripts/tests/test_ci_inventory.py",
+      "accepted_C1_sha256": "7a201a97a28de706e6b5d8f73639eee1d4b44479f018f2d0d91defc14fc5fe43",
+      "resolved_sha256": "7a201a97a28de706e6b5d8f73639eee1d4b44479f018f2d0d91defc14fc5fe43",
+      "prospective_base_sha256": "65755ccd2feb1e62176a1195730fcc379ade83925fe3213fd21ff559969c85a4",
+      "changed_from_base": true,
+      "resolution": "Exact accepted C1 source"
+    },
+    {
+      "path": "scripts/tests/test_ci_selection.py",
+      "accepted_C1_sha256": "0ab29948f24541ddf54c66c4f7905a698e63110f373f72def7b2d4cdabfe7d53",
+      "resolved_sha256": "0ab29948f24541ddf54c66c4f7905a698e63110f373f72def7b2d4cdabfe7d53",
+      "prospective_base_sha256": "0ab29948f24541ddf54c66c4f7905a698e63110f373f72def7b2d4cdabfe7d53",
+      "changed_from_base": false,
+      "resolution": "Exact accepted C1 source"
+    },
+    {
+      "path": "scripts/tests/test_discover_rust.py",
+      "accepted_C1_sha256": "6071acf9b4de20ed9ea657b800ce0e839e8118772dc4c27148f6f6d79c1eb00d",
+      "resolved_sha256": "6071acf9b4de20ed9ea657b800ce0e839e8118772dc4c27148f6f6d79c1eb00d",
+      "prospective_base_sha256": "6071acf9b4de20ed9ea657b800ce0e839e8118772dc4c27148f6f6d79c1eb00d",
+      "changed_from_base": false,
+      "resolution": "Exact accepted C1 source"
+    },
+    {
+      "path": "scripts/tests/test_fast_feedback.py",
+      "accepted_C1_sha256": "1c98077c0ee72cde6ce8268e6d2f4adff5b968fece73d6184ce38f358c4b6fed",
+      "resolved_sha256": "1c98077c0ee72cde6ce8268e6d2f4adff5b968fece73d6184ce38f358c4b6fed",
+      "prospective_base_sha256": "1c98077c0ee72cde6ce8268e6d2f4adff5b968fece73d6184ce38f358c4b6fed",
+      "changed_from_base": false,
+      "resolution": "Exact accepted C1 source"
+    },
+    {
+      "path": "scripts/tests/test_git_fixture_isolation.py",
+      "accepted_C1_sha256": "c1111ef7be9b8fb0a45d2ce4350c28562d7dffa81dae04c9f88477d3b0ce4116",
+      "resolved_sha256": "c1111ef7be9b8fb0a45d2ce4350c28562d7dffa81dae04c9f88477d3b0ce4116",
+      "prospective_base_sha256": "c1111ef7be9b8fb0a45d2ce4350c28562d7dffa81dae04c9f88477d3b0ce4116",
+      "changed_from_base": false,
+      "resolution": "Exact accepted C1 source"
+    },
+    {
+      "path": "scripts/tests/test_independent_ci.py",
+      "accepted_C1_sha256": "00aa69f258fe131279622065a09b6cacd4727f935f2c566ab6354664996bc3ff",
+      "resolved_sha256": "00aa69f258fe131279622065a09b6cacd4727f935f2c566ab6354664996bc3ff",
+      "prospective_base_sha256": "00aa69f258fe131279622065a09b6cacd4727f935f2c566ab6354664996bc3ff",
+      "changed_from_base": false,
+      "resolution": "Exact accepted C1 source"
+    },
+    {
+      "path": "scripts/tests/test_registration_bundle.py",
+      "accepted_C1_sha256": "70ac1bfe2265918d482b1c263cfe1e7ef41b3d8a8e08ee1c0c489af521ed4530",
+      "resolved_sha256": "70ac1bfe2265918d482b1c263cfe1e7ef41b3d8a8e08ee1c0c489af521ed4530",
+      "prospective_base_sha256": "70ac1bfe2265918d482b1c263cfe1e7ef41b3d8a8e08ee1c0c489af521ed4530",
+      "changed_from_base": false,
+      "resolution": "Exact accepted C1 source"
+    },
+    {
+      "path": "scripts/tests/test_regression_admission.py",
+      "accepted_C1_sha256": "d804f6917b3cf08895fc43e87eff16239e97324d4f30148c8fbf80e8afe8e52d",
+      "resolved_sha256": "d804f6917b3cf08895fc43e87eff16239e97324d4f30148c8fbf80e8afe8e52d",
+      "prospective_base_sha256": "d804f6917b3cf08895fc43e87eff16239e97324d4f30148c8fbf80e8afe8e52d",
+      "changed_from_base": false,
+      "resolution": "Exact accepted C1 source"
+    },
+    {
+      "path": "scripts/tests/test_regression_gate.py",
+      "accepted_C1_sha256": "93f126aa0237d28a870e745981752522be5e731dd056d35acc6a3ddbbec1da16",
+      "resolved_sha256": "93f126aa0237d28a870e745981752522be5e731dd056d35acc6a3ddbbec1da16",
+      "prospective_base_sha256": "93f126aa0237d28a870e745981752522be5e731dd056d35acc6a3ddbbec1da16",
+      "changed_from_base": false,
+      "resolution": "Exact accepted C1 source"
+    },
+    {
+      "path": "scripts/tests/test_regression_input_subject.py",
+      "accepted_C1_sha256": "8c81e0e8b085e9e5a6e4cdf4f55191322563236dd2a15849adb7574057a3612d",
+      "resolved_sha256": "8c81e0e8b085e9e5a6e4cdf4f55191322563236dd2a15849adb7574057a3612d",
+      "prospective_base_sha256": "8c81e0e8b085e9e5a6e4cdf4f55191322563236dd2a15849adb7574057a3612d",
+      "changed_from_base": false,
+      "resolution": "Exact accepted C1 source"
+    },
+    {
+      "path": "scripts/tests/test_rust_catalog_reconcile.py",
+      "accepted_C1_sha256": "9ed4c2b0309c4fe8a15dbf91b81710a0eea902b408529e43fe3fa5531337ec7e",
+      "resolved_sha256": "9ed4c2b0309c4fe8a15dbf91b81710a0eea902b408529e43fe3fa5531337ec7e",
+      "prospective_base_sha256": "9ed4c2b0309c4fe8a15dbf91b81710a0eea902b408529e43fe3fa5531337ec7e",
+      "changed_from_base": false,
+      "resolution": "Exact accepted C1 source"
+    },
+    {
+      "path": "scripts/tests/test_trusted_regression_gate.py",
+      "accepted_C1_sha256": "a3d1a6e26e88924486ced360c12fac6cc4aab00b6e71a1cc8a1ebebe9352898d",
+      "resolved_sha256": "a3d1a6e26e88924486ced360c12fac6cc4aab00b6e71a1cc8a1ebebe9352898d",
+      "prospective_base_sha256": "a3d1a6e26e88924486ced360c12fac6cc4aab00b6e71a1cc8a1ebebe9352898d",
+      "changed_from_base": false,
+      "resolution": "Exact accepted C1 source"
+    },
+    {
+      "path": "scripts/tests/test_workspaces.py",
+      "accepted_C1_sha256": "ca0ddf9cf589361193151acb2455335557d7a5cd5d2e9f17ce3cf29765c52188",
+      "resolved_sha256": "ca0ddf9cf589361193151acb2455335557d7a5cd5d2e9f17ce3cf29765c52188",
+      "prospective_base_sha256": "ca0ddf9cf589361193151acb2455335557d7a5cd5d2e9f17ce3cf29765c52188",
+      "changed_from_base": false,
+      "resolution": "Exact accepted C1 source"
+    }
+  ],
+  "changed_paths": 19,
+  "source_patch": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/c1-rebind-20261027/source-only-r2.patch",
+  "source_patch_sha256": "0a4d26d5e29aa2dc73f071e1dbd1f9a0e39bdcd01c155584f43c1a4e7f307bf2",
+  "primary_probe_correction": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/c1-rebind-20261027/primary-probe-r1.json",
+  "source_root": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/c1-rebind-20261027/source",
+  "retained_prospective_base_files": {
+    "evas/capabilities/data/asset-index.json": "368acf57ab05eeaa5558883df68a5fb4da200eef9cf3ae34ea0072a6d66b5043",
+    "evas/capabilities/data/catalog-sources.json": "5e4d95ed79306ae1a7ba27c07853eed7d7f4c33bf80c5389ad5889f1358299ae",
+    "evas/capabilities/data/entrypoint-index.json": "18f820a5a67f419073558f1e5d89e82861dd528053b1a12dd76a31f8d393a42a",
+    "evas/capabilities/data/historical-index.json": "93ca528fc2c933970c2caad40936693b4e989dc635465a77fffb3da707c32e8f",
+    "evas/capabilities/data/method-index.json": "76a395bedfe721d90ce74caa0b1a2c87450f4da37abc4bf98ac4778d76baf9ff",
+    "evas/capabilities/data/registry.json": "9c9f9802b4a20e012a7287e347e0862c5c60ae18047ac6f09cd6637c93452f69",
+    "evas/capabilities/generated/normative.md": "785e79ac9b0209d1e58230bc7eba3980e55485d1c95cfda1180ae3898de77239",
+    "evas/docs/development/TRACEABILITY.md": "036c8708fa93fb8f32eea69b80cd7ac355ecd096bfe95221cd6ab7a773f48dd9",
+    "evas/validation/baselines/regression-v1.json": "be742ae2ae69579fdd4bc7dd8d110e05a71803f387f9d0831b58a6bed97ceff7",
+    "evas/validation/baselines/regression-v1.review.json": "5e8165654a3903c151d07e2f325eae26f98e8da242fbb745e99db0fb22df5518",
+    "scripts/context-registration-bundle.json": "929441a0bdf490cfccbab06e8934137e453026eda7d37139b336ffcd4fc91cb2"
+  },
+  "deferred_generated_paths": [
+    "evas/capabilities/data/asset-index.json",
+    "evas/capabilities/data/catalog-sources.json",
+    "evas/capabilities/data/entrypoint-index.json",
+    "evas/capabilities/data/historical-index.json",
+    "evas/capabilities/data/method-index.json",
+    "evas/capabilities/data/registry.json",
+    "evas/capabilities/generated/normative.md",
+    "evas/docs/development/TRACEABILITY.md"
+  ],
+  "generated_conflicts": [
+    "evas/capabilities/data/asset-index.json",
+    "evas/capabilities/data/catalog-sources.json",
+    "evas/capabilities/data/entrypoint-index.json",
+    "evas/capabilities/data/historical-index.json",
+    "evas/capabilities/data/method-index.json",
+    "evas/capabilities/data/registry.json",
+    "evas/docs/development/TRACEABILITY.md"
+  ],
+  "criteria_file_count": 3604,
+  "criteria_id": "f54a2eac6238fa60cd4bc71b5aa74a6717077ad2cc9a8c8b25b4c2ca2880c625",
+  "dut_file_count": 327,
+  "dut_id": "5e9bf28ad121569a6975811f0b5ea9e60423e676e6dfcf88048948bfd19ba056",
+  "criteria_and_DUT_exact_E1_source": true,
+  "E1_raw": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/ci-40384473617/artifacts/python-regression-timings/python-regression.json",
+  "E1_raw_sha256": "8f1ff97fe6c24dbb339fcac4f7b64c6c3ef98915b005b0711bd963c95ed74770",
+  "collector_files": {
+    "scripts/run_regression.py": "dc2ed03b722fd35e9a20f6eda424ac2ff39b3c22f2081a29c5f0777a9b148985",
+    "scripts/ci_evidence.py": "238c45d156225b29e566665997fdd5e1fc19b2301142e69cdc39243ce56c0257",
+    "scripts/regression_reason_identity.py": "3b7969bbefb3a7d89d4015871200b33d2ef63d7baaf897a4bc0b44a009adc718",
+    "scripts/regression_observation_policy.json": "42ea0b232286934c1af0905dbc89a15e6fa6eebacd641890b69c047fc78e7d93"
+  },
+  "workflow_declarations_exact_C1": true,
+  "workflow_maintenance_timeout_minutes": 30,
+  "before": {
+    "head": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+    "index_sha256": "a2e18b66fd9b3e29093343793d45781c11a717c05c35103d4e9b1da8eec87d71",
+    "shared_config_sha256": "2365548f0cb7f5b21311860afc37dc5a8f41d775b667f50ec8a678eb22a3d7aa",
+    "status": " M evas/tests/test_analog_conditions.py\n M evas/tests/test_constant_initial_power.py\n M evas/tests/test_diagnostics.py\n M evas/tests/test_idt.py\n M evas/tests/test_independent_driver_condition.py\n M evas/tests/test_initial_ordinary_alias.py\n M evas/tests/test_native_integer_events.py\n M evas/tests/test_ordinary_event_prefix.py\n M evas/tests/test_ordinary_integer_event_prefix.py\n M evas/tests/test_passive_events.py\n M evas/tests/test_r01_event_arrays.py\n M evas/tests/test_r01_event_conditions.py\n M evas/tests/test_rational_predicate_closure.py\n M evas/tests/test_refinement.py\n M evas/tests/test_root_recovery.py\n M evas/tests/test_source_floor_event.py\n M evas/tests/test_source_math.py\n M evas/tests/test_source_polynomial_guards.py\n?? evas/tests/raw_solution_contract.py\n?? evas/tests/test_audited_response_contracts.py\n",
+    "old_candidates": [
+      {
+        "path": "evas/tests/raw_solution_contract.py",
+        "sha256": "ffd5243e3b590f81e6e671e5761316b40c60558da2e2c81a001a118a57cf12dc"
+      },
+      {
+        "path": "evas/tests/test_analog_conditions.py",
+        "sha256": "230c3fd16cfe84b0d0198619fd1d9d4efd3b593295ebdd1109549b2933712adf"
+      },
+      {
+        "path": "evas/tests/test_audited_response_contracts.py",
+        "sha256": "bb4ae9ff097e14f25ff61184734370819a260946f40a16a9e5c45fd38efb723f"
+      },
+      {
+        "path": "evas/tests/test_constant_initial_power.py",
+        "sha256": "359c4a4048c7eaa9d4da73eaeba4dcb80a228d2deb8fbaa31afd5c8731921369"
+      },
+      {
+        "path": "evas/tests/test_diagnostics.py",
+        "sha256": "c97ed2e4897eeb14515a9c45214e62b371fefa8c931492de5d3fc40b3ebc0acf"
+      },
+      {
+        "path": "evas/tests/test_idt.py",
+        "sha256": "579fd1729188885cb86f34ff7c696ebb0032d3f5aaa10c8ce8bc8f7fd4f902f9"
+      },
+      {
+        "path": "evas/tests/test_independent_driver_condition.py",
+        "sha256": "1e449bb7b8eacf7abf6680857340084acc24b1df90626725b8f41fe929e20205"
+      },
+      {
+        "path": "evas/tests/test_initial_ordinary_alias.py",
+        "sha256": "c26b69a060538157c275676b0d8ac7dc61054099669f5cf64ccc182205588d6d"
+      },
+      {
+        "path": "evas/tests/test_native_integer_events.py",
+        "sha256": "0b8b4eeeae223c3893c160550469572081ed1b2fc417b328e5596cf205258df7"
+      },
+      {
+        "path": "evas/tests/test_ordinary_event_prefix.py",
+        "sha256": "c67342dcb28194029ad296c5bad7749267e9d608369631899adb986fc7ec1464"
+      },
+      {
+        "path": "evas/tests/test_ordinary_integer_event_prefix.py",
+        "sha256": "aa2a090c32b614f14da6cf045e054d61392df2e320a4bb4df9bb00265600dddb"
+      },
+      {
+        "path": "evas/tests/test_passive_events.py",
+        "sha256": "3781d23a61398427f2bb7b4a0cf3b363babbae43c1c62adfc1874e6acc9402ae"
+      },
+      {
+        "path": "evas/tests/test_r01_event_arrays.py",
+        "sha256": "81a135bb3a0b8267fb862421fc20f5a88b68b8cb24506a242fc152b72594f3fc"
+      },
+      {
+        "path": "evas/tests/test_r01_event_conditions.py",
+        "sha256": "0d855cbc4c98e25e9272c5ac10a1624ef14ecfd65168ef122a68b79d868ba96c"
+      },
+      {
+        "path": "evas/tests/test_rational_predicate_closure.py",
+        "sha256": "ec07237b7602c528d2c808c250d73f9480e7e15b2a6d059cd9314381ecf7f1e0"
+      },
+      {
+        "path": "evas/tests/test_refinement.py",
+        "sha256": "d18e105fe7b31dc575754d7f3bfd67779659025245b0e6eb00252ebbd6677e8a"
+      },
+      {
+        "path": "evas/tests/test_root_recovery.py",
+        "sha256": "393bdb5070bd0f9c09919f6943d120556021c8bf54a4ba7c521a87c28327e9c5"
+      },
+      {
+        "path": "evas/tests/test_source_floor_event.py",
+        "sha256": "becd95ca2c6cd51f58a722a41994065c0f5b04f4e0e8384bc9f4b16245058639"
+      },
+      {
+        "path": "evas/tests/test_source_math.py",
+        "sha256": "12b27fe5cf5d977bd1b295bdbf95c5c27a19495f6086b4a5c4b7449258f3ac22"
+      },
+      {
+        "path": "evas/tests/test_source_polynomial_guards.py",
+        "sha256": "542ac3a7c73a3bc20f3f7e6a2aea88ff4a5b45ccee47ee04f59d1586bf75ac83"
+      }
+    ]
+  },
+  "after": {
+    "head": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+    "index_sha256": "a2e18b66fd9b3e29093343793d45781c11a717c05c35103d4e9b1da8eec87d71",
+    "shared_config_sha256": "2365548f0cb7f5b21311860afc37dc5a8f41d775b667f50ec8a678eb22a3d7aa",
+    "status": " M evas/tests/test_analog_conditions.py\n M evas/tests/test_constant_initial_power.py\n M evas/tests/test_diagnostics.py\n M evas/tests/test_idt.py\n M evas/tests/test_independent_driver_condition.py\n M evas/tests/test_initial_ordinary_alias.py\n M evas/tests/test_native_integer_events.py\n M evas/tests/test_ordinary_event_prefix.py\n M evas/tests/test_ordinary_integer_event_prefix.py\n M evas/tests/test_passive_events.py\n M evas/tests/test_r01_event_arrays.py\n M evas/tests/test_r01_event_conditions.py\n M evas/tests/test_rational_predicate_closure.py\n M evas/tests/test_refinement.py\n M evas/tests/test_root_recovery.py\n M evas/tests/test_source_floor_event.py\n M evas/tests/test_source_math.py\n M evas/tests/test_source_polynomial_guards.py\n?? evas/tests/raw_solution_contract.py\n?? evas/tests/test_audited_response_contracts.py\n",
+    "old_candidates": [
+      {
+        "path": "evas/tests/raw_solution_contract.py",
+        "sha256": "ffd5243e3b590f81e6e671e5761316b40c60558da2e2c81a001a118a57cf12dc"
+      },
+      {
+        "path": "evas/tests/test_analog_conditions.py",
+        "sha256": "230c3fd16cfe84b0d0198619fd1d9d4efd3b593295ebdd1109549b2933712adf"
+      },
+      {
+        "path": "evas/tests/test_audited_response_contracts.py",
+        "sha256": "bb4ae9ff097e14f25ff61184734370819a260946f40a16a9e5c45fd38efb723f"
+      },
+      {
+        "path": "evas/tests/test_constant_initial_power.py",
+        "sha256": "359c4a4048c7eaa9d4da73eaeba4dcb80a228d2deb8fbaa31afd5c8731921369"
+      },
+      {
+        "path": "evas/tests/test_diagnostics.py",
+        "sha256": "c97ed2e4897eeb14515a9c45214e62b371fefa8c931492de5d3fc40b3ebc0acf"
+      },
+      {
+        "path": "evas/tests/test_idt.py",
+        "sha256": "579fd1729188885cb86f34ff7c696ebb0032d3f5aaa10c8ce8bc8f7fd4f902f9"
+      },
+      {
+        "path": "evas/tests/test_independent_driver_condition.py",
+        "sha256": "1e449bb7b8eacf7abf6680857340084acc24b1df90626725b8f41fe929e20205"
+      },
+      {
+        "path": "evas/tests/test_initial_ordinary_alias.py",
+        "sha256": "c26b69a060538157c275676b0d8ac7dc61054099669f5cf64ccc182205588d6d"
+      },
+      {
+        "path": "evas/tests/test_native_integer_events.py",
+        "sha256": "0b8b4eeeae223c3893c160550469572081ed1b2fc417b328e5596cf205258df7"
+      },
+      {
+        "path": "evas/tests/test_ordinary_event_prefix.py",
+        "sha256": "c67342dcb28194029ad296c5bad7749267e9d608369631899adb986fc7ec1464"
+      },
+      {
+        "path": "evas/tests/test_ordinary_integer_event_prefix.py",
+        "sha256": "aa2a090c32b614f14da6cf045e054d61392df2e320a4bb4df9bb00265600dddb"
+      },
+      {
+        "path": "evas/tests/test_passive_events.py",
+        "sha256": "3781d23a61398427f2bb7b4a0cf3b363babbae43c1c62adfc1874e6acc9402ae"
+      },
+      {
+        "path": "evas/tests/test_r01_event_arrays.py",
+        "sha256": "81a135bb3a0b8267fb862421fc20f5a88b68b8cb24506a242fc152b72594f3fc"
+      },
+      {
+        "path": "evas/tests/test_r01_event_conditions.py",
+        "sha256": "0d855cbc4c98e25e9272c5ac10a1624ef14ecfd65168ef122a68b79d868ba96c"
+      },
+      {
+        "path": "evas/tests/test_rational_predicate_closure.py",
+        "sha256": "ec07237b7602c528d2c808c250d73f9480e7e15b2a6d059cd9314381ecf7f1e0"
+      },
+      {
+        "path": "evas/tests/test_refinement.py",
+        "sha256": "d18e105fe7b31dc575754d7f3bfd67779659025245b0e6eb00252ebbd6677e8a"
+      },
+      {
+        "path": "evas/tests/test_root_recovery.py",
+        "sha256": "393bdb5070bd0f9c09919f6943d120556021c8bf54a4ba7c521a87c28327e9c5"
+      },
+      {
+        "path": "evas/tests/test_source_floor_event.py",
+        "sha256": "becd95ca2c6cd51f58a722a41994065c0f5b04f4e0e8384bc9f4b16245058639"
+      },
+      {
+        "path": "evas/tests/test_source_math.py",
+        "sha256": "12b27fe5cf5d977bd1b295bdbf95c5c27a19495f6086b4a5c4b7449258f3ac22"
+      },
+      {
+        "path": "evas/tests/test_source_polynomial_guards.py",
+        "sha256": "542ac3a7c73a3bc20f3f7e6a2aea88ff4a5b45ccee47ee04f59d1586bf75ac83"
+      }
+    ]
+  },
+  "published": false,
+  "scientific_execution": false,
+  "semantic_qualification": false,
+  "pending": [
+    "PR265 necessary CI acceptance and merge/tree verification",
+    "Bind this source to actual merged main; retain main catalog versions and regenerate catalog/views",
+    "Full existing ci_lint --plan, affected checks, fixed candidate CI and affected independent review",
+    "Non-force update original PR263 only after prerequisites are accepted"
+  ]
+}

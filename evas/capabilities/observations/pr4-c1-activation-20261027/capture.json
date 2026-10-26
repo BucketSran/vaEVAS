@@ -1,0 +1,53 @@
+{
+  "base": "cfe0ac45f75677fbd1e4dbf6243740b16d1caab0",
+  "commit": "4a5aa6a56a92fa3c7ff62db39bd0524b5a651c53",
+  "tree": "ea22be19a224e133e72c7bdbef100e00e556a25b",
+  "parents": [
+    "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+    "cfe0ac45f75677fbd1e4dbf6243740b16d1caab0"
+  ],
+  "paths": [
+    ".github/workflows/numerical-assurance.yml",
+    "evas/tests/test_bound_step.py",
+    "evas/tests/test_deferred_rdist.py",
+    "evas/tests/test_source_math.py",
+    "evas/validation/checker_calibration/README.md",
+    "evas/validation/checker_calibration/fixtures/provenance.json",
+    "evas/validation/checker_calibration/fixtures/source_math.json",
+    "evas/validation/checker_calibration/fixtures/test_bound_caps_actual_nonlinear_integration_segments--identity--0.diagnostics.json",
+    "evas/validation/checker_calibration/fixtures/test_bound_caps_actual_nonlinear_integration_segments--identity--0.original-response.json",
+    "evas/validation/checker_calibration/fixtures/test_bound_caps_actual_nonlinear_integration_segments--identity--0.request.json",
+    "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.diagnostics.json",
+    "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.original-response.json",
+    "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.request.json",
+    "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.original-response.json",
+    "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.request.json",
+    "evas/validation/checker_calibration/fixtures/validator_predicates.json",
+    "evas/validation/checker_calibration/test_detector_controls.py",
+    "scripts/tests/test_catalog_history_selection.py",
+    "scripts/tests/test_ci_inventory.py"
+  ],
+  "files": {
+    ".github/workflows/numerical-assurance.yml": "76c7387d4c8a3390edc2ba440f169c14794301867d1f277d3488b654cf585682",
+    "evas/tests/test_bound_step.py": "8bae51b61822f4a365766887e8793b9b024553fcc644289ce21092cdfbff7744",
+    "evas/tests/test_deferred_rdist.py": "41ed77da87c25c4ac48d1ea3514702417febddc3f7df95aeceb7d50baaa7631b",
+    "evas/tests/test_source_math.py": "ef2f50533a53b1fd9f588fc14c6bb6dc56c30da92fa5a33c5bbe7851c345ad54",
+    "evas/validation/checker_calibration/README.md": "6a1d923f65be68306da57516af04d61e230f8bb4a09c6ad8436812bd741bde13",
+    "evas/validation/checker_calibration/fixtures/provenance.json": "28b14e021b3ab5c563d3d5a4c7cbb5c379e260100fc606cab5d57743a05303c3",
+    "evas/validation/checker_calibration/fixtures/source_math.json": "3c0a697b66055fc4c9124198ad15c55e896a87af70add85bd9f760c3cb34aad2",
+    "evas/validation/checker_calibration/fixtures/test_bound_caps_actual_nonlinear_integration_segments--identity--0.diagnostics.json": "5cf94f240a17c45ea3a5d219e089471a86c458626c90e32c45b141ef42fb9a74",
+    "evas/validation/checker_calibration/fixtures/test_bound_caps_actual_nonlinear_integration_segments--identity--0.original-response.json": "2bf0767fe7a6241813b047b662c2506447439ca83e8e1d89dac227b68e3211b5",
+    "evas/validation/checker_calibration/fixtures/test_bound_caps_actual_nonlinear_integration_segments--identity--0.request.json": "d320c50b4d1a1889edda8bcc6fba79b80ce0a974e3dd299024ea29612abe9be2",
+    "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.diagnostics.json": "a44dc5e299aa05830b9352d840bc252870f5fcb10b8f658b10fa72176bb76314",
+    "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.original-response.json": "3616d402a8653ab2333e9ece3b9c204ce71eed0701b3b8336e7c4db866a8f510",
+    "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.request.json": "c67d8e1b2ad4dd15db2fbe64937d86bf5fc078b1e66a01839979d5a619092efc",
+    "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.original-response.json": "830d7dc4a8585b6cc71c36985ef6f7ce1228a710fee2f30ff87d116581c8ded6",
+    "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.request.json": "77cd33129b13e93b6cde1c86b9936865ca2b51762857af4f25bd06b550fa5a90",
+    "evas/validation/checker_calibration/fixtures/validator_predicates.json": "1e4e74c05dddaa010a49f3545bdd413f7f2ae68dcad635198c021eef1a928ecc",
+    "evas/validation/checker_calibration/test_detector_controls.py": "2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661",
+    "scripts/tests/test_catalog_history_selection.py": "56a20eb84fc607089a7d8176fc15646872fbc8b0708ea62bb9ec839d8abbf44d",
+    "scripts/tests/test_ci_inventory.py": "7a201a97a28de706e6b5d8f73639eee1d4b44479f018f2d0d91defc14fc5fe43"
+  },
+  "non_force_successor_of_PR263": true,
+  "scientific_qualification": false
+}
