@@ -1,5 +1,6 @@
 """Coordinator construction fixtures; no scientific tests or Git writes."""
 import copy
+import fnmatch
 import hashlib
 import importlib.util
 import json
@@ -24,21 +25,97 @@ def load(path, name):
     return module
 
 
+# Literal discover entries in .github/workflows/numerical-assurance.yml at the
+# fixed candidate, in source order. Primary regression discovery is separate.
+WORKFLOW_LITERALS = (
+    ('maintenance', 'selection', 'Check CI routing and changed-line whitespace', 'scripts/tests', 'test_ci_selection.py'),
+    ('maintenance', 'selection', 'Check CI routing and changed-line whitespace', 'scripts/tests', 'test_evas_check_policy.py'),
+    ('maintenance', 'selection', 'Check CI routing and changed-line whitespace', 'scripts/tests', 'test_fast_feedback.py'),
+    ('maintenance', 'selection', 'Check CI routing and changed-line whitespace', 'scripts/tests', 'test_independent_ci.py'),
+    ('maintenance', 'selection', 'Check CI routing and changed-line whitespace', 'scripts/tests', 'test_regression_runner.py'),
+    ('maintenance', 'static-checks', 'Traceability and frozen validation identities', 'scripts/tests', 'test*.py'),
+    ('maintenance', 'static-checks', 'Traceability and frozen validation identities', 'evas/capabilities', 'test_*.py'),
+    ('validation', 'static-checks', 'Independent mathematics and checker calibration (no simulator)', 'experiments/backends/evidence', 'test*.py'),
+    ('validation', 'static-checks', 'Independent mathematics and checker calibration (no simulator)', 'experiments/backends/dvs2-spectre-validation', 'test_*.py'),
+    ('validation', 'static-checks', 'Independent mathematics and checker calibration (no simulator)', 'experiments/backends/spectre-alignment', 'test_*.py'),
+    ('validation', 'static-checks', 'Independent mathematics and checker calibration (no simulator)', 'evas/validation/event_alignment', 'test_checker.py'),
+    ('validation', 'static-checks', 'Independent mathematics and checker calibration (no simulator)', 'evas/validation/strobe', 'test_*.py'),
+    ('validation', 'static-checks', 'Independent mathematics and checker calibration (no simulator)', 'experiments/backends/event-alignment', 'test_*.py'),
+    ('validation', 'static-checks', 'Independent mathematics and checker calibration (no simulator)', 'evas/validation/sample_edge_filter', 'test_*.py'),
+    ('validation', 'static-checks', 'Independent mathematics and checker calibration (no simulator)', 'experiments/backends/sample-edge-filter', 'test_*.py'),
+    ('validation', 'static-checks', 'Independent mathematics and checker calibration (no simulator)', 'experiments/backends/implicit-event-restart', 'test_check.py'),
+    ('validation', 'static-checks', 'Independent mathematics and checker calibration (no simulator)', 'experiments/performance', 'test_*.py'),
+    ('validation', 'provenance-paper', 'Paper contracts, observable criteria and table provenance', 'evas/validation/paper', 'test_criteria.py'),
+    ('validation', 'provenance-paper', 'Paper contracts, observable criteria and table provenance', 'evas/validation/paper', 'test_*root*.py'),
+    ('validation', 'provenance-paper', 'Paper contracts, observable criteria and table provenance', 'evas/validation/checker_calibration', 'test*.py'),
+    ('validation', 'provenance-paper', 'Paper contracts, observable criteria and table provenance', 'evas/validation/paper', 'test_coefficient_first_order.py'),
+    ('validation', 'provenance-paper', 'Paper contracts, observable criteria and table provenance', 'evas/validation/paper', 'test_precision.py'),
+    ('validation', 'provenance-paper', 'Paper contracts, observable criteria and table provenance', 'evas/validation/paper', 'test_precision_binding.py'),
+    ('validation', 'provenance-paper', 'Paper contracts, observable criteria and table provenance', 'evas/validation/paper', 'test_precision_v2.py'),
+    ('validation', 'provenance-paper', 'Paper contracts, observable criteria and table provenance', 'evas/validation/paper', 'test_primitives.py'),
+    ('validation', 'provenance-paper', 'Paper contracts, observable criteria and table provenance', 'experiments/backends/paper', 'test_*.py'),
+    ('validation', 'provenance-paper', 'Paper contracts, observable criteria and table provenance', 'evas/validation/support', 'test_*.py'),
+    ('validation', 'provenance-support', 'Backend support checker tests', 'experiments/backends/support', 'test_*.py'),
+    ('validation', 'properties-and-ngspice', None, 'evas/validation/differential', 'test*.py'),
+)
+PAPER_TEST_MODULES = (
+    'test_coefficient_first_order.py',
+    'test_criteria.py',
+    'test_precision.py',
+    'test_precision_binding.py',
+    'test_precision_composition_root_v3.py',
+    'test_precision_root_v3.py',
+    'test_precision_v2.py',
+    'test_primitives.py',
+    'test_root_windows.py',
+)
+DIRECT_MATH_SCRIPTS = (
+    'evas/validation/check_design_math.py',
+    'evas/validation/check_timed_operator_math.py',
+    'evas/validation/check_dynamics_math.py',
+    'evas/validation/check_event_conditions_math.py',
+)
+
+
+def literal_identity(entry):
+    return (entry['namespace'], entry['job'], entry['step'], entry['start'], entry['pattern'])
+
+
 class ParserTests(unittest.TestCase):
-    def test_current_workflow_has_23_literals_plus_separate_primary(self):
+    def test_current_workflow_literals_and_separate_primary(self):
         value = inventory.parse_workflow((ROOT / inventory.WORKFLOW).read_bytes())
-        self.assertEqual(len(value['entries']), 23)
-        self.assertEqual(sum(e['namespace'] == 'maintenance' for e in value['entries']), 7)
-        self.assertEqual(sum(e['namespace'] == 'validation' for e in value['entries']), 16)
-        differential = [e for e in value['entries'] if e['start'] == 'evas/validation/differential']
-        self.assertEqual(len(differential), 1)
-        self.assertEqual(differential[0]['job'], 'properties-and-ngspice')
-        self.assertEqual(differential[0]['pattern'], 'test*.py')
-        self.assertIsNone(differential[0]['step'])
-        self.assertEqual(inventory.primary_entry(ROOT, value)['pattern'], 'test*.py')
-        scripts = [e for e in value['script_entries'] if e['kind'] == 'direct-math-script']
-        self.assertEqual(len(scripts), 4)
-        self.assertTrue(all(e['method_denominator'] is None and not e['executed'] for e in scripts))
+        self.assertEqual(len(WORKFLOW_LITERALS), 29)
+        self.assertEqual([literal_identity(entry) for entry in value['entries']], list(WORKFLOW_LITERALS))
+        self.assertEqual([inventory.namespace(entry['start']) for entry in value['entries']],
+                         [entry[0] for entry in WORKFLOW_LITERALS])
+        self.assertEqual(sum(entry[0] == 'maintenance' for entry in WORKFLOW_LITERALS), 7)
+        self.assertEqual(sum(entry[0] == 'validation' for entry in WORKFLOW_LITERALS), 22)
+        self.assertFalse(any(entry[0] in ('calibration', 'python-regression') for entry in WORKFLOW_LITERALS))
+        paper = [entry for entry in value['entries'] if entry['start'] == 'evas/validation/paper']
+        self.assertEqual([entry['pattern'] for entry in paper], [
+            'test_criteria.py', 'test_*root*.py', 'test_coefficient_first_order.py', 'test_precision.py',
+            'test_precision_binding.py', 'test_precision_v2.py', 'test_primitives.py'])
+        self.assertTrue(all(entry['namespace'] == 'validation' and entry['job'] == 'provenance-paper' for entry in paper))
+        observed_paper = sorted(path.name for path in (ROOT / 'evas/validation/paper').glob('test_*.py'))
+        self.assertEqual(observed_paper, list(PAPER_TEST_MODULES))
+        for name in PAPER_TEST_MODULES:
+            matches = [entry for entry in paper if fnmatch.fnmatchcase(name, entry['pattern'])]
+            self.assertEqual(len(matches), 1, name)
+        calibration = [entry for entry in value['entries'] if entry['start'] == 'evas/validation/checker_calibration']
+        self.assertEqual([literal_identity(entry) for entry in calibration], [(
+            'validation', 'provenance-paper', 'Paper contracts, observable criteria and table provenance',
+            'evas/validation/checker_calibration', 'test*.py')])
+        differential = [entry for entry in value['entries'] if entry['start'] == 'evas/validation/differential']
+        self.assertEqual([literal_identity(entry) for entry in differential], [(
+            'validation', 'properties-and-ngspice', None, 'evas/validation/differential', 'test*.py')])
+        primary = inventory.primary_entry(ROOT, value)
+        self.assertEqual(primary['namespace'], 'python-regression')
+        self.assertEqual(primary['start'], 'evas/tests')
+        self.assertEqual(primary['pattern'], 'test*.py')
+        self.assertNotIn(('python-regression', 'evas/tests'), {(entry['namespace'], entry['start']) for entry in value['entries']})
+        scripts = [entry for entry in value['script_entries'] if entry['kind'] == 'direct-math-script']
+        self.assertEqual([entry['source'] for entry in scripts], list(DIRECT_MATH_SCRIPTS))
+        self.assertTrue(all(entry['method_denominator'] is None and not entry['executed'] for entry in scripts))
 
     def test_inline_pipe_and_folded_origins_retained(self):
         raw = b'''jobs:
