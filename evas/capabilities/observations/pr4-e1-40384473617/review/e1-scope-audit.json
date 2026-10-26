@@ -1,0 +1,321 @@
+{
+  "head": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+  "old_methods": 3257,
+  "new_methods": 3257,
+  "old_conditions": 7737,
+  "new_conditions": 7737,
+  "old_and_new_mapping_bijection": true,
+  "mapping_sha256": "72decd6082b3126157876e2c718ead5f1233e4aa15ce9605d3f0c0d30517de13",
+  "proof_sha256": "b33cb2ae7a912d8548dc5f281dde39bddb080c3c122de98a7606bdf7ad0bb28b",
+  "counts": {
+    "identical_retained_signature": 7660,
+    "only_source_identity_and_identical_source_line_changes": 74,
+    "corrected_negative_leaf_same_full_input": 3
+  },
+  "negative_controls": [
+    {
+      "owner": "test_deferred_rdist.DeferredRdist.test_bad_raw_leaf_seed_and_signature_are_rejected",
+      "variant": "function",
+      "entire_bad_leaf_capture_equal": true,
+      "old_condition": "95d832442ff617b8f9d48e3ea9f0d459ac243873efe2a2c0ecab5452c9248d2c",
+      "new_condition": "5abaa9904114cb9447382256c4da16836850f9277729afd3ab7e63bf81bcba81",
+      "outcome": "passed",
+      "expected_diagnostic": "invalid deferred system function signature"
+    },
+    {
+      "owner": "test_deferred_rdist.DeferredRdist.test_bad_raw_leaf_seed_and_signature_are_rejected",
+      "variant": "seed",
+      "entire_bad_leaf_capture_equal": true,
+      "old_condition": "1841d05ac2e9c9e4eb6a4711a5a838850e9cf1daeb2e129e58e854179d55f6f3",
+      "new_condition": "604dfd1070c7a577cf0d6c470e87162f44c4174cffb2170f307916014e7d32a4",
+      "outcome": "passed",
+      "expected_diagnostic": "system function seed requires same-instance integer state"
+    },
+    {
+      "owner": "test_deferred_rdist.DeferredRdist.test_bad_raw_leaf_seed_and_signature_are_rejected",
+      "variant": "arity",
+      "entire_bad_leaf_capture_equal": true,
+      "old_condition": "d9e944f2685ad92cb1596ced62209384725e5c774a45fdf42346281893ab0ad0",
+      "new_condition": "fd569605cf4530acdd11a39dcad533fa93acd50bb38ca82d911c3404e58e0826",
+      "outcome": "passed",
+      "expected_diagnostic": "invalid deferred system function signature"
+    }
+  ],
+  "changed_methods": 43,
+  "unchanged_body_ast": 38,
+  "changed_body_ast": [
+    "test_bound_step.BoundStepContracts.test_bound_caps_actual_nonlinear_integration_segments",
+    "test_bound_step.BoundStepContracts.test_sampled_clock_activation_preserves_physics_and_caps_inner_segments",
+    "test_deferred_rdist.DeferredRdist.test_bad_raw_leaf_seed_and_signature_are_rejected",
+    "test_source_math.SourceMath.test_multinode_certificate_uses_same_original_constraint_system",
+    "test_source_math.SourceMath.test_product_contains_independent_decimal_root_in_reported_box"
+  ],
+  "method_rows": [
+    {
+      "method": "test_bound_step.BoundStepContracts.test_bound_caps_actual_nonlinear_integration_segments",
+      "body_ast_equal": false,
+      "outcome_unchanged": true
+    },
+    {
+      "method": "test_bound_step.BoundStepContracts.test_bound_reads_state_after_same_time_event_settlement",
+      "body_ast_equal": true,
+      "outcome_unchanged": true
+    },
+    {
+      "method": "test_bound_step.BoundStepContracts.test_conditional_bound_releases_on_next_accepted_evaluation",
+      "body_ast_equal": true,
+      "outcome_unchanged": true
+    },
+    {
+      "method": "test_bound_step.BoundStepContracts.test_dynamic_bound_caps_nonlinear_history_after_initial_event",
+      "body_ast_equal": true,
+      "outcome_unchanged": true
+    },
+    {
+      "method": "test_bound_step.BoundStepContracts.test_inactive_outer_condition_skips_inner_numeric_request",
+      "body_ast_equal": true,
+      "outcome_unchanged": true
+    },
+    {
+      "method": "test_bound_step.BoundStepContracts.test_invalid_values_and_contexts_reject",
+      "body_ast_equal": true,
+      "outcome_unchanged": true
+    },
+    {
+      "method": "test_bound_step.BoundStepContracts.test_minimum_across_calls_and_instances",
+      "body_ast_equal": true,
+      "outcome_unchanged": true
+    },
+    {
+      "method": "test_bound_step.BoundStepContracts.test_raw_ir_rejects_malformed_bound_source_expansion",
+      "body_ast_equal": true,
+      "outcome_unchanged": true
+    },
+    {
+      "method": "test_bound_step.BoundStepContracts.test_raw_ir_rejects_old_version_invalid_nodes_and_state_indices",
+      "body_ast_equal": true,
+      "outcome_unchanged": true
+    },
+    {
+      "method": "test_bound_step.BoundStepContracts.test_rounded_held_activation_matches_linear_and_nonlinear_paths",
+      "body_ast_equal": true,
+      "outcome_unchanged": true
+    },
+    {
+      "method": "test_bound_step.BoundStepContracts.test_sampled_clock_activation_preserves_physics_and_caps_inner_segments",
+      "body_ast_equal": false,
+      "outcome_unchanged": true
+    },
+    {
+      "method": "test_bound_step.BoundStepContracts.test_stateless_bound_and_program_order",
+      "body_ast_equal": true,
+      "outcome_unchanged": true
+    },
+    {
+      "method": "test_bound_step.BoundStepContracts.test_zero_request_uses_the_minimum_representable_timestep",
+      "body_ast_equal": true,
+      "outcome_unchanged": true
+    },
+    {
+      "method": "test_deferred_rdist.DeferredRdist.test_bad_raw_leaf_seed_and_signature_are_rejected",
+      "body_ast_equal": false,
+      "outcome_unchanged": true
+    },
+    {
+      "method": "test_deferred_rdist.DeferredRdist.test_caller_module_seed_in_function_argument_prefix_is_allowed",
+      "body_ast_equal": true,
+      "outcome_unchanged": true
+    },
+    {
+      "method": "test_deferred_rdist.DeferredRdist.test_function_local_or_body_seed_stays_out_of_scope",
+      "body_ast_equal": true,
+      "outcome_unchanged": true
+    },
+    {
+      "method": "test_deferred_rdist.DeferredRdist.test_initial_and_uncertain_arm_retain_failure_leaf",
+      "body_ast_equal": true,
+      "outcome_unchanged": true
+    },
+    {
+      "method": "test_deferred_rdist.DeferredRdist.test_macro_clip_keeps_original_occurrences_and_origins",
+      "body_ast_equal": true,
+      "outcome_unchanged": true
+    },
+    {
+      "method": "test_deferred_rdist.DeferredRdist.test_module_nested_copy_in_chain_keeps_module_seed_authority",
+      "body_ast_equal": true,
+      "outcome_unchanged": true
+    },
+    {
+      "method": "test_deferred_rdist.DeferredRdist.test_nested_call_argument_in_function_body_cannot_regain_authority",
+      "body_ast_equal": true,
+      "outcome_unchanged": true
+    },
+    {
+      "method": "test_deferred_rdist.DeferredRdist.test_nonconstant_dead_arm_args_do_not_evaluate_real_division",
+      "body_ast_equal": true,
+      "outcome_unchanged": true
+    },
+    {
+      "method": "test_deferred_rdist.DeferredRdist.test_numeric_original_control_audit_has_no_discarded_call_slots",
+      "body_ast_equal": true,
+      "outcome_unchanged": true
+    },
+    {
+      "method": "test_deferred_rdist.DeferredRdist.test_original_audit_does_not_emit_owned_calls_in_control",
+      "body_ast_equal": true,
+      "outcome_unchanged": true
+    },
+    {
+      "method": "test_deferred_rdist.DeferredRdist.test_original_owner_charges_seed_scan_and_retries_stay_exhausted",
+      "body_ast_equal": true,
+      "outcome_unchanged": true
+    },
+    {
+      "method": "test_deferred_rdist.DeferredRdist.test_parameter_dead_arm_is_still_statically_checked",
+      "body_ast_equal": true,
+      "outcome_unchanged": true
+    },
+    {
+      "method": "test_deferred_rdist.DeferredRdist.test_resource_choice_uses_same_owner_and_sticky_limit",
+      "body_ast_equal": true,
+      "outcome_unchanged": true
+    },
+    {
+      "method": "test_deferred_rdist.DeferredRdist.test_resource_choices_keep_deferred_leaf_and_argument_choices",
+      "body_ast_equal": true,
+      "outcome_unchanged": true
+    },
+    {
+      "method": "test_deferred_rdist.DeferredRdist.test_two_instances_keep_independent_integer_seed_indices",
+      "body_ast_equal": true,
+      "outcome_unchanged": true
+    },
+    {
+      "method": "test_deferred_rdist.DeferredRdist.test_unknown_system_names_do_not_gain_reachable_support",
+      "body_ast_equal": true,
+      "outcome_unchanged": true
+    },
+    {
+      "method": "test_deferred_rdist.DeferredRdist.test_unselected_argument_math_domain_is_a_retained_operator",
+      "body_ast_equal": true,
+      "outcome_unchanged": true
+    },
+    {
+      "method": "test_deferred_rdist.DeferredRdist.test_unused_actual_retains_deferred_effect_with_resource_choice",
+      "body_ast_equal": true,
+      "outcome_unchanged": true
+    },
+    {
+      "method": "test_deferred_rdist.DeferredRdist.test_zero_sigma_keeps_leaf_and_seed_storage_identity",
+      "body_ast_equal": true,
+      "outcome_unchanged": true
+    },
+    {
+      "method": "test_source_math.SourceMath.test_distinct_physical_shape_knots_are_explicitly_rejected",
+      "body_ast_equal": true,
+      "outcome_unchanged": true
+    },
+    {
+      "method": "test_source_math.SourceMath.test_existing_affine_math_route_still_has_certificates",
+      "body_ast_equal": true,
+      "outcome_unchanged": true
+    },
+    {
+      "method": "test_source_math.SourceMath.test_internal_feedback_and_dead_arm_dependencies_stay_rejected",
+      "body_ast_equal": true,
+      "outcome_unchanged": true
+    },
+    {
+      "method": "test_source_math.SourceMath.test_invalid_original_arithmetic_is_not_hidden_by_math_saturation",
+      "body_ast_equal": true,
+      "outcome_unchanged": true
+    },
+    {
+      "method": "test_source_math.SourceMath.test_legacy_affine_math_positive_source_error_remains_explicitly_refused",
+      "body_ast_equal": true,
+      "outcome_unchanged": true
+    },
+    {
+      "method": "test_source_math.SourceMath.test_multinode_certificate_uses_same_original_constraint_system",
+      "body_ast_equal": false,
+      "outcome_unchanged": true
+    },
+    {
+      "method": "test_source_math.SourceMath.test_old_affine_native_math_keeps_all_4000_unrelated_driven_sources",
+      "body_ast_equal": true,
+      "outcome_unchanged": true
+    },
+    {
+      "method": "test_source_math.SourceMath.test_product_contains_independent_decimal_root_in_reported_box",
+      "body_ast_equal": false,
+      "outcome_unchanged": true
+    },
+    {
+      "method": "test_source_math.SourceMath.test_small_true_source_box_encloses_both_independent_endpoint_roots",
+      "body_ast_equal": true,
+      "outcome_unchanged": true
+    },
+    {
+      "method": "test_source_math.SourceMath.test_true_source_error_is_propagated_and_amplification_is_refused",
+      "body_ast_equal": true,
+      "outcome_unchanged": true
+    },
+    {
+      "method": "test_source_math.SourceMath.test_zero_band_equal_shape_preserves_existing_native_math_consumers",
+      "body_ast_equal": true,
+      "outcome_unchanged": true
+    }
+  ],
+  "bundle_files": [
+    {
+      "name": "artifact_manifest",
+      "sha256": "8715cb2d2ed6e2bf198a501cda2287f8f3bbdd088b1372d18056f9d02bccedd6"
+    },
+    {
+      "name": "collector_manifest",
+      "sha256": "225b9b80d905436696a410e2a312cf1a4d415fe2b4771427f38ae4d93b602179"
+    },
+    {
+      "name": "composition_recipe",
+      "sha256": "d5fb84240f25fb749fc184bdde6df26ef9153210191d9b24470e62ba32ac5346"
+    },
+    {
+      "name": "dut_build",
+      "sha256": "942640320015f370b88fa758e72eb87e580a3700734bbdfba2441dfa0b03f5b0"
+    },
+    {
+      "name": "kernel_binary",
+      "sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe"
+    },
+    {
+      "name": "report.json",
+      "sha256": "8f1ff97fe6c24dbb339fcac4f7b64c6c3ef98915b005b0711bd963c95ed74770"
+    },
+    {
+      "name": "shard_reports",
+      "sha256": "b2ccad274de2c33311c7db89f9337955f98e77218e1ccd3911b407af075128eb"
+    },
+    {
+      "name": "snapshot_manifest",
+      "sha256": "8fb4d8a49e0d29113e81c383a4d830b80986a5dee9f0db9497e6ae686af4fd57"
+    },
+    {
+      "name": "stderr",
+      "sha256": "9810c08bbf6353c02132fce21ef0a3d2c617eee2f126b8d6c1596886bd56056d"
+    },
+    {
+      "name": "stdout",
+      "sha256": "4c777506d6382237741fbd371f2b847140e6515bdf2809bda085ec9982f06748"
+    }
+  ],
+  "original_CI_bytes_match": true,
+  "snapshot_criteria_DUT_collector_language_binding": true,
+  "pending_preview_review": {
+    "status": "pending",
+    "semantic_status": "pending"
+  },
+  "scientific_execution": false,
+  "original_comparison_validator_executed": false,
+  "authorization_created": false
+}

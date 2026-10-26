@@ -1,0 +1,35 @@
+{
+  "run": 40384473617,
+  "candidate": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+  "CI_completed": true,
+  "CI_conclusion": "failure",
+  "jobs": 21,
+  "success": 18,
+  "failure": 3,
+  "failed_jobs": [
+    "static-checks",
+    "regression-admission",
+    "ci-result"
+  ],
+  "independent_failure_paths": [
+    "two maintenance test defects in static-checks",
+    "new criteria context lacks trusted-base authorization in regression-admission"
+  ],
+  "ci_result": "aggregate of the two failed paths;no third independent defect",
+  "retained_published_artifacts": 13,
+  "rust_job": "success",
+  "rust_listing_only": {
+    "count": 904,
+    "ignored": 1,
+    "not_test_body_execution": true
+  },
+  "raw_and_E1_preparation_reused": [
+    "raw-verification.json",
+    "bundle-byte-binding.json",
+    "condition-mapping-proof.json"
+  ],
+  "no_new_scientific_execution": true,
+  "E1_accepted": false,
+  "semantic_qualification": false,
+  "old20_retained": true
+}

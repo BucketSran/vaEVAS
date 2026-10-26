@@ -1,0 +1,1862 @@
+{
+  "final-candidate.json": {
+    "matched": 40,
+    "total": 40,
+    "mismatches": []
+  },
+  "precheck-acceptance.json": {
+    "matched": 40,
+    "total": 40,
+    "mismatches": []
+  },
+  "changed_paths": [
+    ".github/workflows/numerical-assurance.yml",
+    "evas/capabilities/data/asset-index.json",
+    "evas/capabilities/data/catalog-sources.json",
+    "evas/capabilities/data/entrypoint-index.json",
+    "evas/capabilities/data/historical-index.json",
+    "evas/capabilities/data/method-index.json",
+    "evas/capabilities/data/registry.json",
+    "evas/capabilities/generated/normative.md",
+    "evas/docs/development/TRACEABILITY.md",
+    "evas/tests/test_bound_step.py",
+    "evas/tests/test_deferred_rdist.py",
+    "evas/tests/test_source_math.py",
+    "evas/validation/checker_calibration/README.md",
+    "evas/validation/checker_calibration/fixtures/provenance.json",
+    "evas/validation/checker_calibration/fixtures/source_math.json",
+    "evas/validation/checker_calibration/fixtures/test_bound_caps_actual_nonlinear_integration_segments--identity--0.diagnostics.json",
+    "evas/validation/checker_calibration/fixtures/test_bound_caps_actual_nonlinear_integration_segments--identity--0.original-response.json",
+    "evas/validation/checker_calibration/fixtures/test_bound_caps_actual_nonlinear_integration_segments--identity--0.request.json",
+    "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.diagnostics.json",
+    "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.original-response.json",
+    "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.request.json",
+    "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.original-response.json",
+    "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.request.json",
+    "evas/validation/checker_calibration/fixtures/validator_predicates.json",
+    "evas/validation/checker_calibration/test_detector_controls.py",
+    "scripts/tests/git_fixture.py",
+    "scripts/tests/test_asset_observer.py",
+    "scripts/tests/test_ci_evidence_v3.py",
+    "scripts/tests/test_ci_selection.py",
+    "scripts/tests/test_discover_rust.py",
+    "scripts/tests/test_fast_feedback.py",
+    "scripts/tests/test_git_fixture_isolation.py",
+    "scripts/tests/test_independent_ci.py",
+    "scripts/tests/test_registration_bundle.py",
+    "scripts/tests/test_regression_admission.py",
+    "scripts/tests/test_regression_gate.py",
+    "scripts/tests/test_regression_input_subject.py",
+    "scripts/tests/test_rust_catalog_reconcile.py",
+    "scripts/tests/test_trusted_regression_gate.py",
+    "scripts/tests/test_workspaces.py"
+  ],
+  "frozen_scope_matches_final_candidate": true,
+  "maintenance_reuse": {
+    "source_hashes": [
+      {
+        "path": "scripts/tests/git_fixture.py",
+        "match": true
+      },
+      {
+        "path": "scripts/tests/test_asset_observer.py",
+        "match": true
+      },
+      {
+        "path": "scripts/tests/test_ci_evidence_v3.py",
+        "match": true
+      },
+      {
+        "path": "scripts/tests/test_ci_selection.py",
+        "match": true
+      },
+      {
+        "path": "scripts/tests/test_discover_rust.py",
+        "match": true
+      },
+      {
+        "path": "scripts/tests/test_fast_feedback.py",
+        "match": true
+      },
+      {
+        "path": "scripts/tests/test_git_fixture_isolation.py",
+        "match": true
+      },
+      {
+        "path": "scripts/tests/test_independent_ci.py",
+        "match": true
+      },
+      {
+        "path": "scripts/tests/test_registration_bundle.py",
+        "match": true
+      },
+      {
+        "path": "scripts/tests/test_regression_admission.py",
+        "match": true
+      },
+      {
+        "path": "scripts/tests/test_regression_gate.py",
+        "match": true
+      },
+      {
+        "path": "scripts/tests/test_regression_input_subject.py",
+        "match": true
+      },
+      {
+        "path": "scripts/tests/test_rust_catalog_reconcile.py",
+        "match": true
+      },
+      {
+        "path": "scripts/tests/test_trusted_regression_gate.py",
+        "match": true
+      },
+      {
+        "path": "scripts/tests/test_workspaces.py",
+        "match": true
+      }
+    ],
+    "logs": [
+      {
+        "module": "test_asset_observer.py",
+        "returncode": 0,
+        "declared_count": 10,
+        "summary_count": 10,
+        "ok_result_lines": 10,
+        "result_line_count": 10,
+        "terminal_ok": true,
+        "skips_in_log": false,
+        "stdout_hash_match": true,
+        "stderr_hash_match": true,
+        "stderr_path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/fixture-primary/test_asset_observer.stderr",
+        "verified_result_rows": [
+          {
+            "id": "test_asset_observer.ImmutableObserverTests.test_actual_immutable_export_verifies_commit_tree_blob_and_preserves_untracked_boundary",
+            "status": "ok"
+          },
+          {
+            "id": "test_asset_observer.ImmutableObserverTests.test_cli_export_mode_does_not_need_git_in_export_directory",
+            "status": "ok"
+          },
+          {
+            "id": "test_asset_observer.ImmutableObserverTests.test_default_staged_rename_reports_both_paths_without_modifying_index",
+            "status": "ok"
+          },
+          {
+            "id": "test_asset_observer.ImmutableObserverTests.test_default_worktree_reports_dirty_actual_bytes_and_explicit_untracked_boundary",
+            "status": "ok"
+          },
+          {
+            "id": "test_asset_observer.ImmutableObserverTests.test_dirty_export_bytes_missing_file_and_nonregular_file_are_rejected",
+            "status": "ok"
+          },
+          {
+            "id": "test_asset_observer.ImmutableObserverTests.test_exact_revision_is_mandatory_paired_full_nonzero_and_no_fallback",
+            "status": "ok"
+          },
+          {
+            "id": "test_asset_observer.ImmutableObserverTests.test_full_blob_oid_cannot_be_supplied_in_place_of_commit",
+            "status": "ok"
+          },
+          {
+            "id": "test_asset_observer.ImmutableObserverTests.test_selected_commit_not_source_repository_head_or_dirty_checkout_controls_export",
+            "status": "ok"
+          },
+          {
+            "id": "test_asset_observer.ImmutableObserverTests.test_sha256_repository_object_format_is_used_for_actual_git_blob_verification",
+            "status": "ok"
+          },
+          {
+            "id": "test_asset_observer.ImmutableObserverTests.test_symbolic_parent_in_export_and_nonregular_git_tree_are_rejected",
+            "status": "ok"
+          }
+        ]
+      },
+      {
+        "module": "test_ci_evidence_v3.py",
+        "returncode": 0,
+        "declared_count": 18,
+        "summary_count": 18,
+        "ok_result_lines": 18,
+        "result_line_count": 18,
+        "terminal_ok": true,
+        "skips_in_log": false,
+        "stdout_hash_match": true,
+        "stderr_hash_match": true,
+        "stderr_path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/fixture-primary/test_ci_evidence_v3.stderr",
+        "verified_result_rows": [
+          {
+            "id": "test_ci_evidence_v3.EvidenceV3Tests.test_changes_during_execution_and_old_schema_fail_closed",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_evidence_v3.EvidenceV3Tests.test_collect_preserves_complete_raw_failure_without_claiming_merge",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_evidence_v3.EvidenceV3Tests.test_collect_rejects_missing_raw_exit_and_incomplete_report",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_evidence_v3.EvidenceV3Tests.test_default_kernel_permissions_are_part_of_execution_identity",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_evidence_v3.EvidenceV3Tests.test_empty_shard_is_not_success_cache_and_scope_tampering_rejected",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_evidence_v3.EvidenceV3Tests.test_environment_presence_distinguishes_empty_from_default_configuration",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_evidence_v3.EvidenceV3Tests.test_every_literal_python_environment_consumer_is_registered",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_evidence_v3.EvidenceV3Tests.test_fixture_skip_and_error_remain_collectable_but_never_cache",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_evidence_v3.EvidenceV3Tests.test_format_version_binds_fingerprint_and_receipt",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_evidence_v3.EvidenceV3Tests.test_missing_selected_kernel_cannot_generate_cache_identity",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_evidence_v3.EvidenceV3Tests.test_module_supports_import_without_scripts_on_sys_path",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_evidence_v3.EvidenceV3Tests.test_performance_profile_manifest_is_outside_portable_cache_scope",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_evidence_v3.EvidenceV3Tests.test_real_collector_binds_pre_execution_identity_to_cache_receipt",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_evidence_v3.EvidenceV3Tests.test_report_digest_and_execution_identity_are_required",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_evidence_v3.EvidenceV3Tests.test_requested_external_evidence_is_reexecuted_instead_of_cached",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_evidence_v3.EvidenceV3Tests.test_rust_runtime_environment_reads_are_registered_or_explicitly_reviewed",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_evidence_v3.EvidenceV3Tests.test_selected_kernel_override_and_actual_bytes_invalidate_cached_pass",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_evidence_v3.EvidenceV3Tests.test_successful_shard_caches_but_skips_xfails_and_errors_do_not",
+            "status": "ok"
+          }
+        ]
+      },
+      {
+        "module": "test_ci_selection.py",
+        "returncode": 0,
+        "declared_count": 35,
+        "summary_count": 35,
+        "ok_result_lines": 35,
+        "result_line_count": 35,
+        "terminal_ok": true,
+        "skips_in_log": false,
+        "stdout_hash_match": true,
+        "stderr_hash_match": true,
+        "stderr_path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/fixture-primary/test_ci_selection.stderr",
+        "verified_result_rows": [
+          {
+            "id": "test_ci_selection.GateTests.test_cli_gate_returns_nonzero_for_failed_selected_check",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_selection.GateTests.test_failure_cancellation_missing_jobs_or_unexpected_execution_failures_are_rejected",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_selection.GateTests.test_intentional_skips_are_allowed_but_selected_skips_are_not",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_selection.GateTests.test_missing_or_invalid_selector_output_is_rejected",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_selection.GateTests.test_reusable_workflow_success_cannot_hide_skipped_or_failed_child_jobs",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_selection.GitChangeTests.test_cli_emits_github_boolean_outputs",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_selection.GitChangeTests.test_compact_cli_saves_complete_evidence_and_preserves_job_outputs",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_selection.GitChangeTests.test_deleted_source_still_runs_regression_and_install",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_selection.GitChangeTests.test_fixture_ignores_host_signing_and_hooks",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_selection.GitChangeTests.test_missing_history_initial_push_and_manual_run_cannot_skip_checks",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_selection.GitChangeTests.test_pr_uses_merge_base_and_excludes_base_branch_only_changes",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_selection.GitChangeTests.test_progress_block_exemption_does_not_cover_table_contract_or_file_removal",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_selection.GitChangeTests.test_push_includes_deletion_and_rename_destination",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_selection.GitChangeTests.test_receipt_rename_to_unknown_input_keeps_regression",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_selection.GitChangeTests.test_registration_exemption_preserves_semantics_and_unknown_inputs",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_selection.RoutingTests.test_backend_checkers_keep_calibration_without_kernel_regression",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_selection.RoutingTests.test_benchmark_sources_and_format_checks_keep_their_ci_consumer",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_selection.RoutingTests.test_capability_catalog_stays_on_maintenance",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_selection.RoutingTests.test_continuation_controls_only_select_maintenance",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_selection.RoutingTests.test_development_records_only_select_maintenance",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_selection.RoutingTests.test_development_tests_keep_regression_and_source_identity",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_selection.RoutingTests.test_documentation_uses_its_own_contract",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_selection.RoutingTests.test_five_layer_documentation_change_keeps_only_related_static_checks",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_selection.RoutingTests.test_fixtures_keep_regression_without_unrelated_fuzz_or_install",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_selection.RoutingTests.test_maintenance_and_install_checks_are_separate",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_selection.RoutingTests.test_mixed_change_runs_the_union_of_checks",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_selection.RoutingTests.test_narrow_routes_do_not_apply_to_other_fixture_or_build_inputs",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_selection.RoutingTests.test_plain_prose_only_needs_selection_and_whitespace",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_selection.RoutingTests.test_production_and_build_changes_keep_all_evas_checks",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_selection.RoutingTests.test_registered_historical_receipt_keeps_static_checks",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_selection.RoutingTests.test_rust_implementation_keeps_producer_identity_but_not_checker_calibration",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_selection.RoutingTests.test_shared_dvs2_scientific_sources_keep_their_public_regression",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_selection.RoutingTests.test_shared_smoke_inputs_and_required_sdist_seed_keep_their_consumers",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_selection.RoutingTests.test_task_instructions_are_a_benchmark_input_even_when_markdown",
+            "status": "ok"
+          },
+          {
+            "id": "test_ci_selection.RoutingTests.test_workflow_selector_or_unrecognized_code_runs_every_check",
+            "status": "ok"
+          }
+        ]
+      },
+      {
+        "module": "test_discover_rust.py",
+        "returncode": 0,
+        "declared_count": 10,
+        "summary_count": 10,
+        "ok_result_lines": 10,
+        "result_line_count": 10,
+        "terminal_ok": true,
+        "skips_in_log": false,
+        "stdout_hash_match": true,
+        "stderr_hash_match": true,
+        "stderr_path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/fixture-primary/test_discover_rust.stderr",
+        "verified_result_rows": [
+          {
+            "id": "test_discover_rust.RustListingTests.test_actual_fake_harness_listings_have_independent_binary_denominators",
+            "status": "ok"
+          },
+          {
+            "id": "test_discover_rust.RustListingTests.test_binary_mutation_and_dirty_rust_source_refused",
+            "status": "ok"
+          },
+          {
+            "id": "test_discover_rust.RustListingTests.test_compiler_failure_terminal_missing_and_truncated_json_refused",
+            "status": "ok"
+          },
+          {
+            "id": "test_discover_rust.RustListingTests.test_custom_harness_manifest_cannot_claim_native_test_listing",
+            "status": "ok"
+          },
+          {
+            "id": "test_discover_rust.RustListingTests.test_effective_artifact_profile_must_match_requested_ci_profile",
+            "status": "ok"
+          },
+          {
+            "id": "test_discover_rust.RustListingTests.test_empty_complete_listing_and_nonregular_or_outside_executable_refused",
+            "status": "ok"
+          },
+          {
+            "id": "test_discover_rust.RustListingTests.test_missing_duplicate_unknown_or_shared_executable_artifacts_refused",
+            "status": "ok"
+          },
+          {
+            "id": "test_discover_rust.RustListingTests.test_real_workflow_listing_block_keeps_build_failure_and_raw_artifacts",
+            "status": "ok"
+          },
+          {
+            "id": "test_discover_rust.RustListingTests.test_summary_duplicates_unknown_stdout_and_nonzero_exit_retain_binary_receipt",
+            "status": "ok"
+          },
+          {
+            "id": "test_discover_rust.RustListingTests.test_unknown_metadata_structures_refuse_with_error_report",
+            "status": "ok"
+          }
+        ]
+      },
+      {
+        "module": "test_fast_feedback.py",
+        "returncode": 0,
+        "declared_count": 14,
+        "summary_count": 14,
+        "ok_result_lines": 14,
+        "result_line_count": 14,
+        "terminal_ok": true,
+        "skips_in_log": false,
+        "stdout_hash_match": true,
+        "stderr_hash_match": true,
+        "stderr_path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/fixture-primary/test_fast_feedback.stderr",
+        "verified_result_rows": [
+          {
+            "id": "test_fast_feedback.CoverageGate.test_missing_overlapping_failed_or_mismatched_shard_cannot_pass",
+            "status": "ok"
+          },
+          {
+            "id": "test_fast_feedback.CoverageGate.test_new_gate_requires_fast_checks_and_complete_shard_coverage",
+            "status": "ok"
+          },
+          {
+            "id": "test_fast_feedback.EvidenceIdentity.test_changed_code_tests_tools_or_budget_invalidates_evidence",
+            "status": "ok"
+          },
+          {
+            "id": "test_fast_feedback.FixtureSkipAccounting.test_setup_skip_is_explicit_and_does_not_invent_execution",
+            "status": "ok"
+          },
+          {
+            "id": "test_fast_feedback.GitDraftStages.test_incremental_draft_and_ready_use_different_scopes",
+            "status": "ok"
+          },
+          {
+            "id": "test_fast_feedback.ReceiptRoundTrip.test_real_report_round_trip_rejects_corruption_drift_and_failed_results",
+            "status": "ok"
+          },
+          {
+            "id": "test_fast_feedback.Sharding.test_module_shards_are_disjoint_complete_and_keep_failure_red",
+            "status": "ok"
+          },
+          {
+            "id": "test_fast_feedback.Sharding.test_reservation_moves_the_heavy_module_off_shard_zero",
+            "status": "ok"
+          },
+          {
+            "id": "test_fast_feedback.Sharding.test_unknown_module_cannot_turn_a_typo_into_success",
+            "status": "ok"
+          },
+          {
+            "id": "test_fast_feedback.SkipOnlyShard.test_a_skip_only_module_can_share_full_coverage_with_live_modules",
+            "status": "ok"
+          },
+          {
+            "id": "test_fast_feedback.StageSelection.test_common_runtime_iteration_does_not_discharge_full_delivery",
+            "status": "ok"
+          },
+          {
+            "id": "test_fast_feedback.StageSelection.test_draft_keeps_focused_regression_and_explicit_delivery_obligations",
+            "status": "ok"
+          },
+          {
+            "id": "test_fast_feedback.StageSelection.test_final_candidate_and_unknown_source_keep_complete_checks",
+            "status": "ok"
+          },
+          {
+            "id": "test_fast_feedback.StageSelection.test_latest_delta_limits_iteration_without_erasing_cumulative_requirements",
+            "status": "ok"
+          }
+        ]
+      },
+      {
+        "module": "test_git_fixture_isolation.py",
+        "returncode": 0,
+        "declared_count": 7,
+        "summary_count": 7,
+        "ok_result_lines": 7,
+        "result_line_count": 7,
+        "terminal_ok": true,
+        "skips_in_log": false,
+        "stdout_hash_match": true,
+        "stderr_hash_match": true,
+        "stderr_path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/fixture-primary/test_git_fixture_isolation-final.stderr",
+        "verified_result_rows": [
+          {
+            "id": "test_git_fixture_isolation.GitFixtureIsolationTests.test_explicit_redirects_and_worktree_commitish_cannot_leave_scratch",
+            "status": "ok"
+          },
+          {
+            "id": "test_git_fixture_isolation.GitFixtureIsolationTests.test_fixed_incident_fixture_and_select_leave_hold_sentinel",
+            "status": "ok"
+          },
+          {
+            "id": "test_git_fixture_isolation.GitFixtureIsolationTests.test_gitfile_and_symlink_targets_are_refused",
+            "status": "ok"
+          },
+          {
+            "id": "test_git_fixture_isolation.GitFixtureIsolationTests.test_init_checks_existing_common_dir",
+            "status": "ok"
+          },
+          {
+            "id": "test_git_fixture_isolation.GitFixtureIsolationTests.test_poisoned_fixture_entrypoints_leave_hold_sentinel",
+            "status": "ok"
+          },
+          {
+            "id": "test_git_fixture_isolation.GitFixtureIsolationTests.test_stored_worktree_redirect_is_refused",
+            "status": "ok"
+          },
+          {
+            "id": "test_git_fixture_isolation.GitFixtureIsolationTests.test_unfixed_incident_writes_linked_worktree_common_config",
+            "status": "ok"
+          }
+        ]
+      },
+      {
+        "module": "test_independent_ci.py",
+        "returncode": 0,
+        "declared_count": 7,
+        "summary_count": 7,
+        "ok_result_lines": 7,
+        "result_line_count": 7,
+        "terminal_ok": true,
+        "skips_in_log": false,
+        "stdout_hash_match": true,
+        "stderr_hash_match": true,
+        "stderr_path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/fixture-primary/test_independent_ci-final.stderr",
+        "verified_result_rows": [
+          {
+            "id": "test_independent_ci.IndependentDelivery.test_numeric_delta_keeps_regression_but_omits_installation",
+            "status": "ok"
+          },
+          {
+            "id": "test_independent_ci.IndependentDelivery.test_real_numeric_module_prose_does_not_create_installation_dependency",
+            "status": "ok"
+          },
+          {
+            "id": "test_independent_ci.IndependentDelivery.test_resource_platform_protocol_and_unknown_changes_keep_installation",
+            "status": "ok"
+          },
+          {
+            "id": "test_independent_ci.IndependentDelivery.test_scs_iteration_covers_public_consumers_and_retains_full_delivery",
+            "status": "ok"
+          },
+          {
+            "id": "test_independent_ci.IndependentDelivery.test_source_kernel_oracle_rejects_nonfinite_wrong_or_missing_observations",
+            "status": "ok"
+          },
+          {
+            "id": "test_independent_ci.IndependentDelivery.test_unavailable_content_identity_keeps_installation",
+            "status": "ok"
+          },
+          {
+            "id": "test_independent_ci.IndependentDelivery.test_workflow_prose_reuses_execution_but_unknown_inputs_invalidate",
+            "status": "ok"
+          }
+        ]
+      },
+      {
+        "module": "test_registration_bundle.py",
+        "returncode": 0,
+        "declared_count": 11,
+        "summary_count": 11,
+        "ok_result_lines": 11,
+        "result_line_count": 11,
+        "terminal_ok": true,
+        "skips_in_log": false,
+        "stdout_hash_match": true,
+        "stderr_hash_match": true,
+        "stderr_path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/fixture-primary/test_registration_bundle-final.stderr",
+        "verified_result_rows": [
+          {
+            "id": "test_registration_bundle.BundleMaterializationTests.test_exact_bytes_and_git_identity_are_retained",
+            "status": "ok"
+          },
+          {
+            "id": "test_registration_bundle.BundleMaterializationTests.test_failed_publish_preserves_another_output_owner",
+            "status": "ok"
+          },
+          {
+            "id": "test_registration_bundle.BundleMaterializationTests.test_manifest_cannot_select_floating_refs_or_escaping_paths",
+            "status": "ok"
+          },
+          {
+            "id": "test_registration_bundle.BundleMaterializationTests.test_missing_symlink_and_tree_are_rejected_without_partial_output",
+            "status": "ok"
+          },
+          {
+            "id": "test_registration_bundle.BundleMaterializationTests.test_partial_clone_missing_blobs_are_not_fetched",
+            "status": "ok"
+          },
+          {
+            "id": "test_registration_bundle.BundleWorkflowTests.test_c0_refusal_precedes_pointer_and_helper_reads",
+            "status": "ok"
+          },
+          {
+            "id": "test_registration_bundle.BundleWorkflowTests.test_changed_bundle_bytes_cannot_register",
+            "status": "ok"
+          },
+          {
+            "id": "test_registration_bundle.BundleWorkflowTests.test_head_pointer_and_helper_cannot_replace_base_authority",
+            "status": "ok"
+          },
+          {
+            "id": "test_registration_bundle.BundleWorkflowTests.test_missing_or_nonregular_base_data_fails_without_head_fallback",
+            "status": "ok"
+          },
+          {
+            "id": "test_registration_bundle.BundleWorkflowTests.test_no_append_does_not_read_pointer_or_execute_helper",
+            "status": "ok"
+          },
+          {
+            "id": "test_registration_bundle.BundleWorkflowTests.test_trusted_pointer_registers_for_each_supported_event",
+            "status": "ok"
+          }
+        ]
+      },
+      {
+        "module": "test_regression_admission.py",
+        "returncode": 0,
+        "declared_count": 7,
+        "summary_count": 7,
+        "ok_result_lines": 7,
+        "result_line_count": 7,
+        "terminal_ok": true,
+        "skips_in_log": false,
+        "stdout_hash_match": true,
+        "stderr_hash_match": true,
+        "stderr_path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/fixture-primary/test_regression_admission-final.stderr",
+        "verified_result_rows": [
+          {
+            "id": "test_regression_admission.AdmissionIntegrationTests.test_actual_coverage_then_admission_commands_preserve_raw_failure_and_reject_drift",
+            "status": "ok"
+          },
+          {
+            "id": "test_regression_admission.AdmissionIntegrationTests.test_required_job_wiring_and_separate_always_uploaded_artifacts",
+            "status": "ok"
+          },
+          {
+            "id": "test_regression_admission.AdmissionIntegrationTests.test_selected_admission_failure_skip_or_absence_blocks_total_gate",
+            "status": "ok"
+          },
+          {
+            "id": "test_regression_admission.BootstrapSourceTests.test_actual_workflow_rejects_new_B_after_only_head_loader_replacement",
+            "status": "ok"
+          },
+          {
+            "id": "test_regression_admission.BootstrapSourceTests.test_fixed_bootstrap_hash_mismatch_refuses_without_head_fallback",
+            "status": "ok"
+          },
+          {
+            "id": "test_regression_admission.BootstrapSourceTests.test_missing_invalid_or_short_fixed_pin_never_uses_head_loader",
+            "status": "ok"
+          },
+          {
+            "id": "test_regression_admission.BootstrapSourceTests.test_missing_or_nonregular_bootstrap_blob_never_uses_head_loader",
+            "status": "ok"
+          }
+        ]
+      },
+      {
+        "module": "test_regression_gate.py",
+        "returncode": 0,
+        "declared_count": 22,
+        "summary_count": 22,
+        "ok_result_lines": 22,
+        "result_line_count": 22,
+        "terminal_ok": true,
+        "skips_in_log": false,
+        "stdout_hash_match": true,
+        "stderr_hash_match": true,
+        "stderr_path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/fixture-primary/test_regression_gate-final.stderr",
+        "verified_result_rows": [
+          {
+            "id": "test_regression_gate.GateTests.test_baseline_keeps_complete_signatures_without_bulk_raw_payload",
+            "status": "ok"
+          },
+          {
+            "id": "test_regression_gate.GateTests.test_cache_accepts_only_complete_actual_passes",
+            "status": "ok"
+          },
+          {
+            "id": "test_regression_gate.GateTests.test_cli_reads_trusted_commit_and_inactive_cannot_allow",
+            "status": "ok"
+          },
+          {
+            "id": "test_regression_gate.GateTests.test_cli_validate_and_pending_proposal_are_reviewable_json",
+            "status": "ok"
+          },
+          {
+            "id": "test_regression_gate.GateTests.test_compact_merged_observations_keep_complete_part_coverage",
+            "status": "ok"
+          },
+          {
+            "id": "test_regression_gate.GateTests.test_complete_known_failure_retains_raw_result",
+            "status": "ok"
+          },
+          {
+            "id": "test_regression_gate.GateTests.test_fixture_errors_block_even_reviewed_observations",
+            "status": "ok"
+          },
+          {
+            "id": "test_regression_gate.GateTests.test_incomplete_reason_context_cannot_be_waived_by_complete_outer_label",
+            "status": "ok"
+          },
+          {
+            "id": "test_regression_gate.GateTests.test_incomplete_source_identity_cannot_exempt_failure",
+            "status": "ok"
+          },
+          {
+            "id": "test_regression_gate.GateTests.test_integrity_rejects_incomplete_empty_duplicate_collection_and_unknown",
+            "status": "ok"
+          },
+          {
+            "id": "test_regression_gate.GateTests.test_malformed_structures_return_invalid_without_crashing",
+            "status": "ok"
+          },
+          {
+            "id": "test_regression_gate.GateTests.test_merged_parts_missing_or_duplicated_block",
+            "status": "ok"
+          },
+          {
+            "id": "test_regression_gate.GateTests.test_missing_context_review_or_identity_fails_closed",
+            "status": "ok"
+          },
+          {
+            "id": "test_regression_gate.GateTests.test_missing_passed_condition_is_unknown",
+            "status": "ok"
+          },
+          {
+            "id": "test_regression_gate.GateTests.test_nonempty_passed_shard_can_cache_without_granting_full_merge",
+            "status": "ok"
+          },
+          {
+            "id": "test_regression_gate.GateTests.test_pending_proposal_does_not_grant_merge",
+            "status": "ok"
+          },
+          {
+            "id": "test_regression_gate.GateTests.test_profiles_match_criteria_not_dut_identity",
+            "status": "ok"
+          },
+          {
+            "id": "test_regression_gate.GateTests.test_repeated_large_context_is_losslessly_pooled_and_tampering_blocks",
+            "status": "ok"
+          },
+          {
+            "id": "test_regression_gate.GateTests.test_replaced_condition_reason_and_phase_are_new_failures",
+            "status": "ok"
+          },
+          {
+            "id": "test_regression_gate.GateTests.test_structured_assertion_identity_preserves_operands_and_raw_diagnostic",
+            "status": "ok"
+          },
+          {
+            "id": "test_regression_gate.GateTests.test_unknown_or_missing_observation_projection_format_is_not_trusted",
+            "status": "ok"
+          },
+          {
+            "id": "test_regression_gate.GateTests.test_unknown_reason_structure_is_invalid_instead_of_crashing_comparison",
+            "status": "ok"
+          }
+        ]
+      },
+      {
+        "module": "test_regression_input_subject.py",
+        "returncode": 0,
+        "declared_count": 7,
+        "summary_count": 7,
+        "ok_result_lines": 7,
+        "result_line_count": 7,
+        "terminal_ok": true,
+        "skips_in_log": false,
+        "stdout_hash_match": true,
+        "stderr_hash_match": true,
+        "stderr_path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/fixture-primary/test_regression_input_subject-final.stderr",
+        "verified_result_rows": [
+          {
+            "id": "test_regression_input_subject.SubjectProducerTests.test_Git_index_mode_is_bound_separately_from_actual_file_mode",
+            "status": "ok"
+          },
+          {
+            "id": "test_regression_input_subject.SubjectProducerTests.test_actual_file_mode_is_bound_even_when_Git_index_mode_stays",
+            "status": "ok"
+          },
+          {
+            "id": "test_regression_input_subject.SubjectProducerTests.test_another_file_in_baseline_directory_is_retained",
+            "status": "ok"
+          },
+          {
+            "id": "test_regression_input_subject.SubjectProducerTests.test_environment_only_excludes_shard",
+            "status": "ok"
+          },
+          {
+            "id": "test_regression_input_subject.SubjectProducerTests.test_new_tracked_file_changes_comparison_subject",
+            "status": "ok"
+          },
+          {
+            "id": "test_regression_input_subject.SubjectProducerTests.test_only_two_baseline_files_are_non_circular_and_full_key_keeps_them",
+            "status": "ok"
+          },
+          {
+            "id": "test_regression_input_subject.SubjectProducerTests.test_other_config_changes_comparison_subject",
+            "status": "ok"
+          }
+        ]
+      },
+      {
+        "module": "test_rust_catalog_reconcile.py",
+        "returncode": 0,
+        "declared_count": 5,
+        "summary_count": 5,
+        "ok_result_lines": 5,
+        "result_line_count": 5,
+        "terminal_ok": true,
+        "skips_in_log": false,
+        "stdout_hash_match": true,
+        "stderr_hash_match": true,
+        "stderr_path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/fixture-primary/test_rust_catalog_reconcile-final.stderr",
+        "verified_result_rows": [
+          {
+            "id": "test_rust_catalog_reconcile.RustCatalogReconciliation.test_cli_opt_in_retains_observation_on_requirement_failure",
+            "status": "ok"
+          },
+          {
+            "id": "test_rust_catalog_reconcile.RustCatalogReconciliation.test_complete_qualified_denominator_preserves_both_actual_hashes",
+            "status": "ok"
+          },
+          {
+            "id": "test_rust_catalog_reconcile.RustCatalogReconciliation.test_missing_extra_duplicate_target_and_unknown_profile_fail_closed",
+            "status": "ok"
+          },
+          {
+            "id": "test_rust_catalog_reconcile.RustCatalogReconciliation.test_source_toolchain_profile_ids_and_ignored_drift_refused",
+            "status": "ok"
+          },
+          {
+            "id": "test_rust_catalog_reconcile.RustCatalogReconciliation.test_unavailable_unpublished_source_and_duplicate_registration_refused",
+            "status": "ok"
+          }
+        ]
+      },
+      {
+        "module": "test_trusted_regression_gate.py",
+        "returncode": 0,
+        "declared_count": 19,
+        "summary_count": 19,
+        "ok_result_lines": 19,
+        "result_line_count": 19,
+        "terminal_ok": true,
+        "skips_in_log": false,
+        "stdout_hash_match": true,
+        "stderr_hash_match": true,
+        "stderr_path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/fixture-primary/test_trusted_regression_gate-final.stderr",
+        "verified_result_rows": [
+          {
+            "id": "test_trusted_regression_gate.RegistrationLoaderIntegrationTests.test_append_without_bundle_fails_closed",
+            "status": "ok"
+          },
+          {
+            "id": "test_trusted_regression_gate.RegistrationLoaderIntegrationTests.test_base_registration_symlink_is_rejected",
+            "status": "ok"
+          },
+          {
+            "id": "test_trusted_regression_gate.RegistrationLoaderIntegrationTests.test_exact_trusted_authorization_registers_via_real_cli",
+            "status": "ok"
+          },
+          {
+            "id": "test_trusted_regression_gate.RegistrationLoaderIntegrationTests.test_head_registration_code_cannot_execute_or_authorize_append",
+            "status": "ok"
+          },
+          {
+            "id": "test_trusted_regression_gate.RegistrationLoaderIntegrationTests.test_new_authorization_in_HEAD_cannot_supply_missing_base_authority",
+            "status": "ok"
+          },
+          {
+            "id": "test_trusted_regression_gate.RegistrationLoaderIntegrationTests.test_preauthorized_shards_must_bind_inputs_and_actual_shard_labels",
+            "status": "ok"
+          },
+          {
+            "id": "test_trusted_regression_gate.RegistrationLoaderIntegrationTests.test_unknown_current_context_stops_before_registration_bundle",
+            "status": "ok"
+          },
+          {
+            "id": "test_trusted_regression_gate.TransitionIntegrationTests.test_bad_or_nonregular_head_proposal_refused_after_old_comparison_allows",
+            "status": "ok"
+          },
+          {
+            "id": "test_trusted_regression_gate.TransitionIntegrationTests.test_missing_trusted_transition_api_refused",
+            "status": "ok"
+          },
+          {
+            "id": "test_trusted_regression_gate.TransitionIntegrationTests.test_original_refusal_survives_missing_bad_or_hostile_head_baseline",
+            "status": "ok"
+          },
+          {
+            "id": "test_trusted_regression_gate.TransitionIntegrationTests.test_real_git_fix_retained_then_same_failure_in_next_pr_rejected",
+            "status": "ok"
+          },
+          {
+            "id": "test_trusted_regression_gate.TrustedLoaderTests.test_head_code_and_baseline_cannot_self_exempt_new_failure",
+            "status": "ok"
+          },
+          {
+            "id": "test_trusted_regression_gate.TrustedLoaderTests.test_head_module_names_and_pythonpath_are_not_imported",
+            "status": "ok"
+          },
+          {
+            "id": "test_trusted_regression_gate.TrustedLoaderTests.test_invalid_refs_missing_event_fields_and_cli_override_refuse",
+            "status": "ok"
+          },
+          {
+            "id": "test_trusted_regression_gate.TrustedLoaderTests.test_missing_empty_unknown_or_nonregular_trusted_sources_refuse",
+            "status": "ok"
+          },
+          {
+            "id": "test_trusted_regression_gate.TrustedLoaderTests.test_missing_origin_default_branch_cannot_fallback_to_head_or_manual_base",
+            "status": "ok"
+          },
+          {
+            "id": "test_trusted_regression_gate.TrustedLoaderTests.test_push_main_selects_exact_event_before",
+            "status": "ok"
+          },
+          {
+            "id": "test_trusted_regression_gate.TrustedLoaderTests.test_reviewed_known_raw_failure_is_allowed_by_trusted_code",
+            "status": "ok"
+          },
+          {
+            "id": "test_trusted_regression_gate.TrustedLoaderTests.test_schedule_and_manual_fetch_origin_main_and_ignore_manual_base",
+            "status": "ok"
+          }
+        ]
+      },
+      {
+        "module": "test_workspaces.py",
+        "returncode": 0,
+        "declared_count": 21,
+        "summary_count": 21,
+        "ok_result_lines": 21,
+        "result_line_count": 21,
+        "terminal_ok": true,
+        "skips_in_log": false,
+        "stdout_hash_match": true,
+        "stderr_hash_match": true,
+        "stderr_path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/fixture-primary/test_workspaces-final.stderr",
+        "verified_result_rows": [
+          {
+            "id": "test_workspaces.WorkspaceChecks.test_absent_hidden_paths_do_not_flood_overlap_but_real_deletions_remain",
+            "status": "ok"
+          },
+          {
+            "id": "test_workspaces.WorkspaceChecks.test_asset_limits_remain_unknown_and_suppress_exact_duplicate_claims",
+            "status": "ok"
+          },
+          {
+            "id": "test_workspaces.WorkspaceChecks.test_assets_do_not_follow_links_or_count_hardlinks_twice",
+            "status": "ok"
+          },
+          {
+            "id": "test_workspaces.WorkspaceChecks.test_assets_find_duplicate_local_content_without_changing_assets_or_index",
+            "status": "ok"
+          },
+          {
+            "id": "test_workspaces.WorkspaceChecks.test_assets_keep_staged_changes_even_if_working_file_matches_head",
+            "status": "ok"
+          },
+          {
+            "id": "test_workspaces.WorkspaceChecks.test_assets_mark_patch_equivalence_as_candidate_not_integration",
+            "status": "ok"
+          },
+          {
+            "id": "test_workspaces.WorkspaceChecks.test_comments_and_code_do_not_provide_visible_navigation",
+            "status": "ok"
+          },
+          {
+            "id": "test_workspaces.WorkspaceChecks.test_compact_default_keeps_failures_and_full_report",
+            "status": "ok"
+          },
+          {
+            "id": "test_workspaces.WorkspaceChecks.test_direct_external_link_does_not_replace_visible_project_entry",
+            "status": "ok"
+          },
+          {
+            "id": "test_workspaces.WorkspaceChecks.test_directory_replacement_during_scan_never_reads_external_target",
+            "status": "ok"
+          },
+          {
+            "id": "test_workspaces.WorkspaceChecks.test_git_hidden_changes_cannot_become_matching_or_retirement_candidates",
+            "status": "ok"
+          },
+          {
+            "id": "test_workspaces.WorkspaceChecks.test_hidden_worktree_fails_then_visible_navigation_passes_without_mutation",
+            "status": "ok"
+          },
+          {
+            "id": "test_workspaces.WorkspaceChecks.test_index_can_link_draft_documents_beside_worktree_entries",
+            "status": "ok"
+          },
+          {
+            "id": "test_workspaces.WorkspaceChecks.test_invalid_requested_base_fails",
+            "status": "ok"
+          },
+          {
+            "id": "test_workspaces.WorkspaceChecks.test_paths_with_spaces_and_unicode_are_supported",
+            "status": "ok"
+          },
+          {
+            "id": "test_workspaces.WorkspaceChecks.test_primary_only_needs_no_registry_and_ignores_archive_copies",
+            "status": "ok"
+          },
+          {
+            "id": "test_workspaces.WorkspaceChecks.test_reports_changes_ignored_material_and_commits_against_named_base",
+            "status": "ok"
+          },
+          {
+            "id": "test_workspaces.WorkspaceChecks.test_stale_link_after_retirement_fails",
+            "status": "ok"
+          },
+          {
+            "id": "test_workspaces.WorkspaceChecks.test_stale_link_without_trailing_slash_or_symlink_fails",
+            "status": "ok"
+          },
+          {
+            "id": "test_workspaces.WorkspaceChecks.test_untracked_mutation_after_hashing_invalidates_source_match",
+            "status": "ok"
+          },
+          {
+            "id": "test_workspaces.WorkspaceChecks.test_visible_directory_still_needs_an_index_entry",
+            "status": "ok"
+          }
+        ]
+      }
+    ],
+    "total_from_summaries": 193,
+    "total_verified_result_rows": 193
+  },
+  "paper_reuse": {
+    "inputs": [
+      {
+        "path": "evas/validation/paper/COVERAGE.md",
+        "match": true
+      },
+      {
+        "path": "evas/validation/paper/README.md",
+        "match": true
+      },
+      {
+        "path": "evas/validation/paper/case_inputs.py",
+        "match": true
+      },
+      {
+        "path": "evas/validation/paper/check_design.py",
+        "match": true
+      },
+      {
+        "path": "evas/validation/paper/coefficient_first_order.py",
+        "match": true
+      },
+      {
+        "path": "evas/validation/paper/core-v1.json",
+        "match": true
+      },
+      {
+        "path": "evas/validation/paper/criteria.py",
+        "match": true
+      },
+      {
+        "path": "evas/validation/paper/inventory-v1.json",
+        "match": true
+      },
+      {
+        "path": "evas/validation/paper/legacy_chain_bounds.py",
+        "match": true
+      },
+      {
+        "path": "evas/validation/paper/legacy_chain_precision.py",
+        "match": true
+      },
+      {
+        "path": "evas/validation/paper/oracle.py",
+        "match": true
+      },
+      {
+        "path": "evas/validation/paper/precision-bindings-v1.json",
+        "match": true
+      },
+      {
+        "path": "evas/validation/paper/precision-root-v3.json",
+        "match": true
+      },
+      {
+        "path": "evas/validation/paper/precision-v1.json",
+        "match": true
+      },
+      {
+        "path": "evas/validation/paper/precision-v2.json",
+        "match": true
+      },
+      {
+        "path": "evas/validation/paper/precision_binding.py",
+        "match": true
+      },
+      {
+        "path": "evas/validation/paper/precision_breadth.py",
+        "match": true
+      },
+      {
+        "path": "evas/validation/paper/precision_breadth_composition.py",
+        "match": true
+      },
+      {
+        "path": "evas/validation/paper/precision_breadth_foundation.py",
+        "match": true
+      },
+      {
+        "path": "evas/validation/paper/precision_checker.py",
+        "match": true
+      },
+      {
+        "path": "evas/validation/paper/precision_composition_root_v3.py",
+        "match": true
+      },
+      {
+        "path": "evas/validation/paper/precision_reference.py",
+        "match": true
+      },
+      {
+        "path": "evas/validation/paper/precision_root_v3.py",
+        "match": true
+      },
+      {
+        "path": "evas/validation/paper/precision_v2.py",
+        "match": true
+      },
+      {
+        "path": "evas/validation/paper/primitives.py",
+        "match": true
+      },
+      {
+        "path": "evas/validation/paper/root_windows.py",
+        "match": true
+      },
+      {
+        "path": "evas/validation/paper/test_coefficient_first_order.py",
+        "match": true
+      },
+      {
+        "path": "evas/validation/paper/test_criteria.py",
+        "match": true
+      },
+      {
+        "path": "evas/validation/paper/test_precision.py",
+        "match": true
+      },
+      {
+        "path": "evas/validation/paper/test_precision_binding.py",
+        "match": true
+      },
+      {
+        "path": "evas/validation/paper/test_precision_composition_root_v3.py",
+        "match": true
+      },
+      {
+        "path": "evas/validation/paper/test_precision_root_v3.py",
+        "match": true
+      },
+      {
+        "path": "evas/validation/paper/test_precision_v2.py",
+        "match": true
+      },
+      {
+        "path": "evas/validation/paper/test_primitives.py",
+        "match": true
+      },
+      {
+        "path": "evas/validation/paper/test_root_windows.py",
+        "match": true
+      },
+      {
+        "path": "evas/validation/paper/transition_integral_precision.py",
+        "match": true
+      },
+      {
+        "path": "scripts/capabilities/collect_ci_inventory.py",
+        "match": true
+      },
+      {
+        "path": "scripts/capabilities/discover_methods.py",
+        "match": true
+      },
+      {
+        "path": "scripts/capabilities/discover_rust.py",
+        "match": true
+      },
+      {
+        "path": "scripts/capabilities/generate_catalog.py",
+        "match": true
+      },
+      {
+        "path": "scripts/capabilities/observe_assets.py",
+        "match": true
+      },
+      {
+        "path": "scripts/capabilities/reconcile.py",
+        "match": true
+      }
+    ],
+    "records": [
+      {
+        "file": "test_coefficient_first_order.py",
+        "source_match": true,
+        "returncode": 0,
+        "result_count": 3,
+        "ok_count": 3,
+        "terminal_ok": true
+      },
+      {
+        "file": "test_precision.py",
+        "source_match": true,
+        "returncode": 0,
+        "result_count": 12,
+        "ok_count": 12,
+        "terminal_ok": true
+      },
+      {
+        "file": "test_precision_binding.py",
+        "source_match": true,
+        "returncode": 0,
+        "result_count": 5,
+        "ok_count": 5,
+        "terminal_ok": true
+      },
+      {
+        "file": "test_precision_v2.py",
+        "source_match": true,
+        "returncode": 0,
+        "result_count": 16,
+        "ok_count": 16,
+        "terminal_ok": true
+      },
+      {
+        "file": "test_primitives.py",
+        "source_match": true,
+        "returncode": 0,
+        "result_count": 11,
+        "ok_count": 11,
+        "terminal_ok": true
+      }
+    ],
+    "total_result_lines": 47,
+    "total_ok_lines": 47
+  },
+  "fixtures": [
+    {
+      "fixture": "source_math.json",
+      "original_sha_match": true,
+      "original_size_match": true,
+      "frozen_sha_match": true,
+      "frozen_size_match": true,
+      "extracted_json_equal": true
+    },
+    {
+      "fixture": "test_bound_caps_actual_nonlinear_integration_segments--identity--0.request.json",
+      "original_sha_match": true,
+      "original_size_match": true,
+      "frozen_sha_match": true,
+      "frozen_size_match": true,
+      "extracted_json_equal": true
+    },
+    {
+      "fixture": "test_bound_caps_actual_nonlinear_integration_segments--identity--0.original-response.json",
+      "original_sha_match": true,
+      "original_size_match": true,
+      "frozen_sha_match": true,
+      "frozen_size_match": true,
+      "extracted_json_equal": true
+    },
+    {
+      "fixture": "test_bound_caps_actual_nonlinear_integration_segments--identity--0.diagnostics.json",
+      "original_sha_match": true,
+      "original_size_match": true,
+      "frozen_sha_match": true,
+      "frozen_size_match": true,
+      "extracted_json_equal": true
+    },
+    {
+      "fixture": "test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.request.json",
+      "original_sha_match": true,
+      "original_size_match": true,
+      "frozen_sha_match": true,
+      "frozen_size_match": true,
+      "extracted_json_equal": true
+    },
+    {
+      "fixture": "test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.original-response.json",
+      "original_sha_match": true,
+      "original_size_match": true,
+      "frozen_sha_match": true,
+      "frozen_size_match": true,
+      "extracted_json_equal": true
+    },
+    {
+      "fixture": "test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.diagnostics.json",
+      "original_sha_match": true,
+      "original_size_match": true,
+      "frozen_sha_match": true,
+      "frozen_size_match": true,
+      "extracted_json_equal": true
+    },
+    {
+      "fixture": "test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.request.json",
+      "original_sha_match": true,
+      "original_size_match": true,
+      "frozen_sha_match": true,
+      "frozen_size_match": true,
+      "extracted_json_equal": true
+    },
+    {
+      "fixture": "test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.original-response.json",
+      "original_sha_match": true,
+      "original_size_match": true,
+      "frozen_sha_match": true,
+      "frozen_size_match": true,
+      "extracted_json_equal": true
+    },
+    {
+      "fixture": "validator_predicates.json",
+      "original_sha_match": true,
+      "original_size_match": true,
+      "frozen_sha_match": true,
+      "frozen_size_match": true,
+      "extracted_json_equal": true
+    }
+  ],
+  "catalog": {
+    "old_object_versions": 22602,
+    "new_object_versions": 31017,
+    "old_missing": [],
+    "old_mutated": [],
+    "active_kind_counts": {
+      "analysis": 1,
+      "asset": 4215,
+      "calibration": 1,
+      "checker": 1,
+      "entrypoint": 35,
+      "case": 2,
+      "internal-contract": 1,
+      "execution": 1,
+      "historical-audit-record": 3257,
+      "historical-finding": 3,
+      "source": 50,
+      "method": 4631,
+      "qualification": 1,
+      "requirement": 4,
+      "review": 1
+    },
+    "qualification_objects_added": 0,
+    "active_method_namespaces": {
+      "maintenance": 614,
+      "validation": 760,
+      "python-regression": 3257
+    },
+    "active_method_semantic_status": {
+      "pending": 4631
+    }
+  },
+  "discovery": {
+    "actual_entry_count": 30,
+    "receipt_count": 30,
+    "entry_id_set_equal": true,
+    "entries": [
+      {
+        "path": "discovery-complete/entry-000.json",
+        "entry_id": "8728e565f4468c702b40aba87fcffd8b90398dd6078040c590b2a72ba63b4cc8",
+        "candidate_entry_equal": true,
+        "complete": true,
+        "returncode": 0,
+        "errors": 0,
+        "unresolved": 0,
+        "reported_count": 35,
+        "method_rows": 35,
+        "skipped_declarations": 0,
+        "start": "scripts/tests"
+      },
+      {
+        "path": "discovery-complete/entry-001.json",
+        "entry_id": "dc743147439e4d27f4838becc5e46dee3923e866fdeea0100d9d7479af10108e",
+        "candidate_entry_equal": true,
+        "complete": true,
+        "returncode": 0,
+        "errors": 0,
+        "unresolved": 0,
+        "reported_count": 12,
+        "method_rows": 12,
+        "skipped_declarations": 0,
+        "start": "scripts/tests"
+      },
+      {
+        "path": "discovery-complete/entry-002.json",
+        "entry_id": "8d48624992909fcbef141935e46aea903f6db22057a4a96a055e148bf193e2da",
+        "candidate_entry_equal": true,
+        "complete": true,
+        "returncode": 0,
+        "errors": 0,
+        "unresolved": 0,
+        "reported_count": 14,
+        "method_rows": 14,
+        "skipped_declarations": 0,
+        "start": "scripts/tests"
+      },
+      {
+        "path": "discovery-complete/entry-003.json",
+        "entry_id": "3cf39003351ddf1d15048a7571870fbc1472d6c396a033051e2edd622423c133",
+        "candidate_entry_equal": true,
+        "complete": true,
+        "returncode": 0,
+        "errors": 0,
+        "unresolved": 0,
+        "reported_count": 7,
+        "method_rows": 7,
+        "skipped_declarations": 0,
+        "start": "scripts/tests"
+      },
+      {
+        "path": "discovery-complete/entry-004.json",
+        "entry_id": "a1d1e85dc7ec2626dbf63f201cfc1e51882c04eaed16db13f11d549e3eb08773",
+        "candidate_entry_equal": true,
+        "complete": true,
+        "returncode": 0,
+        "errors": 0,
+        "unresolved": 0,
+        "reported_count": 25,
+        "method_rows": 25,
+        "skipped_declarations": 0,
+        "start": "scripts/tests"
+      },
+      {
+        "path": "discovery-complete/entry-005.json",
+        "entry_id": "37df9f5b0bc1225aebf2d0eb637bf712c9adb760bbbe2cbf77848f20687a6eea",
+        "candidate_entry_equal": true,
+        "complete": true,
+        "returncode": 0,
+        "errors": 0,
+        "unresolved": 0,
+        "reported_count": 547,
+        "method_rows": 547,
+        "skipped_declarations": 34,
+        "start": "scripts/tests"
+      },
+      {
+        "path": "discovery-complete/entry-006.json",
+        "entry_id": "7ca3014facd481757071df99f0ad67f44e04b45c671019efa8cd05a184dc88da",
+        "candidate_entry_equal": true,
+        "complete": true,
+        "returncode": 0,
+        "errors": 0,
+        "unresolved": 0,
+        "reported_count": 67,
+        "method_rows": 67,
+        "skipped_declarations": 0,
+        "start": "evas/capabilities"
+      },
+      {
+        "path": "discovery-complete/entry-007.json",
+        "entry_id": "c8fe7f60827a7b398bb2dcdd637f86e5208ca87a53217fc17ade28c6bc590c41",
+        "candidate_entry_equal": true,
+        "complete": true,
+        "returncode": 0,
+        "errors": 0,
+        "unresolved": 0,
+        "reported_count": 16,
+        "method_rows": 16,
+        "skipped_declarations": 0,
+        "start": "experiments/backends/evidence"
+      },
+      {
+        "path": "discovery-complete/entry-008.json",
+        "entry_id": "e2652c98fd2f6b58886dd9851140ba6a292ecb7ca96c543e81d3ff056ede84ad",
+        "candidate_entry_equal": true,
+        "complete": true,
+        "returncode": 0,
+        "errors": 0,
+        "unresolved": 0,
+        "reported_count": 100,
+        "method_rows": 100,
+        "skipped_declarations": 0,
+        "start": "experiments/backends/dvs2-spectre-validation"
+      },
+      {
+        "path": "discovery-complete/entry-009.json",
+        "entry_id": "a2fe460934e016fb5f673d7b90cddf74003147554773bcf0efe44c9d372077d7",
+        "candidate_entry_equal": true,
+        "complete": true,
+        "returncode": 0,
+        "errors": 0,
+        "unresolved": 0,
+        "reported_count": 20,
+        "method_rows": 20,
+        "skipped_declarations": 0,
+        "start": "experiments/backends/spectre-alignment"
+      },
+      {
+        "path": "discovery-complete/entry-010.json",
+        "entry_id": "62077e5d119f4265d3bbc0eb8bcbdb49b12cb38f0330fafa163849d7c2e63761",
+        "candidate_entry_equal": true,
+        "complete": true,
+        "returncode": 0,
+        "errors": 0,
+        "unresolved": 0,
+        "reported_count": 19,
+        "method_rows": 19,
+        "skipped_declarations": 0,
+        "start": "evas/validation/event_alignment"
+      },
+      {
+        "path": "discovery-complete/entry-011.json",
+        "entry_id": "06e05b8d3eb47520a7bc82dcaf1c43ec36d35790ddf7622d63a407c2b57b0845",
+        "candidate_entry_equal": true,
+        "complete": true,
+        "returncode": 0,
+        "errors": 0,
+        "unresolved": 0,
+        "reported_count": 5,
+        "method_rows": 5,
+        "skipped_declarations": 0,
+        "start": "evas/validation/strobe"
+      },
+      {
+        "path": "discovery-complete/entry-012.json",
+        "entry_id": "1534295b585fa2307a53717e62260291fc18d5a34aeb17eb238843786849d72a",
+        "candidate_entry_equal": true,
+        "complete": true,
+        "returncode": 0,
+        "errors": 0,
+        "unresolved": 0,
+        "reported_count": 35,
+        "method_rows": 35,
+        "skipped_declarations": 0,
+        "start": "experiments/backends/event-alignment"
+      },
+      {
+        "path": "discovery-complete/entry-013.json",
+        "entry_id": "2202954d7464aba0a6fb0ed044485194444bedf78da6e36a1cf829caf17053e6",
+        "candidate_entry_equal": true,
+        "complete": true,
+        "returncode": 0,
+        "errors": 0,
+        "unresolved": 0,
+        "reported_count": 4,
+        "method_rows": 4,
+        "skipped_declarations": 0,
+        "start": "evas/validation/sample_edge_filter"
+      },
+      {
+        "path": "discovery-complete/entry-014.json",
+        "entry_id": "73380be092d455455dab35b694f310758219a02f04f2420a06336707aad7a4a5",
+        "candidate_entry_equal": true,
+        "complete": true,
+        "returncode": 0,
+        "errors": 0,
+        "unresolved": 0,
+        "reported_count": 36,
+        "method_rows": 36,
+        "skipped_declarations": 0,
+        "start": "experiments/backends/sample-edge-filter"
+      },
+      {
+        "path": "discovery-complete/entry-015.json",
+        "entry_id": "642810224ed854fd1224a521b99c3e63f9c9c99c6b4c454caecc1eb0e50ab7b3",
+        "candidate_entry_equal": true,
+        "complete": true,
+        "returncode": 0,
+        "errors": 0,
+        "unresolved": 0,
+        "reported_count": 26,
+        "method_rows": 26,
+        "skipped_declarations": 0,
+        "start": "experiments/backends/implicit-event-restart"
+      },
+      {
+        "path": "discovery-complete/entry-016.json",
+        "entry_id": "b53e44d8f64db52ccd1eb111995977a11afeeeaa4e2f2aa9c13686fc543f6bf5",
+        "candidate_entry_equal": true,
+        "complete": true,
+        "returncode": 0,
+        "errors": 0,
+        "unresolved": 0,
+        "reported_count": 5,
+        "method_rows": 5,
+        "skipped_declarations": 0,
+        "start": "experiments/performance"
+      },
+      {
+        "path": "discovery-complete/entry-017.json",
+        "entry_id": "34ada95d81015eab0e76ef208481ce9d0417747f0fc2becca6cf8067396f1f0b",
+        "candidate_entry_equal": true,
+        "complete": true,
+        "returncode": 0,
+        "errors": 0,
+        "unresolved": 0,
+        "reported_count": 29,
+        "method_rows": 29,
+        "skipped_declarations": 0,
+        "start": "evas/validation/paper"
+      },
+      {
+        "path": "discovery-complete/entry-018.json",
+        "entry_id": "d1900aef9163b8fc56f330a4bc7c82bee0fea32a45f8a80d7ebc88490565e371",
+        "candidate_entry_equal": true,
+        "complete": true,
+        "returncode": 0,
+        "errors": 0,
+        "unresolved": 0,
+        "reported_count": 34,
+        "method_rows": 34,
+        "skipped_declarations": 0,
+        "start": "evas/validation/paper"
+      },
+      {
+        "path": "discovery-complete/entry-019.json",
+        "entry_id": "a3b8e3338559d7b655de88ff3c35497b2264e5b9341c7bf039ccb6b82554277d",
+        "candidate_entry_equal": true,
+        "complete": true,
+        "returncode": 0,
+        "errors": 0,
+        "unresolved": 0,
+        "reported_count": 22,
+        "method_rows": 22,
+        "skipped_declarations": 0,
+        "start": "evas/validation/checker_calibration"
+      },
+      {
+        "path": "discovery-complete/entry-020.json",
+        "entry_id": "95c96890ea36e3018c2416574ddb148eaf0a9e7531f5dbb35acf7030275b0058",
+        "candidate_entry_equal": true,
+        "complete": true,
+        "returncode": 0,
+        "errors": 0,
+        "unresolved": 0,
+        "reported_count": 3,
+        "method_rows": 3,
+        "skipped_declarations": 0,
+        "start": "evas/validation/paper"
+      },
+      {
+        "path": "discovery-complete/entry-021.json",
+        "entry_id": "8139adc6525d6bfea91de654ffbc763b5e2ca9521d944703cf821121613d481e",
+        "candidate_entry_equal": true,
+        "complete": true,
+        "returncode": 0,
+        "errors": 0,
+        "unresolved": 0,
+        "reported_count": 12,
+        "method_rows": 12,
+        "skipped_declarations": 0,
+        "start": "evas/validation/paper"
+      },
+      {
+        "path": "discovery-complete/entry-022.json",
+        "entry_id": "ad0309b9692193fa47a3688833dece5a17b5729f4b8696a490c0311511b9f468",
+        "candidate_entry_equal": true,
+        "complete": true,
+        "returncode": 0,
+        "errors": 0,
+        "unresolved": 0,
+        "reported_count": 5,
+        "method_rows": 5,
+        "skipped_declarations": 0,
+        "start": "evas/validation/paper"
+      },
+      {
+        "path": "discovery-complete/entry-023.json",
+        "entry_id": "806ae90b5ec2581bf135aad4533c6b5f9ae50580c4b4e9cd46d05133ac2d0bb7",
+        "candidate_entry_equal": true,
+        "complete": true,
+        "returncode": 0,
+        "errors": 0,
+        "unresolved": 0,
+        "reported_count": 16,
+        "method_rows": 16,
+        "skipped_declarations": 0,
+        "start": "evas/validation/paper"
+      },
+      {
+        "path": "discovery-complete/entry-024.json",
+        "entry_id": "0861b956200f28c19ddbbaf03c2f028ebe91d1189f5668bed48d90ef836a20ce",
+        "candidate_entry_equal": true,
+        "complete": true,
+        "returncode": 0,
+        "errors": 0,
+        "unresolved": 0,
+        "reported_count": 11,
+        "method_rows": 11,
+        "skipped_declarations": 0,
+        "start": "evas/validation/paper"
+      },
+      {
+        "path": "discovery-complete/entry-025.json",
+        "entry_id": "39ad30688fb094b54aebd08b4b02f26353528a2d98c817d469eaa1b51f3cc7a1",
+        "candidate_entry_equal": true,
+        "complete": true,
+        "returncode": 0,
+        "errors": 0,
+        "unresolved": 0,
+        "reported_count": 129,
+        "method_rows": 129,
+        "skipped_declarations": 0,
+        "start": "experiments/backends/paper"
+      },
+      {
+        "path": "discovery-complete/entry-026.json",
+        "entry_id": "031022b67055586ca1c4e816720fd7ee57533f4f56223b7152b95f9270d19706",
+        "candidate_entry_equal": true,
+        "complete": true,
+        "returncode": 0,
+        "errors": 0,
+        "unresolved": 0,
+        "reported_count": 3,
+        "method_rows": 3,
+        "skipped_declarations": 0,
+        "start": "evas/validation/support"
+      },
+      {
+        "path": "discovery-complete/entry-027.json",
+        "entry_id": "aae6a7f97e1b54e9acf3a46ea40eb8580e9e66dbb80d023c3526628447c71197",
+        "candidate_entry_equal": true,
+        "complete": true,
+        "returncode": 0,
+        "errors": 0,
+        "unresolved": 0,
+        "reported_count": 221,
+        "method_rows": 221,
+        "skipped_declarations": 0,
+        "start": "experiments/backends/support"
+      },
+      {
+        "path": "discovery-complete/entry-028.json",
+        "entry_id": "6d8cf4be34fcbe82e16cf6af3057f804c78623230e135ba151260079974f62ae",
+        "candidate_entry_equal": true,
+        "complete": true,
+        "returncode": 0,
+        "errors": 0,
+        "unresolved": 0,
+        "reported_count": 9,
+        "method_rows": 9,
+        "skipped_declarations": 0,
+        "start": "evas/validation/differential"
+      },
+      {
+        "path": "discovery-complete/entry-029.json",
+        "entry_id": "a9bb265f87f6be280e8a0a4ff2fc61c048e5ba524e472e58eea9739529d47b3a",
+        "candidate_entry_equal": true,
+        "complete": true,
+        "returncode": 0,
+        "errors": 0,
+        "unresolved": 0,
+        "reported_count": 3257,
+        "method_rows": 3257,
+        "skipped_declarations": 0,
+        "start": "evas/tests"
+      }
+    ],
+    "source_modules_count": 448,
+    "module_mismatches": [],
+    "deduplicated_namespaces": {
+      "python-regression": 3257,
+      "validation": 760,
+      "maintenance": 614
+    },
+    "test_bodies_executed": false
+  },
+  "ci_routing": {
+    "maintenance": true,
+    "calibration": true,
+    "provenance": true,
+    "regression": true,
+    "differential": true,
+    "fuzz": true,
+    "package": true,
+    "benchmark": true
+  },
+  "new_calibration_counts": {
+    "outer_tests": 22,
+    "outer_success": true,
+    "accepted": 9,
+    "expected_rejected": 13,
+    "skipped": 0,
+    "family_counts": {
+      "BoundStep": 6,
+      "DeferredRdist": 2,
+      "SourceMath": 14
+    }
+  }
+}

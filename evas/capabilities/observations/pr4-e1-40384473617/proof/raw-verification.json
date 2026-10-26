@@ -1,0 +1,255 @@
+{
+  "run": 40384473617,
+  "candidate": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+  "tree": "32034ffd54c8006ac13ff4d475aaf5313b6e436e",
+  "actual_checkout": "f6602382e15133b1ec0c33434a73999911af453c",
+  "artifact_archive_hashes_verified": [
+    {
+      "name": "python-regression-shard-1",
+      "files": 9,
+      "sha256": "cb0acb8bd234594ec4c9e4ce219b4d6b4aaf6bed5c5e10f8b3edf2dd7d8a75b0"
+    },
+    {
+      "name": "python-regression-admission",
+      "files": 3,
+      "sha256": "1f27ef921410e5466af9bd2a8ade34949cc0ee0a188394dc0d2ef470f0c93a0a"
+    },
+    {
+      "name": "ngspice-comparison",
+      "files": 79,
+      "sha256": "6d1d307c45bf0527b07d4127ccb9f045717069fd253b1dcdd7cfe0ded77a920e"
+    },
+    {
+      "name": "package-ubuntu-24.04-x86_64-py3.10",
+      "files": 48,
+      "sha256": "83c9a838cb0ac04971e47d0d00f8efcf1c6c73ca87cb94e907f1d0d7a4a18407"
+    },
+    {
+      "name": "python-regression-timings",
+      "files": 2,
+      "sha256": "78d9be23cb3a0bd10c98da12df1be024c9e38ca3f89f7ee1aadd4b856cd563dc"
+    },
+    {
+      "name": "package-macos-14-arm64-py3.12",
+      "files": 48,
+      "sha256": "c5e2c5e6d89058a309a034121f17b5b3558e71999f887bb6b155f277571f6290"
+    },
+    {
+      "name": "python-regression-shard-3",
+      "files": 9,
+      "sha256": "84f7f160861ae16d47168b77197e6a9fa4f169b308482b30abf3a7f34e7b22b0"
+    },
+    {
+      "name": "catalog-inventory",
+      "files": 39,
+      "sha256": "d0854264a6e1b159e1864225d1772b8f54876e26d66268afb0c888b0ea54fadb"
+    },
+    {
+      "name": "python-regression-shard-0",
+      "files": 9,
+      "sha256": "6f366606ae5e19c2d6956ad4d2d8e1744c96d1512aa8c5d184346c297323250c"
+    },
+    {
+      "name": "python-regression-shard-2",
+      "files": 9,
+      "sha256": "ab2c8b46e9ba8f1bc5ab7a5c0582a3ec91c37cfb4fb0915b1ff89518ca62d5eb"
+    },
+    {
+      "name": "git-fixture-isolation",
+      "files": 180,
+      "sha256": "e81332c98c33c8863e169c521be0dd5ef4397ebe93d77a67296ddb357e22da3b"
+    },
+    {
+      "name": "fast-feedback",
+      "files": 2,
+      "sha256": "6a5efecea0eb81908f3c55f2a5db5de6c4b9aa11b2d2abee7ca15ba55f2c3131"
+    }
+  ],
+  "actual_assets": 49565,
+  "unchanged_assets_reused": 49525,
+  "changed_assets_verified": [
+    ".github/workflows/numerical-assurance.yml",
+    "evas/capabilities/data/asset-index.json",
+    "evas/capabilities/data/catalog-sources.json",
+    "evas/capabilities/data/entrypoint-index.json",
+    "evas/capabilities/data/historical-index.json",
+    "evas/capabilities/data/method-index.json",
+    "evas/capabilities/data/registry.json",
+    "evas/capabilities/generated/normative.md",
+    "evas/docs/development/TRACEABILITY.md",
+    "evas/tests/test_bound_step.py",
+    "evas/tests/test_deferred_rdist.py",
+    "evas/tests/test_source_math.py",
+    "evas/validation/checker_calibration/README.md",
+    "evas/validation/checker_calibration/fixtures/provenance.json",
+    "evas/validation/checker_calibration/fixtures/source_math.json",
+    "evas/validation/checker_calibration/fixtures/test_bound_caps_actual_nonlinear_integration_segments--identity--0.diagnostics.json",
+    "evas/validation/checker_calibration/fixtures/test_bound_caps_actual_nonlinear_integration_segments--identity--0.original-response.json",
+    "evas/validation/checker_calibration/fixtures/test_bound_caps_actual_nonlinear_integration_segments--identity--0.request.json",
+    "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.diagnostics.json",
+    "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.original-response.json",
+    "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.request.json",
+    "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.original-response.json",
+    "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.request.json",
+    "evas/validation/checker_calibration/fixtures/validator_predicates.json",
+    "evas/validation/checker_calibration/test_detector_controls.py",
+    "scripts/tests/git_fixture.py",
+    "scripts/tests/test_asset_observer.py",
+    "scripts/tests/test_ci_evidence_v3.py",
+    "scripts/tests/test_ci_selection.py",
+    "scripts/tests/test_discover_rust.py",
+    "scripts/tests/test_fast_feedback.py",
+    "scripts/tests/test_git_fixture_isolation.py",
+    "scripts/tests/test_independent_ci.py",
+    "scripts/tests/test_registration_bundle.py",
+    "scripts/tests/test_regression_admission.py",
+    "scripts/tests/test_regression_gate.py",
+    "scripts/tests/test_regression_input_subject.py",
+    "scripts/tests/test_rust_catalog_reconcile.py",
+    "scripts/tests/test_trusted_regression_gate.py",
+    "scripts/tests/test_workspaces.py"
+  ],
+  "full_input_count": 49555,
+  "shards": [
+    {
+      "index": 0,
+      "methods": 818,
+      "raw_exit": 1,
+      "cacheable": false,
+      "input_fingerprint": "526e13fa5c441829abc740714f3094826c2541a96698ef2183cf9ebb9c62dc94",
+      "kernel_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+      "jsonl_exact": true,
+      "retained_stdout_bytes": 0,
+      "retained_stderr_bytes": 401480
+    },
+    {
+      "index": 1,
+      "methods": 831,
+      "raw_exit": 1,
+      "cacheable": false,
+      "input_fingerprint": "9576f4f2b2b2086ffddc3b51d7d0ba34bb7d8b78c22fdcec47977e3c2c2f5a99",
+      "kernel_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+      "jsonl_exact": true,
+      "retained_stdout_bytes": 170,
+      "retained_stderr_bytes": 403110
+    },
+    {
+      "index": 2,
+      "methods": 823,
+      "raw_exit": 1,
+      "cacheable": false,
+      "input_fingerprint": "73c123a6d74bf6c7548f80a4a06e5340f8adc316cf0cb134d2b42ba4c1b45f06",
+      "kernel_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+      "jsonl_exact": true,
+      "retained_stdout_bytes": 10391,
+      "retained_stderr_bytes": 431650
+    },
+    {
+      "index": 3,
+      "methods": 785,
+      "raw_exit": 1,
+      "cacheable": false,
+      "input_fingerprint": "930e03e2bde01395e490fb9f10722b6fdd88aaa3b6d7d64c15350838ebf714c8",
+      "kernel_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+      "jsonl_exact": true,
+      "retained_stdout_bytes": 921,
+      "retained_stderr_bytes": 430952
+    }
+  ],
+  "merged_exact": true,
+  "raw_sha256": "8f1ff97fe6c24dbb339fcac4f7b64c6c3ef98915b005b0711bd963c95ed74770",
+  "methods": 3257,
+  "conditions": 7737,
+  "method_outcomes": {
+    "passed": 2617,
+    "error": 214,
+    "failed": 423,
+    "expected_failure": 3
+  },
+  "unittest_condition_counters": {
+    "failures": 597,
+    "errors": 296,
+    "skipped": 0,
+    "expected_failures": 3
+  },
+  "raw_successful": false,
+  "method_ids_preserved": true,
+  "method_outcome_changes": [],
+  "condition_delta_methods": [
+    "test_bound_step.BoundStepContracts.test_bound_caps_actual_nonlinear_integration_segments",
+    "test_bound_step.BoundStepContracts.test_bound_reads_state_after_same_time_event_settlement",
+    "test_bound_step.BoundStepContracts.test_conditional_bound_releases_on_next_accepted_evaluation",
+    "test_bound_step.BoundStepContracts.test_dynamic_bound_caps_nonlinear_history_after_initial_event",
+    "test_bound_step.BoundStepContracts.test_inactive_outer_condition_skips_inner_numeric_request",
+    "test_bound_step.BoundStepContracts.test_invalid_values_and_contexts_reject",
+    "test_bound_step.BoundStepContracts.test_minimum_across_calls_and_instances",
+    "test_bound_step.BoundStepContracts.test_raw_ir_rejects_malformed_bound_source_expansion",
+    "test_bound_step.BoundStepContracts.test_raw_ir_rejects_old_version_invalid_nodes_and_state_indices",
+    "test_bound_step.BoundStepContracts.test_rounded_held_activation_matches_linear_and_nonlinear_paths",
+    "test_bound_step.BoundStepContracts.test_sampled_clock_activation_preserves_physics_and_caps_inner_segments",
+    "test_bound_step.BoundStepContracts.test_stateless_bound_and_program_order",
+    "test_bound_step.BoundStepContracts.test_zero_request_uses_the_minimum_representable_timestep",
+    "test_deferred_rdist.DeferredRdist.test_bad_raw_leaf_seed_and_signature_are_rejected",
+    "test_deferred_rdist.DeferredRdist.test_caller_module_seed_in_function_argument_prefix_is_allowed",
+    "test_deferred_rdist.DeferredRdist.test_function_local_or_body_seed_stays_out_of_scope",
+    "test_deferred_rdist.DeferredRdist.test_initial_and_uncertain_arm_retain_failure_leaf",
+    "test_deferred_rdist.DeferredRdist.test_macro_clip_keeps_original_occurrences_and_origins",
+    "test_deferred_rdist.DeferredRdist.test_module_nested_copy_in_chain_keeps_module_seed_authority",
+    "test_deferred_rdist.DeferredRdist.test_nested_call_argument_in_function_body_cannot_regain_authority",
+    "test_deferred_rdist.DeferredRdist.test_nonconstant_dead_arm_args_do_not_evaluate_real_division",
+    "test_deferred_rdist.DeferredRdist.test_numeric_original_control_audit_has_no_discarded_call_slots",
+    "test_deferred_rdist.DeferredRdist.test_original_audit_does_not_emit_owned_calls_in_control",
+    "test_deferred_rdist.DeferredRdist.test_original_owner_charges_seed_scan_and_retries_stay_exhausted",
+    "test_deferred_rdist.DeferredRdist.test_parameter_dead_arm_is_still_statically_checked",
+    "test_deferred_rdist.DeferredRdist.test_resource_choice_uses_same_owner_and_sticky_limit",
+    "test_deferred_rdist.DeferredRdist.test_resource_choices_keep_deferred_leaf_and_argument_choices",
+    "test_deferred_rdist.DeferredRdist.test_two_instances_keep_independent_integer_seed_indices",
+    "test_deferred_rdist.DeferredRdist.test_unknown_system_names_do_not_gain_reachable_support",
+    "test_deferred_rdist.DeferredRdist.test_unselected_argument_math_domain_is_a_retained_operator",
+    "test_deferred_rdist.DeferredRdist.test_unused_actual_retains_deferred_effect_with_resource_choice",
+    "test_deferred_rdist.DeferredRdist.test_zero_sigma_keeps_leaf_and_seed_storage_identity",
+    "test_source_math.SourceMath.test_distinct_physical_shape_knots_are_explicitly_rejected",
+    "test_source_math.SourceMath.test_existing_affine_math_route_still_has_certificates",
+    "test_source_math.SourceMath.test_internal_feedback_and_dead_arm_dependencies_stay_rejected",
+    "test_source_math.SourceMath.test_invalid_original_arithmetic_is_not_hidden_by_math_saturation",
+    "test_source_math.SourceMath.test_legacy_affine_math_positive_source_error_remains_explicitly_refused",
+    "test_source_math.SourceMath.test_multinode_certificate_uses_same_original_constraint_system",
+    "test_source_math.SourceMath.test_old_affine_native_math_keeps_all_4000_unrelated_driven_sources",
+    "test_source_math.SourceMath.test_product_contains_independent_decimal_root_in_reported_box",
+    "test_source_math.SourceMath.test_small_true_source_box_encloses_both_independent_endpoint_roots",
+    "test_source_math.SourceMath.test_true_source_error_is_propagated_and_amplification_is_refused",
+    "test_source_math.SourceMath.test_zero_band_equal_shape_preserves_existing_native_math_consumers"
+  ],
+  "criteria_changed_paths": [
+    "evas/tests/test_bound_step.py",
+    "evas/tests/test_deferred_rdist.py",
+    "evas/tests/test_source_math.py",
+    "evas/validation/checker_calibration/README.md",
+    "evas/validation/checker_calibration/fixtures/provenance.json",
+    "evas/validation/checker_calibration/fixtures/source_math.json",
+    "evas/validation/checker_calibration/fixtures/test_bound_caps_actual_nonlinear_integration_segments--identity--0.diagnostics.json",
+    "evas/validation/checker_calibration/fixtures/test_bound_caps_actual_nonlinear_integration_segments--identity--0.original-response.json",
+    "evas/validation/checker_calibration/fixtures/test_bound_caps_actual_nonlinear_integration_segments--identity--0.request.json",
+    "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.diagnostics.json",
+    "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.original-response.json",
+    "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.request.json",
+    "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.original-response.json",
+    "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.request.json",
+    "evas/validation/checker_calibration/fixtures/validator_predicates.json",
+    "evas/validation/checker_calibration/test_detector_controls.py"
+  ],
+  "D0_and_kernel_unchanged": true,
+  "other_context_profiles_unchanged": true,
+  "admission": {
+    "valid": true,
+    "raw_successful": false,
+    "merge_allowed": false,
+    "differences": [
+      "expected exactly one matching trusted baseline context"
+    ],
+    "semantic_qualification": false
+  },
+  "semantic_qualification": false,
+  "E1_acceptance": "pending independent review and precise source-bound condition delta mapping",
+  "whole_CI_accepted": false
+}

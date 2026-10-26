@@ -1,0 +1,40 @@
+{
+  "total_old_obligations": 7737,
+  "identical": 7660,
+  "mechanical_source_location_remaps": 74,
+  "corrected_negative_controls": 3,
+  "corrected_variants": [
+    {
+      "owner": "test_deferred_rdist.DeferredRdist.test_bad_raw_leaf_seed_and_signature_are_rejected",
+      "old_condition": "95d832442ff617b8f9d48e3ea9f0d459ac243873efe2a2c0ecab5452c9248d2c",
+      "new_condition": "5abaa9904114cb9447382256c4da16836850f9277729afd3ab7e63bf81bcba81",
+      "variant": "function",
+      "new_expected_diagnostic": "invalid deferred system function signature",
+      "classification": "pending independent exact mapping approval",
+      "proof": "fixed Git diff replaces the actual selected event and adds unchanged-leaf control; original malformed leaf variant preserved; per-case detector calibration and CI pass retained"
+    },
+    {
+      "owner": "test_deferred_rdist.DeferredRdist.test_bad_raw_leaf_seed_and_signature_are_rejected",
+      "old_condition": "1841d05ac2e9c9e4eb6a4711a5a838850e9cf1daeb2e129e58e854179d55f6f3",
+      "new_condition": "604dfd1070c7a577cf0d6c470e87162f44c4174cffb2170f307916014e7d32a4",
+      "variant": "seed",
+      "new_expected_diagnostic": "system function seed requires same-instance integer state",
+      "classification": "pending independent exact mapping approval",
+      "proof": "fixed Git diff replaces the actual selected event and adds unchanged-leaf control; original malformed leaf variant preserved; per-case detector calibration and CI pass retained"
+    },
+    {
+      "owner": "test_deferred_rdist.DeferredRdist.test_bad_raw_leaf_seed_and_signature_are_rejected",
+      "old_condition": "d9e944f2685ad92cb1596ced62209384725e5c774a45fdf42346281893ab0ad0",
+      "new_condition": "fd569605cf4530acdd11a39dcad533fa93acd50bb38ca82d911c3404e58e0826",
+      "variant": "arity",
+      "new_expected_diagnostic": "invalid deferred system function signature",
+      "classification": "pending independent exact mapping approval",
+      "proof": "fixed Git diff replaces the actual selected event and adds unchanged-leaf control; original malformed leaf variant preserved; per-case detector calibration and CI pass retained"
+    }
+  ],
+  "source_bound_draft_structurally_complete": true,
+  "independent_review_approved": false,
+  "E1_accepted": false,
+  "semantic_qualification": false,
+  "notes": "All outcomes and counts preserved. Mechanical mapping uses exact unchanged source lines, hashes and encoded Python code location only; original/new condition IDs recomputed from unchanged collector. Five changed method bodies separately require the existing detector calibration and independent review."
+}

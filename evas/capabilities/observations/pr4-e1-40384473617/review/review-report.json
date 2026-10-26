@@ -1,0 +1,728 @@
+{
+  "schema_version": 1,
+  "review_status": "complete_same_round_with_two_open_maintenance_findings_and_exact_E1_evidence_accepted",
+  "reviewed_at_utc": "2026-10-26T19:50:37.426879+00:00",
+  "reviewer": {
+    "role": "独立审核子代理，新上下文，单轮覆盖 Standards 与 Spec",
+    "providerInstanceId": "codex",
+    "model": "gpt-6-astra",
+    "options": {
+      "reasoningEffort": "max",
+      "serviceTier": "default"
+    },
+    "options_evidence": "本轮 orchestrator_capabilities 的 inheritedProviderInstanceId / inheritedModel / inheritedOptions",
+    "delegated_further": false,
+    "implemented_candidate": false
+  },
+  "scope": {
+    "base": "842bde7101164330fa03e7aee58b45d1789cbed1",
+    "head": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+    "tree": "32034ffd54c8006ac13ff4d475aaf5313b6e436e",
+    "comparison": "两个指定端点的完整差异，不采用当前工作字节或自动 merge-base",
+    "paths": [
+      ".github/workflows/numerical-assurance.yml",
+      "evas/capabilities/data/asset-index.json",
+      "evas/capabilities/data/catalog-sources.json",
+      "evas/capabilities/data/entrypoint-index.json",
+      "evas/capabilities/data/historical-index.json",
+      "evas/capabilities/data/method-index.json",
+      "evas/capabilities/data/registry.json",
+      "evas/capabilities/generated/normative.md",
+      "evas/docs/development/TRACEABILITY.md",
+      "evas/tests/test_bound_step.py",
+      "evas/tests/test_deferred_rdist.py",
+      "evas/tests/test_source_math.py",
+      "evas/validation/checker_calibration/README.md",
+      "evas/validation/checker_calibration/fixtures/provenance.json",
+      "evas/validation/checker_calibration/fixtures/source_math.json",
+      "evas/validation/checker_calibration/fixtures/test_bound_caps_actual_nonlinear_integration_segments--identity--0.diagnostics.json",
+      "evas/validation/checker_calibration/fixtures/test_bound_caps_actual_nonlinear_integration_segments--identity--0.original-response.json",
+      "evas/validation/checker_calibration/fixtures/test_bound_caps_actual_nonlinear_integration_segments--identity--0.request.json",
+      "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.diagnostics.json",
+      "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.original-response.json",
+      "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.request.json",
+      "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.original-response.json",
+      "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.request.json",
+      "evas/validation/checker_calibration/fixtures/validator_predicates.json",
+      "evas/validation/checker_calibration/test_detector_controls.py",
+      "scripts/tests/git_fixture.py",
+      "scripts/tests/test_asset_observer.py",
+      "scripts/tests/test_ci_evidence_v3.py",
+      "scripts/tests/test_ci_selection.py",
+      "scripts/tests/test_discover_rust.py",
+      "scripts/tests/test_fast_feedback.py",
+      "scripts/tests/test_git_fixture_isolation.py",
+      "scripts/tests/test_independent_ci.py",
+      "scripts/tests/test_registration_bundle.py",
+      "scripts/tests/test_regression_admission.py",
+      "scripts/tests/test_regression_gate.py",
+      "scripts/tests/test_regression_input_subject.py",
+      "scripts/tests/test_rust_catalog_reconcile.py",
+      "scripts/tests/test_trusted_regression_gate.py",
+      "scripts/tests/test_workspaces.py"
+    ],
+    "path_count": 40,
+    "PR_URL": "https://github.com/BucketSran/vaEVAS/pull/263",
+    "PR_linked_to_review_thread": true,
+    "PR_watched": false,
+    "source_capture": "c7ce2d2fade6fb03efa2bd89114f1f3df3d896a5",
+    "source_capture_to_candidate_delta": [
+      "evas/capabilities/data/asset-index.json",
+      "evas/capabilities/data/catalog-sources.json",
+      "evas/capabilities/data/entrypoint-index.json",
+      "evas/capabilities/data/historical-index.json",
+      "evas/capabilities/data/method-index.json",
+      "evas/capabilities/data/registry.json",
+      "evas/capabilities/generated/normative.md",
+      "evas/docs/development/TRACEABILITY.md"
+    ],
+    "owning_spec": "evas/docs/development/validation-restructure-plan.md:151 PR4，按当前用户要求加入 scripts/tests Git 事故修正",
+    "included": "三类检测器、22 个永久控制、五个旧 paper 模块的 CI 接线、Git fixture 环境/路径隔离、生成登记和 TRACEABILITY、E1 所需原始流和 kernel 的归档接线；同轮后来提供的 CI40384473617 原始产物和精确 E1 义务映射审查",
+    "excluded": "前三批及 PR261/262 的无关重审、20 份脏工作区科学候选、DUT/科学回归、SSH/Spectre/Harbor/远端作业、context 授权与基线变更",
+    "read_only_real_git_command": [
+      "/usr/bin/git",
+      "--git-dir=/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/.git/worktrees/ir33-regression-night",
+      "--work-tree=/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night"
+    ],
+    "only_write_root": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/night-coordination/pr4-168a9d7a-astra-r1-20261027",
+    "candidate_export": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/night-coordination/pr4-168a9d7a-astra-r1-20261027/scratch/candidate",
+    "dirty_worktree_used_as_candidate": false,
+    "retained_worktree_paths_at_start": 20,
+    "retained_worktree_path_status_unchanged_at_end": true,
+    "workspace_check_boundary": "按用户的固定 Git 边界读取 W 的 status/identity；未运行会遍历其他真实 worktree 的全局 check_workspaces。没有创建真实 worktree 或写入真实 Git 元数据。",
+    "followup_evidence": "两次用户同轮补充实际 CI/E1 材料；未改变 BASE/head/tree，未另开审核或采用 worker 未冻结修正。",
+    "additional_unchanged_consumers_read": [
+      "scripts/tests/test_ci_inventory.py",
+      "scripts/tests/test_catalog_history_selection.py",
+      "scripts/regression_context_registration.py",
+      "scripts/regression_gate.py",
+      "evas/capabilities/source_reader.py"
+    ]
+  },
+  "instructions_read": [
+    "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/AGENTS.md",
+    "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/.agents/skills/vaevas-review-pr/SKILL.md",
+    "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/README.md#t3-multimodel-workflow",
+    "CONTRIBUTING.md#reviewing-diffs / #concise-review-delivery",
+    ".agents/skills/evas-validate/SKILL.md",
+    "/Users/bucketsran/.codex/skills/unslop/SKILL.md"
+  ],
+  "Standards": {
+    "findings": [
+      {
+        "id": "PR4-MAINT-01",
+        "priority": "P2",
+        "category": "maintenance-test compatibility",
+        "status": "open_at_fixed_candidate",
+        "blocks_delivery": true,
+        "title": "更新新增六个入口后的固定 CI 解析预期",
+        "revision": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+        "file": "scripts/tests/test_ci_inventory.py",
+        "line": 30,
+        "end_line": 32,
+        "fixed_source_url": "https://github.com/BucketSran/vaEVAS/blob/168a9d7a4305e7ce21d1577b4ca1dda65beae4ce/scripts/tests/test_ci_inventory.py#L30",
+        "changed_trigger_location": {
+          "file": ".github/workflows/numerical-assurance.yml",
+          "line": 220
+        },
+        "trigger_input": "在固定候选运行 ParserTests.test_current_workflow_has_23_literals_plus_separate_primary；workflow 已加入 checker_calibration 和五个 paper 入口。",
+        "actual_impact": "parse_workflow 正确得到 29 个 literal，但夹具仍断言 23；validation 的旧预期 16 也应变为 22。static-checks 因 AssertionError: 29 != 23 失败，不能把该候选称为维护检查通过。",
+        "reproducible_evidence": [
+          "maintenance-failures.json",
+          "maintenance-failures.stderr",
+          "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/ci-40384473617/static-checks.log:848",
+          "ci-supplement-audit.json"
+        ],
+        "minimal_fix": "只更新消费实际 workflow 的测试夹具：明确 29 个 literal、maintenance 7、validation 22 和单独 primary 入口，并校验新增六条命令。保留精确集合/分类检查，不改为宽松下界或自比较。",
+        "attribution": "本次 workflow 增加入口后的关联维护测试未同步；不是 inventory parser 的生产故障。"
+      },
+      {
+        "id": "PR4-MAINT-02",
+        "priority": "P2",
+        "category": "maintenance-test identity fixture",
+        "status": "open_at_fixed_candidate",
+        "blocks_delivery": true,
+        "title": "历史迁移夹具应保留同一路径的全部所需 owner 版本",
+        "revision": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+        "file": "scripts/tests/test_catalog_history_selection.py",
+        "line": 45,
+        "end_line": 46,
+        "fixed_source_url": "https://github.com/BucketSran/vaEVAS/blob/168a9d7a4305e7ce21d1577b4ca1dda65beae4ce/scripts/tests/test_catalog_history_selection.py#L45",
+        "trigger_input": "加载候选的三个 historical-finding，执行 test_all_original_finding_protocols_keep_paths_after_file_moves。新登记在同一路径保留不同来源版本。",
+        "actual_impact": "finding_owners 按 current_path 覆盖条目；BoundStep 原 cap 方法需要 owner f230094a…，最后留下的是 cc966115…。构造 previous 时丢失所需 owner，实际 generator 正确拒绝不可匹配的历史身份；三个协议子例均报 ValueError: finding original subject identity unavailable。",
+        "reproducible_evidence": [
+          "maintenance-failures.json",
+          "maintenance-failures.stderr",
+          "ci-supplement-audit.json#/history_fixture_overwrite",
+          "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/ci-40384473617/static-checks.log:809"
+        ],
+        "minimal_fix": "在该测试中按完整 id/version 引用保存历史方法与 owner，并把所有被引用版本传入 previous；模拟移动时按历史引用选择目标。保留原历史字节和 generator 的身份拒绝规则，不放宽生产 select_finding_method。",
+        "attribution": "本次登记更新暴露 fixture 的路径键覆盖假设；全量目录本身保留了旧对象版本。本轮没有发现需要修改生产 generator 的证据。"
+      }
+    ],
+    "conclusion": "发现两项固定候选的维护夹具兼容性问题，均独立复现且需修复后交付。Git 事故隔离和已核对的登记保存修正保持闭合；全 CI 未通过。",
+    "assessments": [
+      {
+        "area": "所有权与边界",
+        "result": "变更位于测试、验证、登记及 CI；没有 DUT 源码、Benchmark 工作线、context 授权或基线改动。审核始终使用固定 Git 对象。"
+      },
+      {
+        "area": "共享 Git 事故隔离",
+        "result": "fixture 清理定位变量及 GIT_CONFIG* 注入；受影响调用改用公共 helper 或清理后的子进程环境。现有允许调用和已列事故路径由 7 项控制、15 个嵌套 fixture 入口及已匹配维护记录覆盖。仅评价这些调用，不声称通用 Git 沙箱。",
+        "locations": [
+          "scripts/tests/git_fixture.py:20",
+          "scripts/tests/git_fixture.py:564",
+          "scripts/tests/git_fixture.py:584",
+          "scripts/tests/git_fixture.py:628",
+          "scripts/tests/test_git_fixture_isolation.py:116"
+        ],
+        "evidence": [
+          "isolation-results.json",
+          "git-fixture-receipt-location.json",
+          "evidence-audit.json"
+        ]
+      },
+      {
+        "area": "证据保存与分类",
+        "result": "22,602 个基线对象版本逐对象比对，没有删除或改写；资格对象新增数为 0，当前 4,631 个方法仍为 pending。本轮进一步核对了实际 kernel 字节、构建流和四分片流；固定 E1 证据的接受范围见 E1_independent_decision，不授予科学资格。",
+        "evidence": [
+          "evidence-audit.json",
+          "candidate-code.diff",
+          "ci-supplement-audit.json",
+          "e1-scope-audit.json"
+        ]
+      },
+      {
+        "area": "生成与预检",
+        "result": "最终 40 文件 SHA 与 final-candidate/precheck 两份收据全部一致；读取最后的 82 视图检查成功记录，初次 stale 记录未被误当最终通过。固定端点 diff --check 新执行通过。",
+        "evidence": [
+          "evidence-audit.json",
+          "end-checks.json",
+          "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/capability-views-final.txt",
+          "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/maintenance-fast-checks.txt"
+        ]
+      },
+      {
+        "area": "实际 CI 维护结果",
+        "result": "547 个方法结果逐条核对为 511 passed、1 failed、1 error、34 skipped；error 方法包含 3 个协议 subcase errors。34 skip 的日志原因是外部 Harness unavailable，未算通过。两个失败不由 193 项受影响本地测试的成功覆盖。",
+        "evidence": [
+          "ci-supplement-audit.json",
+          "maintenance-failures.json",
+          "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/ci-40384473617/static-checks.log"
+        ]
+      }
+    ]
+  },
+  "Spec": {
+    "findings": [],
+    "conclusion": "三类检测器、校准合同和生产登记逻辑未发现额外可操作语义缺陷。固定 E1 原始证据和完整条件映射经独立审查接受；此接受不等于新科学资格、CI 全通过或合入授权。两个维护发现仍阻塞交付。",
+    "assessments": [
+      {
+        "area": "SourceMath 两方法",
+        "result": "原独立正指数 Decimal 参考、输入与包含关系保留；新增代表值误差和相对代表值的双端 box 半径检查，预算仍为 binary64 原值 1e-12 + 1e-10*abs(actual)。边界控制使用精确有理数和相邻 float，没有新增 epsilon。14 控制中 6 接受、8 预期拒绝，目标拒绝落在代表/box 预算断言。",
+        "locations": [
+          "evas/tests/test_source_math.py:50",
+          "evas/tests/test_source_math.py:154",
+          "evas/validation/checker_calibration/test_detector_controls.py:72"
+        ],
+        "evidence": [
+          "calibration-results.json",
+          "baseline-counterexamples.json",
+          "evidence-audit.json"
+        ]
+      },
+      {
+        "area": "DeferredRdist",
+        "result": "按枚举得到的实际 event 索引替换叶，合法叶经同一替换位置先通过。function/seed/arity 分别要求指定诊断。内存 mutant 只去掉固定原 AST 的两项谓词，产生三条 CompileError not raised；原 validator 控制通过，未依靠重复事件的旁路错误。",
+        "locations": [
+          "evas/tests/test_deferred_rdist.py:160",
+          "evas/validation/checker_calibration/test_detector_controls.py:128"
+        ],
+        "evidence": [
+          "calibration-results.json",
+          "baseline-counterexamples.json",
+          "evidence-audit.json"
+        ]
+      },
+      {
+        "area": "BoundStep 两条 raw 路径",
+        "result": "两方法均在读取响应后调用公共 validate_response，并传入实际请求的输出数量和时间。删初始解/改时间分别由 solution count / transient identity 拒绝；旧错误末值控制仍由数值断言拒绝，正确历史格式控制通过。",
+        "locations": [
+          "evas/tests/test_bound_step.py:117",
+          "evas/tests/test_bound_step.py:194"
+        ],
+        "evidence": [
+          "calibration-results.json",
+          "baseline-counterexamples.json"
+        ]
+      },
+      {
+        "area": "控制来源与可执行性",
+        "result": "10 个 fixture 的原始 SHA/大小、冻结 SHA/大小和抽取 JSON/AST 均核对一致。22 项只调用五个目标方法，并阻止真实 subprocess 和未替换 runtime _invoke。五个已知漏检控制在 BASE 检测器上均出现预期的外层校准失败，在候选上对应控制通过。",
+        "evidence": [
+          "evidence-audit.json",
+          "calibration-results.json",
+          "baseline-counterexamples.json"
+        ]
+      },
+      {
+        "area": "实际 CI 发现与旧 paper 接线",
+        "result": "从候选 workflow 重新解析的 30 入口与原始发现收据逐项相同，448 个方法所属模块的字节身份匹配。scripts/tests 收集 547 方法，科学入口 3257；全体去重后 maintenance=614、validation=760、python-regression=3257。新增五个 paper 命令对应 3/12/5/16/11 条原结果，合计 47，42 个输入 SHA 匹配。当前差异会选择 maintenance/provenance 等所需作业。发现完整不等于测试执行通过。",
+        "evidence": [
+          "evidence-audit.json",
+          "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/discovery-summary.json",
+          "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/paper-routing-reuse.json"
+        ]
+      },
+      {
+        "area": "E1 原始数据与条件语义对应",
+        "result": "独立核对实际 12 个归档及解压字节、四分片 JSONL/原报告、固定 tree 的 49,565 个资产和 49,555 项指纹输入。3257 方法的 outcome 与 C0 相同。7737 原条件全部一一映射；7660 是保留签名相同，74 只改变正确模块 SHA/相同源码文本对应行，3 个原负控的完整 bad 叶值等于新捕获值。43 方法中 38 个正文 AST 相同，余下 5 个正是本轮直接源码审查和控制覆盖的检测器修正。",
+        "evidence": [
+          "ci-supplement-audit.json",
+          "e1-scope-audit.json",
+          "calibration-results.json",
+          "baseline-counterexamples.json"
+        ]
+      }
+    ]
+  },
+  "prior_fix_closure": [
+    {
+      "item": "继承真实 GIT_DIR/WORK_TREE 和 GIT_CONFIG* 的原事故",
+      "status": "closed_in_reviewed_scope",
+      "independent_check": "清理后的 fixture 及生产 CLI 能工作；有意未修路径只写 scratch red 仓库；hold 仓库与其 worktree 的全 manifest 保持一致。",
+      "evidence": [
+        "isolation-results.json",
+        "git-fixture-receipt-location.json"
+      ]
+    },
+    {
+      "item": "显式 --git-dir init 逃逸、末尾 HEAD 被误当 worktree 目的路径",
+      "status": "closed_in_reviewed_scope",
+      "independent_check": "初始化前统一检查显式定位；worktree add 的第一个路径参数在解析中被检查。外部目标均被 GitFixtureBoundary 拒绝；允许的 linked worktree 创建控制通过。",
+      "locations": [
+        "scripts/tests/git_fixture.py:346",
+        "scripts/tests/git_fixture.py:442"
+      ],
+      "evidence": [
+        "isolation-results.json",
+        "git-fixture-receipt-location.json"
+      ]
+    },
+    {
+      "item": "存储的 core.worktree 与已有 commondir 解析遗漏",
+      "status": "closed_in_reviewed_scope",
+      "independent_check": "检查现有 common-dir，且用只读 Git rev-parse 解析实际 git-dir/common-dir/work-tree。新执行两条原边界控制均拒绝，外部 sentinel 未变。",
+      "locations": [
+        "scripts/tests/git_fixture.py:363",
+        "scripts/tests/git_fixture.py:564",
+        "scripts/tests/git_fixture.py:593"
+      ],
+      "evidence": [
+        "isolation-results.json",
+        "git-fixture-receipt-location.json"
+      ]
+    },
+    {
+      "item": "默认运行跳过隔离负控，以及 CI 不归档",
+      "status": "closed_in_reviewed_scope",
+      "independent_check": "不设置留存环境变量的新执行发现并执行 7 项且零 skip；候选默认建留存临时目录。CI 设置相对留存路径，always 上传并包含隐藏 Git 文件。实际 git-fixture-isolation 归档已核对 SHA 和全部 180 个文件的解压字节。",
+      "locations": [
+        "scripts/tests/test_git_fixture_isolation.py:118",
+        ".github/workflows/numerical-assurance.yml:170"
+      ],
+      "evidence": [
+        "isolation-results.json",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/fixture-primary/ci-retention.json",
+        "ci-supplement-audit.json#/archives"
+      ]
+    },
+    {
+      "item": "主控对 command-scope core.worktree 的错误额外断言",
+      "status": "not_a_worker_defect",
+      "independent_check": "读取 primary-test-correction.json 及固定终态代码；该错误断言已移除，现有检查使用实际存储 worktree 的 Git 解析。未把已撤回的推断计作 worker 缺陷，也未据此扩成通用 Git 沙箱审计。",
+      "evidence": [
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/fixture-primary/primary-test-correction.json",
+        "candidate-code.diff"
+      ]
+    },
+    {
+      "item": "PR4-CAL-01：跨 Python 版本的 AST dump 格式",
+      "status": "closed_in_reviewed_scope",
+      "independent_check": "fixture 保存原谓词的可解析源码，再用当前解释器解析后比较 AST。两条谓词与 BASE 原源码独立比对一致；本轮 3.12 新运行通过，既有 3.12/3.14 各 22 结果日志 SHA 和结果行已核对。",
+      "evidence": [
+        "calibration-results.json",
+        "interpreter-evidence.json",
+        "evidence-audit.json",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/calibration-compatibility-repair.json"
+      ]
+    }
+  ],
+  "verification": {
+    "newly_executed": [
+      {
+        "check": "fixed Git identity, complete changed paths, final file receipts",
+        "result": "40/40 字节匹配；BASE/head/tree 与请求一致",
+        "evidence": "evidence-audit.json"
+      },
+      {
+        "check": "candidate detector calibration",
+        "result": {
+          "outer_tests": 22,
+          "outer_success": true,
+          "accepted": 9,
+          "expected_rejected": 13,
+          "skipped": 0,
+          "family_counts": {
+            "BoundStep": 6,
+            "DeferredRdist": 2,
+            "SourceMath": 14
+          }
+        },
+        "evidence": [
+          "focused-checks.json",
+          "calibration-results.json",
+          "calibration.stdout",
+          "calibration.stderr"
+        ]
+      },
+      {
+        "check": "candidate Git fixture isolation, default retention path",
+        "result": {
+          "tests_run": 7,
+          "outer_success": true,
+          "skipped": 0,
+          "embedded_fixture_entrypoints": 15
+        },
+        "evidence": [
+          "focused-checks.json",
+          "isolation-results.json",
+          "isolation.stdout",
+          "isolation.stderr",
+          "git-fixture-receipt-location.json"
+        ]
+      },
+      {
+        "check": "five fixed BASE false-negative controls",
+        "result": {
+          "outer_control_failures_expected": 5,
+          "outer_control_failures_observed": 5,
+          "unexpected_errors": 0,
+          "scientific_execution": false
+        },
+        "evidence": [
+          "baseline-counterexamples.json",
+          "baseline-counterexamples.stdout"
+        ]
+      },
+      {
+        "check": "fixture provenance, catalog object preservation, workflow/discovery identity",
+        "result": "10 fixture 完整抽取匹配；22,602 旧版本全部保持；30 入口及 448 模块字节匹配",
+        "evidence": "evidence-audit.json"
+      },
+      {
+        "check": "git diff --check BASE HEAD",
+        "returncode": 0,
+        "evidence": "end-checks.json"
+      },
+      {
+        "check": "two CI maintenance failures on fixed candidate",
+        "result": {
+          "test_methods": 2,
+          "failures": 1,
+          "protocol_subcase_errors": 3,
+          "skipped": 0
+        },
+        "evidence": [
+          "maintenance-failures.json",
+          "maintenance-failures.stderr"
+        ],
+        "scope": "仅调用两条维护方法；source-reader 的只读 Git 命令绑定到用户指定真实 git-dir/work-tree。没有运行完整维护或科学套件。"
+      },
+      {
+        "check": "archived CI integrity and counted raw outcomes",
+        "result": {
+          "archive_count": 12,
+          "asset_count": 49565,
+          "full_input_count": 49555,
+          "shards": 4,
+          "scientific_methods": 3257,
+          "conditions": 7737,
+          "method_outcomes": {
+            "passed": 2617,
+            "error": 214,
+            "failed": 423,
+            "expected_failure": 3
+          },
+          "changed_method_outcomes": 0
+        },
+        "evidence": "ci-supplement-audit.json",
+        "scope": "读取已归档产物并重算 SHA/JSON/计数；未执行模拟器或原 comparison 验证器。"
+      },
+      {
+        "check": "independent E1 byte and obligation mapping audit",
+        "result": {
+          "bundle_files": 10,
+          "old_and_new_conditions": 7737,
+          "bijective_mapping": true,
+          "classification_counts": {
+            "identical_retained_signature": 7660,
+            "only_source_identity_and_identical_source_line_changes": 74,
+            "corrected_negative_leaf_same_full_input": 3
+          },
+          "unchanged_method_body_AST": 38,
+          "planned_changed_method_body_AST": 5
+        },
+        "evidence": "e1-scope-audit.json",
+        "scope": "按原始记录、固定 Git 源码及本轮控制判断，不把生产 evidence()/mapped_obligations() 的结构通过当资格。"
+      },
+      {
+        "check": "review output format",
+        "result": "两个发现完整保留，单一 summary 按 findings=2 的 800 字符门槛核验",
+        "evidence": "review-output-check.json"
+      }
+    ],
+    "reused_after_inspection": [
+      {
+        "check": "14 modules / 193 maintenance results",
+        "result": "逐条核对 193 个命名结果为 ok，零 skip，stdout/stderr SHA 和 15 个维护源码文件 SHA 全部匹配；其中 7 隔离控制本轮另行执行，不相加成新的唯一方法数。",
+        "evidence": [
+          "evidence-audit.json",
+          "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/fixture-integration-r2.json"
+        ]
+      },
+      {
+        "check": "five paper modules / 47 controls",
+        "result": "47 个命名结果为 ok；42 个输入 SHA 匹配；本轮未重跑。",
+        "evidence": [
+          "evidence-audit.json",
+          "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/paper-routing-reuse.json"
+        ]
+      },
+      {
+        "check": "Python 3.12 and 3.14 compatibility",
+        "result": "两份旧日志各 22 条 ok，SHA 匹配；本轮只新执行 3.12。",
+        "evidence": "interpreter-evidence.json"
+      },
+      {
+        "check": "maintenance fast checks and 82 generated views",
+        "result": "读取身份匹配的最终成功收据；未重跑 Rust 编译/clippy 或整个快速检查链。",
+        "evidence": [
+          "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/precheck-acceptance.json",
+          "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/maintenance-fast-checks.txt",
+          "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/capability-views-final.txt"
+        ]
+      },
+      {
+        "check": "production evidence()/mapped_obligations() receipts",
+        "result": "读取实现及主控结构检查收据；独立重算 bundle 原字节和全部映射。未重跑原 comparison 验证器，未采用 pending 预览为授权。",
+        "evidence": [
+          "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/ci-40384473617/bundle-byte-binding.json",
+          "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/ci-40384473617/condition-mapping-proof.json",
+          "e1-scope-audit.json"
+        ]
+      }
+    ],
+    "not_run": [
+      "DUT 内核执行",
+      "完整科学回归",
+      "原 comparison 验证器",
+      "SSH/Spectre/Harbor/远端作业",
+      "PR/CI watcher 或轮询",
+      "原审计所有方法的科学资格复审"
+    ],
+    "result_count_policy": "外层控制、内部 subtest、实际科学方法、发现结构与资格分开。5 个 BASE red 是预期对照失败，不是候选失败；22 控制的 13 个预期拒绝也不算科学通过。",
+    "reviewer_tool_corrections": [
+      {
+        "record": "e1-audit-reviewer-correction.json",
+        "candidate_defect": false,
+        "result": "独立审查脚本对可省略 kind 字段的首次读取报 KeyError；修正为原协议的缺省分支后完整核对通过。失败脚本保留，未改候选。"
+      }
+    ]
+  },
+  "pending_acceptance": {
+    "CI": {
+      "status": "known_maintenance_failure_and_expected_context_admission_rejection",
+      "run_URL": "https://github.com/BucketSran/vaEVAS/actions/runs/40384473617",
+      "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/ci-40384473617",
+      "maintenance": {
+        "declared_summary": "Ran 547 tests; failures=1, errors=3, skipped=34",
+        "counted_method_rows": 547,
+        "method_outcomes": {
+          "passed": 511,
+          "error": 1,
+          "failed": 1,
+          "skipped": 34
+        },
+        "error_subcases": 3,
+        "raw_log_sha256": "f2ec8ca040910fd239129445583ae76c4f1b667363ba68ce626bd172c4fd0ec6",
+        "note": "Three protocol subcase errors belong to one method, not three extra methods."
+      },
+      "admission": {
+        "valid": true,
+        "raw_successful": false,
+        "merge_allowed": false,
+        "differences": [
+          "expected exactly one matching trusted baseline context"
+        ],
+        "semantic_qualification": false,
+        "trusted_comparison": {
+          "valid": true,
+          "raw_successful": false,
+          "merge_allowed": false,
+          "differences": [
+            "expected exactly one matching trusted baseline context"
+          ],
+          "semantic_qualification": false
+        },
+        "transition": {
+          "proposal_evaluated": false,
+          "refresh_required": null,
+          "accepted": false,
+          "differences": []
+        },
+        "trust": {
+          "trusted_commit": "842bde7101164330fa03e7aee58b45d1789cbed1",
+          "code_path": "scripts/regression_gate.py",
+          "baseline_path": "evas/validation/baselines/regression-v1.json",
+          "code_sha256": "df028ac10ddecb10f870ce889342826b56789d83322394e62e10e5cbb9c0d654",
+          "transition_code_sha256": "df028ac10ddecb10f870ce889342826b56789d83322394e62e10e5cbb9c0d654",
+          "baseline_sha256": "481a9476da9fc54773762609cc84333e52709b2d9fc6058a875aa2952dfc3cfa",
+          "candidate_baseline": {
+            "evaluated": false,
+            "is_authority": false,
+            "path": "evas/validation/baselines/regression-v1.json"
+          },
+          "source": "event.pull_request.base.sha",
+          "default_branch": "main"
+        }
+      },
+      "note": "读取已有原始日志与产物，没有查询、watch 或轮询远端 CI。不得称全部 CI 通过。"
+    },
+    "E1": {
+      "status": "independent_evidence_and_mapping_review_accepted_trusted_registration_pending",
+      "decision": "见 E1_independent_decision，限定全部精确哈希。",
+      "remaining": [
+        "可信 context 授权与指针尚未创建",
+        "基线精确追加及 C1 激活尚未完成",
+        "维护修正未进入受审固定 head，也未获得本报告对该修正的验证"
+      ]
+    },
+    "adoption_order": [
+      "先审核精确 E1/context 决定",
+      "在普通 C0 下合入授权/指针",
+      "在普通 C0 下精确追加基线",
+      "最后激活 C1 并核对最终 main"
+    ],
+    "merge_allowed_by_this_review": false,
+    "scientific_qualification_granted": false,
+    "legacy_limits": "实际归档的科学方法为 2617 passed、423 failed、214 error、3 expected_failure；与 C0 的方法 outcome 逐项相同。637 非通过与 3 xfail 均保留，旧/新均无新增 setup skip。20 份独立候选未动。方法 outcome 不代表规范资格，六批及全部历史缺陷不在本轮宣告完成。",
+    "archive_availability_limit": "固定 E1 十文件及本地原始 CI 归档字节已独立核对并按本报告精确绑定接受；未联网验证 archive b63facf8154c32fdad8404d00918b44475fce160 的公开取回性，公开复现可用性未核验。"
+  },
+  "artifacts": {
+    "report": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/night-coordination/pr4-168a9d7a-astra-r1-20261027/review-report.json",
+    "summary": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/night-coordination/pr4-168a9d7a-astra-r1-20261027/summary.txt",
+    "reproduction_scripts": [
+      "scratch/probe_driver.py",
+      "scratch/baseline_probe.py",
+      "scratch/audit_evidence.py",
+      "scratch/maintenance_failures.py",
+      "scratch/ci_supplement_audit.py",
+      "scratch/e1_scope_audit.py"
+    ],
+    "raw_reports": [
+      "calibration-results.json",
+      "isolation-results.json",
+      "baseline-counterexamples.json",
+      "evidence-audit.json",
+      "interpreter-evidence.json",
+      "end-checks.json",
+      "maintenance-failures.json",
+      "ci-supplement-audit.json",
+      "e1-scope-audit.json",
+      "review-output-check.json"
+    ]
+  },
+  "E1_independent_decision": {
+    "accepted": true,
+    "decision": "accept_exact_E1_evidence_and_explicit_obligation_mapping",
+    "scope": "仅接受固定168a候选/CI40384473617的 E1 原始观察及指定7737条件映射，作为后续可信 context 登记的独立审核意见。",
+    "candidate": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+    "tree": "32034ffd54c8006ac13ff4d475aaf5313b6e436e",
+    "run": 40384473617,
+    "raw_sha256": "8f1ff97fe6c24dbb339fcac4f7b64c6c3ef98915b005b0711bd963c95ed74770",
+    "mapping_sha256": "72decd6082b3126157876e2c718ead5f1233e4aa15ce9605d3f0c0d30517de13",
+    "mapping_proof_sha256": "b33cb2ae7a912d8548dc5f281dde39bddb080c3c122de98a7606bdf7ad0bb28b",
+    "bundle_file_hashes": [
+      {
+        "name": "artifact_manifest",
+        "sha256": "8715cb2d2ed6e2bf198a501cda2287f8f3bbdd088b1372d18056f9d02bccedd6"
+      },
+      {
+        "name": "collector_manifest",
+        "sha256": "225b9b80d905436696a410e2a312cf1a4d415fe2b4771427f38ae4d93b602179"
+      },
+      {
+        "name": "composition_recipe",
+        "sha256": "d5fb84240f25fb749fc184bdde6df26ef9153210191d9b24470e62ba32ac5346"
+      },
+      {
+        "name": "dut_build",
+        "sha256": "942640320015f370b88fa758e72eb87e580a3700734bbdfba2441dfa0b03f5b0"
+      },
+      {
+        "name": "kernel_binary",
+        "sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe"
+      },
+      {
+        "name": "report.json",
+        "sha256": "8f1ff97fe6c24dbb339fcac4f7b64c6c3ef98915b005b0711bd963c95ed74770"
+      },
+      {
+        "name": "shard_reports",
+        "sha256": "b2ccad274de2c33311c7db89f9337955f98e77218e1ccd3911b407af075128eb"
+      },
+      {
+        "name": "snapshot_manifest",
+        "sha256": "8fb4d8a49e0d29113e81c383a4d830b80986a5dee9f0db9497e6ae686af4fd57"
+      },
+      {
+        "name": "stderr",
+        "sha256": "9810c08bbf6353c02132fce21ef0a3d2c617eee2f126b8d6c1596886bd56056d"
+      },
+      {
+        "name": "stdout",
+        "sha256": "4c777506d6382237741fbd371f2b847140e6515bdf2809bda085ec9982f06748"
+      }
+    ],
+    "bundle_name_hash_pairs_sha256": "051e3159089e21972802f6e8be69f92f1fcc004ae4a0f16b412cb0c270d4e110",
+    "D0_manifest_sha256": "5e9bf28ad121569a6975811f0b5ea9e60423e676e6dfcf88048948bfd19ba056",
+    "kernel_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+    "criteria_id": "f54a2eac6238fa60cd4bc71b5aa74a6717077ad2cc9a8c8b25b4c2ca2880c625",
+    "basis": [
+      "三类检测器修改的直接源码及独立数值/诊断合同审查",
+      "22 校准控制、五个 BASE 漏检对照和实际 CI 中五个修正方法的原 outcome 保持",
+      "十文件与原始 CI 归档、D0/kernel/profile/collector 及完整输入字节绑定",
+      "7737 旧条件完整一一对应；74 机械变化和 3 个完整坏叶相同的修正负控逐项核对"
+    ],
+    "scientific_qualification_granted": false,
+    "merge_authorized": false,
+    "trusted_context_authorization_created": false,
+    "pending_preview_unchanged": {
+      "status": "pending",
+      "semantic_status": "pending"
+    },
+    "does_not_cover": [
+      "未冻结/未提交的 Grok 两测试修正或任何新 head",
+      "所有方法的普遍科学有效性或 EVAS 新支持资格",
+      "维护检查全通过或合入许可"
+    ],
+    "required_followup": "主控按现有 C0 授权/指针、精确基线追加、最后 C1 激活顺序推进；先解决固定候选的维护发现，后续变更按实际输入身份判定证据复用范围。"
+  },
+  "same_round_updates": {
+    "initial_pre_CI_report": "scratch/pre-ci-draft-review-report.json",
+    "initial_report_status": "superseded draft; not final approval",
+    "reason": "用户在交付前补充同一固定候选的真实 CI 和 E1 材料；本轮原地更新，不增加审查轮次。",
+    "worker_repair_status": "用户报告仅在 worker 专属 scratch；未读取或认可其新修正，不将其视为固定候选已修。"
+  }
+}

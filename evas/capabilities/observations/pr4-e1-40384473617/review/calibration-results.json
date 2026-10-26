@@ -1,0 +1,383 @@
+{
+  "mode": "calibration",
+  "python": "3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]",
+  "testsRun": 22,
+  "outer_success": true,
+  "failures": [],
+  "errors": [],
+  "skipped": [],
+  "rows": [
+    {
+      "id": "test_detector_controls.DetectorControls.test_bound_step_0_drop_initial",
+      "outer_status": "passed",
+      "observation": {
+        "family": "BoundStep",
+        "method": "test_bound_caps_actual_nonlinear_integration_segments",
+        "mode": "drop_initial",
+        "expected_reject": true,
+        "observed_failures": 0,
+        "observed_errors": 1,
+        "request_count": 1,
+        "assertion_denominator": 1
+      }
+    },
+    {
+      "id": "test_detector_controls.DetectorControls.test_bound_step_0_identity",
+      "outer_status": "passed",
+      "observation": {
+        "family": "BoundStep",
+        "method": "test_bound_caps_actual_nonlinear_integration_segments",
+        "mode": "identity",
+        "expected_reject": false,
+        "observed_failures": 0,
+        "observed_errors": 0,
+        "request_count": 1,
+        "assertion_denominator": 1
+      }
+    },
+    {
+      "id": "test_detector_controls.DetectorControls.test_bound_step_0_wrong_voltage",
+      "outer_status": "passed",
+      "observation": {
+        "family": "BoundStep",
+        "method": "test_bound_caps_actual_nonlinear_integration_segments",
+        "mode": "wrong_voltage",
+        "expected_reject": true,
+        "observed_failures": 1,
+        "observed_errors": 0,
+        "request_count": 1,
+        "assertion_denominator": 1
+      }
+    },
+    {
+      "id": "test_detector_controls.DetectorControls.test_bound_step_1_identity",
+      "outer_status": "passed",
+      "observation": {
+        "family": "BoundStep",
+        "method": "test_sampled_clock_activation_preserves_physics_and_caps_inner_segments",
+        "mode": "identity",
+        "expected_reject": false,
+        "observed_failures": 0,
+        "observed_errors": 0,
+        "request_count": 2,
+        "assertion_denominator": 1
+      }
+    },
+    {
+      "id": "test_detector_controls.DetectorControls.test_bound_step_1_wrong_times",
+      "outer_status": "passed",
+      "observation": {
+        "family": "BoundStep",
+        "method": "test_sampled_clock_activation_preserves_physics_and_caps_inner_segments",
+        "mode": "wrong_times",
+        "expected_reject": true,
+        "observed_failures": 0,
+        "observed_errors": 1,
+        "request_count": 1,
+        "assertion_denominator": 1
+      }
+    },
+    {
+      "id": "test_detector_controls.DetectorControls.test_bound_step_1_wrong_voltage",
+      "outer_status": "passed",
+      "observation": {
+        "family": "BoundStep",
+        "method": "test_sampled_clock_activation_preserves_physics_and_caps_inner_segments",
+        "mode": "wrong_voltage",
+        "expected_reject": true,
+        "observed_failures": 1,
+        "observed_errors": 0,
+        "request_count": 1,
+        "assertion_denominator": 1
+      }
+    },
+    {
+      "id": "test_detector_controls.DetectorControls.test_deferred_exact_mutant",
+      "outer_status": "passed",
+      "observation": {
+        "family": "DeferredRdist",
+        "mode": "exact_mutant",
+        "expected_reject": true,
+        "observed_failures": 3,
+        "observed_errors": 0,
+        "assertion_denominator": 3,
+        "removed_predicates": [
+          "If(test=BoolOp(op=Or(), values=[Compare(left=Attribute(value=Name(id='value', ctx=Load()), attr='op', ctx=Load()), ops=[NotEq()], comparators=[Constant(value='unsupported_system_call')]), Compare(left=Attribute(value=Name(id='value', ctx=Load()), attr='function', ctx=Load()), ops=[NotEq()], comparators=[Constant(value='rdist_normal')]), UnaryOp(op=Not(), operand=Call(func=Name(id='sequence', ctx=Load()), args=[Attribute(value=Name(id='value', ctx=Load()), attr='args', ctx=Load())], keywords=[])), Compare(left=Call(func=Name(id='len', ctx=Load()), args=[Attribute(value=Name(id='value', ctx=Load()), attr='args', ctx=Load())], keywords=[]), ops=[NotEq()], comparators=[Constant(value=2)]), UnaryOp(op=Not(), operand=Call(func=Name(id='all', ctx=Load()), args=[GeneratorExp(elt=Call(func=Name(id='isinstance', ctx=Load()), args=[Name(id='argument', ctx=Load()), Name(id='_EXPRESSIONS', ctx=Load())], keywords=[]), generators=[comprehension(target=Name(id='argument', ctx=Store()), iter=Attribute(value=Name(id='value', ctx=Load()), attr='args', ctx=Load()), ifs=[], is_async=0)])], keywords=[]))]), body=[Expr(value=Call(func=Name(id='fail', ctx=Load()), args=[Constant(value='invalid deferred system function signature')], keywords=[]))], orelse=[])",
+          "If(test=BoolOp(op=Or(), values=[Compare(left=Name(id='owner', ctx=Load()), ops=[Is()], comparators=[Constant(value=None)]), Compare(left=Attribute(value=Name(id='state', ctx=Load()), attr='kind', ctx=Load()), ops=[NotEq()], comparators=[Constant(value='integer')]), Compare(left=Attribute(value=Name(id='state', ctx=Load()), attr='instance', ctx=Load()), ops=[NotEq()], comparators=[Attribute(value=Subscript(value=Name(id='procedures', ctx=Load()), slice=Name(id='owner', ctx=Load()), ctx=Load()), attr='instance', ctx=Load())]), BoolOp(op=And(), values=[Name(id='active_calls', ctx=Load()), UnaryOp(op=Not(), operand=Name(id='call_argument', ctx=Load()))])]), body=[Expr(value=Call(func=Name(id='fail', ctx=Load()), args=[Constant(value='system function seed requires same-instance integer state outside a function call')], keywords=[]))], orelse=[])"
+        ]
+      }
+    },
+    {
+      "id": "test_detector_controls.DetectorControls.test_deferred_original",
+      "outer_status": "passed",
+      "observation": {
+        "family": "DeferredRdist",
+        "mode": "original",
+        "expected_reject": false,
+        "observed_failures": 0,
+        "observed_errors": 0,
+        "assertion_denominator": 3,
+        "removed_predicates": []
+      }
+    },
+    {
+      "id": "test_detector_controls.DetectorControls.test_source_math_0_correct",
+      "outer_status": "passed",
+      "observation": {
+        "family": "SourceMath",
+        "method": "test_product_contains_independent_decimal_root_in_reported_box",
+        "mode": "correct",
+        "request_sha256": [
+          "9e28ba987c0d34814e0ee91ba8185fcec7c299e3d101acd70d121823f062285b",
+          "20334a10de275f28c012158e5c77c0ce257fa7765afe4ab074534936dec28d3d",
+          "9401dce571b1d6ca910a4f37600986576dfedba5577e3e1604909ce390bc5ca7",
+          "9651fc61521cc41e3a5e63e6f06d64ca45c3b028b4b240d6567d7b2d091e1d2e",
+          "63ddb3c57cee90849a45bd51497aca9294cd149066906045992eb8623c8cba92",
+          "64614858ec9471b25e4605331c4ccc9f40889da4e3468a42c8bcec344fab1560"
+        ],
+        "expected_reject": false,
+        "observed_failures": 0,
+        "observed_errors": 0,
+        "assertion_denominator": 6
+      }
+    },
+    {
+      "id": "test_detector_controls.DetectorControls.test_source_math_0_correct_wide",
+      "outer_status": "passed",
+      "observation": {
+        "family": "SourceMath",
+        "method": "test_product_contains_independent_decimal_root_in_reported_box",
+        "mode": "correct_wide",
+        "request_sha256": [
+          "9e28ba987c0d34814e0ee91ba8185fcec7c299e3d101acd70d121823f062285b",
+          "20334a10de275f28c012158e5c77c0ce257fa7765afe4ab074534936dec28d3d",
+          "9401dce571b1d6ca910a4f37600986576dfedba5577e3e1604909ce390bc5ca7",
+          "9651fc61521cc41e3a5e63e6f06d64ca45c3b028b4b240d6567d7b2d091e1d2e",
+          "63ddb3c57cee90849a45bd51497aca9294cd149066906045992eb8623c8cba92",
+          "64614858ec9471b25e4605331c4ccc9f40889da4e3468a42c8bcec344fab1560"
+        ],
+        "expected_reject": true,
+        "observed_failures": 6,
+        "observed_errors": 0,
+        "assertion_denominator": 6
+      }
+    },
+    {
+      "id": "test_detector_controls.DetectorControls.test_source_math_0_lower_over",
+      "outer_status": "passed",
+      "observation": {
+        "family": "SourceMath",
+        "method": "test_product_contains_independent_decimal_root_in_reported_box",
+        "mode": "lower_over",
+        "request_sha256": [
+          "9e28ba987c0d34814e0ee91ba8185fcec7c299e3d101acd70d121823f062285b",
+          "20334a10de275f28c012158e5c77c0ce257fa7765afe4ab074534936dec28d3d",
+          "9401dce571b1d6ca910a4f37600986576dfedba5577e3e1604909ce390bc5ca7",
+          "9651fc61521cc41e3a5e63e6f06d64ca45c3b028b4b240d6567d7b2d091e1d2e",
+          "63ddb3c57cee90849a45bd51497aca9294cd149066906045992eb8623c8cba92",
+          "64614858ec9471b25e4605331c4ccc9f40889da4e3468a42c8bcec344fab1560"
+        ],
+        "expected_reject": true,
+        "observed_failures": 6,
+        "observed_errors": 0,
+        "assertion_denominator": 6
+      }
+    },
+    {
+      "id": "test_detector_controls.DetectorControls.test_source_math_0_lower_within",
+      "outer_status": "passed",
+      "observation": {
+        "family": "SourceMath",
+        "method": "test_product_contains_independent_decimal_root_in_reported_box",
+        "mode": "lower_within",
+        "request_sha256": [
+          "9e28ba987c0d34814e0ee91ba8185fcec7c299e3d101acd70d121823f062285b",
+          "20334a10de275f28c012158e5c77c0ce257fa7765afe4ab074534936dec28d3d",
+          "9401dce571b1d6ca910a4f37600986576dfedba5577e3e1604909ce390bc5ca7",
+          "9651fc61521cc41e3a5e63e6f06d64ca45c3b028b4b240d6567d7b2d091e1d2e",
+          "63ddb3c57cee90849a45bd51497aca9294cd149066906045992eb8623c8cba92",
+          "64614858ec9471b25e4605331c4ccc9f40889da4e3468a42c8bcec344fab1560"
+        ],
+        "expected_reject": false,
+        "observed_failures": 0,
+        "observed_errors": 0,
+        "assertion_denominator": 6
+      }
+    },
+    {
+      "id": "test_detector_controls.DetectorControls.test_source_math_0_upper_over",
+      "outer_status": "passed",
+      "observation": {
+        "family": "SourceMath",
+        "method": "test_product_contains_independent_decimal_root_in_reported_box",
+        "mode": "upper_over",
+        "request_sha256": [
+          "9e28ba987c0d34814e0ee91ba8185fcec7c299e3d101acd70d121823f062285b",
+          "20334a10de275f28c012158e5c77c0ce257fa7765afe4ab074534936dec28d3d",
+          "9401dce571b1d6ca910a4f37600986576dfedba5577e3e1604909ce390bc5ca7",
+          "9651fc61521cc41e3a5e63e6f06d64ca45c3b028b4b240d6567d7b2d091e1d2e",
+          "63ddb3c57cee90849a45bd51497aca9294cd149066906045992eb8623c8cba92",
+          "64614858ec9471b25e4605331c4ccc9f40889da4e3468a42c8bcec344fab1560"
+        ],
+        "expected_reject": true,
+        "observed_failures": 6,
+        "observed_errors": 0,
+        "assertion_denominator": 6
+      }
+    },
+    {
+      "id": "test_detector_controls.DetectorControls.test_source_math_0_upper_within",
+      "outer_status": "passed",
+      "observation": {
+        "family": "SourceMath",
+        "method": "test_product_contains_independent_decimal_root_in_reported_box",
+        "mode": "upper_within",
+        "request_sha256": [
+          "9e28ba987c0d34814e0ee91ba8185fcec7c299e3d101acd70d121823f062285b",
+          "20334a10de275f28c012158e5c77c0ce257fa7765afe4ab074534936dec28d3d",
+          "9401dce571b1d6ca910a4f37600986576dfedba5577e3e1604909ce390bc5ca7",
+          "9651fc61521cc41e3a5e63e6f06d64ca45c3b028b4b240d6567d7b2d091e1d2e",
+          "63ddb3c57cee90849a45bd51497aca9294cd149066906045992eb8623c8cba92",
+          "64614858ec9471b25e4605331c4ccc9f40889da4e3468a42c8bcec344fab1560"
+        ],
+        "expected_reject": false,
+        "observed_failures": 0,
+        "observed_errors": 0,
+        "assertion_denominator": 6
+      }
+    },
+    {
+      "id": "test_detector_controls.DetectorControls.test_source_math_0_wrong_wide",
+      "outer_status": "passed",
+      "observation": {
+        "family": "SourceMath",
+        "method": "test_product_contains_independent_decimal_root_in_reported_box",
+        "mode": "wrong_wide",
+        "request_sha256": [
+          "9e28ba987c0d34814e0ee91ba8185fcec7c299e3d101acd70d121823f062285b",
+          "20334a10de275f28c012158e5c77c0ce257fa7765afe4ab074534936dec28d3d",
+          "9401dce571b1d6ca910a4f37600986576dfedba5577e3e1604909ce390bc5ca7",
+          "9651fc61521cc41e3a5e63e6f06d64ca45c3b028b4b240d6567d7b2d091e1d2e",
+          "63ddb3c57cee90849a45bd51497aca9294cd149066906045992eb8623c8cba92",
+          "64614858ec9471b25e4605331c4ccc9f40889da4e3468a42c8bcec344fab1560"
+        ],
+        "expected_reject": true,
+        "observed_failures": 6,
+        "observed_errors": 0,
+        "assertion_denominator": 6
+      }
+    },
+    {
+      "id": "test_detector_controls.DetectorControls.test_source_math_1_correct",
+      "outer_status": "passed",
+      "observation": {
+        "family": "SourceMath",
+        "method": "test_multinode_certificate_uses_same_original_constraint_system",
+        "mode": "correct",
+        "request_sha256": [
+          "958e5491c16f66913026232f8d61b12502a472fb9fed7fe3a6a42b539e64046a"
+        ],
+        "expected_reject": false,
+        "observed_failures": 0,
+        "observed_errors": 0,
+        "assertion_denominator": 1
+      }
+    },
+    {
+      "id": "test_detector_controls.DetectorControls.test_source_math_1_correct_wide",
+      "outer_status": "passed",
+      "observation": {
+        "family": "SourceMath",
+        "method": "test_multinode_certificate_uses_same_original_constraint_system",
+        "mode": "correct_wide",
+        "request_sha256": [
+          "958e5491c16f66913026232f8d61b12502a472fb9fed7fe3a6a42b539e64046a"
+        ],
+        "expected_reject": true,
+        "observed_failures": 1,
+        "observed_errors": 0,
+        "assertion_denominator": 1
+      }
+    },
+    {
+      "id": "test_detector_controls.DetectorControls.test_source_math_1_lower_over",
+      "outer_status": "passed",
+      "observation": {
+        "family": "SourceMath",
+        "method": "test_multinode_certificate_uses_same_original_constraint_system",
+        "mode": "lower_over",
+        "request_sha256": [
+          "958e5491c16f66913026232f8d61b12502a472fb9fed7fe3a6a42b539e64046a"
+        ],
+        "expected_reject": true,
+        "observed_failures": 1,
+        "observed_errors": 0,
+        "assertion_denominator": 1
+      }
+    },
+    {
+      "id": "test_detector_controls.DetectorControls.test_source_math_1_lower_within",
+      "outer_status": "passed",
+      "observation": {
+        "family": "SourceMath",
+        "method": "test_multinode_certificate_uses_same_original_constraint_system",
+        "mode": "lower_within",
+        "request_sha256": [
+          "958e5491c16f66913026232f8d61b12502a472fb9fed7fe3a6a42b539e64046a"
+        ],
+        "expected_reject": false,
+        "observed_failures": 0,
+        "observed_errors": 0,
+        "assertion_denominator": 1
+      }
+    },
+    {
+      "id": "test_detector_controls.DetectorControls.test_source_math_1_upper_over",
+      "outer_status": "passed",
+      "observation": {
+        "family": "SourceMath",
+        "method": "test_multinode_certificate_uses_same_original_constraint_system",
+        "mode": "upper_over",
+        "request_sha256": [
+          "958e5491c16f66913026232f8d61b12502a472fb9fed7fe3a6a42b539e64046a"
+        ],
+        "expected_reject": true,
+        "observed_failures": 1,
+        "observed_errors": 0,
+        "assertion_denominator": 1
+      }
+    },
+    {
+      "id": "test_detector_controls.DetectorControls.test_source_math_1_upper_within",
+      "outer_status": "passed",
+      "observation": {
+        "family": "SourceMath",
+        "method": "test_multinode_certificate_uses_same_original_constraint_system",
+        "mode": "upper_within",
+        "request_sha256": [
+          "958e5491c16f66913026232f8d61b12502a472fb9fed7fe3a6a42b539e64046a"
+        ],
+        "expected_reject": false,
+        "observed_failures": 0,
+        "observed_errors": 0,
+        "assertion_denominator": 1
+      }
+    },
+    {
+      "id": "test_detector_controls.DetectorControls.test_source_math_1_wrong_wide",
+      "outer_status": "passed",
+      "observation": {
+        "family": "SourceMath",
+        "method": "test_multinode_certificate_uses_same_original_constraint_system",
+        "mode": "wrong_wide",
+        "request_sha256": [
+          "958e5491c16f66913026232f8d61b12502a472fb9fed7fe3a6a42b539e64046a"
+        ],
+        "expected_reject": true,
+        "observed_failures": 1,
+        "observed_errors": 0,
+        "assertion_denominator": 1
+      }
+    }
+  ]
+}

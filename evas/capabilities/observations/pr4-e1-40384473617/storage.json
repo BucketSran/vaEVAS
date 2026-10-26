@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "bundle_path": "evas/capabilities/observations/pr4-e1-40384473617/bundle",
+  "materializer_manifest_schema": 2,
+  "kernel_binary": {
+    "encoding": "gzip",
+    "decoded_bytes": 105862328,
+    "decoded_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe"
+  },
+  "files": [
+    {
+      "name": "artifact_manifest",
+      "stored_sha256": "8715cb2d2ed6e2bf198a501cda2287f8f3bbdd088b1372d18056f9d02bccedd6",
+      "stored_bytes": 931,
+      "materialized_sha256": "8715cb2d2ed6e2bf198a501cda2287f8f3bbdd088b1372d18056f9d02bccedd6",
+      "materialized_bytes": 931,
+      "encoding": "identity"
+    },
+    {
+      "name": "collector_manifest",
+      "stored_sha256": "225b9b80d905436696a410e2a312cf1a4d415fe2b4771427f38ae4d93b602179",
+      "stored_bytes": 356,
+      "materialized_sha256": "225b9b80d905436696a410e2a312cf1a4d415fe2b4771427f38ae4d93b602179",
+      "materialized_bytes": 356,
+      "encoding": "identity"
+    },
+    {
+      "name": "composition_recipe",
+      "stored_sha256": "d5fb84240f25fb749fc184bdde6df26ef9153210191d9b24470e62ba32ac5346",
+      "stored_bytes": 620,
+      "materialized_sha256": "d5fb84240f25fb749fc184bdde6df26ef9153210191d9b24470e62ba32ac5346",
+      "materialized_bytes": 620,
+      "encoding": "identity"
+    },
+    {
+      "name": "dut_build",
+      "stored_sha256": "942640320015f370b88fa758e72eb87e580a3700734bbdfba2441dfa0b03f5b0",
+      "stored_bytes": 832,
+      "materialized_sha256": "942640320015f370b88fa758e72eb87e580a3700734bbdfba2441dfa0b03f5b0",
+      "materialized_bytes": 832,
+      "encoding": "identity"
+    },
+    {
+      "name": "kernel_binary",
+      "stored_sha256": "6b6c592c12de213e6df8b91d84fd325bf6b228ad512f0e3107157489812d0065",
+      "stored_bytes": 22916941,
+      "materialized_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+      "materialized_bytes": 105862328,
+      "encoding": "gzip"
+    },
+    {
+      "name": "report.json",
+      "stored_sha256": "8f1ff97fe6c24dbb339fcac4f7b64c6c3ef98915b005b0711bd963c95ed74770",
+      "stored_bytes": 41453345,
+      "materialized_sha256": "8f1ff97fe6c24dbb339fcac4f7b64c6c3ef98915b005b0711bd963c95ed74770",
+      "materialized_bytes": 41453345,
+      "encoding": "identity"
+    },
+    {
+      "name": "shard_reports",
+      "stored_sha256": "b2ccad274de2c33311c7db89f9337955f98e77218e1ccd3911b407af075128eb",
+      "stored_bytes": 44733209,
+      "materialized_sha256": "b2ccad274de2c33311c7db89f9337955f98e77218e1ccd3911b407af075128eb",
+      "materialized_bytes": 44733209,
+      "encoding": "identity"
+    },
+    {
+      "name": "snapshot_manifest",
+      "stored_sha256": "8fb4d8a49e0d29113e81c383a4d830b80986a5dee9f0db9497e6ae686af4fd57",
+      "stored_bytes": 12757051,
+      "materialized_sha256": "8fb4d8a49e0d29113e81c383a4d830b80986a5dee9f0db9497e6ae686af4fd57",
+      "materialized_bytes": 12757051,
+      "encoding": "identity"
+    },
+    {
+      "name": "stderr",
+      "stored_sha256": "9810c08bbf6353c02132fce21ef0a3d2c617eee2f126b8d6c1596886bd56056d",
+      "stored_bytes": 1667192,
+      "materialized_sha256": "9810c08bbf6353c02132fce21ef0a3d2c617eee2f126b8d6c1596886bd56056d",
+      "materialized_bytes": 1667192,
+      "encoding": "identity"
+    },
+    {
+      "name": "stdout",
+      "stored_sha256": "4c777506d6382237741fbd371f2b847140e6515bdf2809bda085ec9982f06748",
+      "stored_bytes": 11482,
+      "materialized_sha256": "4c777506d6382237741fbd371f2b847140e6515bdf2809bda085ec9982f06748",
+      "materialized_bytes": 11482,
+      "encoding": "identity"
+    }
+  ],
+  "scientific_qualification": false,
+  "codec_adoption": "pending implementation increment verification and independent review"
+}

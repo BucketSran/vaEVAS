@@ -1,0 +1,56 @@
+{
+  "base": "842bde7101164330fa03e7aee58b45d1789cbed1",
+  "calibration_source": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+  "scope": "Five known false-negative controls against original detector methods; all DUT execution remains forbidden",
+  "python": "3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]",
+  "rows": [
+    {
+      "id": "test_source_math_0_wrong_wide",
+      "testsRun": 1,
+      "failures": [
+        "Traceback (most recent call last):\n  File \"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/night-coordination/pr4-168a9d7a-astra-r1-20261027/scratch/candidate/evas/validation/checker_calibration/test_detector_controls.py\", line 226, in test\n    self.math_control(method, mode)\n  File \"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/night-coordination/pr4-168a9d7a-astra-r1-20261027/scratch/candidate/evas/validation/checker_calibration/test_detector_controls.py\", line 117, in math_control\n    self.assertEqual(len(result.failures), expected_count if reject else 0, result.failures)\nAssertionError: 0 != 6 : []\n"
+      ],
+      "errors": [],
+      "skipped": []
+    },
+    {
+      "id": "test_source_math_1_wrong_wide",
+      "testsRun": 1,
+      "failures": [
+        "Traceback (most recent call last):\n  File \"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/night-coordination/pr4-168a9d7a-astra-r1-20261027/scratch/candidate/evas/validation/checker_calibration/test_detector_controls.py\", line 226, in test\n    self.math_control(method, mode)\n  File \"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/night-coordination/pr4-168a9d7a-astra-r1-20261027/scratch/candidate/evas/validation/checker_calibration/test_detector_controls.py\", line 117, in math_control\n    self.assertEqual(len(result.failures), expected_count if reject else 0, result.failures)\nAssertionError: 0 != 1 : []\n"
+      ],
+      "errors": [],
+      "skipped": []
+    },
+    {
+      "id": "test_deferred_exact_mutant",
+      "testsRun": 1,
+      "failures": [
+        "Traceback (most recent call last):\n  File \"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/night-coordination/pr4-168a9d7a-astra-r1-20261027/scratch/candidate/evas/validation/checker_calibration/test_detector_controls.py\", line 249, in _deferred_mutant\n    self.deferred_control(True)\n  File \"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/night-coordination/pr4-168a9d7a-astra-r1-20261027/scratch/candidate/evas/validation/checker_calibration/test_detector_controls.py\", line 167, in deferred_control\n    self.assertEqual(len(result.failures), 3 if mutant else 0, result.failures)\nAssertionError: 0 != 3 : []\n"
+      ],
+      "errors": [],
+      "skipped": []
+    },
+    {
+      "id": "test_bound_step_0_drop_initial",
+      "testsRun": 1,
+      "failures": [
+        "Traceback (most recent call last):\n  File \"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/night-coordination/pr4-168a9d7a-astra-r1-20261027/scratch/candidate/evas/validation/checker_calibration/test_detector_controls.py\", line 232, in test\n    self.bound_control(method, mode)\n  File \"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/night-coordination/pr4-168a9d7a-astra-r1-20261027/scratch/candidate/evas/validation/checker_calibration/test_detector_controls.py\", line 217, in bound_control\n    self.assertEqual(len(result.errors), 1)\nAssertionError: 0 != 1\n"
+      ],
+      "errors": [],
+      "skipped": []
+    },
+    {
+      "id": "test_bound_step_1_wrong_times",
+      "testsRun": 1,
+      "failures": [
+        "Traceback (most recent call last):\n  File \"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/night-coordination/pr4-168a9d7a-astra-r1-20261027/scratch/candidate/evas/validation/checker_calibration/test_detector_controls.py\", line 232, in test\n    self.bound_control(method, mode)\n  File \"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/night-coordination/pr4-168a9d7a-astra-r1-20261027/scratch/candidate/evas/validation/checker_calibration/test_detector_controls.py\", line 217, in bound_control\n    self.assertEqual(len(result.errors), 1)\nAssertionError: 0 != 1\n"
+      ],
+      "errors": [],
+      "skipped": []
+    }
+  ],
+  "expected_outer_failures": 5,
+  "observed_outer_failures": 5,
+  "observed_outer_errors": 0
+}
