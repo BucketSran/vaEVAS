@@ -1,0 +1,3 @@
+# R10b scoped local discovery
+
+Actual local Python3.12.13 TestLoader construction refreshes only full scripts/tests after completing R10 identity selection for all three historical finding protocols. The 487 methods are discovery, not test-body execution or original CI execution. Other23 receipts remain fixed at f666c97c10f5c8046865b60f499da96ee25d967e. Original history data and strict history_binding are unchanged; finding alignment remains pending. The patch/raw commit reconstruct source from public5e674bd8beeb8f89f678caf971c31a4ba29e45d5. No semantic qualification or Spectre result is granted.
