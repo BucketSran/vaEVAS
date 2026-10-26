@@ -425,6 +425,58 @@ class RegistrationLoaderIntegrationTests(unittest.TestCase):
         self.assertEqual(facts['trust']['registration']['trusted_commit'], self.trusted)
         self.assertFalse(facts['semantic_qualification'])
 
+    def test_preauthorized_shards_must_bind_inputs_and_actual_shard_labels(self):
+        spec = importlib.util.spec_from_file_location('registration_evidence_control',
+                                                       ROOT / 'scripts/ci_evidence.py')
+        ci_evidence = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(ci_evidence)
+        fx = self.fixtures
+        for merged in (False, True):
+            for mode in ('coherent', 'input_identity', 'shard_label'):
+                with self.subTest(merged=merged, mode=mode):
+                    def alter(shard, entries):
+                        if shard['shard_index'] != shard['shard_count'] - 1:
+                            return
+                        if mode == 'input_identity':
+                            shard['input_identity'] = '0' * 64
+                        elif mode == 'shard_label':
+                            identity = shard['source_identity']['execution_identity']
+                            identity['environment']['shard'] = '0-of-2' if merged else '1-of-1'
+                            identity['key'] = fx.api.digest(dict(version=3, report_schema_version=3,
+                                files=entries, environment=identity['environment']))
+                            fx.bind_input_identity(shard)
+
+                    fixture = fx.make_fixture(merged=merged, alter_shard=alter)
+                    shards = [json.loads(raw) for raw in json.loads(fixture['blobs']['shard_reports'])]
+                    for shard in shards:
+                        identity = shard['source_identity']['execution_identity']
+                        label = str(shard['shard_index']) + '-of-' + str(shard['shard_count'])
+                        malformed_input = mode == 'input_identity' and shard is shards[-1]
+                        if malformed_input:
+                            with self.assertRaisesRegex(ValueError, 'input_identity'):
+                                ci_evidence.bound_report(shard, identity, label)
+                        else:
+                            ci_evidence.bound_report(shard, identity, label)
+                    self.write(BASELINE_PATH, fx.raw(fixture['baseline']))
+                    self.write(self.review_path, fx.raw(fixture['review']))
+                    self.trusted = self.commit('preauthorize exact synthetic ' + mode)
+                    self.write(BASELINE_PATH, fx.raw(fixture['head']))
+                    self.commit('append exact synthetic context ' + mode)
+                    self.report_path.write_bytes(fixture['current_bytes'])
+                    (self.bundle / 'report.json').write_bytes(fixture['e1_bytes'])
+                    for role, raw in fixture['blobs'].items():
+                        (self.bundle / role).write_bytes(raw)
+                    result = self.call('pull_request', None, '--registration-bundle', str(self.bundle))
+                    facts = json.loads(result.stdout)
+                    self.assertEqual(result.returncode, 0 if mode == 'coherent' else 1,
+                                     result.stdout + result.stderr)
+                    self.assertEqual(facts['merge_allowed'], mode == 'coherent', facts)
+                    if mode == 'coherent':
+                        self.assertTrue(facts['transition']['registration'])
+                    else:
+                        expected = 'shard input_identity' if mode == 'input_identity' else 'shard environment label'
+                        self.assertIn(expected, ' '.join(facts['differences']))
+
     def test_head_registration_code_cannot_execute_or_authorize_append(self):
         marker = self.root / 'head-code-executed'
         self.write(self.registration_path,

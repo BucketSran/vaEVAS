@@ -25,6 +25,11 @@ def raw(value):
     return json.dumps(value, indent=2, sort_keys=True).encode() + b'\n'
 
 
+def bind_input_identity(value):
+    value['input_identity'] = api.digest({key: value[key] for key in
+                                         ('metadata', 'source_identity', 'selected_test_ids')})
+
+
 def condition(identity, outcome, opaque=False, criteria='C0'):
     site = {'module': 'synthetic_fixture', 'line': 10, 'source_sha256': h(criteria)}
     value = dict(id=identity, phase='test', kind='assertion', site=site,
@@ -76,6 +81,7 @@ def report(criteria='C0', collector='I0', correction=False, opaque_count=58):
                                invocation={'pattern': 'test_*.py', 'modules': []}),
                  source_identity=dict(criteria_files=criteria_files, dut_files=dut_files,
                                       kernel_sha256=api.raw_digest(kernel), execution_identity=identity))
+    bind_input_identity(value)
     return value, entries, collector_manifest, kernel
 
 
@@ -110,7 +116,7 @@ class Store:
 
 def make_fixture(correction=False, opaque_count=58, alter_e1=None, alter_entry=None,
                  alter_auth=None, alter_baseline=None, new_criteria='C1', new_collector='I1',
-                 merged=False, alter_blobs=None):
+                 merged=False, alter_blobs=None, alter_shard=None):
     current, _, _, _ = report(opaque_count=opaque_count)
     e1, entries, collector, kernel = report(new_criteria, new_collector, correction, opaque_count)
     shards = [e1]
@@ -120,8 +126,7 @@ def make_fixture(correction=False, opaque_count=58, alter_e1=None, alter_entry=N
         for index in range(2):
             shard = copy.deepcopy(e1)
             shard.update(discovered_test_ids=names, selected_test_ids=[names[index]],
-                         assignment=[[name] for name in names], shard_count=2, shard_index=index,
-                         input_identity=h('synthetic part ' + str(index)))
+                         assignment=[[name] for name in names], shard_count=2, shard_index=index)
             if index == 1:
                 shard.update(failures=0, successful=True,
                              tests=[dict(id=names[1], outcome='passed', seconds=0.1,
@@ -130,6 +135,9 @@ def make_fixture(correction=False, opaque_count=58, alter_e1=None, alter_entry=N
             identity['environment']['shard'] = str(index) + '-of-2'
             identity['key'] = api.digest(dict(version=3, report_schema_version=3,
                                                files=entries, environment=identity['environment']))
+            bind_input_identity(shard)
+            if alter_shard:
+                alter_shard(shard, entries)
             shards.append(shard)
         e1 = copy.deepcopy(shards[0])
         e1.update(merged=True, shard_index=None, selected_test_ids=names, tests_run=2,
@@ -138,6 +146,8 @@ def make_fixture(correction=False, opaque_count=58, alter_e1=None, alter_entry=N
                           'selected_test_ids', 'metadata', 'input_identity', 'source_identity')} for shard in shards])
         e1['source_identity'] = {k: v for k, v in e1['source_identity'].items() if k != 'execution_identity'}
         e1.pop('input_identity')
+    elif alter_shard:
+        alter_shard(e1, entries)
     if alter_e1:
         alter_e1(e1)
     baseline = gate.propose_baseline(current, {'fixture': 'C0:D0 observed provenance'}, REVIEW)

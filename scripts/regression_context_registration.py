@@ -251,6 +251,12 @@ def evidence(auth, blobs, gate, e1, entry, current_subject):
             equal(shard[key], e1[key], 'shard ' + key)
         public = lambda source: {k: v for k, v in source.items() if k != 'execution_identity'}
         equal(public(shard['source_identity']), public(e1['source_identity']), 'shard public scientific source')
+        expected_input = digest({key: shard[key] for key in
+                                 ('metadata', 'source_identity', 'selected_test_ids')})
+        equal(shard.get('input_identity'), expected_input, 'shard input_identity')
+        environment = shard['source_identity']['execution_identity']['environment']
+        expected_shard = str(shard['shard_index']) + '-of-' + str(shard['shard_count'])
+        equal(environment.get('shard'), expected_shard, 'shard environment label')
     if e1.get('merged'):
         for key in ('tests', 'fixtures', 'setup_skipped_test_ids'):
             equal([item for shard in shards for item in shard[key]], e1[key], 'merged raw ' + key)

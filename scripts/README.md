@@ -367,6 +367,8 @@ python3 -B scripts/regression_gate.py compare runs/<task>/complete.json --repo .
 `collector_manifest`、`artifact_manifest`、`stdout`、`stderr` 和 `shard_reports`。
 各文件的原始 bytes 由先前可信主线的授权记录锁定。完整快照、所有分片、实际
 DUT/kernel、环境及旧新义务映射均参与核验；夹具测试不能替代这些实际执行。
+每个原始分片的 `input_identity` 须与实际元数据、来源和所选方法的摘要一致，
+执行环境中的分片标签须匹配该报告的分片序号及总数；精确预授权不能豁免这两项检查。
 
 登记顺序是先在已审主线安装校验器，再取得新判据/旧 DUT 的完整证据并独审，
 将精确授权追加到既有 `regression-v1.review.json` 的
