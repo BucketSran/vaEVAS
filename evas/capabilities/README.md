@@ -55,5 +55,68 @@
 python3 -B evas/capabilities/registry.py
 python3 -B evas/capabilities/render.py
 python3 -B evas/capabilities/render.py --check
-python3 -B -m unittest discover -s evas/capabilities -p 'test_registry.py' -v
+python3 -B -m unittest discover -s evas/capabilities -p 'test_*.py' -v
 ```
+
+## 资产、实际方法与历史来源
+
+`data/registry.json` 的 `current` 选择当前版本，`object_parts` 只把同一逻辑登记拆成文件。
+`asset_catalog.py` 通过原 Registry 解析资产、方法、入口及历史记录，沿用同一内容绑定规则。
+文件级 GUARDS、实际发现方法和语义资格分别保存。生成方法保留工厂定义身份，
+原生 `unittest.skip` 包装器保留跳过声明及原方法定义；发现过程不执行测试体或 `setUp`。
+
+`scripts/capabilities/observe_assets.py` 独立观察 Git 跟踪的普通文件，保留所有观察行。
+范围策略分别列出 EVAS 资产、其他组件所有的文件和无法分类的路径。
+跨组件桥接必须登记具体路径及来源，未知目录会使对账失败。
+资产职责和消费者关系允许明确待审；没有发现调用者不能据此断言文件已无用途。
+
+普通源码使用整文件 SHA-256。目录元数据、派生视图及回归基线使用
+`external-input-manifest`，由实际执行输入清单绑定其本次字节。
+把目录自身的最新文件哈希写回目录会形成自引用，不能用这种方式认证当前目录。
+独立资产观察与回归 `ci_input_key` 的关系仍须按各自协议核对，不能凭两个摘要推定相等。
+
+历史审计原文保存在同仓库的固定提交
+[`3b1c193817b91a85cff8ea150b9710d9ba37d86c`](https://github.com/BucketSran/vaEVAS/tree/3b1c193817b91a85cff8ea150b9710d9ba37d86c/evas/capabilities/history)。
+它保留原裁决和执行范围，不授予当前方法资格。`source_reader.py` 仅读取固定 Git 对象，
+不自动取回来源，也不导入归档代码。缺少对象时可显式取回该提交：
+
+```sh
+git fetch origin 3b1c193817b91a85cff8ea150b9710d9ba37d86c
+```
+
+后续[实际 CI 观察](https://github.com/BucketSran/vaEVAS/tree/cff75acb26ed43088c26b750cdad0abaf6c4c237/evas/capabilities/observations/ci-40274116394)
+在同一归档分支的固定子提交保留 Python 入口发现、资产观察和 Rust 原生 listing 原文。
+该检查点只完成目录构造，整轮 CI 的维护夹具失败仍保留；它不替代最终目录对账或语义验收。
+读取该来源需要本地 Git 对象库包含 `cff75acb26ed43088c26b750cdad0abaf6c4c237`。
+
+仅加载 Registry 会校验历史记录的声明结构。消费原裁决前，必须逐条调用
+`registry.catalog().read_history(record)`，核对原文的行、范围、ID、裁决及源码绑定。
+历史源码未匹配当前方法时保留具体原因，不能把模块匹配当作方法匹配。
+追溯矩阵的显式目录入口同时执行这些核对：
+
+```sh
+python3 -B scripts/traceability.py --catalog-data evas/capabilities/data
+python3 -B scripts/traceability.py --catalog-data evas/capabilities/data --check
+```
+
+Rust 方法使用实际 Cargo 测试二进制的原生 listing，与 Python 方法分别计数。
+`scripts/capabilities/discover_rust.py` 保留工具链、目标、二进制哈希和原始输出，
+listing 不表示测试体执行或逐函数源码归属。Rust job 原有完整测试仍独立执行。
+`--require-catalog` 按 workflow 固定的 `--listing-profile` 核对完整 target 集合、
+Rust 输入、工具链、构建配置、测试 ID 及 ignored 状态；未知 profile 和缺少来源均失败。
+原 listing 通过同一 Registry 的固定 Git 来源读取。本次与原观察的 binary SHA 分别保留，
+不因源码和工具链相同就假设跨次构建字节必然相同。
+
+`scripts/capabilities/generate_catalog.py` 从干净的源码导出、独立资产观察及逐入口发现收据
+重生目录，不执行已发现的测试。输入配置指定 `source_root`、`asset_receipt`、`discoveries`、
+`archive_repository` 和固定 `archive_commit`；`rust_listings` 单独指定 profile 及完整原始收据。
+`discovery_source_locators` 和 `source_repositories` 描述可取得的固定来源，不用本机路径假装已发布。
+
+```sh
+python3 -B scripts/capabilities/generate_catalog.py --config selected-inputs.json --output runs/catalog-build
+```
+
+检查输出的 `generation-report.json`，再从 `tree/` 选择本批所属文件。不要整目录覆盖其他作者的改动。
+`previous_data_dir` 指定要保留的旧版本，默认使用源码导出中的当前登记；`identity_moves` 显式记录移动，
+不从相似名称猜测历史身份。普通来源漂移、重复观察或旧 ID/版本内容冲突均会拒绝生成。
+重生元数据后，还须对最终实际输入重新观察并运行 CI 强制对账。

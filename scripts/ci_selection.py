@@ -34,6 +34,8 @@ JOB_FLAGS = {
     'package': ('package',),
     'benchmark': ('benchmark',),
 }
+# Inventory construction/reconciliation is required for every declared CI mode.
+ALWAYS_REQUIRED_JOBS = ('catalog-inventory',)
 CHILD_RESULTS = {'package': ('install_result',),
                  'benchmark': ('identity_result', 'first_batch_result')}
 MAINTENANCE_FILES = {
@@ -403,6 +405,9 @@ def execution_plan(repo, paths, required, stage, *, iteration_paths=None):
 
 def gate_errors(needs):
     errors = []
+    for job in ALWAYS_REQUIRED_JOBS:
+        if needs.get(job, {}).get('result') != 'success':
+            errors.append(f'{job}: always required success, got {needs.get(job, {}).get("result")!r}')
     selection = needs.get('selection', {})
     if selection.get('result') != 'success':
         errors.append('selection did not succeed')

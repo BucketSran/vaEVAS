@@ -324,6 +324,7 @@ class CoverageGate(unittest.TestCase):
         needs = {
             "selection": {"result": "success", "outputs": outputs},
             "fast-checks": {"result": "success"},
+            "catalog-inventory": {"result": "success"},
             "regression-coverage": {"result": "success"},
         }
         for job, selectors in ci.JOB_FLAGS.items():
@@ -331,7 +332,7 @@ class CoverageGate(unittest.TestCase):
                 "result": "success" if any(flags[x] for x in selectors) else "skipped"
             }
         self.assertEqual(ci.gate_errors(needs), [])
-        for job in ["fast-checks", "regression-coverage"]:
+        for job in ["fast-checks", "catalog-inventory", "regression-coverage"]:
             needs[job]["result"] = "skipped"
             self.assertTrue(ci.gate_errors(needs))
             needs[job]["result"] = "success"

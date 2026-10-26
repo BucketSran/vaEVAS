@@ -5,10 +5,18 @@ Historical evaluation retains the old version selection, but never overrides an
 explicit revocation or incomplete evidence. This module does not run a backend.
 """
 import hashlib
+import importlib.util
 import json
 from pathlib import Path
 
 DATA = Path(__file__).resolve().parent / 'data'
+
+def _owned(name):
+    spec = importlib.util.spec_from_file_location('_evas_' + name, Path(__file__).with_name(name + '.py'))
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
 
 
 class RegistryError(ValueError):
@@ -25,7 +33,8 @@ def reference(obj):
 
 
 class Registry:
-    def __init__(self, data, *, root=None):
+    def __init__(self, data, *, root=None, repositories=None):
+        self.repositories = repositories or {}
         if data.get('schema_version') != 1:
             raise RegistryError('unsupported registry schema')
         if data.get('inventory_identity') and digest(data['inventory']) != data['inventory_identity']:
@@ -59,6 +68,16 @@ class Registry:
                 raise RegistryError(f'invalid disposition: {item}')
         for obj in self.objects.values():
             self._check_links(obj, set())
+        try:
+            self.catalog().validate()
+        except (ValueError, KeyError, TypeError) as error:
+            raise RegistryError(str(error)) from error
+
+    def catalog(self):
+        return _owned('asset_catalog').Catalog(self)
+
+    def read_source(self, source):
+        return _owned('source_reader').read_source(source, root=self.root, repositories=self.repositories)
 
     def _check_links(self, obj, visiting):
         key = (obj['id'], obj['version'])
@@ -119,17 +138,7 @@ class Registry:
             if source is None:
                 return None
             try:
-                if 'embedded' in source:
-                    raw = json.dumps(source['embedded'], ensure_ascii=False,
-                                     sort_keys=True, separators=(',', ':')).encode()
-                elif source.get('path') and self.root is not None:
-                    raw = (self.root / source['path']).read_bytes()
-                else:
-                    gap(obj, f'{field} evidence is not retrievable')
-                    return None
-                if hashlib.sha256(raw).hexdigest() != source.get('sha256'):
-                    gap(obj, f'{field} evidence bytes changed')
-                    return None
+                raw = self.read_source(source)
                 payload = json.loads(raw)
                 if not isinstance(payload, dict) or payload.get('schema_version') != 1:
                     gap(obj, f'{field} has an unknown receipt format')
@@ -315,17 +324,38 @@ class Registry:
         return obj['kind'] in ('checker', 'qualification') and not self.qualification_gaps(name, historical=historical)
 
 
-def load(data_dir=DATA):
+def load(data_dir=DATA, *, root=None, repositories=None):
     """Read one logical registry; the inventory is independent of its dispositions."""
     data_dir = Path(data_dir)
     data = json.loads((data_dir / 'registry.json').read_text())
+    catalog = _owned('asset_catalog')
+    parts = data.get('object_parts', [])
+    if not isinstance(parts, list) or len(parts) != len(set(parts)):
+        raise RegistryError('duplicate/invalid object parts')
+    for name in parts:
+        try:
+            catalog.relative(name)
+            part = json.loads((data_dir / name).read_text())
+            if set(part) != {'schema_version', 'kind', 'objects'} or part['schema_version'] != 1 or part['kind'] not in catalog.KINDS:
+                raise ValueError('unknown object part schema')
+            if any(o.get('kind') not in catalog.KINDS[part['kind']] for o in part['objects']):
+                raise ValueError('wrong object kind in part')
+            data['objects'].extend(part['objects'])
+        except (ValueError, KeyError, TypeError) as error:
+            raise RegistryError(str(error)) from error
+    effective_root = Path(root) if root is not None else Path(__file__).resolve().parents[2]
+    try:
+        prefix = data_dir.resolve().relative_to(effective_root.resolve())
+        data['_catalog_metadata_paths'] = [(prefix / name).as_posix() for name in ['registry.json', *parts]]
+    except ValueError as error:
+        raise RegistryError('registry data must be inside the declared source root') from error
     data['inventory'] = json.loads((data_dir / 'source-inventory.json').read_text())['items']
     data['dispositions'] = json.loads((data_dir / 'dispositions.json').read_text())['items']
     audit = json.loads((data_dir / 'boundary-audit.json').read_text())
     data['inventory_identity'] = audit['normalized_inventory_identity']
     data['target_scope'] = json.loads((data_dir / 'target-scope.json').read_text())
     data['language_profile'] = json.loads((data_dir / 'language-profile.json').read_text())
-    return Registry(data, root=Path(__file__).resolve().parents[2])
+    return Registry(data, root=root if root is not None else Path(__file__).resolve().parents[2], repositories=repositories)
 
 
 def main():

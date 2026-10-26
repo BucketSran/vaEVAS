@@ -410,6 +410,8 @@ class GateTests(unittest.TestCase):
         output.update(plan_version='2', mode='delivery')
         needs = {'selection': {'result': 'success', 'outputs': output}}
         needs['fast-checks'] = {'result': 'success'}
+        for job in ci.ALWAYS_REQUIRED_JOBS:
+            needs[job] = {'result': 'success'}
         needs['regression-coverage'] = {'result': 'success' if 'regression' in selected else 'skipped'}
         for job, flags in ci.JOB_FLAGS.items():
             result = 'success' if any(flag in selected for flag in flags) else 'skipped'
