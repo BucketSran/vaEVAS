@@ -1,0 +1,226 @@
+{
+  "entry": {
+    "workflow": ".github/workflows/numerical-assurance.yml",
+    "line": 63,
+    "job": "selection",
+    "step": "Check CI routing and changed-line whitespace",
+    "job_if": null,
+    "step_if": null,
+    "command": "python3 -B -m unittest discover -s scripts/tests -p test_independent_ci.py -v",
+    "environment_overrides": {
+      "CI_BASE": "${{ steps.changes.outputs.base }}",
+      "CI_HEAD": "${{ steps.changes.outputs.head }}"
+    },
+    "declared_python_versions": [],
+    "start": "scripts/tests",
+    "pattern": "test_independent_ci.py",
+    "namespace": "maintenance",
+    "collector": "unittest",
+    "mode": "declared-ci-literal",
+    "purpose": "role-not-semantic-qualification",
+    "entry_id": "3cf39003351ddf1d15048a7571870fbc1472d6c396a033051e2edd622423c133"
+  },
+  "receipt": {
+    "collector": {
+      "definition_profile": "actual-code-or-registered-native-skip-v1",
+      "native_skip_authority": {
+        "factory_span_sha256": "a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad",
+        "profile": "registered-native-unittest-skip-v1",
+        "runtime_file_sha256": "45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987",
+        "runtime_source": "unittest/case.py",
+        "wrapper_span_sha256": "96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda"
+      },
+      "path": "scripts/capabilities/discover_methods.py",
+      "sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "source_relationship": "owned-source-root"
+    },
+    "complete": true,
+    "discovered_instances": 7,
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONPATH": null,
+      "bytecode_disabled": true,
+      "cache_tag": "cpython-312",
+      "environment_scope": "python-runtime-and-import-path-only",
+      "executable": "/opt/homebrew/opt/python@3.12/bin/python3.12",
+      "implementation": "cpython",
+      "platform": "darwin",
+      "python_version": "3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]",
+      "sys_path_before_selected_imports": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/source-c0",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python312.zip",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload",
+        "/opt/homebrew/lib/python3.12/site-packages"
+      ]
+    },
+    "error_count": 0,
+    "errors": [],
+    "loader_error_count": 0,
+    "methods": [
+      {
+        "definition": {
+          "line": 56,
+          "name": "test_numeric_delta_keeps_regression_but_omits_installation",
+          "path": "scripts/tests/test_independent_ci.py",
+          "sha256": "cb52601e73ca43493ed70f34836ffe13db80c4a88072e2cf33f598bc27225978"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_independent_ci.py",
+        "module_sha256": "00aa69f258fe131279622065a09b6cacd4727f935f2c566ab6354664996bc3ff",
+        "runtime_id": "test_independent_ci.IndependentDelivery.test_numeric_delta_keeps_regression_but_omits_installation",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 65,
+          "name": "test_real_numeric_module_prose_does_not_create_installation_dependency",
+          "path": "scripts/tests/test_independent_ci.py",
+          "sha256": "231c7b9c01de776805e5a4c11f21f3f75dd77eeed1f6054b747445d16748522f"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_independent_ci.py",
+        "module_sha256": "00aa69f258fe131279622065a09b6cacd4727f935f2c566ab6354664996bc3ff",
+        "runtime_id": "test_independent_ci.IndependentDelivery.test_real_numeric_module_prose_does_not_create_installation_dependency",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 74,
+          "name": "test_resource_platform_protocol_and_unknown_changes_keep_installation",
+          "path": "scripts/tests/test_independent_ci.py",
+          "sha256": "2d588520128a3882468e6be8d07da95987ff0c7ec943de2ddd56aadee6b5d031"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_independent_ci.py",
+        "module_sha256": "00aa69f258fe131279622065a09b6cacd4727f935f2c566ab6354664996bc3ff",
+        "runtime_id": "test_independent_ci.IndependentDelivery.test_resource_platform_protocol_and_unknown_changes_keep_installation",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 106,
+          "name": "test_scs_iteration_covers_public_consumers_and_retains_full_delivery",
+          "path": "scripts/tests/test_independent_ci.py",
+          "sha256": "6c7c4b2779a44e3f0432786a75bd640fe1f673c902ca94ec980fffd4c9401bd4"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_independent_ci.py",
+        "module_sha256": "00aa69f258fe131279622065a09b6cacd4727f935f2c566ab6354664996bc3ff",
+        "runtime_id": "test_independent_ci.IndependentDelivery.test_scs_iteration_covers_public_consumers_and_retains_full_delivery",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 136,
+          "name": "test_source_kernel_oracle_rejects_nonfinite_wrong_or_missing_observations",
+          "path": "scripts/tests/test_independent_ci.py",
+          "sha256": "81edda2fa21693c8c6fc83de2286ce83a2ba2182752b8045ea568b5f2ee16a38"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_independent_ci.py",
+        "module_sha256": "00aa69f258fe131279622065a09b6cacd4727f935f2c566ab6354664996bc3ff",
+        "runtime_id": "test_independent_ci.IndependentDelivery.test_source_kernel_oracle_rejects_nonfinite_wrong_or_missing_observations",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 100,
+          "name": "test_unavailable_content_identity_keeps_installation",
+          "path": "scripts/tests/test_independent_ci.py",
+          "sha256": "9caec11dfbecc0b4bd4bce4552f91d7789bec30a7504a6c2f373030102f86c3c"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_independent_ci.py",
+        "module_sha256": "00aa69f258fe131279622065a09b6cacd4727f935f2c566ab6354664996bc3ff",
+        "runtime_id": "test_independent_ci.IndependentDelivery.test_unavailable_content_identity_keeps_installation",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 121,
+          "name": "test_workflow_prose_reuses_execution_but_unknown_inputs_invalidate",
+          "path": "scripts/tests/test_independent_ci.py",
+          "sha256": "c3a95a610d9a448b3032fbf285ced36daafb27d9adef65d800cbbfe55e2cdd87"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_independent_ci.py",
+        "module_sha256": "00aa69f258fe131279622065a09b6cacd4727f935f2c566ab6354664996bc3ff",
+        "runtime_id": "test_independent_ci.IndependentDelivery.test_workflow_prose_reuses_execution_but_unknown_inputs_invalidate",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      }
+    ],
+    "namespace": "maintenance",
+    "schema_version": 1,
+    "skipped_declarations": 0,
+    "unresolved_instances": [],
+    "transport": {
+      "argv": [
+        "/opt/homebrew/opt/python@3.12/bin/python3.12",
+        "-B",
+        "-c",
+        "import os,runpy,sys; sys.path[0]=os.getcwd(); tool=sys.argv[1]; sys.argv=sys.argv[1:]; runpy.run_path(tool,run_name=\"__main__\")",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/source-c0/scripts/capabilities/discover_methods.py",
+        "--worker",
+        "--root",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/source-c0",
+        "--start",
+        "scripts/tests",
+        "--pattern",
+        "test_independent_ci.py",
+        "--namespace",
+        "maintenance"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/source-c0",
+      "returncode": 0,
+      "stdout": "{\"collector\": {\"definition_profile\": \"actual-code-or-registered-native-skip-v1\", \"native_skip_authority\": {\"factory_span_sha256\": \"a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad\", \"profile\": \"registered-native-unittest-skip-v1\", \"runtime_file_sha256\": \"45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987\", \"runtime_source\": \"unittest/case.py\", \"wrapper_span_sha256\": \"96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda\"}, \"path\": \"scripts/capabilities/discover_methods.py\", \"sha256\": \"aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17\", \"source_relationship\": \"owned-source-root\"}, \"complete\": true, \"discovered_instances\": 7, \"environment\": {\"PYTHONDONTWRITEBYTECODE\": \"1\", \"PYTHONPATH\": null, \"bytecode_disabled\": true, \"cache_tag\": \"cpython-312\", \"environment_scope\": \"python-runtime-and-import-path-only\", \"executable\": \"/opt/homebrew/opt/python@3.12/bin/python3.12\", \"implementation\": \"cpython\", \"platform\": \"darwin\", \"python_version\": \"3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"sys_path_before_selected_imports\": [\"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/source-c0\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python312.zip\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload\", \"/opt/homebrew/lib/python3.12/site-packages\"]}, \"error_count\": 0, \"errors\": [], \"loader_error_count\": 0, \"methods\": [{\"definition\": {\"line\": 56, \"name\": \"test_numeric_delta_keeps_regression_but_omits_installation\", \"path\": \"scripts/tests/test_independent_ci.py\", \"sha256\": \"cb52601e73ca43493ed70f34836ffe13db80c4a88072e2cf33f598bc27225978\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_independent_ci.py\", \"module_sha256\": \"00aa69f258fe131279622065a09b6cacd4727f935f2c566ab6354664996bc3ff\", \"runtime_id\": \"test_independent_ci.IndependentDelivery.test_numeric_delta_keeps_regression_but_omits_installation\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 65, \"name\": \"test_real_numeric_module_prose_does_not_create_installation_dependency\", \"path\": \"scripts/tests/test_independent_ci.py\", \"sha256\": \"231c7b9c01de776805e5a4c11f21f3f75dd77eeed1f6054b747445d16748522f\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_independent_ci.py\", \"module_sha256\": \"00aa69f258fe131279622065a09b6cacd4727f935f2c566ab6354664996bc3ff\", \"runtime_id\": \"test_independent_ci.IndependentDelivery.test_real_numeric_module_prose_does_not_create_installation_dependency\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 74, \"name\": \"test_resource_platform_protocol_and_unknown_changes_keep_installation\", \"path\": \"scripts/tests/test_independent_ci.py\", \"sha256\": \"2d588520128a3882468e6be8d07da95987ff0c7ec943de2ddd56aadee6b5d031\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_independent_ci.py\", \"module_sha256\": \"00aa69f258fe131279622065a09b6cacd4727f935f2c566ab6354664996bc3ff\", \"runtime_id\": \"test_independent_ci.IndependentDelivery.test_resource_platform_protocol_and_unknown_changes_keep_installation\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 106, \"name\": \"test_scs_iteration_covers_public_consumers_and_retains_full_delivery\", \"path\": \"scripts/tests/test_independent_ci.py\", \"sha256\": \"6c7c4b2779a44e3f0432786a75bd640fe1f673c902ca94ec980fffd4c9401bd4\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_independent_ci.py\", \"module_sha256\": \"00aa69f258fe131279622065a09b6cacd4727f935f2c566ab6354664996bc3ff\", \"runtime_id\": \"test_independent_ci.IndependentDelivery.test_scs_iteration_covers_public_consumers_and_retains_full_delivery\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 136, \"name\": \"test_source_kernel_oracle_rejects_nonfinite_wrong_or_missing_observations\", \"path\": \"scripts/tests/test_independent_ci.py\", \"sha256\": \"81edda2fa21693c8c6fc83de2286ce83a2ba2182752b8045ea568b5f2ee16a38\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_independent_ci.py\", \"module_sha256\": \"00aa69f258fe131279622065a09b6cacd4727f935f2c566ab6354664996bc3ff\", \"runtime_id\": \"test_independent_ci.IndependentDelivery.test_source_kernel_oracle_rejects_nonfinite_wrong_or_missing_observations\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 100, \"name\": \"test_unavailable_content_identity_keeps_installation\", \"path\": \"scripts/tests/test_independent_ci.py\", \"sha256\": \"9caec11dfbecc0b4bd4bce4552f91d7789bec30a7504a6c2f373030102f86c3c\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_independent_ci.py\", \"module_sha256\": \"00aa69f258fe131279622065a09b6cacd4727f935f2c566ab6354664996bc3ff\", \"runtime_id\": \"test_independent_ci.IndependentDelivery.test_unavailable_content_identity_keeps_installation\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 121, \"name\": \"test_workflow_prose_reuses_execution_but_unknown_inputs_invalidate\", \"path\": \"scripts/tests/test_independent_ci.py\", \"sha256\": \"c3a95a610d9a448b3032fbf285ced36daafb27d9adef65d800cbbfe55e2cdd87\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_independent_ci.py\", \"module_sha256\": \"00aa69f258fe131279622065a09b6cacd4727f935f2c566ab6354664996bc3ff\", \"runtime_id\": \"test_independent_ci.IndependentDelivery.test_workflow_prose_reuses_execution_but_unknown_inputs_invalidate\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}], \"namespace\": \"maintenance\", \"schema_version\": 1, \"skipped_declarations\": 0, \"unresolved_instances\": []}\n",
+      "stderr": "",
+      "environment_overrides": {
+        "CI_BASE": "${{ steps.changes.outputs.base }}",
+        "CI_HEAD": "${{ steps.changes.outputs.head }}"
+      },
+      "actual_resolved_overrides": {
+        "CI_BASE": "842bde7101164330fa03e7aee58b45d1789cbed1",
+        "CI_HEAD": "cc6442bd656fef2f79b257ad2250336dec0704bc"
+      },
+      "collection_profile": "inventory-child runtime; not original phase execution/skip results",
+      "original_python_equivalence": "unpinned-runner-python3-unproven",
+      "sys_path_contract": "repository-cwd first, then literal phase PYTHONPATH; TestLoader adds start directory"
+    }
+  }
+}

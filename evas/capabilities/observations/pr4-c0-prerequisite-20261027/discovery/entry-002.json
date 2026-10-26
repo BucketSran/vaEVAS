@@ -1,0 +1,352 @@
+{
+  "entry": {
+    "workflow": ".github/workflows/numerical-assurance.yml",
+    "line": 62,
+    "job": "selection",
+    "step": "Check CI routing and changed-line whitespace",
+    "job_if": null,
+    "step_if": null,
+    "command": "python3 -B -m unittest discover -s scripts/tests -p test_fast_feedback.py -v",
+    "environment_overrides": {
+      "CI_BASE": "${{ steps.changes.outputs.base }}",
+      "CI_HEAD": "${{ steps.changes.outputs.head }}"
+    },
+    "declared_python_versions": [],
+    "start": "scripts/tests",
+    "pattern": "test_fast_feedback.py",
+    "namespace": "maintenance",
+    "collector": "unittest",
+    "mode": "declared-ci-literal",
+    "purpose": "role-not-semantic-qualification",
+    "entry_id": "8d48624992909fcbef141935e46aea903f6db22057a4a96a055e148bf193e2da"
+  },
+  "receipt": {
+    "collector": {
+      "definition_profile": "actual-code-or-registered-native-skip-v1",
+      "native_skip_authority": {
+        "factory_span_sha256": "a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad",
+        "profile": "registered-native-unittest-skip-v1",
+        "runtime_file_sha256": "45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987",
+        "runtime_source": "unittest/case.py",
+        "wrapper_span_sha256": "96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda"
+      },
+      "path": "scripts/capabilities/discover_methods.py",
+      "sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "source_relationship": "owned-source-root"
+    },
+    "complete": true,
+    "discovered_instances": 14,
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONPATH": null,
+      "bytecode_disabled": true,
+      "cache_tag": "cpython-312",
+      "environment_scope": "python-runtime-and-import-path-only",
+      "executable": "/opt/homebrew/opt/python@3.12/bin/python3.12",
+      "implementation": "cpython",
+      "platform": "darwin",
+      "python_version": "3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]",
+      "sys_path_before_selected_imports": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/source-c0",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python312.zip",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload",
+        "/opt/homebrew/lib/python3.12/site-packages"
+      ]
+    },
+    "error_count": 0,
+    "errors": [],
+    "loader_error_count": 0,
+    "methods": [
+      {
+        "definition": {
+          "line": 272,
+          "name": "test_missing_overlapping_failed_or_mismatched_shard_cannot_pass",
+          "path": "scripts/tests/test_fast_feedback.py",
+          "sha256": "d40c60c00b2f33f0d1c26730edaa651d0ece72f5df5f23c5875a49d4110b023e"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_fast_feedback.py",
+        "module_sha256": "1c98077c0ee72cde6ce8268e6d2f4adff5b968fece73d6184ce38f358c4b6fed",
+        "runtime_id": "test_fast_feedback.CoverageGate.test_missing_overlapping_failed_or_mismatched_shard_cannot_pass",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 322,
+          "name": "test_new_gate_requires_fast_checks_and_complete_shard_coverage",
+          "path": "scripts/tests/test_fast_feedback.py",
+          "sha256": "570a3a001b5408d077916afb1609ebde17dc8f8598097a8158622c4b98ffa4b4"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_fast_feedback.py",
+        "module_sha256": "1c98077c0ee72cde6ce8268e6d2f4adff5b968fece73d6184ce38f358c4b6fed",
+        "runtime_id": "test_fast_feedback.CoverageGate.test_new_gate_requires_fast_checks_and_complete_shard_coverage",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 212,
+          "name": "test_changed_code_tests_tools_or_budget_invalidates_evidence",
+          "path": "scripts/tests/test_fast_feedback.py",
+          "sha256": "e279e4dbcc117d92f615729246f7b7b58fb168db47707f1fa1f33cd3db1479b2"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_fast_feedback.py",
+        "module_sha256": "1c98077c0ee72cde6ce8268e6d2f4adff5b968fece73d6184ce38f358c4b6fed",
+        "runtime_id": "test_fast_feedback.EvidenceIdentity.test_changed_code_tests_tools_or_budget_invalidates_evidence",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 501,
+          "name": "test_setup_skip_is_explicit_and_does_not_invent_execution",
+          "path": "scripts/tests/test_fast_feedback.py",
+          "sha256": "79ae09151915dc9df599ef7f30791934f04eccc74493912fb3e5ea71ca05850b"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_fast_feedback.py",
+        "module_sha256": "1c98077c0ee72cde6ce8268e6d2f4adff5b968fece73d6184ce38f358c4b6fed",
+        "runtime_id": "test_fast_feedback.FixtureSkipAccounting.test_setup_skip_is_explicit_and_does_not_invent_execution",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 345,
+          "name": "test_incremental_draft_and_ready_use_different_scopes",
+          "path": "scripts/tests/test_fast_feedback.py",
+          "sha256": "44978475adbc83b10dcc5385928f9accbabf0a31c18ff1023733e8a545d541ce"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_fast_feedback.py",
+        "module_sha256": "1c98077c0ee72cde6ce8268e6d2f4adff5b968fece73d6184ce38f358c4b6fed",
+        "runtime_id": "test_fast_feedback.GitDraftStages.test_incremental_draft_and_ready_use_different_scopes",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 425,
+          "name": "test_real_report_round_trip_rejects_corruption_drift_and_failed_results",
+          "path": "scripts/tests/test_fast_feedback.py",
+          "sha256": "b98590ea7c7d896ceabfd6168ff9b9c3701b690f72e04b0abca3ce1977249e96"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_fast_feedback.py",
+        "module_sha256": "1c98077c0ee72cde6ce8268e6d2f4adff5b968fece73d6184ce38f358c4b6fed",
+        "runtime_id": "test_fast_feedback.ReceiptRoundTrip.test_real_report_round_trip_rejects_corruption_drift_and_failed_results",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 97,
+          "name": "test_module_shards_are_disjoint_complete_and_keep_failure_red",
+          "path": "scripts/tests/test_fast_feedback.py",
+          "sha256": "db261bfb1ae3b7f1288e7dd2439f0597dee40bf7c39950eb71403bd608054659"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_fast_feedback.py",
+        "module_sha256": "1c98077c0ee72cde6ce8268e6d2f4adff5b968fece73d6184ce38f358c4b6fed",
+        "runtime_id": "test_fast_feedback.Sharding.test_module_shards_are_disjoint_complete_and_keep_failure_red",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 136,
+          "name": "test_reservation_moves_the_heavy_module_off_shard_zero",
+          "path": "scripts/tests/test_fast_feedback.py",
+          "sha256": "fcd875f9662d685aa732517d06573df48dcbc4a900920c195518784e6cf7ad9c"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_fast_feedback.py",
+        "module_sha256": "1c98077c0ee72cde6ce8268e6d2f4adff5b968fece73d6184ce38f358c4b6fed",
+        "runtime_id": "test_fast_feedback.Sharding.test_reservation_moves_the_heavy_module_off_shard_zero",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 185,
+          "name": "test_unknown_module_cannot_turn_a_typo_into_success",
+          "path": "scripts/tests/test_fast_feedback.py",
+          "sha256": "8f8c633193075b7d21e8d6eb9d7196a58bd770d54e8d12fea7a869ee808b59d8"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_fast_feedback.py",
+        "module_sha256": "1c98077c0ee72cde6ce8268e6d2f4adff5b968fece73d6184ce38f358c4b6fed",
+        "runtime_id": "test_fast_feedback.Sharding.test_unknown_module_cannot_turn_a_typo_into_success",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 538,
+          "name": "test_a_skip_only_module_can_share_full_coverage_with_live_modules",
+          "path": "scripts/tests/test_fast_feedback.py",
+          "sha256": "4558315d0e00737458d8386d25ecb354723d01662e89deaf112af14e4fdf749c"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_fast_feedback.py",
+        "module_sha256": "1c98077c0ee72cde6ce8268e6d2f4adff5b968fece73d6184ce38f358c4b6fed",
+        "runtime_id": "test_fast_feedback.SkipOnlyShard.test_a_skip_only_module_can_share_full_coverage_with_live_modules",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 52,
+          "name": "test_common_runtime_iteration_does_not_discharge_full_delivery",
+          "path": "scripts/tests/test_fast_feedback.py",
+          "sha256": "840945fd0e1fd543f3449fd88990d502fb8e24ab283ccfb494edbf8b2af5fd4b"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_fast_feedback.py",
+        "module_sha256": "1c98077c0ee72cde6ce8268e6d2f4adff5b968fece73d6184ce38f358c4b6fed",
+        "runtime_id": "test_fast_feedback.StageSelection.test_common_runtime_iteration_does_not_discharge_full_delivery",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 26,
+          "name": "test_draft_keeps_focused_regression_and_explicit_delivery_obligations",
+          "path": "scripts/tests/test_fast_feedback.py",
+          "sha256": "111f991f1d8cf0b59cf05cadd53c26be1d345b258e0e66c31111851871057ad3"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_fast_feedback.py",
+        "module_sha256": "1c98077c0ee72cde6ce8268e6d2f4adff5b968fece73d6184ce38f358c4b6fed",
+        "runtime_id": "test_fast_feedback.StageSelection.test_draft_keeps_focused_regression_and_explicit_delivery_obligations",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 38,
+          "name": "test_final_candidate_and_unknown_source_keep_complete_checks",
+          "path": "scripts/tests/test_fast_feedback.py",
+          "sha256": "3aeebcacdec08929914249b1910d4c02e69c25519eccb2a749add620a2ad2885"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_fast_feedback.py",
+        "module_sha256": "1c98077c0ee72cde6ce8268e6d2f4adff5b968fece73d6184ce38f358c4b6fed",
+        "runtime_id": "test_fast_feedback.StageSelection.test_final_candidate_and_unknown_source_keep_complete_checks",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 74,
+          "name": "test_latest_delta_limits_iteration_without_erasing_cumulative_requirements",
+          "path": "scripts/tests/test_fast_feedback.py",
+          "sha256": "51d9a2d030dbc4e4c983b03393ab1915c26973af0a5d77acf1ff4fef43baad78"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_fast_feedback.py",
+        "module_sha256": "1c98077c0ee72cde6ce8268e6d2f4adff5b968fece73d6184ce38f358c4b6fed",
+        "runtime_id": "test_fast_feedback.StageSelection.test_latest_delta_limits_iteration_without_erasing_cumulative_requirements",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      }
+    ],
+    "namespace": "maintenance",
+    "schema_version": 1,
+    "skipped_declarations": 0,
+    "unresolved_instances": [],
+    "transport": {
+      "argv": [
+        "/opt/homebrew/opt/python@3.12/bin/python3.12",
+        "-B",
+        "-c",
+        "import os,runpy,sys; sys.path[0]=os.getcwd(); tool=sys.argv[1]; sys.argv=sys.argv[1:]; runpy.run_path(tool,run_name=\"__main__\")",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/source-c0/scripts/capabilities/discover_methods.py",
+        "--worker",
+        "--root",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/source-c0",
+        "--start",
+        "scripts/tests",
+        "--pattern",
+        "test_fast_feedback.py",
+        "--namespace",
+        "maintenance"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/source-c0",
+      "returncode": 0,
+      "stdout": "{\"collector\": {\"definition_profile\": \"actual-code-or-registered-native-skip-v1\", \"native_skip_authority\": {\"factory_span_sha256\": \"a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad\", \"profile\": \"registered-native-unittest-skip-v1\", \"runtime_file_sha256\": \"45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987\", \"runtime_source\": \"unittest/case.py\", \"wrapper_span_sha256\": \"96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda\"}, \"path\": \"scripts/capabilities/discover_methods.py\", \"sha256\": \"aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17\", \"source_relationship\": \"owned-source-root\"}, \"complete\": true, \"discovered_instances\": 14, \"environment\": {\"PYTHONDONTWRITEBYTECODE\": \"1\", \"PYTHONPATH\": null, \"bytecode_disabled\": true, \"cache_tag\": \"cpython-312\", \"environment_scope\": \"python-runtime-and-import-path-only\", \"executable\": \"/opt/homebrew/opt/python@3.12/bin/python3.12\", \"implementation\": \"cpython\", \"platform\": \"darwin\", \"python_version\": \"3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"sys_path_before_selected_imports\": [\"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/source-c0\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python312.zip\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload\", \"/opt/homebrew/lib/python3.12/site-packages\"]}, \"error_count\": 0, \"errors\": [], \"loader_error_count\": 0, \"methods\": [{\"definition\": {\"line\": 272, \"name\": \"test_missing_overlapping_failed_or_mismatched_shard_cannot_pass\", \"path\": \"scripts/tests/test_fast_feedback.py\", \"sha256\": \"d40c60c00b2f33f0d1c26730edaa651d0ece72f5df5f23c5875a49d4110b023e\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_fast_feedback.py\", \"module_sha256\": \"1c98077c0ee72cde6ce8268e6d2f4adff5b968fece73d6184ce38f358c4b6fed\", \"runtime_id\": \"test_fast_feedback.CoverageGate.test_missing_overlapping_failed_or_mismatched_shard_cannot_pass\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 322, \"name\": \"test_new_gate_requires_fast_checks_and_complete_shard_coverage\", \"path\": \"scripts/tests/test_fast_feedback.py\", \"sha256\": \"570a3a001b5408d077916afb1609ebde17dc8f8598097a8158622c4b98ffa4b4\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_fast_feedback.py\", \"module_sha256\": \"1c98077c0ee72cde6ce8268e6d2f4adff5b968fece73d6184ce38f358c4b6fed\", \"runtime_id\": \"test_fast_feedback.CoverageGate.test_new_gate_requires_fast_checks_and_complete_shard_coverage\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 212, \"name\": \"test_changed_code_tests_tools_or_budget_invalidates_evidence\", \"path\": \"scripts/tests/test_fast_feedback.py\", \"sha256\": \"e279e4dbcc117d92f615729246f7b7b58fb168db47707f1fa1f33cd3db1479b2\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_fast_feedback.py\", \"module_sha256\": \"1c98077c0ee72cde6ce8268e6d2f4adff5b968fece73d6184ce38f358c4b6fed\", \"runtime_id\": \"test_fast_feedback.EvidenceIdentity.test_changed_code_tests_tools_or_budget_invalidates_evidence\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 501, \"name\": \"test_setup_skip_is_explicit_and_does_not_invent_execution\", \"path\": \"scripts/tests/test_fast_feedback.py\", \"sha256\": \"79ae09151915dc9df599ef7f30791934f04eccc74493912fb3e5ea71ca05850b\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_fast_feedback.py\", \"module_sha256\": \"1c98077c0ee72cde6ce8268e6d2f4adff5b968fece73d6184ce38f358c4b6fed\", \"runtime_id\": \"test_fast_feedback.FixtureSkipAccounting.test_setup_skip_is_explicit_and_does_not_invent_execution\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 345, \"name\": \"test_incremental_draft_and_ready_use_different_scopes\", \"path\": \"scripts/tests/test_fast_feedback.py\", \"sha256\": \"44978475adbc83b10dcc5385928f9accbabf0a31c18ff1023733e8a545d541ce\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_fast_feedback.py\", \"module_sha256\": \"1c98077c0ee72cde6ce8268e6d2f4adff5b968fece73d6184ce38f358c4b6fed\", \"runtime_id\": \"test_fast_feedback.GitDraftStages.test_incremental_draft_and_ready_use_different_scopes\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 425, \"name\": \"test_real_report_round_trip_rejects_corruption_drift_and_failed_results\", \"path\": \"scripts/tests/test_fast_feedback.py\", \"sha256\": \"b98590ea7c7d896ceabfd6168ff9b9c3701b690f72e04b0abca3ce1977249e96\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_fast_feedback.py\", \"module_sha256\": \"1c98077c0ee72cde6ce8268e6d2f4adff5b968fece73d6184ce38f358c4b6fed\", \"runtime_id\": \"test_fast_feedback.ReceiptRoundTrip.test_real_report_round_trip_rejects_corruption_drift_and_failed_results\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 97, \"name\": \"test_module_shards_are_disjoint_complete_and_keep_failure_red\", \"path\": \"scripts/tests/test_fast_feedback.py\", \"sha256\": \"db261bfb1ae3b7f1288e7dd2439f0597dee40bf7c39950eb71403bd608054659\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_fast_feedback.py\", \"module_sha256\": \"1c98077c0ee72cde6ce8268e6d2f4adff5b968fece73d6184ce38f358c4b6fed\", \"runtime_id\": \"test_fast_feedback.Sharding.test_module_shards_are_disjoint_complete_and_keep_failure_red\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 136, \"name\": \"test_reservation_moves_the_heavy_module_off_shard_zero\", \"path\": \"scripts/tests/test_fast_feedback.py\", \"sha256\": \"fcd875f9662d685aa732517d06573df48dcbc4a900920c195518784e6cf7ad9c\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_fast_feedback.py\", \"module_sha256\": \"1c98077c0ee72cde6ce8268e6d2f4adff5b968fece73d6184ce38f358c4b6fed\", \"runtime_id\": \"test_fast_feedback.Sharding.test_reservation_moves_the_heavy_module_off_shard_zero\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 185, \"name\": \"test_unknown_module_cannot_turn_a_typo_into_success\", \"path\": \"scripts/tests/test_fast_feedback.py\", \"sha256\": \"8f8c633193075b7d21e8d6eb9d7196a58bd770d54e8d12fea7a869ee808b59d8\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_fast_feedback.py\", \"module_sha256\": \"1c98077c0ee72cde6ce8268e6d2f4adff5b968fece73d6184ce38f358c4b6fed\", \"runtime_id\": \"test_fast_feedback.Sharding.test_unknown_module_cannot_turn_a_typo_into_success\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 538, \"name\": \"test_a_skip_only_module_can_share_full_coverage_with_live_modules\", \"path\": \"scripts/tests/test_fast_feedback.py\", \"sha256\": \"4558315d0e00737458d8386d25ecb354723d01662e89deaf112af14e4fdf749c\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_fast_feedback.py\", \"module_sha256\": \"1c98077c0ee72cde6ce8268e6d2f4adff5b968fece73d6184ce38f358c4b6fed\", \"runtime_id\": \"test_fast_feedback.SkipOnlyShard.test_a_skip_only_module_can_share_full_coverage_with_live_modules\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 52, \"name\": \"test_common_runtime_iteration_does_not_discharge_full_delivery\", \"path\": \"scripts/tests/test_fast_feedback.py\", \"sha256\": \"840945fd0e1fd543f3449fd88990d502fb8e24ab283ccfb494edbf8b2af5fd4b\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_fast_feedback.py\", \"module_sha256\": \"1c98077c0ee72cde6ce8268e6d2f4adff5b968fece73d6184ce38f358c4b6fed\", \"runtime_id\": \"test_fast_feedback.StageSelection.test_common_runtime_iteration_does_not_discharge_full_delivery\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 26, \"name\": \"test_draft_keeps_focused_regression_and_explicit_delivery_obligations\", \"path\": \"scripts/tests/test_fast_feedback.py\", \"sha256\": \"111f991f1d8cf0b59cf05cadd53c26be1d345b258e0e66c31111851871057ad3\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_fast_feedback.py\", \"module_sha256\": \"1c98077c0ee72cde6ce8268e6d2f4adff5b968fece73d6184ce38f358c4b6fed\", \"runtime_id\": \"test_fast_feedback.StageSelection.test_draft_keeps_focused_regression_and_explicit_delivery_obligations\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 38, \"name\": \"test_final_candidate_and_unknown_source_keep_complete_checks\", \"path\": \"scripts/tests/test_fast_feedback.py\", \"sha256\": \"3aeebcacdec08929914249b1910d4c02e69c25519eccb2a749add620a2ad2885\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_fast_feedback.py\", \"module_sha256\": \"1c98077c0ee72cde6ce8268e6d2f4adff5b968fece73d6184ce38f358c4b6fed\", \"runtime_id\": \"test_fast_feedback.StageSelection.test_final_candidate_and_unknown_source_keep_complete_checks\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 74, \"name\": \"test_latest_delta_limits_iteration_without_erasing_cumulative_requirements\", \"path\": \"scripts/tests/test_fast_feedback.py\", \"sha256\": \"51d9a2d030dbc4e4c983b03393ab1915c26973af0a5d77acf1ff4fef43baad78\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_fast_feedback.py\", \"module_sha256\": \"1c98077c0ee72cde6ce8268e6d2f4adff5b968fece73d6184ce38f358c4b6fed\", \"runtime_id\": \"test_fast_feedback.StageSelection.test_latest_delta_limits_iteration_without_erasing_cumulative_requirements\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}], \"namespace\": \"maintenance\", \"schema_version\": 1, \"skipped_declarations\": 0, \"unresolved_instances\": []}\n",
+      "stderr": "",
+      "environment_overrides": {
+        "CI_BASE": "${{ steps.changes.outputs.base }}",
+        "CI_HEAD": "${{ steps.changes.outputs.head }}"
+      },
+      "actual_resolved_overrides": {
+        "CI_BASE": "842bde7101164330fa03e7aee58b45d1789cbed1",
+        "CI_HEAD": "cc6442bd656fef2f79b257ad2250336dec0704bc"
+      },
+      "collection_profile": "inventory-child runtime; not original phase execution/skip results",
+      "original_python_equivalence": "unpinned-runner-python3-unproven",
+      "sys_path_contract": "repository-cwd first, then literal phase PYTHONPATH; TestLoader adds start directory"
+    }
+  }
+}
