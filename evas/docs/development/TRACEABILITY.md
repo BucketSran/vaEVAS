@@ -100,12 +100,12 @@
 Metadata navigation only; GUARDS remain AST navigation. No normative coverage or qualification is inferred.
 
 - calibration: 0 registered methods; 0 generated; 0 entrypoints
-- maintenance: 554 registered methods; 0 generated; 7 entrypoints
+- maintenance: 595 registered methods; 0 generated; 7 entrypoints
 - python-regression: 3257 registered methods; 12 generated; 1 entrypoints
 - validation: 691 registered methods; 0 generated; 16 entrypoints
 - rust-tests (linux-x86_64-regression-opt1-v1): 904 IDs in the archived native listing; 1 ignored; 5 binary entrypoints; listing only
 - 3260 historical records verified against their original sources; no qualification is inferred
-- Current method semantic review: reviewed=0; pending=4502
+- Current method semantic review: reviewed=0; pending=4543
 - Original historical audit verdicts (original scope only): evidence_gap=95; mixed=359; no_defect_found=2785; test_defect=18
-- Pending asset roles: 3417
-- Consumer closure pending/partial: 4195
+- Pending asset roles: 3419
+- Consumer closure pending/partial: 4198
