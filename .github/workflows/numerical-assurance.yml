@@ -275,11 +275,11 @@ jobs:
           python3 -B scripts/ci_evidence.py identity
           --identity runs/regression-identity.json --shard ${{ matrix.shard }}-of-4
           --output "$GITHUB_OUTPUT"
-      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+      - uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830
         if: github.event_name != 'schedule'
         with:
           path: runs/regression-evidence
-          key: regression-evidence-v1-${{ steps.evidence.outputs.key }}
+          key: regression-evidence-v3-${{ steps.evidence.outputs.key }}
       - name: Validate reusable successful evidence
         id: reuse
         run: |
@@ -289,19 +289,35 @@ jobs:
           else
             echo 'verified=false' >> "$GITHUB_OUTPUT"
           fi
-      - name: Full Python regression shard
+      - name: Collect complete Python regression observations
+        id: collect
         if: steps.reuse.outputs.verified != 'true'
         env:
           PYTHONPATH: evas/src
-        run: >-
-          python3 -B scripts/run_regression.py --shard-count 4 --shard-index ${{ matrix.shard }}
-          --weights scripts/regression-weights.json --report runs/regression-evidence/report.json
-      - name: Record successful evidence after verifying inputs remained unchanged
-        if: steps.reuse.outputs.verified != 'true'
+        run: |
+          set +e
+          python3 -B scripts/run_regression.py --shard-count 4 --shard-index ${{ matrix.shard }} --weights scripts/regression-weights.json --input-identity runs/regression-identity.json --report runs/regression-evidence/report.json
+          raw_exit=$?
+          set -e
+          python3 -B scripts/ci_evidence.py collect --identity runs/regression-identity.json --shard ${{ matrix.shard }}-of-4 --report runs/regression-evidence/report.json --raw-exit "$raw_exit" > runs/regression-evidence/collection.json
+          python3 - <<'PYTHON'
+          import json, os
+          from pathlib import Path
+          result = json.loads(Path('runs/regression-evidence/collection.json').read_text())
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as stream:
+              stream.write('cacheable=' + str(result['cacheable']).lower() + '\n')
+          PYTHON
+      - name: Record only newly executed all-pass evidence
+        if: steps.collect.outputs.cacheable == 'true'
         run: >-
           python3 -B scripts/ci_evidence.py record --identity runs/regression-identity.json
           --shard ${{ matrix.shard }}-of-4 --receipt runs/regression-evidence/receipt.json
           --report runs/regression-evidence/report.json
+      - uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830
+        if: github.event_name != 'schedule' && steps.collect.outputs.cacheable == 'true'
+        with:
+          path: runs/regression-evidence
+          key: regression-evidence-v3-${{ steps.evidence.outputs.key }}
       - name: Retain test manifest, timings and reuse provenance
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -314,7 +330,7 @@ jobs:
           retention-days: 14
   regression-coverage:
     needs: [selection, regression]
-    if: needs.selection.outputs.regression == 'true'
+    if: always() && needs.selection.outputs.regression == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -326,20 +342,40 @@ jobs:
         with:
           pattern: python-regression-shard-*
           path: runs/shards
-      - name: Require disjoint, complete successful test coverage
+      - name: Verify complete raw coverage with admission gate inactive
         run: |
           python3 - <<'PYTHON'
           from pathlib import Path
-          import subprocess, sys
+          import json, os, subprocess, sys
+          sys.path.insert(0, 'scripts')
+          from regression_gate import validate_report
           reports = sorted(Path('runs/shards').rglob('report.json'))
           assert len(reports) == 4, 'all four regression reports are required'
-          subprocess.run([sys.executable, '-B', 'scripts/run_regression.py', '--merge',
-                          *map(str, reports), '--report', 'runs/python-regression.json'], check=True)
+          result = subprocess.run([sys.executable, '-B', 'scripts/run_regression.py', '--merge',
+                                   *map(str, reports), '--report', 'runs/python-regression.json'])
+          report = json.loads(Path('runs/python-regression.json').read_text())
+          validation = validate_report(report)
+          assert validation['valid'], validation['errors']
+          assert result.returncode == (0 if report['successful'] else 1), 'raw exit/report mismatch'
+          # PR2a bootstraps observations under independent manual review.
+          # This result grants no automatic merge admission or semantic support.
+          status = dict(collection_valid=True, raw_successful=report['successful'],
+                        methods=report['tests_run'], discovered=len(report['discovered_test_ids']),
+                        failures=report['failures'], errors=report['errors'], skipped=report['skipped'],
+                        expected_failures=report['expected_failures'], unexpected_successes=report['unexpected_successes'],
+                        gate_active=False, merge_allowed=None, manual_review_required=True)
+          Path('runs/regression-admission.json').write_text(json.dumps(status, indent=2) + '\n')
+          print(json.dumps(status))
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as stream:
+              stream.write('## Regression observation collection\n\n```json\n' + json.dumps(status, indent=2) + '\n```\n')
           PYTHON
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
         with:
           name: python-regression-timings
-          path: runs/python-regression.json
+          path: |
+            runs/python-regression.json
+            runs/regression-admission.json
           if-no-files-found: error
           retention-days: 14
   properties-and-ngspice:

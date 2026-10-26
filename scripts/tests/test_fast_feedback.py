@@ -434,19 +434,6 @@ class ReceiptRoundTrip(unittest.TestCase):
             report = root / "report.json"
             identity = root / "identity.json"
             receipt = root / "receipt.json"
-            subprocess.run(
-                [
-                    sys.executable,
-                    "-B",
-                    str(ROOT / "scripts/run_regression.py"),
-                    "--start-directory",
-                    str(root),
-                    "--report",
-                    str(report),
-                ],
-                check=True,
-                capture_output=True,
-            )
             tools = {"toolchain": "fixture", "kernel_sha256": "fixture", "budget": 120}
 
             def call(operation):
@@ -462,7 +449,7 @@ class ReceiptRoundTrip(unittest.TestCase):
                     "--report",
                     str(report),
                     "--shard",
-                    "fixture",
+                    "0-of-1",
                 ]
                 with (
                     patch.object(sys, "argv", argv),
@@ -471,6 +458,21 @@ class ReceiptRoundTrip(unittest.TestCase):
                     return evidence.main()
 
             self.assertEqual(call("identity"), 0)
+            subprocess.run(
+                [
+                    sys.executable,
+                    "-B",
+                    str(ROOT / "scripts/run_regression.py"),
+                    "--start-directory",
+                    str(root),
+                    "--input-identity",
+                    str(identity),
+                    "--report",
+                    str(report),
+                ],
+                check=True,
+                capture_output=True,
+            )
             self.assertEqual(call("verify"), 1)
             self.assertEqual(call("record"), 0)
             self.assertEqual(call("verify"), 0)
@@ -484,14 +486,12 @@ class ReceiptRoundTrip(unittest.TestCase):
             original_source = source.read_text()
             source.write_text(original_source + "# changed\n")
             self.assertEqual(call("verify"), 1)
-            with self.assertRaises(ValueError):
-                call("record")
+            self.assertEqual(call("record"), 1)
             source.write_text(original_source)
             failed = json.loads(original)
             failed["successful"] = False
             report.write_text(json.dumps(failed))
-            with self.assertRaises(ValueError):
-                call("record")
+            self.assertEqual(call("record"), 1)
 
 
 class FixtureSkipAccounting(unittest.TestCase):

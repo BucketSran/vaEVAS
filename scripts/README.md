@@ -234,6 +234,96 @@ python3 -B scripts/run_regression.py --merge runs/<task>/shard0.json runs/<task>
 [分阶段持续集成](https://martinfowler.com/articles/continuousIntegration.html#KeepTheBuildFast)与
 [测试范围和隔离](https://testing.googleblog.com/2010/12/test-sizes.html)。
 
+### 原始观察、基线提案与合入门禁
+
+`run_regression.py` 的 schema 3 保留方法、子测试、测试体及清理阶段的诊断。
+普通循环失败记录当次循环变量；无法稳定序列化的条件标为 `identity_complete=false`，
+不能自动按旧失败豁免。有理数按精确分子和分母编码。普通数据类须通过字段元数据及静态属性检查，保留实例属性、声明默认值和类数据；
+运行描述符、自定义属性解析或元数据迭代不能取得完整身份。数据字典始终带类型编码，只有命名子测试参数另设名称映射。
+未注解的 Python 函数仅在代码、默认值、闭包和引用全局均能稳定记录时取得条件身份；名称绑定的存在状态与其值分层记录。循环引用、动态导入、
+懒注解、不透明状态及变化的标准数学模块仍不匹配。采集器不执行这些函数来推算身份。
+没有子测试的通过方法只记录方法完成，不推定内部断言已逐项认证。
+`successful` 沿用 unittest 原始结论，预期失败和跳过仍可令该字段为真。
+`collection_complete` 另记导入和收集是否完整。空集合、缺片、中断或覆盖不符不能通过完整性检查。
+
+完整的失败分片仍能合并；合并命令保留失败诊断并返回 1。
+旧 schema 2 仅保留原有只读合并规则，不补造子条件或转成可信基线。
+`metadata` 绑定判据文件、语言配置、采集器、运行环境和模块选择。
+判据身份覆盖 `evas/tests`、`evas/validation`、`evas/examples`、`experiments` 的实际文件，
+排除缓存、构建输出、临时运行及基线目录。生产源码与内核另记在 `source_identity`。
+CI 的运行配置同时绑定完整执行身份中的实际编译器、Cargo 及构建配置，内核内容归 DUT 身份。
+无法确定状态的 `while` 调用和属性条件不授予稳定身份，子测试沿用这个限制。
+这是保守的输入边界，身份变化需要独立审核相应基线配置。
+
+CI 先生成完整输入身份，再用 `--input-identity` 绑定采集报告。
+`ci_evidence.py collect --raw-exit` 检查输入未漂移、报告完整以及原始退出码一致。
+`ci_evidence.py` 统一维护内核选择、运行配置和额外证据输出变量。
+采集器使用同一份表，其内容哈希纳入采集器身份。Python 配置读取及 Rust 运行配置读取有消费者覆盖检查；
+新增键或无法解析的动态读取须先补齐审核。所有登记内核选择及实际文件字节纳入执行身份，
+缺失选择文件拒绝身份生成和复用。未设置与空值分别记录。
+请求额外证据文件时强制执行，不复用成功报告；性能专用 `EVAS_PROFILE_INPUTS` 不在此回归缓存范围内。
+采集成功只表示数据可用。`record` 和 `verify` 只接受非空、全部实际通过的独立分片；
+跳过、预期失败和已知失败均不能写入成功缓存。恢复与保存缓存分别执行。
+
+当前 PR2a 的 CI 仅承担完整采集和覆盖对账。汇总同时显示原始结果、固定分母、
+`gate_active=false`、`merge_allowed=null` 和 `manual_review_required=true`。
+合入仍需固定候选的人工比较与独立审查；CI 采集成功不表示无回退或语义合格。
+PR2b 将从已审核的可信 base 同时读取门禁代码与基线后激活自动准入，缺任一项即拒绝。
+
+```sh
+python3 -B scripts/regression_gate.py validate runs/<task>/complete.json
+python3 -B scripts/regression_gate.py propose runs/<task>/complete.json --source-identity runs/<task>/source.json > runs/<task>/baseline-proposal.json
+python3 -B scripts/regression_gate.py compare runs/<task>/complete.json --repo . --trusted-base <full-commit-id> --inactive
+```
+
+提案默认待审，不自动信任工作树或同一 PR 内修改的基线。
+正式基线使用 `regression-observations-v1` 投影，保留全部方法、条件、阶段、参数、原因及通过观察，
+将完整输入清单、traceback 和原始报告保留在原证据位置。重复的大型循环值按内容哈希共享，
+比较时无损恢复；缺引用、冲突或内容哈希变化均拒绝。投影不修改原报告，另记规范 JSON 的 SHA-256；
+调用者的 `source_identity` 仍须提供实际原文件字节哈希和可获得性。未知投影格式不能取得匹配结论。
+比较器只接受完整可信提交中的 `evas/validation/baselines/regression-v1.json`。
+原通过条件消失、同一方法由失败 A 换成失败 B、新增非通过或条件身份不明均阻断。
+已审核且条件不变的失败可与原始 `successful=false` 并存；这不授予能力资格。
+
+#### 诊断文本中的非确定值
+
+默认比较保留精确诊断文本。对已经复现的耗时、临时目录及巨大有理数 repr 漂移，
+`regression_observation_policy.json` 按源码哈希、函数和断言位置显式选择采集范围。
+选中的标准 unittest 断言另外记录 `reason.comparison_identity`，保留操作、标准库源码身份、
+完整操作数、自定义消息和策略版本；原始 `message` 与 traceback 继续保留。
+未选中的断言沿用精确文本比较。选中但证据不完整的断言不能退回文本豁免。
+自定义失败异常、非精确原生 `AssertionError` 或动态失败属性解析，均不能用操作数替代其诊断。
+
+操作数使用有类型的有限编码。有理数的分子与分母使用无损十六进制，避免十进制显示上限或对象地址。
+用户字典始终编码为键值序列，不能伪装成内部的耗时角色或临时目录标记。
+未知标签、缺失字段、不透明值和不受支持的策略结构均拒绝匹配。
+
+耗时角色须绑定实际生产函数、赋值来源及返回对象，只略去明确诊断耗时的数值，保留其角色与类型。
+同名用户字段仍参与比较。临时目录标记须证明异常发生时的实际标准库目录与调用帧绑定，
+保留文件后缀、源码定位和诊断正文；目录在 subTest 记录失败前正常退出不丢失该证据。
+已有 trace/profile 回调不会被覆盖。策略和采集实现的实际内容均纳入采集器身份，
+变更后须在原 DUT 上重新执行并审核新上下文，不能给旧原始记录补写身份。
+
+#### 保留修复后的通过观察
+
+`validate_baseline_transition` 先按旧可信基线比较本次报告。只有这一比较允许后，
+才检查候选基线的数据；候选提案不能豁免本次新失败。
+如果旧失败已经修好，新增的通过观察必须进入完整、获审查的更新提案。
+只删除旧失败豁免而未保存实际通过条件，同样不能准入。
+下一次比较从合入后的可信提交读取这些通过观察，原失败 A 再次出现或换成失败 B 均须拒绝。
+已有不透明的通过观察保留其未取得身份资格的标记，不能由提案改成合格。
+
+完整执行指纹与成功缓存继续包含基线文件。为避免“写入提案又改变原报告指纹”的循环，
+同一次输入采集另外生成 `comparison_subject`，固定仅分离
+`evas/validation/baselines/regression-v1.json` 和 `regression-v1.review.json`。
+其余输入清单的内容摘要、Git 与实际文件模式、运行环境和工具身份仍参与绑定；
+分片坐标另由完整分片覆盖检查保留。候选数据不能扩大这份固定列表。
+更新提案的 `execution_subject` 还绑定判据、语言、采集器、模块选择、实际 DUT 清单与内核。
+
+提案保留其原始执行的完整报告 SHA 和审查身份。该 SHA 可以不同于写入提案后再次执行的报告 SHA，
+但实际观察、上下文和上述完整输入主体必须匹配。缺失、篡改、混用分片或漏掉输入均拒绝；
+不为缺少新主体字段的旧报告补造资格。当前 PR2a 仍只执行采集，正式准入由 PR2b 接线启用。
+
 ### 找出回归慢在哪里
 
 Python 回归在 Actions 摘要列出最慢的 20 个测试，并保留 `python-regression-timings` 附件。
