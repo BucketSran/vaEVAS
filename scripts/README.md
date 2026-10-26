@@ -382,9 +382,21 @@ CI，不得沿用旧 criteria/collector ID，也不得在未知 context 失败�
 精确映射。新 skip/xfail、丢失义务、非通过身份不全或任意证据哈希不符均拒绝。
 JSON 中的 reviewer 字段仅记录已审主线的决定，不认证独立审查者身份。
 
-当前提交只预装 API 和 loader，固定 workflow 引导仍使用先前已审版本；须先合入
-本代码，再单独将引导锁定到可取得的该版本，才能启用新登记入口。现有科学判据、
-collector 和基线没有因此获得新资格。
+workflow 将引导锁定到已审主线 `72f1c2e4c22d8a2f743da8ec23101d022a3096d5`
+及 loader 的独立 SHA256。loader 只选择一次事件可信 base。普通 C0 比较允许且
+候选追加一个 context 时，workflow 才从同一 base 读取
+`scripts/context-registration-bundle.json` 和 `scripts/materialize_registration_bundle.py`。
+HEAD 中的同名文件不能替代它们；没有追加时不要求这些文件存在。
+
+指针仅含 `schema_version: 1`、非零完整 `commit` 和仓库内相对目录 `prefix`。
+物化 helper 只读本地 Git 中的十个固定普通 blob，不抓取对象、不执行 bundle，
+并记录 commit、tree、blob 和 SHA256。缺对象、符号链接、目录、浮动 ref 或路径逃逸
+均拒绝。bundle 字节仍须经过可信登记 API 的精确授权核验，指针本身不授予资格。
+`runs/regression-bundle-source.json` 与原准入收据一同上传，区分未请求、已物化和错误。
+
+后续授权 PR 须同时将精确授权及其数据指针放入可信 base；之后的追加事务仍只改
+固定 baseline。本批没有加入真实指针、context 或授权。现有科学判据、collector
+和基线没有因此获得新资格。
 
 
 ### 找出回归慢在哪里
