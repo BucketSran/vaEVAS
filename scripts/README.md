@@ -265,16 +265,37 @@ CI 先生成完整输入身份，再用 `--input-identity` 绑定采集报告。
 采集成功只表示数据可用。`record` 和 `verify` 只接受非空、全部实际通过的独立分片；
 跳过、预期失败和已知失败均不能写入成功缓存。恢复与保存缓存分别执行。
 
-当前 PR2a 的 CI 仅承担完整采集和覆盖对账。汇总同时显示原始结果、固定分母、
-`gate_active=false`、`merge_allowed=null` 和 `manual_review_required=true`。
-合入仍需固定候选的人工比较与独立审查；CI 采集成功不表示无回退或语义合格。
-可信比较 loader 作为 inactive bootstrap 提供，尚未接入必需准入 job。
-它从事件选定的可信提交同时读取 gate、transition API 和基线，head 基线仅作候选数据；
-这些比较器测试不证明 workflow 的 loader 本体来源已固定。
-合入本 bootstrap 后，后续独立激活 PR 才能固定其完整已审 main commit，
-从该 commit 的 regular Git blob 抽取 loader 并以 `python -I` 执行。
-直接执行 PR checkout 的同名脚本不能作为可信准入；`-I` 不能防脚本本体被替换。
-激活前继续采用上述人工比较与独立审查，不把采集成功称为自动允许合入。
+`regression-coverage` 校验完整采集和固定分母，保留原始合并报告及
+`regression-collection.json`。独立的 `regression-admission` job 使用 workflow 内固定的完整
+已审 main bootstrap commit，从该提交的 regular Git blob 抽取 loader。
+执行前还须核对已审 loader SHA256；缺 pin、缺文件、非 regular blob 或摘要不符均拒绝，
+没有 head loader、HEAD、任意 source override 或空 pin 回退。`python -I` 只隔离导入环境，
+不能防被执行的脚本本体遭替换，因此不得直接运行 PR checkout 的同名 loader 作准入。
+
+bootstrap 来源与科学比较来源分别记录：固定 bootstrap commit 只提供入口；
+loader 仍从真实 CI 事件选择 gate、transition API 和可信基线所在提交。
+PR 固定取 `pull_request.base.sha`，默认主线 push 取 `before`；schedule/manual 重新 fetch
+origin 默认主线后取本次 `FETCH_HEAD`，忽略手动 `inputs.base`。
+默认分支为 `main`，其它分支名只能由受审 workflow 固定配置。
+HEAD 的 baseline 只作候选数据，不能允许当前新失败；先前可信比较拒绝后不检查它。
+新增通过须由同一可信 transition 检查完整提案和实际 producer input subject。
+
+结果分别保存在 `regression-bootstrap-source.json` 和 `regression-admission.json`，失败也上传。
+已审核且条件未变的失败可取得 `merge_allowed=true`，原始 `successful=false` 保持不变。
+所选准入 job 失败、跳过或缺失均阻断总门槛；未选完整回归的 iteration 仍按现策略跳过。
+
+启用前必须先将 inactive loader/有界测试独审合入实际 main，再由独立激活 PR 填入那个完整
+bootstrap commit 和已核对的 loader SHA256。临时 fixture commit、PR head 或发布但尚未合入的
+commit 不能代替它。workflow/pin 本身仍依正常源码审查；这里不宣称能防获准合入的任意恶意
+workflow，也不改变 GitHub 事件权限或分支保护。
+
+维护入口：
+
+```sh
+python3 -B -m unittest discover -s scripts/tests -p test_regression_admission.py -v
+```
+
+本地报告检查和基线提案仍使用以下入口：
 
 ```sh
 python3 -B scripts/regression_gate.py validate runs/<task>/complete.json

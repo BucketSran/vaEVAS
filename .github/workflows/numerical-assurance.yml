@@ -342,7 +342,7 @@ jobs:
         with:
           pattern: python-regression-shard-*
           path: runs/shards
-      - name: Verify complete raw coverage with admission gate inactive
+      - name: Verify complete raw coverage
         run: |
           python3 - <<'PYTHON'
           from pathlib import Path
@@ -357,14 +357,12 @@ jobs:
           validation = validate_report(report)
           assert validation['valid'], validation['errors']
           assert result.returncode == (0 if report['successful'] else 1), 'raw exit/report mismatch'
-          # PR2a bootstraps observations under independent manual review.
-          # This result grants no automatic merge admission or semantic support.
+          # Coverage establishes complete observations; admission is separate.
           status = dict(collection_valid=True, raw_successful=report['successful'],
                         methods=report['tests_run'], discovered=len(report['discovered_test_ids']),
                         failures=report['failures'], errors=report['errors'], skipped=report['skipped'],
-                        expected_failures=report['expected_failures'], unexpected_successes=report['unexpected_successes'],
-                        gate_active=False, merge_allowed=None, manual_review_required=True)
-          Path('runs/regression-admission.json').write_text(json.dumps(status, indent=2) + '\n')
+                        expected_failures=report['expected_failures'], unexpected_successes=report['unexpected_successes'])
+          Path('runs/regression-collection.json').write_text(json.dumps(status, indent=2) + '\n')
           print(json.dumps(status))
           with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as stream:
               stream.write('## Regression observation collection\n\n```json\n' + json.dumps(status, indent=2) + '\n```\n')
@@ -375,7 +373,119 @@ jobs:
           name: python-regression-timings
           path: |
             runs/python-regression.json
+            runs/regression-collection.json
+          if-no-files-found: error
+          retention-days: 14
+  regression-admission:
+    needs: [selection, regression-coverage]
+    if: always() && needs.selection.outputs.regression == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: python-regression-timings
+          path: runs
+      - name: Compare raw observations with the trusted comparator
+        run: |
+          mkdir -p runs
+          python3 -I - <<'PYTHON'
+          import ast
+          import hashlib
+          import json
+          from pathlib import Path
+          import re
+          import subprocess
+          import sys
+          import tempfile
+
+          # Fill only after the inactive bootstrap has actually merged to reviewed main.
+          BOOTSTRAP_COMMIT = "58521bb6fe416c3ade0bc26682458e25fac6a5c3"
+          BOOTSTRAP_SHA256 = "c93c4f5d713afdc1779790e01da6caed8f2c0d76541c944351dee037e85e0261"
+          BOOTSTRAP_PATH = "scripts/run_trusted_regression_gate.py"
+          repo = Path.cwd().resolve()
+          report = repo / "runs/python-regression.json"
+          admission = repo / "runs/regression-admission.json"
+          source_path = repo / "runs/regression-bootstrap-source.json"
+          source = dict(schema_version=1, source="fixed-reviewed-main-commit",
+                        bootstrap_commit=BOOTSTRAP_COMMIT, bootstrap_path=BOOTSTRAP_PATH,
+                        expected_loader_sha256=BOOTSTRAP_SHA256, loaded=False, execution_cwd="isolated-temporary-directory")
+          status = 2
+
+          def git(*args):
+              result = subprocess.run(["git", "-C", str(repo), *args], capture_output=True)
+              if result.returncode:
+                  raise ValueError(result.stderr.decode(errors="replace").strip())
+              return result.stdout
+
+          try:
+              if (not re.fullmatch(r"(?:[0-9a-f]{40}|[0-9a-f]{64})", BOOTSTRAP_COMMIT)
+                      or set(BOOTSTRAP_COMMIT) == {"0"}):
+                  raise ValueError("a fixed full reviewed bootstrap commit is required")
+              resolved = git("rev-parse", "--verify", BOOTSTRAP_COMMIT + "^{commit}").decode().strip()
+              if resolved != BOOTSTRAP_COMMIT:
+                  raise ValueError("bootstrap pin must name an exact commit")
+              entries = [item for item in git("ls-tree", "-z", BOOTSTRAP_COMMIT, "--", BOOTSTRAP_PATH).split(b"\0") if item]
+              if len(entries) != 1:
+                  raise ValueError("fixed bootstrap source is missing")
+              metadata, name = entries[0].split(b"\t", 1)
+              mode, kind, blob = metadata.decode().split()
+              if mode not in ("100644", "100755") or kind != "blob" or name.decode() != BOOTSTRAP_PATH:
+                  raise ValueError("fixed bootstrap source must be a regular Git blob")
+              content = git("show", BOOTSTRAP_COMMIT + ":" + BOOTSTRAP_PATH)
+              if not content.strip():
+                  raise ValueError("fixed bootstrap source is empty")
+              observed = hashlib.sha256(content).hexdigest()
+              source.update(bootstrap_blob=blob, bootstrap_mode=mode, loader_sha256=observed)
+              if not re.fullmatch(r"[0-9a-f]{64}", BOOTSTRAP_SHA256) or observed != BOOTSTRAP_SHA256:
+                  raise ValueError("fixed bootstrap SHA256 mismatch")
+              tree = ast.parse(content, filename=BOOTSTRAP_PATH)
+              functions = {item.name for item in tree.body if isinstance(item, ast.FunctionDef)}
+              if not {"main", "select_trusted_commit", "evaluate_event"} <= functions:
+                  raise ValueError("fixed bootstrap source lacks its public entry structure")
+              source["loaded"] = True
+              with tempfile.TemporaryDirectory(prefix="regression-bootstrap-") as directory:
+                  isolated = Path(directory)
+                  loader = isolated / "trusted-loader.py"
+                  loader.write_bytes(content)
+                  process = subprocess.run([sys.executable, "-I", str(loader), "--repo", str(repo),
+                                            "--report", str(report)], cwd=isolated,
+                                           capture_output=True)
+              if process.stderr:
+                  sys.stderr.buffer.write(process.stderr)
+              result = json.loads(process.stdout)
+              if (not isinstance(result, dict) or type(result.get("merge_allowed")) is not bool
+                      or (process.returncode == 0) != result["merge_allowed"]):
+                  raise ValueError("trusted bootstrap exit/result mismatch")
+              admission.write_bytes(process.stdout)
+              source["bootstrap_exit"] = process.returncode
+              trust = result.get("trust")
+              if isinstance(trust, dict):
+                  source["event_trusted_commit"] = trust.get("trusted_commit")
+                  source["event_trust_source"] = trust.get("source")
+              status = process.returncode
+          except (OSError, ValueError, TypeError, KeyError, SyntaxError) as error:
+              source["error"] = str(error)
+              admission.write_text(json.dumps(dict(merge_allowed=False, raw_successful=None,
+                                                  bootstrap_error=str(error)), indent=2) + "\n")
+          finally:
+              source_path.write_text(json.dumps(source, indent=2) + "\n")
+              print(json.dumps(source))
+          raise SystemExit(status)
+          PYTHON
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: python-regression-admission
+          path: |
             runs/regression-admission.json
+            runs/regression-bootstrap-source.json
           if-no-files-found: error
           retention-days: 14
   properties-and-ngspice:
@@ -465,7 +575,7 @@ jobs:
     uses: ./.github/workflows/benchmark-evidence.yml
   ci-result:
     name: ${{ needs.selection.outputs.mode == 'iteration' && 'iteration-result' || 'ci-result' }}
-    needs: [selection, fast-checks, static-checks, provenance-paper, provenance-support, regression, rust-regression, regression-coverage, properties-and-ngspice, fuzz-smoke, package, benchmark]
+    needs: [selection, fast-checks, static-checks, provenance-paper, provenance-support, regression, rust-regression, regression-coverage, regression-admission, properties-and-ngspice, fuzz-smoke, package, benchmark]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 5
