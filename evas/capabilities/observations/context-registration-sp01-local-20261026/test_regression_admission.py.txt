@@ -1,0 +1,12 @@
+test_actual_coverage_then_admission_commands_preserve_raw_failure_and_reject_drift (test_regression_admission.AdmissionIntegrationTests.test_actual_coverage_then_admission_commands_preserve_raw_failure_and_reject_drift) ... ok
+test_required_job_wiring_and_separate_always_uploaded_artifacts (test_regression_admission.AdmissionIntegrationTests.test_required_job_wiring_and_separate_always_uploaded_artifacts) ... ok
+test_selected_admission_failure_skip_or_absence_blocks_total_gate (test_regression_admission.AdmissionIntegrationTests.test_selected_admission_failure_skip_or_absence_blocks_total_gate) ... ok
+test_actual_workflow_rejects_new_B_after_only_head_loader_replacement (test_regression_admission.BootstrapSourceTests.test_actual_workflow_rejects_new_B_after_only_head_loader_replacement) ... ok
+test_fixed_bootstrap_hash_mismatch_refuses_without_head_fallback (test_regression_admission.BootstrapSourceTests.test_fixed_bootstrap_hash_mismatch_refuses_without_head_fallback) ... ok
+test_missing_invalid_or_short_fixed_pin_never_uses_head_loader (test_regression_admission.BootstrapSourceTests.test_missing_invalid_or_short_fixed_pin_never_uses_head_loader) ... ok
+test_missing_or_nonregular_bootstrap_blob_never_uses_head_loader (test_regression_admission.BootstrapSourceTests.test_missing_or_nonregular_bootstrap_blob_never_uses_head_loader) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 6.363s
+
+OK

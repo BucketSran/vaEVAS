@@ -1,0 +1,330 @@
+test_preauthorized_shards_must_bind_inputs_and_actual_shard_labels (test_trusted_regression_gate.RegistrationLoaderIntegrationTests.test_preauthorized_shards_must_bind_inputs_and_actual_shard_labels) ... 
+  test_preauthorized_shards_must_bind_inputs_and_actual_shard_labels (test_trusted_regression_gate.RegistrationLoaderIntegrationTests.test_preauthorized_shards_must_bind_inputs_and_actual_shard_labels) (merged=False, mode='input_identity') ... FAIL
+  test_preauthorized_shards_must_bind_inputs_and_actual_shard_labels (test_trusted_regression_gate.RegistrationLoaderIntegrationTests.test_preauthorized_shards_must_bind_inputs_and_actual_shard_labels) (merged=False, mode='shard_label') ... FAIL
+  test_preauthorized_shards_must_bind_inputs_and_actual_shard_labels (test_trusted_regression_gate.RegistrationLoaderIntegrationTests.test_preauthorized_shards_must_bind_inputs_and_actual_shard_labels) (merged=True, mode='input_identity') ... FAIL
+  test_preauthorized_shards_must_bind_inputs_and_actual_shard_labels (test_trusted_regression_gate.RegistrationLoaderIntegrationTests.test_preauthorized_shards_must_bind_inputs_and_actual_shard_labels) (merged=True, mode='shard_label') ... FAIL
+
+======================================================================
+FAIL: test_preauthorized_shards_must_bind_inputs_and_actual_shard_labels (test_trusted_regression_gate.RegistrationLoaderIntegrationTests.test_preauthorized_shards_must_bind_inputs_and_actual_shard_labels) (merged=False, mode='input_identity')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/scripts/tests/test_trusted_regression_gate.py", line 471, in test_preauthorized_shards_must_bind_inputs_and_actual_shard_labels
+    self.assertEqual(result.returncode, 0 if mode == 'coherent' else 1,
+AssertionError: 0 != 1 : {
+  "valid": true,
+  "raw_successful": false,
+  "merge_allowed": true,
+  "semantic_qualification": false,
+  "transition": {
+    "accepted": true,
+    "registration": true
+  },
+  "authorization_evaluated": true,
+  "head_evaluated": true,
+  "differences": [],
+  "trusted_comparison": {
+    "valid": true,
+    "raw_successful": false,
+    "merge_allowed": true,
+    "differences": [],
+    "semantic_qualification": false
+  },
+  "current_transition": {
+    "valid": true,
+    "raw_successful": false,
+    "merge_allowed": true,
+    "differences": [],
+    "semantic_qualification": false,
+    "trusted_comparison": {
+      "valid": true,
+      "raw_successful": false,
+      "merge_allowed": true,
+      "differences": [],
+      "semantic_qualification": false
+    },
+    "transition": {
+      "proposal_evaluated": false,
+      "refresh_required": false,
+      "accepted": true,
+      "differences": [],
+      "new_passed_observations": [],
+      "reused_trusted_baseline": true
+    }
+  },
+  "authorization_id": "fixture:append C1,I1 on unchanged D0",
+  "added_entry_sha256": "11795c4333dc66eeee78e66c99395dead7ba0b5c9567f9c8beae420471b31d11",
+  "human_review_status": "trusted-main record only; JSON does not authenticate a human",
+  "opaque_passes": 58,
+  "trust": {
+    "trusted_commit": "40c86ac146f3e9df57405d39763086bac85f4573",
+    "code_path": "scripts/regression_gate.py",
+    "baseline_path": "evas/validation/baselines/regression-v1.json",
+    "code_sha256": "df028ac10ddecb10f870ce889342826b56789d83322394e62e10e5cbb9c0d654",
+    "transition_code_sha256": "df028ac10ddecb10f870ce889342826b56789d83322394e62e10e5cbb9c0d654",
+    "baseline_sha256": "e83482d62b90587a812ce9c5e52fcd7dd4e1218d3619b4af08223b8fd18c25b1",
+    "candidate_baseline": {
+      "evaluated": true,
+      "is_authority": false,
+      "path": "evas/validation/baselines/regression-v1.json",
+      "commit": "b93c44df79647ca2c6387826d25e5b37cc34ab83",
+      "sha256": "aa50d8a84a3c2bb96aa39238dba9f3664844121baeae3e90a51193c5fbe97ebd",
+      "loaded": true
+    },
+    "registration": {
+      "trusted_commit": "40c86ac146f3e9df57405d39763086bac85f4573",
+      "code_path": "scripts/regression_context_registration.py",
+      "code_sha256": "0064551f39057e24855a0969af79ef1a00d4e3bebe9a0d9bbc4652d98ebd4a75",
+      "review_path": "evas/validation/baselines/regression-v1.review.json",
+      "review_sha256": "8d0a44aea496223bdf2761e718fb9ab7d99572b5b9b77642875a4eb241797744",
+      "head_authority": false
+    },
+    "source": "event.pull_request.base.sha",
+    "default_branch": "main"
+  }
+}
+
+
+======================================================================
+FAIL: test_preauthorized_shards_must_bind_inputs_and_actual_shard_labels (test_trusted_regression_gate.RegistrationLoaderIntegrationTests.test_preauthorized_shards_must_bind_inputs_and_actual_shard_labels) (merged=False, mode='shard_label')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/scripts/tests/test_trusted_regression_gate.py", line 471, in test_preauthorized_shards_must_bind_inputs_and_actual_shard_labels
+    self.assertEqual(result.returncode, 0 if mode == 'coherent' else 1,
+AssertionError: 0 != 1 : {
+  "valid": true,
+  "raw_successful": false,
+  "merge_allowed": true,
+  "semantic_qualification": false,
+  "transition": {
+    "accepted": true,
+    "registration": true
+  },
+  "authorization_evaluated": true,
+  "head_evaluated": true,
+  "differences": [],
+  "trusted_comparison": {
+    "valid": true,
+    "raw_successful": false,
+    "merge_allowed": true,
+    "differences": [],
+    "semantic_qualification": false
+  },
+  "current_transition": {
+    "valid": true,
+    "raw_successful": false,
+    "merge_allowed": true,
+    "differences": [],
+    "semantic_qualification": false,
+    "trusted_comparison": {
+      "valid": true,
+      "raw_successful": false,
+      "merge_allowed": true,
+      "differences": [],
+      "semantic_qualification": false
+    },
+    "transition": {
+      "proposal_evaluated": false,
+      "refresh_required": false,
+      "accepted": true,
+      "differences": [],
+      "new_passed_observations": [],
+      "reused_trusted_baseline": true
+    }
+  },
+  "authorization_id": "fixture:append C1,I1 on unchanged D0",
+  "added_entry_sha256": "887c5eb0cab35d364b520b3be87c344e66dcccceae2755c16adf3804f8eaa89a",
+  "human_review_status": "trusted-main record only; JSON does not authenticate a human",
+  "opaque_passes": 58,
+  "trust": {
+    "trusted_commit": "c5b5516eb8e2ce1d0a7c617f76d4d8475e70ae10",
+    "code_path": "scripts/regression_gate.py",
+    "baseline_path": "evas/validation/baselines/regression-v1.json",
+    "code_sha256": "df028ac10ddecb10f870ce889342826b56789d83322394e62e10e5cbb9c0d654",
+    "transition_code_sha256": "df028ac10ddecb10f870ce889342826b56789d83322394e62e10e5cbb9c0d654",
+    "baseline_sha256": "e83482d62b90587a812ce9c5e52fcd7dd4e1218d3619b4af08223b8fd18c25b1",
+    "candidate_baseline": {
+      "evaluated": true,
+      "is_authority": false,
+      "path": "evas/validation/baselines/regression-v1.json",
+      "commit": "87f3ad65170ef4490f735ef8f05ecc99be49b697",
+      "sha256": "04ed962754504e2e259ac3731f3c45fa3622131feb2cd2ca9e08c1d4b67f8b44",
+      "loaded": true
+    },
+    "registration": {
+      "trusted_commit": "c5b5516eb8e2ce1d0a7c617f76d4d8475e70ae10",
+      "code_path": "scripts/regression_context_registration.py",
+      "code_sha256": "0064551f39057e24855a0969af79ef1a00d4e3bebe9a0d9bbc4652d98ebd4a75",
+      "review_path": "evas/validation/baselines/regression-v1.review.json",
+      "review_sha256": "f8fb61ccb6e03e5164ddfb4eae964cf41d909d915b9b6ee985b14850724c2eb4",
+      "head_authority": false
+    },
+    "source": "event.pull_request.base.sha",
+    "default_branch": "main"
+  }
+}
+
+
+======================================================================
+FAIL: test_preauthorized_shards_must_bind_inputs_and_actual_shard_labels (test_trusted_regression_gate.RegistrationLoaderIntegrationTests.test_preauthorized_shards_must_bind_inputs_and_actual_shard_labels) (merged=True, mode='input_identity')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/scripts/tests/test_trusted_regression_gate.py", line 471, in test_preauthorized_shards_must_bind_inputs_and_actual_shard_labels
+    self.assertEqual(result.returncode, 0 if mode == 'coherent' else 1,
+AssertionError: 0 != 1 : {
+  "valid": true,
+  "raw_successful": false,
+  "merge_allowed": true,
+  "semantic_qualification": false,
+  "transition": {
+    "accepted": true,
+    "registration": true
+  },
+  "authorization_evaluated": true,
+  "head_evaluated": true,
+  "differences": [],
+  "trusted_comparison": {
+    "valid": true,
+    "raw_successful": false,
+    "merge_allowed": true,
+    "differences": [],
+    "semantic_qualification": false
+  },
+  "current_transition": {
+    "valid": true,
+    "raw_successful": false,
+    "merge_allowed": true,
+    "differences": [],
+    "semantic_qualification": false,
+    "trusted_comparison": {
+      "valid": true,
+      "raw_successful": false,
+      "merge_allowed": true,
+      "differences": [],
+      "semantic_qualification": false
+    },
+    "transition": {
+      "proposal_evaluated": false,
+      "refresh_required": false,
+      "accepted": true,
+      "differences": [],
+      "new_passed_observations": [],
+      "reused_trusted_baseline": true
+    }
+  },
+  "authorization_id": "fixture:append C1,I1 on unchanged D0",
+  "added_entry_sha256": "89bb91d90fc618f29153ccbe3a900307e4c861852f0b99f273d6d53e91540978",
+  "human_review_status": "trusted-main record only; JSON does not authenticate a human",
+  "opaque_passes": 58,
+  "trust": {
+    "trusted_commit": "89d6a734936b9200db6684d65a0b1b679312ee8b",
+    "code_path": "scripts/regression_gate.py",
+    "baseline_path": "evas/validation/baselines/regression-v1.json",
+    "code_sha256": "df028ac10ddecb10f870ce889342826b56789d83322394e62e10e5cbb9c0d654",
+    "transition_code_sha256": "df028ac10ddecb10f870ce889342826b56789d83322394e62e10e5cbb9c0d654",
+    "baseline_sha256": "e83482d62b90587a812ce9c5e52fcd7dd4e1218d3619b4af08223b8fd18c25b1",
+    "candidate_baseline": {
+      "evaluated": true,
+      "is_authority": false,
+      "path": "evas/validation/baselines/regression-v1.json",
+      "commit": "fec34672299da781d79fc61b3e4a646d10d7097e",
+      "sha256": "6bd01ba12965e64a2ef954c408d58d24e717d0ab0aba24eafc33546ec596acc3",
+      "loaded": true
+    },
+    "registration": {
+      "trusted_commit": "89d6a734936b9200db6684d65a0b1b679312ee8b",
+      "code_path": "scripts/regression_context_registration.py",
+      "code_sha256": "0064551f39057e24855a0969af79ef1a00d4e3bebe9a0d9bbc4652d98ebd4a75",
+      "review_path": "evas/validation/baselines/regression-v1.review.json",
+      "review_sha256": "7c92a70e35babb50160a4b7e110b4f81432cb1b2ecd9b24b6d7d952b3f1b2c60",
+      "head_authority": false
+    },
+    "source": "event.pull_request.base.sha",
+    "default_branch": "main"
+  }
+}
+
+
+======================================================================
+FAIL: test_preauthorized_shards_must_bind_inputs_and_actual_shard_labels (test_trusted_regression_gate.RegistrationLoaderIntegrationTests.test_preauthorized_shards_must_bind_inputs_and_actual_shard_labels) (merged=True, mode='shard_label')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/scripts/tests/test_trusted_regression_gate.py", line 471, in test_preauthorized_shards_must_bind_inputs_and_actual_shard_labels
+    self.assertEqual(result.returncode, 0 if mode == 'coherent' else 1,
+AssertionError: 0 != 1 : {
+  "valid": true,
+  "raw_successful": false,
+  "merge_allowed": true,
+  "semantic_qualification": false,
+  "transition": {
+    "accepted": true,
+    "registration": true
+  },
+  "authorization_evaluated": true,
+  "head_evaluated": true,
+  "differences": [],
+  "trusted_comparison": {
+    "valid": true,
+    "raw_successful": false,
+    "merge_allowed": true,
+    "differences": [],
+    "semantic_qualification": false
+  },
+  "current_transition": {
+    "valid": true,
+    "raw_successful": false,
+    "merge_allowed": true,
+    "differences": [],
+    "semantic_qualification": false,
+    "trusted_comparison": {
+      "valid": true,
+      "raw_successful": false,
+      "merge_allowed": true,
+      "differences": [],
+      "semantic_qualification": false
+    },
+    "transition": {
+      "proposal_evaluated": false,
+      "refresh_required": false,
+      "accepted": true,
+      "differences": [],
+      "new_passed_observations": [],
+      "reused_trusted_baseline": true
+    }
+  },
+  "authorization_id": "fixture:append C1,I1 on unchanged D0",
+  "added_entry_sha256": "ef1c4c45ad53575585d3f98e8d9a7fea5174e01b21e01ce2d7fd890d455d5333",
+  "human_review_status": "trusted-main record only; JSON does not authenticate a human",
+  "opaque_passes": 58,
+  "trust": {
+    "trusted_commit": "0d128d6ea1863f9d7eaa286f94b2ba585b762efd",
+    "code_path": "scripts/regression_gate.py",
+    "baseline_path": "evas/validation/baselines/regression-v1.json",
+    "code_sha256": "df028ac10ddecb10f870ce889342826b56789d83322394e62e10e5cbb9c0d654",
+    "transition_code_sha256": "df028ac10ddecb10f870ce889342826b56789d83322394e62e10e5cbb9c0d654",
+    "baseline_sha256": "e83482d62b90587a812ce9c5e52fcd7dd4e1218d3619b4af08223b8fd18c25b1",
+    "candidate_baseline": {
+      "evaluated": true,
+      "is_authority": false,
+      "path": "evas/validation/baselines/regression-v1.json",
+      "commit": "e4396cf5d73232945d0f0c222dbb3202fd9a6d7a",
+      "sha256": "4d0dcd33067f4455f6fa345ceb595c5d874ca7977730c527a272145b8cf090ab",
+      "loaded": true
+    },
+    "registration": {
+      "trusted_commit": "0d128d6ea1863f9d7eaa286f94b2ba585b762efd",
+      "code_path": "scripts/regression_context_registration.py",
+      "code_sha256": "0064551f39057e24855a0969af79ef1a00d4e3bebe9a0d9bbc4652d98ebd4a75",
+      "review_path": "evas/validation/baselines/regression-v1.review.json",
+      "review_sha256": "80509dd1cbd846d78a0da7a9a22f14f65dd8b78580bcffd105ea7fdc0237a7cf",
+      "head_authority": false
+    },
+    "source": "event.pull_request.base.sha",
+    "default_branch": "main"
+  }
+}
+
+
+----------------------------------------------------------------------
+Ran 1 test in 9.332s
+
+FAILED (failures=4)

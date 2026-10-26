@@ -1,0 +1,14 @@
+test_preauthorized_shards_must_bind_inputs_and_actual_shard_labels (test_trusted_regression_gate.RegistrationLoaderIntegrationTests.test_preauthorized_shards_must_bind_inputs_and_actual_shard_labels) ... ERROR
+
+======================================================================
+ERROR: test_preauthorized_shards_must_bind_inputs_and_actual_shard_labels (test_trusted_regression_gate.RegistrationLoaderIntegrationTests.test_preauthorized_shards_must_bind_inputs_and_actual_shard_labels)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night/scripts/tests/test_trusted_regression_gate.py", line 429, in test_preauthorized_shards_must_bind_inputs_and_actual_shard_labels
+    import ci_evidence
+ModuleNotFoundError: No module named 'ci_evidence'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.510s
+
+FAILED (errors=1)

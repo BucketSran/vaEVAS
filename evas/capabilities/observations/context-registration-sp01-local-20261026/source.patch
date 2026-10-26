@@ -1,0 +1,155 @@
+diff --git a/scripts/README.md b/scripts/README.md
+index 58dd82fb..5f09a177 100644
+--- a/scripts/README.md
++++ b/scripts/README.md
+@@ -367,6 +367,8 @@ python3 -B scripts/regression_gate.py compare runs/<task>/complete.json --repo .
+ `collector_manifest`、`artifact_manifest`、`stdout`、`stderr` 和 `shard_reports`。
+ 各文件的原始 bytes 由先前可信主线的授权记录锁定。完整快照、所有分片、实际
+ DUT/kernel、环境及旧新义务映射均参与核验；夹具测试不能替代这些实际执行。
++每个原始分片的 `input_identity` 须与实际元数据、来源和所选方法的摘要一致，
++执行环境中的分片标签须匹配该报告的分片序号及总数；精确预授权不能豁免这两项检查。
+ 
+ 登记顺序是先在已审主线安装校验器，再取得新判据/旧 DUT 的完整证据并独审，
+ 将精确授权追加到既有 `regression-v1.review.json` 的
+diff --git a/scripts/regression_context_registration.py b/scripts/regression_context_registration.py
+index adb2e308..c4ca61a4 100644
+--- a/scripts/regression_context_registration.py
++++ b/scripts/regression_context_registration.py
+@@ -251,6 +251,12 @@ def evidence(auth, blobs, gate, e1, entry, current_subject):
+             equal(shard[key], e1[key], 'shard ' + key)
+         public = lambda source: {k: v for k, v in source.items() if k != 'execution_identity'}
+         equal(public(shard['source_identity']), public(e1['source_identity']), 'shard public scientific source')
++        expected_input = digest({key: shard[key] for key in
++                                 ('metadata', 'source_identity', 'selected_test_ids')})
++        equal(shard.get('input_identity'), expected_input, 'shard input_identity')
++        environment = shard['source_identity']['execution_identity']['environment']
++        expected_shard = str(shard['shard_index']) + '-of-' + str(shard['shard_count'])
++        equal(environment.get('shard'), expected_shard, 'shard environment label')
+     if e1.get('merged'):
+         for key in ('tests', 'fixtures', 'setup_skipped_test_ids'):
+             equal([item for shard in shards for item in shard[key]], e1[key], 'merged raw ' + key)
+diff --git a/scripts/tests/regression_registration_fixtures.py b/scripts/tests/regression_registration_fixtures.py
+index 8c0a9a0d..cd8d67f8 100644
+--- a/scripts/tests/regression_registration_fixtures.py
++++ b/scripts/tests/regression_registration_fixtures.py
+@@ -25,6 +25,11 @@ def raw(value):
+     return json.dumps(value, indent=2, sort_keys=True).encode() + b'\n'
+ 
+ 
++def bind_input_identity(value):
++    value['input_identity'] = api.digest({key: value[key] for key in
++                                         ('metadata', 'source_identity', 'selected_test_ids')})
++
++
+ def condition(identity, outcome, opaque=False, criteria='C0'):
+     site = {'module': 'synthetic_fixture', 'line': 10, 'source_sha256': h(criteria)}
+     value = dict(id=identity, phase='test', kind='assertion', site=site,
+@@ -76,6 +81,7 @@ def report(criteria='C0', collector='I0', correction=False, opaque_count=58):
+                                invocation={'pattern': 'test_*.py', 'modules': []}),
+                  source_identity=dict(criteria_files=criteria_files, dut_files=dut_files,
+                                       kernel_sha256=api.raw_digest(kernel), execution_identity=identity))
++    bind_input_identity(value)
+     return value, entries, collector_manifest, kernel
+ 
+ 
+@@ -110,7 +116,7 @@ class Store:
+ 
+ def make_fixture(correction=False, opaque_count=58, alter_e1=None, alter_entry=None,
+                  alter_auth=None, alter_baseline=None, new_criteria='C1', new_collector='I1',
+-                 merged=False, alter_blobs=None):
++                 merged=False, alter_blobs=None, alter_shard=None):
+     current, _, _, _ = report(opaque_count=opaque_count)
+     e1, entries, collector, kernel = report(new_criteria, new_collector, correction, opaque_count)
+     shards = [e1]
+@@ -120,8 +126,7 @@ def make_fixture(correction=False, opaque_count=58, alter_e1=None, alter_entry=N
+         for index in range(2):
+             shard = copy.deepcopy(e1)
+             shard.update(discovered_test_ids=names, selected_test_ids=[names[index]],
+-                         assignment=[[name] for name in names], shard_count=2, shard_index=index,
+-                         input_identity=h('synthetic part ' + str(index)))
++                         assignment=[[name] for name in names], shard_count=2, shard_index=index)
+             if index == 1:
+                 shard.update(failures=0, successful=True,
+                              tests=[dict(id=names[1], outcome='passed', seconds=0.1,
+@@ -130,6 +135,9 @@ def make_fixture(correction=False, opaque_count=58, alter_e1=None, alter_entry=N
+             identity['environment']['shard'] = str(index) + '-of-2'
+             identity['key'] = api.digest(dict(version=3, report_schema_version=3,
+                                                files=entries, environment=identity['environment']))
++            bind_input_identity(shard)
++            if alter_shard:
++                alter_shard(shard, entries)
+             shards.append(shard)
+         e1 = copy.deepcopy(shards[0])
+         e1.update(merged=True, shard_index=None, selected_test_ids=names, tests_run=2,
+@@ -138,6 +146,8 @@ def make_fixture(correction=False, opaque_count=58, alter_e1=None, alter_entry=N
+                           'selected_test_ids', 'metadata', 'input_identity', 'source_identity')} for shard in shards])
+         e1['source_identity'] = {k: v for k, v in e1['source_identity'].items() if k != 'execution_identity'}
+         e1.pop('input_identity')
++    elif alter_shard:
++        alter_shard(e1, entries)
+     if alter_e1:
+         alter_e1(e1)
+     baseline = gate.propose_baseline(current, {'fixture': 'C0:D0 observed provenance'}, REVIEW)
+diff --git a/scripts/tests/test_trusted_regression_gate.py b/scripts/tests/test_trusted_regression_gate.py
+index c93e9e2f..40846d93 100644
+--- a/scripts/tests/test_trusted_regression_gate.py
++++ b/scripts/tests/test_trusted_regression_gate.py
+@@ -425,6 +425,58 @@ class RegistrationLoaderIntegrationTests(unittest.TestCase):
+         self.assertEqual(facts['trust']['registration']['trusted_commit'], self.trusted)
+         self.assertFalse(facts['semantic_qualification'])
+ 
++    def test_preauthorized_shards_must_bind_inputs_and_actual_shard_labels(self):
++        spec = importlib.util.spec_from_file_location('registration_evidence_control',
++                                                       ROOT / 'scripts/ci_evidence.py')
++        ci_evidence = importlib.util.module_from_spec(spec)
++        spec.loader.exec_module(ci_evidence)
++        fx = self.fixtures
++        for merged in (False, True):
++            for mode in ('coherent', 'input_identity', 'shard_label'):
++                with self.subTest(merged=merged, mode=mode):
++                    def alter(shard, entries):
++                        if shard['shard_index'] != shard['shard_count'] - 1:
++                            return
++                        if mode == 'input_identity':
++                            shard['input_identity'] = '0' * 64
++                        elif mode == 'shard_label':
++                            identity = shard['source_identity']['execution_identity']
++                            identity['environment']['shard'] = '0-of-2' if merged else '1-of-1'
++                            identity['key'] = fx.api.digest(dict(version=3, report_schema_version=3,
++                                files=entries, environment=identity['environment']))
++                            fx.bind_input_identity(shard)
++
++                    fixture = fx.make_fixture(merged=merged, alter_shard=alter)
++                    shards = [json.loads(raw) for raw in json.loads(fixture['blobs']['shard_reports'])]
++                    for shard in shards:
++                        identity = shard['source_identity']['execution_identity']
++                        label = str(shard['shard_index']) + '-of-' + str(shard['shard_count'])
++                        malformed_input = mode == 'input_identity' and shard is shards[-1]
++                        if malformed_input:
++                            with self.assertRaisesRegex(ValueError, 'input_identity'):
++                                ci_evidence.bound_report(shard, identity, label)
++                        else:
++                            ci_evidence.bound_report(shard, identity, label)
++                    self.write(BASELINE_PATH, fx.raw(fixture['baseline']))
++                    self.write(self.review_path, fx.raw(fixture['review']))
++                    self.trusted = self.commit('preauthorize exact synthetic ' + mode)
++                    self.write(BASELINE_PATH, fx.raw(fixture['head']))
++                    self.commit('append exact synthetic context ' + mode)
++                    self.report_path.write_bytes(fixture['current_bytes'])
++                    (self.bundle / 'report.json').write_bytes(fixture['e1_bytes'])
++                    for role, raw in fixture['blobs'].items():
++                        (self.bundle / role).write_bytes(raw)
++                    result = self.call('pull_request', None, '--registration-bundle', str(self.bundle))
++                    facts = json.loads(result.stdout)
++                    self.assertEqual(result.returncode, 0 if mode == 'coherent' else 1,
++                                     result.stdout + result.stderr)
++                    self.assertEqual(facts['merge_allowed'], mode == 'coherent', facts)
++                    if mode == 'coherent':
++                        self.assertTrue(facts['transition']['registration'])
++                    else:
++                        expected = 'shard input_identity' if mode == 'input_identity' else 'shard environment label'
++                        self.assertIn(expected, ' '.join(facts['differences']))
++
+     def test_head_registration_code_cannot_execute_or_authorize_append(self):
+         marker = self.root / 'head-code-executed'
+         self.write(self.registration_path,
