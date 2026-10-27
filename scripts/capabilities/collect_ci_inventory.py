@@ -254,7 +254,8 @@ def error_details(error):
 def child(root, entry, timeout):
     tool = Path(root) / 'scripts/capabilities/discover_methods.py'
     declared = entry['declared_python_versions']
-    if declared and (len(declared) != 1 or declared[0] != str(sys.version_info.major) + '.' + str(sys.version_info.minor)):
+    actual = str(sys.version_info.major) + '.' + str(sys.version_info.minor)
+    if declared and (len(declared) != 1 or '.'.join(declared[0].split('.')[:2]) != actual):
         raise ValueError('inventory interpreter does not match unique declared phase Python major/minor')
     environment = os.environ.copy()
     # python -m at repository cwd places the cwd on sys.path[0]. The wrapper
