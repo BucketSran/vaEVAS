@@ -1,0 +1,352 @@
+{
+  "purpose": "Compose PR266 983b ten-role bundle and draft obligation map (data composition and proof only)",
+  "started_at_utc": "2026-10-27T05:53:49.313194+00:00",
+  "finished_at_utc": "2026-10-27T05:54:31.017305+00:00",
+  "queue_time_seconds": null,
+  "queue_time": "unknown",
+  "actual_model": {
+    "providerInstanceId": "tclaude",
+    "model": "claude-sonnet-5-5",
+    "options": [
+      {
+        "id": "effort",
+        "value": "high"
+      }
+    ]
+  },
+  "delegation_task_id": "node:delegated-task:command%3Amcp%3A474fd0ec-3723-4fb5-9af6-d18001f8bfcc%3Adelegate-task%3Aevas-pr5-983b-context-bundle-sonnet-r1-20261027",
+  "identity": {
+    "ci_run": 40454789703,
+    "attempt": 1,
+    "ci_conclusion": "failure",
+    "head": "983b1ef6a4804c29483279ca34a7a92fce56a858",
+    "tree": "7a99e40b4a58e00c138e4c721f3deaab1bdb2ba6",
+    "trusted_base": "e10e1af5796f0cc7af3b6b5f5d26c420c0c03325",
+    "source_capture": "d9495c77f7d8a574e24d0977c1c49b6339ddfa2a",
+    "ci_merge_checkout": "33ed0fa1a516627d7d418fcf563a47a0d9e272b0",
+    "ci_merge_checkout_verified": false,
+    "ci_merge_checkout_expectation": {
+      "parents": [
+        "e10e1af5796f0cc7af3b6b5f5d26c420c0c03325",
+        "983b1ef6a4804c29483279ca34a7a92fce56a858"
+      ],
+      "tree": "7a99e40b4a58e00c138e4c721f3deaab1bdb2ba6",
+      "status": "expected, not observed"
+    },
+    "current_context_report": {
+      "sha256": "9097c8dce35461961b76782234c75e67d11f2c33a4f90d3abd98cc947ec9d981",
+      "criteria_id": "f54a2eac6238fa60cd4bc71b5aa74a6717077ad2cc9a8c8b25b4c2ca2880c625"
+    },
+    "new_context_report": {
+      "sha256": "531016babc8a288fd130f3af99364dbcaf20f25c225201d1f35e73e6b0a6c995",
+      "criteria_id": "145a6118739af5c1419269c4d46faae6cd666d766843d41dd38150d8da77d21b"
+    }
+  },
+  "status": {
+    "execution_success": true,
+    "structure_complete": true,
+    "expected_rejection_reproduced": true,
+    "expected_rejection_text": "expected exactly one matching trusted baseline context",
+    "semantic_qualification": false,
+    "scientific_qualification": false,
+    "merge_allowed": false,
+    "raw_successful": false,
+    "independent_review_approved": false,
+    "authorization_created": false,
+    "baseline_written": false
+  },
+  "counts": {
+    "methods": 3257,
+    "conditions": 7737,
+    "snapshot_entries": 49562,
+    "shards": 4,
+    "bundle_files": 10,
+    "method_outcomes": {
+      "passed": 2617,
+      "error": 214,
+      "failed": 423,
+      "expected_failure": 3
+    }
+  },
+  "trusted_code_sha256": {
+    "regression_gate.py": "df028ac10ddecb10f870ce889342826b56789d83322394e62e10e5cbb9c0d654",
+    "regression_context_registration.py": "72495c5799cb487471b0a8d3a7b2d42041df339f3500992a229e568b38d266e3",
+    "ci_evidence.py": "238c45d156225b29e566665997fdd5e1fc19b2301142e69cdc39243ce56c0257"
+  },
+  "dut_manifest_checks": {
+    "842bde7101164330fa03e7aee58b45d1789cbed1": {
+      "sha256": "5e9bf28ad121569a6975811f0b5ea9e60423e676e6dfcf88048948bfd19ba056",
+      "files": 327
+    },
+    "e10e1af5796f0cc7af3b6b5f5d26c420c0c03325": {
+      "sha256": "5e9bf28ad121569a6975811f0b5ea9e60423e676e6dfcf88048948bfd19ba056",
+      "files": 327
+    },
+    "983b1ef6a4804c29483279ca34a7a92fce56a858": {
+      "sha256": "5e9bf28ad121569a6975811f0b5ea9e60423e676e6dfcf88048948bfd19ba056",
+      "files": 327
+    }
+  },
+  "kernel": {
+    "sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+    "bytes": 105862328,
+    "executed": false,
+    "shards": [
+      {
+        "shard_index": 0,
+        "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/ci-40454789703/raw-intake-sol/artifacts/python-regression-shard-0/regression-build/evas-kernel",
+        "bytes": 105862328,
+        "sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe"
+      },
+      {
+        "shard_index": 1,
+        "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/ci-40454789703/raw-intake-sol/artifacts/python-regression-shard-1/regression-build/evas-kernel",
+        "bytes": 105862328,
+        "sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe"
+      },
+      {
+        "shard_index": 2,
+        "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/ci-40454789703/raw-intake-sol/artifacts/python-regression-shard-2/regression-build/evas-kernel",
+        "bytes": 105862328,
+        "sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe"
+      },
+      {
+        "shard_index": 3,
+        "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/ci-40454789703/raw-intake-sol/artifacts/python-regression-shard-3/regression-build/evas-kernel",
+        "bytes": 105862328,
+        "sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe"
+      }
+    ]
+  },
+  "stream_boundaries": "stream-boundaries.json",
+  "consumed_inputs": {
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/ci-40454789703/raw-intake-sol/artifacts/python-regression-timings/python-regression.json": {
+      "bytes": 41458076,
+      "sha256": "531016babc8a288fd130f3af99364dbcaf20f25c225201d1f35e73e6b0a6c995"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/catalog-index-recovery-20261027/ci-40429826545/raw-intake-grok/artifacts/python-regression-timings/python-regression.json": {
+      "bytes": 41452927,
+      "sha256": "9097c8dce35461961b76782234c75e67d11f2c33a4f90d3abd98cc947ec9d981"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/ci-40454789703/raw-intake-sol/artifacts/catalog-inventory/assets-before.json": {
+      "bytes": 21881792,
+      "sha256": "165623fc531f7919cd82c52f7b7a04317b3215e47297778ca16927bac34a0290"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/ci-40454789703/raw-intake-sol/artifacts/catalog-inventory/assets-after.json": {
+      "bytes": 21881792,
+      "sha256": "165623fc531f7919cd82c52f7b7a04317b3215e47297778ca16927bac34a0290"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/ci-40454789703/raw-intake-sol/artifacts/python-regression-shard-0/regression-identity.json": {
+      "bytes": 6768,
+      "sha256": "f9b2bd90a74eedf746903ac6022c0e84b3b19dbef4fc2a5e815fafec45120a18"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/ci-40454789703/raw-intake-sol/artifacts/python-regression-shard-1/regression-identity.json": {
+      "bytes": 6768,
+      "sha256": "3ce427508f822501933ce2805e56bbf751b5c7e4a5a849965a0e7eef0d51da05"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/ci-40454789703/raw-intake-sol/artifacts/python-regression-shard-2/regression-identity.json": {
+      "bytes": 6768,
+      "sha256": "1f91174977e95515829a652a27a890d0f2bfed454f72a8174a0fb72a30a8d4e4"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/ci-40454789703/raw-intake-sol/artifacts/python-regression-shard-3/regression-identity.json": {
+      "bytes": 6768,
+      "sha256": "43ef97c925ee19326ab3745ccc5490d468c458433e10043c7eb447bb4665acc8"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/ci-40454789703/raw-intake-sol/artifacts/python-regression-shard-0/regression-build/evas-kernel": {
+      "bytes": 105862328,
+      "sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/ci-40454789703/raw-intake-sol/artifacts/python-regression-shard-1/regression-build/evas-kernel": {
+      "bytes": 105862328,
+      "sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/ci-40454789703/raw-intake-sol/artifacts/python-regression-shard-2/regression-build/evas-kernel": {
+      "bytes": 105862328,
+      "sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/ci-40454789703/raw-intake-sol/artifacts/python-regression-shard-3/regression-build/evas-kernel": {
+      "bytes": 105862328,
+      "sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/ci-40454789703/raw-intake-sol/artifacts/python-regression-shard-0/regression-evidence/stdout.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/ci-40454789703/raw-intake-sol/artifacts/python-regression-shard-1/regression-evidence/stdout.txt": {
+      "bytes": 170,
+      "sha256": "31885cbb279f62211e79e79a07f9884381416585397d403a2216a93af4cfbce1"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/ci-40454789703/raw-intake-sol/artifacts/python-regression-shard-2/regression-evidence/stdout.txt": {
+      "bytes": 10391,
+      "sha256": "ebb893730317d81d9a6303fc36bfebf60aaddfa95a033b3d14eaf4a0d4c9792f"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/ci-40454789703/raw-intake-sol/artifacts/python-regression-shard-3/regression-evidence/stdout.txt": {
+      "bytes": 921,
+      "sha256": "b3a10698ec259600dc6fef3e612db885dcee1109a1fc3bcd86eb4b66d575ee34"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/ci-40454789703/raw-intake-sol/artifacts/python-regression-shard-0/regression-evidence/stderr.txt": {
+      "bytes": 401481,
+      "sha256": "d5634497c7051e48df57acfe94e623adf6f8f221af64f050232773634c751861"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/ci-40454789703/raw-intake-sol/artifacts/python-regression-shard-1/regression-evidence/stderr.txt": {
+      "bytes": 403111,
+      "sha256": "8fe3d215329109bddef015fea28323effd052292f93432695b94163562aa491b"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/ci-40454789703/raw-intake-sol/artifacts/python-regression-shard-2/regression-evidence/stderr.txt": {
+      "bytes": 431739,
+      "sha256": "13aeb2025393b35d65dcb8d8fdb04726b1fe382bcda41de88c999d3b609b6736"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/ci-40454789703/raw-intake-sol/artifacts/python-regression-shard-3/regression-evidence/stderr.txt": {
+      "bytes": 430950,
+      "sha256": "efe1630704fdcafaf0f77fa684a08a9714489f7ac3e448283c103033b628cbe5"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/ci-40454789703/raw-intake-sol/artifacts/python-regression-shard-0/regression-evidence/report.json": {
+      "bytes": 6842416,
+      "sha256": "31ed965985f978a43c58900861f42338cab71a804b47782623c220c29674236a"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/ci-40454789703/raw-intake-sol/artifacts/python-regression-shard-1/regression-evidence/report.json": {
+      "bytes": 8927106,
+      "sha256": "3b799a59936c503d65adefa4d5b7eb19d0c1d4bf0f2543db0c3c75120b8bca10"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/ci-40454789703/raw-intake-sol/artifacts/python-regression-shard-2/regression-evidence/report.json": {
+      "bytes": 7073308,
+      "sha256": "dbaf204cc32fab515e94f217d9757cff7a1dfbb88de3fa9545540faaa02aecb5"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/ci-40454789703/raw-intake-sol/artifacts/python-regression-shard-3/regression-evidence/report.json": {
+      "bytes": 19449912,
+      "sha256": "5e2e5120984bd3e3e4ce9fd2fa439d8ce634fd0203cd65a435854e61cc275776"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/ci-40454789703/raw-intake-sol/artifacts/python-regression-shard-0/regression-build/stdout.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/ci-40454789703/raw-intake-sol/artifacts/python-regression-shard-0/regression-build/stderr.txt": {
+      "bytes": 233,
+      "sha256": "8d90aa35f30512b01f4c4395365e86ff45ac23da1d6427f02394754baf94371f"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/ci-40454789703/raw-intake-sol/artifacts/python-regression-shard-1/regression-build/stdout.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/ci-40454789703/raw-intake-sol/artifacts/python-regression-shard-1/regression-build/stderr.txt": {
+      "bytes": 233,
+      "sha256": "6d7e810587b8d57b8fd713d299a5b90ac9da45f268e2a821fe20d91296392eca"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/ci-40454789703/raw-intake-sol/artifacts/python-regression-shard-2/regression-build/stdout.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/ci-40454789703/raw-intake-sol/artifacts/python-regression-shard-2/regression-build/stderr.txt": {
+      "bytes": 233,
+      "sha256": "3456140d5199a796fef9142cfc549be2d084612ecb66927a544f9a1bad2e9de5"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/ci-40454789703/raw-intake-sol/artifacts/python-regression-shard-3/regression-build/stdout.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/ci-40454789703/raw-intake-sol/artifacts/python-regression-shard-3/regression-build/stderr.txt": {
+      "bytes": 233,
+      "sha256": "d9138facbf20a206437b970b0fbdefeaaad71681d63b603be2821e4cc248ab3c"
+    }
+  },
+  "reused_not_reverified": {
+    "archives": 13,
+    "members": 467,
+    "source": "raw-intake-sol/verification-r3/archive-members-verified.json",
+    "index_sha256": "9cd1ca1466577a96f71436de20552e770a1afc88d676d229bcc0bd130dfda6f1"
+  },
+  "outputs": [
+    {
+      "path": "bundle/artifact_manifest",
+      "bytes": 1394,
+      "sha256": "5cc042c0a33607906f8eee3cc6f4f45657b13bf13ed0b02133275ba9ec8d6e43"
+    },
+    {
+      "path": "bundle/collector_manifest",
+      "bytes": 356,
+      "sha256": "225b9b80d905436696a410e2a312cf1a4d415fe2b4771427f38ae4d93b602179"
+    },
+    {
+      "path": "bundle/composition_recipe",
+      "bytes": 620,
+      "sha256": "a0abe35c10fa5e97f1b80c29e83e99db1099826a118a2d29dbf4f43a811fa38b"
+    },
+    {
+      "path": "bundle/dut_build",
+      "bytes": 1860,
+      "sha256": "ae1774af226e22ebf62cd590f1c3243d43f9d06089a902307718aae9fed49f2d"
+    },
+    {
+      "path": "bundle/kernel_binary",
+      "bytes": 105862328,
+      "sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe"
+    },
+    {
+      "path": "bundle/report.json",
+      "bytes": 41458076,
+      "sha256": "531016babc8a288fd130f3af99364dbcaf20f25c225201d1f35e73e6b0a6c995"
+    },
+    {
+      "path": "bundle/shard_reports",
+      "bytes": 44736807,
+      "sha256": "42fa7bb25445a1c0784144a7b43af79b6c982dc7a3269e446492f9d947785aca"
+    },
+    {
+      "path": "bundle/snapshot_manifest",
+      "bytes": 12758265,
+      "sha256": "908fc15264c92586d8014a7b94f71b7176440b92ce2836d9fd9f59c21435d607"
+    },
+    {
+      "path": "bundle/stderr",
+      "bytes": 1667281,
+      "sha256": "7ba285e31505468a43c81bcc5cd2aef0bda8025ba19ddaacd5463f2bf9b23843"
+    },
+    {
+      "path": "bundle/stdout",
+      "bytes": 11482,
+      "sha256": "231f69ab48e18e4b01251a1f46b4e4bfea54b86539695b66be2648c3501c47de"
+    },
+    {
+      "path": "obligation-map-draft.json",
+      "bytes": 6717320,
+      "sha256": "9e894cd05b70aa4a3d4d7b2d049de3cf25e69c9703bca7e8f50af1aa147ecf80"
+    },
+    {
+      "path": "obligation-map-proof.json",
+      "bytes": 137842,
+      "sha256": "e625aa95cca4fa9045787f1e2a7694e9bad57406dc58a31d659ecc78d42d8219"
+    },
+    {
+      "path": "bundle-byte-binding.json",
+      "bytes": 4011,
+      "sha256": "0ea5fb1243d0f9936a495e42536b4b11ebf38ae391b38263a3a4a2ca494c464a"
+    },
+    {
+      "path": "stream-boundaries.json",
+      "bytes": 3367,
+      "sha256": "0e2157a4bb3a207eff5a6eb71c0e56a6bc7089a676965166f334d3575d922b33"
+    },
+    {
+      "path": "guard-before.json",
+      "bytes": 3055,
+      "sha256": "1cb9159b7854adf70debbc1e56c3008fd5db2676731f1a437f0dec30ab69a704"
+    },
+    {
+      "path": "guard-after.json",
+      "bytes": 3055,
+      "sha256": "1cb9159b7854adf70debbc1e56c3008fd5db2676731f1a437f0dec30ab69a704"
+    }
+  ],
+  "guard_equal_before_after": true,
+  "new_scientific_thresholds": false,
+  "fetch_performed": false,
+  "fixture_created": false,
+  "python": "3.14.6",
+  "command": [
+    "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "-B",
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/context-registration-20261027/bundle-preparation-sonnet/prepare_bundle.py",
+    "--output",
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/context-registration-20261027/bundle-preparation-sonnet/run-r3"
+  ]
+}

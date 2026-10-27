@@ -1,0 +1,91 @@
+{
+  "purpose": "Bounded raw intake of already executed PR266 CI40454789703 attempt1",
+  "started_at_utc": "2026-10-27T05:36:27.816004+00:00",
+  "finished_at_utc": "2026-10-27T05:41:41.147309+00:00",
+  "queue_time_seconds": null,
+  "execution_time_note": "available local start/completion only; no invented scheduling durations",
+  "actual_model": {
+    "providerInstanceId": "codex",
+    "model": "gpt-6.1-sol",
+    "options": [
+      {
+        "id": "reasoningEffort",
+        "value": "medium"
+      },
+      {
+        "id": "serviceTier",
+        "value": "default"
+      }
+    ]
+  },
+  "routing_reason": "cursor.canRunChildTask=false; Cursor SDK catalog request timed out after15000ms; Grok unavailable; Sol available fallback",
+  "candidate": "983b1ef6a4804c29483279ca34a7a92fce56a858",
+  "base": "e10e1af5796f0cc7af3b6b5f5d26c420c0c03325",
+  "tree": "7a99e40b4a58e00c138e4c721f3deaab1bdb2ba6",
+  "source_capture": "d9495c77f7d8a574e24d0977c1c49b6339ddfa2a",
+  "private_source_HEAD_not_used_for_final_identity": true,
+  "run": 40454789703,
+  "attempt": 1,
+  "CI_conclusion": "failure",
+  "scientific_execution": false,
+  "scientific_qualification": false,
+  "merge_permission": false,
+  "new_scientific_thresholds": false,
+  "fixture_created": false,
+  "fetch_performed": false,
+  "before_after_guard_equal": true,
+  "raw_verification": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/ci-40454789703/raw-intake-sol/raw-verification.json",
+  "replay_command": [
+    "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "-B",
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/ci-40454789703/raw-intake-sol/verify.py",
+    "--output",
+    "NEW-UNUSED-DIRECTORY"
+  ],
+  "archive_receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/ci-40454789703/raw-intake-sol/artifact-download-receipt.json",
+  "source_and_bundle_role_index": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/ci-40454789703/raw-intake-sol/verification-r3/role-original-index.json",
+  "open_merge_object": {
+    "commit": "33ed0fa1a516627d7d418fcf563a47a0d9e272b0",
+    "locally_present": false,
+    "fetched": false,
+    "verified": false,
+    "inventory_source_tree": "7a99e40b4a58e00c138e4c721f3deaab1bdb2ba6",
+    "inventory_tree_matches_fixed_head_tree": true,
+    "inventory_relationship": "head-context-only",
+    "inventory_content_binding": "actual-checkout-bytes-not-commit-identity",
+    "fixed_head": "983b1ef6a4804c29483279ca34a7a92fce56a858",
+    "fixed_tree": "7a99e40b4a58e00c138e4c721f3deaab1bdb2ba6",
+    "fixed_head_parents": [
+      "d9495c77f7d8a574e24d0977c1c49b6339ddfa2a"
+    ],
+    "trusted_is_ancestor_of_head": true,
+    "unverified_expectation_if_github_pull_merge": {
+      "parents": [
+        "e10e1af5796f0cc7af3b6b5f5d26c420c0c03325",
+        "983b1ef6a4804c29483279ca34a7a92fce56a858"
+      ],
+      "tree": "7a99e40b4a58e00c138e4c721f3deaab1bdb2ba6",
+      "basis": "run-final referenced_workflows ref refs/pull/266/merge uses this SHA; GitHub pull merge commits conventionally have parents [base, head]; trusted main is an ancestor of the head, and the inventory claims this checkout's tree equals the head tree. The commit object was not local, so none of those parent or tree links were read from the object."
+    }
+  },
+  "error_classification": [
+    {
+      "round": "verification-r2",
+      "classification": "worker verifier implementation",
+      "failure": "supplement manifest exact order used string sorting; trusted collector uses pathlib Path sorting",
+      "fixed": "sort inventory path keys by PurePosixPath",
+      "observed_path_order_fix_exact": true,
+      "original_outputs_preserved": true,
+      "scientific_failure": false
+    },
+    {
+      "round": "verification-r1",
+      "classification": "inherited verifier explanatory text",
+      "detail": "Original PR4 script reused; stale PR263 merge-ref explanation and f974 purpose label corrected in r2/r3; original outputs retained."
+    },
+    {
+      "classification": "source object availability",
+      "detail": "33ed0fa1a516627d7d418fcf563a47a0d9e272b0 absent locally; parent must perform any authorized one-time closure"
+    }
+  ]
+}

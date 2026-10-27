@@ -1,0 +1,26 @@
+{
+  "taskId": "node:delegated-task:command%3Amcp%3A474fd0ec-3723-4fb5-9af6-d18001f8bfcc%3Adelegate-task%3Aevas-pr5-983b-context-bundle-sonnet-r1-20261027",
+  "childThreadId": "thread:delegated-task:command%3Amcp%3A474fd0ec-3723-4fb5-9af6-d18001f8bfcc%3Adelegate-task%3Aevas-pr5-983b-context-bundle-sonnet-r1-20261027",
+  "childRunId": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253A474fd0ec-3723-4fb5-9af6-d18001f8bfcc%253Adelegate-task%253Aevas-pr5-983b-context-bundle-sonnet-r1-20261027:ordinal:1",
+  "childNodeId": "node:delegated-task:command%3Amcp%3A474fd0ec-3723-4fb5-9af6-d18001f8bfcc%3Adelegate-task%3Aevas-pr5-983b-context-bundle-sonnet-r1-20261027",
+  "status": "completed",
+  "workState": "result_available",
+  "hasPendingChildRuns": false,
+  "latestTerminalRunId": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253A474fd0ec-3723-4fb5-9af6-d18001f8bfcc%253Adelegate-task%253Aevas-pr5-983b-context-bundle-sonnet-r1-20261027:ordinal:1",
+  "latestTerminalStatus": "completed",
+  "latestTerminalSummary": null,
+  "latestTerminalResultContextTransferId": null,
+  "providerInstanceId": "tclaude",
+  "model": "claude-sonnet-5-5",
+  "options": [
+    {
+      "id": "effort",
+      "value": "high"
+    }
+  ],
+  "summary": "十角色 bundle、逐条件义务映射草案和对应的机器证明已经生成并通过独立复验。这只是数据组合与证明，没有审查、授权、登记或合入，科学资格为 false。\n\n- **执行成功：** `prepare_bundle.py` 写出 `run-r3`，`verify.py` 写出 `verify-r2`，40 项检查全部通过。真实工作区 HEAD 前后都是 `168a9d7a`，20 个候选文件和 HEAD/index/config/packed-refs 的哈希前后一致。\n- **结构完整：** 十个文件齐全。生产函数 `evidence` 和 `mapped_obligations` 在磁盘字节上通过，用的是内存里的测试用授权对象，没有写出任何授权。\n- **预期拒绝已复现：**\n  - 在 e10 的未改 baseline 上，新 report 仍被拒，原文 `expected exactly one matching trusted baseline context`，同一 baseline 接受 C0 旧 report。\n  - 7 项篡改/漏映射探针（改 stdout、改 kernel 字节、换 shard 顺序、重排 snapshot、映射指向未知条件、漏映射、错分类）和 6 项输出路径拒绝探针全部按预期被拒。\n- **语义资格 false：** `raw_successful=false`，独立精确 context 验收未做，映射只是 DRAFT。\n- **映射：** 3257 个方法、7737 个条件按 id 一一对应，outcome 相同，`gate._retention_condition` 逐条完全相同。全部是 `preserved`，无需 remap，没有需要编造或无法映射的项。每个条件 ID 都按收集器公式重算验证过，332 个测试源码哈希对子都对上了 983b 的实际 Git blob。\n- **snapshot 次序：** 49562 条目保持 `git ls-files` 原次序，该次序能重现 4 个 shard 的 identity key。按 Path 或字符串重排会被生产函数拒绝。\n- **bundle 内引用文本：** `dut_build` 和 `snapshot_reference` 明确写出 CI merge 对象 `33ed0fa1…` 未在本地验证，没有冒称已验证。\n\n**我自己的三个失败（输出都保留）：**\n- `run-r1`：把 `source/` 目录路径写错了一级。\n- `run-r2`：把 DUT 清单全局排序。收集器实际是 `evas/src` 与 `evas/rust_core` 两个目录依次、各自 Path 排序。\n- `verify-r1`：两个篡改探针写成了无效篡改，还有一个变量名被循环覆盖。\n- 脚本是在原文件上直接修的，旧版脚本没有留存，只有失败输出在。\n\n**交给你的事：**\n- 取回 `33ed0fa1…` 对象，核对 parents 为 `[e10e1af5…, 983b1ef6…]`、tree 为 `7a99e40b…`。若实测不符，`dut_build` 和 `snapshot_reference` 的文本要重做，recipe 与 artifact manifest 的 SHA 也要重算。\n- 18 个 criteria 路径变化但 7737 条件签名相同，这一点请 Astra 精确审阅，我只验证了签名和测试源码一致，没有判断这 18 个路径的影响。\n- C0 授权提案、entry、publish 和既有 schema2 压缩我都没做，留给你。\n- `dut_revision` 沿用 `842bde71`；DUT 清单摘要在 `842bde71`、e10、983b 三处相同，换成别的不改语义，但会改变 recipe SHA。\n\n所有产出在 `/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/context-registration-20261027/bundle-preparation-sonnet`（实际路径在 `/Volumes/vaEVAS-runs/` 下）：\n- REPORT.md（含十文件哈希与首轮失败说明）\n- prepare_bundle.py\n- verify.py\n- run-r3/（十个文件在 `bundle/`，另有 `receipt.json`、`stream-boundaries.json`、`bundle-byte-binding.json`、`obligation-map-draft.json`、`obligation-map-proof.json`）\n- verify-r2/verification.json\n\n排队时间 unknown；prepare 用时约 42 秒，verify 约 21 秒；模型为 tclaude / claude-sonnet-5-5，effort high。",
+  "resultContextTransferId": "context-transfer:type:subagent_result:source-thread:thread%3Adelegated-task%3Acommand%253Amcp%253A474fd0ec-3723-4fb5-9af6-d18001f8bfcc%253Adelegate-task%253Aevas-pr5-983b-context-bundle-sonnet-r1-20261027:target-thread:mcp%3A5e3a6250-d8c4-4913-bf61-e75447edac3e:977cd907-4f89-43cb-990b-b0c2724a42a7",
+  "hasPendingQuestion": false,
+  "pendingApproval": null,
+  "waitTimedOut": false
+}

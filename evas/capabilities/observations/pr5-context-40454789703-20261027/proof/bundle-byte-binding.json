@@ -1,0 +1,89 @@
+{
+  "run": 40454789703,
+  "attempt": 1,
+  "head": "983b1ef6a4804c29483279ca34a7a92fce56a858",
+  "tree": "7a99e40b4a58e00c138e4c721f3deaab1bdb2ba6",
+  "trusted_base": "e10e1af5796f0cc7af3b6b5f5d26c420c0c03325",
+  "ci_merge_checkout": "33ed0fa1a516627d7d418fcf563a47a0d9e272b0",
+  "ci_merge_checkout_locally_verified": false,
+  "files": [
+    {
+      "path": "bundle/artifact_manifest",
+      "bytes": 1394,
+      "sha256": "5cc042c0a33607906f8eee3cc6f4f45657b13bf13ed0b02133275ba9ec8d6e43"
+    },
+    {
+      "path": "bundle/collector_manifest",
+      "bytes": 356,
+      "sha256": "225b9b80d905436696a410e2a312cf1a4d415fe2b4771427f38ae4d93b602179"
+    },
+    {
+      "path": "bundle/composition_recipe",
+      "bytes": 620,
+      "sha256": "a0abe35c10fa5e97f1b80c29e83e99db1099826a118a2d29dbf4f43a811fa38b"
+    },
+    {
+      "path": "bundle/dut_build",
+      "bytes": 1860,
+      "sha256": "ae1774af226e22ebf62cd590f1c3243d43f9d06089a902307718aae9fed49f2d"
+    },
+    {
+      "path": "bundle/kernel_binary",
+      "bytes": 105862328,
+      "sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe"
+    },
+    {
+      "path": "bundle/report.json",
+      "bytes": 41458076,
+      "sha256": "531016babc8a288fd130f3af99364dbcaf20f25c225201d1f35e73e6b0a6c995"
+    },
+    {
+      "path": "bundle/shard_reports",
+      "bytes": 44736807,
+      "sha256": "42fa7bb25445a1c0784144a7b43af79b6c982dc7a3269e446492f9d947785aca"
+    },
+    {
+      "path": "bundle/snapshot_manifest",
+      "bytes": 12758265,
+      "sha256": "908fc15264c92586d8014a7b94f71b7176440b92ce2836d9fd9f59c21435d607"
+    },
+    {
+      "path": "bundle/stderr",
+      "bytes": 1667281,
+      "sha256": "7ba285e31505468a43c81bcc5cd2aef0bda8025ba19ddaacd5463f2bf9b23843"
+    },
+    {
+      "path": "bundle/stdout",
+      "bytes": 11482,
+      "sha256": "231f69ab48e18e4b01251a1f46b4e4bfea54b86539695b66be2648c3501c47de"
+    }
+  ],
+  "ten_file_bundle_bytes_verified_by_production_evidence_function": true,
+  "evidence_function": "regression_context_registration.evidence (e10 blob) with an in-memory harness; no authorization object exists in any output",
+  "snapshot_entries": 49562,
+  "snapshot_entry_order": "git ls-files order as written by ci_evidence.fingerprint; reproduces each shard identity key",
+  "snapshot_order_differs_from_Path_sort": true,
+  "entry_provenance_preview": {
+    "schema_version": 1,
+    "snapshot_revision": "983b1ef6a4804c29483279ca34a7a92fce56a858",
+    "snapshot_reference": "https://github.com/BucketSran/vaEVAS/tree/983b1ef6a4804c29483279ca34a7a92fce56a858; CI inventory checkout 33ed0fa1a516627d7d418fcf563a47a0d9e272b0 is unverified locally, its recorded tree equals the head tree 7a99e40b4a58e00c138e4c721f3deaab1bdb2ba6",
+    "raw_reference": "https://github.com/BucketSran/vaEVAS/actions/runs/40454789703 attempt 1; original zipped artifact index and members retained in raw-intake-sol",
+    "recipe_sha256": "a0abe35c10fa5e97f1b80c29e83e99db1099826a118a2d29dbf4f43a811fa38b",
+    "artifact_manifest_sha256": "5cc042c0a33607906f8eee3cc6f4f45657b13bf13ed0b02133275ba9ec8d6e43"
+  },
+  "role_sources": {
+    "report": "python-regression-timings/python-regression.json (byte copy)",
+    "shard_reports": "4 x python-regression-shard-N/regression-evidence/report.json texts as JSON array",
+    "kernel_binary": "python-regression-shard-0/regression-build/evas-kernel (byte copy, 4 shards identical, never executed)",
+    "stdout": "shard-index-order concatenation",
+    "stderr": "shard-index-order concatenation",
+    "snapshot_manifest": "catalog-inventory/assets-before.json x git ls-tree order, reproduces input_list_sha256 and 4 identity keys",
+    "collector_manifest": "four collector source SHA256 from snapshot + 983b blobs",
+    "composition_recipe": "derived",
+    "dut_build": "derived from shard build records and identities",
+    "artifact_manifest": "derived"
+  },
+  "governance_authorization_created": false,
+  "E1_or_new_context_accepted": false,
+  "semantic_qualification": false
+}

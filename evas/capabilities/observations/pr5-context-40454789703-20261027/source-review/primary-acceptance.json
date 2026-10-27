@@ -1,0 +1,42 @@
+{
+  "at_utc": "2026-10-27T05:39:51.207386+00:00",
+  "candidate": "983b1ef6a4804c29483279ca34a7a92fce56a858",
+  "tree": "7a99e40b4a58e00c138e4c721f3deaab1bdb2ba6",
+  "base": "e10e1af5796f0cc7af3b6b5f5d26c420c0c03325",
+  "taskId": "node:delegated-task:command%3Amcp%3A5f270c77-1160-4fbe-b285-30cbeb7fd470%3Adelegate-task%3Aevas-pr5-983b1ef6-astra-r3-20261027",
+  "actual_model": "gpt-6-astra",
+  "actual_options": [
+    {
+      "id": "reasoningEffort",
+      "value": "max"
+    },
+    {
+      "id": "serviceTier",
+      "value": "default"
+    }
+  ],
+  "report": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-continuation-fix-astra-r3-20261027/review-report.json",
+  "report_sha256": "8a824b9b4c72050670fbfd4b065dfe877daf4147a603a73f6c0cda8292543d6d",
+  "standards_findings": [],
+  "spec_findings": [],
+  "prior_finding_closed": "PR5-ASTRA-R1-01",
+  "primary_precheck": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/precheck-acceptance.json",
+  "source_increment_review_accepted": true,
+  "current_CI_accepted": false,
+  "trusted_context_adopted": false,
+  "semantic_qualification": false,
+  "limits": [
+    {
+      "kind": "CI/raw",
+      "state": "not accepted by this reviewer",
+      "owner": "coordinator",
+      "detail": "当前 983b 必要 CI/raw 由主控验收。本轮只读到本地主计划记录的 CI40454789703 in_progress；未查询或轮询 PR/CI。旧 a7 CI 的有限接收不能替代当前候选。"
+    },
+    {
+      "kind": "trusted-context and activation",
+      "state": "pending coordinator acceptance",
+      "owner": "coordinator",
+      "detail": "精确新 context 授权/bundle、单独 baseline 追加和激活仍须按既定顺序验收，本轮没有放宽 gate 或更改 baseline。"
+    }
+  ]
+}
