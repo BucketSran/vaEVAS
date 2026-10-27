@@ -1,0 +1,1317 @@
+diff --git a/.github/workflows/numerical-assurance.yml b/.github/workflows/numerical-assurance.yml
+index dd03a77a..a11e3f47 100644
+--- a/.github/workflows/numerical-assurance.yml
++++ b/.github/workflows/numerical-assurance.yml
+@@ -225,6 +225,7 @@ jobs:
+           python3 -B -m unittest discover -s evas/validation/paper -p 'test_precision_v2.py' -v
+           python3 -B -m unittest discover -s evas/validation/paper -p 'test_primitives.py' -v
+           python3 -B -m unittest discover -s experiments/backends/paper -p 'test_*.py' -v
++          python3 -B -m unittest discover -s experiments/backends/comparison -p 'test_*.py' -v
+           python3 -B -m unittest discover -s evas/validation/support -p 'test_*.py' -v
+   provenance-support:
+     needs: [selection, fast-checks]
+diff --git a/evas/validation/adapters/comparison_evas_worker.py b/evas/validation/adapters/comparison_evas_worker.py
+new file mode 100644
+index 00000000..3c539724
+--- /dev/null
++++ b/evas/validation/adapters/comparison_evas_worker.py
+@@ -0,0 +1,61 @@
++"""EVAS execution for the condition/requested_settings comparison contract.
++
++This adapter does not implement the paper request/raw-response contract.
++"""
++import csv
++import json
++from pathlib import Path
++import sys
++
++
++def load(path):
++    return json.loads(path.read_text())
++
++
++def save(path, value):
++    with path.open('x') as stream:
++        json.dump(value, stream, indent=2, ensure_ascii=False)
++        stream.write('\n')
++
++
++def worker(work, kernel, root):
++    """Current Python compiler + current transient API, explicitly selected kernel."""
++    sys.path.insert(0, str(root / 'evas/src'))
++    from evas import CompileError, KernelError, Instance, compile_sources, transient
++    from evas.syntax import Parser
++    c = load(work / 'condition.json')
++    settings = load(work / 'requested_settings.json')
++    sources = {card: (root / 'evas/validation/cases' / card / 'dut.va').read_text() for card in c['source_cards']}
++    if '\n'.join(sources.values()) != (work / 'dut.va').read_text():
++        raise ValueError('current module bytes differ from frozen DUT')
++    result = {'status': 'not_run'}
++    try:
++        ports = {m.name: m.ports for card, text in sources.items() for m in [Parser(text, card).parse()]}
++        instances = [Instance(i['name'], i.get('module', c.get('module')),
++                     dict(zip(ports[i.get('module', c.get('module'))], i['ports'], strict=True)), i['params'])
++                     for i in c['instances']]
++        program = compile_sources(sources, instances)
++        save(work / 'program.json', program.to_dict())
++        count = round(settings['stop'] / settings['step'])
++        times = [i * (settings['stop'] / count) for i in range(count + 1)]
++        inputs = {n: [[t * 1e-6, v] for t, v in points] for n, points in c['inputs'].items()}
++        response = transient(program, inputs, times, stop=settings['stop'], max_step=settings['maxstep'],
++                             kernel=kernel, vabstol=settings['vabstol'], reltol=settings['reltol'])
++        save(work / 'effective.json', {'vabstol': settings['vabstol'], 'reltol': settings['reltol'],
++             'max_step': settings['maxstep'], 'stop': settings['stop'], 'output_points': len(times),
++             'engine': response['engine'], 'transient_summary': {
++                 'accepted_steps': response['transient'].get('accepted_steps'),
++                 'discarded_trials': response['transient'].get('discarded_trials'),
++                 'state_names': response['transient'].get('state_names'),
++                 'event_count': len(response['transient'].get('events', []))},
++             'unsupported_spice_controls': ['iabstol', 'integration method']})
++        with (work / 'waveform.csv').open('x') as stream:
++            writer = csv.writer(stream)
++            writer.writerow(['time', *response['nodes']])
++            writer.writerows([t, *s['voltages']] for t, s in zip(times, response['solutions'], strict=True))
++        result = {'status': 'waveform_available', 'waveform': 'waveform.csv'}
++    except CompileError as exc:
++        result = {'status': 'compile_failed', 'failure_stage': 'compile', 'reason': str(exc)}
++    except KernelError as exc:
++        result = {'status': 'execution_failed', 'failure_stage': 'kernel', 'reason': str(exc), 'detail': exc.detail}
++    save(work / 'worker-result.json', result)
+diff --git a/evas/validation/adapters/paper_evas_worker.py b/evas/validation/adapters/paper_evas_worker.py
+new file mode 100644
+index 00000000..be943bf0
+--- /dev/null
++++ b/evas/validation/adapters/paper_evas_worker.py
+@@ -0,0 +1,80 @@
++"""Current paper EVAS worker: compile, transient response, and raw record.
++
++The caller supplies a prepared work directory and an explicit kernel path.
++Plan selection, launch budgets, and non-EVAS backends stay in the experiment runner.
++"""
++from __future__ import annotations
++
++import csv
++import json
++import sys
++from pathlib import Path
++
++ROOT = Path(__file__).resolve().parents[3]
++RELATIVE_PATH = 'evas/validation/adapters/paper_evas_worker.py'
++
++
++def load(path):
++    return json.loads(path.read_text())
++
++
++def save(path, value):
++    with path.open('x') as handle:
++        json.dump(value, handle, indent=2, ensure_ascii=False, allow_nan=False)
++        handle.write('\n')
++
++
++def save_raw_response(path, response):
++    """Only the potentially large response uses compact JSON; preserve all values."""
++    with path.open('x') as stream:
++        json.dump(response, stream, separators=(',', ':'), ensure_ascii=False, allow_nan=False)
++        stream.write('\n')
++
++
++def evas_effective_record(request, response):
++    """The transient public API has already validated the actual response."""
++    evidence = response.get('observation_evidence')
++    record = {'request_echo': {'reltol': request['reltol'], 'vabstol': request['vabstol'],
++                              'stop': request['stop'], 'maxstep': request['max_step']},
++              'observed_response': {'engine': response['engine'], 'accepted_steps': response['transient'].get('accepted_steps')},
++              'unsupported_controls': ['iabstol', 'integration_method']}
++    if evidence is None:
++        record.update(sample_origin='unknown; legacy response has no observation evidence',
++                      settings_readback='unknown; legacy response does not report actual controls')
++    else:
++        record['runtime_controls'] = dict(evidence['effective_controls'])
++        origins = evidence['sample_origins']
++        record['sample_origin_summary'] = {origin: origins.count(origin) for origin in sorted(set(origins))}
++        record['sample_origin'] = 'actual response origins; these do not independently establish paper native qualification'
++        record['settings_readback'] = 'validated public response observation_evidence.effective_controls'
++    return record
++
++
++def worker(work, kernel):
++    """Normal compiler/top hierarchy, current transient API, no source rewriting."""
++    sys.path.insert(0, str(ROOT / 'evas/src'))
++    from evas import CompileError, KernelError, Instance, compile_sources, transient
++    request = load(work / 'request.json')
++    result = {'status': 'execution_failed', 'reason': 'worker did not complete'}
++    try:
++        instances = [Instance(i['name'], i['module'], i['ports'], i['parameters']) for i in request['instances']]
++        program = compile_sources({'dut.va': (work / 'dut.va').read_text()}, instances)
++        save(work / 'program.json', program.to_dict())
++        times = load(work / request['requested_times'])
++        response = transient(program, request['inputs'], times, stop=request['stop'], max_step=request['max_step'],
++                             kernel=kernel, vabstol=request['vabstol'], reltol=request['reltol'], timeout=None)
++        save_raw_response(work / 'raw-response.json', response)
++        # Owned outer stage kills the complete worker/kernel group at its limit.
++        with (work / 'waveform.csv').open('x') as handle:
++            writer = csv.writer(handle)
++            writer.writerow(['time', *response['nodes']])
++            writer.writerows([t, *row['voltages']] for t, row in zip(times, response['solutions'], strict=True))
++        save(work / 'effective.json', evas_effective_record(request, response))
++        result = {'status': 'waveform_available', 'waveform': 'waveform.csv'}
++    except CompileError as exc:
++        result = {'status': 'compile_failed', 'failure_stage': 'compile', 'reason': str(exc)}
++    except KernelError as exc:
++        result = {'status': 'execution_failed', 'failure_stage': 'kernel', 'reason': str(exc), 'detail': exc.detail}
++    except Exception as exc:
++        result = {'status': 'execution_failed', 'failure_stage': 'worker', 'exception_type': type(exc).__name__, 'reason': str(exc)}
++    save(work / 'worker-result.json', result)
+diff --git a/evas/validation/adapters/precision_evas_worker.py b/evas/validation/adapters/precision_evas_worker.py
+new file mode 100644
+index 00000000..51e55774
+--- /dev/null
++++ b/evas/validation/adapters/precision_evas_worker.py
+@@ -0,0 +1,37 @@
++"""EVAS precision worker with forced strobe evidence and original raw records.
++
++Research planning, budgets and backend process ownership stay in experiments.
++This worker shares serialization and actual-control records with the paper adapter;
++its strobe sampling and result/error contract remain specific to precision.
++"""
++import csv
++import sys
++from pathlib import Path
++
++ROOT = Path(__file__).resolve().parents[3]
++sys.path.insert(0, str(Path(__file__).resolve().parent))
++from paper_evas_worker import load, save, save_raw_response, evas_effective_record
++
++
++def worker(work,kernel):
++    sys.path.insert(0,str(ROOT/'evas/src'))
++    from evas import compile_sources, transient, Instance, CompileError, KernelError
++    request=load(work/'request.json');times=load(work/'requested_times.json')
++    try:
++        instances=[Instance(i['name'],i['module'],i['ports'],i['parameters']) for i in request['instances']]
++        program=compile_sources({'dut.va':(work/'dut.va').read_text()},instances)
++        save(work/'program.json',program.to_dict())
++        response=transient(program,request['inputs'],times,stop=request['stop'],max_step=request['max_step'],
++                           strobetimes=times,kernel=kernel,vabstol=request['vabstol'],reltol=request['reltol'],timeout=None)
++        save_raw_response(work/'raw-response.json',response)
++        strobe=response['strobe_evidence']
++        if strobe['times']!=times:raise ValueError('strobe time mismatch')
++        with (work/'waveform.csv').open('x') as stream:
++            writer=csv.writer(stream);writer.writerow(['time',*response['nodes']])
++            writer.writerows([t,*v] for t,v in zip(strobe['times'],strobe['voltages_V'],strict=True))
++        save(work/'effective.json',evas_effective_record(request,response))
++        result={'status':'waveform_available','origins':sorted(set(strobe['sample_origins']))}
++    except CompileError as exc:result={'status':'compile_failed','reason':str(exc)}
++    except KernelError as exc:result={'status':'execution_failed','reason':str(exc),'detail':exc.detail}
++    except Exception as exc:result={'status':'execution_failed','reason':repr(exc)}
++    save(work/'worker-result.json',result)
+diff --git a/experiments/backends/comparison/freeze.py b/experiments/backends/comparison/freeze.py
+index b4bbadd2..b5e59bb8 100644
+--- a/experiments/backends/comparison/freeze.py
++++ b/experiments/backends/comparison/freeze.py
+@@ -1,6 +1,7 @@
+ """Freeze exactly eight existing development conditions and 32 base configurations."""
+ from __future__ import annotations
+ import argparse
++import ast
+ import json
+ from pathlib import Path
+ import sys
+@@ -21,11 +22,35 @@ def save(path, value):
+         stream.write('\n')
+ 
+ 
++WORKER_ADAPTER = 'evas/validation/adapters/comparison_evas_worker.py'
++
++
++def worker_dependencies(source):
++    """Select the dependency contract from audited runner source, never file presence."""
++    tree = ast.parse(source)
++    assignments = [n.value for n in tree.body if isinstance(n, ast.Assign)
++                   and any(isinstance(t, ast.Name) and t.id == '_EVAS_WORKER_PATH' for t in n.targets)]
++    if assignments:
++        expected = ast.parse('ROOT / ' + repr(WORKER_ADAPTER), mode='eval').body
++        if len(assignments) != 1 or ast.dump(assignments[0]) != ast.dump(expected):
++            raise ValueError('unknown comparison worker dependency contract')
++        return (WORKER_ADAPTER,)
++    if any(isinstance(n, ast.Constant) and isinstance(n.value, str)
++           and n.value.endswith('/comparison_evas_worker.py') for n in ast.walk(tree)):
++        raise ValueError('unregistered comparison worker dependency contract')
++    return ()
++
++
++def worker_sources():
++    source = (ROOT / 'experiments/backends/comparison/runner.py').read_text()
++    return {name: sha(ROOT / name) for name in worker_dependencies(source)}
++
++
+ def runtime_identity():
+     paths = sorted(p for base in ('evas/src', 'evas/rust_core') for p in (ROOT / base).rglob('*')
+                    if p.is_file() and (p.suffix in ('.py', '.rs', '.toml') or p.name == 'Cargo.lock')
+                    and 'target' not in p.parts and '__pycache__' not in p.parts)
+-    return identity({str(p.relative_to(ROOT)): sha(p) for p in paths})
++    return identity({**{str(p.relative_to(ROOT)): sha(p) for p in paths}, **worker_sources()})
+ 
+ 
+ def checker_identity():
+diff --git a/experiments/backends/comparison/ingest.py b/experiments/backends/comparison/ingest.py
+index 254944ee..cbbbe613 100644
+--- a/experiments/backends/comparison/ingest.py
++++ b/experiments/backends/comparison/ingest.py
+@@ -7,7 +7,7 @@ import shutil
+ from pathlib import Path
+ 
+ from records import ROOT, BACKENDS, STATUS, identity, load, sha, validate, voltage_metrics
+-from freeze import SELECTED, save
++from freeze import SELECTED, save, worker_dependencies
+ from runner import verify
+ 
+ 
+@@ -18,13 +18,49 @@ def verify_output(output):
+             raise ValueError('execution artifact drift: ' + rel)
+ 
+ 
+-def runner_sources(hashes):
++def runner_sources(hashes, workers=None):
+     refs = []
+-    for digest in sorted(set(hashes)):
++    required = set()
++    def archived(digest):
+         paths = list((ROOT / 'experiments/backends/comparison/evidence/sources').glob('*-' + digest + '.py.txt'))
+         if len(paths) != 1 or sha(paths[0]) != digest:
+             raise ValueError('actual runner source is not retrievable: ' + digest)
+-        refs.append({'path': str(paths[0].relative_to(ROOT)), 'sha256': digest, 'kind': 'actual runner source'})
++        return paths[0]
++    for digest in sorted(set(hashes)):
++        path = archived(digest)
++        required.update(worker_dependencies(path.read_text()))
++        refs.append({'path': str(path.relative_to(ROOT)), 'sha256': digest, 'kind': 'actual runner source'})
++    workers = {} if workers is None else workers
++    if set(workers) != required:
++        raise ValueError('comparison worker source closure mismatch')
++    for name, digest in sorted(workers.items()):
++        path = archived(digest)
++        refs.append({'path': str(path.relative_to(ROOT)), 'sha256': digest,
++                     'original_path': name, 'kind': 'actual EVAS worker source'})
++    return refs
++
++
++def execution_sources(started, result, continuation, started_sha256):
++    """Bind each runner's closure to the record written by that invocation.
++
++    Legacy executions need only their frozen STARTED contract. A distinct
++    analysis invocation must supply a continuation bound to those exact bytes;
++    missing worker_sources is valid only for a runner with no worker dependency.
++    """
++    initial = started['runner_sha256']
++    analysis = result.get('runner_sha256', initial)
++    refs = runner_sources([initial], started.get('worker_sources'))
++    if continuation is None:
++        if analysis != initial:
++            raise ValueError('continuation source identity missing')
++        return refs
++    if (continuation.get('old_started_sha256') != started_sha256
++            or continuation.get('runner_sha256') != analysis):
++        raise ValueError('continuation source identity mismatch')
++    analysis_refs = runner_sources([analysis], continuation.get('worker_sources'))
++    for ref in analysis_refs:
++        if ref not in refs:
++            refs.append(ref)
+     return refs
+ 
+ 
+@@ -50,6 +86,7 @@ def ingest(snapshot, inputs, executions, compact, blocked=()):
+         started_sha256 = sha(output / 'STARTED.json')
+         run_id = output.name + '-' + started_sha256
+         results = load(output / 'EXECUTION.json')
++        continuation = load(output / 'CONTINUATION.json') if (output / 'CONTINUATION.json').is_file() else None
+         backend = started['backend']
+         if backend not in BACKENDS or len(results) != 8 or {r['condition'] for r in results} != set(SELECTED):
+             raise ValueError('incomplete or unexpected backend execution')
+@@ -83,8 +120,8 @@ def ingest(snapshot, inputs, executions, compact, blocked=()):
+                 'source_sha256': result['source_sha256'], 'checker_identity': load(inputs / 'provenance.json')['checker_identity'],
+                 'initial_runner_sha256': started['runner_sha256'],
+                 'analysis_runner_sha256': result.get('runner_sha256', started['runner_sha256']),
+-                'runner_sources': runner_sources([started['runner_sha256'], result.get('runner_sha256', started['runner_sha256'])]),
+-                'continuation': load(output / 'CONTINUATION.json') if (output / 'CONTINUATION.json').is_file() else None,
++                'runner_sources': execution_sources(started, result, continuation, started_sha256),
++                'continuation': continuation,
+                 'allocation': started['allocation'],
+                 'requested_settings': load(output / 'runs' / condition / 'base' / 'requested_settings.json'),
+                 'effective_settings': effective,
+@@ -128,7 +165,7 @@ def ingest(snapshot, inputs, executions, compact, blocked=()):
+             raise ValueError('failed preflight/log identity mismatch')
+         receipt = {'backend': backend, 'input_manifest_sha256': started['input_manifest_sha256'],
+                    'allocation': started['allocation'], 'tool': started['tool'], 'probe': probe,
+-                   'runner_sources': runner_sources([started['runner_sha256']]),
++                   'runner_sources': runner_sources([started['runner_sha256']], started.get('worker_sources')),
+                    'failure_log': log.read_text(), 'case_compilation_launches': 0, 'case_simulation_launches': 0,
+                    'reason': 'Existing pinned container layer is missing; no backend case was launched. No restore or retry.'}
+         path = compact / (backend + '-preflight.json')
+diff --git a/experiments/backends/comparison/runner.py b/experiments/backends/comparison/runner.py
+index 9010ccc7..ce917d93 100644
+--- a/experiments/backends/comparison/runner.py
++++ b/experiments/backends/comparison/runner.py
+@@ -5,7 +5,6 @@ selects a backend or a historical runtime. Each output directory is new.
+ """
+ from __future__ import annotations
+ import argparse
+-import csv
+ import importlib.util
+ from functools import partial
+ import json
+@@ -21,7 +20,7 @@ import time
+ from types import SimpleNamespace
+ 
+ from records import ROOT, BACKENDS, identity, load, sha
+-from freeze import SELECTED, checker_identity, runtime_identity, save
++from freeze import SELECTED, checker_identity, runtime_identity, save, worker_sources
+ 
+ 
+ def verify(root):
+@@ -57,47 +56,15 @@ def execute(argv, work, stage, cleanup=None, timeout=90):
+     return record
+ 
+ 
++_EVAS_WORKER_PATH = ROOT / 'evas/validation/adapters/comparison_evas_worker.py'
++
++
+ def worker(work, kernel):
+-    """Current Python compiler + current transient API, explicitly selected kernel."""
+-    sys.path.insert(0, str(ROOT / 'evas/src'))
+-    from evas import CompileError, KernelError, Instance, compile_sources, transient
+-    from evas.syntax import Parser
+-    c = load(work / 'condition.json')
+-    settings = load(work / 'requested_settings.json')
+-    sources = {card: (ROOT / 'evas/validation/cases' / card / 'dut.va').read_text() for card in c['source_cards']}
+-    if '\n'.join(sources.values()) != (work / 'dut.va').read_text():
+-        raise ValueError('current module bytes differ from frozen DUT')
+-    result = {'status': 'not_run'}
+-    try:
+-        ports = {m.name: m.ports for card, text in sources.items() for m in [Parser(text, card).parse()]}
+-        instances = [Instance(i['name'], i.get('module', c.get('module')),
+-                     dict(zip(ports[i.get('module', c.get('module'))], i['ports'], strict=True)), i['params'])
+-                     for i in c['instances']]
+-        program = compile_sources(sources, instances)
+-        save(work / 'program.json', program.to_dict())
+-        count = round(settings['stop'] / settings['step'])
+-        times = [i * (settings['stop'] / count) for i in range(count + 1)]
+-        inputs = {n: [[t * 1e-6, v] for t, v in points] for n, points in c['inputs'].items()}
+-        response = transient(program, inputs, times, stop=settings['stop'], max_step=settings['maxstep'],
+-                             kernel=kernel, vabstol=settings['vabstol'], reltol=settings['reltol'])
+-        save(work / 'effective.json', {'vabstol': settings['vabstol'], 'reltol': settings['reltol'],
+-             'max_step': settings['maxstep'], 'stop': settings['stop'], 'output_points': len(times),
+-             'engine': response['engine'], 'transient_summary': {
+-                 'accepted_steps': response['transient'].get('accepted_steps'),
+-                 'discarded_trials': response['transient'].get('discarded_trials'),
+-                 'state_names': response['transient'].get('state_names'),
+-                 'event_count': len(response['transient'].get('events', []))},
+-             'unsupported_spice_controls': ['iabstol', 'integration method']})
+-        with (work / 'waveform.csv').open('x') as stream:
+-            writer = csv.writer(stream)
+-            writer.writerow(['time', *response['nodes']])
+-            writer.writerows([t, *s['voltages']] for t, s in zip(times, response['solutions'], strict=True))
+-        result = {'status': 'waveform_available', 'waveform': 'waveform.csv'}
+-    except CompileError as exc:
+-        result = {'status': 'compile_failed', 'failure_stage': 'compile', 'reason': str(exc)}
+-    except KernelError as exc:
+-        result = {'status': 'execution_failed', 'failure_stage': 'kernel', 'reason': str(exc), 'detail': exc.detail}
+-    save(work / 'worker-result.json', result)
++    """Keep the legacy import and CLI entry for comparison execution."""
++    spec = importlib.util.spec_from_file_location('comparison_evas_worker', _EVAS_WORKER_PATH)
++    adapter = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(adapter)
++    return adapter.worker(work, kernel, ROOT)
+ 
+ 
+ def analyze(work, backend, result):
+@@ -220,10 +187,11 @@ def run(args):
+     started = {'started_unix_ns': time.time_ns(), 'backend': args.backend, 'input_manifest_sha256': sha(source / 'INPUT_MANIFEST.json'),
+          'plan_sha256': sha(source / 'RUN_PLAN.json'), 'configurations': 8, 'max_simulations': 8,
+          'max_compilations': 8, 'stage_timeout_s': 90, 'license_timeout_s': 30, 'tool': tool,
+-         'runner_sha256': sha(Path(__file__)), 'allocation': args.allocation}
++         'runner_sha256': sha(Path(__file__)), 'worker_sources': worker_sources(), 'allocation': args.allocation}
+     if args.resume_finished_spectre:
+         save(output / 'CONTINUATION.json', {'old_started_sha256': sha(output / 'STARTED.json'),
+-             'runner_sha256': sha(Path(__file__)), 'reason': 'Explicit module-path repair; completed simulations are analyzed without replay.'})
++             'runner_sha256': started['runner_sha256'], 'worker_sources': started['worker_sources'],
++             'reason': 'Explicit module-path repair; completed simulations are analyzed without replay.'})
+     else:
+         save(output / 'STARTED.json', started)
+ 
+diff --git a/experiments/backends/comparison/test_worker_adapter.py b/experiments/backends/comparison/test_worker_adapter.py
+new file mode 100644
+index 00000000..f73c125a
+--- /dev/null
++++ b/experiments/backends/comparison/test_worker_adapter.py
+@@ -0,0 +1,223 @@
++"""Comparison worker dependency and legacy entry controls; no numerical backend."""
++import hashlib
++from pathlib import Path
++import tempfile
++import unittest
++from unittest.mock import patch
++import freeze
++import ingest
++import runner
++
++
++class WorkerAdapterControls(unittest.TestCase):
++    def test_legacy_worker_dispatches_original_root(self):
++        with patch.object(runner.importlib.util, 'spec_from_file_location') as spec, patch.object(runner.importlib.util, 'module_from_spec') as module:
++            runner.worker(Path('work'), Path('kernel'))
++            module.return_value.worker.assert_called_once_with(Path('work'), Path('kernel'), runner.ROOT)
++            self.assertEqual(spec.call_args.args[1], runner.ROOT / freeze.WORKER_ADAPTER)
++
++    def test_contract_uses_audited_source_not_file_presence(self):
++        self.assertEqual(freeze.worker_dependencies('def worker(): pass'), ())
++        source = "_EVAS_WORKER_PATH = ROOT / " + repr(freeze.WORKER_ADAPTER)
++        self.assertEqual(freeze.worker_dependencies(source), (freeze.WORKER_ADAPTER,))
++        for invalid in [source.replace('ROOT /', 'OTHER /'), source+'\n'+source,
++                        "path = " + repr(freeze.WORKER_ADAPTER)]:
++            with self.subTest(source=invalid), self.assertRaises(ValueError):
++                freeze.worker_dependencies(invalid)
++
++    def test_runtime_identity_binds_adapter_and_rejects_missing(self):
++        with tempfile.TemporaryDirectory() as temp:
++            root = Path(temp)
++            runner_path = root / 'experiments/backends/comparison/runner.py'
++            runner_path.parent.mkdir(parents=True)
++            runner_path.write_text('def worker(): pass')
++            with patch.object(freeze, 'ROOT', root):
++                old = freeze.runtime_identity()
++                adapter = root / freeze.WORKER_ADAPTER
++                adapter.parent.mkdir(parents=True);adapter.write_text('# control')
++                self.assertEqual(old, freeze.runtime_identity())
++                runner_path.write_text("_EVAS_WORKER_PATH = ROOT / " + repr(freeze.WORKER_ADAPTER))
++                current = freeze.runtime_identity()
++                self.assertNotEqual(old, current)
++                adapter.write_text('# changed control')
++                self.assertNotEqual(current, freeze.runtime_identity())
++                adapter.unlink()
++                with self.assertRaises(FileNotFoundError):freeze.runtime_identity()
++
++    def test_archive_closure_old_new_and_missing_or_changed(self):
++        with tempfile.TemporaryDirectory() as temp:
++            root = Path(temp)
++            archive = root / 'experiments/backends/comparison/evidence/sources'
++            archive.mkdir(parents=True)
++            def frozen(text):
++                digest = hashlib.sha256(text.encode()).hexdigest()
++                path = archive / ('control-' + digest + '.py.txt');path.write_text(text)
++                return digest, path
++            old, _ = frozen('def worker(): pass')
++            new, _ = frozen("_EVAS_WORKER_PATH = ROOT / " + repr(freeze.WORKER_ADAPTER))
++            adapter, path = frozen('# controlled adapter')
++            with patch.object(ingest, 'ROOT', root):
++                self.assertEqual(len(ingest.runner_sources([old])), 1)
++                self.assertEqual(len(ingest.runner_sources([new], {freeze.WORKER_ADAPTER:adapter})), 2)
++                with self.assertRaisesRegex(ValueError, 'closure mismatch'):ingest.runner_sources([new])
++                with self.assertRaisesRegex(ValueError, 'closure mismatch'):ingest.runner_sources([old], {freeze.WORKER_ADAPTER:adapter})
++                path.write_text('# changed')
++                with self.assertRaisesRegex(ValueError, 'not retrievable'):ingest.runner_sources([new], {freeze.WORKER_ADAPTER:adapter})
++
++
++class ContinuationIngestControls(unittest.TestCase):
++    """Synthetic execution artifacts exercise run -> results -> real ingest wiring.
++
++    External execution and scientific analysis are forbidden/mocked. The oracle is
++    source identity, immutable STARTED bytes and rejection of unbound provenance.
++    """
++    def exercise(self, mode='resume', fault=None):
++        import json
++        from argparse import Namespace
++        from contextlib import ExitStack
++        import derive
++        from records import sha, load
++        with tempfile.TemporaryDirectory() as temp, ExitStack() as stack:
++            root = Path(temp).resolve()
++            stack.enter_context(patch.object(runner.subprocess, 'Popen', side_effect=AssertionError('external process forbidden')))
++            stack.enter_context(patch.object(runner.subprocess, 'run', side_effect=AssertionError('external process forbidden')))
++            stack.enter_context(patch.object(runner.subprocess, 'check_output', side_effect=AssertionError('external process forbidden')))
++            inputs = root / 'inputs';inputs.mkdir()
++            output = root / 'output'
++            archive = root / 'experiments/backends/comparison/evidence/sources'
++            archive.mkdir(parents=True)
++            def write(path, value):
++                path.parent.mkdir(parents=True, exist_ok=True)
++                path.write_text(json.dumps(value))
++            def frozen(text):
++                digest = hashlib.sha256(text.encode()).hexdigest()
++                (archive / ('control-' + digest + '.py.txt')).write_text(text)
++                return digest
++            current_text = Path(runner.__file__).read_text()
++            current = frozen(current_text)
++            legacy = frozen('def worker(): pass')
++            adapter = frozen('# synthetic bound adapter')
++            workers = {freeze.WORKER_ADAPTER: adapter}
++            binary = root / 'synthetic-binary';binary.write_text('# never executed')
++            profile = root / 'profile.json'
++            write(profile, {'spectre': str(binary), 'setup_scripts': []})
++            tool = {'revision': 'synthetic', 'runtime_identity': 'synthetic',
++                    'binary_sha256': sha(binary), 'setup_sha256': []}
++            plan = [{'backend': b, 'condition': c, 'profile': 'base',
++                     'input_identity': c, 'source_sha256': 'synthetic', 'work': c}
++                    for b in runner.BACKENDS for c in freeze.SELECTED]
++            write(inputs / 'RUN_PLAN.json', plan)
++            write(inputs / 'INPUT_MANIFEST.json', {})
++            write(inputs / 'provenance.json', {'checker_identity': 'synthetic'})
++            for c in freeze.SELECTED:
++                write(inputs / c / 'requested_settings.json', {})
++            started = {'backend': 'spectre', 'input_manifest_sha256': sha(inputs / 'INPUT_MANIFEST.json'),
++                       'runner_sha256': legacy, 'tool': tool, 'allocation': 'synthetic'}
++            if mode != 'new':
++                write(output / 'STARTED.json', started)
++                # Original formatting is intentionally retained byte for byte.
++                with (output / 'STARTED.json').open('a') as stream:stream.write(' \n')
++                for c in freeze.SELECTED:
++                    work = output / 'runs' / c / 'base'
++                    write(work / 'requested_settings.json', {})
++                    (work / 'simulate.log').write_text('synthetic completed log')
++                    write(work / 'simulate.json', {'stage': 'simulate', 'exit_code': 0,
++                          'timed_out': False, 'log_sha256': sha(work / 'simulate.log')})
++                original = (output / 'STARTED.json').read_bytes()
++            def execute(argv, work, stage, *args, **kwargs):
++                if mode != 'new':raise AssertionError('resume must never launch a process')
++                (work / (stage + '.log')).write_text('synthetic tool log')
++                return {'stage': stage, 'exit_code': 0, 'timed_out': False}
++            stack.enter_context(patch.object(runner, 'checker_identity', return_value='synthetic'))
++            stack.enter_context(patch.object(runner, 'worker_sources', return_value=workers))
++            stack.enter_context(patch.object(runner.os, 'sched_getaffinity', return_value={0}, create=True))
++            stack.enter_context(patch.object(runner, 'execute', side_effect=execute))
++            stack.enter_context(patch.object(runner, 'analyze', return_value={'status': 'unresolved'}))
++            args = Namespace(inputs=inputs, output=output, backend='spectre', kernel=None,
++                             spectre_profile=profile, allocation='synthetic', resume_finished_spectre=mode!='new')
++            runner.run(args)
++            if mode != 'new':self.assertEqual((output / 'STARTED.json').read_bytes(), original)
++            if mode in ('legacy', 'legacy-continuation'):
++                if mode == 'legacy':
++                    (output / 'CONTINUATION.json').unlink()
++                else:
++                    (output / 'CONTINUATION.json').write_text(json.dumps({
++                        'old_started_sha256': sha(output / 'STARTED.json'), 'runner_sha256': legacy}))
++                results = load(output / 'EXECUTION.json')
++                for result in results:result['runner_sha256'] = legacy
++                (output / 'EXECUTION.json').write_text(json.dumps(results))
++            if fault:
++                continuation = load(output / 'CONTINUATION.json')
++                if fault == 'missing-workers':continuation.pop('worker_sources', None)
++                elif fault == 'wrong-adapter':continuation['worker_sources'] = {freeze.WORKER_ADAPTER: '0'*64}
++                elif fault == 'extra-worker':continuation['worker_sources'] = {**workers, 'unknown.py': adapter}
++                elif fault == 'wrong-started':continuation['old_started_sha256'] = '0'*64
++                elif fault == 'wrong-runner':continuation['runner_sha256'] = legacy
++                elif fault == 'unknown-contract':
++                    digest = frozen("_EVAS_WORKER_PATH = OTHER / " + repr(freeze.WORKER_ADAPTER))
++                    continuation['runner_sha256'] = digest
++                    results = load(output / 'EXECUTION.json')
++                    for result in results:result['runner_sha256'] = digest
++                    (output / 'EXECUTION.json').write_text(json.dumps(results))
++                if fault == 'missing-continuation':(output / 'CONTINUATION.json').unlink()
++                else:(output / 'CONTINUATION.json').write_text(json.dumps(continuation))
++            # Rebuild the synthetic raw manifest after the intentional fault.
++            manifest = {str(p.relative_to(output)): {'sha256': sha(p), 'bytes': p.stat().st_size}
++                        for p in output.rglob('*') if p.is_file() and p.name != 'FILE_MANIFEST.json'}
++            (output / 'FILE_MANIFEST.json').write_text(json.dumps(manifest))
++            snapshot = root / 'snapshot.json'
++            write(snapshot, {'schema_version': 2, 'datasets': [
++                {'id': 'cmp8-base', 'cases': [{'id': c, 'input_identity': c} for c in freeze.SELECTED]},
++                {'id': 'application-reference'}], 'records': [
++                {'dataset': 'cmp8-base', 'backend': 'spectre', 'case': c, 'accounting': 'unrun'}
++                for c in freeze.SELECTED]})
++            task = root / 'benchmark/material/historyref/tasks/va07-triangle-repair'
++            write(task / 'tests/cases.json', [{'name': 'constant-tighter'}])
++            for rel in ['solution/dut.va']:(task / rel).parent.mkdir(parents=True, exist_ok=True);(task / rel).write_text('synthetic')
++            for name in ['triangle_oscillator.py', 'triangle_evas.py']:
++                p = root / 'benchmark/material/historyref/legacy-authoring/checkers' / name
++                p.parent.mkdir(parents=True, exist_ok=True);p.write_text('# synthetic')
++            stack.enter_context(patch.object(ingest, 'ROOT', root))
++            stack.enter_context(patch.object(ingest.subprocess, 'check_output', return_value='synthetic-revision'))
++            stack.enter_context(patch.object(derive, 'freeze_candidates'))
++            stack.enter_context(patch.object(ingest, 'validate'))
++            data = ingest.ingest(snapshot, inputs, [output], root / 'compact')
++            self.assertEqual(len([r for r in data['records'] if r['accounting']=='executed']), 8)
++            receipt = load(root / 'compact/spectre' / freeze.SELECTED[0] / 'receipt.json')
++            expected = {legacy} if mode in ('legacy', 'legacy-continuation') else {current, adapter} if mode == 'new' else {legacy, current, adapter}
++            self.assertEqual({ref['sha256'] for ref in receipt['runner_sources']}, expected)
++            self.assertEqual((root / 'compact/spectre/STARTED.json').read_bytes(), (output / 'STARTED.json').read_bytes())
++            if mode == 'resume':self.assertEqual(receipt['continuation']['worker_sources'], workers)
++
++    def test_resume_to_actual_ingest_preserves_started_and_binds_analysis(self):
++        self.exercise()
++
++    def test_new_execution_to_actual_ingest(self):
++        self.exercise('new')
++
++    def test_legacy_execution_to_actual_ingest(self):
++        self.exercise('legacy')
++
++    def test_legacy_continuation_without_worker_contract_to_actual_ingest(self):
++        self.exercise('legacy-continuation')
++
++    def test_resume_rejects_missing_analysis_workers(self):
++        with self.assertRaisesRegex(ValueError, 'closure mismatch'):self.exercise(fault='missing-workers')
++
++    def test_resume_rejects_wrong_analysis_worker_digest(self):
++        with self.assertRaisesRegex(ValueError, 'not retrievable'):self.exercise(fault='wrong-adapter')
++
++    def test_resume_rejects_unknown_extra_dependency(self):
++        with self.assertRaisesRegex(ValueError, 'closure mismatch'):self.exercise(fault='extra-worker')
++
++    def test_resume_rejects_wrong_started_digest(self):
++        with self.assertRaisesRegex(ValueError, 'continuation.*identity'):self.exercise(fault='wrong-started')
++
++    def test_resume_rejects_wrong_analysis_runner_digest(self):
++        with self.assertRaisesRegex(ValueError, 'continuation.*identity'):self.exercise(fault='wrong-runner')
++
++    def test_resume_rejects_missing_continuation(self):
++        with self.assertRaisesRegex(ValueError, 'continuation.*identity'):self.exercise(fault='missing-continuation')
++
++    def test_resume_rejects_unknown_analysis_contract(self):
++        with self.assertRaisesRegex(ValueError, 'unknown comparison worker dependency'):self.exercise(fault='unknown-contract')
+diff --git a/experiments/backends/paper/actual_observation.py b/experiments/backends/paper/actual_observation.py
+index 138dd8db..fc2c52c9 100644
+--- a/experiments/backends/paper/actual_observation.py
++++ b/experiments/backends/paper/actual_observation.py
+@@ -52,13 +52,14 @@ def input_curve_bound(card,request):
+     return max((b['bound_V'] for b in maxima.values()),default=0),{'inputs':maxima,'domain_s':[0,request['stop']],'reference_endpoint_semantics':'oracle.pwl endpoint hold; no actual-source extension'}
+ 
+ 
++EVAS_WORKER_ADAPTER = 'evas/validation/adapters/paper_evas_worker.py'
+ PAPER_WORKERS = tuple('experiments/backends/paper/'+name+'.py' for name in
+                       ('runner','inputs','process','settings_readback','observations'))
+ SHARED_READER_FILES = ('experiments/backends/evidence/legacy_waveforms.py',)
+ LEGACY_READER_FILES = ('experiments/archive/dvs2-starter-pilot/analyze.py',
+                        'experiments/archive/dvs2-starter-pilot/suite.py')
+ CASE_INPUTS_FILE = 'evas/validation/paper/case_inputs.py'
+-WORKER_DEPENDENCIES = PAPER_WORKERS + SHARED_READER_FILES
++WORKER_DEPENDENCIES = PAPER_WORKERS + (EVAS_WORKER_ADAPTER,) + SHARED_READER_FILES
+ 
+ 
+ def _assignment(tree, name):
+@@ -83,6 +84,7 @@ def worker_dependencies(repo):
+     try:
+         observations = ast.parse((repo/'experiments/backends/paper/observations.py').read_text())
+         inputs = ast.parse((repo/'experiments/backends/paper/inputs.py').read_text())
++        runner = ast.parse((repo/'experiments/backends/paper/runner.py').read_text())
+     except (OSError, SyntaxError) as exc:
+         raise ValueError('audited worker dependency contract unavailable') from exc
+     reader_files = _assignment(observations, 'READER_FILES')
+@@ -109,7 +111,19 @@ def worker_dependencies(repo):
+                and n.value.endswith('/case_inputs.py') for n in ast.walk(inputs)):
+             raise ValueError('unregistered audited case-input dependency contract')
+         constructors = ()
+-    return PAPER_WORKERS + readers + constructors
++    # Select the dependency from the audited source, never file existence.
++    loaders = [node for node in runner.body if isinstance(node, ast.FunctionDef)
++               and node.name == 'evas_worker_adapter']
++    adapters = ()
++    if loaders:
++        if len(loaders) != 1 or not _expression_matches(_assignment(loaders[0], 'path'),
++                "Path(__file__).resolve().parents[3] / 'evas/validation/adapters/paper_evas_worker.py'"):
++            raise ValueError('unknown audited EVAS worker adapter contract')
++        adapters = (EVAS_WORKER_ADAPTER,)
++    elif any(isinstance(node, ast.Constant) and isinstance(node.value, str)
++             and node.value.endswith('/paper_evas_worker.py') for node in ast.walk(runner)):
++        raise ValueError('unregistered audited EVAS worker adapter contract')
++    return PAPER_WORKERS + adapters + readers + constructors
+ 
+ 
+ BUILD_METADATA=('evas/pyproject.toml','evas/rust_core/Cargo.toml','evas/rust_core/Cargo.lock',
+diff --git a/experiments/backends/paper/inputs.py b/experiments/backends/paper/inputs.py
+index e03d3b68..59d40667 100644
+--- a/experiments/backends/paper/inputs.py
++++ b/experiments/backends/paper/inputs.py
+@@ -189,7 +189,8 @@ def freeze(cards_path, output, *, stage_timeout_s=90, license_timeout_s=30):
+                     Path(__file__).with_name('settings_readback.py'),
+                     Path(__file__).with_name('OBSERVATION_METHODS.md'),
+                     ROOT/'experiments/backends/evidence/legacy_waveforms.py',
+-                    ROOT/'experiments/backends/dvs2-spectre-validation/report.py']
++                    ROOT/'experiments/backends/dvs2-spectre-validation/report.py',
++                    ROOT/'evas/validation/adapters/paper_evas_worker.py']
+     source_identity = {}
+     for path in source_paths:
+         relative = str(path.relative_to(ROOT))
+diff --git a/experiments/backends/paper/runner.py b/experiments/backends/paper/runner.py
+index fdb7d1e1..78b4d99d 100644
+--- a/experiments/backends/paper/runner.py
++++ b/experiments/backends/paper/runner.py
+@@ -273,60 +273,33 @@ def verify_tool(tool, profile, env):
+                 raise ValueError('compiler changed after preflight')
+ 
+ 
++def evas_worker_adapter():
++    """Load the validation adapter when a response or worker call needs it."""
++    name = 'paper_evas_worker_adapter'
++    cached = sys.modules.get(name)
++    if cached is not None:
++        return cached
++    path = Path(__file__).resolve().parents[3] / 'evas/validation/adapters/paper_evas_worker.py'
++    spec = importlib.util.spec_from_file_location(name, path)
++    module = importlib.util.module_from_spec(spec)
++    sys.modules[name] = module
++    spec.loader.exec_module(module)
++    return module
++
++
+ def save_raw_response(path, response):
+     """Only the potentially large response uses compact JSON; preserve all values."""
+-    with path.open('x') as stream:
+-        json.dump(response,stream,separators=(',',':'),ensure_ascii=False,allow_nan=False)
+-        stream.write('\n')
++    return evas_worker_adapter().save_raw_response(path, response)
+ 
+ 
+ def evas_effective_record(request,response):
+     """The transient public API has already validated the actual response."""
+-    evidence=response.get('observation_evidence')
+-    record={'request_echo':{'reltol':request['reltol'],'vabstol':request['vabstol'],
+-                           'stop':request['stop'],'maxstep':request['max_step']},
+-            'observed_response':{'engine':response['engine'],'accepted_steps':response['transient'].get('accepted_steps')},
+-            'unsupported_controls':['iabstol','integration_method']}
+-    if evidence is None:
+-        record.update(sample_origin='unknown; legacy response has no observation evidence',
+-                      settings_readback='unknown; legacy response does not report actual controls')
+-    else:
+-        record['runtime_controls']=dict(evidence['effective_controls'])
+-        origins=evidence['sample_origins']
+-        record['sample_origin_summary']={origin:origins.count(origin) for origin in sorted(set(origins))}
+-        record['sample_origin']='actual response origins; these do not independently establish paper native qualification'
+-        record['settings_readback']='validated public response observation_evidence.effective_controls'
+-    return record
++    return evas_worker_adapter().evas_effective_record(request, response)
+ 
+ 
+ def worker(work, kernel):
+     """Normal compiler/top hierarchy, current transient API, no source rewriting."""
+-    sys.path.insert(0,str(ROOT/'evas/src'))
+-    from evas import CompileError, KernelError, Instance, compile_sources, transient
+-    request=load(work/'request.json')
+-    result={'status':'execution_failed','reason':'worker did not complete'}
+-    try:
+-        instances=[Instance(i['name'],i['module'],i['ports'],i['parameters']) for i in request['instances']]
+-        program=compile_sources({'dut.va':(work/'dut.va').read_text()},instances)
+-        save(work/'program.json',program.to_dict())
+-        times=load(work/request['requested_times'])
+-        response=transient(program,request['inputs'],times,stop=request['stop'],max_step=request['max_step'],
+-                           kernel=kernel,vabstol=request['vabstol'],reltol=request['reltol'],timeout=None)
+-        save_raw_response(work/'raw-response.json',response)
+-        # Owned outer stage kills the complete worker/kernel group at its limit.
+-        with (work/'waveform.csv').open('x') as f:
+-            writer=csv.writer(f)
+-            writer.writerow(['time',*response['nodes']])
+-            writer.writerows([t,*r['voltages']] for t,r in zip(times,response['solutions'],strict=True))
+-        save(work/'effective.json',evas_effective_record(request,response))
+-        result={'status':'waveform_available','waveform':'waveform.csv'}
+-    except CompileError as exc:
+-        result={'status':'compile_failed','failure_stage':'compile','reason':str(exc)}
+-    except KernelError as exc:
+-        result={'status':'execution_failed','failure_stage':'kernel','reason':str(exc),'detail':exc.detail}
+-    except Exception as exc:
+-        result={'status':'execution_failed','failure_stage':'worker','exception_type':type(exc).__name__,'reason':str(exc)}
+-    save(work/'worker-result.json',result)
++    return evas_worker_adapter().worker(work, kernel)
+ 
+ 
+ def effective_settings(work, backend):
+diff --git a/experiments/backends/paper/test_evas_worker_adapter.py b/experiments/backends/paper/test_evas_worker_adapter.py
+new file mode 100644
+index 00000000..8b00e12f
+--- /dev/null
++++ b/experiments/backends/paper/test_evas_worker_adapter.py
+@@ -0,0 +1,74 @@
++"""Call the paper EVAS response adapter without a kernel or DUT simulation."""
++import json
++import tempfile
++import unittest
++from pathlib import Path
++
++import runner
++from actual_observation import EVAS_WORKER_ADAPTER, production_dependencies
++
++
++REQUEST = {'reltol': 1e-5, 'vabstol': 1e-6, 'stop': 1e-6, 'max_step': 1e-9}
++LEGACY = {'engine': 'synthetic-engine', 'transient': {'accepted_steps': 0, 'times': [0, 0.30000000000000004]}}
++EVIDENCE = {'effective_controls': {'relative': 1e-5, 'absolute_V': 1e-6, 'stop_s': 1e-6,
++                                   'max_step_s': 1e-9, 'max_step_applied': True},
++            'sample_origins': ['accepted_controller_frame', 'certified_causal_frame', 'accepted_controller_frame']}
++
++
++class PaperEvasWorkerAdapter(unittest.TestCase):
++    def setUp(self):
++        self.adapter = runner.evas_worker_adapter()
++
++    def test_public_entry_and_adapter_write_the_same_response_bytes(self):
++        response = {**LEGACY, 'observation_evidence': EVIDENCE, 'nodes': ['a'], 'extra': {'kept': True}}
++        with tempfile.TemporaryDirectory() as temporary:
++            root = Path(temporary)
++            left = root / 'runner.json'
++            right = root / 'adapter.json'
++            runner.save_raw_response(left, response)
++            self.adapter.save_raw_response(right, response)
++            self.assertEqual(left.read_bytes(), right.read_bytes())
++            self.assertEqual(runner.evas_effective_record(REQUEST, LEGACY),
++                             self.adapter.evas_effective_record(REQUEST, LEGACY))
++            self.assertEqual(runner.evas_effective_record(REQUEST, response),
++                             self.adapter.evas_effective_record(REQUEST, response))
++
++    def test_missing_request_stops_before_a_worker_result(self):
++        with tempfile.TemporaryDirectory() as temporary:
++            work = Path(temporary)
++            with self.assertRaises(FileNotFoundError):
++                runner.worker(work, Path('unused-kernel'))
++            self.assertFalse((work / 'worker-result.json').exists())
++            with self.assertRaises(FileNotFoundError):
++                self.adapter.worker(work, Path('unused-kernel'))
++            self.assertFalse((work / 'worker-result.json').exists())
++
++    def test_incomplete_request_keeps_the_worker_failure_record(self):
++        with tempfile.TemporaryDirectory() as temporary:
++            work = Path(temporary)
++            (work / 'request.json').write_text('{}\n')
++            runner.worker(work, Path('unused-kernel'))
++            record = json.loads((work / 'worker-result.json').read_text())
++            self.assertEqual(record['status'], 'execution_failed')
++            self.assertEqual(record['failure_stage'], 'worker')
++            self.assertEqual(record['exception_type'], 'KeyError')
++            self.assertFalse((work / 'waveform.csv').exists())
++            self.assertFalse((work / 'raw-response.json').exists())
++
++    def test_compact_response_rejects_nan_and_an_existing_file(self):
++        with tempfile.TemporaryDirectory() as temporary:
++            path = Path(temporary) / 'raw.json'
++            runner.save_raw_response(path, LEGACY)
++            with self.assertRaises(FileExistsError):
++                self.adapter.save_raw_response(path, LEGACY)
++            with self.assertRaises(ValueError):
++                runner.save_raw_response(Path(temporary) / 'nan.json', {'v': float('nan')})
++
++    def test_production_closure_includes_the_adapter_file(self):
++        sources = production_dependencies(Path(__file__).resolve().parents[3])
++        self.assertIn(EVAS_WORKER_ADAPTER, sources)
++        self.assertIn('experiments/backends/paper/runner.py', sources)
++
++
++if __name__ == '__main__':
++    unittest.main()
+diff --git a/experiments/backends/paper/test_producer_dependencies.py b/experiments/backends/paper/test_producer_dependencies.py
+index 0a51bc2d..7bec7536 100644
+--- a/experiments/backends/paper/test_producer_dependencies.py
++++ b/experiments/backends/paper/test_producer_dependencies.py
+@@ -3,7 +3,7 @@ from pathlib import Path
+ import tempfile
+ import unittest
+ 
+-from actual_observation import production_dependencies, producer_identity
++from actual_observation import EVAS_WORKER_ADAPTER, production_dependencies, producer_identity
+ 
+ PAPER = 'experiments/backends/paper/'
+ SHARED = 'experiments/backends/evidence/legacy_waveforms.py'
+@@ -38,6 +38,33 @@ def fixture(root, *, legacy=False, constructor=False):
+ 
+ 
+ class ProducerDependencyContracts(unittest.TestCase):
++    def test_audited_migrated_worker_requires_adapter_without_changing_legacy(self):
++        with tempfile.TemporaryDirectory() as temporary:
++            root = Path(temporary)
++            fixture(root)
++            self.assertNotIn(EVAS_WORKER_ADAPTER, production_dependencies(root))
++            runner = root/'experiments/backends/paper/runner.py'
++            loader = ("def evas_worker_adapter():\n"
++                      "    path = Path(__file__).resolve().parents[3] / "
++                      "'evas/validation/adapters/paper_evas_worker.py'\n")
++            runner.write_text(loader)
++            with self.assertRaisesRegex(ValueError, 'audited production dependency missing'):
++                production_dependencies(root)
++            adapter = root/EVAS_WORKER_ADAPTER
++            adapter.parent.mkdir(parents=True)
++            adapter.write_text('# synthetic migrated worker\n')
++            sources = production_dependencies(root)
++            self.assertIn(EVAS_WORKER_ADAPTER, sources)
++            missing = dict(sources)
++            missing.pop(EVAS_WORKER_ADAPTER)
++            self.assertIn(EVAS_WORKER_ADAPTER, producer_identity(missing, root)['missing_dependencies'])
++            changed = dict(sources)
++            changed[EVAS_WORKER_ADAPTER] = '0'*64
++            self.assertIn(EVAS_WORKER_ADAPTER, producer_identity(changed, root)['changed_dependencies'])
++            runner.write_text(loader.replace('parents[3]', 'parents[2]'))
++            with self.assertRaisesRegex(ValueError, 'unknown audited EVAS worker adapter contract'):
++                production_dependencies(root)
++
+     def test_legacy_and_current_producers_keep_distinct_reader_contracts(self):
+         for legacy in (False, True):
+             with self.subTest(legacy=legacy), tempfile.TemporaryDirectory() as temporary:
+diff --git a/experiments/backends/support/comparison_completion.py b/experiments/backends/support/comparison_completion.py
+index 97a3dd03..2f7559a6 100644
+--- a/experiments/backends/support/comparison_completion.py
++++ b/experiments/backends/support/comparison_completion.py
+@@ -141,9 +141,10 @@ def freeze(output):
+                   ROOT/'experiments/backends/paper/inputs.py',
+                   ROOT/'experiments/backends/paper/observations.py',
+                   ROOT/'experiments/backends/paper/runner.py',
++                  ROOT/'evas/validation/adapters/paper_evas_worker.py',
+                   ROOT/'experiments/backends/paper/process.py',
+                   ROOT/'experiments/backends/paper/settings_readback.py',
+-                  ROOT/'experiments/backends/support/precision_run.py',*READER_DEPENDENCIES]
++                  ROOT/'experiments/backends/support/precision_run.py',*execution.worker_source_files(),*READER_DEPENDENCIES]
+     save(output/'SOURCE_IDENTITY.json',{str(p.relative_to(ROOT)):sha(p) for p in dependencies})
+     save(output/'MANIFEST.json',{str(p.relative_to(output)):sha(p)
+                                 for p in sorted(output.rglob('*')) if p.is_file()})
+diff --git a/experiments/backends/support/legacy_chain_run.py b/experiments/backends/support/legacy_chain_run.py
+index 6755e7d2..a7f98e7b 100644
+--- a/experiments/backends/support/legacy_chain_run.py
++++ b/experiments/backends/support/legacy_chain_run.py
+@@ -74,6 +74,7 @@ def source_identity():
+          ROOT/'experiments/backends/paper/actual_observation.py',ROOT/'experiments/backends/dvs2-spectre-validation/run_suite.py',
+          ROOT/'experiments/backends/dvs2-spectre-validation/check_results.py',ROOT/'experiments/archive/dvs2-history-validation/history.py',ROOT/'experiments/archive/dvs2-history-validation/recheck.py',
+          ROOT/'evas/validation/cases/n_v4_02/dut.va',ROOT/'evas/validation/cases/d2_v6_01_standard/dut.va'))
++    paths.update(str(p.relative_to(ROOT)) for p in execution.worker_source_files())
+     return {p:sha(ROOT/p) for p in sorted(paths)}
+ 
+ 
+diff --git a/experiments/backends/support/precision_run.py b/experiments/backends/support/precision_run.py
+index 3bd11750..5e04e539 100644
+--- a/experiments/backends/support/precision_run.py
++++ b/experiments/backends/support/precision_run.py
+@@ -4,7 +4,6 @@ Backend process ownership, compiler identity and format readers reuse the paper
+ adapter. This pilot owns its new cards, observation grid and independent checker.
+ """
+ import argparse
+-import csv
+ import json
+ import math
+ from pathlib import Path
+@@ -50,8 +49,9 @@ def source_files():
+            'target' not in p.parts and '__pycache__' not in p.parts]
+     paths += [Path(__file__),ROOT/'experiments/backends/support/precision_report.py',ROOT/'evas/pyproject.toml',
+               ROOT/'experiments/backends/evidence/legacy_waveforms.py',
+-              ROOT/'evas/validation/paper/precision-v1.json']
+-    return sorted(set(paths))
++              ROOT/'evas/validation/paper/precision-v1.json',
++              ROOT/'evas/validation/adapters/paper_evas_worker.py']
++    return sorted(set(paths + worker_source_files()))
+ 
+ 
+ def freeze(output):
+@@ -98,28 +98,17 @@ def verify(inputs):
+         if not p.is_relative_to(ROOT) or sha(p)!=digest:raise ValueError('source drift: '+rel)
+ 
+ 
++def worker_source_files():
++    """Current worker closure for new freezes; historical freezes retain old sources."""
++    return [ROOT/'evas/validation/adapters/precision_evas_worker.py',
++            ROOT/'evas/validation/adapters/paper_evas_worker.py']
++
++
+ def worker(work,kernel):
+-    sys.path.insert(0,str(ROOT/'evas/src'))
+-    from evas import compile_sources, transient, Instance, CompileError, KernelError
+-    request=load(work/'request.json');times=load(work/'requested_times.json')
+-    try:
+-        instances=[Instance(i['name'],i['module'],i['ports'],i['parameters']) for i in request['instances']]
+-        program=compile_sources({'dut.va':(work/'dut.va').read_text()},instances)
+-        save(work/'program.json',program.to_dict())
+-        response=transient(program,request['inputs'],times,stop=request['stop'],max_step=request['max_step'],
+-                           strobetimes=times,kernel=kernel,vabstol=request['vabstol'],reltol=request['reltol'],timeout=None)
+-        save_raw_response(work/'raw-response.json',response)
+-        strobe=response['strobe_evidence']
+-        if strobe['times']!=times:raise ValueError('strobe time mismatch')
+-        with (work/'waveform.csv').open('x') as stream:
+-            writer=csv.writer(stream);writer.writerow(['time',*response['nodes']])
+-            writer.writerows([t,*v] for t,v in zip(strobe['times'],strobe['voltages_V'],strict=True))
+-        save(work/'effective.json',evas_effective_record(request,response))
+-        result={'status':'waveform_available','origins':sorted(set(strobe['sample_origins']))}
+-    except CompileError as exc:result={'status':'compile_failed','reason':str(exc)}
+-    except KernelError as exc:result={'status':'execution_failed','reason':str(exc),'detail':exc.detail}
+-    except Exception as exc:result={'status':'execution_failed','reason':repr(exc)}
+-    save(work/'worker-result.json',result)
++    """Compatibility entry for the precision-specific validation adapter."""
++    sys.path.insert(0,str(ROOT/'evas/validation/adapters'))
++    from precision_evas_worker import worker as adapter_worker
++    return adapter_worker(work,kernel)
+ 
+ 
+ def qualify(work,backend,result):
+diff --git a/experiments/backends/support/precision_v2_report.py b/experiments/backends/support/precision_v2_report.py
+index 59bf293b..858094b7 100644
+--- a/experiments/backends/support/precision_v2_report.py
++++ b/experiments/backends/support/precision_v2_report.py
+@@ -166,6 +166,7 @@ def report(base,step_evidence=None):
+                 [Path(__file__),ROOT/'evas/validation/paper/precision_v2.py',ROOT/'evas/validation/paper/precision_reference.py',
+                  ROOT/'experiments/backends/support/precision_report.py',ROOT/'experiments/backends/paper/observations.py',
+                  ROOT/'experiments/backends/support/precision_run.py',ROOT/'experiments/backends/paper/runner.py',
++                 ROOT/'evas/validation/adapters/paper_evas_worker.py',
+                  ROOT/'experiments/backends/paper/settings_readback.py',
+                  ROOT/'experiments/backends/evidence/legacy_waveforms.py']},
+             'claim':'finite development-informed conditions, not held-out paper suite; original v1 scores unchanged'}
+diff --git a/experiments/backends/support/probes.py b/experiments/backends/support/probes.py
+index 9c92fb1d..535d4547 100644
+--- a/experiments/backends/support/probes.py
++++ b/experiments/backends/support/probes.py
+@@ -54,7 +54,8 @@ def freeze(output, cards_path=None, gnucap_time_bits=None):
+             save(work/'requested_settings.json', backend_settings)
+     paths = [*(ROOT/'evas/validation/support').glob('*.py'), *Path(__file__).parent.glob('*.py'), * (ROOT/'experiments/backends/paper').glob('*.py'),
+              ROOT/'experiments/backends/evidence/legacy_waveforms.py',
+-             ROOT/'experiments/backends/dvs2-spectre-validation/report.py']
++             ROOT/'experiments/backends/dvs2-spectre-validation/report.py',
++             ROOT/'evas/validation/adapters/paper_evas_worker.py']
+     save(output/'ADAPTER_IDENTITY.json', {str(p.relative_to(ROOT)): sha(p) for p in sorted(paths)})
+     save(output/'INPUT_MANIFEST.json', {str(p.relative_to(output)): sha(p) for p in sorted(output.rglob('*')) if p.is_file()})
+ 
+diff --git a/experiments/backends/support/test_precision_worker_adapter.py b/experiments/backends/support/test_precision_worker_adapter.py
+new file mode 100644
+index 00000000..e580a3a9
+--- /dev/null
++++ b/experiments/backends/support/test_precision_worker_adapter.py
+@@ -0,0 +1,164 @@
++"""Synthetic precision transport controls; never compile or run a real DUT."""
++import importlib.util
++import json
++from pathlib import Path
++import sys
++import tempfile
++import types
++import unittest
++from unittest.mock import patch
++
++ROOT = Path(__file__).resolve().parents[3]
++sys.path.insert(0, str(Path(__file__).resolve().parent))
++import precision_run as runner
++
++
++def synthetic_evas(mode='success'):
++    """Replace the entire public EVAS boundary, with an auditable call record."""
++    module = types.ModuleType('evas')
++    module.calls = []
++
++    class CompileError(Exception):
++        pass
++
++    class KernelError(Exception):
++        def __init__(self, message, detail):
++            super().__init__(message)
++            self.detail = detail
++
++    module.CompileError = CompileError
++    module.KernelError = KernelError
++    module.Instance = lambda *args: list(args)
++
++    def compile_sources(sources, instances):
++        module.calls.append({'sources': sources, 'instances': instances})
++        if mode == 'compile':
++            raise CompileError('synthetic compile rejection')
++        return types.SimpleNamespace(to_dict=lambda: {'synthetic_program': True})
++
++    def transient(program, inputs, times, **kwargs):
++        module.calls.append({'inputs': inputs, 'times': times, 'kwargs': kwargs})
++        if mode == 'kernel':
++            raise KernelError('synthetic kernel rejection', {'tag': 'synthetic'})
++        if mode == 'generic':
++            raise RuntimeError('synthetic worker rejection')
++        response = {
++            'engine': 'synthetic boundary only', 'nodes': ['y'],
++            'transient': {'accepted_steps': 0},
++            # Ordinary solutions deliberately disagree with the strobe response.
++            'solutions': [{'voltages': [99.]} for t in times],
++            'strobe_evidence': {
++                'times': list(times), 'voltages_V': [[-0.0], [5e-324], [1.0000000000000002]][:len(times)],
++                'sample_origins': ['implicit_history_evaluation', 'stateless_working_point',
++                                   'implicit_history_evaluation'][:len(times)]},
++            'observation_evidence': {'effective_controls': {'reltol': kwargs['reltol']},
++                                     'sample_origins': ['accepted_controller_frame'] * len(times)}}
++        if mode == 'mismatch':
++            response['strobe_evidence']['times'] = [42.]
++        if mode == 'short':
++            response['strobe_evidence']['voltages_V'] = []
++        if mode == 'nonfinite':
++            response['strobe_evidence']['voltages_V'][0] = [float('nan')]
++        return response
++
++    module.compile_sources = compile_sources
++    module.transient = transient
++    return module
++
++
++def fixture(work):
++    request = {'instances': [{'name': 'x', 'module': 'synthetic', 'ports': {}, 'parameters': {}}],
++               'inputs': {'u': [[0., -0.0], [1., 1.]]}, 'stop': 1., 'max_step': .125,
++               'vabstol': 1e-9, 'reltol': 1e-6}
++    (work/'request.json').write_text(json.dumps(request))
++    # Duplicate and adjacent binary64 observations must reach transient unchanged.
++    (work/'requested_times.json').write_text('[0.0, 0.0, 1.0000000000000002e-6]')
++    (work/'dut.va').write_text('// synthetic boundary token; never compiled\n')
++    return request
++
++
++class PrecisionWorkerAdapter(unittest.TestCase):
++    def run_worker(self, work, mode='success'):
++        fake = synthetic_evas(mode)
++        with patch.dict(sys.modules, {'evas': fake}):
++            runner.worker(work, 'synthetic-kernel-must-not-execute')
++        return fake
++
++    def test_strobe_bytes_origins_and_public_arguments_are_preserved(self):
++        with tempfile.TemporaryDirectory() as temporary:
++            work = Path(temporary)
++            request = fixture(work)
++            fake = self.run_worker(work)
++            call = fake.calls[-1]
++            times = json.loads((work/'requested_times.json').read_text())
++            self.assertEqual(call['times'], times)
++            self.assertEqual(call['kwargs'], dict(stop=request['stop'], max_step=request['max_step'],
++                strobetimes=times, kernel='synthetic-kernel-must-not-execute', vabstol=1e-9,
++                reltol=1e-6, timeout=None))
++            self.assertEqual((work/'waveform.csv').read_bytes(),
++                b'time,y\r\n0.0,-0.0\r\n0.0,5e-324\r\n1.0000000000000002e-06,1.0000000000000002\r\n')
++            raw = (work/'raw-response.json').read_bytes()
++            self.assertIn(b'"voltages_V":[[-0.0],[5e-324],[1.0000000000000002]]', raw)
++            self.assertEqual(json.loads((work/'worker-result.json').read_text()),
++                {'status': 'waveform_available', 'origins': ['implicit_history_evaluation', 'stateless_working_point']})
++
++    def test_failure_classes_and_partial_artifacts_remain_distinct(self):
++        expected = {'compile': 'compile_failed', 'kernel': 'execution_failed',
++                    'generic': 'execution_failed', 'mismatch': 'execution_failed',
++                    'short': 'execution_failed', 'nonfinite': 'execution_failed'}
++        for mode, status in expected.items():
++            with self.subTest(mode=mode), tempfile.TemporaryDirectory() as temporary:
++                work = Path(temporary)
++                fixture(work)
++                self.run_worker(work, mode)
++                result = json.loads((work/'worker-result.json').read_text())
++                self.assertEqual(result['status'], status)
++                if mode == 'kernel':
++                    self.assertEqual(result['detail'], {'tag': 'synthetic'})
++                if mode in ('mismatch', 'short'):
++                    self.assertTrue((work/'raw-response.json').is_file())
++                self.assertNotIn('failure_stage', result)
++
++    def test_missing_request_or_times_escapes_before_result(self):
++        for missing in ('request.json', 'requested_times.json'):
++            with self.subTest(missing=missing), tempfile.TemporaryDirectory() as temporary:
++                work = Path(temporary)
++                fixture(work)
++                (work/missing).unlink()
++                with self.assertRaises(FileNotFoundError):
++                    self.run_worker(work)
++                self.assertFalse((work/'worker-result.json').exists())
++
++    def test_existing_waveform_and_bad_request_keep_worker_rejection(self):
++        for mode in ('existing-waveform', 'bad-request'):
++            with self.subTest(mode=mode), tempfile.TemporaryDirectory() as temporary:
++                work = Path(temporary)
++                fixture(work)
++                if mode == 'existing-waveform':
++                    (work/'waveform.csv').write_bytes(b'original waveform\n')
++                else:
++                    (work/'request.json').write_text('{}')
++                self.run_worker(work)
++                self.assertEqual(json.loads((work/'worker-result.json').read_text())['status'], 'execution_failed')
++                if mode == 'existing-waveform':
++                    self.assertEqual((work/'waveform.csv').read_bytes(), b'original waveform\n')
++
++    def test_current_freeze_binds_both_adapters_and_verify_rejects_drift(self):
++        files = runner.source_files()
++        self.assertEqual(len(files), len(set(files)))
++        self.assertTrue(set(runner.worker_source_files()).issubset(files))
++        with tempfile.TemporaryDirectory() as temporary:
++            root = Path(temporary)
++            inputs = root/'inputs'
++            inputs.mkdir()
++            relative = 'evas/validation/adapters/precision_evas_worker.py'
++            source = root/relative
++            source.parent.mkdir(parents=True)
++            source.write_bytes((ROOT/relative).read_bytes())
++            (inputs/'SOURCE_IDENTITY.json').write_text(json.dumps({relative: runner.sha(source)}))
++            (inputs/'MANIFEST.json').write_text(json.dumps({'SOURCE_IDENTITY.json': runner.sha(inputs/'SOURCE_IDENTITY.json')}))
++            with patch.object(runner, 'ROOT', root):
++                runner.verify(inputs)
++                source.write_bytes(source.read_bytes() + b'\n# drift\n')
++                with self.assertRaisesRegex(ValueError, 'source drift: .*precision_evas_worker'):
++                    runner.verify(inputs)
+diff --git a/scripts/ci_selection.py b/scripts/ci_selection.py
+index 7f94fd45..6c1a2bbb 100644
+--- a/scripts/ci_selection.py
++++ b/scripts/ci_selection.py
+@@ -57,7 +57,8 @@ MAINTENANCE_FILES = {
+ }
+ PACKAGE_FILES = {'scripts/check_installed_evas.py',
+                  'scripts/tests/test_installed_evas_package.py'}
+-PROVENANCE_PREFIXES = ('evas/validation/paper/', 'evas/validation/support/',
++PROVENANCE_PREFIXES = ('experiments/backends/comparison/',
++                       'evas/validation/adapters/', 'evas/validation/paper/', 'evas/validation/support/',
+                        'experiments/backends/paper/', 'experiments/backends/support/')
+ CALIBRATION_PREFIXES = (
+     'experiments/backends/evidence/', 'experiments/backends/dvs2-spectre-validation/',
+diff --git a/scripts/tests/test_ci_inventory.py b/scripts/tests/test_ci_inventory.py
+index 4b3fc6e0..de66e9b4 100644
+--- a/scripts/tests/test_ci_inventory.py
++++ b/scripts/tests/test_ci_inventory.py
+@@ -54,6 +54,7 @@ WORKFLOW_LITERALS = (
+     ('validation', 'provenance-paper', 'Paper contracts, observable criteria and table provenance', 'evas/validation/paper', 'test_precision_v2.py'),
+     ('validation', 'provenance-paper', 'Paper contracts, observable criteria and table provenance', 'evas/validation/paper', 'test_primitives.py'),
+     ('validation', 'provenance-paper', 'Paper contracts, observable criteria and table provenance', 'experiments/backends/paper', 'test_*.py'),
++    ('validation', 'provenance-paper', 'Paper contracts, observable criteria and table provenance', 'experiments/backends/comparison', 'test_*.py'),
+     ('validation', 'provenance-paper', 'Paper contracts, observable criteria and table provenance', 'evas/validation/support', 'test_*.py'),
+     ('validation', 'provenance-support', 'Backend support checker tests', 'experiments/backends/support', 'test_*.py'),
+     ('validation', 'properties-and-ngspice', None, 'evas/validation/differential', 'test*.py'),
+@@ -84,12 +85,12 @@ def literal_identity(entry):
+ class ParserTests(unittest.TestCase):
+     def test_current_workflow_literals_and_separate_primary(self):
+         value = inventory.parse_workflow((ROOT / inventory.WORKFLOW).read_bytes())
+-        self.assertEqual(len(WORKFLOW_LITERALS), 29)
++        self.assertEqual(len(WORKFLOW_LITERALS), 30)
+         self.assertEqual([literal_identity(entry) for entry in value['entries']], list(WORKFLOW_LITERALS))
+         self.assertEqual([inventory.namespace(entry['start']) for entry in value['entries']],
+                          [entry[0] for entry in WORKFLOW_LITERALS])
+         self.assertEqual(sum(entry[0] == 'maintenance' for entry in WORKFLOW_LITERALS), 7)
+-        self.assertEqual(sum(entry[0] == 'validation' for entry in WORKFLOW_LITERALS), 22)
++        self.assertEqual(sum(entry[0] == 'validation' for entry in WORKFLOW_LITERALS), 23)
+         self.assertFalse(any(entry[0] in ('calibration', 'python-regression') for entry in WORKFLOW_LITERALS))
+         paper = [entry for entry in value['entries'] if entry['start'] == 'evas/validation/paper']
+         self.assertEqual([entry['pattern'] for entry in paper], [
+@@ -117,6 +118,26 @@ class ParserTests(unittest.TestCase):
+         self.assertEqual([entry['source'] for entry in scripts], list(DIRECT_MATH_SCRIPTS))
+         self.assertTrue(all(entry['method_denominator'] is None and not entry['executed'] for entry in scripts))
+ 
++    def test_missing_or_duplicate_comparison_literal_is_rejected(self):
++        raw = (ROOT / inventory.WORKFLOW).read_bytes()
++        needle = b"          python3 -B -m unittest discover -s experiments/backends/comparison -p 'test_*.py' -v\n"
++        self.assertEqual(raw.count(needle), 1)
++        expected = list(WORKFLOW_LITERALS)
++        comparison = (
++            'validation', 'provenance-paper', 'Paper contracts, observable criteria and table provenance',
++            'experiments/backends/comparison', 'test_*.py')
++        self.assertEqual(expected[25][3:], ('experiments/backends/paper', 'test_*.py'))
++        self.assertEqual(expected[26], comparison)
++        self.assertEqual(expected[27][3:], ('evas/validation/support', 'test_*.py'))
++        self.assertEqual(sum(row == comparison for row in expected), 1)
++        missing_ids = [literal_identity(entry) for entry in inventory.parse_workflow(raw.replace(needle, b'', 1))['entries']]
++        duplicate_ids = [literal_identity(entry) for entry in inventory.parse_workflow(raw.replace(needle, needle + needle, 1))['entries']]
++        self.assertEqual(missing_ids, expected[:26] + expected[27:])
++        self.assertNotEqual(missing_ids, expected)
++        self.assertEqual(duplicate_ids, expected[:27] + [comparison] + expected[27:])
++        self.assertNotEqual(duplicate_ids, expected)
++        self.assertNotIn('evas/tests', [row[3] for row in expected])
++
+     def test_inline_pipe_and_folded_origins_retained(self):
+         raw = b'''jobs:
+   examples:
+diff --git a/scripts/tests/test_ci_selection.py b/scripts/tests/test_ci_selection.py
+index 50bc0b24..5eaa83b1 100644
+--- a/scripts/tests/test_ci_selection.py
++++ b/scripts/tests/test_ci_selection.py
+@@ -17,6 +17,14 @@ spec.loader.exec_module(ci)
+ 
+ 
+ class RoutingTests(unittest.TestCase):
++    def test_comparison_worker_migration_routes_actual_consumers(self):
++        for path in ('experiments/backends/comparison/runner.py',
++                     'experiments/backends/comparison/freeze.py',
++                     'experiments/backends/comparison/ingest.py',
++                     'evas/validation/adapters/comparison_evas_worker.py'):
++            with self.subTest(path=path):
++                self.assertEqual(ci.classify([path]), ci.flags('calibration', 'provenance'))
++
+     def test_continuation_controls_only_select_maintenance(self):
+         paths = ('scripts/check_task_continuation.py',
+                  'scripts/task_continuation_policy.py',

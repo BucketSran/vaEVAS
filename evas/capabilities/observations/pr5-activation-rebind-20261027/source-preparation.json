@@ -1,0 +1,436 @@
+{
+  "prepared_at_utc": "2026-10-27T07:51:13.108704+00:00",
+  "base": "8a091f4db5fca23b38fef7fef674f675799161cb",
+  "base_tree": "b531c9d1f2fbdf6f4ea9c5d3aafb6c0fa55e741e",
+  "old_pr": "983b1ef6a4804c29483279ca34a7a92fce56a858",
+  "old_pr_tree": "7a99e40b4a58e00c138e4c721f3deaab1bdb2ba6",
+  "old_base": "e10e1af5796f0cc7af3b6b5f5d26c420c0c03325",
+  "source_paths": [
+    {
+      "path": ".github/workflows/numerical-assurance.yml",
+      "accepted_983b_sha256": "75da6ea8a3f0e7baa90b99388833ae2d757da66754b1d1dea3a8113d1fd1fa3b",
+      "resolved_sha256": "75da6ea8a3f0e7baa90b99388833ae2d757da66754b1d1dea3a8113d1fd1fa3b",
+      "base_sha256": "76c7387d4c8a3390edc2ba440f169c14794301867d1f277d3488b654cf585682",
+      "git_mode": "100644",
+      "changed_from_base": true,
+      "resolution": "Exact accepted 983b source; main unchanged since e10"
+    },
+    {
+      "path": "evas/validation/adapters/comparison_evas_worker.py",
+      "accepted_983b_sha256": "6677599736df6bd6f5367bb23878f227a5b3322c5a74c9aba6d29e9ab35523de",
+      "resolved_sha256": "6677599736df6bd6f5367bb23878f227a5b3322c5a74c9aba6d29e9ab35523de",
+      "base_sha256": null,
+      "git_mode": "100644",
+      "changed_from_base": true,
+      "resolution": "Exact accepted 983b source; main unchanged since e10"
+    },
+    {
+      "path": "evas/validation/adapters/paper_evas_worker.py",
+      "accepted_983b_sha256": "78a1651e7628fb63e143f665e5dcbec1d7e1d9589faf5c74ad89e4b73122a05c",
+      "resolved_sha256": "78a1651e7628fb63e143f665e5dcbec1d7e1d9589faf5c74ad89e4b73122a05c",
+      "base_sha256": null,
+      "git_mode": "100644",
+      "changed_from_base": true,
+      "resolution": "Exact accepted 983b source; main unchanged since e10"
+    },
+    {
+      "path": "evas/validation/adapters/precision_evas_worker.py",
+      "accepted_983b_sha256": "c751e75d4e68d4b07f649eb608ac9119cf10d3c9a49f28acb53ca00fceea828b",
+      "resolved_sha256": "c751e75d4e68d4b07f649eb608ac9119cf10d3c9a49f28acb53ca00fceea828b",
+      "base_sha256": null,
+      "git_mode": "100644",
+      "changed_from_base": true,
+      "resolution": "Exact accepted 983b source; main unchanged since e10"
+    },
+    {
+      "path": "experiments/backends/comparison/freeze.py",
+      "accepted_983b_sha256": "4526b0b0477b56f49cb288ae29accf4ff721cf924e799e282aac9ae0f575d911",
+      "resolved_sha256": "4526b0b0477b56f49cb288ae29accf4ff721cf924e799e282aac9ae0f575d911",
+      "base_sha256": "0ad46e9a0cb36fc2cb4848f1abec852fd6df12fca7aad8ecfc3386246c7dfce6",
+      "git_mode": "100644",
+      "changed_from_base": true,
+      "resolution": "Exact accepted 983b source; main unchanged since e10"
+    },
+    {
+      "path": "experiments/backends/comparison/ingest.py",
+      "accepted_983b_sha256": "6e80d747a7f6ab4ebff8fb58dbc22e67d162defd21e696427ca1a2dfa8f116cb",
+      "resolved_sha256": "6e80d747a7f6ab4ebff8fb58dbc22e67d162defd21e696427ca1a2dfa8f116cb",
+      "base_sha256": "caaa4da6a541395ab224f97951fd32263c14f5203cfe2b9e225a90d9358cd724",
+      "git_mode": "100644",
+      "changed_from_base": true,
+      "resolution": "Exact accepted 983b source; main unchanged since e10"
+    },
+    {
+      "path": "experiments/backends/comparison/runner.py",
+      "accepted_983b_sha256": "2a75f9d8d898b920820b0a239a09c5c32267839e7cdfd9fd5dec2dac76f26f91",
+      "resolved_sha256": "2a75f9d8d898b920820b0a239a09c5c32267839e7cdfd9fd5dec2dac76f26f91",
+      "base_sha256": "ef3b402601b7e920eaa8734f20c7275709698976ea4570b27fec24b7198c341b",
+      "git_mode": "100644",
+      "changed_from_base": true,
+      "resolution": "Exact accepted 983b source; main unchanged since e10"
+    },
+    {
+      "path": "experiments/backends/comparison/test_worker_adapter.py",
+      "accepted_983b_sha256": "653fefd7133825d6f805c8ab86c55f4a0dda630f8fa1e3535117cc37df1c7d76",
+      "resolved_sha256": "653fefd7133825d6f805c8ab86c55f4a0dda630f8fa1e3535117cc37df1c7d76",
+      "base_sha256": null,
+      "git_mode": "100644",
+      "changed_from_base": true,
+      "resolution": "Exact accepted 983b source; main unchanged since e10"
+    },
+    {
+      "path": "experiments/backends/paper/actual_observation.py",
+      "accepted_983b_sha256": "3ed118d6b1ef162adc9f876984e78be14adba05dcd6a87c5c9852b63ce4b5df3",
+      "resolved_sha256": "3ed118d6b1ef162adc9f876984e78be14adba05dcd6a87c5c9852b63ce4b5df3",
+      "base_sha256": "59659621d8a023dcf0f338e4b824c5451030e26237b705998713652ce6d2fa9a",
+      "git_mode": "100644",
+      "changed_from_base": true,
+      "resolution": "Exact accepted 983b source; main unchanged since e10"
+    },
+    {
+      "path": "experiments/backends/paper/inputs.py",
+      "accepted_983b_sha256": "a8d766bb6cf1216a99fb175c6569a96891e9317440569249cc03d990d9bf92d1",
+      "resolved_sha256": "a8d766bb6cf1216a99fb175c6569a96891e9317440569249cc03d990d9bf92d1",
+      "base_sha256": "259961105f6848f05300437611df2d76ba221e6d757ed18be8b242277a55e68f",
+      "git_mode": "100644",
+      "changed_from_base": true,
+      "resolution": "Exact accepted 983b source; main unchanged since e10"
+    },
+    {
+      "path": "experiments/backends/paper/runner.py",
+      "accepted_983b_sha256": "6fdb86566d2ff03a9808b062c582f865cda7547082418af7341a24addc26afb1",
+      "resolved_sha256": "6fdb86566d2ff03a9808b062c582f865cda7547082418af7341a24addc26afb1",
+      "base_sha256": "d98907554aa01e7eb6425b1ea7be741fe98714bdba09c0d14fadf3d102c068ba",
+      "git_mode": "100644",
+      "changed_from_base": true,
+      "resolution": "Exact accepted 983b source; main unchanged since e10"
+    },
+    {
+      "path": "experiments/backends/paper/test_evas_worker_adapter.py",
+      "accepted_983b_sha256": "9691d8493462c538cd491414f59106c92fc40f4b8ea496aa512941787e2904bc",
+      "resolved_sha256": "9691d8493462c538cd491414f59106c92fc40f4b8ea496aa512941787e2904bc",
+      "base_sha256": null,
+      "git_mode": "100644",
+      "changed_from_base": true,
+      "resolution": "Exact accepted 983b source; main unchanged since e10"
+    },
+    {
+      "path": "experiments/backends/paper/test_producer_dependencies.py",
+      "accepted_983b_sha256": "ad970a1e9914dc8d9f35009996dcd3003afc5534043d2429d8cae7a5b92aec8a",
+      "resolved_sha256": "ad970a1e9914dc8d9f35009996dcd3003afc5534043d2429d8cae7a5b92aec8a",
+      "base_sha256": "0c4ac1c7ca1cdb350a4065c9f9d191eb064af5e12c55dc0e5e68a95d300e2006",
+      "git_mode": "100644",
+      "changed_from_base": true,
+      "resolution": "Exact accepted 983b source; main unchanged since e10"
+    },
+    {
+      "path": "experiments/backends/support/comparison_completion.py",
+      "accepted_983b_sha256": "a96627bce2f77820bb01d63e1b0dedb8c4d509a288a6df7c46783281fb342c9f",
+      "resolved_sha256": "a96627bce2f77820bb01d63e1b0dedb8c4d509a288a6df7c46783281fb342c9f",
+      "base_sha256": "d1f9a88fe729a2e25e5f11ac43b052339fdf9858b34c83bcfa38b6457b061ec2",
+      "git_mode": "100644",
+      "changed_from_base": true,
+      "resolution": "Exact accepted 983b source; main unchanged since e10"
+    },
+    {
+      "path": "experiments/backends/support/legacy_chain_run.py",
+      "accepted_983b_sha256": "0b23953786c82fada907601c1e98577f496b4a2eb10486118eaa3814646e8262",
+      "resolved_sha256": "0b23953786c82fada907601c1e98577f496b4a2eb10486118eaa3814646e8262",
+      "base_sha256": "0dcffab11aeb8f47f9fd6013935ba4631b81cec7343b8aec96b1c34a3e1c578a",
+      "git_mode": "100644",
+      "changed_from_base": true,
+      "resolution": "Exact accepted 983b source; main unchanged since e10"
+    },
+    {
+      "path": "experiments/backends/support/precision_run.py",
+      "accepted_983b_sha256": "16850212a0b3bd067459e3710f16eee29bacfdbf0b72794266871cd812d14e96",
+      "resolved_sha256": "16850212a0b3bd067459e3710f16eee29bacfdbf0b72794266871cd812d14e96",
+      "base_sha256": "ccda8f36efdf4d413fd77dc7ef0de8abff0fd6df1152ed6cd71b12cceefef3e4",
+      "git_mode": "100644",
+      "changed_from_base": true,
+      "resolution": "Exact accepted 983b source; main unchanged since e10"
+    },
+    {
+      "path": "experiments/backends/support/precision_v2_report.py",
+      "accepted_983b_sha256": "0b07bf65db05f16ca54c1107fee0ebeea39eb38327fbb45986d6061aadbd9838",
+      "resolved_sha256": "0b07bf65db05f16ca54c1107fee0ebeea39eb38327fbb45986d6061aadbd9838",
+      "base_sha256": "467f84759d22f80f301c281ec7944263824930d575fb66fc3c6f64bccfdceaa9",
+      "git_mode": "100644",
+      "changed_from_base": true,
+      "resolution": "Exact accepted 983b source; main unchanged since e10"
+    },
+    {
+      "path": "experiments/backends/support/probes.py",
+      "accepted_983b_sha256": "992f0e05b4da1e58c2b1dda810bbbf58c4f4f5e054684a9efced474a22ef56b4",
+      "resolved_sha256": "992f0e05b4da1e58c2b1dda810bbbf58c4f4f5e054684a9efced474a22ef56b4",
+      "base_sha256": "1ced8f5b497fee35e2dc474286eadbcdb4bf48e411306816b5f6de8520db5024",
+      "git_mode": "100644",
+      "changed_from_base": true,
+      "resolution": "Exact accepted 983b source; main unchanged since e10"
+    },
+    {
+      "path": "experiments/backends/support/test_precision_worker_adapter.py",
+      "accepted_983b_sha256": "c8966716e0734220b70c3fd1f45bb08cf58ead8315b6872b753e061165ce2ed6",
+      "resolved_sha256": "c8966716e0734220b70c3fd1f45bb08cf58ead8315b6872b753e061165ce2ed6",
+      "base_sha256": null,
+      "git_mode": "100644",
+      "changed_from_base": true,
+      "resolution": "Exact accepted 983b source; main unchanged since e10"
+    },
+    {
+      "path": "scripts/ci_selection.py",
+      "accepted_983b_sha256": "26d18c67bc54cea796a2120d8ebba60f550f0b5d78d2e4278f89070ffe905f93",
+      "resolved_sha256": "26d18c67bc54cea796a2120d8ebba60f550f0b5d78d2e4278f89070ffe905f93",
+      "base_sha256": "a830dc21d632822dc42d6170027caa98f972e338e4e0b99ca12cdb4c945be5ce",
+      "git_mode": "100644",
+      "changed_from_base": true,
+      "resolution": "Exact accepted 983b source; main unchanged since e10"
+    },
+    {
+      "path": "scripts/tests/test_ci_inventory.py",
+      "accepted_983b_sha256": "c297e26c71e1ddce4875b909049d267b7afd67f0d9a6f67a79fc952b999ed7b6",
+      "resolved_sha256": "c297e26c71e1ddce4875b909049d267b7afd67f0d9a6f67a79fc952b999ed7b6",
+      "base_sha256": "7a201a97a28de706e6b5d8f73639eee1d4b44479f018f2d0d91defc14fc5fe43",
+      "git_mode": "100644",
+      "changed_from_base": true,
+      "resolution": "Exact accepted 983b source; main unchanged since e10"
+    },
+    {
+      "path": "scripts/tests/test_ci_selection.py",
+      "accepted_983b_sha256": "85dad32d09660a1e082436ac957d15bb4b483c209260fdd38a729299d44928f4",
+      "resolved_sha256": "85dad32d09660a1e082436ac957d15bb4b483c209260fdd38a729299d44928f4",
+      "base_sha256": "0ab29948f24541ddf54c66c4f7905a698e63110f373f72def7b2d4cdabfe7d53",
+      "git_mode": "100644",
+      "changed_from_base": true,
+      "resolution": "Exact accepted 983b source; main unchanged since e10"
+    }
+  ],
+  "changed_paths": 22,
+  "main_changes_since_old_base": [
+    "evas/capabilities/data/asset-index.json",
+    "evas/capabilities/data/registry.json",
+    "evas/validation/baselines/regression-v1.json",
+    "evas/validation/baselines/regression-v1.review.json",
+    "scripts/context-registration-bundle.json"
+  ],
+  "source_root": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/context-registration-20261027/pr266-rebind-20261027/source",
+  "retained_base_files": {
+    "evas/capabilities/data/asset-index.json": "fa4b6326f4bad43e6e70f2b2cd01909ba9e16902d198b643aea13eb569297e12",
+    "evas/capabilities/data/catalog-sources.json": "4cf58da9ad646744bd5c87c9ccb01ae961e86f6c4d0742b1faf726709e02b6b7",
+    "evas/capabilities/data/entrypoint-index.json": "c7a614cb0df69eef85474f68eec6de27048a20d0a96d9c86d3750d7adade02c0",
+    "evas/capabilities/data/historical-index.json": "26de4c0053dc4430133b08f71594c164d56137076d29615f543c0e39a8a458d2",
+    "evas/capabilities/data/method-index.json": "7a3a0d67d7db9a7a2412df5854ae81c569f8f039a71634e40454219787782a4c",
+    "evas/capabilities/data/registry.json": "87120f9d38f18ebf55b8a4a0295b40d621fff3512661d035da08273d9ca703bc",
+    "evas/capabilities/generated/normative.md": "4498743a49be807a336a4991b5b30c0ef5c670b14d3c541089a11d62ee330f43",
+    "evas/docs/development/TRACEABILITY.md": "6d9360be819e82d88d9bf1c6e80d822758f711ae7fbe7cfd308b209a5cd37bd6",
+    "evas/validation/baselines/regression-v1.json": "f765004c11b99673b95ddd87daabdc0c75fc6e4e3ef5b6cb2e9f31de96ae702b",
+    "evas/validation/baselines/regression-v1.review.json": "10a264c44a5b3e709196770c68b1c1d197c2356be753c5af2194f2d7fcdc2f8d",
+    "scripts/context-registration-bundle.json": "cf1880ec72709eeb8e125b71cd11b2d177018925482152cbd38e83c65dc1a639"
+  },
+  "deferred_generated_paths": [
+    "evas/capabilities/data/asset-index.json",
+    "evas/capabilities/data/catalog-sources.json",
+    "evas/capabilities/data/entrypoint-index.json",
+    "evas/capabilities/data/historical-index.json",
+    "evas/capabilities/data/method-index.json",
+    "evas/capabilities/data/registry.json",
+    "evas/capabilities/generated/normative.md",
+    "evas/docs/development/TRACEABILITY.md"
+  ],
+  "criteria_file_count": 3610,
+  "criteria_id": "145a6118739af5c1419269c4d46faae6cd666d766843d41dd38150d8da77d21b",
+  "dut_file_count": 327,
+  "dut_id": "5e9bf28ad121569a6975811f0b5ea9e60423e676e6dfcf88048948bfd19ba056",
+  "criteria_and_DUT_equal_registered_context": true,
+  "registered_context_index": 3,
+  "E1_raw": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/context-registration-20261027/bundle-bound/report.json",
+  "E1_raw_sha256": "531016babc8a288fd130f3af99364dbcaf20f25c225201d1f35e73e6b0a6c995",
+  "collector_files": {
+    "scripts/run_regression.py": "dc2ed03b722fd35e9a20f6eda424ac2ff39b3c22f2081a29c5f0777a9b148985",
+    "scripts/ci_evidence.py": "238c45d156225b29e566665997fdd5e1fc19b2301142e69cdc39243ce56c0257",
+    "scripts/regression_reason_identity.py": "3b7969bbefb3a7d89d4015871200b33d2ef63d7baaf897a4bc0b44a009adc718",
+    "scripts/regression_observation_policy.json": "42ea0b232286934c1af0905dbc89a15e6fa6eebacd641890b69c047fc78e7d93",
+    "scripts/regression_gate.py": "df028ac10ddecb10f870ce889342826b56789d83322394e62e10e5cbb9c0d654",
+    "scripts/run_trusted_regression_gate.py": "30cb19e469db4ea26b00ca4959e68c4aa1196be15a9051452ff491210619aa63",
+    "scripts/regression_context_registration.py": "72495c5799cb487471b0a8d3a7b2d42041df339f3500992a229e568b38d266e3"
+  },
+  "workflow_declarations_exact_983b": true,
+  "before": {
+    "head": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+    "index_sha256": "a2e18b66fd9b3e29093343793d45781c11a717c05c35103d4e9b1da8eec87d71",
+    "shared_config_sha256": "2365548f0cb7f5b21311860afc37dc5a8f41d775b667f50ec8a678eb22a3d7aa",
+    "old_candidates": [
+      {
+        "path": "evas/tests/raw_solution_contract.py",
+        "sha256": "ffd5243e3b590f81e6e671e5761316b40c60558da2e2c81a001a118a57cf12dc"
+      },
+      {
+        "path": "evas/tests/test_analog_conditions.py",
+        "sha256": "230c3fd16cfe84b0d0198619fd1d9d4efd3b593295ebdd1109549b2933712adf"
+      },
+      {
+        "path": "evas/tests/test_audited_response_contracts.py",
+        "sha256": "bb4ae9ff097e14f25ff61184734370819a260946f40a16a9e5c45fd38efb723f"
+      },
+      {
+        "path": "evas/tests/test_constant_initial_power.py",
+        "sha256": "359c4a4048c7eaa9d4da73eaeba4dcb80a228d2deb8fbaa31afd5c8731921369"
+      },
+      {
+        "path": "evas/tests/test_diagnostics.py",
+        "sha256": "c97ed2e4897eeb14515a9c45214e62b371fefa8c931492de5d3fc40b3ebc0acf"
+      },
+      {
+        "path": "evas/tests/test_idt.py",
+        "sha256": "579fd1729188885cb86f34ff7c696ebb0032d3f5aaa10c8ce8bc8f7fd4f902f9"
+      },
+      {
+        "path": "evas/tests/test_independent_driver_condition.py",
+        "sha256": "1e449bb7b8eacf7abf6680857340084acc24b1df90626725b8f41fe929e20205"
+      },
+      {
+        "path": "evas/tests/test_initial_ordinary_alias.py",
+        "sha256": "c26b69a060538157c275676b0d8ac7dc61054099669f5cf64ccc182205588d6d"
+      },
+      {
+        "path": "evas/tests/test_native_integer_events.py",
+        "sha256": "0b8b4eeeae223c3893c160550469572081ed1b2fc417b328e5596cf205258df7"
+      },
+      {
+        "path": "evas/tests/test_ordinary_event_prefix.py",
+        "sha256": "c67342dcb28194029ad296c5bad7749267e9d608369631899adb986fc7ec1464"
+      },
+      {
+        "path": "evas/tests/test_ordinary_integer_event_prefix.py",
+        "sha256": "aa2a090c32b614f14da6cf045e054d61392df2e320a4bb4df9bb00265600dddb"
+      },
+      {
+        "path": "evas/tests/test_passive_events.py",
+        "sha256": "3781d23a61398427f2bb7b4a0cf3b363babbae43c1c62adfc1874e6acc9402ae"
+      },
+      {
+        "path": "evas/tests/test_r01_event_arrays.py",
+        "sha256": "81a135bb3a0b8267fb862421fc20f5a88b68b8cb24506a242fc152b72594f3fc"
+      },
+      {
+        "path": "evas/tests/test_r01_event_conditions.py",
+        "sha256": "0d855cbc4c98e25e9272c5ac10a1624ef14ecfd65168ef122a68b79d868ba96c"
+      },
+      {
+        "path": "evas/tests/test_rational_predicate_closure.py",
+        "sha256": "ec07237b7602c528d2c808c250d73f9480e7e15b2a6d059cd9314381ecf7f1e0"
+      },
+      {
+        "path": "evas/tests/test_refinement.py",
+        "sha256": "d18e105fe7b31dc575754d7f3bfd67779659025245b0e6eb00252ebbd6677e8a"
+      },
+      {
+        "path": "evas/tests/test_root_recovery.py",
+        "sha256": "393bdb5070bd0f9c09919f6943d120556021c8bf54a4ba7c521a87c28327e9c5"
+      },
+      {
+        "path": "evas/tests/test_source_floor_event.py",
+        "sha256": "becd95ca2c6cd51f58a722a41994065c0f5b04f4e0e8384bc9f4b16245058639"
+      },
+      {
+        "path": "evas/tests/test_source_math.py",
+        "sha256": "12b27fe5cf5d977bd1b295bdbf95c5c27a19495f6086b4a5c4b7449258f3ac22"
+      },
+      {
+        "path": "evas/tests/test_source_polynomial_guards.py",
+        "sha256": "542ac3a7c73a3bc20f3f7e6a2aea88ff4a5b45ccee47ee04f59d1586bf75ac83"
+      }
+    ]
+  },
+  "after": {
+    "head": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+    "index_sha256": "a2e18b66fd9b3e29093343793d45781c11a717c05c35103d4e9b1da8eec87d71",
+    "shared_config_sha256": "2365548f0cb7f5b21311860afc37dc5a8f41d775b667f50ec8a678eb22a3d7aa",
+    "old_candidates": [
+      {
+        "path": "evas/tests/raw_solution_contract.py",
+        "sha256": "ffd5243e3b590f81e6e671e5761316b40c60558da2e2c81a001a118a57cf12dc"
+      },
+      {
+        "path": "evas/tests/test_analog_conditions.py",
+        "sha256": "230c3fd16cfe84b0d0198619fd1d9d4efd3b593295ebdd1109549b2933712adf"
+      },
+      {
+        "path": "evas/tests/test_audited_response_contracts.py",
+        "sha256": "bb4ae9ff097e14f25ff61184734370819a260946f40a16a9e5c45fd38efb723f"
+      },
+      {
+        "path": "evas/tests/test_constant_initial_power.py",
+        "sha256": "359c4a4048c7eaa9d4da73eaeba4dcb80a228d2deb8fbaa31afd5c8731921369"
+      },
+      {
+        "path": "evas/tests/test_diagnostics.py",
+        "sha256": "c97ed2e4897eeb14515a9c45214e62b371fefa8c931492de5d3fc40b3ebc0acf"
+      },
+      {
+        "path": "evas/tests/test_idt.py",
+        "sha256": "579fd1729188885cb86f34ff7c696ebb0032d3f5aaa10c8ce8bc8f7fd4f902f9"
+      },
+      {
+        "path": "evas/tests/test_independent_driver_condition.py",
+        "sha256": "1e449bb7b8eacf7abf6680857340084acc24b1df90626725b8f41fe929e20205"
+      },
+      {
+        "path": "evas/tests/test_initial_ordinary_alias.py",
+        "sha256": "c26b69a060538157c275676b0d8ac7dc61054099669f5cf64ccc182205588d6d"
+      },
+      {
+        "path": "evas/tests/test_native_integer_events.py",
+        "sha256": "0b8b4eeeae223c3893c160550469572081ed1b2fc417b328e5596cf205258df7"
+      },
+      {
+        "path": "evas/tests/test_ordinary_event_prefix.py",
+        "sha256": "c67342dcb28194029ad296c5bad7749267e9d608369631899adb986fc7ec1464"
+      },
+      {
+        "path": "evas/tests/test_ordinary_integer_event_prefix.py",
+        "sha256": "aa2a090c32b614f14da6cf045e054d61392df2e320a4bb4df9bb00265600dddb"
+      },
+      {
+        "path": "evas/tests/test_passive_events.py",
+        "sha256": "3781d23a61398427f2bb7b4a0cf3b363babbae43c1c62adfc1874e6acc9402ae"
+      },
+      {
+        "path": "evas/tests/test_r01_event_arrays.py",
+        "sha256": "81a135bb3a0b8267fb862421fc20f5a88b68b8cb24506a242fc152b72594f3fc"
+      },
+      {
+        "path": "evas/tests/test_r01_event_conditions.py",
+        "sha256": "0d855cbc4c98e25e9272c5ac10a1624ef14ecfd65168ef122a68b79d868ba96c"
+      },
+      {
+        "path": "evas/tests/test_rational_predicate_closure.py",
+        "sha256": "ec07237b7602c528d2c808c250d73f9480e7e15b2a6d059cd9314381ecf7f1e0"
+      },
+      {
+        "path": "evas/tests/test_refinement.py",
+        "sha256": "d18e105fe7b31dc575754d7f3bfd67779659025245b0e6eb00252ebbd6677e8a"
+      },
+      {
+        "path": "evas/tests/test_root_recovery.py",
+        "sha256": "393bdb5070bd0f9c09919f6943d120556021c8bf54a4ba7c521a87c28327e9c5"
+      },
+      {
+        "path": "evas/tests/test_source_floor_event.py",
+        "sha256": "becd95ca2c6cd51f58a722a41994065c0f5b04f4e0e8384bc9f4b16245058639"
+      },
+      {
+        "path": "evas/tests/test_source_math.py",
+        "sha256": "12b27fe5cf5d977bd1b295bdbf95c5c27a19495f6086b4a5c4b7449258f3ac22"
+      },
+      {
+        "path": "evas/tests/test_source_polynomial_guards.py",
+        "sha256": "542ac3a7c73a3bc20f3f7e6a2aea88ff4a5b45ccee47ee04f59d1586bf75ac83"
+      }
+    ]
+  },
+  "published": false,
+  "scientific_execution": false,
+  "semantic_qualification": false,
+  "executed_by": "tclaude/claude-opus-5-5"
+}

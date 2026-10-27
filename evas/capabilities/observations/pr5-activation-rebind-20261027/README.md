@@ -1,0 +1,3 @@
+# Consumer-migration activation rebind
+
+The exact context authority (#267) and baseline append (#268) have merged. This capture merges main into the reviewed PR266 head without changing any reviewed source byte: the 22 source paths equal 983b1ef6 and main had not changed them since e10e1af5. Criteria and DUT manifests equal the registered context of CI 40454789703. All 31 discovery receipts are reused by exact workflow, collector and owner-module hashes. No test bodies or simulator run here. Catalog generation, precheck, candidate CI and merged-tree verification remain separate. Scientific qualification is false.
