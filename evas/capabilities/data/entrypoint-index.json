@@ -104,6 +104,58 @@
     {
       "actual_receipt": {
         "id": "source:d4d9fe92a80666a801134657",
+        "sha256": "8c43797ecfc71ea47aa58487126dbfaa42cdd4fafc99770d5c05ca694aaf70e9",
+        "version": "b57942fdc8487880019958a9e6ba0c1fb786699dd797095873381f97318b7e3b"
+      },
+      "ci_entrypoint_ids": [
+        "37df9f5b0bc1225aebf2d0eb637bf712c9adb760bbbe2cbf77848f20687a6eea"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s scripts/tests -v",
+      "dependencies": [
+        {
+          "id": "source:d4d9fe92a80666a801134657",
+          "sha256": "8c43797ecfc71ea47aa58487126dbfaa42cdd4fafc99770d5c05ca694aaf70e9",
+          "version": "b57942fdc8487880019958a9e6ba0c1fb786699dd797095873381f97318b7e3b"
+        }
+      ],
+      "id": "entry:0a2c699d011115d6df386c5d",
+      "kind": "entrypoint",
+      "namespace": "maintenance",
+      "pattern": "test*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "37df9f5b0bc1225aebf2d0eb637bf712c9adb760bbbe2cbf77848f20687a6eea",
+        "environment_overrides": {
+          "GIT_FIXTURE_RETAIN_DIR": "runs/git-fixture-isolation"
+        },
+        "job": "static-checks",
+        "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+        "line": 176,
+        "mode": "declared-ci-literal",
+        "namespace": "maintenance",
+        "pattern": "test*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "scripts/tests",
+        "step": "Traceability and frozen validation identities",
+        "step_if": "needs.selection.outputs.maintenance == 'true'",
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "2c505fbb46b8196147ad900749684885cd37780be7c95d23d12eeff640da3a76",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "scripts/tests",
+      "status": "active",
+      "version": "33062f5f08a891f1fe7601535792e3a3e9a375d84b7fcb59bd3e63cbc8172bae",
+      "workflow_sha256": "75da6ea8a3f0e7baa90b99388833ae2d757da66754b1d1dea3a8113d1fd1fa3b"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:d4d9fe92a80666a801134657",
         "sha256": "ee94905bcc97b291cfd4b03850208a9bf9fc6a1a28873171c9ede13e9759b27d",
         "version": "2f1b93c35b040c85a306eba8648a504606a4cdb709e67e8a802c376f5e059661"
       },
@@ -152,6 +204,58 @@
       "status": "active",
       "version": "477f771008200853e7dbb9def9a891ecd9f94a62e79287e4e099d05a990c97f9",
       "workflow_sha256": "70dba1d0705b83d4811e2d79502cb96b891fe3cd8ea32cfb5c5ddf7b3f407dfa"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:d4d9fe92a80666a801134657",
+        "sha256": "7fc6652005ff6fa6a26065b65068c7ee3b98d9dd096f0d3e7c9a82dfdae89bb3",
+        "version": "51300ef27f10c2c5154ed4aa47469d376c6e910a59bc3b6146bbb7ada038281f"
+      },
+      "ci_entrypoint_ids": [
+        "37df9f5b0bc1225aebf2d0eb637bf712c9adb760bbbe2cbf77848f20687a6eea"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s scripts/tests -v",
+      "dependencies": [
+        {
+          "id": "source:d4d9fe92a80666a801134657",
+          "sha256": "7fc6652005ff6fa6a26065b65068c7ee3b98d9dd096f0d3e7c9a82dfdae89bb3",
+          "version": "51300ef27f10c2c5154ed4aa47469d376c6e910a59bc3b6146bbb7ada038281f"
+        }
+      ],
+      "id": "entry:0a2c699d011115d6df386c5d",
+      "kind": "entrypoint",
+      "namespace": "maintenance",
+      "pattern": "test*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "37df9f5b0bc1225aebf2d0eb637bf712c9adb760bbbe2cbf77848f20687a6eea",
+        "environment_overrides": {
+          "GIT_FIXTURE_RETAIN_DIR": "runs/git-fixture-isolation"
+        },
+        "job": "static-checks",
+        "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+        "line": 176,
+        "mode": "declared-ci-literal",
+        "namespace": "maintenance",
+        "pattern": "test*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "scripts/tests",
+        "step": "Traceability and frozen validation identities",
+        "step_if": "needs.selection.outputs.maintenance == 'true'",
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "6d44d340b92e31754f3c76346a351d6186f0aafab9f9ef5991189da8c851e585",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "scripts/tests",
+      "status": "active",
+      "version": "6a3bf31b5a84f9a930d5007d65b38b694b8211dcef121441c015d7f7c09fe01a",
+      "workflow_sha256": "75da6ea8a3f0e7baa90b99388833ae2d757da66754b1d1dea3a8113d1fd1fa3b"
     },
     {
       "actual_receipt": {

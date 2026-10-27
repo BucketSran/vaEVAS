@@ -123,6 +123,30 @@ class TrustedLoaderTests(unittest.TestCase):
         self.assertEqual(result.returncode,1,result.stdout+result.stderr)
         self.assertEqual(json.loads(result.stdout)['trust']['trusted_commit'],self.trusted)
 
+    def test_trusted_comparator_reports_a_runner_host_change(self):
+        def on_host(platform, image, python='3.12.15'):
+            value = report()
+            value['metadata']['runtime_profile'] = dict(python=python, platform=platform, machine='x86_64',
+                variables={'ImageVersion': image},
+                execution_toolchain=dict(platform=platform, machine='x86_64', variables={'ImageVersion': image}))
+            return value
+        self.write(BASELINE_PATH, json.dumps(baseline(on_host('Linux-6.17.0-1022-azure-x86_64-with-glibc2.39',
+                                                              '20261023.334.3'))))
+        self.trusted = self.commit('baseline observed on the previous runner image')
+        self.report_path.write_text(json.dumps(on_host('Linux-7.0.0-1017-azure-x86_64-with-glibc2.39',
+                                                       '20261026.354.1')))
+        result = self.call()
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        facts = json.loads(result.stdout)
+        self.assertTrue(facts['merge_allowed'])
+        self.assertEqual(facts['host_runtime_difference']['actual']['runtime_profile']['ImageVersion'], '20261026.354.1')
+        self.assertEqual(facts['trusted_comparison']['host_runtime_difference'], facts['host_runtime_difference'])
+        self.report_path.write_text(json.dumps(on_host('Linux-7.0.0-1017-azure-x86_64-with-glibc2.39',
+                                                       '20261026.354.1', python='3.12.16')))
+        result = self.call()
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertNotIn('host_runtime_difference', json.loads(result.stdout))
+
     def test_schedule_and_manual_fetch_origin_main_and_ignore_manual_base(self):
         origin = self.root / 'origin.git'
         git_fixture.run(['clone', '--bare', str(self.repo), str(origin)], scratch=self.root,
