@@ -1,20 +1,11 @@
 {
-  "prepared_at_utc": "2026-10-27T11:26:24.415138+00:00",
+  "prepared_at_utc": "2026-10-27T12:33:48.656354+00:00",
   "base": "ac1b6e8d8de743b8da3f862c0f50bdf0a1a1ca14",
-  "base_tree": "1b83f28af63dbaddc60fea500309f19962e7f947",
-  "increment_receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/increment-receipt.json",
+  "parent": "dc8866d35c496ca33ee59f9975a832bdf0f5d036",
+  "parent_tree": "49f493ad5ec6fa7c6bdf2a05c85f0a92da88abd5",
+  "increment_receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/r2/increment-receipt.json",
   "increment_sources": [
-    "scripts/regression_gate.py",
-    "scripts/regression_context_registration.py",
-    "evas/capabilities/rust_listing.py",
-    "scripts/tests/test_regression_gate.py",
-    "scripts/tests/test_regression_transition.py",
-    "scripts/tests/test_trusted_regression_gate.py",
-    "scripts/tests/test_context_registration.py",
-    "scripts/tests/regression_registration_fixtures.py",
-    "scripts/tests/test_rust_catalog_reconcile.py",
-    "scripts/README.md",
-    "evas/capabilities/README.md"
+    "scripts/tests/test_rust_catalog_reconcile.py"
   ],
   "pre_render_checks": [
     {
@@ -23,11 +14,11 @@
         "-B",
         "evas/capabilities/render.py"
       ],
-      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/source",
-      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/pre-render.txt",
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/r2/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/r2/pre-render.txt",
       "returncode": 0,
-      "started_at_utc": "2026-10-27T11:23:54.515956+00:00",
-      "finished_at_utc": "2026-10-27T11:24:39.123947+00:00"
+      "started_at_utc": "2026-10-27T12:31:07.595206+00:00",
+      "finished_at_utc": "2026-10-27T12:31:53.792466+00:00"
     },
     {
       "command": [
@@ -37,25 +28,15 @@
         "--catalog-data",
         "evas/capabilities/data"
       ],
-      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/source",
-      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/pre-traceability.txt",
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/r2/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/r2/pre-traceability.txt",
       "returncode": 0,
-      "started_at_utc": "2026-10-27T11:24:39.124099+00:00",
-      "finished_at_utc": "2026-10-27T11:25:08.526147+00:00"
+      "started_at_utc": "2026-10-27T12:31:53.792730+00:00",
+      "finished_at_utc": "2026-10-27T12:32:21.435774+00:00"
     }
   ],
   "paths": [
-    "evas/capabilities/README.md",
-    "evas/capabilities/rust_listing.py",
-    "scripts/README.md",
-    "scripts/regression_context_registration.py",
-    "scripts/regression_gate.py",
-    "scripts/tests/regression_registration_fixtures.py",
-    "scripts/tests/test_context_registration.py",
-    "scripts/tests/test_regression_gate.py",
-    "scripts/tests/test_regression_transition.py",
-    "scripts/tests/test_rust_catalog_reconcile.py",
-    "scripts/tests/test_trusted_regression_gate.py"
+    "scripts/tests/test_rust_catalog_reconcile.py"
   ],
   "criteria_collector_language_unchanged": true,
   "before": {

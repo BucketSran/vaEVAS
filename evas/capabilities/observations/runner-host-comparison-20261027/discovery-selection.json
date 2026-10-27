@@ -76,17 +76,13 @@
       "pattern": "test_regression_runner.py"
     },
     {
-      "entry_file": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/new-discovery/entry-005.json",
+      "entry_file": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/r2/new-discovery/entry-005.json",
       "entry_id": "37df9f5b0bc1225aebf2d0eb637bf712c9adb760bbbe2cbf77848f20687a6eea",
       "reused": false,
       "forced_by_changed_paths": [
-        "scripts/tests/test_context_registration.py",
-        "scripts/tests/test_regression_gate.py",
-        "scripts/tests/test_regression_transition.py",
-        "scripts/tests/test_rust_catalog_reconcile.py",
-        "scripts/tests/test_trusted_regression_gate.py"
+        "scripts/tests/test_rust_catalog_reconcile.py"
       ],
-      "sha256": "2b6535d82cf273ae438156389206d43609fc496ee0812f22dd298123615264d9",
+      "sha256": "ebe0f1358b1681e8a75af4925c133626d7dbdcb63bcc05bdd2888f1f1f3cb9c2",
       "instances": 571,
       "start": "scripts/tests",
       "pattern": "test*.py"
@@ -470,7 +466,7 @@
   "entry_count": 31,
   "reused": 30,
   "new_collections": 1,
-  "reuse_basis": "Exact workflow entry, collector and owner-module hashes from the main receipts; entries whose start/pattern match a changed path are recollected.",
+  "reuse_basis": "Exact workflow entry, collector and owner-module hashes from the PR271 receipts; entries whose start/pattern match a changed path are recollected.",
   "test_bodies_executed": false,
   "scientific_qualification": false
 }

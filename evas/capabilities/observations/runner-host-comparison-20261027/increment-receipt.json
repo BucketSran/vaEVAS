@@ -1,72 +1,13 @@
 {
-  "base": "ac1b6e8d8de743b8da3f862c0f50bdf0a1a1ca14",
+  "base": "dc8866d35c496ca33ee59f9975a832bdf0f5d036",
   "files": [
     {
-      "path": "scripts/regression_gate.py",
-      "before_sha256": "df028ac10ddecb10f870ce889342826b56789d83322394e62e10e5cbb9c0d654",
-      "after_sha256": "65e3542fa4989b35d31ee6998c9dc14f8975524e4b30a23b76539abf7317b38e",
-      "bytes": 45735
-    },
-    {
-      "path": "scripts/regression_context_registration.py",
-      "before_sha256": "72495c5799cb487471b0a8d3a7b2d42041df339f3500992a229e568b38d266e3",
-      "after_sha256": "138ca3036008c8f0616d0e21019f1e434ab1cd1b6498694cd2613c275c261a22",
-      "bytes": 25700
-    },
-    {
-      "path": "evas/capabilities/rust_listing.py",
-      "before_sha256": "4eaf730511a0d6a01a6b8b1e6c47fd23561a991a368a9d1ca6fcf81a6635451a",
-      "after_sha256": "ec0f176ef9e9e8f9852032755ab3660e3d9fa5e56a06eb53b56b35e519033901",
-      "bytes": 11400
-    },
-    {
-      "path": "scripts/tests/test_regression_gate.py",
-      "before_sha256": "93f126aa0237d28a870e745981752522be5e731dd056d35acc6a3ddbbec1da16",
-      "after_sha256": "230ebb006017c03c593f02df99027a423c957360f83d810582115c5f004553da",
-      "bytes": 27321
-    },
-    {
-      "path": "scripts/tests/test_regression_transition.py",
-      "before_sha256": "1029f0dda44a4a1bd44d0df288a0042e16219896e991cbd0170094cfcecc5816",
-      "after_sha256": "e37fa0593b59328575e0c74a32fea6648b23a7c83df80466a2efe4a473d12836",
-      "bytes": 19658
-    },
-    {
-      "path": "scripts/tests/test_trusted_regression_gate.py",
-      "before_sha256": "a3d1a6e26e88924486ced360c12fac6cc4aab00b6e71a1cc8a1ebebe9352898d",
-      "after_sha256": "2ad28df60516ae694e2f19dc12240f937d074a95754f736ae5814cee4d9f6a0c",
-      "bytes": 32892
-    },
-    {
-      "path": "scripts/tests/test_context_registration.py",
-      "before_sha256": "1a0aaa5587f6651bc460825a1d7479a0f090f1c9b0fa774f57133638ef45e7d4",
-      "after_sha256": "1d3bf03d9857d58a6804a74def22a6eb616654a2002050ca862da9610f99e0ac",
-      "bytes": 17270
-    },
-    {
-      "path": "scripts/tests/regression_registration_fixtures.py",
-      "before_sha256": "0dc554ed43a192ebecb325e3a6003fe42933038903b8ce4f9452bcff1ed68496",
-      "after_sha256": "611cccc3abe8d87167909ab5da3339dc8cc1550ca80cec04a9a74fc2b55e7515",
-      "bytes": 15377
-    },
-    {
       "path": "scripts/tests/test_rust_catalog_reconcile.py",
-      "before_sha256": "9ed4c2b0309c4fe8a15dbf91b81710a0eea902b408529e43fe3fa5531337ec7e",
-      "after_sha256": "835a658d588d9849df10f6e372ecddafdd326142a9b9d7a442451730c1c62004",
-      "bytes": 10792
-    },
-    {
-      "path": "scripts/README.md",
-      "before_sha256": "474015276936a59fce736aa86e3b6efab9d97b973f8b3b998ea00c13c2d012e5",
-      "after_sha256": "28821597bca75a22ca4ac0182fbeb4cf1d4b018b41934f6ec9bac90907c11372",
-      "bytes": 58861
-    },
-    {
-      "path": "evas/capabilities/README.md",
-      "before_sha256": "d3b2a3fc4526593172a656789fb1bde84ac770593b4ec3021d00f2d2e96a0735",
-      "after_sha256": "ae81480462ecdbd25299e5dcbc1d097a8c92f018673ed817d84b6d16cd363e03",
-      "bytes": 9478
+      "before_sha256": "835a658d588d9849df10f6e372ecddafdd326142a9b9d7a442451730c1c62004",
+      "after_sha256": "a641b2dad6e73b19554510b4479c49b6eeeeaade371e6d6e0d7d1a134464c312",
+      "bytes": 10898
     }
   ],
+  "reason": "CI 40500166767 static-checks: fixture commit was empty on a runner already reporting the registered platform",
   "scientific_qualification": false
 }
