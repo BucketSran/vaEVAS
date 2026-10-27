@@ -1,0 +1,44 @@
+{
+  "fixed_parent": "2a0e173a2164f6f7a0b544e344e4463226ad26c1",
+  "trusted_base": "cfe0ac45f75677fbd1e4dbf6243740b16d1caab0",
+  "source_snapshot": "d771a896615093474917a5d664380a7e61daae74",
+  "implementation_patch": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/catalog-validation-scan-grok-20261027/source.patch",
+  "implementation_patch_sha256": "905c4ebfc45dcc5ba8a558c1be7388fb4619c9da502088912c5501b1efdc6573",
+  "source_paths": [
+    "evas/capabilities/asset_catalog.py",
+    "evas/capabilities/test_asset_catalog.py"
+  ],
+  "deferred_generated_paths": [
+    "evas/capabilities/data/asset-index.json",
+    "evas/capabilities/data/catalog-sources.json",
+    "evas/capabilities/data/entrypoint-index.json",
+    "evas/capabilities/data/historical-index.json",
+    "evas/capabilities/data/method-index.json",
+    "evas/capabilities/data/registry.json",
+    "evas/capabilities/generated/normative.md",
+    "evas/docs/development/TRACEABILITY.md"
+  ],
+  "criteria_file_count": 3604,
+  "criteria_id": "f54a2eac6238fa60cd4bc71b5aa74a6717077ad2cc9a8c8b25b4c2ca2880c625",
+  "dut_file_count": 327,
+  "dut_id": "5e9bf28ad121569a6975811f0b5ea9e60423e676e6dfcf88048948bfd19ba056",
+  "criteria_and_DUT_exact_E1_source": true,
+  "E1_raw": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/detector-integration-20261027/ci-40384473617/artifacts/python-regression-timings/python-regression.json",
+  "E1_raw_sha256": "8f1ff97fe6c24dbb339fcac4f7b64c6c3ef98915b005b0711bd963c95ed74770",
+  "unchanged_trust_and_execution_paths": [
+    ".github/workflows/numerical-assurance.yml",
+    "evas/validation/baselines/regression-v1.json",
+    "evas/validation/baselines/regression-v1.review.json",
+    "scripts/context-registration-bundle.json",
+    "scripts/run_trusted_regression_gate.py",
+    "scripts/regression_gate.py",
+    "scripts/regression_context_registration.py",
+    "scripts/run_regression.py",
+    "scripts/ci_evidence.py",
+    "scripts/regression_reason_identity.py",
+    "scripts/regression_observation_policy.json"
+  ],
+  "prior_CI_failure": "30-minute maintenance timeout",
+  "scientific_execution": false,
+  "scientific_qualification": false
+}

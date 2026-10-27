@@ -1,0 +1,243 @@
+{
+  "checked_at_utc": "2026-10-27T00:15:40.785427+00:00",
+  "status": "accepted_as_provisional_preparation",
+  "taskId": "node:delegated-task:command%3Amcp%3A77237e4d-3f1a-49ed-b46c-0984553f1454%3Adelegate-task%3Aevas-pr6-catalog-validation-scan-grok-r1-20261027",
+  "model": "grok-4.7",
+  "options": [
+    {
+      "id": "reasoning_effort",
+      "value": "high"
+    },
+    {
+      "id": "fastMode",
+      "value": false
+    }
+  ],
+  "fixed_base": "cfe0ac45f75677fbd1e4dbf6243740b16d1caab0",
+  "fixed_tree": "5f5fc7acfc9d430e7092a27a261508971f42920b",
+  "patch_sha256": "905c4ebfc45dcc5ba8a558c1be7388fb4619c9da502088912c5501b1efdc6573",
+  "bound_inputs": [
+    {
+      "path": "evas/capabilities/asset_catalog.py",
+      "fixed_blob": "86889be9f5c8db1a21ff22c967301256459fea95",
+      "sha256": "e21f17b18da84644ad02643312336b985e5f79c8e038828bcc56f5b1694e6aa9",
+      "changed": true
+    },
+    {
+      "path": "evas/capabilities/asset_scope.py",
+      "fixed_blob": "0c0a3eac73fe0cdb5a6782fb3369ef330cd8018c",
+      "sha256": "88110b7ad10d59d57ce66705f2cad4c724f6c73e0a832603d049b035b48f3f5a",
+      "changed": false
+    },
+    {
+      "path": "evas/capabilities/data/annex-c-policy.json",
+      "fixed_blob": "af9b4a751095eda9a8e369223182e6f4f103e98b",
+      "sha256": "d62f44898e121072593729c369739fafd9ddd00b9cc8fb2866864913956d28b3",
+      "changed": false
+    },
+    {
+      "path": "evas/capabilities/data/asset-index.json",
+      "fixed_blob": "74dc5a231fc0fc081e670b56227d5122aca01346",
+      "sha256": "368acf57ab05eeaa5558883df68a5fb4da200eef9cf3ae34ea0072a6d66b5043",
+      "changed": false
+    },
+    {
+      "path": "evas/capabilities/data/boundary-audit.json",
+      "fixed_blob": "b8ea727f5a6d5636527b6a215256e35c2c8c75d0",
+      "sha256": "a82a6e6118d030c5b77f2a097264bf2a91c2e9847e45644e52f72f41ef6693e6",
+      "changed": false
+    },
+    {
+      "path": "evas/capabilities/data/catalog-sources.json",
+      "fixed_blob": "be6bed486e2b6598bed50d3eedffbbe2b3c30ff4",
+      "sha256": "5e4d95ed79306ae1a7ba27c07853eed7d7f4c33bf80c5389ad5889f1358299ae",
+      "changed": false
+    },
+    {
+      "path": "evas/capabilities/data/dispositions.json",
+      "fixed_blob": "f981f5581b568c1e213946a028ef5fb8898a847e",
+      "sha256": "9f8045f841f91cd36e83d2633636e260b6e1529c28dafa50f2a2bac589eb079f",
+      "changed": false
+    },
+    {
+      "path": "evas/capabilities/data/entrypoint-index.json",
+      "fixed_blob": "ee231a23200c1ee3daa6bfc28af8b8802051ed20",
+      "sha256": "18f820a5a67f419073558f1e5d89e82861dd528053b1a12dd76a31f8d393a42a",
+      "changed": false
+    },
+    {
+      "path": "evas/capabilities/data/historical-comparison.json",
+      "fixed_blob": "708f03be0ea6b8e4d08c8cf96e5532fa9072cb5c",
+      "sha256": "156fcb3d2197d013e12fd48333d010a596d13322ba4998832f159966a841bf6f",
+      "changed": false
+    },
+    {
+      "path": "evas/capabilities/data/historical-index.json",
+      "fixed_blob": "35f710b382c2f09fb99498d32293c84d5a129e6e",
+      "sha256": "93ca528fc2c933970c2caad40936693b4e989dc635465a77fffb3da707c32e8f",
+      "changed": false
+    },
+    {
+      "path": "evas/capabilities/data/language-profile.json",
+      "fixed_blob": "e1934fc680a5701d189622102ffc2ce5366e01e8",
+      "sha256": "cb96d837943af90db29d359f57cc6e3a2f6f37fcf3956ed8163486f33d6111c1",
+      "changed": false
+    },
+    {
+      "path": "evas/capabilities/data/method-index.json",
+      "fixed_blob": "51f40902f457e327e4495f1684d68c3f6874a0d2",
+      "sha256": "76a395bedfe721d90ce74caa0b1a2c87450f4da37abc4bf98ac4778d76baf9ff",
+      "changed": false
+    },
+    {
+      "path": "evas/capabilities/data/registry.json",
+      "fixed_blob": "52463f9439d7299ab88814f9ec614fe66e04d91c",
+      "sha256": "9c9f9802b4a20e012a7287e347e0862c5c60ae18047ac6f09cd6637c93452f69",
+      "changed": false
+    },
+    {
+      "path": "evas/capabilities/data/source-inventory.json",
+      "fixed_blob": "b1a8600e5d7eb723916e516bb877dccb182f2262",
+      "sha256": "dbdf10f029b36f066a65b4589afde2346fdd432683c2bab9cba3a34e8462208c",
+      "changed": false
+    },
+    {
+      "path": "evas/capabilities/data/target-scope.json",
+      "fixed_blob": "9bd3aa7e81f5c15c19fdb080548bff84cff950a2",
+      "sha256": "54471d86a6f06a5496d9cd7580a44825369869ebf16a1ba2ccced47343f98a85",
+      "changed": false
+    },
+    {
+      "path": "evas/capabilities/history_binding.py",
+      "fixed_blob": "1c648cb4ba03c5d62ce297f5832a5a32607e8f4b",
+      "sha256": "784983c9289b67731e8a1266b4ffb5beefc7235fac4ac78f51c9f08a1c26ceed",
+      "changed": false
+    },
+    {
+      "path": "evas/capabilities/registry.py",
+      "fixed_blob": "fd909b5b1a6442987d1c8ae37d8852b15129b8ff",
+      "sha256": "cdd0f281a3b5848847015957d7f2f71949a36f89c395df8089056b01d5dc2880",
+      "changed": false
+    },
+    {
+      "path": "evas/capabilities/rust_listing.py",
+      "fixed_blob": "3d9a15de8f5e771f8811bf00b7cce62c403a993f",
+      "sha256": "4eaf730511a0d6a01a6b8b1e6c47fd23561a991a368a9d1ca6fcf81a6635451a",
+      "changed": false
+    },
+    {
+      "path": "evas/capabilities/source_reader.py",
+      "fixed_blob": "f33fbd5f65fedd31e46957c3d891ccb26338f287",
+      "sha256": "d248fa28e6fe1caf4248fa198eb905938e285585b0b9081b65338bc68186b125",
+      "changed": false
+    },
+    {
+      "path": "evas/capabilities/test_asset_catalog.py",
+      "fixed_blob": "e8b423e7debade6ea73bffdd0720128c4fbaac53",
+      "sha256": "faa74ee4ad826dcbff092216ac55689bfd96e3c425ca95fcff790456001daf71",
+      "changed": true
+    },
+    {
+      "path": "scripts/capabilities/discover_methods.py",
+      "fixed_blob": "d992de8b7819f4dda2920f0f404385d3e71b804e",
+      "sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "changed": false
+    },
+    {
+      "path": "scripts/capabilities/observe_assets.py",
+      "fixed_blob": "902d2c9f201611da3fb0cf58c85de243e0e63ee6",
+      "sha256": "359fdf080c0df7b1a1c2d3fb4f16395d607713a1e30f1ba61c8ce273262a70f6",
+      "changed": false
+    },
+    {
+      "path": "scripts/traceability.py",
+      "fixed_blob": "3c525a806b0b99bb797542d3142a57dcfaa8c32b",
+      "sha256": "b22e84d4be2a4aeef28b33d8a749ecc935b78572155eb8f266aa487fa318199c",
+      "changed": false
+    }
+  ],
+  "verified_raw_logs": [
+    {
+      "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/catalog-validation-scan-grok-20261027/acceptance-run/logs/git-archive.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/catalog-validation-scan-grok-20261027/acceptance-run/logs/patch.stdout",
+      "sha256": "5af7db5e137fd62e3c6e8f616d988333e2a2779b060969c4303d56f85581d8d2"
+    },
+    {
+      "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/catalog-validation-scan-grok-20261027/acceptance-run/logs/patch.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/catalog-validation-scan-grok-20261027/acceptance-run/logs/unittest-original.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/catalog-validation-scan-grok-20261027/acceptance-run/logs/unittest-original.stderr",
+      "sha256": "ae02741b85e18c181faecd55c797b6ca39f1afc88424bbd12234c541095ff6e4"
+    },
+    {
+      "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/catalog-validation-scan-grok-20261027/acceptance-run/logs/unittest-indexed.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/catalog-validation-scan-grok-20261027/acceptance-run/logs/unittest-indexed.stderr",
+      "sha256": "627326b1cb5e67baf48d4db4b697d22a29d92b2f8a33bc488ec5649be840e3e3"
+    }
+  ],
+  "existing_behavior_tests_reused": {
+    "original": 25,
+    "indexed": 25
+  },
+  "same_input_registry_result": "Both succeeded with None; no exception.",
+  "objects": 39229,
+  "asset_method_objects": 25997,
+  "scan_fact": {
+    "original_values_calls": 25998,
+    "indexed_values_calls": 2,
+    "full_iteration_item_count_inferred_from_successful_complete_loops": [
+      1019875542,
+      78458
+    ]
+  },
+  "new_composition_check": {
+    "argv": [
+      "/opt/homebrew/bin/python3.12",
+      "-B",
+      "-m",
+      "unittest",
+      "test_asset_catalog",
+      "-v"
+    ],
+    "started_at_utc": "2026-10-27T00:15:39.829142+00:00",
+    "returncode": 0,
+    "methods": 26,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "e977f1d0181bb02756689396af10413dbc7f6109937bfe7241d711103ae59846",
+    "composed_test_sha256": "fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806",
+    "reason": "Existing PR6 derived-view test and this patch modify the same test file."
+  },
+  "performance_assessment": {
+    "formal_performance_verdict": "inconclusive; no production or CI speedup claim",
+    "retained_single_pair_seconds": [
+      86.603268,
+      12.89324
+    ],
+    "repetitions_per_side": 1,
+    "instrumentation": "CountingMap increments per values() call and adds len(map); not a per-yield profiler.",
+    "limitations": [
+      "original always first",
+      "machine load not recorded",
+      "no alternating repeated samples",
+      "Registry load excluded",
+      "no end-to-end CI pairing"
+    ],
+    "attribution": "The reported0.851123 is the difference divided by the original duration, not a measured profiler share of the scan.",
+    "accepted_basis": "Exact fewer full scans plus matching outcomes; no extra performance campaign authorized or needed for preparation."
+  },
+  "scientific_execution": false,
+  "scientific_qualification": false,
+  "integration": false,
+  "pending": "Rebind after PR4/5; normal complete PR6 precheck, CI and fresh independent Astra."
+}

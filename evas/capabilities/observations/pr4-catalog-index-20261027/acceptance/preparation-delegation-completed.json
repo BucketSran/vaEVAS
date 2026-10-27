@@ -1,0 +1,30 @@
+{
+  "taskId": "node:delegated-task:command%3Amcp%3A77237e4d-3f1a-49ed-b46c-0984553f1454%3Adelegate-task%3Aevas-pr6-catalog-validation-scan-grok-r1-20261027",
+  "childThreadId": "thread:delegated-task:command%3Amcp%3A77237e4d-3f1a-49ed-b46c-0984553f1454%3Adelegate-task%3Aevas-pr6-catalog-validation-scan-grok-r1-20261027",
+  "childRunId": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253A77237e4d-3f1a-49ed-b46c-0984553f1454%253Adelegate-task%253Aevas-pr6-catalog-validation-scan-grok-r1-20261027:ordinal:1",
+  "childNodeId": "node:delegated-task:command%3Amcp%3A77237e4d-3f1a-49ed-b46c-0984553f1454%3Adelegate-task%3Aevas-pr6-catalog-validation-scan-grok-r1-20261027",
+  "status": "completed",
+  "workState": "result_available",
+  "hasPendingChildRuns": false,
+  "latestTerminalRunId": "run:thread:thread%3Adelegated-task%3Acommand%253Amcp%253A77237e4d-3f1a-49ed-b46c-0984553f1454%253Adelegate-task%253Aevas-pr6-catalog-validation-scan-grok-r1-20261027:ordinal:1",
+  "latestTerminalStatus": "completed",
+  "latestTerminalSummary": null,
+  "latestTerminalResultContextTransferId": null,
+  "providerInstanceId": "cursor",
+  "model": "grok-4.7",
+  "options": [
+    {
+      "id": "reasoning_effort",
+      "value": "high"
+    },
+    {
+      "id": "fastMode",
+      "value": false
+    }
+  ],
+  "summary": "`Catalog.validate` 的局部索引已写好。固定登记上原实现和索引实现都成功返回，行为测试两边都是 25 项通过。这次同输入测量里，重复全对象扫描占该次 `validate` 墙钟的 0.851123。15 分 49 秒和 23 分 10 秒仍只是已记录的异质作业时间。\n\n源码里每个 asset/method 都会再扫一遍 `registry.objects.values()`。索引只在一次 `validate` 内按 id 保留 `values()` 的顺序，返回后丢弃。补丁是 `source.patch`，只有 `evas/capabilities/asset_catalog.py` 和 `evas/capabilities/test_asset_catalog.py`。\n\n同一份已审登记 `cfe0ac45f75677fbd1e4dbf6243740b16d1caab0`、Python 3.12.13、Apple M5 上各跑一次：\n\n| | 秒 | `values()` 调用 | 交出对象 |\n| --- | ---: | ---: | ---: |\n| 原实现 | 86.603268 | 25998 | 1019875542 |\n| 索引实现 | 12.893240 | 2 | 78458 |\n\n差额 73.710028 秒。25998 等于外层 1 次加上 25997 个 asset/method 的全扫描；2 等于外层 1 次加上一次索引构建。真实登记 39229 个对象，两边的成功值都是 `None`。重复次数是 1。\n\n10 项新测试先在原实现上通过，覆盖移名有无旧身份、多个旧版本、无关 id、非当前版本上的 history、不匹配摘要、输入变化后重验，以及重复路径、重复 runtime id 和未知内容身份。资格未授予，也未采用。\n\n模型是 cursor 上的 `grok-4.7`，选项 `reasoning_effort=high`、`fastMode=false`。没有仍在运行的命令。记录在 `REPORT.md` 和 `receipt.json`。",
+  "resultContextTransferId": "context-transfer:type:subagent_result:source-thread:thread%3Adelegated-task%3Acommand%253Amcp%253A77237e4d-3f1a-49ed-b46c-0984553f1454%253Adelegate-task%253Aevas-pr6-catalog-validation-scan-grok-r1-20261027:target-thread:mcp%3A5e3a6250-d8c4-4913-bf61-e75447edac3e:b0fb51a4-a2b3-4d96-8a0e-1909238a611f",
+  "hasPendingQuestion": false,
+  "pendingApproval": null,
+  "waitTimedOut": false
+}

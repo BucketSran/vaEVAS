@@ -1,0 +1,21 @@
+{
+  "argv": [
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+    "-m",
+    "ruff",
+    "check",
+    "--isolated",
+    "--select",
+    "E9,F63,F7,F82",
+    "--",
+    "evas/capabilities/asset_catalog.py",
+    "evas/capabilities/test_asset_catalog.py"
+  ],
+  "returncode": 0,
+  "files": {
+    "evas/capabilities/asset_catalog.py": "e21f17b18da84644ad02643312336b985e5f79c8e038828bcc56f5b1694e6aa9",
+    "evas/capabilities/test_asset_catalog.py": "faa74ee4ad826dcbff092216ac55689bfd96e3c425ca95fcff790456001daf71"
+  },
+  "log_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+  "reason": "Explicitly cover the two catalog paths outside ci_lint selected Ruff paths."
+}

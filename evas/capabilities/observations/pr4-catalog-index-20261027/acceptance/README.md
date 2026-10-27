@@ -1,0 +1,3 @@
+# Fixed catalog validation increment before CI acceptance
+
+The original detector candidate exceeded its existing 30-minute maintenance job limit while validating catalog views. This increment replaces per-object full scans with a per-call ordered ID index. The workflow limit and checks, trusted baseline and scientific inputs are unchanged. Local generation, complete quick maintenance checks and affected capability tests passed. Fresh independent Astra review and necessary new candidate CI are pending; this directory does not claim either acceptance or a measured CI speedup. Earlier single-pair instrumented times are preparation observations, not a production performance claim. Scientific qualification remains false.

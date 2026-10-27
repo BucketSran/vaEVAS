@@ -1,0 +1,79 @@
+{
+  "task": "pr6-catalog-validation-scan",
+  "ok": true,
+  "adopted": false,
+  "scientific_qualification_conferred": false,
+  "integration": false,
+  "repository_modified": false,
+  "model": "grok-4.7",
+  "providerInstanceId": "cursor",
+  "options": [
+    {"id": "reasoning_effort", "value": "high"},
+    {"id": "fastMode", "value": false}
+  ],
+  "commands_still_running": [],
+  "python": "Python 3.12.13",
+  "processor": "Apple M5",
+  "cpu_count": 10,
+  "input_commit": "cfe0ac45f75677fbd1e4dbf6243740b16d1caab0",
+  "input_tree": "5f5fc7acfc9d430e7092a27a261508971f42920b",
+  "worktree_head_not_used": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+  "source_patch": {
+    "path": "source.patch",
+    "sha256": "905c4ebfc45dcc5ba8a558c1be7388fb4619c9da502088912c5501b1efdc6573",
+    "bytes": 14354,
+    "paths": [
+      "evas/capabilities/asset_catalog.py",
+      "evas/capabilities/test_asset_catalog.py"
+    ]
+  },
+  "verify": {
+    "path": "verify.py",
+    "sha256": "9f28f8977b5e22835a40f007722d3039374743ade109dd4736e2d86ae8e2e1bf",
+    "bytes": 14284
+  },
+  "acceptance_run": "acceptance-run",
+  "acceptance_receipt_sha256": "85f4aeee86fc8ddf716dbd99d7088e06e4e926f7ed4e6f363176c73efdaffa97",
+  "invocation": {
+    "stdout_sha256": "fc2fa445cf835060d2b4d16b95e700e04fa3a6a63484085699e559972d7eb6ba",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "returncode": 0
+  },
+  "counts": {
+    "execution": {
+      "git_archive_invocations": 1,
+      "git_archive_returncode": 0,
+      "patch_returncode": 0,
+      "unittest_processes": 2,
+      "unittest_failures": 0,
+      "tests_per_process": 25
+    },
+    "structure": {
+      "objects": 39229,
+      "assets": 5672,
+      "methods": 20325,
+      "asset_method_objects": 25997,
+      "original_values_calls": 25998,
+      "indexed_values_calls": 2,
+      "original_values_items": 1019875542,
+      "indexed_values_items": 78458,
+      "predicted_same_id_visits": 110131
+    },
+    "numeric_seconds": {
+      "repetitions": 1,
+      "original_validate": 86.603268,
+      "indexed_validate": 12.89324,
+      "reduction": 73.710028,
+      "reduction_share_of_original_validate": 0.851123
+    },
+    "rejection": {
+      "real_registry_raised": false,
+      "same_result": true,
+      "success_value": null
+    },
+    "qualification": {
+      "conferred": false,
+      "adopted": false
+    }
+  }
+}
