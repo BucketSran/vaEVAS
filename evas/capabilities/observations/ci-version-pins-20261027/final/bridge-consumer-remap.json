@@ -1,0 +1,15 @@
+{
+  "at_utc": "2026-10-27T13:50:06.135634+00:00",
+  "reason": "workflow pins change every entry identity; the bridged TestLoader entry keeps the same start and pattern",
+  "remap": [
+    {
+      "bridge": "benchmark/material/draftbench/templates/INSTRUCTION.md",
+      "old_entry_id": "37df9f5b0bc1225aebf2d0eb637bf712c9adb760bbbe2cbf77848f20687a6eea",
+      "new_entry_id": "731c212693179dd8da1abe60e53fbe6689c67e9467f0ac2969d322297420e8cb",
+      "start": "scripts/tests",
+      "pattern": "test*.py"
+    }
+  ],
+  "config_before_sha256": "6dc39ea5b17648c888151de7cfff4757297c1e64d7875759e4f4448fce2c3bc8",
+  "config_after_sha256": "c5f329adddc3c210f2d8ca30fe669fd582b3456ebbce0c35b301e36de884a01d"
+}

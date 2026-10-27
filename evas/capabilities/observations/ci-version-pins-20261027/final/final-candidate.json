@@ -1,0 +1,47 @@
+{
+  "base": "02dee32b2c9b25f166cbd77f8a895953e004f288",
+  "commit": "6bfa35ea22cee6e2bbc1819164571364fd6938da",
+  "tree": "1e0d4dca75756b1130714b949faf1c8e1ce42f67",
+  "paths": [
+    "evas/capabilities/data/asset-index.json",
+    "evas/capabilities/data/catalog-sources.json",
+    "evas/capabilities/data/entrypoint-index.json",
+    "evas/capabilities/data/historical-index.json",
+    "evas/capabilities/data/method-index.json",
+    "evas/capabilities/data/registry.json",
+    "evas/docs/development/TRACEABILITY.md"
+  ],
+  "files": {
+    "evas/capabilities/data/asset-index.json": "734497c0d364ee2775023b8501ccb8e825ad80e4a7702cb6d5515097b41d92a1",
+    "evas/capabilities/data/catalog-sources.json": "59547cfcce91a3a7325b2f691ed0c8e70abb5aa5788155c42a6e08f002bd7580",
+    "evas/capabilities/data/entrypoint-index.json": "67f1c81d8ff74620c794295786d101ec9074732a1ecedaef61d05900aba9b7cc",
+    "evas/capabilities/data/historical-index.json": "68840a0c57ae2d235f13955ce6c72152357263a437bf753c03d02303b8ed4c8f",
+    "evas/capabilities/data/method-index.json": "f102588db0dc43ef5e748a846bf7d7ab653920991090b269d6b29b137d3db704",
+    "evas/capabilities/data/registry.json": "e43bf2f72e0cff163a73d8c415167c5e9159ee4f9cb31334045558de2c58b231",
+    "evas/docs/development/TRACEABILITY.md": "748c29f8fed2fc88cde193875c94efc4ff749f9743915822ddf2fc70164a755f"
+  },
+  "old20_preserved": true,
+  "scientific_qualification": false,
+  "time_utc": "2026-10-27T13:56:04.498873+00:00",
+  "source_capture": "520a54744297bb1bf9e3cadcf6438ae981aa2f40",
+  "complete_paths": [
+    ".github/workflows/benchmark-evidence.yml",
+    ".github/workflows/numerical-assurance.yml",
+    ".github/workflows/package-install.yml",
+    "evas/capabilities/data/asset-index.json",
+    "evas/capabilities/data/catalog-sources.json",
+    "evas/capabilities/data/entrypoint-index.json",
+    "evas/capabilities/data/historical-index.json",
+    "evas/capabilities/data/method-index.json",
+    "evas/capabilities/data/registry.json",
+    "evas/docs/development/TRACEABILITY.md",
+    "scripts/capabilities/collect_ci_inventory.py",
+    "scripts/tests/test_ci_inventory.py",
+    "scripts/tests/test_ci_pins.py"
+  ],
+  "derive": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/derive-acceptance.json",
+  "precheck": "runs on the frozen head in parallel with CI",
+  "review": "Fresh Astra after CI selection and fast-checks pass on this head",
+  "CI": "pending",
+  "published": false
+}

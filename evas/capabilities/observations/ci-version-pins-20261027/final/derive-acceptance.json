@@ -1,0 +1,65 @@
+{
+  "base": "02dee32b2c9b25f166cbd77f8a895953e004f288",
+  "source_capture": "520a54744297bb1bf9e3cadcf6438ae981aa2f40",
+  "paths_vs_base": [
+    ".github/workflows/benchmark-evidence.yml",
+    ".github/workflows/numerical-assurance.yml",
+    ".github/workflows/package-install.yml",
+    "evas/capabilities/data/asset-index.json",
+    "evas/capabilities/data/catalog-sources.json",
+    "evas/capabilities/data/entrypoint-index.json",
+    "evas/capabilities/data/historical-index.json",
+    "evas/capabilities/data/method-index.json",
+    "evas/capabilities/data/registry.json",
+    "evas/docs/development/TRACEABILITY.md",
+    "scripts/capabilities/collect_ci_inventory.py",
+    "scripts/tests/test_ci_inventory.py",
+    "scripts/tests/test_ci_pins.py"
+  ],
+  "render_outputs": 82,
+  "checks": [
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "scripts/traceability.py",
+        "--catalog-data",
+        "evas/capabilities/data"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/traceability-generate.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-27T13:52:27.218969+00:00",
+      "finished_at_utc": "2026-10-27T13:53:06.839263+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "evas/capabilities/render.py"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/capability-render.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-27T13:53:06.839469+00:00",
+      "finished_at_utc": "2026-10-27T13:54:05.923084+00:00"
+    }
+  ],
+  "files": {
+    ".github/workflows/benchmark-evidence.yml": "a1bce4e1a0dc7a62276839de3e6d98caa3a4cb0cb8cdfa325b6be722bc03ccb0",
+    ".github/workflows/numerical-assurance.yml": "b2d897da3f8b794d4709849a0bd91bc1ada1b518513db06df60fcd9a705c1aaa",
+    ".github/workflows/package-install.yml": "d09f17ec5313406456eb8bbfe8be194fef6c3869d5c8a2a451b31ff589875c70",
+    "evas/capabilities/data/asset-index.json": "734497c0d364ee2775023b8501ccb8e825ad80e4a7702cb6d5515097b41d92a1",
+    "evas/capabilities/data/catalog-sources.json": "59547cfcce91a3a7325b2f691ed0c8e70abb5aa5788155c42a6e08f002bd7580",
+    "evas/capabilities/data/entrypoint-index.json": "67f1c81d8ff74620c794295786d101ec9074732a1ecedaef61d05900aba9b7cc",
+    "evas/capabilities/data/historical-index.json": "68840a0c57ae2d235f13955ce6c72152357263a437bf753c03d02303b8ed4c8f",
+    "evas/capabilities/data/method-index.json": "f102588db0dc43ef5e748a846bf7d7ab653920991090b269d6b29b137d3db704",
+    "evas/capabilities/data/registry.json": "e43bf2f72e0cff163a73d8c415167c5e9159ee4f9cb31334045558de2c58b231",
+    "evas/docs/development/TRACEABILITY.md": "748c29f8fed2fc88cde193875c94efc4ff749f9743915822ddf2fc70164a755f",
+    "scripts/capabilities/collect_ci_inventory.py": "7031390d9ac27029d571805e4cecea5e417a71f06639ef01980b6c37b564fc45",
+    "scripts/tests/test_ci_inventory.py": "3e2b78fa28a06ef4689e15abd4b6253783e1e39308b238e5e75e152dddff4bf6",
+    "scripts/tests/test_ci_pins.py": "de70f901b0753cb068c908f1da5823acccebe1a72125812521c135f5fa1cc645"
+  },
+  "scientific_execution": false,
+  "scientific_qualification": false
+}
