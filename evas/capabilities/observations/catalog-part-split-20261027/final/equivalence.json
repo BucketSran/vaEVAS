@@ -1,0 +1,1431 @@
+{
+  "after": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/catalog-split-build-r3-20261027/catalog/tree/evas/capabilities/data",
+  "allowed_difference_count": 103,
+  "allowed_differences": [
+    {
+      "after": [
+        "catalog-sources.json",
+        "asset-index.json",
+        "method-index-00.json",
+        "method-index-01.json",
+        "method-index-02.json",
+        "method-index-03.json",
+        "method-index-04.json",
+        "method-index-05.json",
+        "method-index-06.json",
+        "method-index-07.json",
+        "method-index-08.json",
+        "method-index-09.json",
+        "method-index-10.json",
+        "method-index-11.json",
+        "method-index-12.json",
+        "method-index-13.json",
+        "method-index-14.json",
+        "method-index-15.json",
+        "entrypoint-index.json",
+        "historical-index-00.json",
+        "historical-index-01.json",
+        "historical-index-02.json",
+        "historical-index-03.json",
+        "historical-index-04.json",
+        "historical-index-05.json",
+        "historical-index-06.json",
+        "historical-index-07.json",
+        "historical-index-08.json",
+        "historical-index-09.json",
+        "historical-index-10.json",
+        "historical-index-11.json",
+        "historical-index-12.json",
+        "historical-index-13.json",
+        "historical-index-14.json",
+        "historical-index-15.json"
+      ],
+      "before": [
+        "catalog-sources.json",
+        "asset-index.json",
+        "method-index.json",
+        "entrypoint-index.json",
+        "historical-index.json"
+      ],
+      "class": "registry-field",
+      "field": "object_parts",
+      "reason": "methods 与 history 各写成固定数量的 part；sources、assets、entrypoints 仍是单文件。读端按该列表加载。"
+    },
+    {
+      "class": "object-after-only",
+      "current_path": "evas/capabilities/data/method-index-07.json",
+      "id": "asset:03697e1919968aa324fb6bde",
+      "kind": "asset",
+      "reason": "该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。",
+      "sha256": "a0a3dae4f67c0be7b49deee03e21497770ce802236b283f0e64c921f276c97e3",
+      "version": "7df53f330ac9cee6f7f0da3937504a15f51becd0c8c564222a7d1ba23b7dc527"
+    },
+    {
+      "class": "object-after-only",
+      "current_path": "evas/capabilities/data/method-index-12.json",
+      "id": "asset:08412f01ca4255ac68f95c3f",
+      "kind": "asset",
+      "reason": "该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。",
+      "sha256": "295f45df61a3a9b4c8b57e487b199930d19491fcf153dc250639c49974deb139",
+      "version": "552b16f2592187eeea0d3f34e3e4ba4714ce39ac81311ef08ba92980bdc319ec"
+    },
+    {
+      "class": "object-after-only",
+      "current_path": "evas/capabilities/data/historical-index-04.json",
+      "id": "asset:08ec81f351247837a74357bf",
+      "kind": "asset",
+      "reason": "该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。",
+      "sha256": "928c47aa32a5cd032984de24ef4d59db09e3fe1a0e8a8c606dabd99544eb0774",
+      "version": "aa54112102c74b4f64333d910f3ce8fe95a0b9cc18b1ce881f836cc56f73035b"
+    },
+    {
+      "class": "object-after-only",
+      "current_path": "evas/capabilities/data/historical-index-15.json",
+      "id": "asset:19d8e739ae1ca49459921977",
+      "kind": "asset",
+      "reason": "该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。",
+      "sha256": "fdab1f26b7cf74bedd4da65bd14d7dc4cb2e880c0802bf783857408405b6b182",
+      "version": "4cd0a8a33915df4a5939713a25340ce10c605cab81b248f14f1b3be705ceaeb9"
+    },
+    {
+      "class": "object-after-only",
+      "current_path": "evas/capabilities/data/method-index-06.json",
+      "id": "asset:23b8c206d05d5b3ebb50f00b",
+      "kind": "asset",
+      "reason": "该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。",
+      "sha256": "955c07a8d8348e5e01edc223a941c57d7dcfd8c4767a2244a616ef448c580ee3",
+      "version": "a3fc69b651d34dbcf9252ec433f74cbecec0ef66ce59bda25702299a9e325430"
+    },
+    {
+      "class": "object-after-only",
+      "current_path": "evas/capabilities/data/method-index-00.json",
+      "id": "asset:37dbd88710e39b6e59584ef2",
+      "kind": "asset",
+      "reason": "该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。",
+      "sha256": "45d2e7f5b8e5433aa18ac08feab446fb6418c7eb22ec3ad7f97010c310ebe3b7",
+      "version": "2f11f61bf14984f3623a6634de1e0702a75d7d58d84efb8d8d40b7e534797554"
+    },
+    {
+      "class": "object-after-only",
+      "current_path": "evas/capabilities/data/method-index-03.json",
+      "id": "asset:406fe9253ab005782fa65353",
+      "kind": "asset",
+      "reason": "该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。",
+      "sha256": "8a470c5deeae80b70298e59bcab28d829df42e73cf6ce6a1840bdd02bf04ea7f",
+      "version": "9973c9e42d093a9f1d55a3250b610f08477440a205b7f7f87c1cf66138b7ab87"
+    },
+    {
+      "class": "object-after-only",
+      "current_path": "evas/capabilities/data/historical-index-13.json",
+      "id": "asset:45335f9dd08385ed20a802f4",
+      "kind": "asset",
+      "reason": "该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。",
+      "sha256": "b880cf77bb159117bf849b8021b090623ce380cd863e34efaee6fc0970b0d7f3",
+      "version": "2b648ec25a0b9fcb33357b5451a4e57051ab6ddb3394198a3c030d901e737cab"
+    },
+    {
+      "class": "object-after-only",
+      "current_path": "evas/capabilities/data/method-index-05.json",
+      "id": "asset:4c5988caf143bd2a142db256",
+      "kind": "asset",
+      "reason": "该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。",
+      "sha256": "b639ee715d4883bff9709a462d509fe37125d373e20a79be9604beba6c6d17ea",
+      "version": "c7587b6e970d2c2767315c870be76784ecf40e78e1f812ba4d7f1dfc1b81eff1"
+    },
+    {
+      "class": "object-after-only",
+      "current_path": "evas/capabilities/data/historical-index-08.json",
+      "id": "asset:4ec424059b48b3067212bc42",
+      "kind": "asset",
+      "reason": "该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。",
+      "sha256": "ccc0bb84d9dcbe750bbf6f0f059572bb489c96f473ce2bf39869059ad4cc9b51",
+      "version": "c0b9890a76b1e331366d2d22331c555d3ba831dedea52401a2ae94674acc7999"
+    },
+    {
+      "class": "object-after-only",
+      "current_path": "evas/capabilities/data/method-index-01.json",
+      "id": "asset:4f6b24cc111ec5ea1a659156",
+      "kind": "asset",
+      "reason": "该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。",
+      "sha256": "aa3ce721bdac205425b98cc2714308db6091f834ff3f6cd4990eacacb10a7700",
+      "version": "c7465a7f18476a34fc565ad5b0ba9c77147f9093de5295361bd32395bc582d2e"
+    },
+    {
+      "class": "object-after-only",
+      "current_path": "evas/capabilities/data/historical-index-05.json",
+      "id": "asset:5892cab30cd6dcef3c5181fc",
+      "kind": "asset",
+      "reason": "该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。",
+      "sha256": "e5f57bcc510472c0b8350a23a2f0a97e2f8458e2d9d49ce408df17b241a2de91",
+      "version": "2b9ffcc91ad6222988d5b7b3018a641b29214bba36b6f64148dfb3721eaf5f8f"
+    },
+    {
+      "class": "object-after-only",
+      "current_path": "evas/capabilities/data/historical-index-02.json",
+      "id": "asset:5ac17e8abf4bcf7be047cede",
+      "kind": "asset",
+      "reason": "该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。",
+      "sha256": "b0b5f61f97d868d66c2bb6cc174b04baf9ad61b3469d52be3558528d467b36cb",
+      "version": "f67ab3de29aaeef025f11136f419a500057901c9e7552421f2d4e7a0b055cca8"
+    },
+    {
+      "class": "object-after-only",
+      "current_path": "evas/capabilities/data/method-index-13.json",
+      "id": "asset:5ce867b6d889a4ba497da253",
+      "kind": "asset",
+      "reason": "该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。",
+      "sha256": "8df37e8e62111cbb671247527c3e079af78221cb12dc69efc22012a7d841173d",
+      "version": "7c5ae5975b89b0ec19c6f60bc1ad8d7be29cdf773dba8783aa9e7fc17ae94b4e"
+    },
+    {
+      "class": "object-after-only",
+      "current_path": "evas/capabilities/data/historical-index-10.json",
+      "id": "asset:624acba1664e88e1edac1ee0",
+      "kind": "asset",
+      "reason": "该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。",
+      "sha256": "4d2b2484495ea756201fb8e24dd12d63c3146f3818e68e20e64a10a5bdb1d97d",
+      "version": "df789d73829f2af482b57cd93ab6692073ae4614d6d6ed6ad9510638f2cd9432"
+    },
+    {
+      "class": "object-after-only",
+      "current_path": "evas/capabilities/data/historical-index-01.json",
+      "id": "asset:62cdb39112ab24fb64ebcf91",
+      "kind": "asset",
+      "reason": "该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。",
+      "sha256": "38577af7b5ed0592aad9f87359c261e8e47b693668b3e3dcd90b9dde0e931cda",
+      "version": "d2fce5a3744e82844db88a35d716beef83c884fb0f4ee57470e4af7285b9a8b4"
+    },
+    {
+      "class": "object-after-only",
+      "current_path": "evas/capabilities/data/historical-index-00.json",
+      "id": "asset:652243fec3c1be1b5fffb296",
+      "kind": "asset",
+      "reason": "该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。",
+      "sha256": "fcd92758ab2d356155d9237307ff125695c4cc9aa733960b53a17d1e59bb3357",
+      "version": "d07cd21f75e270f1313d409a65630fccfe03794e03fc41888052f93be42c2395"
+    },
+    {
+      "class": "object-after-only",
+      "current_path": "evas/capabilities/data/method-index-08.json",
+      "id": "asset:77a5038cc4e0e569cadefd19",
+      "kind": "asset",
+      "reason": "该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。",
+      "sha256": "fefb7c6a08487186f3c76e4fcbdb73e144167614be5004375164d32906404dd7",
+      "version": "4e57004dbab4807d21723dbc53eabf232025c7aef1cf0eacdf410ca7cee592ba"
+    },
+    {
+      "class": "object-after-only",
+      "current_path": "evas/capabilities/data/method-index-11.json",
+      "id": "asset:7ea6343427f57b47f26073d4",
+      "kind": "asset",
+      "reason": "该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。",
+      "sha256": "b9c4182d37f0bd3bd250fdf3c06eda4c5f14947c781472b2ce9a9e257482fd12",
+      "version": "ebc18400921e7e4129d69a491418e0bf461652e3a292e4efbeb1267283d40712"
+    },
+    {
+      "class": "object-before-only",
+      "current_path": "evas/capabilities/data/historical-index.json",
+      "id": "asset:7f02fc1335786cc7b100d6cf",
+      "kind": "asset",
+      "reason": "该文件是拆分前的 methods 或 history 单体 part。拆分后 object_parts 不再列出它；同一输入收据仍观察得到这个路径，所以写入端按普通源码文件保留其资产身份。",
+      "sha256": "80775b9e8305c1d6938ac0e077384d7c96d20ef263a51a7abfba1dcc6ce1bda1",
+      "version": "fff3a5dbd63e99a36c355084761287b9a85e1d406c3cd1c113291ddf306e3292"
+    },
+    {
+      "class": "object-after-only",
+      "current_path": "evas/capabilities/data/method-index-04.json",
+      "id": "asset:8dbc07e5b18be2cb208301a2",
+      "kind": "asset",
+      "reason": "该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。",
+      "sha256": "7a28fb2ef191bddf29f8d2a3391913f9b5d21f91628bd63e55ea750931624e35",
+      "version": "1d01bcf5e8fc8780dc18b4ad6f01412d1f0987e49e9f806e5c41fa30f4d1ed17"
+    },
+    {
+      "class": "object-after-only",
+      "current_path": "evas/capabilities/data/historical-index-11.json",
+      "id": "asset:a2cfd28518ad8d17fd5d530d",
+      "kind": "asset",
+      "reason": "该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。",
+      "sha256": "24bc0ebabd0e711f9bafecbc83b952376e5e83141a04d7c23c8867df0809f6cb",
+      "version": "693632eef2ed30cb5b89e68a2c244ff90978454344a981f87a34bd289cd29a08"
+    },
+    {
+      "class": "object-after-only",
+      "current_path": "evas/capabilities/data/historical-index-12.json",
+      "id": "asset:a6d6465939a0c68b167217df",
+      "kind": "asset",
+      "reason": "该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。",
+      "sha256": "266facbfb7be1a173f5e009e632eccebf3081a4018e5b7452f70bc989aadc618",
+      "version": "ac8a73dcce3084f14682fdd6d60a4eaa02dc6a7426604354cd7ab7b91b6a1c49"
+    },
+    {
+      "class": "object-after-only",
+      "current_path": "evas/capabilities/data/historical-index-07.json",
+      "id": "asset:a86f88c182393445e2866682",
+      "kind": "asset",
+      "reason": "该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。",
+      "sha256": "298b31bf16923124e3956464cd19c39efa649f22411f576bfbbf02e1b6a5d592",
+      "version": "d901b48444b5b7cf3dfb5e9b8846c8615c584fa9fb330b13e63d0cd02be91a5e"
+    },
+    {
+      "class": "object-after-only",
+      "current_path": "evas/capabilities/data/historical-index-06.json",
+      "id": "asset:b01fbba8a3b2746ffff65840",
+      "kind": "asset",
+      "reason": "该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。",
+      "sha256": "d1305298ab4d96a33c4316ef1fbaba53b878371770cf26d8df17afbf2c27b480",
+      "version": "046a9bbf3dfa821b2fe8058cab9bb66608760de48e9ed0fc06073742848e53a1"
+    },
+    {
+      "class": "object-after-only",
+      "current_path": "evas/capabilities/data/method-index-10.json",
+      "id": "asset:bc853b5ea45d98165dae0bd7",
+      "kind": "asset",
+      "reason": "该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。",
+      "sha256": "2c1db662c799a39d8e44347a34d081a474d6fe84b35c3007075dcc533fe54a2d",
+      "version": "2b62b5d6757fb34bebadfd897f8367d9bb804016088b5892f7c1de8357f7b33e"
+    },
+    {
+      "class": "object-after-only",
+      "current_path": "evas/capabilities/data/method-index-15.json",
+      "id": "asset:bf251be2a3ee2054d0a8071b",
+      "kind": "asset",
+      "reason": "该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。",
+      "sha256": "8f900fa3810c9b0db7db8c5ac97d7c90c3612447331c6ca40f013fa6e6450dd9",
+      "version": "7e4d24c62fff613e32a0873aa1c02cb291139a8a0d3235e7cdb019805b75c265"
+    },
+    {
+      "class": "object-after-only",
+      "current_path": "evas/capabilities/data/historical-index-09.json",
+      "id": "asset:c4b022ab2a7a22c6573c90fb",
+      "kind": "asset",
+      "reason": "该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。",
+      "sha256": "0a4d28235f218f7eb63c08ce58119e67bbbc5572d0582bf82e56dd07291c852b",
+      "version": "56d8352cf2b4643a0428bd8024c3cb56421b7a18255d6bec1fcc9d1187a142dc"
+    },
+    {
+      "class": "object-after-only",
+      "current_path": "evas/capabilities/data/historical-index-14.json",
+      "id": "asset:ccfb8fba3e8161dac7264bbe",
+      "kind": "asset",
+      "reason": "该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。",
+      "sha256": "1b87a214ffc005dc85b28de9cf6c2e7357bcefcaa1806ad748d1a033f1237e88",
+      "version": "63108d1a2b6500a440dd1a9cd0d94c7f031554162ef933234a1f16be3dd8545f"
+    },
+    {
+      "class": "object-after-only",
+      "current_path": "evas/capabilities/data/historical-index-03.json",
+      "id": "asset:cf539eb8fa05199f73979e62",
+      "kind": "asset",
+      "reason": "该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。",
+      "sha256": "5078e8d839a501f250e05b55adcc39452d051e92d67c6e403eb0f39996634f92",
+      "version": "2f4c46095a9e87522df14639e167fb94269a1ea1824810364a2175faf5bd7da8"
+    },
+    {
+      "class": "object-before-only",
+      "current_path": "evas/capabilities/data/method-index.json",
+      "id": "asset:d755f9dc2cbf57e6abb09867",
+      "kind": "asset",
+      "reason": "该文件是拆分前的 methods 或 history 单体 part。拆分后 object_parts 不再列出它；同一输入收据仍观察得到这个路径，所以写入端按普通源码文件保留其资产身份。",
+      "sha256": "45dc455f9c7c5176219b57d1b616317cc5216bff3421ad077c1bf5af2ebe345a",
+      "version": "f95787691117f36b7b4cc452383d998f1045f9e65788d4c62f3b300fece5fb9a"
+    },
+    {
+      "class": "object-after-only",
+      "current_path": "evas/capabilities/data/method-index-14.json",
+      "id": "asset:e1a935f6299a646dd174cfcb",
+      "kind": "asset",
+      "reason": "该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。",
+      "sha256": "eb6dd666ac418060981a456fe625bbb92c12d94939bdc2501f7c949f5f51803e",
+      "version": "58391e0d0a5b358f69da747c09ce2bcb54828a483de3cba966ddf8bd523e123f"
+    },
+    {
+      "class": "object-after-only",
+      "current_path": "evas/capabilities/data/method-index-09.json",
+      "id": "asset:ed006226b037611ddc004316",
+      "kind": "asset",
+      "reason": "该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。",
+      "sha256": "3a2295ef80a5d27fa11fd52eb243a216286e6a3aeba56ecb9948f54e6078df50",
+      "version": "a181ce91889060d92633518b70d9ec3bf7ac42f935be36ecb9e8c63c14b4f446"
+    },
+    {
+      "class": "object-after-only",
+      "current_path": "evas/capabilities/data/method-index-02.json",
+      "id": "asset:f38deabdc4f612ff095f01ab",
+      "kind": "asset",
+      "reason": "该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。",
+      "sha256": "19fc7be2f6ccbcaf8a4a887b1caa31a44ac25c9cc218148721f5ad07c13869e2",
+      "version": "5b54ac5d8c63ab176927a2806ffe6f7e7709504a671a572190525487687d4b4e"
+    },
+    {
+      "after": [
+        "7df53f330ac9cee6f7f0da3937504a15f51becd0c8c564222a7d1ba23b7dc527"
+      ],
+      "before": null,
+      "class": "version-list",
+      "current_paths": [
+        "evas/capabilities/data/method-index-07.json"
+      ],
+      "id": "asset:03697e1919968aa324fb6bde",
+      "kind": "asset",
+      "reason": "该资产 id 只对应目录数据文件，版本列表可以随这些文件的登记变化。"
+    },
+    {
+      "after": [
+        "552b16f2592187eeea0d3f34e3e4ba4714ce39ac81311ef08ba92980bdc319ec"
+      ],
+      "before": null,
+      "class": "version-list",
+      "current_paths": [
+        "evas/capabilities/data/method-index-12.json"
+      ],
+      "id": "asset:08412f01ca4255ac68f95c3f",
+      "kind": "asset",
+      "reason": "该资产 id 只对应目录数据文件，版本列表可以随这些文件的登记变化。"
+    },
+    {
+      "after": [
+        "aa54112102c74b4f64333d910f3ce8fe95a0b9cc18b1ce881f836cc56f73035b"
+      ],
+      "before": null,
+      "class": "version-list",
+      "current_paths": [
+        "evas/capabilities/data/historical-index-04.json"
+      ],
+      "id": "asset:08ec81f351247837a74357bf",
+      "kind": "asset",
+      "reason": "该资产 id 只对应目录数据文件，版本列表可以随这些文件的登记变化。"
+    },
+    {
+      "after": [
+        "4cd0a8a33915df4a5939713a25340ce10c605cab81b248f14f1b3be705ceaeb9"
+      ],
+      "before": null,
+      "class": "version-list",
+      "current_paths": [
+        "evas/capabilities/data/historical-index-15.json"
+      ],
+      "id": "asset:19d8e739ae1ca49459921977",
+      "kind": "asset",
+      "reason": "该资产 id 只对应目录数据文件，版本列表可以随这些文件的登记变化。"
+    },
+    {
+      "after": [
+        "a3fc69b651d34dbcf9252ec433f74cbecec0ef66ce59bda25702299a9e325430"
+      ],
+      "before": null,
+      "class": "version-list",
+      "current_paths": [
+        "evas/capabilities/data/method-index-06.json"
+      ],
+      "id": "asset:23b8c206d05d5b3ebb50f00b",
+      "kind": "asset",
+      "reason": "该资产 id 只对应目录数据文件，版本列表可以随这些文件的登记变化。"
+    },
+    {
+      "after": [
+        "2f11f61bf14984f3623a6634de1e0702a75d7d58d84efb8d8d40b7e534797554"
+      ],
+      "before": null,
+      "class": "version-list",
+      "current_paths": [
+        "evas/capabilities/data/method-index-00.json"
+      ],
+      "id": "asset:37dbd88710e39b6e59584ef2",
+      "kind": "asset",
+      "reason": "该资产 id 只对应目录数据文件，版本列表可以随这些文件的登记变化。"
+    },
+    {
+      "after": [
+        "9973c9e42d093a9f1d55a3250b610f08477440a205b7f7f87c1cf66138b7ab87"
+      ],
+      "before": null,
+      "class": "version-list",
+      "current_paths": [
+        "evas/capabilities/data/method-index-03.json"
+      ],
+      "id": "asset:406fe9253ab005782fa65353",
+      "kind": "asset",
+      "reason": "该资产 id 只对应目录数据文件，版本列表可以随这些文件的登记变化。"
+    },
+    {
+      "after": [
+        "2b648ec25a0b9fcb33357b5451a4e57051ab6ddb3394198a3c030d901e737cab"
+      ],
+      "before": null,
+      "class": "version-list",
+      "current_paths": [
+        "evas/capabilities/data/historical-index-13.json"
+      ],
+      "id": "asset:45335f9dd08385ed20a802f4",
+      "kind": "asset",
+      "reason": "该资产 id 只对应目录数据文件，版本列表可以随这些文件的登记变化。"
+    },
+    {
+      "after": [
+        "c7587b6e970d2c2767315c870be76784ecf40e78e1f812ba4d7f1dfc1b81eff1"
+      ],
+      "before": null,
+      "class": "version-list",
+      "current_paths": [
+        "evas/capabilities/data/method-index-05.json"
+      ],
+      "id": "asset:4c5988caf143bd2a142db256",
+      "kind": "asset",
+      "reason": "该资产 id 只对应目录数据文件，版本列表可以随这些文件的登记变化。"
+    },
+    {
+      "after": [
+        "c0b9890a76b1e331366d2d22331c555d3ba831dedea52401a2ae94674acc7999"
+      ],
+      "before": null,
+      "class": "version-list",
+      "current_paths": [
+        "evas/capabilities/data/historical-index-08.json"
+      ],
+      "id": "asset:4ec424059b48b3067212bc42",
+      "kind": "asset",
+      "reason": "该资产 id 只对应目录数据文件，版本列表可以随这些文件的登记变化。"
+    },
+    {
+      "after": [
+        "c7465a7f18476a34fc565ad5b0ba9c77147f9093de5295361bd32395bc582d2e"
+      ],
+      "before": null,
+      "class": "version-list",
+      "current_paths": [
+        "evas/capabilities/data/method-index-01.json"
+      ],
+      "id": "asset:4f6b24cc111ec5ea1a659156",
+      "kind": "asset",
+      "reason": "该资产 id 只对应目录数据文件，版本列表可以随这些文件的登记变化。"
+    },
+    {
+      "after": [
+        "2b9ffcc91ad6222988d5b7b3018a641b29214bba36b6f64148dfb3721eaf5f8f"
+      ],
+      "before": null,
+      "class": "version-list",
+      "current_paths": [
+        "evas/capabilities/data/historical-index-05.json"
+      ],
+      "id": "asset:5892cab30cd6dcef3c5181fc",
+      "kind": "asset",
+      "reason": "该资产 id 只对应目录数据文件，版本列表可以随这些文件的登记变化。"
+    },
+    {
+      "after": [
+        "f67ab3de29aaeef025f11136f419a500057901c9e7552421f2d4e7a0b055cca8"
+      ],
+      "before": null,
+      "class": "version-list",
+      "current_paths": [
+        "evas/capabilities/data/historical-index-02.json"
+      ],
+      "id": "asset:5ac17e8abf4bcf7be047cede",
+      "kind": "asset",
+      "reason": "该资产 id 只对应目录数据文件，版本列表可以随这些文件的登记变化。"
+    },
+    {
+      "after": [
+        "7c5ae5975b89b0ec19c6f60bc1ad8d7be29cdf773dba8783aa9e7fc17ae94b4e"
+      ],
+      "before": null,
+      "class": "version-list",
+      "current_paths": [
+        "evas/capabilities/data/method-index-13.json"
+      ],
+      "id": "asset:5ce867b6d889a4ba497da253",
+      "kind": "asset",
+      "reason": "该资产 id 只对应目录数据文件，版本列表可以随这些文件的登记变化。"
+    },
+    {
+      "after": [
+        "df789d73829f2af482b57cd93ab6692073ae4614d6d6ed6ad9510638f2cd9432"
+      ],
+      "before": null,
+      "class": "version-list",
+      "current_paths": [
+        "evas/capabilities/data/historical-index-10.json"
+      ],
+      "id": "asset:624acba1664e88e1edac1ee0",
+      "kind": "asset",
+      "reason": "该资产 id 只对应目录数据文件，版本列表可以随这些文件的登记变化。"
+    },
+    {
+      "after": [
+        "d2fce5a3744e82844db88a35d716beef83c884fb0f4ee57470e4af7285b9a8b4"
+      ],
+      "before": null,
+      "class": "version-list",
+      "current_paths": [
+        "evas/capabilities/data/historical-index-01.json"
+      ],
+      "id": "asset:62cdb39112ab24fb64ebcf91",
+      "kind": "asset",
+      "reason": "该资产 id 只对应目录数据文件，版本列表可以随这些文件的登记变化。"
+    },
+    {
+      "after": [
+        "d07cd21f75e270f1313d409a65630fccfe03794e03fc41888052f93be42c2395"
+      ],
+      "before": null,
+      "class": "version-list",
+      "current_paths": [
+        "evas/capabilities/data/historical-index-00.json"
+      ],
+      "id": "asset:652243fec3c1be1b5fffb296",
+      "kind": "asset",
+      "reason": "该资产 id 只对应目录数据文件，版本列表可以随这些文件的登记变化。"
+    },
+    {
+      "after": [
+        "4e57004dbab4807d21723dbc53eabf232025c7aef1cf0eacdf410ca7cee592ba"
+      ],
+      "before": null,
+      "class": "version-list",
+      "current_paths": [
+        "evas/capabilities/data/method-index-08.json"
+      ],
+      "id": "asset:77a5038cc4e0e569cadefd19",
+      "kind": "asset",
+      "reason": "该资产 id 只对应目录数据文件，版本列表可以随这些文件的登记变化。"
+    },
+    {
+      "after": [
+        "ebc18400921e7e4129d69a491418e0bf461652e3a292e4efbeb1267283d40712"
+      ],
+      "before": null,
+      "class": "version-list",
+      "current_paths": [
+        "evas/capabilities/data/method-index-11.json"
+      ],
+      "id": "asset:7ea6343427f57b47f26073d4",
+      "kind": "asset",
+      "reason": "该资产 id 只对应目录数据文件，版本列表可以随这些文件的登记变化。"
+    },
+    {
+      "after": [
+        "1703bc35e73d957045a1d94738a038576c197b6a39129a806c590ac3af6ad112"
+      ],
+      "before": [
+        "1703bc35e73d957045a1d94738a038576c197b6a39129a806c590ac3af6ad112",
+        "fff3a5dbd63e99a36c355084761287b9a85e1d406c3cd1c113291ddf306e3292"
+      ],
+      "class": "version-list",
+      "current_paths": [
+        "evas/capabilities/data/historical-index.json"
+      ],
+      "id": "asset:7f02fc1335786cc7b100d6cf",
+      "kind": "asset",
+      "reason": "该资产 id 只对应目录数据文件，版本列表可以随这些文件的登记变化。"
+    },
+    {
+      "after": [
+        "1d01bcf5e8fc8780dc18b4ad6f01412d1f0987e49e9f806e5c41fa30f4d1ed17"
+      ],
+      "before": null,
+      "class": "version-list",
+      "current_paths": [
+        "evas/capabilities/data/method-index-04.json"
+      ],
+      "id": "asset:8dbc07e5b18be2cb208301a2",
+      "kind": "asset",
+      "reason": "该资产 id 只对应目录数据文件，版本列表可以随这些文件的登记变化。"
+    },
+    {
+      "after": [
+        "693632eef2ed30cb5b89e68a2c244ff90978454344a981f87a34bd289cd29a08"
+      ],
+      "before": null,
+      "class": "version-list",
+      "current_paths": [
+        "evas/capabilities/data/historical-index-11.json"
+      ],
+      "id": "asset:a2cfd28518ad8d17fd5d530d",
+      "kind": "asset",
+      "reason": "该资产 id 只对应目录数据文件，版本列表可以随这些文件的登记变化。"
+    },
+    {
+      "after": [
+        "ac8a73dcce3084f14682fdd6d60a4eaa02dc6a7426604354cd7ab7b91b6a1c49"
+      ],
+      "before": null,
+      "class": "version-list",
+      "current_paths": [
+        "evas/capabilities/data/historical-index-12.json"
+      ],
+      "id": "asset:a6d6465939a0c68b167217df",
+      "kind": "asset",
+      "reason": "该资产 id 只对应目录数据文件，版本列表可以随这些文件的登记变化。"
+    },
+    {
+      "after": [
+        "d901b48444b5b7cf3dfb5e9b8846c8615c584fa9fb330b13e63d0cd02be91a5e"
+      ],
+      "before": null,
+      "class": "version-list",
+      "current_paths": [
+        "evas/capabilities/data/historical-index-07.json"
+      ],
+      "id": "asset:a86f88c182393445e2866682",
+      "kind": "asset",
+      "reason": "该资产 id 只对应目录数据文件，版本列表可以随这些文件的登记变化。"
+    },
+    {
+      "after": [
+        "046a9bbf3dfa821b2fe8058cab9bb66608760de48e9ed0fc06073742848e53a1"
+      ],
+      "before": null,
+      "class": "version-list",
+      "current_paths": [
+        "evas/capabilities/data/historical-index-06.json"
+      ],
+      "id": "asset:b01fbba8a3b2746ffff65840",
+      "kind": "asset",
+      "reason": "该资产 id 只对应目录数据文件，版本列表可以随这些文件的登记变化。"
+    },
+    {
+      "after": [
+        "2b62b5d6757fb34bebadfd897f8367d9bb804016088b5892f7c1de8357f7b33e"
+      ],
+      "before": null,
+      "class": "version-list",
+      "current_paths": [
+        "evas/capabilities/data/method-index-10.json"
+      ],
+      "id": "asset:bc853b5ea45d98165dae0bd7",
+      "kind": "asset",
+      "reason": "该资产 id 只对应目录数据文件，版本列表可以随这些文件的登记变化。"
+    },
+    {
+      "after": [
+        "7e4d24c62fff613e32a0873aa1c02cb291139a8a0d3235e7cdb019805b75c265"
+      ],
+      "before": null,
+      "class": "version-list",
+      "current_paths": [
+        "evas/capabilities/data/method-index-15.json"
+      ],
+      "id": "asset:bf251be2a3ee2054d0a8071b",
+      "kind": "asset",
+      "reason": "该资产 id 只对应目录数据文件，版本列表可以随这些文件的登记变化。"
+    },
+    {
+      "after": [
+        "56d8352cf2b4643a0428bd8024c3cb56421b7a18255d6bec1fcc9d1187a142dc"
+      ],
+      "before": null,
+      "class": "version-list",
+      "current_paths": [
+        "evas/capabilities/data/historical-index-09.json"
+      ],
+      "id": "asset:c4b022ab2a7a22c6573c90fb",
+      "kind": "asset",
+      "reason": "该资产 id 只对应目录数据文件，版本列表可以随这些文件的登记变化。"
+    },
+    {
+      "after": [
+        "63108d1a2b6500a440dd1a9cd0d94c7f031554162ef933234a1f16be3dd8545f"
+      ],
+      "before": null,
+      "class": "version-list",
+      "current_paths": [
+        "evas/capabilities/data/historical-index-14.json"
+      ],
+      "id": "asset:ccfb8fba3e8161dac7264bbe",
+      "kind": "asset",
+      "reason": "该资产 id 只对应目录数据文件，版本列表可以随这些文件的登记变化。"
+    },
+    {
+      "after": [
+        "2f4c46095a9e87522df14639e167fb94269a1ea1824810364a2175faf5bd7da8"
+      ],
+      "before": null,
+      "class": "version-list",
+      "current_paths": [
+        "evas/capabilities/data/historical-index-03.json"
+      ],
+      "id": "asset:cf539eb8fa05199f73979e62",
+      "kind": "asset",
+      "reason": "该资产 id 只对应目录数据文件，版本列表可以随这些文件的登记变化。"
+    },
+    {
+      "after": [
+        "2f5eb84d28f358ba4f8374ac84af4e66354ed0cdd9a35b804f295e37dc185c48"
+      ],
+      "before": [
+        "2f5eb84d28f358ba4f8374ac84af4e66354ed0cdd9a35b804f295e37dc185c48",
+        "f95787691117f36b7b4cc452383d998f1045f9e65788d4c62f3b300fece5fb9a"
+      ],
+      "class": "version-list",
+      "current_paths": [
+        "evas/capabilities/data/method-index.json"
+      ],
+      "id": "asset:d755f9dc2cbf57e6abb09867",
+      "kind": "asset",
+      "reason": "该资产 id 只对应目录数据文件，版本列表可以随这些文件的登记变化。"
+    },
+    {
+      "after": [
+        "58391e0d0a5b358f69da747c09ce2bcb54828a483de3cba966ddf8bd523e123f"
+      ],
+      "before": null,
+      "class": "version-list",
+      "current_paths": [
+        "evas/capabilities/data/method-index-14.json"
+      ],
+      "id": "asset:e1a935f6299a646dd174cfcb",
+      "kind": "asset",
+      "reason": "该资产 id 只对应目录数据文件，版本列表可以随这些文件的登记变化。"
+    },
+    {
+      "after": [
+        "a181ce91889060d92633518b70d9ec3bf7ac42f935be36ecb9e8c63c14b4f446"
+      ],
+      "before": null,
+      "class": "version-list",
+      "current_paths": [
+        "evas/capabilities/data/method-index-09.json"
+      ],
+      "id": "asset:ed006226b037611ddc004316",
+      "kind": "asset",
+      "reason": "该资产 id 只对应目录数据文件，版本列表可以随这些文件的登记变化。"
+    },
+    {
+      "after": [
+        "5b54ac5d8c63ab176927a2806ffe6f7e7709504a671a572190525487687d4b4e"
+      ],
+      "before": null,
+      "class": "version-list",
+      "current_paths": [
+        "evas/capabilities/data/method-index-02.json"
+      ],
+      "id": "asset:f38deabdc4f612ff095f01ab",
+      "kind": "asset",
+      "reason": "该资产 id 只对应目录数据文件，版本列表可以随这些文件的登记变化。"
+    },
+    {
+      "after": "7df53f330ac9cee6f7f0da3937504a15f51becd0c8c564222a7d1ba23b7dc527",
+      "before": null,
+      "class": "current",
+      "current_path": "evas/capabilities/data/method-index-07.json",
+      "id": "asset:03697e1919968aa324fb6bde",
+      "reason": "current 变化只指向目录数据文件资产。该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。"
+    },
+    {
+      "after": "552b16f2592187eeea0d3f34e3e4ba4714ce39ac81311ef08ba92980bdc319ec",
+      "before": null,
+      "class": "current",
+      "current_path": "evas/capabilities/data/method-index-12.json",
+      "id": "asset:08412f01ca4255ac68f95c3f",
+      "reason": "current 变化只指向目录数据文件资产。该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。"
+    },
+    {
+      "after": "aa54112102c74b4f64333d910f3ce8fe95a0b9cc18b1ce881f836cc56f73035b",
+      "before": null,
+      "class": "current",
+      "current_path": "evas/capabilities/data/historical-index-04.json",
+      "id": "asset:08ec81f351247837a74357bf",
+      "reason": "current 变化只指向目录数据文件资产。该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。"
+    },
+    {
+      "after": "4cd0a8a33915df4a5939713a25340ce10c605cab81b248f14f1b3be705ceaeb9",
+      "before": null,
+      "class": "current",
+      "current_path": "evas/capabilities/data/historical-index-15.json",
+      "id": "asset:19d8e739ae1ca49459921977",
+      "reason": "current 变化只指向目录数据文件资产。该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。"
+    },
+    {
+      "after": "a3fc69b651d34dbcf9252ec433f74cbecec0ef66ce59bda25702299a9e325430",
+      "before": null,
+      "class": "current",
+      "current_path": "evas/capabilities/data/method-index-06.json",
+      "id": "asset:23b8c206d05d5b3ebb50f00b",
+      "reason": "current 变化只指向目录数据文件资产。该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。"
+    },
+    {
+      "after": "2f11f61bf14984f3623a6634de1e0702a75d7d58d84efb8d8d40b7e534797554",
+      "before": null,
+      "class": "current",
+      "current_path": "evas/capabilities/data/method-index-00.json",
+      "id": "asset:37dbd88710e39b6e59584ef2",
+      "reason": "current 变化只指向目录数据文件资产。该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。"
+    },
+    {
+      "after": "9973c9e42d093a9f1d55a3250b610f08477440a205b7f7f87c1cf66138b7ab87",
+      "before": null,
+      "class": "current",
+      "current_path": "evas/capabilities/data/method-index-03.json",
+      "id": "asset:406fe9253ab005782fa65353",
+      "reason": "current 变化只指向目录数据文件资产。该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。"
+    },
+    {
+      "after": "2b648ec25a0b9fcb33357b5451a4e57051ab6ddb3394198a3c030d901e737cab",
+      "before": null,
+      "class": "current",
+      "current_path": "evas/capabilities/data/historical-index-13.json",
+      "id": "asset:45335f9dd08385ed20a802f4",
+      "reason": "current 变化只指向目录数据文件资产。该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。"
+    },
+    {
+      "after": "c7587b6e970d2c2767315c870be76784ecf40e78e1f812ba4d7f1dfc1b81eff1",
+      "before": null,
+      "class": "current",
+      "current_path": "evas/capabilities/data/method-index-05.json",
+      "id": "asset:4c5988caf143bd2a142db256",
+      "reason": "current 变化只指向目录数据文件资产。该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。"
+    },
+    {
+      "after": "c0b9890a76b1e331366d2d22331c555d3ba831dedea52401a2ae94674acc7999",
+      "before": null,
+      "class": "current",
+      "current_path": "evas/capabilities/data/historical-index-08.json",
+      "id": "asset:4ec424059b48b3067212bc42",
+      "reason": "current 变化只指向目录数据文件资产。该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。"
+    },
+    {
+      "after": "c7465a7f18476a34fc565ad5b0ba9c77147f9093de5295361bd32395bc582d2e",
+      "before": null,
+      "class": "current",
+      "current_path": "evas/capabilities/data/method-index-01.json",
+      "id": "asset:4f6b24cc111ec5ea1a659156",
+      "reason": "current 变化只指向目录数据文件资产。该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。"
+    },
+    {
+      "after": "2b9ffcc91ad6222988d5b7b3018a641b29214bba36b6f64148dfb3721eaf5f8f",
+      "before": null,
+      "class": "current",
+      "current_path": "evas/capabilities/data/historical-index-05.json",
+      "id": "asset:5892cab30cd6dcef3c5181fc",
+      "reason": "current 变化只指向目录数据文件资产。该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。"
+    },
+    {
+      "after": "f67ab3de29aaeef025f11136f419a500057901c9e7552421f2d4e7a0b055cca8",
+      "before": null,
+      "class": "current",
+      "current_path": "evas/capabilities/data/historical-index-02.json",
+      "id": "asset:5ac17e8abf4bcf7be047cede",
+      "reason": "current 变化只指向目录数据文件资产。该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。"
+    },
+    {
+      "after": "7c5ae5975b89b0ec19c6f60bc1ad8d7be29cdf773dba8783aa9e7fc17ae94b4e",
+      "before": null,
+      "class": "current",
+      "current_path": "evas/capabilities/data/method-index-13.json",
+      "id": "asset:5ce867b6d889a4ba497da253",
+      "reason": "current 变化只指向目录数据文件资产。该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。"
+    },
+    {
+      "after": "df789d73829f2af482b57cd93ab6692073ae4614d6d6ed6ad9510638f2cd9432",
+      "before": null,
+      "class": "current",
+      "current_path": "evas/capabilities/data/historical-index-10.json",
+      "id": "asset:624acba1664e88e1edac1ee0",
+      "reason": "current 变化只指向目录数据文件资产。该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。"
+    },
+    {
+      "after": "d2fce5a3744e82844db88a35d716beef83c884fb0f4ee57470e4af7285b9a8b4",
+      "before": null,
+      "class": "current",
+      "current_path": "evas/capabilities/data/historical-index-01.json",
+      "id": "asset:62cdb39112ab24fb64ebcf91",
+      "reason": "current 变化只指向目录数据文件资产。该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。"
+    },
+    {
+      "after": "d07cd21f75e270f1313d409a65630fccfe03794e03fc41888052f93be42c2395",
+      "before": null,
+      "class": "current",
+      "current_path": "evas/capabilities/data/historical-index-00.json",
+      "id": "asset:652243fec3c1be1b5fffb296",
+      "reason": "current 变化只指向目录数据文件资产。该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。"
+    },
+    {
+      "after": "4e57004dbab4807d21723dbc53eabf232025c7aef1cf0eacdf410ca7cee592ba",
+      "before": null,
+      "class": "current",
+      "current_path": "evas/capabilities/data/method-index-08.json",
+      "id": "asset:77a5038cc4e0e569cadefd19",
+      "reason": "current 变化只指向目录数据文件资产。该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。"
+    },
+    {
+      "after": "ebc18400921e7e4129d69a491418e0bf461652e3a292e4efbeb1267283d40712",
+      "before": null,
+      "class": "current",
+      "current_path": "evas/capabilities/data/method-index-11.json",
+      "id": "asset:7ea6343427f57b47f26073d4",
+      "reason": "current 变化只指向目录数据文件资产。该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。"
+    },
+    {
+      "after": null,
+      "before": "fff3a5dbd63e99a36c355084761287b9a85e1d406c3cd1c113291ddf306e3292",
+      "class": "current",
+      "current_path": "evas/capabilities/data/historical-index.json",
+      "id": "asset:7f02fc1335786cc7b100d6cf",
+      "reason": "current 变化只指向目录数据文件资产。该文件是拆分前的 methods 或 history 单体 part。拆分后 object_parts 不再列出它；同一输入收据仍观察得到这个路径，所以写入端按普通源码文件保留其资产身份。"
+    },
+    {
+      "after": "1d01bcf5e8fc8780dc18b4ad6f01412d1f0987e49e9f806e5c41fa30f4d1ed17",
+      "before": null,
+      "class": "current",
+      "current_path": "evas/capabilities/data/method-index-04.json",
+      "id": "asset:8dbc07e5b18be2cb208301a2",
+      "reason": "current 变化只指向目录数据文件资产。该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。"
+    },
+    {
+      "after": "693632eef2ed30cb5b89e68a2c244ff90978454344a981f87a34bd289cd29a08",
+      "before": null,
+      "class": "current",
+      "current_path": "evas/capabilities/data/historical-index-11.json",
+      "id": "asset:a2cfd28518ad8d17fd5d530d",
+      "reason": "current 变化只指向目录数据文件资产。该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。"
+    },
+    {
+      "after": "ac8a73dcce3084f14682fdd6d60a4eaa02dc6a7426604354cd7ab7b91b6a1c49",
+      "before": null,
+      "class": "current",
+      "current_path": "evas/capabilities/data/historical-index-12.json",
+      "id": "asset:a6d6465939a0c68b167217df",
+      "reason": "current 变化只指向目录数据文件资产。该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。"
+    },
+    {
+      "after": "d901b48444b5b7cf3dfb5e9b8846c8615c584fa9fb330b13e63d0cd02be91a5e",
+      "before": null,
+      "class": "current",
+      "current_path": "evas/capabilities/data/historical-index-07.json",
+      "id": "asset:a86f88c182393445e2866682",
+      "reason": "current 变化只指向目录数据文件资产。该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。"
+    },
+    {
+      "after": "046a9bbf3dfa821b2fe8058cab9bb66608760de48e9ed0fc06073742848e53a1",
+      "before": null,
+      "class": "current",
+      "current_path": "evas/capabilities/data/historical-index-06.json",
+      "id": "asset:b01fbba8a3b2746ffff65840",
+      "reason": "current 变化只指向目录数据文件资产。该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。"
+    },
+    {
+      "after": "2b62b5d6757fb34bebadfd897f8367d9bb804016088b5892f7c1de8357f7b33e",
+      "before": null,
+      "class": "current",
+      "current_path": "evas/capabilities/data/method-index-10.json",
+      "id": "asset:bc853b5ea45d98165dae0bd7",
+      "reason": "current 变化只指向目录数据文件资产。该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。"
+    },
+    {
+      "after": "7e4d24c62fff613e32a0873aa1c02cb291139a8a0d3235e7cdb019805b75c265",
+      "before": null,
+      "class": "current",
+      "current_path": "evas/capabilities/data/method-index-15.json",
+      "id": "asset:bf251be2a3ee2054d0a8071b",
+      "reason": "current 变化只指向目录数据文件资产。该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。"
+    },
+    {
+      "after": "56d8352cf2b4643a0428bd8024c3cb56421b7a18255d6bec1fcc9d1187a142dc",
+      "before": null,
+      "class": "current",
+      "current_path": "evas/capabilities/data/historical-index-09.json",
+      "id": "asset:c4b022ab2a7a22c6573c90fb",
+      "reason": "current 变化只指向目录数据文件资产。该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。"
+    },
+    {
+      "after": "63108d1a2b6500a440dd1a9cd0d94c7f031554162ef933234a1f16be3dd8545f",
+      "before": null,
+      "class": "current",
+      "current_path": "evas/capabilities/data/historical-index-14.json",
+      "id": "asset:ccfb8fba3e8161dac7264bbe",
+      "reason": "current 变化只指向目录数据文件资产。该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。"
+    },
+    {
+      "after": "2f4c46095a9e87522df14639e167fb94269a1ea1824810364a2175faf5bd7da8",
+      "before": null,
+      "class": "current",
+      "current_path": "evas/capabilities/data/historical-index-03.json",
+      "id": "asset:cf539eb8fa05199f73979e62",
+      "reason": "current 变化只指向目录数据文件资产。该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。"
+    },
+    {
+      "after": null,
+      "before": "f95787691117f36b7b4cc452383d998f1045f9e65788d4c62f3b300fece5fb9a",
+      "class": "current",
+      "current_path": "evas/capabilities/data/method-index.json",
+      "id": "asset:d755f9dc2cbf57e6abb09867",
+      "reason": "current 变化只指向目录数据文件资产。该文件是拆分前的 methods 或 history 单体 part。拆分后 object_parts 不再列出它；同一输入收据仍观察得到这个路径，所以写入端按普通源码文件保留其资产身份。"
+    },
+    {
+      "after": "58391e0d0a5b358f69da747c09ce2bcb54828a483de3cba966ddf8bd523e123f",
+      "before": null,
+      "class": "current",
+      "current_path": "evas/capabilities/data/method-index-14.json",
+      "id": "asset:e1a935f6299a646dd174cfcb",
+      "reason": "current 变化只指向目录数据文件资产。该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。"
+    },
+    {
+      "after": "a181ce91889060d92633518b70d9ec3bf7ac42f935be36ecb9e8c63c14b4f446",
+      "before": null,
+      "class": "current",
+      "current_path": "evas/capabilities/data/method-index-09.json",
+      "id": "asset:ed006226b037611ddc004316",
+      "reason": "current 变化只指向目录数据文件资产。该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。"
+    },
+    {
+      "after": "5b54ac5d8c63ab176927a2806ffe6f7e7709504a671a572190525487687d4b4e",
+      "before": null,
+      "class": "current",
+      "current_path": "evas/capabilities/data/method-index-02.json",
+      "id": "asset:f38deabdc4f612ff095f01ab",
+      "reason": "current 变化只指向目录数据文件资产。该文件是 methods 或 history 的固定 part。写入端把它登记为目录元数据资产；同一次输入收据还没有这个新文件。"
+    }
+  ],
+  "before": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/catalog-split-build-r3-20261027/control/tree/evas/capabilities/data",
+  "committed_retention": {
+    "committed": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/catalog-split-build-r3-20261027/base-data",
+    "committed_objects": 57416,
+    "missing": [],
+    "missing_count": 0,
+    "ok": true,
+    "rewritten": [],
+    "rewritten_count": 0
+  },
+  "max_part": {
+    "below_warning_line": true,
+    "bytes": 13849595,
+    "kind": "assets",
+    "name": "asset-index.json",
+    "ratio_to_50_000_000": 0.2769919,
+    "ratio_to_50_mib": 0.2641600608825684,
+    "warning_line_bytes": 52428800
+  },
+  "object_counts": {
+    "after": 58063,
+    "before": 58033
+  },
+  "ok": true,
+  "parts": {
+    "after": [
+      {
+        "bytes": 13849595,
+        "kind": "assets",
+        "name": "asset-index.json",
+        "objects": 6761
+      },
+      {
+        "bytes": 1156798,
+        "kind": "sources",
+        "name": "catalog-sources.json",
+        "objects": 87
+      },
+      {
+        "bytes": 385281,
+        "kind": "entrypoints",
+        "name": "entrypoint-index.json",
+        "objects": 170
+      },
+      {
+        "bytes": 1896693,
+        "kind": "history",
+        "name": "historical-index-00.json",
+        "objects": 995
+      },
+      {
+        "bytes": 2354853,
+        "kind": "history",
+        "name": "historical-index-01.json",
+        "objects": 1235
+      },
+      {
+        "bytes": 2488140,
+        "kind": "history",
+        "name": "historical-index-02.json",
+        "objects": 1305
+      },
+      {
+        "bytes": 2396279,
+        "kind": "history",
+        "name": "historical-index-03.json",
+        "objects": 1257
+      },
+      {
+        "bytes": 2331358,
+        "kind": "history",
+        "name": "historical-index-04.json",
+        "objects": 1223
+      },
+      {
+        "bytes": 2569982,
+        "kind": "history",
+        "name": "historical-index-05.json",
+        "objects": 1348
+      },
+      {
+        "bytes": 2284034,
+        "kind": "history",
+        "name": "historical-index-06.json",
+        "objects": 1198
+      },
+      {
+        "bytes": 2139156,
+        "kind": "history",
+        "name": "historical-index-07.json",
+        "objects": 1122
+      },
+      {
+        "bytes": 2524382,
+        "kind": "history",
+        "name": "historical-index-08.json",
+        "objects": 1324
+      },
+      {
+        "bytes": 2245580,
+        "kind": "history",
+        "name": "historical-index-09.json",
+        "objects": 1178
+      },
+      {
+        "bytes": 2226974,
+        "kind": "history",
+        "name": "historical-index-10.json",
+        "objects": 1168
+      },
+      {
+        "bytes": 2259162,
+        "kind": "history",
+        "name": "historical-index-11.json",
+        "objects": 1185
+      },
+      {
+        "bytes": 2267643,
+        "kind": "history",
+        "name": "historical-index-12.json",
+        "objects": 1190
+      },
+      {
+        "bytes": 2342905,
+        "kind": "history",
+        "name": "historical-index-13.json",
+        "objects": 1229
+      },
+      {
+        "bytes": 2676556,
+        "kind": "history",
+        "name": "historical-index-14.json",
+        "objects": 1404
+      },
+      {
+        "bytes": 2201844,
+        "kind": "history",
+        "name": "historical-index-15.json",
+        "objects": 1155
+      },
+      {
+        "bytes": 5101791,
+        "kind": "methods",
+        "name": "method-index-00.json",
+        "objects": 2033
+      },
+      {
+        "bytes": 4815804,
+        "kind": "methods",
+        "name": "method-index-01.json",
+        "objects": 1921
+      },
+      {
+        "bytes": 5597945,
+        "kind": "methods",
+        "name": "method-index-02.json",
+        "objects": 2212
+      },
+      {
+        "bytes": 5263669,
+        "kind": "methods",
+        "name": "method-index-03.json",
+        "objects": 2067
+      },
+      {
+        "bytes": 4858922,
+        "kind": "methods",
+        "name": "method-index-04.json",
+        "objects": 1933
+      },
+      {
+        "bytes": 5381415,
+        "kind": "methods",
+        "name": "method-index-05.json",
+        "objects": 2126
+      },
+      {
+        "bytes": 4815966,
+        "kind": "methods",
+        "name": "method-index-06.json",
+        "objects": 1919
+      },
+      {
+        "bytes": 4686881,
+        "kind": "methods",
+        "name": "method-index-07.json",
+        "objects": 1868
+      },
+      {
+        "bytes": 4408124,
+        "kind": "methods",
+        "name": "method-index-08.json",
+        "objects": 1757
+      },
+      {
+        "bytes": 4946487,
+        "kind": "methods",
+        "name": "method-index-09.json",
+        "objects": 1951
+      },
+      {
+        "bytes": 4880528,
+        "kind": "methods",
+        "name": "method-index-10.json",
+        "objects": 1913
+      },
+      {
+        "bytes": 4877065,
+        "kind": "methods",
+        "name": "method-index-11.json",
+        "objects": 1924
+      },
+      {
+        "bytes": 4557516,
+        "kind": "methods",
+        "name": "method-index-12.json",
+        "objects": 1794
+      },
+      {
+        "bytes": 5403746,
+        "kind": "methods",
+        "name": "method-index-13.json",
+        "objects": 2129
+      },
+      {
+        "bytes": 4834744,
+        "kind": "methods",
+        "name": "method-index-14.json",
+        "objects": 1907
+      },
+      {
+        "bytes": 5190160,
+        "kind": "methods",
+        "name": "method-index-15.json",
+        "objects": 2050
+      }
+    ],
+    "before": [
+      {
+        "bytes": 1156798,
+        "kind": "sources",
+        "name": "catalog-sources.json",
+        "objects": 87
+      },
+      {
+        "bytes": 13820429,
+        "kind": "assets",
+        "name": "asset-index.json",
+        "objects": 6731
+      },
+      {
+        "bytes": 79619773,
+        "kind": "methods",
+        "name": "method-index.json",
+        "objects": 31504
+      },
+      {
+        "bytes": 385281,
+        "kind": "entrypoints",
+        "name": "entrypoint-index.json",
+        "objects": 170
+      },
+      {
+        "bytes": 37204551,
+        "kind": "history",
+        "name": "historical-index.json",
+        "objects": 19516
+      }
+    ]
+  },
+  "placement": {
+    "after": {
+      "empty_parts": [],
+      "files_by_kind": {
+        "assets": [
+          "asset-index.json"
+        ],
+        "entrypoints": [
+          "entrypoint-index.json"
+        ],
+        "history": [
+          "historical-index-00.json",
+          "historical-index-01.json",
+          "historical-index-02.json",
+          "historical-index-03.json",
+          "historical-index-04.json",
+          "historical-index-05.json",
+          "historical-index-06.json",
+          "historical-index-07.json",
+          "historical-index-08.json",
+          "historical-index-09.json",
+          "historical-index-10.json",
+          "historical-index-11.json",
+          "historical-index-12.json",
+          "historical-index-13.json",
+          "historical-index-14.json",
+          "historical-index-15.json"
+        ],
+        "methods": [
+          "method-index-00.json",
+          "method-index-01.json",
+          "method-index-02.json",
+          "method-index-03.json",
+          "method-index-04.json",
+          "method-index-05.json",
+          "method-index-06.json",
+          "method-index-07.json",
+          "method-index-08.json",
+          "method-index-09.json",
+          "method-index-10.json",
+          "method-index-11.json",
+          "method-index-12.json",
+          "method-index-13.json",
+          "method-index-14.json",
+          "method-index-15.json"
+        ],
+        "sources": [
+          "catalog-sources.json"
+        ]
+      },
+      "same_id_single_file": true,
+      "tracked_ids": 8019,
+      "violations": []
+    },
+    "before": {
+      "empty_parts": [],
+      "files_by_kind": {
+        "assets": [
+          "asset-index.json"
+        ],
+        "entrypoints": [
+          "entrypoint-index.json"
+        ],
+        "history": [
+          "historical-index.json"
+        ],
+        "methods": [
+          "method-index.json"
+        ],
+        "sources": [
+          "catalog-sources.json"
+        ]
+      },
+      "same_id_single_file": true,
+      "tracked_ids": 8019,
+      "violations": []
+    }
+  },
+  "unexpected_difference_count": 0,
+  "unexpected_differences": []
+}

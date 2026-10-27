@@ -1,0 +1,134 @@
+{
+  "paths": [
+    "evas/capabilities/data/asset-index.json",
+    "evas/capabilities/data/catalog-sources.json",
+    "evas/capabilities/data/entrypoint-index.json",
+    "evas/capabilities/data/historical-index-00.json",
+    "evas/capabilities/data/historical-index-01.json",
+    "evas/capabilities/data/historical-index-02.json",
+    "evas/capabilities/data/historical-index-03.json",
+    "evas/capabilities/data/historical-index-04.json",
+    "evas/capabilities/data/historical-index-05.json",
+    "evas/capabilities/data/historical-index-06.json",
+    "evas/capabilities/data/historical-index-07.json",
+    "evas/capabilities/data/historical-index-08.json",
+    "evas/capabilities/data/historical-index-09.json",
+    "evas/capabilities/data/historical-index-10.json",
+    "evas/capabilities/data/historical-index-11.json",
+    "evas/capabilities/data/historical-index-12.json",
+    "evas/capabilities/data/historical-index-13.json",
+    "evas/capabilities/data/historical-index-14.json",
+    "evas/capabilities/data/historical-index-15.json",
+    "evas/capabilities/data/method-index-00.json",
+    "evas/capabilities/data/method-index-01.json",
+    "evas/capabilities/data/method-index-02.json",
+    "evas/capabilities/data/method-index-03.json",
+    "evas/capabilities/data/method-index-04.json",
+    "evas/capabilities/data/method-index-05.json",
+    "evas/capabilities/data/method-index-06.json",
+    "evas/capabilities/data/method-index-07.json",
+    "evas/capabilities/data/method-index-08.json",
+    "evas/capabilities/data/method-index-09.json",
+    "evas/capabilities/data/method-index-10.json",
+    "evas/capabilities/data/method-index-11.json",
+    "evas/capabilities/data/method-index-12.json",
+    "evas/capabilities/data/method-index-13.json",
+    "evas/capabilities/data/method-index-14.json",
+    "evas/capabilities/data/method-index-15.json",
+    "evas/capabilities/data/registry.json"
+  ],
+  "retired_removed_from_disk": [
+    "evas/capabilities/data/historical-index.json",
+    "evas/capabilities/data/method-index.json"
+  ],
+  "old_versions_retained": 57416,
+  "main_retention": {
+    "objects": 57416,
+    "missing": 0,
+    "rewritten": 0
+  },
+  "objects": {
+    "assets": 4253,
+    "entrypoints": 36,
+    "history": 3260,
+    "methods": 4758,
+    "sources": 39
+  },
+  "namespace_counts": {
+    "calibration": {
+      "entrypoints": 0,
+      "generated": 0,
+      "methods": 0
+    },
+    "maintenance": {
+      "entrypoints": 7,
+      "generated": 0,
+      "methods": 652
+    },
+    "python-regression": {
+      "entrypoints": 1,
+      "generated": 12,
+      "methods": 3257
+    },
+    "rust-tests": {
+      "entrypoints": 5,
+      "generated": 0,
+      "methods": 0
+    },
+    "validation": {
+      "entrypoints": 23,
+      "generated": 22,
+      "methods": 849
+    }
+  },
+  "data_file_sizes": {
+    "annex-c-policy.json": 10304,
+    "asset-index.json": 13849595,
+    "boundary-audit.json": 256727,
+    "catalog-sources.json": 1156798,
+    "dispositions.json": 3119826,
+    "entrypoint-index.json": 385281,
+    "historical-comparison.json": 37425,
+    "historical-index-00.json": 1896693,
+    "historical-index-01.json": 2354853,
+    "historical-index-02.json": 2488140,
+    "historical-index-03.json": 2396279,
+    "historical-index-04.json": 2331358,
+    "historical-index-05.json": 2569982,
+    "historical-index-06.json": 2284034,
+    "historical-index-07.json": 2139156,
+    "historical-index-08.json": 2524382,
+    "historical-index-09.json": 2245580,
+    "historical-index-10.json": 2226974,
+    "historical-index-11.json": 2259162,
+    "historical-index-12.json": 2267643,
+    "historical-index-13.json": 2342905,
+    "historical-index-14.json": 2676556,
+    "historical-index-15.json": 2201844,
+    "language-profile.json": 1959,
+    "method-index-00.json": 5101791,
+    "method-index-01.json": 4815804,
+    "method-index-02.json": 5597945,
+    "method-index-03.json": 5263669,
+    "method-index-04.json": 4858922,
+    "method-index-05.json": 5381415,
+    "method-index-06.json": 4815966,
+    "method-index-07.json": 4686881,
+    "method-index-08.json": 4408124,
+    "method-index-09.json": 4946487,
+    "method-index-10.json": 4880528,
+    "method-index-11.json": 4877065,
+    "method-index-12.json": 4557516,
+    "method-index-13.json": 5403746,
+    "method-index-14.json": 4834744,
+    "method-index-15.json": 5190160,
+    "registry.json": 1361530,
+    "source-inventory.json": 5879814,
+    "target-scope.json": 1806
+  },
+  "largest_data_file": [
+    "asset-index.json",
+    13849595
+  ],
+  "scientific_qualification": false
+}
