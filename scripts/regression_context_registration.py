@@ -389,7 +389,11 @@ def validate_context_registration(gate, report, trusted_baseline, head_proposal,
             equal(entry['context'][key], before_context[key], 'fixed ' + key)
         if all(entry['context'][key] == before_context[key] for key in ('criteria_id', 'collector_sha256')):
             raise ValueError('registration requires criteria/collector change')
-        old = gate._expand_baseline_observations(next(e for e in old_entries if encoded(e['context']) == encoded(before_context)))
+        # The current run matched one trusted context, possibly across a runner-host change.
+        matched, _ = gate._matching_contexts(old_entries, before_context)
+        if len(matched) != 1:
+            raise ValueError('current context lacks one matching trusted entry')
+        old = gate._expand_baseline_observations(matched[0])
         if not set(old['discovered_test_ids']).issubset(e1['discovered_test_ids']):
             raise ValueError('old method ID obligation lost; registration does not support renames')
         if e1['setup_skipped_test_ids'] or any(f['outcome'] != 'passed' for f in e1['fixtures']):

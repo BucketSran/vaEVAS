@@ -41,7 +41,7 @@ def condition(identity, outcome, opaque=False, criteria='C0'):
     return value
 
 
-def report(criteria='C0', collector='I0', correction=False, opaque_count=58):
+def report(criteria='C0', collector='I0', correction=False, opaque_count=58, runtime=None):
     criteria_files = [['evas/tests/test_demo.py', h(criteria)]]
     dut_files = [['evas/src/evas/core.py', h('D0 implementation fixture')]]
     collector_manifest = {role: h(collector + ':' + role) for role in api.COLLECTOR_PATHS}
@@ -77,7 +77,7 @@ def report(criteria='C0', collector='I0', correction=False, opaque_count=58):
                  tests=[dict(id=name, outcome='failed', seconds=0.1, conditions=conditions)],
                  metadata=dict(criteria_id=api.digest(criteria_files), language_profile=h('fixed-language'),
                                collector_sha256=api.digest(collector_manifest),
-                               runtime_profile={'profile': 'synthetic-fixed-runtime'},
+                               runtime_profile=copy.deepcopy(runtime) if runtime else {'profile': 'synthetic-fixed-runtime'},
                                invocation={'pattern': 'test_*.py', 'modules': []}),
                  source_identity=dict(criteria_files=criteria_files, dut_files=dut_files,
                                       kernel_sha256=api.raw_digest(kernel), execution_identity=identity))
@@ -116,9 +116,10 @@ class Store:
 
 def make_fixture(correction=False, opaque_count=58, alter_e1=None, alter_entry=None,
                  alter_auth=None, alter_baseline=None, new_criteria='C1', new_collector='I1',
-                 merged=False, alter_blobs=None, alter_shard=None):
-    current, _, _, _ = report(opaque_count=opaque_count)
-    e1, entries, collector, kernel = report(new_criteria, new_collector, correction, opaque_count)
+                 merged=False, alter_blobs=None, alter_shard=None, runtime=None, e1_runtime=None):
+    current, _, _, _ = report(opaque_count=opaque_count, runtime=runtime)
+    e1, entries, collector, kernel = report(new_criteria, new_collector, correction, opaque_count,
+                                            e1_runtime or runtime)
     shards = [e1]
     if merged:
         names = e1['discovered_test_ids'] + ['synthetic.Case.test_added']

@@ -201,4 +201,38 @@ class MissingHeadDataBehavior(unittest.TestCase):
         old=report();trusted=propose(old)
         self.assertFalse(gate.validate_baseline_transition(old,trusted,None)['merge_allowed'])
 
+
+OLD_PLATFORM='Linux-6.17.0-1022-azure-x86_64-with-glibc2.39';NEW_PLATFORM='Linux-7.0.0-1017-azure-x86_64-with-glibc2.39'
+def on_host(r,platform,image):
+    r=copy.deepcopy(r);variables={'PATH':'/usr/bin','ImageVersion':image}
+    r['metadata']['runtime_profile']=dict(platform=platform,machine='x86_64',variables=variables,
+        execution_toolchain=dict(platform=platform,machine='x86_64',variables={'ImageVersion':image}))
+    return r
+NEW_HOST={'runtime_profile':{'platform':NEW_PLATFORM,'ImageVersion':'20261026.354.1'},
+          'execution_toolchain':{'platform':NEW_PLATFORM,'ImageVersion':'20261026.354.1'}}
+
+
+class RunnerHostRefresh(unittest.TestCase):
+    """A new pass seen on another runner host refreshes the registered context."""
+    def setUp(self):
+        self.trusted=propose(on_host(report(),OLD_PLATFORM,'20261023.334.3'))
+        self.fixed=on_host(report('passed'),NEW_PLATFORM,'20261026.354.1')
+    def refresh(self,observed_host=NEW_HOST,run='fixture-run:40000000001'):
+        head=propose(self.fixed);entry=head['contexts'][0];registered=self.trusted['contexts'][0]['context']
+        entry['context']=copy.deepcopy(registered);entry['observations']['metadata']=copy.deepcopy(registered)
+        entry['source_identity']=dict(entry['source_identity'],observed_run=run,observed_host=copy.deepcopy(observed_host))
+        return head
+    def test_refresh_keeps_registered_context_and_records_actual_host(self):
+        r=gate.validate_baseline_transition(self.fixed,self.trusted,self.refresh())
+        self.assertTrue(r['merge_allowed'],r);self.assertTrue(r['transition']['refresh_required'])
+        self.assertEqual(r['host_runtime_difference']['actual'],NEW_HOST)
+    def test_refresh_without_actual_host_or_run_is_refused(self):
+        wrong=copy.deepcopy(NEW_HOST);wrong['runtime_profile']['ImageVersion']='20261023.334.3'
+        for head in [self.refresh(observed_host=None),self.refresh(observed_host=wrong),self.refresh(run=' ')]:
+            r=gate.validate_baseline_transition(self.fixed,self.trusted,head)
+            self.assertFalse(r['merge_allowed']);self.assertIn('actual runner host and run',' '.join(r['differences']))
+    def test_refresh_cannot_move_the_registered_context_to_the_new_host(self):
+        r=gate.validate_baseline_transition(self.fixed,self.trusted,propose(self.fixed))
+        self.assertFalse(r['merge_allowed']);self.assertIn('exactly one current context',' '.join(r['differences']))
+
 if __name__=='__main__':unittest.main()

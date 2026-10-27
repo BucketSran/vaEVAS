@@ -108,6 +108,8 @@ Rust 方法使用实际 Cargo 测试二进制的原生 listing，与 Python 方�
 listing 不表示测试体执行或逐函数源码归属。Rust job 原有完整测试仍独立执行。
 `--require-catalog` 按 workflow 固定的 `--listing-profile` 核对完整 target 集合、
 Rust 输入、工具链、构建配置、测试 ID 及 ignored 状态；未知 profile 和缺少来源均失败。
+runner 换镜像时只允许 platform 中的内核版本段不同，结果的 `host_platform_difference` 列出两边的值；
+glibc、架构和 listing 内容仍逐项相等。
 原 listing 通过同一 Registry 的固定 Git 来源读取。本次与原观察的 binary SHA 分别保留，
 不因源码和工具链相同就假设跨次构建字节必然相同。
 

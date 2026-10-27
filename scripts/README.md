@@ -261,6 +261,12 @@ python3 -B scripts/run_regression.py --merge runs/<task>/shard0.json runs/<task>
 CI 的运行配置同时绑定完整执行身份中的实际编译器、Cargo 及构建配置，内核内容归 DUT 身份。
 无法确定状态的 `while` 调用和属性条件不授予稳定身份，子测试沿用这个限制。
 这是保守的输入边界，身份变化需要独立审核相应基线配置。
+GitHub 托管 runner 换镜像时，只有 `platform` 中的内核版本段和 `ImageVersion` 改变。
+可信比较先找完全相同的 context；找不到时，忽略这两项后恰好对应一个已登记 context，才逐条比较全部观察，
+并在结果的 `host_runtime_difference` 列出两边的值。`platform` 按固定格式解析，glibc 与架构须相同；
+Python、PATH、Rust 工具链和其余变量仍精确匹配，对应多个 context 时按歧义拒绝。
+新镜像上出现新通过时，刷新条目保留原登记 context，并在 `source_identity` 的 `observed_host`、
+`observed_run` 写明实际取得观察的环境。
 
 CI 先生成完整输入身份，再用 `--input-identity` 绑定采集报告。
 `ci_evidence.py collect --raw-exit` 检查输入未漂移、报告完整以及原始退出码一致。

@@ -361,5 +361,95 @@ class GateTests(unittest.TestCase):
                 self.assertNotEqual(denied.returncode, 0)
 
 
+OLD_PLATFORM = 'Linux-6.17.0-1022-azure-x86_64-with-glibc2.39'
+NEW_PLATFORM = 'Linux-7.0.0-1017-azure-x86_64-with-glibc2.39'
+
+
+def on_host(value, host_platform, image, **changes):
+    """Give a fixture the runtime-profile shape that CI records, on one runner host."""
+    value = copy.deepcopy(value)
+    profile = dict(python='3.12.15', platform=host_platform, machine='x86_64',
+                   variables={'PATH': '/usr/bin', 'ImageOS': 'ubuntu24', 'ImageVersion': image})
+    profile['execution_toolchain'] = dict(python='3.12.15', platform=host_platform, machine='x86_64',
+                                          rustc='rustc 1.99.1', variables={'ImageVersion': image})
+    for path, item in changes.items():
+        target = profile
+        *parents, key = path.split('.')
+        for parent in parents:
+            target = target[parent]
+        if item is None:
+            del target[key]
+        else:
+            target[key] = item
+    value['metadata']['runtime_profile'] = profile
+    return value
+
+
+class RunnerHostTests(unittest.TestCase):
+    def setUp(self):
+        self.gate = load_gate()
+        self.old = on_host(report(), OLD_PLATFORM, '20261023.334.3')
+        self.baseline = self.gate.propose_baseline(self.old, {'commit': 'a' * 40}, REVIEW)
+        self.new = on_host(report(), NEW_PLATFORM, '20261026.354.1')
+
+    def test_runner_image_update_still_compares_every_observation(self):
+        result = self.gate.compare_report(self.new, self.baseline)
+        self.assertTrue(result['merge_allowed'], result)
+        host = lambda platform, image: dict(platform=platform, ImageVersion=image)
+        self.assertEqual(result['host_runtime_difference'], dict(
+            trusted=dict(runtime_profile=host(OLD_PLATFORM, '20261023.334.3'),
+                         execution_toolchain=host(OLD_PLATFORM, '20261023.334.3')),
+            actual=dict(runtime_profile=host(NEW_PLATFORM, '20261026.354.1'),
+                        execution_toolchain=host(NEW_PLATFORM, '20261026.354.1'))))
+        changed = copy.deepcopy(self.new)
+        changed['tests'][0]['conditions'][0]['reason']['message'] = 'B differs'
+        result = self.gate.compare_report(changed, self.baseline)
+        self.assertFalse(result['merge_allowed'])
+        self.assertIn('host_runtime_difference', result)
+        self.assertTrue(any('changed nonpassing condition' in d for d in result['differences']), result)
+
+    def test_exact_context_is_used_before_a_runner_host_match(self):
+        self.baseline['contexts'] += self.gate.propose_baseline(self.new, {'commit': 'b' * 40}, REVIEW)['contexts']
+        result = self.gate.compare_report(self.new, self.baseline)
+        self.assertTrue(result['merge_allowed'], result)
+        self.assertNotIn('host_runtime_difference', result)
+
+    def test_only_kernel_release_and_image_version_may_differ(self):
+        cases = {
+            'glibc': dict(platform='Linux-7.0.0-1017-azure-x86_64-with-glibc2.40'),
+            'architecture text': dict(platform='Linux-7.0.0-1017-azure-aarch64-with-glibc2.39'),
+            'machine': dict(machine='aarch64', platform='Linux-7.0.0-1017-azure-aarch64-with-glibc2.39'),
+            'system': dict(platform='Darwin-25.3.0-x86_64-with-glibc2.39'),
+            'python': dict(python='3.12.16'),
+            'PATH': {'variables.PATH': '/opt/bin'},
+            'ImageOS': {'variables.ImageOS': 'ubuntu26'},
+            'new variable': {'variables.CC': 'clang'},
+            'missing image version': {'variables.ImageVersion': None},
+            'toolchain rustc': {'execution_toolchain.rustc': 'rustc 1.100.0'},
+            'toolchain glibc': {'execution_toolchain.platform': 'Linux-7.0.0-1017-azure-x86_64-with-glibc2.40'},
+        }
+        for name, change in cases.items():
+            with self.subTest(name=name):
+                current = on_host(report(), NEW_PLATFORM, '20261026.354.1', **change)
+                result = self.gate.compare_report(current, self.baseline)
+                self.assertFalse(result['merge_allowed'])
+                self.assertNotIn('host_runtime_difference', result)
+                self.assertIn('expected exactly one matching trusted baseline context', result['differences'])
+
+    def test_two_runner_host_candidates_are_ambiguous(self):
+        other = on_host(report(), OLD_PLATFORM, '20261024.340.1')
+        self.baseline['contexts'] += self.gate.propose_baseline(other, {'commit': 'c' * 40}, REVIEW)['contexts']
+        result = self.gate.compare_report(self.new, self.baseline)
+        self.assertFalse(result['merge_allowed'])
+        self.assertNotIn('host_runtime_difference', result)
+        self.assertIn('runner-host difference matches more than one trusted context', result['differences'])
+
+    def test_unchanged_baseline_transition_reports_the_runner_host(self):
+        result = self.gate.validate_baseline_transition(self.new, self.baseline, self.baseline)
+        self.assertTrue(result['merge_allowed'], result)
+        self.assertTrue(result['transition']['reused_trusted_baseline'])
+        self.assertEqual(result['host_runtime_difference'], result['trusted_comparison']['host_runtime_difference'])
+
+
 if __name__ == '__main__':
     unittest.main()
