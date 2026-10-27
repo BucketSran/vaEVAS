@@ -1,0 +1,155 @@
+{
+  "run": 40520607138,
+  "head": "93ec69a4352710b26209bd18cf4bda7d1ecfc95d",
+  "job": 122248285198,
+  "conclusion": "success",
+  "artifact": {
+    "id": 12742017505,
+    "digest": "sha256:1eee99dfdbcef71f1ef5516a0f7bdac27b7683133e7f8fd03cfcb631d05cf51e"
+  },
+  "complete": true,
+  "errors": [],
+  "argv": {
+    "rustc": [
+      "rustc",
+      "-vV"
+    ],
+    "cargo": [
+      "cargo",
+      "--version"
+    ]
+  },
+  "toolchain": {
+    "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+    "cargo": "cargo 1.99.1 (5f94df478 2026-08-27)"
+  },
+  "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+  "tests_discovered": 904,
+  "reconciliation": {
+    "reconciled": true,
+    "profile": "linux-x86_64-regression-opt1-v1",
+    "listing_only": true,
+    "test_body_execution": "not_observed_by_this_helper",
+    "binary_sha256_policy": "separate-observations-no-cross-run-reproducibility-assumption",
+    "tests_discovered": 904,
+    "ignored_tests_discovered": 1,
+    "benchmarks_discovered": 0,
+    "binaries": [
+      {
+        "entrypoint_id": "entry:31be033026c87fb6c21b9022",
+        "rust_target": {
+          "name": "evas_kernel",
+          "package": "evas-kernel",
+          "target_kind": [
+            "lib"
+          ],
+          "version": "0.25.0"
+        },
+        "listing_source": {
+          "id": "source:dd8b4eb4612b272f0eb05592",
+          "sha256": "87ba2d3e6f130f00a1c3554eb7a617fdba6e3131ae20f8810ac29a08598b37b7",
+          "version": "2aa395b1df7c684a4a24a92a024540ce85174d8defc93d7f9a3b46620ebae2a1"
+        },
+        "expected_binary_sha256": "0066801db3cfdc7c760a8b0a51ba510d6967677afdc1b7c92959735bfda2eb6a",
+        "actual_binary_sha256": "0066801db3cfdc7c760a8b0a51ba510d6967677afdc1b7c92959735bfda2eb6a",
+        "binary_sha256_equal": true,
+        "expected_source_commit": "00736351cdd7baf691e2e79cc49c8be1efdb9ebd",
+        "actual_source_commit": "84b1410937d5322f18a100f9788518b5d7d442a4",
+        "expected_observer_sha256": "cca906e775b5b83920d2250ec553ca297b72c68a8d034be345b0fe43582be9d1",
+        "actual_observer_sha256": "f1ade74617fa171c5048246986d52e772b0913ffce28713af6e2fa4af5904892"
+      },
+      {
+        "entrypoint_id": "entry:875c284ae4c832b541413dbb",
+        "rust_target": {
+          "name": "history_consumer",
+          "package": "evas-kernel",
+          "target_kind": [
+            "test"
+          ],
+          "version": "0.25.0"
+        },
+        "listing_source": {
+          "id": "source:dd8b4eb4612b272f0eb05592",
+          "sha256": "87ba2d3e6f130f00a1c3554eb7a617fdba6e3131ae20f8810ac29a08598b37b7",
+          "version": "2aa395b1df7c684a4a24a92a024540ce85174d8defc93d7f9a3b46620ebae2a1"
+        },
+        "expected_binary_sha256": "cdabcb10e0232bf785ae2a4043888739726f3bd1604977acc9d85c5ad03d7852",
+        "actual_binary_sha256": "cdabcb10e0232bf785ae2a4043888739726f3bd1604977acc9d85c5ad03d7852",
+        "binary_sha256_equal": true,
+        "expected_source_commit": "00736351cdd7baf691e2e79cc49c8be1efdb9ebd",
+        "actual_source_commit": "84b1410937d5322f18a100f9788518b5d7d442a4",
+        "expected_observer_sha256": "cca906e775b5b83920d2250ec553ca297b72c68a8d034be345b0fe43582be9d1",
+        "actual_observer_sha256": "f1ade74617fa171c5048246986d52e772b0913ffce28713af6e2fa4af5904892"
+      },
+      {
+        "entrypoint_id": "entry:8c3f459a1a336792a4a33ae8",
+        "rust_target": {
+          "name": "evas-kernel",
+          "package": "evas-kernel",
+          "target_kind": [
+            "bin"
+          ],
+          "version": "0.25.0"
+        },
+        "listing_source": {
+          "id": "source:dd8b4eb4612b272f0eb05592",
+          "sha256": "87ba2d3e6f130f00a1c3554eb7a617fdba6e3131ae20f8810ac29a08598b37b7",
+          "version": "2aa395b1df7c684a4a24a92a024540ce85174d8defc93d7f9a3b46620ebae2a1"
+        },
+        "expected_binary_sha256": "5a841fe3ee7ea99ba2578594b1d0891dad6e9bf728a6fb260284ae9c54de8d93",
+        "actual_binary_sha256": "5a841fe3ee7ea99ba2578594b1d0891dad6e9bf728a6fb260284ae9c54de8d93",
+        "binary_sha256_equal": true,
+        "expected_source_commit": "00736351cdd7baf691e2e79cc49c8be1efdb9ebd",
+        "actual_source_commit": "84b1410937d5322f18a100f9788518b5d7d442a4",
+        "expected_observer_sha256": "cca906e775b5b83920d2250ec553ca297b72c68a8d034be345b0fe43582be9d1",
+        "actual_observer_sha256": "f1ade74617fa171c5048246986d52e772b0913ffce28713af6e2fa4af5904892"
+      },
+      {
+        "entrypoint_id": "entry:ad9c0c08e83601848bd17d89",
+        "rust_target": {
+          "name": "evas_ir",
+          "package": "evas-ir",
+          "target_kind": [
+            "lib"
+          ],
+          "version": "0.1.0"
+        },
+        "listing_source": {
+          "id": "source:dd8b4eb4612b272f0eb05592",
+          "sha256": "87ba2d3e6f130f00a1c3554eb7a617fdba6e3131ae20f8810ac29a08598b37b7",
+          "version": "2aa395b1df7c684a4a24a92a024540ce85174d8defc93d7f9a3b46620ebae2a1"
+        },
+        "expected_binary_sha256": "d24001104106e7f2819a27159a6652f27a9d62105e2cad5b183f06a05bf40130",
+        "actual_binary_sha256": "d24001104106e7f2819a27159a6652f27a9d62105e2cad5b183f06a05bf40130",
+        "binary_sha256_equal": true,
+        "expected_source_commit": "00736351cdd7baf691e2e79cc49c8be1efdb9ebd",
+        "actual_source_commit": "84b1410937d5322f18a100f9788518b5d7d442a4",
+        "expected_observer_sha256": "cca906e775b5b83920d2250ec553ca297b72c68a8d034be345b0fe43582be9d1",
+        "actual_observer_sha256": "f1ade74617fa171c5048246986d52e772b0913ffce28713af6e2fa4af5904892"
+      },
+      {
+        "entrypoint_id": "entry:f0df6da6a340ee8656bf7a13",
+        "rust_target": {
+          "name": "transport",
+          "package": "evas-ir",
+          "target_kind": [
+            "test"
+          ],
+          "version": "0.1.0"
+        },
+        "listing_source": {
+          "id": "source:dd8b4eb4612b272f0eb05592",
+          "sha256": "87ba2d3e6f130f00a1c3554eb7a617fdba6e3131ae20f8810ac29a08598b37b7",
+          "version": "2aa395b1df7c684a4a24a92a024540ce85174d8defc93d7f9a3b46620ebae2a1"
+        },
+        "expected_binary_sha256": "277043a19fc3b9ab205d86e68a9fe5daeb6532e036741ffeba9cce6030f597d6",
+        "actual_binary_sha256": "277043a19fc3b9ab205d86e68a9fe5daeb6532e036741ffeba9cce6030f597d6",
+        "binary_sha256_equal": true,
+        "expected_source_commit": "00736351cdd7baf691e2e79cc49c8be1efdb9ebd",
+        "actual_source_commit": "84b1410937d5322f18a100f9788518b5d7d442a4",
+        "expected_observer_sha256": "cca906e775b5b83920d2250ec553ca297b72c68a8d034be345b0fe43582be9d1",
+        "actual_observer_sha256": "f1ade74617fa171c5048246986d52e772b0913ffce28713af6e2fa4af5904892"
+      }
+    ]
+  }
+}
