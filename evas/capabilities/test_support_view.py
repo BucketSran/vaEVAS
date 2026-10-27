@@ -560,6 +560,72 @@ class SupportViewFixtures(unittest.TestCase):
         self.assertIn('evas/docs/COMPARISON.md#支持矩阵', page)
         self.assertIn('当前要求分母只计登记中的当前要求。', page)
 
+    def test_duplicate_contract_line_must_remain_in_each_requirement(self):
+        projected, text = checked(bare_registry())
+        headings = [line for line in text.splitlines() if line.startswith('### ')]
+        self.assertGreaterEqual(len(headings), 2)
+        self.assertEqual(audit_markdown(projected, text), [])
+        for key in ('allowed_behavior', 'conditions', 'observables'):
+            matches = [line for line in text.splitlines() if line.startswith('原文 ' + key + '：')]
+            self.assertGreaterEqual(len(matches), 2, key)
+            self.assertEqual(set(matches), {matches[0]}, key)
+            changed = _drop_line_under_heading(text, headings[0], matches[0])
+            self.assertIn(matches[0], changed.splitlines())
+            self.assertIn('markdown dropped requirement contract field ' + key,
+                          audit_markdown(projected, changed))
+
+    def test_toolchain_source_is_not_covered_by_another_record(self):
+        data = retarget(fixture(), 'ngspice')
+        by_id(data, 'fixture-execution')['toolchain'] = [
+            {'role': 'simulator', 'name': 'ngspice', 'version': 'sim-12345'}]
+        for name in ('consumer-a', 'consumer-b'):
+            by_id(data, name)['toolchain'] = [
+                {'role': 'compiler', 'name': 'OpenVAF-R', 'version': 'cc-67890'}]
+        projected, text = checked(Registry(refresh(data)))
+        self.assertEqual(audit_markdown(projected, text), [])
+        tool_lines = [line for line in text.splitlines() if line.startswith('工具链：records_listed:')]
+        self.assertGreaterEqual(len(tool_lines), 2)
+        self.assertIn('consumer-a@1: ', tool_lines[0])
+        dropped_source = text.replace(tool_lines[0] + '\n', '', 1)
+        self.assertIn('OpenVAF-R/compiler@cc-67890', dropped_source)
+        self.assertIn('markdown dropped toolchain component', audit_markdown(projected, dropped_source))
+        dropped_owner = text.replace('consumer-a@1: ', '', 1)
+        self.assertNotIn('consumer-a@1: ', dropped_owner)
+        self.assertIn('OpenVAF-R/compiler@cc-67890', dropped_owner)
+        self.assertIn('markdown dropped toolchain component', audit_markdown(projected, dropped_owner))
+
+    def test_markdown_status_requires_view_status_and_provisional(self):
+        projected, text = checked(Registry(fixture()))
+        self.assertEqual(audit_markdown(projected, text), [])
+        preview = document(Registry(fixture()), status='preview')
+        preview_text = markdown(preview)
+        self.assertEqual(audit(preview) + audit_markdown(preview, preview_text), [])
+        replacements = (
+            ('view_status: current-default', 'view_status: preview'),
+            ('provisional: false', 'provisional: true'),
+        )
+        for old, new in replacements:
+            changed = text.replace(old, new, 1)
+            self.assertIn('# 当前要求的四后端事实', changed)
+            self.assertIn('adopted: true', changed)
+            self.assertIn('markdown view status diverged', audit_markdown(projected, changed))
+            dropped = text.replace(old + '\n', '', 1)
+            self.assertIn('markdown view status diverged', audit_markdown(projected, dropped))
+
+
+def _drop_line_under_heading(text, heading, line):
+    newline = '\n' if text.endswith('\n') else ''
+    lines = text.splitlines()
+    start = lines.index(heading)
+    end = next((index for index in range(start + 1, len(lines))
+                if lines[index].startswith('### ') or lines[index].startswith('## ')), len(lines))
+    section = lines[start:end]
+    if line not in section:
+        raise AssertionError('line not in section ' + heading)
+    section.remove(line)
+    return '\n'.join(lines[:start] + section + lines[end:]) + newline
+
+
 def _break_citation(data, owner, ref_id, fields):
     for field in fields:
         for ref in by_id(data, owner).get(field) or []:

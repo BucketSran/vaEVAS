@@ -675,10 +675,46 @@ def _toolchain_source(source):
     return (f"{owner}@{source.get('version', 'unknown')}: " if owner else '') + ', '.join(parts)
 
 
-def _toolchain_tokens(fact):
-    """Component strings that must survive into Markdown for this toolchain fact."""
-    sources = (fact.get('components') or []) if fact.get('state') == 'records_listed' else [fact]
-    return [_component(item) for source in sources for item in (source.get('components') or [])]
+def _toolchain_fragments(fact):
+    """Rendered owner@version and components for each source in one toolchain fact."""
+    if fact.get('state') == 'unknown':
+        return []
+    if fact.get('state') == 'records_listed':
+        return [_toolchain_source(source) for source in (fact.get('components') or [])]
+    return [_toolchain_source(fact)]
+
+
+def _heading_blocks(text, prefix):
+    """Blocks that start at prefix and stop before the next peer or section."""
+    lines = text.splitlines()
+    starts = [index for index, line in enumerate(lines) if line.startswith(prefix)]
+    blocks = []
+    for position, start in enumerate(starts):
+        end = starts[position + 1] if position + 1 < len(starts) else len(lines)
+        for cursor in range(start + 1, end):
+            if lines[cursor].startswith('## '):
+                end = cursor
+                break
+        blocks.append(lines[start:end])
+    return blocks
+
+
+def _take_heading(blocks, heading):
+    for index, block in enumerate(blocks):
+        if block and block[0] == heading:
+            return blocks.pop(index)
+    return []
+
+
+def _markdown_records(document):
+    """Qualification records in the same order markdown() emits them."""
+    rows = []
+    for requirement in document['requirements']:
+        for cell in requirement['backends'].values():
+            rows.extend(cell['records'])
+        rows.extend(requirement['unassigned_backend_records'])
+    rows.extend(document['unbound_qualifications'])
+    return rows
 
 
 def _show_toolchain(fact):
@@ -976,10 +1012,22 @@ def audit_markdown(document, text):
     for line in required:
         if line not in text:
             errors.append('markdown missing ' + line)
-    expected = VIEW_STATUSES.get(document.get('view_status'))
+    status = document.get('view_status')
+    expected = VIEW_STATUSES.get(status)
     top = text.splitlines()[:7]
-    if (expected is None or expected['title'] not in top or expected['note'] not in top
-            or f"adopted: {str(document.get('adopted')).lower()}" not in top):
+    view_line = f"view_status: {status}"
+    adopted_line = f"adopted: {str(document.get('adopted')).lower()}"
+    provisional_line = f"provisional: {str(document.get('provisional')).lower()}"
+    # The visible header has to echo this document and be one of the two
+    # legal combinations: current-default (adopted, not provisional) or
+    # preview (not adopted, provisional). Title and note come from that status.
+    legal_status = (
+        expected is not None
+        and document.get('adopted') is (status == 'current-default')
+        and document.get('provisional') is (status == 'preview')
+    )
+    if (not legal_status or expected['title'] not in top or expected['note'] not in top
+            or view_line not in top or adopted_line not in top or provisional_line not in top):
         errors.append('markdown view status diverged')
     head, separator, _historical = text.partition('## 历史引用')
     if not separator:
@@ -1001,14 +1049,26 @@ def audit_markdown(document, text):
         for cell in _table_cells(line):
             if cell in FORBIDDEN_CELLS:
                 errors.append('markdown collapsed a current cell')
+    requirement_blocks = _heading_blocks(head, '### ')
     for requirement in document['requirements']:
+        heading = f"### {requirement['id']}@{requirement['version']}"
+        section = _take_heading(requirement_blocks, heading)
         for key in CONTRACT_FIELDS:
-            if _contract_line(key, requirement['source_fields']) not in head:
+            if _contract_line(key, requirement['source_fields']) not in section:
                 errors.append('markdown dropped requirement contract field ' + key)
-    for record in _all_records(document['requirements'], document['unbound_qualifications']):
-        for token in _toolchain_tokens(record['toolchain']):
-            if token not in text:
-                errors.append('markdown dropped toolchain component')
+    record_blocks = _heading_blocks(head, '资格记录：')
+    for record in _markdown_records(document):
+        qualification = record['qualification']
+        heading = f"资格记录：{qualification['id']}@{qualification['version']} sha256 {qualification['sha256']}"
+        block = _take_heading(record_blocks, heading)
+        fragments = _toolchain_fragments(record['toolchain'])
+        if not fragments:
+            continue
+        # The canonical toolchain line lists every source's owner@version and
+        # components. The same component on another record does not count.
+        expected = f"工具链：{_show_toolchain(record['toolchain'])}"
+        if expected not in block:
+            errors.append('markdown dropped toolchain component')
     counts = document['classifications']['exception_counts']
     for kind, count in counts.items():
         if f'exception: {kind} {count}' not in text:
