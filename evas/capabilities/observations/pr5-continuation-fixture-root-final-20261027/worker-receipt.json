@@ -1,0 +1,489 @@
+{
+  "finding": "PR5-ASTRA-R1-01",
+  "role": "implementation worker; not independent reviewer",
+  "model": {
+    "providerInstanceId": "codex",
+    "model": "gpt-6.1-sol",
+    "reasoningEffort": "medium",
+    "serviceTier": "default",
+    "evidence": "delegation.json"
+  },
+  "identity": {
+    "base": "e10e1af5796f0cc7af3b6b5f5d26c420c0c03325",
+    "base_tree": "2a44d2998fafbfc1a6efa2b918c4af60de1e5135",
+    "patch_against_head": "a7e82dcd514aa3b4fd75a2d9eb9c16319a8d19aa",
+    "candidate_tree": "441e60a6c9a2e5ded30ade11bc2df0a414d3bd90",
+    "real_head": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+    "export_private_git_head": "cb5ba2e8fdd5f5959cac4f53988d44e01e30bd1f",
+    "export_is_not_candidate_commit": true
+  },
+  "patch": {
+    "all_new_bytes_match": true,
+    "patch_sha256": "858005452e3ba1094ec49c17c17e0e04d4d1b2eddd8c68a45953c6400778eea4",
+    "files": {
+      "experiments/backends/comparison/ingest.py": {
+        "before_sha256": "fa27acd7d4b0bf29d093729a9e8431bcbf3c83cbc9c5a5930b4a54ba3ff4732a",
+        "after_sha256": "6e80d747a7f6ab4ebff8fb58dbc22e67d162defd21e696427ca1a2dfa8f116cb"
+      },
+      "experiments/backends/comparison/runner.py": {
+        "before_sha256": "3080a990d11118ffbded2e8e9e639f319aa5d36abf4bb47d3adeb3585a258e9b",
+        "after_sha256": "2a75f9d8d898b920820b0a239a09c5c32267839e7cdfd9fd5dec2dac76f26f91"
+      },
+      "experiments/backends/comparison/test_worker_adapter.py": {
+        "before_sha256": "1e09e247e52f5e68cf17a5e349e485d2acb3d69c6584f0fdd23b7f591ecff9b8",
+        "after_sha256": "06ad618186e6a8d50da2e6a80ddff07dd6e6e807629689a24e204eb124119e78"
+      }
+    },
+    "ast_parse": true,
+    "added_lines_no_trailing_whitespace": true
+  },
+  "python": {
+    "executable": "/opt/homebrew/opt/python@3.12/bin/python3.12",
+    "version": "3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]",
+    "platform": "macOS-26.3.2-arm64-arm-64bit"
+  },
+  "\u6765\u6e90\u4e8b\u5b9e": [
+    "\u539f\u7ea2\u4f8b rc=0 \u8868\u793a\u63a7\u5236\u6210\u529f\u590d\u73b0\u9884\u671f\u5f02\u5e38\uff1b\u672c\u5730\u5b9e\u9645 run->ingest \u65b0\u589e\u7ea2\u4f8b rc=1\uff0c\u65e5\u5fd7\u5b8c\u6574\u4fdd\u7559\u3002",
+    "\u539f runner resume \u4fdd\u7559 STARTED\uff0c\u5199 CONTINUATION \u4e0e result.runner_sha256\uff1b\u65e7 ingest \u5408\u5e76\u4f9d\u8d56\u5bfc\u81f4\u62d2\u7edd\u3002",
+    "\u771f\u5b9e HEAD\u3001index\u3001\u5171\u4eab config\u300118 tracked+2 untracked \u5019\u9009\u524d\u540e\u5b8c\u5168\u4e00\u81f4\u3002"
+  ],
+  "\u5df2\u5b9a\u6761\u4ef6": [
+    "\u4ec5\u5199 F\uff1b\u65e0\u771f\u5b9e backend\u3001\u7f16\u8bd1\u3001kernel\u3001SSH\u3001Spectre\u3001Harbor\u3001\u7f51\u7edc\u6216\u8fdc\u7aef\u67e5\u8be2\u3002",
+    "\u539f 67/176 \u8bc1\u636e\u53ea\u8bfb\u4fdd\u7559\uff0c\u4e0d\u91cd\u8dd1\u3001\u4e0d\u6269\u5145\u5206\u6bcd\u3002",
+    "\u672c\u6b21\u53ea\u63d0\u4f9b source.patch\uff1b\u4e3b\u63a7\u7ee7\u7eed capture/discover/catalog/precheck \u4e0e Astra \u589e\u91cf\u5ba1\u6838\u3002"
+  ],
+  "\u5b9e\u65bd\u51b3\u5b9a": [
+    "\u6267\u884c\u6765\u6e90\u5355\u72ec\u4ee5 STARTED.runner_sha256 + worker_sources \u9a8c\u8bc1\u3002",
+    "\u5206\u6790\u6765\u6e90\u5355\u72ec\u4ee5 CONTINUATION.runner_sha256 + worker_sources \u9a8c\u8bc1\uff0c\u540c\u65f6\u6821\u9a8c old_started_sha256 \u548c\u6bcf\u6761\u7ed3\u679c runner_sha256\u3002",
+    "\u5f52\u6863\u6e90\u4ecd\u5b58 evidence/sources/*-sha.py.txt\uff1breceipt.runner_sources \u5f15\u7528\u7ecf\u6458\u8981\u6838\u9a8c\u7684\u53cc\u65b9\u6765\u6e90\uff0creceipt.continuation \u4fdd\u7559\u5206\u6790\u4f9d\u8d56\u58f0\u660e\u3002",
+    "\u65e0 CONTINUATION \u65f6\u4ec5\u5141\u8bb8\u4e0e STARTED \u76f8\u540c runner\uff1b\u5386\u53f2\u65e0 worker \u4f9d\u8d56\u7684 runner \u4ecd\u5141\u8bb8\u7f3a worker_sources\uff1b\u9700\u8981 adapter \u7684\u5df2\u6709\u63a5\u7eed\u82e5\u672a\u7ed1\u5b9a\u6765\u6e90\uff0c\u7ee7\u7eed\u62d2\u7edd\uff0c\u4e0d\u80fd\u81ea\u52a8\u8ba4\u53ef\u6216\u8865\u5199\u65e7 STARTED\u3002"
+  ],
+  "\u65b0\u5efa\u8bae": [],
+  "call_chain_evidence": {
+    "entry": "runner.run(args), resume_finished_spectre=True",
+    "actual_functions": [
+      "runner.verify",
+      "runner.run",
+      "runner.save EXECUTION.json/CONTINUATION.json/FILE_MANIFEST.json",
+      "ingest.ingest",
+      "ingest.verify_output",
+      "ingest.execution_sources",
+      "ingest.runner_sources"
+    ],
+    "mocks": [
+      "external execute/Popen/run/check_output",
+      "scientific analyze",
+      "checker_identity fixed synthetic value",
+      "unrelated final derive.freeze_candidates and snapshot validate"
+    ],
+    "claim": "source provenance/consumer wiring controls only; no semantic qualification",
+    "started_bytes_unchanged_asserted": true,
+    "compact_started_bytes_unchanged_asserted": true
+  },
+  "counts": {
+    "final_unique_unittest_methods": 16,
+    "new_collected_methods": 11,
+    "existing_methods_executed": 5,
+    "successful_ingestion_controls": 4,
+    "expected_provenance_rejection_controls": 7,
+    "structural_and_existing_settings_controls": 5,
+    "output_boundary_expected_rejections": 3,
+    "historical_AST_replay_assertions_separate": 2,
+    "original_67_rerun": 0,
+    "historical_176_rerun": 0
+  },
+  "collection": {
+    "path": "verification-final-r2/collection/stdout",
+    "sha256": "b9aad0327100e87ba1f028fb18a8058384df423c2cd0082b583c72a63a18c5e7",
+    "all_module_ids": [
+      "test_worker_adapter.ContinuationIngestControls.test_legacy_continuation_without_worker_contract_to_actual_ingest",
+      "test_worker_adapter.ContinuationIngestControls.test_legacy_execution_to_actual_ingest",
+      "test_worker_adapter.ContinuationIngestControls.test_new_execution_to_actual_ingest",
+      "test_worker_adapter.ContinuationIngestControls.test_resume_rejects_missing_analysis_workers",
+      "test_worker_adapter.ContinuationIngestControls.test_resume_rejects_missing_continuation",
+      "test_worker_adapter.ContinuationIngestControls.test_resume_rejects_unknown_analysis_contract",
+      "test_worker_adapter.ContinuationIngestControls.test_resume_rejects_unknown_extra_dependency",
+      "test_worker_adapter.ContinuationIngestControls.test_resume_rejects_wrong_analysis_runner_digest",
+      "test_worker_adapter.ContinuationIngestControls.test_resume_rejects_wrong_analysis_worker_digest",
+      "test_worker_adapter.ContinuationIngestControls.test_resume_rejects_wrong_started_digest",
+      "test_worker_adapter.ContinuationIngestControls.test_resume_to_actual_ingest_preserves_started_and_binds_analysis",
+      "test_worker_adapter.WorkerAdapterControls.test_archive_closure_old_new_and_missing_or_changed",
+      "test_worker_adapter.WorkerAdapterControls.test_contract_uses_audited_source_not_file_presence",
+      "test_worker_adapter.WorkerAdapterControls.test_legacy_worker_dispatches_original_root",
+      "test_worker_adapter.WorkerAdapterControls.test_runtime_identity_binds_adapter_and_rejects_missing"
+    ],
+    "new_ids": [
+      "test_worker_adapter.ContinuationIngestControls.test_legacy_continuation_without_worker_contract_to_actual_ingest",
+      "test_worker_adapter.ContinuationIngestControls.test_legacy_execution_to_actual_ingest",
+      "test_worker_adapter.ContinuationIngestControls.test_new_execution_to_actual_ingest",
+      "test_worker_adapter.ContinuationIngestControls.test_resume_rejects_missing_analysis_workers",
+      "test_worker_adapter.ContinuationIngestControls.test_resume_rejects_missing_continuation",
+      "test_worker_adapter.ContinuationIngestControls.test_resume_rejects_unknown_analysis_contract",
+      "test_worker_adapter.ContinuationIngestControls.test_resume_rejects_unknown_extra_dependency",
+      "test_worker_adapter.ContinuationIngestControls.test_resume_rejects_wrong_analysis_runner_digest",
+      "test_worker_adapter.ContinuationIngestControls.test_resume_rejects_wrong_analysis_worker_digest",
+      "test_worker_adapter.ContinuationIngestControls.test_resume_rejects_wrong_started_digest",
+      "test_worker_adapter.ContinuationIngestControls.test_resume_to_actual_ingest_preserves_started_and_binds_analysis"
+    ],
+    "source_hashes": {
+      "experiments/backends/comparison/ingest.py": "6e80d747a7f6ab4ebff8fb58dbc22e67d162defd21e696427ca1a2dfa8f116cb",
+      "experiments/backends/comparison/runner.py": "2a75f9d8d898b920820b0a239a09c5c32267839e7cdfd9fd5dec2dac76f26f91",
+      "experiments/backends/comparison/test_worker_adapter.py": "06ad618186e6a8d50da2e6a80ddff07dd6e6e807629689a24e204eb124119e78"
+    }
+  },
+  "original_control": {
+    "files": {
+      "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-consumer-migration-astra-r1-20261027/comparison-history-control.py": {
+        "sha256": "63389c31217a4b47ed46635ba8d3c542ba33753a3dcce3dce09992b60f0e97db",
+        "bytes": 2906
+      },
+      "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-consumer-migration-astra-r1-20261027/comparison-history-control.json": {
+        "sha256": "117b3713df44d27417e69aa5d4f5e5bc8b77fdc3125c6910cf4db68d10ca826d",
+        "bytes": 3042
+      },
+      "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-consumer-migration-astra-r1-20261027/comparison-history-control.stdout": {
+        "sha256": "eeb817af6fa34c6162e4873a405f096a5fec30f56b2d5e381b0273033f115dfb",
+        "bytes": 500
+      },
+      "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-consumer-migration-astra-r1-20261027/comparison-history-control.stderr": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    "original_returncode": 0,
+    "local_red_returncode": 1,
+    "local_red_process": "red-integration/process.json",
+    "returncode_evidence": {
+      "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-consumer-migration-astra-r1-20261027/review-report.json",
+      "sha256": "f93638e38000cffa7c370e4a5cfe7ea5edf5f860082ead66894bf07cef1a1ee7",
+      "field": "PR5-ASTRA-R1-01.reproduction.returncode"
+    }
+  },
+  "processes": {
+    "patch-final-dry-run/process.json": {
+      "argv": [
+        "/usr/bin/patch",
+        "--dry-run",
+        "-p1",
+        "-i",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation/source.patch"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation/apply-proof-final",
+      "returncode": 0,
+      "started": "2026-10-27T04:39:56.160536+00:00",
+      "finished": "2026-10-27T04:39:56.181233+00:00",
+      "stdout_sha256": "10de60fc6abdad15e3c1343558789d116f1516e0a8a4c145b4adb2ee67695ab5",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "patch-final-apply/process.json": {
+      "argv": [
+        "/usr/bin/patch",
+        "-p1",
+        "-i",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation/source.patch"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation/apply-proof-final",
+      "returncode": 0,
+      "started": "2026-10-27T04:39:56.181631+00:00",
+      "finished": "2026-10-27T04:39:56.197787+00:00",
+      "stdout_sha256": "10de60fc6abdad15e3c1343558789d116f1516e0a8a4c145b4adb2ee67695ab5",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "verification-path-r1-failure/process.json": {
+      "argv": [
+        "/opt/homebrew/opt/python@3.12/bin/python3.12",
+        "-B",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation/verify-output-guard-r1.py",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation/verification-final"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation",
+      "returncode": 1,
+      "started": "2026-10-27T04:38:34.371334+00:00",
+      "finished": "2026-10-27T04:38:34.427187+00:00",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "3348fbe5992ef0771173dce1f6e6c7f3700df2b64a8fff274f1e42e124eefef0"
+    },
+    "green-module-r1/process.json": {
+      "argv": [
+        "/opt/homebrew/opt/python@3.12/bin/python3.12",
+        "-B",
+        "-m",
+        "unittest",
+        "-v",
+        "test_worker_adapter"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation/source/experiments/backends/comparison",
+      "returncode": 1,
+      "started": "2026-10-27T04:36:46.281216+00:00",
+      "finished": "2026-10-27T04:36:46.893703+00:00",
+      "stdout_sha256": "101f4f5f7f0618fee6c78494c38e0f9b5c811b810ddfaac4bcc6c4337437fe94",
+      "stderr_sha256": "05f35543f59bc2cab567c441fcf6ba5a77e9797021c67d0b5139798fc0ff3b4d"
+    },
+    "red-integration/process.json": {
+      "argv": [
+        "/opt/homebrew/opt/python@3.12/bin/python3.12",
+        "-B",
+        "-m",
+        "unittest",
+        "-v",
+        "test_worker_adapter.ContinuationIngestControls.test_resume_to_actual_ingest_preserves_started_and_binds_analysis"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation/source/experiments/backends/comparison",
+      "returncode": 1,
+      "started": "2026-10-27T04:36:32.945804+00:00",
+      "finished": "2026-10-27T04:36:33.158374+00:00",
+      "stdout_sha256": "7c50d567cf97bfd5c19d116036191b6ef56750202322e2506d1a678e0c70edfa",
+      "stderr_sha256": "84999e6f63bf91d783d94d725473419af05914d631495b50460e92fd2109f080"
+    },
+    "patch-dry-run/process.json": {
+      "argv": [
+        "/usr/bin/patch",
+        "--dry-run",
+        "-p1",
+        "-i",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation/source.patch"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation/apply-proof",
+      "returncode": 0,
+      "started": "2026-10-27T04:38:58.405308+00:00",
+      "finished": "2026-10-27T04:38:58.427250+00:00",
+      "stdout_sha256": "10de60fc6abdad15e3c1343558789d116f1516e0a8a4c145b4adb2ee67695ab5",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "output-refuse-overwrite/process.json": {
+      "argv": [
+        "/opt/homebrew/opt/python@3.12/bin/python3.12",
+        "-B",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation/verify.py",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation/verification-final-r2"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation",
+      "returncode": 1,
+      "started": "2026-10-27T04:39:56.198681+00:00",
+      "finished": "2026-10-27T04:39:56.253638+00:00",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "4174fe16b3f62433dba2712dccfbacc5044424b36ca01a739d1b0768a6aaaf48"
+    },
+    "output-refuse-link/process.json": {
+      "argv": [
+        "/opt/homebrew/opt/python@3.12/bin/python3.12",
+        "-B",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation/verify.py",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation/guard-link/forbidden-output"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation",
+      "returncode": 1,
+      "started": "2026-10-27T04:39:56.302498+00:00",
+      "finished": "2026-10-27T04:39:56.349127+00:00",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "93db830551f958c13b15ed80460f10c0590882d63718c7c8620ceb24455ee98f"
+    },
+    "patch-apply/process.json": {
+      "argv": [
+        "/usr/bin/patch",
+        "-p1",
+        "-i",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation/source.patch"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation/apply-proof",
+      "returncode": 0,
+      "started": "2026-10-27T04:38:58.427646+00:00",
+      "finished": "2026-10-27T04:38:58.445113+00:00",
+      "stdout_sha256": "10de60fc6abdad15e3c1343558789d116f1516e0a8a4c145b4adb2ee67695ab5",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "output-refuse-escape/process.json": {
+      "argv": [
+        "/opt/homebrew/opt/python@3.12/bin/python3.12",
+        "-B",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation/verify.py",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/forbidden-outside-worker"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation",
+      "returncode": 1,
+      "started": "2026-10-27T04:39:56.254078+00:00",
+      "finished": "2026-10-27T04:39:56.301992+00:00",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "2ae2cb4ab7c9b97ba8a6d9587c698c39e8bd035e3a8b90ab76fb7724281fb209"
+    },
+    "green-module-r2/process.json": {
+      "argv": [
+        "/opt/homebrew/opt/python@3.12/bin/python3.12",
+        "-B",
+        "-m",
+        "unittest",
+        "-v",
+        "test_worker_adapter"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation/source/experiments/backends/comparison",
+      "returncode": 0,
+      "started": "2026-10-27T04:37:06.676984+00:00",
+      "finished": "2026-10-27T04:37:07.431800+00:00",
+      "stdout_sha256": "7868b493b59e4ef8bf8928c78d360ee501f5879800b07485790cf4809583e92d",
+      "stderr_sha256": "2689d383bf264eb3df518950914610ff557e0e662bf8ad0edfeb84c8f02691e8"
+    },
+    "verification-final/collection/process.json": {
+      "argv": [
+        "/opt/homebrew/opt/python@3.12/bin/python3.12",
+        "-B",
+        "-c",
+        "import unittest,json\nsuite=unittest.defaultTestLoader.loadTestsFromName('test_worker_adapter')\ndef ids(s):\n for t in s:\n  if isinstance(t,unittest.TestSuite):yield from ids(t)\n  else:yield t.id()\nprint(json.dumps(sorted(ids(suite)),indent=2))\n"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation/source/experiments/backends/comparison",
+      "returncode": 0,
+      "started": "2026-10-27T04:38:35.579280+00:00",
+      "finished": "2026-10-27T04:38:35.700783+00:00",
+      "stdout_sha256": "b9aad0327100e87ba1f028fb18a8058384df423c2cd0082b583c72a63a18c5e7",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "verification-final/module/process.json": {
+      "argv": [
+        "/opt/homebrew/opt/python@3.12/bin/python3.12",
+        "-B",
+        "-m",
+        "unittest",
+        "-v",
+        "test_worker_adapter"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation/source/experiments/backends/comparison",
+      "returncode": 0,
+      "started": "2026-10-27T04:38:34.607934+00:00",
+      "finished": "2026-10-27T04:38:35.451698+00:00",
+      "stdout_sha256": "7868b493b59e4ef8bf8928c78d360ee501f5879800b07485790cf4809583e92d",
+      "stderr_sha256": "12371504ac847276f6ec88fa2466832403f45a7bed7d1a83ee1d6f46ab2be766"
+    },
+    "verification-final/historical/process.json": {
+      "argv": [
+        "/opt/homebrew/opt/python@3.12/bin/python3.12",
+        "-B",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation/historical_control.py"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation",
+      "returncode": 0,
+      "started": "2026-10-27T04:38:34.518212+00:00",
+      "finished": "2026-10-27T04:38:34.607449+00:00",
+      "stdout_sha256": "573ea3393b15e867989fb4e07ac4d711b13ab3766f71b181a15639b02af027ba",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "verification-final/spectre-settings/process.json": {
+      "argv": [
+        "/opt/homebrew/opt/python@3.12/bin/python3.12",
+        "-B",
+        "-m",
+        "unittest",
+        "-v",
+        "test_runner.RunnerControls.test_spectre_settings_uses_exact_module_despite_name_collision"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation/source/experiments/backends/comparison",
+      "returncode": 0,
+      "started": "2026-10-27T04:38:35.452320+00:00",
+      "finished": "2026-10-27T04:38:35.578793+00:00",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "3d45dfdedf70cc9ad95eeb19450de28a59ce740908148ed450db52921c7ce003"
+    },
+    "verification-final-r2/collection/process.json": {
+      "argv": [
+        "/opt/homebrew/opt/python@3.12/bin/python3.12",
+        "-B",
+        "-c",
+        "import unittest,json\nsuite=unittest.defaultTestLoader.loadTestsFromName('test_worker_adapter')\ndef ids(s):\n for t in s:\n  if isinstance(t,unittest.TestSuite):yield from ids(t)\n  else:yield t.id()\nprint(json.dumps(sorted(ids(suite)),indent=2))\n"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation/source/experiments/backends/comparison",
+      "returncode": 0,
+      "started": "2026-10-27T04:39:28.170957+00:00",
+      "finished": "2026-10-27T04:39:28.287941+00:00",
+      "stdout_sha256": "b9aad0327100e87ba1f028fb18a8058384df423c2cd0082b583c72a63a18c5e7",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "verification-final-r2/module/process.json": {
+      "argv": [
+        "/opt/homebrew/opt/python@3.12/bin/python3.12",
+        "-B",
+        "-m",
+        "unittest",
+        "-v",
+        "test_worker_adapter"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation/source/experiments/backends/comparison",
+      "returncode": 0,
+      "started": "2026-10-27T04:39:27.341941+00:00",
+      "finished": "2026-10-27T04:39:28.046534+00:00",
+      "stdout_sha256": "7868b493b59e4ef8bf8928c78d360ee501f5879800b07485790cf4809583e92d",
+      "stderr_sha256": "6c10817ca2fa8c3f6fd7e583a04e65859c652124caca37495db4ae39b94e359a"
+    },
+    "verification-final-r2/historical/process.json": {
+      "argv": [
+        "/opt/homebrew/opt/python@3.12/bin/python3.12",
+        "-B",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation/historical_control.py"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation",
+      "returncode": 0,
+      "started": "2026-10-27T04:39:27.249897+00:00",
+      "finished": "2026-10-27T04:39:27.341403+00:00",
+      "stdout_sha256": "573ea3393b15e867989fb4e07ac4d711b13ab3766f71b181a15639b02af027ba",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "verification-final-r2/spectre-settings/process.json": {
+      "argv": [
+        "/opt/homebrew/opt/python@3.12/bin/python3.12",
+        "-B",
+        "-m",
+        "unittest",
+        "-v",
+        "test_runner.RunnerControls.test_spectre_settings_uses_exact_module_despite_name_collision"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation/source/experiments/backends/comparison",
+      "returncode": 0,
+      "started": "2026-10-27T04:39:28.047008+00:00",
+      "finished": "2026-10-27T04:39:28.170496+00:00",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "29c5abca18c6bd15c486b6098370ba23aff958d5f27479d1e50191ef5847af9b"
+    }
+  },
+  "guard": {
+    "comparison": "guard-comparison.json",
+    "all_match": true,
+    "candidate_count": 20,
+    "no_git_fixture_or_private_git_created": true,
+    "real_git_calls": "explicit /usr/bin/git --no-lazy-fetch --no-optional-locks --git-dir=GD --work-tree=W; subprocess environment excludes GIT_* and PYTHONPATH"
+  },
+  "preserved_failures": [
+    "red-integration",
+    "green-module-r1: macOS sched_getaffinity fixture seam; fixed only test mock",
+    "verification-path-r1-failure: authorized F path alias mishandled; script corrected",
+    "partial-full-export: interrupted housekeeping export, retained",
+    "source-r1.patch/apply-proof: earlier whitespace revision retained"
+  ],
+  "limits": [
+    "No full CLI launched; real run(args) -> files -> ingest() function chain was executed with fixed synthetic fixtures and mocked scientific/external seams.",
+    "R original control and primary reproduction are read-only; independent review remains coordinator-owned.",
+    "check_workspaces not run because its cross-worktree transport conflicts with this task explicit Git boundary; no workspace created.",
+    "Initial pwd/cat/ls discovery child commands did not explicitly clear inherited GIT_*/PYTHONPATH; they performed no Git/test/mutation. Subsequent process commands use env -i, and all Git/test subprocesses receive sanitized ENV.",
+    "Initial full-export interruption has no complete raw stdout/stderr saved; returncode 130 observed, partial directory retained.",
+    "R original control returncode was recovered from immutable review-report.json; earlier unknown metadata retained as original-controls-r1.json."
+  ],
+  "timing": {
+    "first_delivery_at": "unknown",
+    "correction_delivery_at": "unknown",
+    "materials_ready_at_utc": "2026-10-27T04:41:13.694323+00:00",
+    "task_started_at": "unknown"
+  },
+  "pending": {
+    "local_commands": [],
+    "external_given_not_queried": [
+      "PR266 CI40449877055 in flight per brief"
+    ]
+  },
+  "artifact_hashes": {
+    "source.patch": "858005452e3ba1094ec49c17c17e0e04d4d1b2eddd8c68a45953c6400778eea4",
+    "verify.py": "180b97c845967d8e47308b21a6ec476a32f643024d6e648dbc903f7ee70e18e9",
+    "io_tools.py": "e455164b17ecc321515f582ce070d7550b8021647ab8ede97a0ec4292e24f211",
+    "historical_control.py": "0d21fa88589af81695e3bd7fb9c774d9df48140e172014156ce275241dfb59bb",
+    "delegation.json": "7b983feae0cae6872caac2af67c8b2d15905ec0b81611e28198eeb522cc2887f",
+    "guard-before.json": "fab99b82976415ee7db661352751809854195ffe62a5104a91a41c7e6cff2dbc",
+    "guard-after.json": "fab99b82976415ee7db661352751809854195ffe62a5104a91a41c7e6cff2dbc",
+    "original-controls.json": "6fd3311c7125cab4647e91ce6bc5246f155a910158ea4fd7d9e4175a07e2c6cf",
+    "red-input-reconstruction.json": "e8dd80c006bbc1739a2c5589fad938425f006575a116afe2122ab1d9a13ecbfd"
+  }
+}
