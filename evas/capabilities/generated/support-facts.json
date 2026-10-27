@@ -1,0 +1,2641 @@
+{
+  "schema": "provisional-support-facts-v1",
+  "provisional": true,
+  "adopted": false,
+  "denominators": {
+    "current_requirements": 4,
+    "source_index_items": 12880,
+    "source_index_is_requirement_coverage": false,
+    "historical_nodes": 78,
+    "historical_nodes_joined_to_current_requirements": 0,
+    "current_requirement_support_conferred": 0
+  },
+  "classifications": {
+    "requirement_status": {
+      "pending": 4
+    },
+    "historical_node_status": {
+      "compared": 57,
+      "waiting": 21
+    },
+    "backend_execution_cells": {
+      "unknown": 16
+    },
+    "qualification_records_current_qualified": {
+      "false": 1
+    },
+    "record_execution_states": {
+      "recorded": 1
+    },
+    "exception_counts": {
+      "coverage_sufficiency_pending": 4,
+      "historical_unjoined": 1,
+      "toolchain_unknown": 16,
+      "unbound_qualification": 1
+    }
+  },
+  "exceptions": [
+    {
+      "kind": "unbound_qualification",
+      "id": "qualification:sef-registration-example",
+      "version": "1",
+      "reason": "current qualification does not bind a current requirement"
+    },
+    {
+      "kind": "coverage_sufficiency_pending",
+      "id": "requirement:$itor",
+      "reason": "coverage sufficiency is not defined for this requirement"
+    },
+    {
+      "kind": "toolchain_unknown",
+      "requirement": "requirement:$itor",
+      "backend": "spectre",
+      "reason": "no explicit toolchain list on a bound record"
+    },
+    {
+      "kind": "toolchain_unknown",
+      "requirement": "requirement:$itor",
+      "backend": "ngspice",
+      "reason": "no explicit toolchain list on a bound record"
+    },
+    {
+      "kind": "toolchain_unknown",
+      "requirement": "requirement:$itor",
+      "backend": "gnucap",
+      "reason": "no explicit toolchain list on a bound record"
+    },
+    {
+      "kind": "toolchain_unknown",
+      "requirement": "requirement:$itor",
+      "backend": "evas",
+      "reason": "no explicit toolchain list on a bound record"
+    },
+    {
+      "kind": "coverage_sufficiency_pending",
+      "id": "requirement:$rtoi",
+      "reason": "coverage sufficiency is not defined for this requirement"
+    },
+    {
+      "kind": "toolchain_unknown",
+      "requirement": "requirement:$rtoi",
+      "backend": "spectre",
+      "reason": "no explicit toolchain list on a bound record"
+    },
+    {
+      "kind": "toolchain_unknown",
+      "requirement": "requirement:$rtoi",
+      "backend": "ngspice",
+      "reason": "no explicit toolchain list on a bound record"
+    },
+    {
+      "kind": "toolchain_unknown",
+      "requirement": "requirement:$rtoi",
+      "backend": "gnucap",
+      "reason": "no explicit toolchain list on a bound record"
+    },
+    {
+      "kind": "toolchain_unknown",
+      "requirement": "requirement:$rtoi",
+      "backend": "evas",
+      "reason": "no explicit toolchain list on a bound record"
+    },
+    {
+      "kind": "coverage_sufficiency_pending",
+      "id": "requirement:expm1",
+      "reason": "coverage sufficiency is not defined for this requirement"
+    },
+    {
+      "kind": "toolchain_unknown",
+      "requirement": "requirement:expm1",
+      "backend": "spectre",
+      "reason": "no explicit toolchain list on a bound record"
+    },
+    {
+      "kind": "toolchain_unknown",
+      "requirement": "requirement:expm1",
+      "backend": "ngspice",
+      "reason": "no explicit toolchain list on a bound record"
+    },
+    {
+      "kind": "toolchain_unknown",
+      "requirement": "requirement:expm1",
+      "backend": "gnucap",
+      "reason": "no explicit toolchain list on a bound record"
+    },
+    {
+      "kind": "toolchain_unknown",
+      "requirement": "requirement:expm1",
+      "backend": "evas",
+      "reason": "no explicit toolchain list on a bound record"
+    },
+    {
+      "kind": "coverage_sufficiency_pending",
+      "id": "requirement:ln1p",
+      "reason": "coverage sufficiency is not defined for this requirement"
+    },
+    {
+      "kind": "toolchain_unknown",
+      "requirement": "requirement:ln1p",
+      "backend": "spectre",
+      "reason": "no explicit toolchain list on a bound record"
+    },
+    {
+      "kind": "toolchain_unknown",
+      "requirement": "requirement:ln1p",
+      "backend": "ngspice",
+      "reason": "no explicit toolchain list on a bound record"
+    },
+    {
+      "kind": "toolchain_unknown",
+      "requirement": "requirement:ln1p",
+      "backend": "gnucap",
+      "reason": "no explicit toolchain list on a bound record"
+    },
+    {
+      "kind": "toolchain_unknown",
+      "requirement": "requirement:ln1p",
+      "backend": "evas",
+      "reason": "no explicit toolchain list on a bound record"
+    },
+    {
+      "kind": "historical_unjoined",
+      "count": 78,
+      "reason": "historical nodes do not name a current requirement and are not joined"
+    }
+  ],
+  "requirements": [
+    {
+      "id": "requirement:$itor",
+      "version": "1",
+      "sha256": "779220af0f65d2967caf011d1099f36b01f113d566f37a32c3a6647f947da671",
+      "language": {
+        "requirement_field": "evas-va-2.4-plus-2023-v1",
+        "resolved": {
+          "id": "evas-va-2.4-plus-2023-v1",
+          "version": "1",
+          "base": "2.4",
+          "selected_changes": [
+            "7780",
+            "7920"
+          ]
+        }
+      },
+      "scope": "2023 selected delta; voltage-domain analog context",
+      "source_fields": {
+        "status": "pending",
+        "review": "pending",
+        "gap": "Requirement card and independent boundary answers require review; selection alone is not support.",
+        "budget": "pending applicable referenced definition; no inferred rounding rule",
+        "allowed_behavior": "Permitted in analog context under selected 7920; actual conversion semantics depend on referenced IEEE 1364 definition.",
+        "conditions": [
+          "definition and aliases",
+          "domain and boundary",
+          "analog context"
+        ],
+        "required_boundaries": [
+          "positive and negative operands",
+          "fractional and integral operands",
+          "representation/range boundaries"
+        ],
+        "source_locations": [
+          "9.1 Table 9-8",
+          "9.11"
+        ],
+        "language_profile": "evas-va-2.4-plus-2023-v1"
+      },
+      "referenced_versions": [
+        {
+          "id": "lrm-2.4",
+          "version": "1",
+          "sha256": "afdb66b8baec11cb63e0572346862434fb6652faf3849a402c96bb02f03f13cf",
+          "kind": "source",
+          "bound": true,
+          "path": "unknown",
+          "origin": "https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf",
+          "gap": null,
+          "status": "active"
+        },
+        {
+          "id": "lrm-2023",
+          "version": "1",
+          "sha256": "86b19cb490fab45c0d8dbc077a3412a3dffdd4a553741ac196c825a0cbae3194",
+          "kind": "source",
+          "bound": true,
+          "path": "unknown",
+          "origin": "https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2023.pdf",
+          "gap": null,
+          "status": "active"
+        },
+        {
+          "id": "source:language-profile",
+          "version": "1",
+          "sha256": "96bad1a55d3da59d733ad376d4659e3ff6b821c9a0e5ab41ed6353e794453599",
+          "kind": "source",
+          "bound": true,
+          "path": "evas/capabilities/data/language-profile.json",
+          "origin": "evas/capabilities/data/language-profile.json",
+          "gap": null,
+          "status": "active"
+        },
+        {
+          "id": "reference:IEEE-1364-2005",
+          "version": "1",
+          "sha256": "8d88283385b189d25ca45e99ab0b19b6409a33a1c68b4048b71a0865b6426fcf",
+          "kind": "source",
+          "bound": true,
+          "path": "unknown",
+          "origin": "IEEE-1364-2005 referenced by LRM 2.4",
+          "gap": "LRM 2.4 incorporates Verilog HDL; conversion-function definitions and inherited language constructs require clause review.",
+          "status": "pending"
+        },
+        {
+          "id": "source:target-scope",
+          "version": "1",
+          "sha256": "bbc16ec9f813042a44b714014359fef63bbf28e2c43a113f4aa5868bcd0264cc",
+          "kind": "source",
+          "bound": true,
+          "path": "evas/capabilities/data/target-scope.json",
+          "origin": "evas/capabilities/data/target-scope.json",
+          "gap": null,
+          "status": "active"
+        }
+      ],
+      "readiness_gaps": [
+        "reference:IEEE-1364-2005@1: missing source identity",
+        "reference:IEEE-1364-2005@1: pending",
+        "requirement:$itor@1: pending",
+        "requirement:$itor@1: review missing"
+      ],
+      "readiness_note": "readiness gaps are registry navigation, not a qualification verdict",
+      "requirement_support": "not_conferred",
+      "coverage_sufficiency": "pending",
+      "coverage_note": "coverage sufficiency is not defined for this requirement",
+      "versions": [
+        {
+          "id": "requirement:$itor",
+          "version": "1",
+          "sha256": "779220af0f65d2967caf011d1099f36b01f113d566f37a32c3a6647f947da671",
+          "kind": "requirement",
+          "selected": true
+        }
+      ],
+      "backends": {
+        "spectre": {
+          "backend": "spectre",
+          "heading": "Spectre",
+          "toolchain": {
+            "state": "unknown",
+            "components": []
+          },
+          "execution": {
+            "state": "unknown"
+          },
+          "completeness": {
+            "state": "unknown"
+          },
+          "numerical": {
+            "state": "unknown"
+          },
+          "qualification": {
+            "state": "unknown"
+          },
+          "evidence": {
+            "state": "unknown"
+          },
+          "records": []
+        },
+        "ngspice": {
+          "backend": "ngspice",
+          "heading": "ngspice + OpenVAF-R",
+          "toolchain": {
+            "state": "unknown",
+            "components": []
+          },
+          "execution": {
+            "state": "unknown"
+          },
+          "completeness": {
+            "state": "unknown"
+          },
+          "numerical": {
+            "state": "unknown"
+          },
+          "qualification": {
+            "state": "unknown"
+          },
+          "evidence": {
+            "state": "unknown"
+          },
+          "records": []
+        },
+        "gnucap": {
+          "backend": "gnucap",
+          "heading": "Gnucap + modelgen-verilog",
+          "toolchain": {
+            "state": "unknown",
+            "components": []
+          },
+          "execution": {
+            "state": "unknown"
+          },
+          "completeness": {
+            "state": "unknown"
+          },
+          "numerical": {
+            "state": "unknown"
+          },
+          "qualification": {
+            "state": "unknown"
+          },
+          "evidence": {
+            "state": "unknown"
+          },
+          "records": []
+        },
+        "evas": {
+          "backend": "evas",
+          "heading": "EVAS",
+          "toolchain": {
+            "state": "unknown",
+            "components": []
+          },
+          "execution": {
+            "state": "unknown"
+          },
+          "completeness": {
+            "state": "unknown"
+          },
+          "numerical": {
+            "state": "unknown"
+          },
+          "qualification": {
+            "state": "unknown"
+          },
+          "evidence": {
+            "state": "unknown"
+          },
+          "records": []
+        }
+      },
+      "unassigned_backend_records": [],
+      "historical_references": []
+    },
+    {
+      "id": "requirement:$rtoi",
+      "version": "1",
+      "sha256": "803746845220bcb2683117ec390ac2df68ec0c56e1890c7a9712be799ff470ed",
+      "language": {
+        "requirement_field": "evas-va-2.4-plus-2023-v1",
+        "resolved": {
+          "id": "evas-va-2.4-plus-2023-v1",
+          "version": "1",
+          "base": "2.4",
+          "selected_changes": [
+            "7780",
+            "7920"
+          ]
+        }
+      },
+      "scope": "2023 selected delta; voltage-domain analog context",
+      "source_fields": {
+        "status": "pending",
+        "review": "pending",
+        "gap": "Requirement card and independent boundary answers require review; selection alone is not support.",
+        "budget": "pending applicable referenced definition; no inferred rounding rule",
+        "allowed_behavior": "Permitted in analog context under selected 7920; actual conversion semantics depend on referenced IEEE 1364 definition.",
+        "conditions": [
+          "definition and aliases",
+          "domain and boundary",
+          "analog context"
+        ],
+        "required_boundaries": [
+          "positive and negative operands",
+          "fractional and integral operands",
+          "representation/range boundaries"
+        ],
+        "source_locations": [
+          "9.1 Table 9-8",
+          "9.11"
+        ],
+        "language_profile": "evas-va-2.4-plus-2023-v1"
+      },
+      "referenced_versions": [
+        {
+          "id": "lrm-2.4",
+          "version": "1",
+          "sha256": "afdb66b8baec11cb63e0572346862434fb6652faf3849a402c96bb02f03f13cf",
+          "kind": "source",
+          "bound": true,
+          "path": "unknown",
+          "origin": "https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf",
+          "gap": null,
+          "status": "active"
+        },
+        {
+          "id": "lrm-2023",
+          "version": "1",
+          "sha256": "86b19cb490fab45c0d8dbc077a3412a3dffdd4a553741ac196c825a0cbae3194",
+          "kind": "source",
+          "bound": true,
+          "path": "unknown",
+          "origin": "https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2023.pdf",
+          "gap": null,
+          "status": "active"
+        },
+        {
+          "id": "source:language-profile",
+          "version": "1",
+          "sha256": "96bad1a55d3da59d733ad376d4659e3ff6b821c9a0e5ab41ed6353e794453599",
+          "kind": "source",
+          "bound": true,
+          "path": "evas/capabilities/data/language-profile.json",
+          "origin": "evas/capabilities/data/language-profile.json",
+          "gap": null,
+          "status": "active"
+        },
+        {
+          "id": "reference:IEEE-1364-2005",
+          "version": "1",
+          "sha256": "8d88283385b189d25ca45e99ab0b19b6409a33a1c68b4048b71a0865b6426fcf",
+          "kind": "source",
+          "bound": true,
+          "path": "unknown",
+          "origin": "IEEE-1364-2005 referenced by LRM 2.4",
+          "gap": "LRM 2.4 incorporates Verilog HDL; conversion-function definitions and inherited language constructs require clause review.",
+          "status": "pending"
+        },
+        {
+          "id": "source:target-scope",
+          "version": "1",
+          "sha256": "bbc16ec9f813042a44b714014359fef63bbf28e2c43a113f4aa5868bcd0264cc",
+          "kind": "source",
+          "bound": true,
+          "path": "evas/capabilities/data/target-scope.json",
+          "origin": "evas/capabilities/data/target-scope.json",
+          "gap": null,
+          "status": "active"
+        }
+      ],
+      "readiness_gaps": [
+        "reference:IEEE-1364-2005@1: missing source identity",
+        "reference:IEEE-1364-2005@1: pending",
+        "requirement:$rtoi@1: pending",
+        "requirement:$rtoi@1: review missing"
+      ],
+      "readiness_note": "readiness gaps are registry navigation, not a qualification verdict",
+      "requirement_support": "not_conferred",
+      "coverage_sufficiency": "pending",
+      "coverage_note": "coverage sufficiency is not defined for this requirement",
+      "versions": [
+        {
+          "id": "requirement:$rtoi",
+          "version": "1",
+          "sha256": "803746845220bcb2683117ec390ac2df68ec0c56e1890c7a9712be799ff470ed",
+          "kind": "requirement",
+          "selected": true
+        }
+      ],
+      "backends": {
+        "spectre": {
+          "backend": "spectre",
+          "heading": "Spectre",
+          "toolchain": {
+            "state": "unknown",
+            "components": []
+          },
+          "execution": {
+            "state": "unknown"
+          },
+          "completeness": {
+            "state": "unknown"
+          },
+          "numerical": {
+            "state": "unknown"
+          },
+          "qualification": {
+            "state": "unknown"
+          },
+          "evidence": {
+            "state": "unknown"
+          },
+          "records": []
+        },
+        "ngspice": {
+          "backend": "ngspice",
+          "heading": "ngspice + OpenVAF-R",
+          "toolchain": {
+            "state": "unknown",
+            "components": []
+          },
+          "execution": {
+            "state": "unknown"
+          },
+          "completeness": {
+            "state": "unknown"
+          },
+          "numerical": {
+            "state": "unknown"
+          },
+          "qualification": {
+            "state": "unknown"
+          },
+          "evidence": {
+            "state": "unknown"
+          },
+          "records": []
+        },
+        "gnucap": {
+          "backend": "gnucap",
+          "heading": "Gnucap + modelgen-verilog",
+          "toolchain": {
+            "state": "unknown",
+            "components": []
+          },
+          "execution": {
+            "state": "unknown"
+          },
+          "completeness": {
+            "state": "unknown"
+          },
+          "numerical": {
+            "state": "unknown"
+          },
+          "qualification": {
+            "state": "unknown"
+          },
+          "evidence": {
+            "state": "unknown"
+          },
+          "records": []
+        },
+        "evas": {
+          "backend": "evas",
+          "heading": "EVAS",
+          "toolchain": {
+            "state": "unknown",
+            "components": []
+          },
+          "execution": {
+            "state": "unknown"
+          },
+          "completeness": {
+            "state": "unknown"
+          },
+          "numerical": {
+            "state": "unknown"
+          },
+          "qualification": {
+            "state": "unknown"
+          },
+          "evidence": {
+            "state": "unknown"
+          },
+          "records": []
+        }
+      },
+      "unassigned_backend_records": [],
+      "historical_references": []
+    },
+    {
+      "id": "requirement:expm1",
+      "version": "1",
+      "sha256": "40d49f23708f53f048e1f976444714306e554c2a745cc192b0b13a9b61d1f5ad",
+      "language": {
+        "requirement_field": "evas-va-2.4-plus-2023-v1",
+        "resolved": {
+          "id": "evas-va-2.4-plus-2023-v1",
+          "version": "1",
+          "base": "2.4",
+          "selected_changes": [
+            "7780",
+            "7920"
+          ]
+        }
+      },
+      "scope": "2023 selected delta; voltage-domain analog context",
+      "source_fields": {
+        "status": "pending",
+        "review": "pending",
+        "gap": "Requirement card and independent boundary answers require review; selection alone is not support.",
+        "budget": "No invented universal tolerance; independent numerical acceptance pending review.",
+        "allowed_behavior": "exp(x)-1 for numeric real-domain operands; operands converted to real.",
+        "conditions": [
+          "definition and aliases",
+          "domain and boundary",
+          "analog context"
+        ],
+        "observables": [
+          "expm1(x)",
+          "$expm1(x)"
+        ],
+        "required_boundaries": [
+          "x=0",
+          "small positive and negative x",
+          "large magnitudes within selected numerical domain"
+        ],
+        "source_locations": [
+          "4.3.1 Table 4-14"
+        ],
+        "language_profile": "evas-va-2.4-plus-2023-v1"
+      },
+      "referenced_versions": [
+        {
+          "id": "lrm-2.4",
+          "version": "1",
+          "sha256": "afdb66b8baec11cb63e0572346862434fb6652faf3849a402c96bb02f03f13cf",
+          "kind": "source",
+          "bound": true,
+          "path": "unknown",
+          "origin": "https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf",
+          "gap": null,
+          "status": "active"
+        },
+        {
+          "id": "lrm-2023",
+          "version": "1",
+          "sha256": "86b19cb490fab45c0d8dbc077a3412a3dffdd4a553741ac196c825a0cbae3194",
+          "kind": "source",
+          "bound": true,
+          "path": "unknown",
+          "origin": "https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2023.pdf",
+          "gap": null,
+          "status": "active"
+        },
+        {
+          "id": "source:language-profile",
+          "version": "1",
+          "sha256": "96bad1a55d3da59d733ad376d4659e3ff6b821c9a0e5ab41ed6353e794453599",
+          "kind": "source",
+          "bound": true,
+          "path": "evas/capabilities/data/language-profile.json",
+          "origin": "evas/capabilities/data/language-profile.json",
+          "gap": null,
+          "status": "active"
+        },
+        {
+          "id": "source:target-scope",
+          "version": "1",
+          "sha256": "bbc16ec9f813042a44b714014359fef63bbf28e2c43a113f4aa5868bcd0264cc",
+          "kind": "source",
+          "bound": true,
+          "path": "evas/capabilities/data/target-scope.json",
+          "origin": "evas/capabilities/data/target-scope.json",
+          "gap": null,
+          "status": "active"
+        }
+      ],
+      "readiness_gaps": [
+        "requirement:expm1@1: pending",
+        "requirement:expm1@1: review missing"
+      ],
+      "readiness_note": "readiness gaps are registry navigation, not a qualification verdict",
+      "requirement_support": "not_conferred",
+      "coverage_sufficiency": "pending",
+      "coverage_note": "coverage sufficiency is not defined for this requirement",
+      "versions": [
+        {
+          "id": "requirement:expm1",
+          "version": "1",
+          "sha256": "40d49f23708f53f048e1f976444714306e554c2a745cc192b0b13a9b61d1f5ad",
+          "kind": "requirement",
+          "selected": true
+        }
+      ],
+      "backends": {
+        "spectre": {
+          "backend": "spectre",
+          "heading": "Spectre",
+          "toolchain": {
+            "state": "unknown",
+            "components": []
+          },
+          "execution": {
+            "state": "unknown"
+          },
+          "completeness": {
+            "state": "unknown"
+          },
+          "numerical": {
+            "state": "unknown"
+          },
+          "qualification": {
+            "state": "unknown"
+          },
+          "evidence": {
+            "state": "unknown"
+          },
+          "records": []
+        },
+        "ngspice": {
+          "backend": "ngspice",
+          "heading": "ngspice + OpenVAF-R",
+          "toolchain": {
+            "state": "unknown",
+            "components": []
+          },
+          "execution": {
+            "state": "unknown"
+          },
+          "completeness": {
+            "state": "unknown"
+          },
+          "numerical": {
+            "state": "unknown"
+          },
+          "qualification": {
+            "state": "unknown"
+          },
+          "evidence": {
+            "state": "unknown"
+          },
+          "records": []
+        },
+        "gnucap": {
+          "backend": "gnucap",
+          "heading": "Gnucap + modelgen-verilog",
+          "toolchain": {
+            "state": "unknown",
+            "components": []
+          },
+          "execution": {
+            "state": "unknown"
+          },
+          "completeness": {
+            "state": "unknown"
+          },
+          "numerical": {
+            "state": "unknown"
+          },
+          "qualification": {
+            "state": "unknown"
+          },
+          "evidence": {
+            "state": "unknown"
+          },
+          "records": []
+        },
+        "evas": {
+          "backend": "evas",
+          "heading": "EVAS",
+          "toolchain": {
+            "state": "unknown",
+            "components": []
+          },
+          "execution": {
+            "state": "unknown"
+          },
+          "completeness": {
+            "state": "unknown"
+          },
+          "numerical": {
+            "state": "unknown"
+          },
+          "qualification": {
+            "state": "unknown"
+          },
+          "evidence": {
+            "state": "unknown"
+          },
+          "records": []
+        }
+      },
+      "unassigned_backend_records": [],
+      "historical_references": []
+    },
+    {
+      "id": "requirement:ln1p",
+      "version": "1",
+      "sha256": "eacc51a292b3e1838711d2a37af6c30d9f808baa09699d4cd8a28d9d42e0a895",
+      "language": {
+        "requirement_field": "evas-va-2.4-plus-2023-v1",
+        "resolved": {
+          "id": "evas-va-2.4-plus-2023-v1",
+          "version": "1",
+          "base": "2.4",
+          "selected_changes": [
+            "7780",
+            "7920"
+          ]
+        }
+      },
+      "scope": "2023 selected delta; voltage-domain analog context",
+      "source_fields": {
+        "status": "pending",
+        "review": "pending",
+        "gap": "Requirement card and independent boundary answers require review; selection alone is not support.",
+        "budget": "Not a language-mandated binary64 ULP budget; numerical acceptance pending review.",
+        "allowed_behavior": "Natural logarithm of 1+x for numeric x > -1; operands converted to real.",
+        "conditions": [
+          "definition and aliases",
+          "domain and boundary",
+          "analog context"
+        ],
+        "observables": [
+          "ln1p(x)",
+          "$ln1p(x)"
+        ],
+        "required_boundaries": [
+          "x approaches -1 from above",
+          "x=0",
+          "small positive and negative x"
+        ],
+        "source_locations": [
+          "4.3.1 Table 4-14"
+        ],
+        "language_profile": "evas-va-2.4-plus-2023-v1"
+      },
+      "referenced_versions": [
+        {
+          "id": "lrm-2.4",
+          "version": "1",
+          "sha256": "afdb66b8baec11cb63e0572346862434fb6652faf3849a402c96bb02f03f13cf",
+          "kind": "source",
+          "bound": true,
+          "path": "unknown",
+          "origin": "https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf",
+          "gap": null,
+          "status": "active"
+        },
+        {
+          "id": "lrm-2023",
+          "version": "1",
+          "sha256": "86b19cb490fab45c0d8dbc077a3412a3dffdd4a553741ac196c825a0cbae3194",
+          "kind": "source",
+          "bound": true,
+          "path": "unknown",
+          "origin": "https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2023.pdf",
+          "gap": null,
+          "status": "active"
+        },
+        {
+          "id": "source:language-profile",
+          "version": "1",
+          "sha256": "96bad1a55d3da59d733ad376d4659e3ff6b821c9a0e5ab41ed6353e794453599",
+          "kind": "source",
+          "bound": true,
+          "path": "evas/capabilities/data/language-profile.json",
+          "origin": "evas/capabilities/data/language-profile.json",
+          "gap": null,
+          "status": "active"
+        },
+        {
+          "id": "source:target-scope",
+          "version": "1",
+          "sha256": "bbc16ec9f813042a44b714014359fef63bbf28e2c43a113f4aa5868bcd0264cc",
+          "kind": "source",
+          "bound": true,
+          "path": "evas/capabilities/data/target-scope.json",
+          "origin": "evas/capabilities/data/target-scope.json",
+          "gap": null,
+          "status": "active"
+        }
+      ],
+      "readiness_gaps": [
+        "requirement:ln1p@1: pending",
+        "requirement:ln1p@1: review missing"
+      ],
+      "readiness_note": "readiness gaps are registry navigation, not a qualification verdict",
+      "requirement_support": "not_conferred",
+      "coverage_sufficiency": "pending",
+      "coverage_note": "coverage sufficiency is not defined for this requirement",
+      "versions": [
+        {
+          "id": "requirement:ln1p",
+          "version": "1",
+          "sha256": "eacc51a292b3e1838711d2a37af6c30d9f808baa09699d4cd8a28d9d42e0a895",
+          "kind": "requirement",
+          "selected": true
+        }
+      ],
+      "backends": {
+        "spectre": {
+          "backend": "spectre",
+          "heading": "Spectre",
+          "toolchain": {
+            "state": "unknown",
+            "components": []
+          },
+          "execution": {
+            "state": "unknown"
+          },
+          "completeness": {
+            "state": "unknown"
+          },
+          "numerical": {
+            "state": "unknown"
+          },
+          "qualification": {
+            "state": "unknown"
+          },
+          "evidence": {
+            "state": "unknown"
+          },
+          "records": []
+        },
+        "ngspice": {
+          "backend": "ngspice",
+          "heading": "ngspice + OpenVAF-R",
+          "toolchain": {
+            "state": "unknown",
+            "components": []
+          },
+          "execution": {
+            "state": "unknown"
+          },
+          "completeness": {
+            "state": "unknown"
+          },
+          "numerical": {
+            "state": "unknown"
+          },
+          "qualification": {
+            "state": "unknown"
+          },
+          "evidence": {
+            "state": "unknown"
+          },
+          "records": []
+        },
+        "gnucap": {
+          "backend": "gnucap",
+          "heading": "Gnucap + modelgen-verilog",
+          "toolchain": {
+            "state": "unknown",
+            "components": []
+          },
+          "execution": {
+            "state": "unknown"
+          },
+          "completeness": {
+            "state": "unknown"
+          },
+          "numerical": {
+            "state": "unknown"
+          },
+          "qualification": {
+            "state": "unknown"
+          },
+          "evidence": {
+            "state": "unknown"
+          },
+          "records": []
+        },
+        "evas": {
+          "backend": "evas",
+          "heading": "EVAS",
+          "toolchain": {
+            "state": "unknown",
+            "components": []
+          },
+          "execution": {
+            "state": "unknown"
+          },
+          "completeness": {
+            "state": "unknown"
+          },
+          "numerical": {
+            "state": "unknown"
+          },
+          "qualification": {
+            "state": "unknown"
+          },
+          "evidence": {
+            "state": "unknown"
+          },
+          "records": []
+        }
+      },
+      "unassigned_backend_records": [],
+      "historical_references": []
+    }
+  ],
+  "unbound_qualifications": [
+    {
+      "qualification": {
+        "id": "qualification:sef-registration-example",
+        "version": "1",
+        "sha256": "6ec74a49a91bac6807d9b675257ea922221441b4b96d7112999a58f9fc104287",
+        "scope": "SEF current calibration registration example only",
+        "backend": "unknown",
+        "status": "pending",
+        "review": "pending",
+        "gap": "This example deliberately retains incomplete review; it grants no current EVAS or external-backend support.",
+        "current_qualified": false,
+        "gaps": [
+          "analysis:sef-calibration-pr1@1: analysis not accepted",
+          "analysis:sef-calibration-pr1@1: case is not a bound case dependency",
+          "analysis:sef-calibration-pr1@1: pending",
+          "calibration:sef@1: approval is not a bound source dependency",
+          "calibration:sef@1: calibration review identity or scope missing",
+          "calibration:sef@1: execution is not a bound calibration-execution dependency",
+          "calibration:sef@1: pending",
+          "calibration:sef@1: review missing",
+          "calibration:sef@1: subject is not a bound checker-definition dependency",
+          "checker:sef@1: checker does not match its calibrated subject and scope",
+          "checker:sef@1: pending",
+          "checker:sef@1: review missing",
+          "checker:sef@1: subject is not a bound checker-definition dependency",
+          "example:existing-positive@1: case scope or requirements missing",
+          "example:existing-positive@1: inputs is not a bound case-inputs dependency",
+          "example:existing-positive@1: pending",
+          "example:existing-positive@1: review missing",
+          "execution:sef-calibration-pr1@1: inputs is not a bound case-inputs dependency",
+          "execution:sef-calibration-pr1@1: raw_report is not a bound source dependency",
+          "qualification:sef-registration-example@1: analysis does not bind the selected case",
+          "qualification:sef-registration-example@1: analysis/review does not identify the selected case",
+          "qualification:sef-registration-example@1: pending",
+          "qualification:sef-registration-example@1: qualification differs from the executed backend identity",
+          "qualification:sef-registration-example@1: qualification differs from the reviewed case scope/requirements",
+          "qualification:sef-registration-example@1: qualification exceeds or differs from the reviewed claim",
+          "qualification:sef-registration-example@1: qualification requires scope, requirements and backend",
+          "qualification:sef-registration-example@1: review does not bind the selected case",
+          "qualification:sef-registration-example@1: review missing",
+          "review:sef-calibration-pr1@1: case is not a bound case dependency",
+          "review:sef-calibration-pr1@1: evidence is not a bound source dependency",
+          "review:sef-calibration-pr1@1: missing independent approval identity and claim",
+          "review:sef-calibration-pr1@1: pending"
+        ],
+        "historical_query": {
+          "qualified": false,
+          "gaps": [
+            "analysis:sef-calibration-pr1@1: analysis not accepted",
+            "analysis:sef-calibration-pr1@1: case is not a bound case dependency",
+            "analysis:sef-calibration-pr1@1: pending",
+            "calibration:sef@1: approval is not a bound source dependency",
+            "calibration:sef@1: calibration review identity or scope missing",
+            "calibration:sef@1: execution is not a bound calibration-execution dependency",
+            "calibration:sef@1: pending",
+            "calibration:sef@1: review missing",
+            "calibration:sef@1: subject is not a bound checker-definition dependency",
+            "checker:sef@1: checker does not match its calibrated subject and scope",
+            "checker:sef@1: pending",
+            "checker:sef@1: review missing",
+            "checker:sef@1: subject is not a bound checker-definition dependency",
+            "example:existing-positive@1: case scope or requirements missing",
+            "example:existing-positive@1: inputs is not a bound case-inputs dependency",
+            "example:existing-positive@1: pending",
+            "example:existing-positive@1: review missing",
+            "execution:sef-calibration-pr1@1: inputs is not a bound case-inputs dependency",
+            "execution:sef-calibration-pr1@1: raw_report is not a bound source dependency",
+            "qualification:sef-registration-example@1: analysis does not bind the selected case",
+            "qualification:sef-registration-example@1: analysis/review does not identify the selected case",
+            "qualification:sef-registration-example@1: pending",
+            "qualification:sef-registration-example@1: qualification differs from the executed backend identity",
+            "qualification:sef-registration-example@1: qualification differs from the reviewed case scope/requirements",
+            "qualification:sef-registration-example@1: qualification exceeds or differs from the reviewed claim",
+            "qualification:sef-registration-example@1: qualification requires scope, requirements and backend",
+            "qualification:sef-registration-example@1: review does not bind the selected case",
+            "qualification:sef-registration-example@1: review missing",
+            "review:sef-calibration-pr1@1: case is not a bound case dependency",
+            "review:sef-calibration-pr1@1: evidence is not a bound source dependency",
+            "review:sef-calibration-pr1@1: missing independent approval identity and claim",
+            "review:sef-calibration-pr1@1: pending"
+          ],
+          "counts_as_current_support": false
+        },
+        "confers_requirement_support": false
+      },
+      "executions": [
+        {
+          "id": "execution:sef-calibration-pr1",
+          "version": "1",
+          "sha256": "5c3f0567a4b7d70d3644f54f1529c737ba24945741cd5c9e08ef071b3fbf5bb1",
+          "backend": "Python 3.14.6 unittest; no simulator execution",
+          "execution": {
+            "state": "recorded",
+            "value": "passed"
+          },
+          "completeness": {
+            "state": "recorded",
+            "value": true
+          },
+          "numerical": {
+            "state": "unknown"
+          }
+        }
+      ],
+      "analyses": [
+        {
+          "id": "analysis:sef-calibration-pr1",
+          "version": "1",
+          "sha256": "735a60e19d8f71c369f1bb50ec58b98b74baecffd3e348b86ff2a9bc3cb8ccfb",
+          "outcome": {
+            "state": "recorded",
+            "value": "pending-scope-review"
+          },
+          "numerical": {
+            "state": "unknown"
+          }
+        }
+      ],
+      "toolchain": {
+        "state": "unknown",
+        "components": []
+      },
+      "execution": {
+        "state": "recorded",
+        "value": "passed"
+      },
+      "completeness": {
+        "state": "recorded",
+        "value": true
+      },
+      "numerical": {
+        "state": "unknown"
+      },
+      "evidence": {
+        "state": "missing_evidence",
+        "items": [],
+        "gaps": [
+          "review:sef-calibration-pr1@1: evidence is not a bound source dependency"
+        ]
+      },
+      "locatable_versions": [
+        {
+          "id": "analysis:sef-calibration-pr1",
+          "version": "1",
+          "sha256": "735a60e19d8f71c369f1bb50ec58b98b74baecffd3e348b86ff2a9bc3cb8ccfb",
+          "kind": "analysis",
+          "selected": true
+        },
+        {
+          "id": "calibration:sef",
+          "version": "1",
+          "sha256": "dfa64101eb8614ece6a6e88d0e7cc06f12815c5b44eef52370b88fed991f7e61",
+          "kind": "calibration",
+          "selected": true
+        },
+        {
+          "id": "checker:sef",
+          "version": "1",
+          "sha256": "e36eac6e1d42cd35779c720365c5e9d571951f527dcad9eeaa5321d163f1316b",
+          "kind": "checker",
+          "selected": true
+        },
+        {
+          "id": "example:existing-positive",
+          "version": "1",
+          "sha256": "8dd8b0ac8689197c097ee08f1208c6d1d08ef211f645ce692e06efea139154b6",
+          "kind": "case",
+          "selected": true
+        },
+        {
+          "id": "execution:sef-calibration-pr1",
+          "version": "1",
+          "sha256": "5c3f0567a4b7d70d3644f54f1529c737ba24945741cd5c9e08ef071b3fbf5bb1",
+          "kind": "execution",
+          "selected": true
+        },
+        {
+          "id": "qualification:sef-registration-example",
+          "version": "1",
+          "sha256": "6ec74a49a91bac6807d9b675257ea922221441b4b96d7112999a58f9fc104287",
+          "kind": "qualification",
+          "selected": true
+        },
+        {
+          "id": "review:sef-calibration-pr1",
+          "version": "1",
+          "sha256": "3bb9baa2f4fe869de6234d5f0a2417c616c42475a014eabdf741bf9e171660a0",
+          "kind": "review",
+          "selected": true
+        },
+        {
+          "id": "source:existing-positive",
+          "version": "1",
+          "sha256": "6ca4e89199f661b352ae5bf7c7c0ec9c6d3d8d902e1324f23bf41a7bb5de3970",
+          "kind": "source",
+          "selected": true
+        },
+        {
+          "id": "source:sef-calibration",
+          "version": "1",
+          "sha256": "d0587738903d93870ca2a1e6e56edb5f70375fe3bc2a7932e195a932faeb5244",
+          "kind": "source",
+          "selected": true
+        },
+        {
+          "id": "source:sef-calibration-execution",
+          "version": "1",
+          "sha256": "6bdbe88bf9701506011e54bf8f0b0d1d6e9864a27b45a1d6881d5bedb46a3c0f",
+          "kind": "source",
+          "selected": true
+        },
+        {
+          "id": "source:sef-contract",
+          "version": "1",
+          "sha256": "6a0d4c879b0cfb29a50866a8e0a6855fb849c2208f0356aaa1bd93613f4ff4d3",
+          "kind": "source",
+          "selected": true
+        },
+        {
+          "id": "source:target-scope",
+          "version": "1",
+          "sha256": "bbc16ec9f813042a44b714014359fef63bbf28e2c43a113f4aa5868bcd0264cc",
+          "kind": "source",
+          "selected": true
+        }
+      ],
+      "column": null
+    }
+  ],
+  "historical": {
+    "identity": "historical-comparison-import-f210ebd5",
+    "source": "evas/docs/COMPARISON.md",
+    "scope": "Historical transcription; not qualification for current main",
+    "joined": [],
+    "unjoined": [
+      {
+        "id": "macro-include",
+        "title": "宏与 include",
+        "chapter": "语言",
+        "label": "宏与 include（含实例）",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "层次语法编译失败",
+          "gnucap": "✓ Q3",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "parameters",
+        "title": "参数",
+        "chapter": "语言",
+        "label": "参数",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "层次语法编译失败",
+          "gnucap": "✓ Q3",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "conditions",
+        "title": "条件与逻辑表达式",
+        "chapter": "语言",
+        "label": "条件与逻辑表达式",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "✓ Q3",
+          "gnucap": "✓ Q3",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "case",
+        "title": "case 分支",
+        "chapter": "语言",
+        "label": "case 分支",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "✓ Q3",
+          "gnucap": "✓ Q3",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "sequential-assign",
+        "title": "顺序赋值",
+        "chapter": "语言",
+        "label": "顺序赋值",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "✓ Q3",
+          "gnucap": "✓ Q3",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "user-function",
+        "title": "用户函数",
+        "chapter": "语言",
+        "label": "用户函数",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "✓ Q3",
+          "gnucap": "✓ Q3",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "static-loop",
+        "title": "静态循环",
+        "chapter": "语言",
+        "label": "静态循环",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "✓ Q3",
+          "gnucap": "编译失败",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "array-static-index",
+        "title": "变量数组：静态下标",
+        "chapter": "语言",
+        "label": "变量数组：静态下标",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "✓ Q3",
+          "gnucap": "编译失败",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "electrical-vector",
+        "title": "电气向量",
+        "chapter": "语言",
+        "label": "电气向量",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "✓ Q3",
+          "gnucap": "编译失败",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "hierarchy",
+        "title": "模块层次",
+        "chapter": "语言",
+        "label": "模块层次",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "编译失败",
+          "gnucap": "✓ Q3",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "sin",
+        "title": "sin",
+        "chapter": "语言",
+        "label": "sin",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "✓ Q3",
+          "gnucap": "✓ Q3",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "cos",
+        "title": "cos",
+        "chapter": "语言",
+        "label": "cos",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "✓ Q3",
+          "gnucap": "✓ Q3",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "exp",
+        "title": "exp",
+        "chapter": "语言",
+        "label": "exp",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "✓ Q3",
+          "gnucap": "✓ Q3",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "ln",
+        "title": "ln",
+        "chapter": "语言",
+        "label": "ln",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "初始化失败",
+          "gnucap": "✓ Q3",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "sqrt",
+        "title": "sqrt",
+        "chapter": "语言",
+        "label": "sqrt",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "初始化失败",
+          "gnucap": "✓ Q3",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "pow-cube",
+        "title": "pow：三次幂",
+        "chapter": "语言",
+        "label": "pow：三次幂",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "✓ Q3",
+          "gnucap": "✓ Q3",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "pow-half",
+        "title": "pow：半次幂",
+        "chapter": "语言",
+        "label": "pow：半次幂",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "✓ Q3",
+          "gnucap": "✓ Q3",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "voltage-contribution",
+        "title": "电压访问与贡献",
+        "chapter": "静态电压传递",
+        "label": "电压访问与贡献",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "✓ Q3",
+          "gnucap": "✓ Q3",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "static-voltage-feedback",
+        "title": "静态电压反馈",
+        "chapter": "静态电压传递",
+        "label": "静态电压反馈",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "✓ Q3",
+          "gnucap": "✓ Q3",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "initial-step",
+        "title": "initial_step",
+        "chapter": "阈值、迟滞、启动",
+        "label": "initial_step：事件状态初始化",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "编译或初始化失败",
+          "gnucap": "编译失败",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "cross",
+        "title": "cross：斜坡穿越",
+        "chapter": "阈值、迟滞、启动",
+        "label": "cross：斜坡穿越",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "初始化失败",
+          "gnucap": "漏事件",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "timer",
+        "title": "固定 timer",
+        "chapter": "延迟、边沿、周期",
+        "label": "固定 timer",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "初始化失败",
+          "gnucap": "✓ Q3",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "event-or",
+        "title": "事件 OR：采样与复位",
+        "chapter": "采样、保持、复位",
+        "label": "事件 OR：采样与复位",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "编译失败",
+          "gnucap": "漏事件",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "transition",
+        "title": "transition：定时非对称沿",
+        "chapter": "延迟、边沿、周期",
+        "label": "transition：定时非对称沿",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "初始化失败",
+          "gnucap": "✓ Q3",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "absdelay",
+        "title": "固定 absdelay",
+        "chapter": "延迟、边沿、周期",
+        "label": "固定 absdelay",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "初始化失败",
+          "gnucap": "✓ Q3",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "slew",
+        "title": "固定 slew",
+        "chapter": "延迟、边沿、周期",
+        "label": "固定 slew",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "编译失败",
+          "gnucap": "✓ Q3",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "idt",
+        "title": "idt：非零初值与正负面积",
+        "chapter": "连续动态与相位",
+        "label": "idt：非零初值与正负面积",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q2",
+          "ngspice": "✓ Q3",
+          "gnucap": "✓ Q3",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "idtmod",
+        "title": "idtmod：原始相位与环回",
+        "chapter": "连续动态与相位",
+        "label": "idtmod：原始相位与环回",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "环回边界未验收",
+          "ngspice": "环回边界未验收",
+          "gnucap": "编译失败",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "ddt-time",
+        "title": "ddt：二次时间表达式",
+        "chapter": "连续动态与相位",
+        "label": "ddt：二次时间表达式",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "Q1 误差超限",
+          "ngspice": "误差超限",
+          "gnucap": "✓ Q2",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "ddt-input",
+        "title": "ddt：电压斜坡平方",
+        "chapter": "连续动态与相位",
+        "label": "ddt：电压斜坡平方",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q2",
+          "ngspice": "误差超限",
+          "gnucap": "✓ Q2",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "laplace-nd",
+        "title": "一阶 laplace_nd",
+        "chapter": "连续动态与相位",
+        "label": "一阶 laplace_nd",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "✓ Q3",
+          "gnucap": "非零初态错误",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "laplace-np",
+        "title": "一阶 laplace_np",
+        "chapter": "连续动态与相位",
+        "label": "一阶 laplace_np",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "编译失败",
+          "gnucap": "误差超限",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "filter-second-order",
+        "title": "二阶滤波（内部微分）",
+        "chapter": "连续动态与相位",
+        "label": "二阶滤波（内部微分）",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "Q1 误差超限",
+          "gnucap": "误差超限",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "sample-hold-timer",
+        "title": "采样保持：定时",
+        "chapter": "采样、保持、复位",
+        "label": "采样保持：定时",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "初始化失败",
+          "gnucap": "✓ Q3",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [
+          "timer"
+        ],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "sample-hold-cross",
+        "title": "采样保持：阈值",
+        "chapter": "采样、保持、复位",
+        "label": "采样保持：阈值",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "初始化失败",
+          "gnucap": "漏事件",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [
+          "cross"
+        ],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "sample-reset-edge",
+        "title": "采样、复位与输出边沿",
+        "chapter": "采样、保持、复位",
+        "label": "采样、复位与输出边沿",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "编译失败",
+          "gnucap": "漏事件",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [
+          "transition"
+        ],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "hysteresis-edge",
+        "title": "迟滞比较器与边沿",
+        "chapter": "阈值、迟滞、启动",
+        "label": "迟滞比较器与边沿",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "初始化失败",
+          "gnucap": "误差超限",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [
+          "cross",
+          "transition"
+        ],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "sample-integrate-timer",
+        "title": "定时采样→积分：原模型",
+        "chapter": "组合、反馈、实例",
+        "label": "定时采样→积分：原模型",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "初始化失败",
+          "gnucap": "漏定时事件",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [
+          "timer",
+          "idt"
+        ],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "sample-integrate-ordered",
+        "title": "采样→积分：停止边界与非线性",
+        "chapter": "组合、反馈、实例",
+        "label": "采样→积分：停止边界与非线性",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "初始化失败",
+          "gnucap": "停止边界未达标",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [
+          "idt"
+        ],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "integrator-cascade-reset",
+        "title": "积分级联与复位",
+        "chapter": "组合、反馈、实例",
+        "label": "积分级联与复位",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "复位误差超限",
+          "ngspice": "初始化失败",
+          "gnucap": "误差超限",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [
+          "idt"
+        ],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "nonlinear-filter-feedthrough",
+        "title": "非线性输入与滤波直通项",
+        "chapter": "连续动态与相位",
+        "label": "非线性输入与滤波直通项",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "Q2 误差超限",
+          "ngspice": "Q1/Q2 误差超限",
+          "gnucap": "误差超限",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [
+          "laplace-nd"
+        ],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "filter-ddt-dc",
+        "title": "滤波与微分：DC 直通项",
+        "chapter": "连续动态与相位",
+        "label": "滤波与微分：DC 直通项",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "Q3 启动误差超限",
+          "ngspice": "✓ Q3",
+          "gnucap": "误差超限",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [
+          "laplace-nd",
+          "ddt-input"
+        ],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "two-absdelay",
+        "title": "两个固定延迟的历史",
+        "chapter": "延迟、边沿、周期",
+        "label": "两个固定延迟的历史",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "编译失败",
+          "gnucap": "✓ Q3",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [
+          "absdelay"
+        ],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "two-slew",
+        "title": "两级 slew 与反向追赶",
+        "chapter": "延迟、边沿、周期",
+        "label": "两级 slew 与反向追赶",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "编译失败",
+          "gnucap": "✓ Q3",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [
+          "slew"
+        ],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "interrupted-edge-integrate",
+        "title": "中断边沿→积分",
+        "chapter": "组合、反馈、实例",
+        "label": "中断边沿→积分",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "新版验收未跑",
+          "gnucap": "新版验收未跑",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [
+          "idt"
+        ],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "array-event-update",
+        "title": "数组的事件状态更新",
+        "chapter": "语言",
+        "label": "数组的事件状态更新",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "初始化失败",
+          "gnucap": "编译失败",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [
+          "array-static-index"
+        ],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "chain-sample-hold-edge-filter",
+        "title": "采样→保持→边沿→滤波",
+        "chapter": "组合、反馈、实例",
+        "label": "采样→保持→边沿→滤波",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "编译失败",
+          "gnucap": "事件与输出错误",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [
+          "sample-hold-timer",
+          "transition",
+          "laplace-nd"
+        ],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "filter-then-sample",
+        "title": "滤波→采样保持",
+        "chapter": "组合、反馈、实例",
+        "label": "滤波→采样保持",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "编译失败",
+          "gnucap": "采样历史错误",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [
+          "laplace-nd",
+          "sample-hold-timer"
+        ],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "solve-delay-sample",
+        "title": "电压求解→延迟→采样",
+        "chapter": "组合、反馈、实例",
+        "label": "电压求解→延迟→采样",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "编译失败",
+          "gnucap": "✓ Q3",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [
+          "absdelay"
+        ],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "vco",
+        "title": "VCO：扫频与原始相位",
+        "chapter": "连续动态与相位",
+        "label": "VCO：扫频与原始相位",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "环回边界未验收",
+          "ngspice": "扫频误差超限",
+          "gnucap": "编译失败",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [
+          "idtmod"
+        ],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "instance-integrator-reset",
+        "title": "实例隔离：双积分器复位",
+        "chapter": "组合、反馈、实例",
+        "label": "实例隔离：双积分器复位",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "复位误差超限",
+          "ngspice": "编译失败",
+          "gnucap": "误差超限",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [
+          "idt"
+        ],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "instance-phase",
+        "title": "实例隔离：双相位历史",
+        "chapter": "组合、反馈、实例",
+        "label": "实例隔离：双相位历史",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "环回边界未验收",
+          "ngspice": "编译失败",
+          "gnucap": "编译失败",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [
+          "idtmod"
+        ],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "nonlinear-integral-filter-feedback",
+        "title": "非线性积分与滤波联合反馈",
+        "chapter": "组合、反馈、实例",
+        "label": "非线性积分与滤波联合反馈",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "误差超限",
+          "gnucap": "✓ Q3",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [
+          "idt",
+          "laplace-nd"
+        ],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "event-dynamics-linear",
+        "title": "事件改变动态：线性反馈",
+        "chapter": "组合、反馈、实例",
+        "label": "事件改变动态：线性反馈",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "初始化失败",
+          "gnucap": "Q1 误差超限",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "event-dynamics-riccati",
+        "title": "事件改变动态：Riccati 滤波",
+        "chapter": "组合、反馈、实例",
+        "label": "事件改变动态：Riccati 滤波",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ Q3",
+          "ngspice": "初始化失败",
+          "gnucap": "误差超限",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [
+          "laplace-nd"
+        ],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "near-timer-chain",
+        "title": "近邻定时事件：原整链",
+        "chapter": "组合、反馈、实例",
+        "label": "近邻定时事件：原整链",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "✓ 1 µV",
+          "ngspice": "初始化失败",
+          "gnucap": "✓ 1µV",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [
+          "timer"
+        ],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "near-timer-adjacent",
+        "title": "近邻定时事件：相邻浮点采样积分",
+        "chapter": "组合、反馈、实例",
+        "label": "近邻定时事件：相邻浮点采样积分",
+        "status": "compared",
+        "review": "recorded",
+        "evidence": "evas/docs/COMPARISON.md#支持矩阵",
+        "results": {
+          "spectre": "回调同刻",
+          "ngspice": "初始化失败",
+          "gnucap": "回调同刻",
+          "evas": "✓ Q3"
+        },
+        "depends_on": [
+          "timer",
+          "idt"
+        ],
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "include-guard",
+        "title": "include 保护",
+        "chapter": "语言",
+        "label": "include 保护",
+        "status": "waiting",
+        "review": "pending",
+        "evidence": "evas/validation/paper/COVERAGE.md#remaining-coverage",
+        "depends_on": [],
+        "gap": "include 保护、条件编译的独立验收尚未跑。",
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "parameter-range",
+        "title": "参数范围端点",
+        "chapter": "语言",
+        "label": "参数范围端点",
+        "status": "waiting",
+        "review": "pending",
+        "evidence": "evas/validation/paper/COVERAGE.md#remaining-coverage",
+        "depends_on": [
+          "parameters"
+        ],
+        "gap": "参数依赖与范围端点尚未跑。",
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "loop-bounds",
+        "title": "零次、一次与参数化循环",
+        "chapter": "语言",
+        "label": "零次、一次与参数化循环",
+        "status": "waiting",
+        "review": "pending",
+        "evidence": "evas/validation/paper/COVERAGE.md#remaining-coverage",
+        "depends_on": [
+          "static-loop"
+        ],
+        "gap": "零次、一次与参数化次数的循环尚未跑。",
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "array-declaration-order",
+        "title": "数组声明方向",
+        "chapter": "语言",
+        "label": "数组声明方向",
+        "status": "waiting",
+        "review": "pending",
+        "evidence": "evas/validation/paper/COVERAGE.md#remaining-coverage",
+        "depends_on": [
+          "array-static-index"
+        ],
+        "gap": "相反声明方向的数组尚未跑。",
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "supply-reference-precision",
+        "title": "供电与参考的统一精度",
+        "chapter": "参考与供电",
+        "label": "供电与参考的统一精度",
+        "status": "waiting",
+        "review": "pending",
+        "evidence": "evas/validation/paper/COVERAGE.md#remaining-coverage",
+        "depends_on": [],
+        "gap": "原 v2 四条件已测；统一精度流程中的供电依赖和对应观察尚未跑。",
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "initial-threshold",
+        "title": "初始阈值",
+        "chapter": "阈值、迟滞、启动",
+        "label": "初始阈值",
+        "status": "waiting",
+        "review": "pending",
+        "evidence": "evas/validation/paper/COVERAGE.md#remaining-coverage",
+        "depends_on": [],
+        "gap": "初始阈值尚未逐项补齐。",
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "above",
+        "title": "above",
+        "chapter": "阈值、迟滞、启动",
+        "label": "above",
+        "status": "waiting",
+        "review": "pending",
+        "evidence": "evas/validation/paper/COVERAGE.md#remaining-coverage",
+        "depends_on": [],
+        "gap": "PROTOCOL 仍将 above 列为待补，独立答案尚未写入本登记。",
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "last-crossing",
+        "title": "last_crossing",
+        "chapter": "阈值、迟滞、启动",
+        "label": "last_crossing",
+        "status": "waiting",
+        "review": "pending",
+        "evidence": "evas/validation/paper/COVERAGE.md#remaining-coverage",
+        "depends_on": [],
+        "gap": "PROTOCOL 仍将 last_crossing 列为待补，独立答案尚未写入本登记。",
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "period-update",
+        "title": "周期修改",
+        "chapter": "延迟、边沿、周期",
+        "label": "周期修改",
+        "status": "waiting",
+        "review": "pending",
+        "evidence": "evas/validation/paper/COVERAGE.md#remaining-coverage",
+        "depends_on": [
+          "timer"
+        ],
+        "gap": "周期修改尚未逐项补齐。",
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "schedule-cancel",
+        "title": "旧日程取消",
+        "chapter": "延迟、边沿、周期",
+        "label": "旧日程取消",
+        "status": "waiting",
+        "review": "pending",
+        "evidence": "evas/validation/paper/COVERAGE.md#remaining-coverage",
+        "depends_on": [
+          "timer"
+        ],
+        "gap": "旧日程取消尚未逐项补齐。",
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "same-time-rules",
+        "title": "同刻规则",
+        "chapter": "阈值、迟滞、启动",
+        "label": "同刻规则",
+        "status": "waiting",
+        "review": "pending",
+        "evidence": "evas/validation/paper/COVERAGE.md#remaining-coverage",
+        "depends_on": [],
+        "gap": "同刻规则尚未逐项补齐。",
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "vco-gated",
+        "title": "VCO 门控",
+        "chapter": "连续动态与相位",
+        "label": "VCO 门控",
+        "status": "waiting",
+        "review": "pending",
+        "evidence": "evas/validation/paper/COVERAGE.md#remaining-coverage",
+        "depends_on": [
+          "vco"
+        ],
+        "gap": "门控 VCO 尚未跑。",
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "vco-long-phase",
+        "title": "VCO 长期相位",
+        "chapter": "连续动态与相位",
+        "label": "VCO 长期相位",
+        "status": "waiting",
+        "review": "pending",
+        "evidence": "evas/validation/paper/COVERAGE.md#remaining-coverage",
+        "depends_on": [
+          "vco"
+        ],
+        "gap": "长期相位尚未跑。",
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "phase-cross",
+        "title": "读取相位的 cross",
+        "chapter": "阈值、迟滞、启动",
+        "label": "读取相位的 cross",
+        "status": "waiting",
+        "review": "pending",
+        "evidence": "evas/validation/paper/COVERAGE.md#remaining-coverage",
+        "depends_on": [
+          "cross",
+          "idtmod"
+        ],
+        "gap": "读取相位的 cross 尚未跑。",
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "sine-response",
+        "title": "正弦幅相",
+        "chapter": "连续动态与相位",
+        "label": "正弦幅相",
+        "status": "waiting",
+        "review": "pending",
+        "evidence": "evas/validation/paper/COVERAGE.md#remaining-coverage",
+        "depends_on": [
+          "laplace-nd"
+        ],
+        "gap": "正弦幅相尚未跑。",
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "conjugate-poles",
+        "title": "共轭极点",
+        "chapter": "连续动态与相位",
+        "label": "共轭极点",
+        "status": "waiting",
+        "review": "pending",
+        "evidence": "evas/validation/paper/COVERAGE.md#remaining-coverage",
+        "depends_on": [
+          "filter-second-order"
+        ],
+        "gap": "共轭极点尚未跑。",
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "smooth-derivative",
+        "title": "光滑曲线导数",
+        "chapter": "连续动态与相位",
+        "label": "光滑曲线导数",
+        "status": "waiting",
+        "review": "pending",
+        "evidence": "evas/validation/paper/COVERAGE.md#remaining-coverage",
+        "depends_on": [
+          "ddt-input"
+        ],
+        "gap": "光滑曲线导数尚未跑。",
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "delay-then-slew",
+        "title": "延迟后限速",
+        "chapter": "延迟、边沿、周期",
+        "label": "延迟后限速",
+        "status": "waiting",
+        "review": "pending",
+        "evidence": "evas/validation/paper/COVERAGE.md#remaining-coverage",
+        "depends_on": [
+          "absdelay",
+          "slew"
+        ],
+        "gap": "延迟后限速尚未形成独立卡。",
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "short-pulse",
+        "title": "短脉冲",
+        "chapter": "延迟、边沿、周期",
+        "label": "短脉冲",
+        "status": "waiting",
+        "review": "pending",
+        "evidence": "evas/validation/paper/COVERAGE.md#remaining-coverage",
+        "depends_on": [
+          "transition"
+        ],
+        "gap": "短脉冲尚未形成独立卡。",
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "deeper-slew-cascade",
+        "title": "更深 slew 级联",
+        "chapter": "延迟、边沿、周期",
+        "label": "更深 slew 级联",
+        "status": "waiting",
+        "review": "pending",
+        "evidence": "evas/validation/paper/COVERAGE.md#remaining-coverage",
+        "depends_on": [
+          "two-slew"
+        ],
+        "gap": "更深 slew 级联尚未形成独立卡。",
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      },
+      {
+        "id": "adc-codes",
+        "title": "ADC 端码、阈值、饱和与读取时序",
+        "chapter": "采样、保持、复位",
+        "label": "ADC 端码、阈值、饱和与读取时序",
+        "status": "waiting",
+        "review": "pending",
+        "evidence": "evas/validation/paper/COVERAGE.md#remaining-coverage",
+        "depends_on": [],
+        "gap": "固定端码、阈值、饱和及读取时序的仿真器用例尚未跑，不能用 benchmark 成绩代替。",
+        "in_current_denominator": false,
+        "counts_as_current_support": false
+      }
+    ],
+    "not_current": []
+  },
+  "limits": [
+    "这是暂定事实投影，不是已采用的支持视图，也不授予科学资格。",
+    "覆盖充分性未定义时保持 pending；单个案例资格不解释成要求或能力通过。",
+    "工具链版本只来自已绑定记录上的显式 toolchain 列表；没有该列表时为 unknown。",
+    "catalog.BACKENDS 的四个键不接收协议别名；无法精确对应的后端身份单独列出。",
+    "历史成绩保持原身份，不进入当前要求分母。"
+  ]
+}
