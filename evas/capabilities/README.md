@@ -61,6 +61,7 @@ python3 -B -m unittest discover -s evas/capabilities -p 'test_*.py' -v
 ## 资产、实际方法与历史来源
 
 `data/registry.json` 的 `current` 选择当前版本，`object_parts` 只把同一逻辑登记拆成文件。
+方法和历史对象按对象 id 的 SHA-256 前 8 字节（大端整数）对 16 取模，分别写入 `method-index-00.json` 至 `method-index-15.json`、`historical-index-00.json` 至 `historical-index-15.json`。同一 id 的全部版本进入同一个 part，没有对象的 part 也写出。来源、资产和入口仍各用一个文件。读取端按 `object_parts` 合并这些文件。
 `asset_catalog.py` 通过原 Registry 解析资产、方法、入口及历史记录，沿用同一内容绑定规则。
 文件级 GUARDS、实际发现方法和语义资格分别保存。生成方法保留工厂定义身份，
 原生 `unittest.skip` 包装器保留跳过声明及原方法定义；发现过程不执行测试体或 `setUp`。
