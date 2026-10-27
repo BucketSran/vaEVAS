@@ -1,0 +1,33 @@
+{
+  "parent": "340ef10e723c3fd06058f4d33ffa7dd07a9a3646",
+  "patches": [
+    {
+      "kind": "r6",
+      "worker": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/r4-fixes-sonnet-20261027",
+      "patch": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/r4-fixes-sonnet-20261027/source.patch",
+      "patch_sha256": "a8d67c29d6b195087ec444da4754f545366ff7b14eb6eb0735c9e10213253788",
+      "message": "Accept only the generated support view and check every new Rust receipt strictly",
+      "paths": [
+        "evas/capabilities/support_view.py",
+        "evas/capabilities/test_support_view.py",
+        "scripts/capabilities/generate_catalog.py",
+        "scripts/tests/test_discover_rust.py",
+        "scripts/tests/test_rust_catalog_reconcile.py"
+      ],
+      "before": {
+        "evas/capabilities/support_view.py": "d78620fc40ba6c5d23be3e81b16f25cc916324d3acd9951768b4c91680168468",
+        "evas/capabilities/test_support_view.py": "24f85f632ceff228861466bb7082eaa28bdfb6af6757b3b8b8e258bad3b135e0",
+        "scripts/capabilities/generate_catalog.py": "7cbfe5e9fd00f5b84854e5fe1834b7737781588d7d881720e7cfa3d0ec337b8c",
+        "scripts/tests/test_discover_rust.py": "c0b3e78ab356060a356fc659f3c5ff6e14d51fde66a07f3ec17540f180ae0e25",
+        "scripts/tests/test_rust_catalog_reconcile.py": "4601591ae74de54ce51a38bd6db9e611f1d5071b2837cb12adb28cebc987cc64"
+      },
+      "after": {
+        "evas/capabilities/support_view.py": "bb03011f02052b05b5be28faab6939f2a5e392bb6a9c6852cfa8a163f169da87",
+        "evas/capabilities/test_support_view.py": "4262a184f15e8f1936dc1629b1cb07adfd9cf84c1a9b8d18af9d39270c392b5c",
+        "scripts/capabilities/generate_catalog.py": "c302c25c07ee88df4b7be17e3b67b62d4e0a2216a453308ce48bcba7027ebd7d",
+        "scripts/tests/test_discover_rust.py": "536da9ad73e96e6bb719f8b1efae5cd4f7223ee55185fbeccb3e8680e3d0ff8a",
+        "scripts/tests/test_rust_catalog_reconcile.py": "23ae7ef26e061e0841997f04f93b9fae2ef12299ee47a106c6a058efa90db3ca"
+      }
+    }
+  ]
+}

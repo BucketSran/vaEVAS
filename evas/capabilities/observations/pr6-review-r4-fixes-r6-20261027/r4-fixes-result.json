@@ -1,0 +1,1581 @@
+{
+ "schema_version": 1,
+ "task": "PR6 R4 fixes (R4-01..R4-04), class-closure version",
+ "base_head": "340ef10e723c3fd06058f4d33ffa7dd07a9a3646",
+ "base_tree": "a5ab5fbc15ab805156404a9be8320ba72c6ba683",
+ "export_blob_check": {
+  "file": "verify-export.txt",
+  "text": "checked 49577 bad 0"
+ },
+ "runtime": {
+  "model": "claude-sonnet-5-5",
+  "effort_requested": "high",
+  "options": "unknown (tool does not expose)",
+  "started_utc": "2026-10-27T17:32:47Z",
+  "completed_utc": "2026-10-27T19:19:31Z",
+  "delegated": false,
+  "scientific_execution": false
+ },
+ "patch": {
+  "path": "source.patch",
+  "sha256": "a8d67c29d6b195087ec444da4754f545366ff7b14eb6eb0735c9e10213253788",
+  "files": [
+   "evas/capabilities/support_view.py",
+   "evas/capabilities/test_support_view.py",
+   "scripts/capabilities/generate_catalog.py",
+   "scripts/tests/test_discover_rust.py",
+   "scripts/tests/test_rust_catalog_reconcile.py"
+  ],
+  "applies_cleanly_to_340ef10e": true,
+  "applied_tree_equals_src": true,
+  "check": "git apply --check, then apply to replay-src (clean 340ef10e) and cmp with src for all 5 files"
+ },
+ "files": {
+  "evas/capabilities/support_view.py": {
+   "before_sha256": "d78620fc40ba6c5d23be3e81b16f25cc916324d3acd9951768b4c91680168468",
+   "after_sha256": "bb03011f02052b05b5be28faab6939f2a5e392bb6a9c6852cfa8a163f169da87"
+  },
+  "evas/capabilities/test_support_view.py": {
+   "before_sha256": "24f85f632ceff228861466bb7082eaa28bdfb6af6757b3b8b8e258bad3b135e0",
+   "after_sha256": "4262a184f15e8f1936dc1629b1cb07adfd9cf84c1a9b8d18af9d39270c392b5c"
+  },
+  "scripts/capabilities/generate_catalog.py": {
+   "before_sha256": "7cbfe5e9fd00f5b84854e5fe1834b7737781588d7d881720e7cfa3d0ec337b8c",
+   "after_sha256": "c302c25c07ee88df4b7be17e3b67b62d4e0a2216a453308ce48bcba7027ebd7d"
+  },
+  "scripts/tests/test_discover_rust.py": {
+   "before_sha256": "c0b3e78ab356060a356fc659f3c5ff6e14d51fde66a07f3ec17540f180ae0e25",
+   "after_sha256": "536da9ad73e96e6bb719f8b1efae5cd4f7223ee55185fbeccb3e8680e3d0ff8a"
+  },
+  "scripts/tests/test_rust_catalog_reconcile.py": {
+   "before_sha256": "4601591ae74de54ce51a38bd6db9e611f1d5071b2837cb12adb28cebc987cc64",
+   "after_sha256": "23ae7ef26e061e0841997f04f93b9fae2ef12299ee47a106c6a058efa90db3ca"
+  }
+ },
+ "reviewer_markdown_controls": {
+  "markdown_controls_py": {
+   "n": 26,
+   "before_wrong": [],
+   "after_wrong": [],
+   "r2_old_false_acceptances_rejected_before": [
+    16,
+    16
+   ],
+   "after": [
+    16,
+    16
+   ]
+  },
+  "markdown_extended_py": {
+   "n": 24,
+   "before_wrong": [
+    "duplicate-unbound-section-with-bound-records",
+    "duplicate-unbound-section-empty",
+    "bound-records-before-first-requirement",
+    "extra-unbound-records-in-new-current-subsection",
+    "extra-toolchain-line-in-current-preamble",
+    "requirement-under-wrong-top-section",
+    "current-default-indented-contradictory-view_status",
+    "current-default-indented-contradictory-adopted",
+    "current-default-indented-contradictory-provisional",
+    "preview-indented-contradictory-view_status",
+    "preview-indented-contradictory-adopted",
+    "preview-indented-contradictory-provisional"
+   ],
+   "after_wrong": [],
+   "normal_before": {
+    "fixture": [],
+    "real": []
+   },
+   "normal_after": {
+    "fixture": [],
+    "real": []
+   }
+  },
+  "per_control": [
+   {
+    "name": "requirement-order-only",
+    "expected_reject": false,
+    "before_reject": false,
+    "after_reject": false
+   },
+   {
+    "name": "move-all-records-to-wrong-requirement",
+    "expected_reject": true,
+    "before_reject": true,
+    "after_reject": true
+   },
+   {
+    "name": "duplicate-all-records",
+    "expected_reject": true,
+    "before_reject": true,
+    "after_reject": true
+   },
+   {
+    "name": "move-records-to-unbound-section",
+    "expected_reject": true,
+    "before_reject": true,
+    "after_reject": true
+   },
+   {
+    "name": "record-order-only",
+    "expected_reject": false,
+    "before_reject": false,
+    "after_reject": false
+   },
+   {
+    "name": "duplicate-toolchain-line",
+    "expected_reject": true,
+    "before_reject": true,
+    "after_reject": true
+   },
+   {
+    "name": "contradictory-toolchain-line",
+    "expected_reject": true,
+    "before_reject": true,
+    "after_reject": true
+   },
+   {
+    "name": "wrong-toolchain-line-only",
+    "expected_reject": true,
+    "before_reject": true,
+    "after_reject": true
+   },
+   {
+    "name": "swap-distinct-contract-allowed_behavior",
+    "expected_reject": true,
+    "before_reject": true,
+    "after_reject": true
+   },
+   {
+    "name": "swap-distinct-contract-conditions",
+    "expected_reject": true,
+    "before_reject": true,
+    "after_reject": true
+   },
+   {
+    "name": "swap-distinct-contract-observables",
+    "expected_reject": true,
+    "before_reject": true,
+    "after_reject": true
+   },
+   {
+    "name": "duplicate-requirement-section",
+    "expected_reject": true,
+    "before_reject": true,
+    "after_reject": true
+   },
+   {
+    "name": "current-default-change-view_status",
+    "expected_reject": true,
+    "before_reject": true,
+    "after_reject": true
+   },
+   {
+    "name": "current-default-drop-view_status",
+    "expected_reject": true,
+    "before_reject": true,
+    "after_reject": true
+   },
+   {
+    "name": "current-default-change-adopted",
+    "expected_reject": true,
+    "before_reject": true,
+    "after_reject": true
+   },
+   {
+    "name": "current-default-drop-adopted",
+    "expected_reject": true,
+    "before_reject": true,
+    "after_reject": true
+   },
+   {
+    "name": "current-default-change-provisional",
+    "expected_reject": true,
+    "before_reject": true,
+    "after_reject": true
+   },
+   {
+    "name": "current-default-drop-provisional",
+    "expected_reject": true,
+    "before_reject": true,
+    "after_reject": true
+   },
+   {
+    "name": "current-default-contradictory-duplicate-view-status",
+    "expected_reject": true,
+    "before_reject": true,
+    "after_reject": true
+   },
+   {
+    "name": "preview-change-view_status",
+    "expected_reject": true,
+    "before_reject": true,
+    "after_reject": true
+   },
+   {
+    "name": "preview-drop-view_status",
+    "expected_reject": true,
+    "before_reject": true,
+    "after_reject": true
+   },
+   {
+    "name": "preview-change-adopted",
+    "expected_reject": true,
+    "before_reject": true,
+    "after_reject": true
+   },
+   {
+    "name": "preview-drop-adopted",
+    "expected_reject": true,
+    "before_reject": true,
+    "after_reject": true
+   },
+   {
+    "name": "preview-change-provisional",
+    "expected_reject": true,
+    "before_reject": true,
+    "after_reject": true
+   },
+   {
+    "name": "preview-drop-provisional",
+    "expected_reject": true,
+    "before_reject": true,
+    "after_reject": true
+   },
+   {
+    "name": "preview-contradictory-duplicate-view-status",
+    "expected_reject": true,
+    "before_reject": true,
+    "after_reject": true
+   },
+   {
+    "name": "duplicate-unbound-section-with-bound-records",
+    "expected_reject": true,
+    "before_reject": false,
+    "after_reject": true
+   },
+   {
+    "name": "duplicate-unbound-section-empty",
+    "expected_reject": true,
+    "before_reject": false,
+    "after_reject": true
+   },
+   {
+    "name": "bound-records-before-first-requirement",
+    "expected_reject": true,
+    "before_reject": false,
+    "after_reject": true
+   },
+   {
+    "name": "extra-unbound-records-in-new-current-subsection",
+    "expected_reject": true,
+    "before_reject": false,
+    "after_reject": true
+   },
+   {
+    "name": "extra-toolchain-line-in-current-preamble",
+    "expected_reject": true,
+    "before_reject": false,
+    "after_reject": true
+   },
+   {
+    "name": "requirement-under-wrong-top-section",
+    "expected_reject": true,
+    "before_reject": false,
+    "after_reject": true
+   },
+   {
+    "name": "current-default-duplicate-view_status",
+    "expected_reject": true,
+    "before_reject": true,
+    "after_reject": true
+   },
+   {
+    "name": "current-default-contradictory-duplicate-view_status",
+    "expected_reject": true,
+    "before_reject": true,
+    "after_reject": true
+   },
+   {
+    "name": "current-default-indented-contradictory-view_status",
+    "expected_reject": true,
+    "before_reject": false,
+    "after_reject": true
+   },
+   {
+    "name": "current-default-duplicate-adopted",
+    "expected_reject": true,
+    "before_reject": true,
+    "after_reject": true
+   },
+   {
+    "name": "current-default-contradictory-duplicate-adopted",
+    "expected_reject": true,
+    "before_reject": true,
+    "after_reject": true
+   },
+   {
+    "name": "current-default-indented-contradictory-adopted",
+    "expected_reject": true,
+    "before_reject": false,
+    "after_reject": true
+   },
+   {
+    "name": "current-default-duplicate-provisional",
+    "expected_reject": true,
+    "before_reject": true,
+    "after_reject": true
+   },
+   {
+    "name": "current-default-contradictory-duplicate-provisional",
+    "expected_reject": true,
+    "before_reject": true,
+    "after_reject": true
+   },
+   {
+    "name": "current-default-indented-contradictory-provisional",
+    "expected_reject": true,
+    "before_reject": false,
+    "after_reject": true
+   },
+   {
+    "name": "preview-duplicate-view_status",
+    "expected_reject": true,
+    "before_reject": true,
+    "after_reject": true
+   },
+   {
+    "name": "preview-contradictory-duplicate-view_status",
+    "expected_reject": true,
+    "before_reject": true,
+    "after_reject": true
+   },
+   {
+    "name": "preview-indented-contradictory-view_status",
+    "expected_reject": true,
+    "before_reject": false,
+    "after_reject": true
+   },
+   {
+    "name": "preview-duplicate-adopted",
+    "expected_reject": true,
+    "before_reject": true,
+    "after_reject": true
+   },
+   {
+    "name": "preview-contradictory-duplicate-adopted",
+    "expected_reject": true,
+    "before_reject": true,
+    "after_reject": true
+   },
+   {
+    "name": "preview-indented-contradictory-adopted",
+    "expected_reject": true,
+    "before_reject": false,
+    "after_reject": true
+   },
+   {
+    "name": "preview-duplicate-provisional",
+    "expected_reject": true,
+    "before_reject": true,
+    "after_reject": true
+   },
+   {
+    "name": "preview-contradictory-duplicate-provisional",
+    "expected_reject": true,
+    "before_reject": true,
+    "after_reject": true
+   },
+   {
+    "name": "preview-indented-contradictory-provisional",
+    "expected_reject": true,
+    "before_reject": false,
+    "after_reject": true
+   }
+  ],
+  "reviewer_saved_files_and_real_support_md": {
+   "before": [
+    {
+     "name": "real-generated-support.md-normal",
+     "expected_reject": false,
+     "reject": false
+    },
+    {
+     "name": "real-preview-rendering-normal",
+     "expected_reject": false,
+     "reject": false
+    },
+    {
+     "name": "real-current-default-indented-status",
+     "expected_reject": true,
+     "reject": false
+    },
+    {
+     "name": "real-preview-indented-status",
+     "expected_reject": true,
+     "reject": false
+    },
+    {
+     "name": "duplicate-unbound-contradictory-toolchain",
+     "expected_reject": true,
+     "reject": false
+    },
+    {
+     "name": "real-second-unbound-section",
+     "expected_reject": true,
+     "reject": false
+    },
+    {
+     "name": "real-current-default-pad2-view_status",
+     "expected_reject": true,
+     "reject": false
+    },
+    {
+     "name": "real-current-default-pad1-view_status",
+     "expected_reject": true,
+     "reject": false
+    },
+    {
+     "name": "real-current-default-pad3-view_status",
+     "expected_reject": true,
+     "reject": false
+    },
+    {
+     "name": "real-current-default-pad1t-view_status",
+     "expected_reject": true,
+     "reject": false
+    },
+    {
+     "name": "real-current-default-pad4-view_status",
+     "expected_reject": true,
+     "reject": false
+    },
+    {
+     "name": "real-current-default-pad2-adopted",
+     "expected_reject": true,
+     "reject": false
+    },
+    {
+     "name": "real-current-default-pad1-adopted",
+     "expected_reject": true,
+     "reject": false
+    },
+    {
+     "name": "real-current-default-pad3-adopted",
+     "expected_reject": true,
+     "reject": false
+    },
+    {
+     "name": "real-current-default-pad1t-adopted",
+     "expected_reject": true,
+     "reject": false
+    },
+    {
+     "name": "real-current-default-pad4-adopted",
+     "expected_reject": true,
+     "reject": false
+    },
+    {
+     "name": "real-current-default-pad2-provisional",
+     "expected_reject": true,
+     "reject": false
+    },
+    {
+     "name": "real-current-default-pad1-provisional",
+     "expected_reject": true,
+     "reject": false
+    },
+    {
+     "name": "real-current-default-pad3-provisional",
+     "expected_reject": true,
+     "reject": false
+    },
+    {
+     "name": "real-current-default-pad1t-provisional",
+     "expected_reject": true,
+     "reject": false
+    },
+    {
+     "name": "real-current-default-pad4-provisional",
+     "expected_reject": true,
+     "reject": false
+    }
+   ],
+   "after": [
+    {
+     "name": "real-generated-support.md-normal",
+     "expected_reject": false,
+     "reject": false
+    },
+    {
+     "name": "real-preview-rendering-normal",
+     "expected_reject": false,
+     "reject": false
+    },
+    {
+     "name": "real-current-default-indented-status",
+     "expected_reject": true,
+     "reject": true
+    },
+    {
+     "name": "real-preview-indented-status",
+     "expected_reject": true,
+     "reject": true
+    },
+    {
+     "name": "duplicate-unbound-contradictory-toolchain",
+     "expected_reject": true,
+     "reject": true
+    },
+    {
+     "name": "real-second-unbound-section",
+     "expected_reject": true,
+     "reject": true
+    },
+    {
+     "name": "real-current-default-pad2-view_status",
+     "expected_reject": true,
+     "reject": true
+    },
+    {
+     "name": "real-current-default-pad1-view_status",
+     "expected_reject": true,
+     "reject": true
+    },
+    {
+     "name": "real-current-default-pad3-view_status",
+     "expected_reject": true,
+     "reject": true
+    },
+    {
+     "name": "real-current-default-pad1t-view_status",
+     "expected_reject": true,
+     "reject": true
+    },
+    {
+     "name": "real-current-default-pad4-view_status",
+     "expected_reject": true,
+     "reject": true
+    },
+    {
+     "name": "real-current-default-pad2-adopted",
+     "expected_reject": true,
+     "reject": true
+    },
+    {
+     "name": "real-current-default-pad1-adopted",
+     "expected_reject": true,
+     "reject": true
+    },
+    {
+     "name": "real-current-default-pad3-adopted",
+     "expected_reject": true,
+     "reject": true
+    },
+    {
+     "name": "real-current-default-pad1t-adopted",
+     "expected_reject": true,
+     "reject": true
+    },
+    {
+     "name": "real-current-default-pad4-adopted",
+     "expected_reject": true,
+     "reject": true
+    },
+    {
+     "name": "real-current-default-pad2-provisional",
+     "expected_reject": true,
+     "reject": true
+    },
+    {
+     "name": "real-current-default-pad1-provisional",
+     "expected_reject": true,
+     "reject": true
+    },
+    {
+     "name": "real-current-default-pad3-provisional",
+     "expected_reject": true,
+     "reject": true
+    },
+    {
+     "name": "real-current-default-pad1t-provisional",
+     "expected_reject": true,
+     "reject": true
+    },
+    {
+     "name": "real-current-default-pad4-provisional",
+     "expected_reject": true,
+     "reject": true
+    }
+   ]
+  }
+ },
+ "markdown_class_variants": {
+  "subjects": [
+   "fixture current-default",
+   "fixture preview",
+   "real generated/support.md (current-default)"
+  ],
+  "after": {
+   "status-view_status": {
+    "variants": 592,
+    "must_reject": 592,
+    "rejected": 592,
+    "wrong": 0
+   },
+   "status-adopted": {
+    "variants": 592,
+    "must_reject": 592,
+    "rejected": 592,
+    "wrong": 0
+   },
+   "status-provisional": {
+    "variants": 592,
+    "must_reject": 592,
+    "rejected": 592,
+    "wrong": 0
+   },
+   "qualification-record": {
+    "variants": 592,
+    "must_reject": 592,
+    "rejected": 592,
+    "wrong": 0
+   },
+   "toolchain": {
+    "variants": 592,
+    "must_reject": 592,
+    "rejected": 592,
+    "wrong": 0
+   },
+   "reference": {
+    "variants": 592,
+    "must_reject": 592,
+    "rejected": 592,
+    "wrong": 0
+   },
+   "contract-field": {
+    "variants": 1776,
+    "must_reject": 1776,
+    "rejected": 1776,
+    "wrong": 0
+   },
+   "delete-line": {
+    "variants": 1364,
+    "must_reject": 1364,
+    "rejected": 1364,
+    "wrong": 0
+   },
+   "indent-line": {
+    "variants": 1108,
+    "must_reject": 1108,
+    "rejected": 1108,
+    "wrong": 0
+   },
+   "heading-level": {
+    "variants": 193,
+    "must_reject": 193,
+    "rejected": 193,
+    "wrong": 0
+   },
+   "reorder-allowed": {
+    "variants": 5,
+    "must_reject": 0,
+    "rejected": 0,
+    "wrong": 0
+   }
+  },
+  "before_340ef10e": {
+   "status-view_status": {
+    "variants": 592,
+    "must_reject": 592,
+    "rejected": 38,
+    "wrong": 554
+   },
+   "status-adopted": {
+    "variants": 592,
+    "must_reject": 592,
+    "rejected": 38,
+    "wrong": 554
+   },
+   "status-provisional": {
+    "variants": 592,
+    "must_reject": 592,
+    "rejected": 38,
+    "wrong": 554
+   },
+   "qualification-record": {
+    "variants": 592,
+    "must_reject": 592,
+    "rejected": 70,
+    "wrong": 522
+   },
+   "toolchain": {
+    "variants": 592,
+    "must_reject": 592,
+    "rejected": 70,
+    "wrong": 522
+   },
+   "reference": {
+    "variants": 592,
+    "must_reject": 592,
+    "rejected": 20,
+    "wrong": 572
+   },
+   "contract-field": {
+    "variants": 1776,
+    "must_reject": 1776,
+    "rejected": 60,
+    "wrong": 1716
+   },
+   "delete-line": {
+    "variants": 1364,
+    "must_reject": 1364,
+    "rejected": 107,
+    "wrong": 1257
+   },
+   "indent-line": {
+    "variants": 1108,
+    "must_reject": 1108,
+    "rejected": 118,
+    "wrong": 990
+   },
+   "heading-level": {
+    "variants": 193,
+    "must_reject": 193,
+    "rejected": 25,
+    "wrong": 168
+   },
+   "reorder-allowed": {
+    "variants": 5,
+    "must_reject": 0,
+    "rejected": 0,
+    "wrong": 0
+   }
+  },
+  "total_variants": 7998,
+  "total_wrong_after": 0,
+  "total_wrong_before": 7409,
+  "normal_audit_after": {
+   "fixture-current-default": [],
+   "fixture-preview": [],
+   "real-current-default": []
+  },
+  "note": "before = 340ef10e support_view.py driven by the new variant generator (the old audit run on the same variants)"
+ },
+ "r4_03_generator_replay": {
+  "before/good-published-ci-receipt": {
+   "receipt_sha256": "7a969f8e1564bbab96e9e0522e895cbb359ba4486ea2410854c90a9c4e00e8f5",
+   "published_locator": true,
+   "expected": "registers",
+   "returncode": 0,
+   "registered": true,
+   "stderr_tail": "",
+   "report": {
+    "rust_entrypoints": 5,
+    "rust_checks": [
+     {
+      "actual_binaries": 5,
+      "actual_ignored": 1,
+      "actual_tests": 904,
+      "observer_sha256_as_actually_recorded": "f1ade74617fa171c5048246986d52e772b0913ffce28713af6e2fa4af5904892",
+      "profile": "linux-x86_64-regression-opt1-v1",
+      "source_availability": "published-archive",
+      "source_receipt_sha256": "7a969f8e1564bbab96e9e0522e895cbb359ba4486ea2410854c90a9c4e00e8f5",
+      "status": "formal-API-reconciled"
+     }
+    ]
+   },
+   "generator_sha256": "7cbfe5e9fd00f5b84854e5fe1834b7737781588d7d881720e7cfa3d0ec337b8c",
+   "restored_clean": true
+  },
+  "before/good-unpublished-ci-receipt": {
+   "receipt_sha256": "7a969f8e1564bbab96e9e0522e895cbb359ba4486ea2410854c90a9c4e00e8f5",
+   "published_locator": false,
+   "expected": "registers",
+   "returncode": 0,
+   "registered": true,
+   "stderr_tail": "",
+   "report": {
+    "rust_entrypoints": 5,
+    "rust_checks": [
+     {
+      "actual_binaries": 5,
+      "actual_ignored": 1,
+      "actual_tests": 904,
+      "observer_sha256_as_actually_recorded": "f1ade74617fa171c5048246986d52e772b0913ffce28713af6e2fa4af5904892",
+      "profile": "linux-x86_64-regression-opt1-v1",
+      "source_availability": "pending",
+      "source_receipt_sha256": "7a969f8e1564bbab96e9e0522e895cbb359ba4486ea2410854c90a9c4e00e8f5",
+      "status": "pending-published-source-locator"
+     }
+    ]
+   },
+   "generator_sha256": "7cbfe5e9fd00f5b84854e5fe1834b7737781588d7d881720e7cfa3d0ec337b8c",
+   "restored_clean": true
+  },
+  "before/stable-unpublished": {
+   "receipt_sha256": "068c85494bdb278902b845dba372316f1cae87b19bceb23b67e1f83965bbb244",
+   "published_locator": false,
+   "expected": "rejected",
+   "returncode": 0,
+   "registered": true,
+   "stderr_tail": "",
+   "report": {
+    "rust_entrypoints": 5,
+    "rust_checks": [
+     {
+      "actual_binaries": 5,
+      "actual_ignored": 1,
+      "actual_tests": 904,
+      "observer_sha256_as_actually_recorded": "f1ade74617fa171c5048246986d52e772b0913ffce28713af6e2fa4af5904892",
+      "profile": "linux-x86_64-regression-opt1-v1",
+      "source_availability": "pending",
+      "source_receipt_sha256": "068c85494bdb278902b845dba372316f1cae87b19bceb23b67e1f83965bbb244",
+      "status": "pending-published-source-locator"
+     }
+    ]
+   },
+   "generator_sha256": "7cbfe5e9fd00f5b84854e5fe1834b7737781588d7d881720e7cfa3d0ec337b8c",
+   "restored_clean": true
+  },
+  "before/stable-published": {
+   "receipt_sha256": "068c85494bdb278902b845dba372316f1cae87b19bceb23b67e1f83965bbb244",
+   "published_locator": true,
+   "expected": "rejected",
+   "returncode": 1,
+   "registered": false,
+   "stderr_tail": "ValueError: missing actual Rust toolchain identity",
+   "report": null,
+   "generator_sha256": "7cbfe5e9fd00f5b84854e5fe1834b7737781588d7d881720e7cfa3d0ec337b8c",
+   "restored_clean": true
+  },
+  "after/good-published-ci-receipt": {
+   "receipt_sha256": "7a969f8e1564bbab96e9e0522e895cbb359ba4486ea2410854c90a9c4e00e8f5",
+   "published_locator": true,
+   "expected": "registers",
+   "returncode": 0,
+   "registered": true,
+   "stderr_tail": "",
+   "report": {
+    "rust_entrypoints": 5,
+    "rust_checks": [
+     {
+      "actual_binaries": 5,
+      "actual_ignored": 1,
+      "actual_tests": 904,
+      "observer_sha256_as_actually_recorded": "f1ade74617fa171c5048246986d52e772b0913ffce28713af6e2fa4af5904892",
+      "profile": "linux-x86_64-regression-opt1-v1",
+      "source_availability": "published-archive",
+      "source_receipt_sha256": "7a969f8e1564bbab96e9e0522e895cbb359ba4486ea2410854c90a9c4e00e8f5",
+      "status": "formal-API-reconciled"
+     }
+    ]
+   },
+   "generator_sha256": "c302c25c07ee88df4b7be17e3b67b62d4e0a2216a453308ce48bcba7027ebd7d",
+   "restored_clean": true
+  },
+  "after/good-unpublished-ci-receipt": {
+   "receipt_sha256": "7a969f8e1564bbab96e9e0522e895cbb359ba4486ea2410854c90a9c4e00e8f5",
+   "published_locator": false,
+   "expected": "registers",
+   "returncode": 0,
+   "registered": true,
+   "stderr_tail": "",
+   "report": {
+    "rust_entrypoints": 5,
+    "rust_checks": [
+     {
+      "actual_binaries": 5,
+      "actual_ignored": 1,
+      "actual_tests": 904,
+      "observer_sha256_as_actually_recorded": "f1ade74617fa171c5048246986d52e772b0913ffce28713af6e2fa4af5904892",
+      "profile": "linux-x86_64-regression-opt1-v1",
+      "source_availability": "pending",
+      "source_receipt_sha256": "7a969f8e1564bbab96e9e0522e895cbb359ba4486ea2410854c90a9c4e00e8f5",
+      "status": "pending-published-source-locator"
+     }
+    ]
+   },
+   "generator_sha256": "c302c25c07ee88df4b7be17e3b67b62d4e0a2216a453308ce48bcba7027ebd7d",
+   "restored_clean": true
+  },
+  "after/stable-unpublished": {
+   "receipt_sha256": "068c85494bdb278902b845dba372316f1cae87b19bceb23b67e1f83965bbb244",
+   "published_locator": false,
+   "expected": "rejected",
+   "returncode": 1,
+   "registered": false,
+   "stderr_tail": "ValueError: missing actual Rust toolchain identity",
+   "report": null,
+   "generator_sha256": "c302c25c07ee88df4b7be17e3b67b62d4e0a2216a453308ce48bcba7027ebd7d",
+   "restored_clean": true
+  },
+  "after/stable-published": {
+   "receipt_sha256": "068c85494bdb278902b845dba372316f1cae87b19bceb23b67e1f83965bbb244",
+   "published_locator": true,
+   "expected": "rejected",
+   "returncode": 1,
+   "registered": false,
+   "stderr_tail": "ValueError: missing actual Rust toolchain identity",
+   "report": null,
+   "generator_sha256": "c302c25c07ee88df4b7be17e3b67b62d4e0a2216a453308ce48bcba7027ebd7d",
+   "restored_clean": true
+  }
+ },
+ "r4_04_nightly_replay": {
+  "rows": [
+   {
+    "label": "before",
+    "mutant": "normal",
+    "method": "test_ci_uses_one_fixed_rust_toolchain",
+    "passed": true,
+    "returncode": 0,
+    "workflow_sha256": "fa6d43b7b339d932a950b0cf099d646236dd5266d17252597f6d5b22b7cb0f14",
+    "stderr_tail": ".\n----------------------------------------------------------------------\nRan 1 test in 0.370s\n\nOK\n"
+   },
+   {
+    "label": "before",
+    "mutant": "nightly-outside-fuzz",
+    "method": "test_ci_uses_one_fixed_rust_toolchain",
+    "passed": true,
+    "returncode": 0,
+    "workflow_sha256": "91bff37251253066ca42645fc492087145c23aea3f257914a2c8bc1c39b4c74f",
+    "stderr_tail": ".\n----------------------------------------------------------------------\nRan 1 test in 0.363s\n\nOK\n"
+   },
+   {
+    "label": "before",
+    "mutant": "stable-outside-fuzz",
+    "method": "test_ci_uses_one_fixed_rust_toolchain",
+    "passed": false,
+    "returncode": 1,
+    "workflow_sha256": "46107f0b046ccb616c035a52f3bf1d045a12d4455813da7ccee5ff2ae11d73de",
+    "stderr_tail": "pport, regression, rust-regression, regression-coverage, regression-admission, properties-and-ngspice, fuzz-smoke, package, benchmark]\\n    if: always()\\n    runs-on: ubuntu-latest\\n    timeout-minutes: 5\\n    steps:\\n      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4\\n      - name: Require every selected check and reusable child job to succeed\\n        env:\\n          CI_NEEDS: ${{ toJSON(needs) }}\\n        run: python3 -B scripts/ci_selection.py gate\\n'\n\n----------------------------------------------------------------------\nRan 1 test in 0.354s\n\nFAILED (failures=1)\n"
+   },
+   {
+    "label": "after",
+    "mutant": "normal",
+    "method": "test_ci_uses_one_fixed_rust_toolchain",
+    "passed": true,
+    "returncode": 0,
+    "workflow_sha256": "fa6d43b7b339d932a950b0cf099d646236dd5266d17252597f6d5b22b7cb0f14",
+    "stderr_tail": ".\n----------------------------------------------------------------------\nRan 1 test in 0.382s\n\nOK\n"
+   },
+   {
+    "label": "after",
+    "mutant": "normal",
+    "method": "test_toolchain_selection_is_a_whitelist",
+    "passed": true,
+    "returncode": 0,
+    "workflow_sha256": "fa6d43b7b339d932a950b0cf099d646236dd5266d17252597f6d5b22b7cb0f14",
+    "stderr_tail": ".\n----------------------------------------------------------------------\nRan 1 test in 5.869s\n\nOK\n"
+   },
+   {
+    "label": "after",
+    "mutant": "nightly-outside-fuzz",
+    "method": "test_ci_uses_one_fixed_rust_toolchain",
+    "passed": true,
+    "returncode": 0,
+    "workflow_sha256": "91bff37251253066ca42645fc492087145c23aea3f257914a2c8bc1c39b4c74f",
+    "stderr_tail": ".\n----------------------------------------------------------------------\nRan 1 test in 0.358s\n\nOK\n"
+   },
+   {
+    "label": "after",
+    "mutant": "nightly-outside-fuzz",
+    "method": "test_toolchain_selection_is_a_whitelist",
+    "passed": false,
+    "returncode": 1,
+    "workflow_sha256": "91bff37251253066ca42645fc492087145c23aea3f257914a2c8bc1c39b4c74f",
+    "stderr_tail": "ts 'nightly': run: cargo +nightly test --locked --workspace --manifest-path evas/rust_core/Cargo.toml\"\n\n+ []\n- [\".github/workflows/numerical-assurance.yml:289: cargo selects 'nightly': run: \"\n-  'cargo +nightly test --locked --workspace --manifest-path '\n-  'evas/rust_core/Cargo.toml',\n-  '.github/workflows/numerical-assurance.yml:289: channel name outside an '\n-  'approved nightly use: run: cargo +nightly test --locked --workspace '\n-  '--manifest-path evas/rust_core/Cargo.toml']\n\n----------------------------------------------------------------------\nRan 1 test in 0.368s\n\nFAILED (failures=1)\n"
+   },
+   {
+    "label": "after",
+    "mutant": "stable-outside-fuzz",
+    "method": "test_ci_uses_one_fixed_rust_toolchain",
+    "passed": false,
+    "returncode": 1,
+    "workflow_sha256": "46107f0b046ccb616c035a52f3bf1d045a12d4455813da7ccee5ff2ae11d73de",
+    "stderr_tail": "pport, regression, rust-regression, regression-coverage, regression-admission, properties-and-ngspice, fuzz-smoke, package, benchmark]\\n    if: always()\\n    runs-on: ubuntu-latest\\n    timeout-minutes: 5\\n    steps:\\n      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4\\n      - name: Require every selected check and reusable child job to succeed\\n        env:\\n          CI_NEEDS: ${{ toJSON(needs) }}\\n        run: python3 -B scripts/ci_selection.py gate\\n'\n\n----------------------------------------------------------------------\nRan 1 test in 0.361s\n\nFAILED (failures=1)\n"
+   },
+   {
+    "label": "after",
+    "mutant": "stable-outside-fuzz",
+    "method": "test_toolchain_selection_is_a_whitelist",
+    "passed": false,
+    "returncode": 1,
+    "workflow_sha256": "46107f0b046ccb616c035a52f3bf1d045a12d4455813da7ccee5ff2ae11d73de",
+    "stderr_tail": "selects 'stable': run: cargo +stable test --locked --workspace --manifest-path evas/rust_core/Cargo.toml\"\n\n+ []\n- [\".github/workflows/numerical-assurance.yml:289: cargo selects 'stable': run: \"\n-  'cargo +stable test --locked --workspace --manifest-path '\n-  'evas/rust_core/Cargo.toml',\n-  '.github/workflows/numerical-assurance.yml:289: channel name outside an '\n-  'approved nightly use: run: cargo +stable test --locked --workspace '\n-  '--manifest-path evas/rust_core/Cargo.toml']\n\n----------------------------------------------------------------------\nRan 1 test in 0.511s\n\nFAILED (failures=1)\n"
+   }
+  ],
+  "workflow_normal_sha_equals_head": true
+ },
+ "toolchain_class_variants": {
+  "classes": {
+   "rustup-toolchain-install": {
+    "variants": 27,
+    "must_reject": 26,
+    "rejected": 26,
+    "wrong": 0,
+    "locations": 9,
+    "values": [
+     "1.99.0",
+     "nightly",
+     "stable"
+    ]
+   },
+   "rustup-default": {
+    "variants": 27,
+    "must_reject": 27,
+    "rejected": 27,
+    "wrong": 0,
+    "locations": 9,
+    "values": [
+     "1.99.0",
+     "nightly",
+     "stable"
+    ]
+   },
+   "rustup-override-set": {
+    "variants": 27,
+    "must_reject": 27,
+    "rejected": 27,
+    "wrong": 0,
+    "locations": 9,
+    "values": [
+     "1.99.0",
+     "nightly",
+     "stable"
+    ]
+   },
+   "rustup-run": {
+    "variants": 27,
+    "must_reject": 27,
+    "rejected": 27,
+    "wrong": 0,
+    "locations": 9,
+    "values": [
+     "1.99.0",
+     "nightly",
+     "stable"
+    ]
+   },
+   "rustup-toolchain-link": {
+    "variants": 27,
+    "must_reject": 27,
+    "rejected": 27,
+    "wrong": 0,
+    "locations": 9,
+    "values": [
+     "1.99.0",
+     "nightly",
+     "stable"
+    ]
+   },
+   "rustup-unrecognised": {
+    "variants": 27,
+    "must_reject": 27,
+    "rejected": 27,
+    "wrong": 0,
+    "locations": 9,
+    "values": [
+     "1.99.0",
+     "nightly",
+     "stable"
+    ]
+   },
+   "rustup-in-compound-command": {
+    "variants": 27,
+    "must_reject": 27,
+    "rejected": 27,
+    "wrong": 0,
+    "locations": 9,
+    "values": [
+     "1.99.0",
+     "nightly",
+     "stable"
+    ]
+   },
+   "rustup-in-block-scalar": {
+    "variants": 27,
+    "must_reject": 26,
+    "rejected": 26,
+    "wrong": 0,
+    "locations": 9,
+    "values": [
+     "1.99.0",
+     "nightly",
+     "stable"
+    ]
+   },
+   "cargo-plus": {
+    "variants": 27,
+    "must_reject": 26,
+    "rejected": 26,
+    "wrong": 0,
+    "locations": 9,
+    "values": [
+     "1.99.0",
+     "nightly",
+     "stable"
+    ]
+   },
+   "rustc-plus": {
+    "variants": 27,
+    "must_reject": 27,
+    "rejected": 27,
+    "wrong": 0,
+    "locations": 9,
+    "values": [
+     "1.99.0",
+     "nightly",
+     "stable"
+    ]
+   },
+   "cargo-clippy-plus": {
+    "variants": 27,
+    "must_reject": 27,
+    "rejected": 27,
+    "wrong": 0,
+    "locations": 9,
+    "values": [
+     "1.99.0",
+     "nightly",
+     "stable"
+    ]
+   },
+   "cargo-plus-in-block-scalar": {
+    "variants": 27,
+    "must_reject": 26,
+    "rejected": 26,
+    "wrong": 0,
+    "locations": 9,
+    "values": [
+     "1.99.0",
+     "nightly",
+     "stable"
+    ]
+   },
+   "shell-env-assignment": {
+    "variants": 27,
+    "must_reject": 27,
+    "rejected": 27,
+    "wrong": 0,
+    "locations": 9,
+    "values": [
+     "1.99.0",
+     "nightly",
+     "stable"
+    ]
+   },
+   "shell-export": {
+    "variants": 27,
+    "must_reject": 27,
+    "rejected": 27,
+    "wrong": 0,
+    "locations": 9,
+    "values": [
+     "1.99.0",
+     "nightly",
+     "stable"
+    ]
+   },
+   "github-env-file": {
+    "variants": 27,
+    "must_reject": 27,
+    "rejected": 27,
+    "wrong": 0,
+    "locations": 9,
+    "values": [
+     "1.99.0",
+     "nightly",
+     "stable"
+    ]
+   },
+   "step-env": {
+    "variants": 27,
+    "must_reject": 27,
+    "rejected": 27,
+    "wrong": 0,
+    "locations": 9,
+    "values": [
+     "1.99.0",
+     "nightly",
+     "stable"
+    ]
+   },
+   "step-env-quoted": {
+    "variants": 27,
+    "must_reject": 27,
+    "rejected": 27,
+    "wrong": 0,
+    "locations": 9,
+    "values": [
+     "1.99.0",
+     "nightly",
+     "stable"
+    ]
+   },
+   "with-toolchain-input": {
+    "variants": 27,
+    "must_reject": 26,
+    "rejected": 26,
+    "wrong": 0,
+    "locations": 9,
+    "values": [
+     "1.99.0",
+     "nightly",
+     "stable"
+    ]
+   },
+   "dtolnay-action": {
+    "variants": 27,
+    "must_reject": 27,
+    "rejected": 27,
+    "wrong": 0,
+    "locations": 9,
+    "values": [
+     "1.99.0",
+     "nightly",
+     "stable"
+    ]
+   },
+   "dtolnay-action-with": {
+    "variants": 27,
+    "must_reject": 27,
+    "rejected": 27,
+    "wrong": 0,
+    "locations": 9,
+    "values": [
+     "1.99.0",
+     "nightly",
+     "stable"
+    ]
+   },
+   "actions-rs": {
+    "variants": 27,
+    "must_reject": 27,
+    "rejected": 27,
+    "wrong": 0,
+    "locations": 9,
+    "values": [
+     "1.99.0",
+     "nightly",
+     "stable"
+    ]
+   },
+   "job-env": {
+    "variants": 9,
+    "must_reject": 9,
+    "rejected": 9,
+    "wrong": 0,
+    "locations": 3,
+    "values": [
+     "1.99.0",
+     "nightly",
+     "stable"
+    ]
+   },
+   "job-env-quoted": {
+    "variants": 9,
+    "must_reject": 9,
+    "rejected": 9,
+    "wrong": 0,
+    "locations": 3,
+    "values": [
+     "1.99.0",
+     "nightly",
+     "stable"
+    ]
+   },
+   "workflow-env-second": {
+    "variants": 3,
+    "must_reject": 3,
+    "rejected": 3,
+    "wrong": 0,
+    "locations": 1,
+    "values": [
+     "1.99.0",
+     "nightly",
+     "stable"
+    ]
+   },
+   "workflow-env-pin-replaced": {
+    "variants": 3,
+    "must_reject": 2,
+    "rejected": 2,
+    "wrong": 0,
+    "locations": 1,
+    "values": [
+     "1.99.0",
+     "nightly",
+     "stable"
+    ]
+   },
+   "reusable-input-default": {
+    "variants": 3,
+    "must_reject": 3,
+    "rejected": 3,
+    "wrong": 0,
+    "locations": 1,
+    "values": [
+     "1.99.0",
+     "nightly",
+     "stable"
+    ]
+   },
+   "reusable-caller-passes-literal": {
+    "variants": 3,
+    "must_reject": 3,
+    "rejected": 3,
+    "wrong": 0,
+    "locations": 1,
+    "values": [
+     "1.99.0",
+     "nightly",
+     "stable"
+    ]
+   },
+   "selection-output-literal": {
+    "variants": 3,
+    "must_reject": 3,
+    "rejected": 3,
+    "wrong": 0,
+    "locations": 1,
+    "values": [
+     "1.99.0",
+     "nightly",
+     "stable"
+    ]
+   },
+   "composite-input-default": {
+    "variants": 3,
+    "must_reject": 3,
+    "rejected": 3,
+    "wrong": 0,
+    "locations": 1,
+    "values": [
+     "1.99.0",
+     "nightly",
+     "stable"
+    ]
+   },
+   "composite-env-literal": {
+    "variants": 3,
+    "must_reject": 3,
+    "rejected": 3,
+    "wrong": 0,
+    "locations": 1,
+    "values": [
+     "1.99.0",
+     "nightly",
+     "stable"
+    ]
+   },
+   "toolchain-file": {
+    "variants": 12,
+    "must_reject": 12,
+    "rejected": 12,
+    "wrong": 0,
+    "locations": 4,
+    "values": [
+     "1.99.0",
+     "nightly",
+     "stable"
+    ]
+   },
+   "authoritative-install": {
+    "variants": 7,
+    "must_reject": 0,
+    "rejected": 0,
+    "wrong": 0,
+    "locations": 7,
+    "values": [
+     "authoritative"
+    ]
+   },
+   "authoritative-input": {
+    "variants": 7,
+    "must_reject": 0,
+    "rejected": 0,
+    "wrong": 0,
+    "locations": 7,
+    "values": [
+     "authoritative"
+    ]
+   },
+   "authoritative-cargo-plus": {
+    "variants": 7,
+    "must_reject": 0,
+    "rejected": 0,
+    "wrong": 0,
+    "locations": 7,
+    "values": [
+     "authoritative"
+    ]
+   },
+   "fuzz-cargo-plus-nightly": {
+    "variants": 1,
+    "must_reject": 0,
+    "rejected": 0,
+    "wrong": 0,
+    "locations": 1,
+    "values": [
+     "nightly"
+    ]
+   },
+   "fuzz-install-nightly": {
+    "variants": 1,
+    "must_reject": 0,
+    "rejected": 0,
+    "wrong": 0,
+    "locations": 1,
+    "values": [
+     "nightly"
+    ]
+   },
+   "fuzz-cache-toolchain-nightly": {
+    "variants": 1,
+    "must_reject": 0,
+    "rejected": 0,
+    "wrong": 0,
+    "locations": 1,
+    "values": [
+     "nightly"
+    ]
+   },
+   "unchanged-current-ci": {
+    "variants": 1,
+    "must_reject": 0,
+    "rejected": 0,
+    "wrong": 0,
+    "locations": 1,
+    "values": [
+     "current"
+    ]
+   }
+  },
+  "total_variants": 643,
+  "total_wrong": 0,
+  "current_ci_violations": [],
+  "variant_manifest_sha256": "f2195fb0d3eecf1bfb03c88c60430db81ef7999307515465fcab3bb01381b4b4",
+  "samples": [
+   {
+    "form": "rustup-default",
+    "location": "job-steps-rust-regression",
+    "value": "nightly",
+    "violations": [
+     ".github/workflows/numerical-assurance.yml:263: rustup selects 'nightly': - run: rustup default nightly",
+     ".github/workflows/numerical-assurance.yml:263: channel name outside an approved nightly use: - run: rustup default nightly"
+    ]
+   },
+   {
+    "form": "rustup-default",
+    "location": "job-steps-regression",
+    "value": "nightly",
+    "violations": [
+     ".github/workflows/numerical-assurance.yml:327: rustup selects 'nightly': - run: rustup default nightly",
+     ".github/workflows/numerical-assurance.yml:327: channel name outside an approved nightly use: - run: rustup default nightly"
+    ]
+   },
+   {
+    "form": "rustup-default",
+    "location": "job-steps-selection",
+    "value": "nightly",
+    "violations": [
+     ".github/workflows/numerical-assurance.yml:58: rustup selects 'nightly': - run: rustup default nightly",
+     ".github/workflows/numerical-assurance.yml:58: channel name outside an approved nightly use: - run: rustup default nightly"
+    ]
+   },
+   {
+    "form": "rustup-default",
+    "location": "job-steps-fuzz-smoke",
+    "value": "nightly",
+    "violations": [
+     ".github/workflows/numerical-assurance.yml:680: rustup selects 'nightly': - run: rustup default nightly",
+     ".github/workflows/numerical-assurance.yml:680: channel name outside an approved nightly use: - run: rustup default nightly"
+    ]
+   },
+   {
+    "form": "rustup-default",
+    "location": "job-steps-ci-result",
+    "value": "nightly",
+    "violations": [
+     ".github/workflows/numerical-assurance.yml:731: rustup selects 'nightly': - run: rustup default nightly",
+     ".github/workflows/numerical-assurance.yml:731: channel name outside an approved nightly use: - run: rustup default nightly"
+    ]
+   },
+   {
+    "form": "rustup-default",
+    "location": "reusable-workflow-steps",
+    "value": "nightly",
+    "violations": [
+     ".github/workflows/package-install.yml:36: rustup selects 'nightly': - run: rustup default nightly",
+     ".github/workflows/package-install.yml:36: channel name outside an approved nightly use: - run: rustup default nightly"
+    ]
+   }
+  ]
+ },
+ "test_suites": {
+  "capabilities_discover_after": {
+   "file": "results/after-capabilities.txt",
+   "ran": 100,
+   "ok": true
+  },
+  "capabilities_discover_before_340ef10e": {
+   "file": "results/capabilities-discover-before.txt",
+   "ran": 98,
+   "ok": true
+  },
+  "test_discover_rust": {
+   "file": "results/after-test_discover_rust-defaultPATH.txt",
+   "ran": 14,
+   "ok": true
+  },
+  "test_rust_catalog_reconcile": {
+   "file": "results/after-test_rust_catalog_reconcile.txt",
+   "ran": 10,
+   "ok": true
+  },
+  "test_ci_selection": {
+   "file": "results/after-test_ci_selection.txt",
+   "ran": 38,
+   "ok": true
+  },
+  "test_ci_inventory": {
+   "file": "results/after-test_ci_inventory.txt",
+   "ran": 21,
+   "ok": true
+  },
+  "test_fast_feedback": {
+   "file": "results/after-test_fast_feedback.txt",
+   "ran": 14,
+   "ok": true
+  },
+  "test_catalog_history_selection_in_git_export": {
+   "file": "results/after-test_catalog_history_selection-in-git-export.txt",
+   "ran": 4,
+   "ok": true
+  },
+  "test_catalog_history_selection_baseline_340ef10e_in_git_export": {
+   "file": "results/before-test_catalog_history_selection-in-git-export.txt",
+   "ran": 4,
+   "ok": true
+  },
+  "render_check": {
+   "file": "results/after-render-check.txt",
+   "text": "checked 84 capability files",
+   "returncode": 0
+  }
+ },
+ "guards": {
+  "before": "guard-before.json",
+  "after": "guard-after.json",
+  "real_head": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+  "index_sha256": "a2e18b66fd9b3e29093343793d45781c11a717c05c35103d4e9b1da8eec87d71",
+  "shared_config_sha256": "de2b08ef3ba66e96be8b70c87346ff4a96f905e1272934ddd86c218dba501ea8",
+  "old_candidate_count": 20,
+  "unchanged": true,
+  "old_candidates_match_recorded": true,
+  "config_matches_accepted": true
+ }
+}

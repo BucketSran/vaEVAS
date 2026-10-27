@@ -1,0 +1,47 @@
+{
+  "prepared_at_utc": "2026-10-27T19:29:49.466387+00:00",
+  "parent": "340ef10e723c3fd06058f4d33ffa7dd07a9a3646",
+  "parent_tree": "a5ab5fbc15ab805156404a9be8320ba72c6ba683",
+  "plan": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r6-20261027/source-plan.json",
+  "paths": [
+    "evas/capabilities/support_view.py",
+    "evas/capabilities/test_support_view.py",
+    "scripts/capabilities/generate_catalog.py",
+    "scripts/tests/test_discover_rust.py",
+    "scripts/tests/test_rust_catalog_reconcile.py"
+  ],
+  "pre_render_checks": [
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "evas/capabilities/render.py"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r6-20261027/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r6-20261027/pre-render.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-27T19:28:37.628554+00:00",
+      "finished_at_utc": "2026-10-27T19:29:07.600135+00:00"
+    }
+  ],
+  "criteria_collector_language_unchanged": true,
+  "review": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/night-coordination/pr6-rebuild-astra-r3-20261027/review-report.json",
+  "before": {
+    "head": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+    "index_sha256": "a2e18b66fd9b3e29093343793d45781c11a717c05c35103d4e9b1da8eec87d71",
+    "shared_config_sha256": "de2b08ef3ba66e96be8b70c87346ff4a96f905e1272934ddd86c218dba501ea8",
+    "shared_config_status": "equal-accepted-reference",
+    "old_candidates": 20
+  },
+  "after": {
+    "head": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+    "index_sha256": "a2e18b66fd9b3e29093343793d45781c11a717c05c35103d4e9b1da8eec87d71",
+    "shared_config_sha256": "de2b08ef3ba66e96be8b70c87346ff4a96f905e1272934ddd86c218dba501ea8",
+    "shared_config_status": "equal-accepted-reference",
+    "old_candidates": 20
+  },
+  "published": false,
+  "scientific_execution": false,
+  "semantic_qualification": false,
+  "executed_by": "tclaude/claude-opus-5-5"
+}

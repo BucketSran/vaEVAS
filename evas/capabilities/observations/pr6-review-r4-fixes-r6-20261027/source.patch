@@ -1,0 +1,843 @@
+diff --git a/evas/capabilities/support_view.py b/evas/capabilities/support_view.py
+index e985ad97..7b86727f 100644
+--- a/evas/capabilities/support_view.py
++++ b/evas/capabilities/support_view.py
+@@ -6,6 +6,7 @@ current results. A missing toolchain version stays unknown.
+ """
+ import argparse
+ import json
++import re
+ from collections import Counter
+ from pathlib import Path
+ 
+@@ -900,12 +901,18 @@ def _table_cells(line):
+     return [part.strip() for part in line.strip().strip('|').split('|')]
+ 
+ 
++_STATUS_LINE_PREFIX = re.compile(r'^(?:[ \t]*(?:>|[-*+](?=[ \t])))*[ \t]*')
++
++
+ def _header_status_fields(text):
+     """view_status, adopted, and provisional values in the preamble, in order."""
+     found = {key: [] for key in ('view_status', 'adopted', 'provisional')}
+     for line in text.splitlines():
+         if line.startswith('## '):
+             break
++        # A key with leading whitespace or a quote or list marker still renders as visible
++        # paragraph text, so it counts as a second status field, not as ignorable noise.
++        line = _STATUS_LINE_PREFIX.sub('', line)
+         for key in found:
+             prefix = key + ':'
+             if line.startswith(prefix):
+@@ -960,6 +967,18 @@ def _audit_qualification_records(section_lines, records):
+     return errors
+ 
+ 
++def _audit_section_layout(head_lines):
++    """The current part of the view has exactly these two ## sections, once each and in order."""
++    sections = [line for line in head_lines if line.startswith('## ')]
++    if sections != ['## 当前要求', '## 未绑定当前要求的资格']:
++        return ['markdown top-level sections diverged']
++    current, unbound = head_lines.index(sections[0]), head_lines.index(sections[1])
++    if any(line.startswith('### ') and not current < index < unbound
++           for index, line in enumerate(head_lines)):
++        return ['markdown requirement outside current section']
++    return []
++
++
+ def audit(document):
+     """Check denominators, classifications, and the ban on collapsed marks."""
+     errors = []
+@@ -1037,7 +1056,94 @@ def audit(document):
+     return errors
+ 
+ 
++_BLOCK_START = ('资格记录：', '未归属后端：')
++_BLOCK_STOP = ('资格记录：', '未归属后端：', '历史引用身份：')
++
++
++def _record_blocks(lines, index):
++    """Record blocks starting at lines[index], the blank lines they consume, and the index after them.
++
++    A block runs to the next record or stop line or blank line. Blank lines that follow a block belong
++    to the run, so moving a block takes its separator along; only their count is compared.
++    """
++    blocks, blanks = [], 0
++    while index < len(lines) and lines[index].startswith(_BLOCK_START):
++        end = index + 1
++        if lines[index].startswith('未归属后端：') and end < len(lines) and lines[end].startswith('资格记录：'):
++            end += 1
++        while end < len(lines) and lines[end] != '' and not lines[end].startswith(_BLOCK_STOP):
++            end += 1
++        blocks.append(lines[index:end])
++        index = end
++        while index < len(lines) and lines[index] == '':
++            blanks += 1
++            index += 1
++    return blocks, blanks, index
++
++
++def _with_sorted_record_runs(section):
++    """One requirement section with each run of record blocks in a stable order."""
++    result, index = [], 0
++    while index < len(section):
++        blocks, blanks, after = _record_blocks(section, index)
++        if blocks:
++            for block in sorted(blocks):
++                result.extend(block)
++            result.extend([''] * blanks)
++            index = after
++        else:
++            result.append(section[index])
++            index += 1
++    return result
++
++
++def _canonical_lines(text):
++    """Lines of text in the one order the audit treats as equivalent.
++
++    Exactly two reorderings are allowed: the ### requirement sections under ## 当前要求, and the
++    qualification record blocks inside one requirement section. Everything else stays where it is.
++    Lines split on \n only, so other control characters remain part of the compared text.
++    """
++    lines = text.split('\n')
++    try:
++        start = lines.index('## 当前要求')
++    except ValueError:
++        return lines
++    end = next((index for index in range(start + 1, len(lines)) if lines[index].startswith('## ')), len(lines))
++    region = lines[start + 1:end]
++    heads = [index for index, line in enumerate(region) if line.startswith('### ')]
++    sections = [region[head:(heads[position + 1] if position + 1 < len(heads) else len(region))]
++                for position, head in enumerate(heads)]
++    sections = sorted(_with_sorted_record_runs(section) for section in sections)
++    flat = [line for section in sections for line in section]
++    return lines[:start + 1] + region[:heads[0] if heads else len(region)] + flat + lines[end:]
++
++
++def _first_difference(expected, actual):
++    for index in range(max(len(expected), len(actual))):
++        want = expected[index] if index < len(expected) else None
++        have = actual[index] if index < len(actual) else None
++        if want != have:
++            def show(value):
++                return '<end of text>' if value is None else repr(value if len(value) <= 160 else value[:160] + '...')
++            return (f'markdown differs from the generated view at line {index + 1} '
++                    f'(after allowed reordering): expected {show(want)}, actual {show(have)}')
++    return None
++
++
+ def audit_markdown(document, text):
++    """Accept text only if it is the generated view, up to the two allowed reorderings.
++
++    markdown(document) is the one authority; the checks below only give specific messages.
++    """
++    errors = _audit_markdown_parts(document, text)
++    difference = _first_difference(_canonical_lines(markdown(document)), _canonical_lines(text))
++    if difference:
++        errors.append(difference)
++    return errors
++
++
++def _audit_markdown_parts(document, text):
+     errors = []
+     denominators = document['denominators']
+     required = [
+@@ -1097,7 +1203,9 @@ def audit_markdown(document, text):
+         for cell in _table_cells(line):
+             if cell in FORBIDDEN_CELLS:
+                 errors.append('markdown collapsed a current cell')
++    errors.extend(_audit_section_layout(head.splitlines()))
+     requirement_blocks = _heading_blocks(head, '### ')
++    expected_records = 0
+     for requirement in document['requirements']:
+         heading = f"### {requirement['id']}@{requirement['version']}"
+         section = _take_heading(requirement_blocks, heading)
+@@ -1108,6 +1216,7 @@ def audit_markdown(document, text):
+         for cell in requirement['backends'].values():
+             owned.extend(cell['records'])
+         owned.extend(requirement['unassigned_backend_records'])
++        expected_records += len(owned)
+         # Records match inside this requirement. Another requirement's block does not count.
+         errors.extend(_audit_qualification_records(section, owned))
+     if requirement_blocks:
+@@ -1117,6 +1226,15 @@ def audit_markdown(document, text):
+         errors.append('markdown unbound qualifications diverged')
+     else:
+         errors.extend(_audit_qualification_records(unbound, document['unbound_qualifications']))
++    # Each section above accounts for its own lines exactly. Counting the whole text then rejects
++    # any record or toolchain line that no section owns: a second unbound section, text before the
++    # first requirement, another ## section, or the historical and later sections.
++    expected_records += len(document['unbound_qualifications'])
++    lines = text.splitlines()
++    if sum(line.startswith('资格记录：') for line in lines) > expected_records:
++        errors.append('markdown extra qualification record')
++    if sum(line.startswith('工具链：') for line in lines) > expected_records:
++        errors.append('markdown extra toolchain line')
+     counts = document['classifications']['exception_counts']
+     for kind, count in counts.items():
+         if f'exception: {kind} {count}' not in text:
+diff --git a/evas/capabilities/test_support_view.py b/evas/capabilities/test_support_view.py
+index 98b5d171..56c133cc 100644
+--- a/evas/capabilities/test_support_view.py
++++ b/evas/capabilities/test_support_view.py
+@@ -12,7 +12,7 @@ from pathlib import Path
+ import render
+ import support_view
+ from registry import Registry, digest
+-from support_view import audit, audit_markdown, document, dumps, markdown, write_preview
++from support_view import CONTRACT_FIELDS, audit, audit_markdown, document, dumps, markdown, write_preview
+ from test_registry import by_id, fixture
+ 
+ 
+@@ -115,6 +115,23 @@ def checked(registry, historical=None):
+     return projected, text
+ 
+ 
++def independent_registry():
++    """Two requirements with distinct contract text and records on the second one."""
++    data = retarget(copy.deepcopy(bare_registry().data), 'ngspice')
++    for index, name in enumerate(('bare-requirement', 'fixture-requirement')):
++        by_id(data, name).update(
++            allowed_behavior=f'independent behavior {index}',
++            conditions=[f'independent condition {index}'],
++            observables=[f'independent observable {index}'],
++        )
++    by_id(data, 'fixture-execution')['toolchain'] = [
++        {'role': 'simulator', 'name': 'ngspice', 'version': 'sim-12345'}]
++    for name in ('consumer-a', 'consumer-b'):
++        by_id(data, name)['toolchain'] = [
++            {'role': 'compiler', 'name': 'OpenVAF-R', 'version': 'cc-67890'}]
++    return Registry(refresh(data))
++
++
+ def requirement(projected, name):
+     return next(item for item in projected['requirements'] if item['id'] == name)
+ 
+@@ -123,6 +140,103 @@ def evas_records(projected, name='fixture-requirement'):
+     return requirement(projected, name)['backends']['evas']['records']
+ 
+ 
++MARKDOWN_VARIANT_KINDS = (
++    'status-view_status', 'status-adopted', 'status-provisional', 'qualification-record', 'toolchain',
++    'contract-field', 'reference', 'delete-line', 'indent-line', 'heading-level', 'reorder-allowed')
++
++
++def _first_difference_for(facts, text):
++    return next(error for error in audit_markdown(facts, text) if error.startswith('markdown differs'))
++
++
++def markdown_variant_cases(facts, text, *, full=True):
++    """(kind, name, changed text, must be rejected) for every class of edit to a generated view.
++
++    Fact lines of each kind (the three status keys, qualification record, toolchain, contract field and
++    reference lines) are inserted at every structural position, indented 0-3 spaces, as the same value and
++    as a contradictory value. Any generated line deleted, indented or re-levelled must be rejected; the two
++    allowed reorderings must be accepted. full=False trims the position and indent grid for a large text.
++    """
++    lines = text.split('\n')
++    first = lambda prefix: next(line for line in lines if line.startswith(prefix))
++    status = {key: first(key + ':') for key in ('view_status', 'adopted', 'provisional')}
++    flip = {'current-default': 'preview', 'preview': 'current-default', 'true': 'false', 'false': 'true'}
++    sample = {
++        'status-view_status': (status['view_status'], 'view_status: ' + flip[facts['view_status']]),
++        'status-adopted': (status['adopted'], 'adopted: ' + flip[status['adopted'].split(': ')[1]]),
++        'status-provisional': (status['provisional'], 'provisional: ' + flip[status['provisional'].split(': ')[1]]),
++        'qualification-record': (first('资格记录：'), first('资格记录：') + ' contradictory'),
++        'toolchain': (first('工具链：'), '工具链：consumer-a@1: OpenVAF-R/compiler@wrong-version'),
++        'reference': (first('引用：'), first('引用：') + ' contradictory'),
++    }
++    for key in CONTRACT_FIELDS:
++        sample.setdefault('contract-field', []).append((first('原文 ' + key + '：'), first('原文 ' + key + '：') + ' contradictory'))
++    where = {}
++    at = lines.index
++    current, unbound, historical = at('## 当前要求'), at('## 未绑定当前要求的资格'), at('## 历史引用')
++    exceptions, classes, limits = at('## 例外'), at('## 分类'), at('## 本视图不做的事')
++    heads = [i for i, line in enumerate(lines) if line.startswith('### ') and current < i < unbound]
++    where.update({'header-1': 1, 'header-2': 2, 'header-5': 5, 'header-6': 6,
++                  'current-preamble': current + 1, 'before-first-requirement': heads[0]})
++    for number, head in enumerate(heads):
++        end = heads[number + 1] if number + 1 < len(heads) else unbound
++        where.update({f'requirement-{number}-after-heading': head + 1, f'requirement-{number}-middle': (head + end) // 2,
++                      f'requirement-{number}-last-line': end - 1, f'requirement-{number}-end': end})
++    where.update({'unbound-after-heading': unbound + 1, 'unbound-end': historical - 1, 'before-historical': historical,
++                  'historical-after-heading': historical + 1, 'historical-middle': (historical + exceptions) // 2,
++                  'historical-end': exceptions, 'exceptions-section': exceptions + 1, 'classification-section': classes + 1,
++                  'limits-section': limits + 1, 'end-of-text-before-last': len(lines) - 1, 'end-of-text': len(lines)})
++    indents = ('', ' ', '  ', '   ') if full else ('', '   ')
++    positions = list(where.items()) if full else [
++        item for item in where.items() if item[0] in (
++            'header-2', 'current-preamble', 'requirement-0-after-heading', 'requirement-1-end', 'unbound-end',
++            'historical-middle', 'limits-section', 'end-of-text')]
++    cases = []
++
++    def add(kind, name, changed_lines, expect_reject=True):
++        cases.append((kind, name, '\n'.join(changed_lines), expect_reject))
++
++    for kind, value in sample.items():
++        for entry in (value if isinstance(value, list) else [value]):
++            same, contradictory = entry
++            for label, line in (('same', same), ('contradictory', contradictory)):
++                for indent in indents:
++                    for place, index in positions:
++                        add(kind, f'{label}/indent{len(indent)}/{place}', lines[:index] + [indent + line] + lines[index:])
++                    for heading in ('## 未绑定当前要求的资格', '## 当前要求', '## 补充资格', '### extra@1'):
++                        block = [heading, '', indent + line, '']
++                        add(kind, f'{label}/indent{len(indent)}/extra-section {heading}',
++                            lines[:historical] + block + lines[historical:])
++                        add(kind, f'{label}/indent{len(indent)}/extra-section-at-end {heading}', lines + block)
++    for index, line in enumerate(lines):
++        add('delete-line', f'line {index + 1}', lines[:index] + lines[index + 1:])
++        if line and (full or index % 5 == 0):
++            for pad in ((' ', '  ', '   ') if full else (' ', '   ')):
++                add('indent-line', f'line {index + 1}/{len(pad)}', lines[:index] + [pad + line] + lines[index + 1:])
++        if line.startswith('#'):
++            add('heading-level', f'line {index + 1}', lines[:index] + ['#' + line] + lines[index + 1:])
++            if line.startswith('###'):
++                add('heading-level', f'line {index + 1}/demote', lines[:index] + [line[1:]] + lines[index + 1:])
++    if full:
++        add('delete-line', 'trailing newline', lines[:-1])
++        add('indent-line', 'trailing blank', lines + [''])
++    # The two reorderings the audit allows.
++    sections = [(heads[n], heads[n + 1] if n + 1 < len(heads) else unbound) for n in range(len(heads))]
++    if len(sections) >= 2:
++        order = [lines[a:b] for a, b in sections]
++        add('reorder-allowed', 'requirement-order', lines[:heads[0]] + [x for part in reversed(order) for x in part] + lines[unbound:], False)
++    for number, (a, b) in enumerate(sections):
++        part = lines[a:b]
++        starts = [i for i, line in enumerate(part) if line.startswith('资格记录：')]
++        if len(starts) >= 2:
++            ends = starts[1:] + [len(part) - 1 if part[-1] == '' else len(part)]
++            blocks = [part[x:y] for x, y in zip(starts, ends)]
++            tail = part[ends[-1]:]
++            rebuilt = part[:starts[0]] + [x for block in reversed(blocks) for x in block] + tail
++            add('reorder-allowed', f'record-order requirement {number}', lines[:a] + rebuilt + lines[b:], False)
++    return cases
++
++
+ class SupportViewFixtures(unittest.TestCase):
+     def test_requirement_without_evidence_has_unknown_backend_facts(self):
+         projected, text = checked(bare_registry())
+@@ -614,19 +728,7 @@ class SupportViewFixtures(unittest.TestCase):
+             self.assertIn('markdown view status diverged', audit_markdown(projected, dropped))
+ 
+     def test_records_stay_with_their_requirement_and_header_status_is_unique(self):
+-        data = retarget(copy.deepcopy(bare_registry().data), 'ngspice')
+-        for index, name in enumerate(('bare-requirement', 'fixture-requirement')):
+-            by_id(data, name).update(
+-                allowed_behavior=f'independent behavior {index}',
+-                conditions=[f'independent condition {index}'],
+-                observables=[f'independent observable {index}'],
+-            )
+-        by_id(data, 'fixture-execution')['toolchain'] = [
+-            {'role': 'simulator', 'name': 'ngspice', 'version': 'sim-12345'}]
+-        for name in ('consumer-a', 'consumer-b'):
+-            by_id(data, name)['toolchain'] = [
+-                {'role': 'compiler', 'name': 'OpenVAF-R', 'version': 'cc-67890'}]
+-        registry = Registry(refresh(data))
++        registry = independent_registry()
+         projected = document(registry)
+         text = markdown(projected)
+         self.assertEqual(audit(projected) + audit_markdown(projected, text), [])
+@@ -685,6 +787,52 @@ class SupportViewFixtures(unittest.TestCase):
+             self.assertIn('markdown view status diverged', audit_markdown(facts, changed))
+ 
+ 
++    def test_markdown_is_accepted_only_as_the_generated_view_up_to_two_reorderings(self):
++        registry = independent_registry()
++        generated = Path(__file__).resolve().parent / 'generated'
++        real = json.loads((generated / 'support-facts.json').read_text())
++        subjects = [
++            ('fixture-current-default', document(registry), True),
++            ('fixture-preview', document(registry, status='preview'), True),
++            ('real-current-default', real, False),
++        ]
++        total = {}
++        for label, facts, full in subjects:
++            text = markdown(facts)
++            if label == 'real-current-default':
++                self.assertEqual(text, (generated / 'support.md').read_text())
++            self.assertEqual(audit(facts) + audit_markdown(facts, text), [], label)
++            for kind, name, changed, expect_reject in markdown_variant_cases(facts, text, full=full):
++                if changed == text:
++                    self.fail(f'{label} {kind} {name}: variant equals the generated text')
++                errors = audit_markdown(facts, changed)
++                counts = total.setdefault(kind, [0, 0])
++                counts[0] += 1
++                counts[1] += bool(errors) == expect_reject
++                if bool(errors) != expect_reject:
++                    self.fail(f'{label} {kind} {name}: expected reject={expect_reject}, got {errors}')
++                if expect_reject:
++                    self.assertTrue(any(error.startswith('markdown differs from the generated view at line')
++                                        for error in errors), (label, kind, name, errors))
++        # Every class was generated and every variant behaved as required.
++        self.assertTrue(all(done == count for count, done in total.values()), total)
++        for kind in MARKDOWN_VARIANT_KINDS:
++            self.assertGreater(total[kind][0], 0, kind)
++
++    def test_difference_report_names_the_first_changed_line(self):
++        projected = document(independent_registry())
++        text = markdown(projected)
++        lines = text.split('\n')
++        index = next(i for i, line in enumerate(lines) if line.startswith('工具链：'))
++        changed = lines[:index] + ['  ' + lines[index]] + lines[index + 1:]
++        [error] = [e for e in audit_markdown(projected, '\n'.join(changed)) if e.startswith('markdown differs')]
++        self.assertIn(f'line {index + 1} ', error)
++        self.assertIn(repr(lines[index]), error)
++        self.assertIn(repr('  ' + lines[index]), error)
++        self.assertIn('<end of text>', _first_difference_for(projected, text + '\nextra'))
++        self.assertIn('actual <end of text>', _first_difference_for(projected, text[:-1]))
++
++
+ def _drop_line_under_heading(text, heading, line):
+     newline = '\n' if text.endswith('\n') else ''
+     lines = text.splitlines()
+diff --git a/scripts/capabilities/generate_catalog.py b/scripts/capabilities/generate_catalog.py
+index 690c6bd1..f6adb566 100644
+--- a/scripts/capabilities/generate_catalog.py
++++ b/scripts/capabilities/generate_catalog.py
+@@ -25,6 +25,16 @@ def write(path,value):path.parent.mkdir(parents=True,exist_ok=True);path.write_t
+ def owned(module,path):
+  spec=importlib.util.spec_from_file_location(module,path);value=importlib.util.module_from_spec(spec);spec.loader.exec_module(value);return value
+ 
++def read_rust_listing(root,item):
++ """Read one registered actual Rust listing. A new registration meets the strict current rules whether or not
++ its source is published yet; the historical +stable allowance exists only for a receipt read back from a bound source."""
++ path=Path(item['receipt_file']);raw=json.loads(path.read_text());profile=item['profile']
++ if not isinstance(profile,str) or not profile or raw.get('schema_version')!=1 or not raw.get('complete') or raw.get('errors') or raw.get('observation_kind')!='rust-test-binary-listing':raise ValueError('incomplete/unknown actual Rust listing')
++ listing=owned('catalog_generation_rust_listing',root/'evas/capabilities/rust_listing.py')
++ try:listing.checked(raw)
++ except (KeyError,TypeError,IndexError,AttributeError) as error:raise ValueError('incomplete or unknown actual Rust listing structure: '+str(error)) from error
++ return path,raw,profile
++
+ def source(logical,path,locator=None):
+  rawsha=file_sha(path)
+  return versioned({'schema_version':1,'id':sid('source',logical),'version':rawsha,'kind':'source','status':'active',
+@@ -193,8 +203,7 @@ def build(config,out):
+     'native_skip_wrapper':row.get('native_skip_wrapper'),'execution_status':'not-executed-by-discovery'})
+  rust_records=[]
+  for item in config.get('rust_listings',[]):
+-  path=Path(item['receipt_file']);raw=json.loads(path.read_text());profile=item['profile']
+-  if not isinstance(profile,str) or not profile or raw.get('schema_version')!=1 or not raw.get('complete') or raw.get('errors') or raw.get('observation_kind')!='rust-test-binary-listing':raise ValueError('incomplete/unknown actual Rust listing')
++  path,raw,profile=read_rust_listing(root,item)
+   logical='actual-rust-listing:'+profile
+   src=source(logical,path,item.get('source_locator'));sources.append(src)
+   actual_files={r['path']:r for r in raw['source']['files']}
+diff --git a/scripts/tests/test_discover_rust.py b/scripts/tests/test_discover_rust.py
+index 7be24d98..1b694249 100644
+--- a/scripts/tests/test_discover_rust.py
++++ b/scripts/tests/test_discover_rust.py
+@@ -16,6 +16,312 @@ import git_fixture
+ HELPER = Path(__file__).resolve().parents[1] / 'capabilities/discover_rust.py'
+ 
+ 
++MAIN_WORKFLOW = '.github/workflows/numerical-assurance.yml'
++CACHE_ACTION = '.github/actions/rust-cache/action.yml'
++# Authoritative references: the single pinned literal is reached only through these.
++AUTHORITATIVE = frozenset(['$RUSTUP_TOOLCHAIN', '${RUSTUP_TOOLCHAIN}', '${{ inputs.rust_toolchain }}',
++                           '${{ needs.selection.outputs.rust_toolchain }}', '${{ env.RUSTUP_TOOLCHAIN }}'])
++CACHE_EXPANSION = '${CI_RUST_TOOLCHAIN:++"$CI_RUST_TOOLCHAIN"}'
++TOOLS = ('cargo', 'rustc', 'rustdoc', 'rustfmt', 'cargo-clippy', 'cargo-fmt', 'clippy-driver')
++RUSTUP_NO_SELECTION = frozenset(['component', 'target', 'show', 'which', 'self', 'set', 'doc', 'man', 'completions',
++                                 'check', 'update', '--version', '-V', 'help', '-h', '--help', 'toolchain-list'])
++PIN_LINE = re.compile(r"^  RUSTUP_TOOLCHAIN: '[0-9]+\.[0-9]+\.[0-9]+'$")
++
++
++def _plain(value):
++    return value.strip().strip('\'"').strip()
++
++
++def toolchain_selection_violations(texts, root_files=()):
++    """Every way CI can choose a Rust toolchain, checked against a whitelist.
++
++    texts maps a repo-relative workflow or composite-action path to its text. A selection is allowed only
++    as an authoritative reference (${RUSTUP_TOOLCHAIN}, the reusable input, the selection output, the
++    workflow env), as the one pinned literal under the top-level env, or as nightly in the fuzz-smoke job
++    through exactly `rustup toolchain install nightly`, `cargo +nightly` and `toolchain: nightly`.
++    Anything else that selects a toolchain, and anything this scanner cannot classify, is reported.
++    root_files lists repo files named like rust-toolchain, which also select a toolchain.
++    """
++    found = [f'{name}: toolchain file' for name in root_files]
++    for name, text in sorted(texts.items()):
++        lines = text.split('\n')
++        fuzz = set()
++        if name == MAIN_WORKFLOW:
++            start = next((i for i, line in enumerate(lines) if line == '  fuzz-smoke:'), None)
++            if start is not None:
++                end = next((i for i in range(start + 1, len(lines)) if re.match(r'  [A-Za-z0-9_-]+:\s*$', lines[i])), len(lines))
++                fuzz = set(range(start, end))
++
++        def report(index, reason):
++            found.append(f'{name}:{index + 1}: {reason}: {lines[index].strip()}')
++
++        def allowed(index, value, form):
++            value = _plain(value)
++            if value in AUTHORITATIVE or (value == '${{ inputs.toolchain }}' and name == CACHE_ACTION):
++                return True
++            return value == 'nightly' and index in fuzz and form in ('rustup-install', 'cargo-plus', 'with-toolchain')
++
++        for index, raw in enumerate(lines):
++            line = re.sub(r'\s+#.*$', '', raw)
++            if not line.strip() or line.lstrip().startswith('#') or re.match(r'\s*(?:-\s+)?(?:name|description):', line):
++                continue
++            approved_nightly = False
++            for match in re.finditer(r'(?<![\w./-])rustup\b(?![-\w])([^\n;&|]*)', line):
++                tokens = [_plain(token) for token in match.group(1).split()]
++                words = [token for token in tokens if not token.startswith('-')]
++                picked = []
++                for position, token in enumerate(tokens):
++                    if token.startswith('+'):
++                        picked.append((token[1:], 'rustup-plus'))
++                    elif token == '--toolchain' and position + 1 < len(tokens):
++                        picked.append((tokens[position + 1], 'rustup-flag'))
++                    elif token.startswith('--toolchain='):
++                        picked.append((token.split('=', 1)[1], 'rustup-flag'))
++                sub = words[0] if words else ''
++                rest = words[1:]
++                if sub in ('install', 'default', 'run', 'uninstall'):
++                    picked.append((rest[0] if rest else '', 'rustup-' + sub))
++                elif sub == 'override':
++                    if rest[:1] == ['set']:
++                        picked.append((rest[1] if len(rest) > 1 else '', 'rustup-override'))
++                    elif rest[:1] != ['unset']:
++                        report(index, 'unrecognised rustup override form')
++                elif sub == 'toolchain':
++                    if rest[:1] in (['list'],):
++                        pass
++                    elif rest[:1] == ['install']:
++                        picked.append((rest[1] if len(rest) > 1 else '', 'rustup-install'))
++                    else:
++                        picked.append((rest[1] if len(rest) > 1 else '', 'rustup-toolchain-' + (rest[0] if rest else '')))
++                elif sub and sub not in RUSTUP_NO_SELECTION:
++                    report(index, 'unrecognised rustup form')
++                for value, form in picked:
++                    if allowed(index, value, form):
++                        approved_nightly = approved_nightly or _plain(value) == 'nightly'
++                    else:
++                        report(index, f'rustup selects {value!r}')
++            for match in re.finditer(r'(?<![\w./$-])(' + '|'.join(TOOLS) + r')\b[ \t]+(\S+)', line):
++                token = _plain(match.group(2))
++                if token.startswith('+'):
++                    token = '+' + _plain(token[1:])
++                    if token[1:] in AUTHORITATIVE or (token[1:] == 'nightly' and index in fuzz and match.group(1) == 'cargo'):
++                        approved_nightly = approved_nightly or token[1:] == 'nightly'
++                    else:
++                        report(index, f'{match.group(1)} selects {token[1:]!r}')
++                elif '${' in token and '+' in token:
++                    if not (token == CACHE_EXPANSION and name == CACHE_ACTION):
++                        report(index, 'unrecognised toolchain expansion')
++            for match in re.finditer(r'^\s*(?:-\s+)?([A-Za-z_-]*(?:toolchain|channel|rust[-_]version)[A-Za-z_-]*|RUSTUP_TOOLCHAIN)\s*:\s*(.*)$', line, re.I):
++                key, value = match.group(1), _plain(match.group(2))
++                if value == '':
++                    indent = len(line) - len(line.lstrip())
++                    if key not in ('toolchain', 'rust_toolchain'):
++                        report(index, f'unrecognised {key} declaration')
++                    for later in lines[index + 1:]:
++                        if later.strip() and len(later) - len(later.lstrip()) <= indent:
++                            break
++                        default = re.match(r'\s*default:\s*(.*)$', later)
++                        if default and (key == 'rust_toolchain' or _plain(default.group(1)) != ''):
++                            report(index, f'{key} input has a default')
++                elif key == 'RUSTUP_TOOLCHAIN' and PIN_LINE.match(raw) and name == MAIN_WORKFLOW and index and lines[index - 1] == 'env:':
++                    pass
++                elif allowed(index, value, 'with-toolchain' if key == 'toolchain' else 'assign'):
++                    approved_nightly = approved_nightly or value == 'nightly'
++                else:
++                    report(index, f'{key} selects {value!r}')
++            for match in re.finditer(r'RUSTUP_TOOLCHAIN[ \t]*=[ \t]*([^\s"\';&|]*)', line):
++                if _plain(match.group(1)) not in AUTHORITATIVE:
++                    report(index, f'RUSTUP_TOOLCHAIN assigned {match.group(1)!r}')
++            uses = re.match(r'\s*(?:-\s+)?uses:\s*(\S+)', line)
++            if uses and uses.group(1) != './.github/actions/rust-cache' and re.search(r'(?i)rust|toolchain|cargo|maturin', uses.group(1)):
++                report(index, f'unrecognised toolchain action {uses.group(1)}')
++            if re.search(r'(?i)\b(nightly|stable|beta)\b', line) and not approved_nightly:
++                report(index, 'channel name outside an approved nightly use')
++    return found
++
++
++def toolchain_files(root):
++    """rust-toolchain and rust-toolchain.toml files in the repository, ignoring build output and Git data."""
++    found = []
++    for directory, names, files in os.walk(root):
++        names[:] = [name for name in names if name not in ('.git', 'target', 'node_modules', '__pycache__')]
++        found.extend(os.path.relpath(os.path.join(directory, name), root) for name in files
++                     if name in ('rust-toolchain', 'rust-toolchain.toml'))
++    return sorted(found)
++
++
++SELECTION_VALUES = ('nightly', 'stable', '1.99.0')
++# The only forms through which fuzz-smoke may name nightly (the same ones the real job uses).
++FUZZ_NIGHTLY_FORMS = ('rustup-toolchain-install', 'rustup-in-block-scalar', 'cargo-plus', 'cargo-plus-in-block-scalar',
++                       'with-toolchain-input')
++# Each form is (indent -> list of YAML lines for one workflow step). {v} is the injected toolchain.
++STEP_FORMS = {
++    'rustup-toolchain-install': lambda i, v: [f'{i}- run: rustup toolchain install {v} --profile minimal'],
++    'rustup-default': lambda i, v: [f'{i}- run: rustup default {v}'],
++    'rustup-override-set': lambda i, v: [f'{i}- run: rustup override set {v}'],
++    'rustup-run': lambda i, v: [f'{i}- run: rustup run {v} cargo test'],
++    'rustup-toolchain-link': lambda i, v: [f'{i}- run: rustup toolchain link custom {v}'],
++    'rustup-unrecognised': lambda i, v: [f'{i}- run: rustup frobnicate {v}'],
++    'rustup-in-compound-command': lambda i, v: [f'{i}- run: cd evas && rustup default {v} && cargo test'],
++    'rustup-in-block-scalar': lambda i, v: [f'{i}- run: |', f'{i}    set -e', f'{i}    rustup toolchain install {v}'],
++    'cargo-plus': lambda i, v: [f'{i}- run: cargo +{v} test --locked'],
++    'rustc-plus': lambda i, v: [f'{i}- run: rustc +{v} -vV'],
++    'cargo-clippy-plus': lambda i, v: [f'{i}- run: cargo-clippy +{v}'],
++    'cargo-plus-in-block-scalar': lambda i, v: [f'{i}- run: |', f'{i}    cargo +{v} build'],
++    'shell-env-assignment': lambda i, v: [f'{i}- run: RUSTUP_TOOLCHAIN={v} cargo test'],
++    'shell-export': lambda i, v: [f'{i}- run: export RUSTUP_TOOLCHAIN={v}'],
++    'github-env-file': lambda i, v: [f'{i}- run: echo "RUSTUP_TOOLCHAIN={v}" >> "$GITHUB_ENV"'],
++    'step-env': lambda i, v: [f'{i}- run: cargo test', f'{i}  env:', f'{i}    RUSTUP_TOOLCHAIN: {v}'],
++    'step-env-quoted': lambda i, v: [f'{i}- run: cargo test', f'{i}  env:', f'{i}    RUSTUP_TOOLCHAIN: "{v}"'],
++    'with-toolchain-input': lambda i, v: [f'{i}- uses: ./.github/actions/rust-cache', f'{i}  with:', f'{i}    toolchain: {v}',
++                                          f'{i}    lane: x'],
++    'dtolnay-action': lambda i, v: [f'{i}- uses: dtolnay/rust-toolchain@{v}'],
++    'dtolnay-action-with': lambda i, v: [f'{i}- uses: dtolnay/rust-toolchain@master', f'{i}  with:', f'{i}    toolchain: {v}'],
++    'actions-rs': lambda i, v: [f'{i}- uses: actions-rs/toolchain@v1', f'{i}  with:', f'{i}    toolchain: {v}'],
++}
++# Forms that can sit at other structural positions than a step.
++BLOCK_FORMS = {
++    'job-env': lambda i, v: [f'{i}env:', f'{i}  RUSTUP_TOOLCHAIN: {v}'],
++    'job-env-quoted': lambda i, v: [f'{i}env:', f"{i}  RUSTUP_TOOLCHAIN: '{v}'"],
++}
++
++
++def _insert_after(text, anchor_line, new_lines):
++    lines = text.split('\n')
++    index = lines.index(anchor_line)
++    return '\n'.join(lines[:index + 1] + new_lines + lines[index + 1:])
++
++
++def selection_variant_cases(texts):
++    """(form, location, value, new texts, new toolchain files, expect_reject) for every injected selection.
++
++    Each form is injected at each structural position of CI, once per toolchain value. Authoritative
++    references and the one nightly use cargo-fuzz needs are the positive controls.
++    """
++    main, package, cache = MAIN_WORKFLOW, '.github/workflows/package-install.yml', CACHE_ACTION
++    cases = []
++
++    def add(form, location, value, changed, files=(), expect_reject=True):
++        cases.append((form, location, value, changed, tuple(files), expect_reject))
++
++    step_places = {
++        'job-steps-rust-regression': (main, '  rust-regression:', '    steps:', '      '),
++        'job-steps-regression': (main, '  regression:', '    steps:', '      '),
++        'job-steps-selection': (main, '  selection:', '    steps:', '      '),
++        'job-steps-fuzz-smoke': (main, '  fuzz-smoke:', '    steps:', '      '),
++        'job-steps-ci-result': (main, '  ci-result:', '    steps:', '      '),
++        'reusable-workflow-steps': (package, '  install:', '    steps:', '      '),
++        'composite-action-steps': (cache, None, '  steps:', '    '),
++    }
++
++    def anchored(path, job, steps_anchor):
++        lines = texts[path].split('\n')
++        start = lines.index(job) if job else 0
++        return start + lines[start:].index(steps_anchor)
++
++    for value in SELECTION_VALUES:
++        for form, build in STEP_FORMS.items():
++            for location, (path, job, steps_anchor, indent) in step_places.items():
++                lines = texts[path].split('\n')
++                index = anchored(path, job, steps_anchor)
++                changed = '\n'.join(lines[:index + 1] + build(indent, value) + lines[index + 1:])
++                fuzz_nightly = (location == 'job-steps-fuzz-smoke' and value == 'nightly'
++                                and form in FUZZ_NIGHTLY_FORMS)
++                add(form, location, value, dict(texts, **{path: changed}), expect_reject=not fuzz_nightly)
++            # A brand-new workflow and a brand-new composite action.
++            add(form, 'new-workflow', value, dict(texts, **{'.github/workflows/new.yml': '\n'.join(
++                ['name: n', 'on: push', 'jobs:', '  x:', '    runs-on: ubuntu-latest', '    steps:', *build('      ', value)]) + '\n'}))
++            add(form, 'new-composite-action', value, dict(texts, **{'.github/actions/new/action.yml': '\n'.join(
++                ['name: n', 'description: d', 'runs:', '  using: composite', '  steps:', *build('    ', value)]) + '\n'}))
++        for form, build in BLOCK_FORMS.items():
++            for location, (path, job) in {'job-level-rust-regression': (main, '  rust-regression:'),
++                                          'job-level-fuzz-smoke': (main, '  fuzz-smoke:'),
++                                          'job-level-reusable-workflow': (package, '  install:')}.items():
++                if location == 'job-level-reusable-workflow':
++                    # that job already has an env block: replace the authoritative value
++                    changed = texts[path].replace('RUSTUP_TOOLCHAIN: ${{ inputs.rust_toolchain }}', f'RUSTUP_TOOLCHAIN: {value}', 1)
++                else:
++                    changed = _insert_after(texts[path], job, BLOCK_FORMS[form]('    ', value))
++                add(form, location, value, dict(texts, **{path: changed}))
++        # Top-level env: a second assignment, or the pin replaced.
++        add('workflow-env-second', 'workflow-level', value, dict(texts, **{main: _insert_after(
++            texts[main], "  RUSTUP_TOOLCHAIN: '1.99.1'", [f"  RUSTUP_TOOLCHAIN: '{value}'"])}))
++        if value != '1.99.0':
++            add('workflow-env-pin-replaced', 'workflow-level', value, dict(texts, **{main: texts[main].replace(
++                "RUSTUP_TOOLCHAIN: '1.99.1'", f"RUSTUP_TOOLCHAIN: '{value}'", 1)}))
++        else:
++            add('workflow-env-pin-replaced', 'workflow-level', value, dict(texts, **{main: texts[main].replace(
++                "RUSTUP_TOOLCHAIN: '1.99.1'", f"RUSTUP_TOOLCHAIN: '{value}'", 1)}), expect_reject=False)
++        add('reusable-input-default', 'reusable-workflow-input', value, dict(texts, **{package: texts[package].replace(
++            '        required: true\n', f'        required: true\n        default: {value}\n', 1)}))
++        add('reusable-caller-passes-literal', 'package-job-with', value, dict(texts, **{main: texts[main].replace(
++            'rust_toolchain: ${{ needs.selection.outputs.rust_toolchain }}', f'rust_toolchain: {value}', 1)}))
++        add('selection-output-literal', 'selection-job', value, dict(texts, **{main: texts[main].replace(
++            'rust_toolchain: ${{ env.RUSTUP_TOOLCHAIN }}', f'rust_toolchain: {value}', 1)}))
++        add('composite-input-default', 'composite-action-input', value, dict(texts, **{cache: texts[cache].replace(
++            "    default: ''\n  lane:", f"    default: {value}\n  lane:", 1)}))
++        add('composite-env-literal', 'composite-action-step', value, dict(texts, **{cache: texts[cache].replace(
++            'CI_RUST_TOOLCHAIN: ${{ inputs.toolchain }}', f'CI_RUST_TOOLCHAIN: {value}', 1)}))
++        for name in ('rust-toolchain', 'rust-toolchain.toml'):
++            add('toolchain-file', name, value, texts, files=[name])
++            add('toolchain-file', 'evas/rust_core/' + name, value, texts, files=['evas/rust_core/' + name])
++    # Positive controls: authoritative references anywhere, and fuzz-smoke's nightly.
++    for location, (path, job, steps_anchor, indent) in step_places.items():
++        for form, lines_for in {
++            'authoritative-install': lambda i: [f'{i}- run: rustup toolchain install "$RUSTUP_TOOLCHAIN" --profile minimal'],
++            'authoritative-input': lambda i: [f'{i}- uses: ./.github/actions/rust-cache', f'{i}  with:',
++                                              f'{i}    toolchain: ${{{{ env.RUSTUP_TOOLCHAIN }}}}', f'{i}    lane: x'],
++            'authoritative-cargo-plus': lambda i: [f'{i}- run: cargo +"$RUSTUP_TOOLCHAIN" test'],
++        }.items():
++            lines = texts[path].split('\n')
++            index = anchored(path, job, steps_anchor)
++            changed = '\n'.join(lines[:index + 1] + lines_for(indent) + lines[index + 1:])
++            add(form, location, 'authoritative', dict(texts, **{path: changed}), expect_reject=False)
++    fuzz_lines = texts[main].split('\n')
++    index = anchored(main, '  fuzz-smoke:', '    steps:')
++    for form, build in {'fuzz-cargo-plus-nightly': lambda i, v: [f'{i}- run: cargo +nightly --version'],
++                        'fuzz-install-nightly': lambda i, v: [f'{i}- run: rustup toolchain install nightly --profile minimal'],
++                        'fuzz-cache-toolchain-nightly': lambda i, v: [f'{i}- uses: ./.github/actions/rust-cache', f'{i}  with:',
++                                                                      f'{i}    toolchain: nightly', f'{i}    lane: fuzz']}.items():
++        changed = '\n'.join(fuzz_lines[:index + 1] + build('      ', 'nightly') + fuzz_lines[index + 1:])
++        add(form, 'job-steps-fuzz-smoke', 'nightly', dict(texts, **{main: changed}), expect_reject=False)
++    add('unchanged-current-ci', 'all', 'current', texts, expect_reject=False)
++    return cases
++
++
++def historical_checked_calls(root):
++    """Every call to checked() that sets or forwards `historical`, outside tests, as (path, function, values)."""
++    import ast
++
++    class Finder(ast.NodeVisitor):
++        def __init__(self):
++            self.stack, self.calls = ['<module>'], []
++
++        def visit_FunctionDef(self, node):
++            self.stack.append(node.name)
++            self.generic_visit(node)
++            self.stack.pop()
++
++        visit_AsyncFunctionDef = visit_FunctionDef
++
++        def visit_Call(self, node):
++            func = node.func
++            name = func.attr if isinstance(func, ast.Attribute) else getattr(func, 'id', '')
++            if name == 'checked' and any(keyword.arg in ('historical', None) for keyword in node.keywords):
++                self.calls.append((self.stack[-1], tuple(ast.unparse(keyword.value) for keyword in node.keywords)))
++            self.generic_visit(node)
++
++    calls = []
++    for base in ('scripts', 'evas'):
++        for path in sorted((root / base).rglob('*.py')):
++            if 'target' in path.parts or path.name.startswith('test_') or path.name == 'git_fixture.py':
++                continue
++            finder = Finder()
++            finder.visit(ast.parse(path.read_text()))
++            calls.extend((str(path.relative_to(root)), function, values) for function, values in finder.calls)
++    return sorted(calls)
++
++
+ class RustListingTests(unittest.TestCase):
+     def setUp(self):
+         self.tmp = tempfile.TemporaryDirectory()
+@@ -243,6 +549,41 @@ class RustListingTests(unittest.TestCase):
+         fuzz=re.search(r'^  fuzz-smoke:\n(.*?)(?=^  package:)',text,re.M|re.S).group(1)
+         self.assertIn('rustup toolchain install nightly',fuzz)
+         self.assertEqual(re.findall(r'\bcargo (?!\+nightly)\S+',fuzz),[])
++        # Every toolchain selection anywhere in CI is an authoritative reference; see test_toolchain_selection_is_a_whitelist.
++
++    def test_toolchain_selection_is_a_whitelist(self):
++        root=HELPER.parents[2]
++        paths=sorted([*(root/'.github/workflows').glob('*.yml'),*(root/'.github/actions').glob('**/action.yml')])
++        texts={str(path.relative_to(root)):path.read_text() for path in paths}
++        self.assertIn(CACHE_ACTION,texts)
++        self.assertIn('.github/workflows/package-install.yml',texts)
++        self.assertEqual(toolchain_selection_violations(texts,toolchain_files(root)),[])
++        counts={}
++        for form,location,value,changed,files,expect_reject in selection_variant_cases(texts):
++            found=toolchain_selection_violations(changed,files)
++            counts.setdefault(expect_reject,[0,0]);counts[expect_reject][0]+=1
++            counts[expect_reject][1]+=bool(found)==expect_reject
++            if bool(found)!=expect_reject:self.fail(f'{form} at {location} with {value}: expected reject={expect_reject}, got {found}')
++        self.assertGreater(counts[True][0],500)
++        self.assertGreater(counts[False][0],10)
++        self.assertEqual({key:value[0]==value[1] for key,value in counts.items()},{True:True,False:True})
++
++    def test_historical_toolchain_allowance_has_one_call_site(self):
++        root=HELPER.parents[2]
++        # Only reconcile reads a bound historical receipt; actual, generated and traced receipts use the strict default.
++        self.assertEqual(historical_checked_calls(root),[('evas/capabilities/rust_listing.py','reconcile',('True',))])
++        source=(root/'evas/capabilities/rust_listing.py').read_text()
++        self.assertEqual(re.findall(r'checked\((\w+),historical=True\)',source),['expected_receipt'])
++        self.assertEqual(re.findall(r'actual=checked\(receipt\)',source),['actual=checked(receipt)'])
++        # The scanner sees a second call however it is spelled.
++        with tempfile.TemporaryDirectory() as tmp:
++            fixture=Path(tmp)
++            (fixture/'scripts').mkdir();(fixture/'evas').mkdir()
++            (fixture/'scripts/new.py').write_text('import rl\ndef read(receipt):\n    return rl.checked(receipt, historical=True)\n')
++            (fixture/'evas/more.py').write_text('def read(receipt, **options):\n    return checked(receipt, **options)\n'
++                                                'def other(receipt, flag):\n    return checked(receipt, historical=flag)\n')
++            self.assertEqual(historical_checked_calls(fixture),[('evas/more.py','other',('flag',)),('evas/more.py','read',('options',)),
++                                                               ('scripts/new.py','read',('True',))])
+ 
+     def test_reusable_workflows_take_the_fixed_toolchain_from_their_caller(self):
+         root=HELPER.parents[2]
+diff --git a/scripts/tests/test_rust_catalog_reconcile.py b/scripts/tests/test_rust_catalog_reconcile.py
+index aa27f0f4..ed9adb5f 100644
+--- a/scripts/tests/test_rust_catalog_reconcile.py
++++ b/scripts/tests/test_rust_catalog_reconcile.py
+@@ -1,4 +1,5 @@
+ """Real Git/CLI plumbing fixtures; stub harnesses are not native Rust science."""
++import ast
+ import copy
+ import importlib.util
+ import json
+@@ -21,6 +22,7 @@ fixtures = module('rust_fixture', ROOT/'scripts/tests/test_discover_rust.py')
+ sys.path.insert(0, str(ROOT/'evas/capabilities'))
+ registry = module('registry_fixture', ROOT/'evas/capabilities/registry.py')
+ assets = module('asset_fixture', ROOT/'evas/capabilities/test_asset_catalog.py')
++generator = module('rust_generator_fixture', ROOT/'scripts/capabilities/generate_catalog.py')
+ 
+ class RustCatalogReconciliation(unittest.TestCase):
+     def setUp(self):
+@@ -207,4 +209,40 @@ class RustCatalogReconciliation(unittest.TestCase):
+         self.register(self.legacy(rustc=['rustc','+nightly','-vV']))
+         with self.assertRaisesRegex(ValueError,'toolchain identity'):self.require()
+ 
++    def test_generator_applies_the_strict_rules_to_every_new_registration(self):
++        # A new actual observation is checked on read, with or without a published source locator.
++        locator=dict(kind='git-object',repository='vaevas',revision='0'*40,path='evas/capabilities/observations/rust.json')
++        scratch=Path(self.fx.tmp.name)
++        def item(name,receipt,published):
++            path=scratch/(name+'.json');path.write_text(json.dumps(receipt))
++            value=dict(receipt_file=str(path),profile='fixture-linux')
++            if published:value['source_locator']=locator
++            return value
++        for published in (False,True):
++            path,raw,profile=generator.read_rust_listing(ROOT,item('good-'+str(published),self.receipt,published))
++            self.assertEqual((raw,profile),(self.receipt,'fixture-linux'))
++            for name,tools in dict(rustc=dict(rustc=self.STABLE['rustc']),cargo=dict(cargo=self.STABLE['cargo']),both=self.STABLE).items():
++                with self.subTest(published=published,stable=name):
++                    with self.assertRaisesRegex(ValueError,'toolchain identity'):
++                        generator.read_rust_listing(ROOT,item(name+str(published),self.legacy(**tools),published))
++            for argv in (['rustc','+nightly','-vV'],['rustc','--version']):
++                with self.subTest(published=published,argv=argv):
++                    with self.assertRaisesRegex(ValueError,'toolchain identity'):
++                        generator.read_rust_listing(ROOT,item('other'+str(published),self.legacy(rustc=argv),published))
++            broken=copy.deepcopy(self.receipt);del broken['toolchain']['cargo']
++            with self.assertRaisesRegex(ValueError,'incomplete or unknown actual Rust listing structure'):
++                generator.read_rust_listing(ROOT,item('broken'+str(published),broken,published))
++            with self.assertRaisesRegex(ValueError,'incomplete/unknown actual Rust listing'):
++                generator.read_rust_listing(ROOT,item('incomplete'+str(published),dict(self.receipt,complete=False),published))
++        # The read happens for every listing before the source is built; publication only picks reconciliation.
++        build=next(node for node in ast.parse((ROOT/'scripts/capabilities/generate_catalog.py').read_text()).body
++                   if isinstance(node,ast.FunctionDef) and node.name=='build')
++        loop=next(node for node in build.body if isinstance(node,ast.For) and isinstance(node.iter,ast.Call)
++                  and ast.unparse(node.iter)=="config.get('rust_listings', [])")
++        reader=loop.body[0]
++        self.assertIsInstance(reader,ast.Assign)
++        self.assertEqual(ast.unparse(reader.value),'read_rust_listing(root, item)')
++        self.assertNotIn('source_locator',ast.unparse(reader))
++        self.assertNotIn('published-archive',ast.unparse(reader))
++
+ if __name__=='__main__':unittest.main()
