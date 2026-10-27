@@ -1,0 +1,3 @@
+# PR6 successor construction
+
+Successor of PR269 head eaf80071. It closes the three P2 findings of the first independent review: every toolchain source is shown with owner and component versions, requirement contract fields (allowed behavior, conditions, observables) are shown or explicitly unknown, and the default render is the adopted current support view while preview output stays a preview. Adopted means the current default support view only; it is not a project decision and confers no qualification. The two generated support files are now in the asset receipt before catalog generation, closing the reconciliation gap seen in CI 40478447542. Scientific qualification is false.

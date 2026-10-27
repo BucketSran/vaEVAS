@@ -1,0 +1,117 @@
+{
+  "prepared_at_utc": "2026-10-27T09:54:19.456415+00:00",
+  "prepared_by": "tclaude/claude-opus-5-5 main controller",
+  "base_candidate": "eaf80071154002b5101b3ebeab905303e82658b8",
+  "status": "combined increment ready (r1 findings + adoption); to be integrated as PR269 successor with derived-asset registration fix",
+  "supersedes": {
+    "receipt_r0": {
+      "prepared_at_utc": "2026-10-27T09:34:07.548472+00:00",
+      "prepared_by": "tclaude/claude-opus-5-5 main controller",
+      "base_candidate": "eaf80071154002b5101b3ebeab905303e82658b8",
+      "status": "provisional; not applied to the r1-reviewed export; combine with r1 fixes into one increment and review incrementally",
+      "decision": "coordinator 2026-10-27: adopt inside PR6; adopted = current default support view only; no project/user decision; no qualification",
+      "files": [
+        {
+          "path": "evas/capabilities/support_view.py",
+          "before_sha256": "ab82851eca6a3495c6481b3c9a99ecdbcb362acf7e7304ffa770ff8ad1d09f2f",
+          "after_sha256": "03aa1d8e02dfd35f0a79ffd67b559fb97629529df342ecfe3ef3653ccd1ad2d6",
+          "changed": true
+        },
+        {
+          "path": "evas/capabilities/render.py",
+          "before_sha256": "55b685e39ede2c31b9ecc3c2def3b9638910f0e8552b9a12b9aca366a33f80d3",
+          "after_sha256": "17868f49900a7ab8fb5d961fb635c56feaa1a1ef23adcd3ad87c7eaeca8255b2",
+          "changed": true
+        },
+        {
+          "path": "evas/capabilities/test_support_view.py",
+          "before_sha256": "19e1bc4f165952b59182271bfa53c756aa9134f03748ab661746890ee36c18eb",
+          "after_sha256": "f024c976b6497c9fd6ced37b7458378c67d5cd83b097b7f36191f9e8a8cdd4c7",
+          "changed": true
+        },
+        {
+          "path": "evas/capabilities/generated/support.md",
+          "before_sha256": "dfe1243557fac6e7847907220a2d306fac84038d732d046a94073cba9b6be242",
+          "after_sha256": "70f49c882adbf944c0169e191cbc4a53297beff0ca70407fc8d70a3f06ff98e6",
+          "changed": true
+        },
+        {
+          "path": "evas/capabilities/generated/support-facts.json",
+          "before_sha256": "c73c2963510032abf5a56fa31ca0ae61e7db8855a26cf5f9b2a615102514962c",
+          "after_sha256": "b688b354fd5917b7aa79d81ec43ec8e51e304a3ea74c7801f7b216d071ed94bf",
+          "changed": true
+        }
+      ],
+      "other_capability_files_changed": [],
+      "patch": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/adoption-increment-20261027/adoption-increment.patch",
+      "patch_sha256": "5445164bf5252c91465aebc1381b0a9d1cc55ecebc2fa053afcfa028568ff433",
+      "checks": {
+        "render": "wrote 84",
+        "render_check": "checked 84",
+        "capability_tests": "92 OK (91 + test_adoption_labels_confer_no_support)",
+        "test_catalog_derived_outputs": "3 OK"
+      },
+      "retained_guards": [
+        "audit: current_requirement_support_conferred must be 0",
+        "audit: requirement_support must be not_conferred",
+        "audit: case must not confer requirement support"
+      ],
+      "scientific_qualification": false
+    },
+    "patch_r0": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/adoption-increment-20261027/adoption-increment.r1.patch"
+  },
+  "addresses": {
+    "PR6-ASTRA-R1-01": "record toolchain shows every source owner@version with component name/role@version; audit_markdown rejects dropped components",
+    "PR6-ASTRA-R1-02": "allowed_behavior, conditions, observables shown per requirement or explicitly unknown; audit_markdown rejects dropped contract fields",
+    "PR6-ASTRA-R1-03": "view_status current-default (adopted true) for default render; preview outputs view_status preview (adopted false); audit and audit_markdown reject inconsistent labels; meaning stated as default-view identity only, no qualification"
+  },
+  "decision": "coordinator 2026-10-27: adopt inside PR6; adopted = current default support view only; not a project/user decision; no qualification",
+  "files": [
+    {
+      "path": "evas/capabilities/support_view.py",
+      "before_sha256": "ab82851eca6a3495c6481b3c9a99ecdbcb362acf7e7304ffa770ff8ad1d09f2f",
+      "after_sha256": "b52ecb14d463ab1482db2a46fe953fc8eaf9c1b733108f62f16d020974b32e8d",
+      "changed": true
+    },
+    {
+      "path": "evas/capabilities/render.py",
+      "before_sha256": "55b685e39ede2c31b9ecc3c2def3b9638910f0e8552b9a12b9aca366a33f80d3",
+      "after_sha256": "17868f49900a7ab8fb5d961fb635c56feaa1a1ef23adcd3ad87c7eaeca8255b2",
+      "changed": true
+    },
+    {
+      "path": "evas/capabilities/test_support_view.py",
+      "before_sha256": "19e1bc4f165952b59182271bfa53c756aa9134f03748ab661746890ee36c18eb",
+      "after_sha256": "1dadf47f2cdf2a99a8ff7f8ecaa096fd4061a3b83fe1df8421c2e5461e6c6fb0",
+      "changed": true
+    },
+    {
+      "path": "evas/capabilities/generated/support.md",
+      "before_sha256": "dfe1243557fac6e7847907220a2d306fac84038d732d046a94073cba9b6be242",
+      "after_sha256": "37452c71b2c62e87b5cbcc2088d6f207f7645357af2710b313c14c84bbc20ce2",
+      "changed": true
+    },
+    {
+      "path": "evas/capabilities/generated/support-facts.json",
+      "before_sha256": "c73c2963510032abf5a56fa31ca0ae61e7db8855a26cf5f9b2a615102514962c",
+      "after_sha256": "e658a3fdfe65f8eefa0afe7a696b2841c70a20e1a58bec72b7f7f11fb0ebf770",
+      "changed": true
+    }
+  ],
+  "patch": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/adoption-increment-20261027/combined-increment.patch",
+  "patch_sha256": "bccdddacfc06c1997e8cbc1cd5e48ab52adb58190dba54cb5c93be70601c28c5",
+  "checks": {
+    "test_support_view": "16 OK",
+    "capability_tests": "94 OK",
+    "render": "wrote 84",
+    "render_check": "checked 84",
+    "test_catalog_derived_outputs": "3 OK",
+    "real_support_view": "current-default; all 4 requirements show allowed_behavior/conditions/observables"
+  },
+  "retained_guards": [
+    "current_requirement_support_conferred must be 0",
+    "requirement_support must be not_conferred",
+    "case must not confer requirement support"
+  ],
+  "scientific_qualification": false
+}
