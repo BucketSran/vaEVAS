@@ -10,9 +10,37 @@ import re
 import shutil
 import subprocess
 
-PARTS={'catalog-sources.json':'sources','asset-index.json':'assets','method-index.json':'methods','entrypoint-index.json':'entrypoints','historical-index.json':'history'}
+PART_COUNT=16
+RETIRED_MONOLITHS={'historical-index.json','method-index.json'}
+KIND_FOR={'sources':{'source'},'assets':{'asset'},'methods':{'method'},'entrypoints':{'entrypoint'},'history':{'historical-audit-record','historical-finding'}}
+OBJECT_PART_KIND={kind:part for part,kinds in KIND_FOR.items() for kind in kinds}
 GOVERNANCE={'evas/validation/baselines/regression-v1.json','evas/validation/baselines/regression-v1.review.json'}
 PREFIXES=['.agents/','.github/','docs/','evas/','experiments/','scripts/']
+
+def part_slot(object_id,count=PART_COUNT):
+ """Stable slot: big-endian integer of the first 8 sha256 bytes of the utf-8 id, modulo count."""
+ return int.from_bytes(hashlib.sha256(object_id.encode('utf-8')).digest()[:8],'big')%count
+
+def ordered_parts(count=PART_COUNT):
+ rows=[('catalog-sources.json','sources'),('asset-index.json','assets')]
+ rows+=[('method-index-%02d.json'%index,'methods') for index in range(count)]
+ rows.append(('entrypoint-index.json','entrypoints'))
+ rows+=[('historical-index-%02d.json'%index,'history') for index in range(count)]
+ return rows
+
+PARTS=dict(ordered_parts())
+
+def part_file(kind,object_id,count=PART_COUNT):
+ if kind=='methods':return 'method-index-%02d.json'%part_slot(object_id,count)
+ if kind=='history':return 'historical-index-%02d.json'%part_slot(object_id,count)
+ return next(name for name,value in ordered_parts(count) if value==kind)
+
+def partition_objects(objects,count=PART_COUNT):
+ """One id keeps every version in one part. Empty parts stay in the fixed file set."""
+ buckets={name:[] for name,_kind in ordered_parts(count)}
+ for obj in objects:
+  buckets[part_file(OBJECT_PART_KIND[obj['kind']],obj['id'],count)].append(obj)
+ return {name:sorted(rows,key=lambda obj:(obj['id'],obj['version'])) for name,rows in buckets.items()}
 
 def canonical(value):return hashlib.sha256(json.dumps(value,ensure_ascii=False,sort_keys=True,separators=(',',':')).encode()).hexdigest()
 def file_sha(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
@@ -392,12 +420,12 @@ def build(config,out):
   asset_report=error.report
   if asset_report['extra'] or asset_report['unknown'] or asset_report['drift'] or asset_report['external_identity_missing'] or set(asset_report['missing']) != (metadata_paths-observed.keys()):raise
  # Keep all preexisting normative files unchanged. No raw history/discovery payloads go into main parts.
- for path in (root/'evas/capabilities/data').glob('*.json'):data_dir.mkdir(parents=True,exist_ok=True);shutil.copyfile(path,data_dir/path.name)
- kind_for={'sources':{'source'},'assets':{'asset'},'methods':{'method'},'entrypoints':{'entrypoint'},'history':{'historical-audit-record','historical-finding'}}
+ for path in (root/'evas/capabilities/data').glob('*.json'):
+  if path.name not in RETIRED_MONOLITHS:data_dir.mkdir(parents=True,exist_ok=True);shutil.copyfile(path,data_dir/path.name)
  base_keys={(o['id'],o['version']) for o in oldobjects}
- for name,kind in PARTS.items():
-  objects=[obj for key,obj in merged.items() if key not in base_keys and obj['kind'] in kind_for[kind]]
-  write(data_dir/name,{'schema_version':1,'kind':kind,'objects':sorted(objects,key=lambda o:(o['id'],o['version']))})
+ fresh=[obj for key,obj in merged.items() if key not in base_keys and obj['kind'] in OBJECT_PART_KIND]
+ for name,objects in partition_objects(fresh).items():
+  write(data_dir/name,{'schema_version':1,'kind':PARTS[name],'objects':objects})
  for key in ('inventory','dispositions','inventory_identity','target_scope','language_profile','_catalog_metadata_paths'):base.pop(key,None)
  write(data_dir/'registry.json',base)
  write(out/'guards-transition.json',{'schema_version':1,'facts':guardfacts,'legacy_node_ids':[n['id'] for n in legacy['nodes']],
