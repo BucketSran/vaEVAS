@@ -1,0 +1,65 @@
+{
+  "accepted_at_utc": "2026-10-27T09:57:56.417067+00:00",
+  "accepted_by": "tclaude/claude-opus-5-5 main controller",
+  "candidate": "eaf80071154002b5101b3ebeab905303e82658b8",
+  "tree": "7c29da4843d307424e0d55d86fc507039bd3c4a5",
+  "task": "node:delegated-task:command%3Amcp%3A560a6eb9-75ba-49ac-99ec-18d7c7a347e7%3Adelegate-task%3Aevas-pr6-eaf80071-astra-r1-20261027",
+  "reviewer": {
+    "providerInstanceId": "codex",
+    "model": "gpt-6-astra",
+    "options": [
+      {
+        "id": "reasoningEffort",
+        "value": "max"
+      },
+      {
+        "id": "serviceTier",
+        "value": "default"
+      }
+    ],
+    "fresh_context": true
+  },
+  "review_report": {
+    "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr6-support-views-astra-r1-20261027/review-report.json",
+    "sha256": "5f43c3297a3ce03f71eb89cb0e7a4dd637dc2cb8ee729921205f755508c82b32"
+  },
+  "summary": {
+    "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr6-support-views-astra-r1-20261027/summary.txt",
+    "sha256": "b893f1694b19422edf2fd9157bf3c0abca24ba8831a3418da21b8c84580c888c"
+  },
+  "findings": [
+    {
+      "id": "PR6-ASTRA-R1-01",
+      "priority": "P2",
+      "axis": "Standards",
+      "primary_confirmation": "Confirmed in code: _show_toolchain returned records_listed and _record_lines did not expand sources.",
+      "disposition": "fixed in combined increment: every source owner@version with component name/role@version; audit_markdown rejects dropped components; new test"
+    },
+    {
+      "id": "PR6-ASTRA-R1-02",
+      "priority": "P2",
+      "axis": "Spec",
+      "primary_confirmation": "Confirmed: markdown whitelist omitted allowed_behavior, conditions, observables; real support.md lacked them.",
+      "disposition": "fixed: fields shown per requirement or explicitly unknown; audit_markdown rejects dropped fields; new test; real view shows all 4 requirements"
+    },
+    {
+      "id": "PR6-ASTRA-R1-03",
+      "priority": "P2",
+      "axis": "Spec",
+      "primary_confirmation": "Confirmed: labels provisional/adopted:false; coordinator decided adoption inside PR6.",
+      "disposition": "fixed: view_status current-default for default render, preview for preview output; audit/audit_markdown consistency; no qualification change"
+    }
+  ],
+  "DR": {
+    "DR-04": true,
+    "DR-06": true,
+    "mapping_consistency": {
+      "reference_hashes_all_match": true,
+      "definitions_match_original_DR": true,
+      "R1_R3_r4_scope_consistent": true,
+      "limit": "旧审核未显式以DR编号关闭；本轮完成映射核对，不冒称此前已关闭。"
+    }
+  },
+  "derived_replay": "90 derived files replayed byte-identical by the reviewer; 28 reused receipts match; 3 recollections correct",
+  "scientific_qualification": false
+}
