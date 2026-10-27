@@ -1,0 +1,57 @@
+{
+  "parent": "6bfa35ea22cee6e2bbc1819164571364fd6938da",
+  "source_capture": "37d9a02080cd49d87be6e530dc8cff36cb5a5323",
+  "paths_vs_parent": [
+    ".github/workflows/package-install.yml",
+    "evas/capabilities/data/asset-index.json",
+    "evas/capabilities/data/catalog-sources.json",
+    "evas/capabilities/data/entrypoint-index.json",
+    "evas/capabilities/data/method-index.json",
+    "evas/capabilities/data/registry.json",
+    "scripts/capabilities/collect_ci_inventory.py",
+    "scripts/tests/test_ci_inventory.py",
+    "scripts/tests/test_ci_pins.py"
+  ],
+  "render_outputs": 82,
+  "checks": [
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "scripts/traceability.py",
+        "--catalog-data",
+        "evas/capabilities/data"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r2/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r2/traceability-generate.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-27T15:13:17.474601+00:00",
+      "finished_at_utc": "2026-10-27T15:13:52.897135+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "evas/capabilities/render.py"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r2/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r2/capability-render.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-27T15:13:52.897374+00:00",
+      "finished_at_utc": "2026-10-27T15:14:44.907992+00:00"
+    }
+  ],
+  "files": {
+    ".github/workflows/package-install.yml": "7973a5763e7391b862cc2bac0b31254c9896690eb340b557d025374be3168131",
+    "evas/capabilities/data/asset-index.json": "f651474adce50429118512ca4c35aee9dc1d551434c799cca6c83448349afb41",
+    "evas/capabilities/data/catalog-sources.json": "a2f5a0fe221eaff917311204ee76377e3f3741e4d04f4ef094fbf42b4096da84",
+    "evas/capabilities/data/entrypoint-index.json": "75aba2edd81fd62d2924ff88e5c78a60427500baf1e24ebc2d2ebafbb78ba56c",
+    "evas/capabilities/data/method-index.json": "f58b85b0b079110fceea31ed09ff61c35e1440e5416e85c9cdd26460e1a79954",
+    "evas/capabilities/data/registry.json": "a956ea7574ee7218fe3de9484b641d35127645be4ed0f1781382c9fe58bcd06a",
+    "scripts/capabilities/collect_ci_inventory.py": "8da66383ae222db84d763121ead226a7d6d9207b71ce57be88a816477343806a",
+    "scripts/tests/test_ci_inventory.py": "5e62f1f814313ec91e45b2f73ce715b6f5b718bd26c7f327657f5f5c60df01a8",
+    "scripts/tests/test_ci_pins.py": "47322dcd7232ad7e0012cc17f8fbc3ed7b566adf5f8e13f4c41ac1269b09a7af"
+  },
+  "scientific_execution": false,
+  "scientific_qualification": false
+}
