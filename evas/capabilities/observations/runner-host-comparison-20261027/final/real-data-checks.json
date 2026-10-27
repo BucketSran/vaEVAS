@@ -1,0 +1,56 @@
+{
+  "regression_shards": {
+    "0": {
+      "runtime_profile": {
+        "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+        "ImageVersion": "20261023.334.3"
+      },
+      "execution_toolchain": {
+        "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+        "ImageVersion": "20261023.334.3"
+      }
+    },
+    "1": {
+      "runtime_profile": {
+        "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+        "ImageVersion": "20261023.334.3"
+      },
+      "execution_toolchain": {
+        "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+        "ImageVersion": "20261023.334.3"
+      }
+    },
+    "2": {
+      "runtime_profile": {
+        "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+        "ImageVersion": "20261023.334.3"
+      },
+      "execution_toolchain": {
+        "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+        "ImageVersion": "20261023.334.3"
+      }
+    },
+    "3": {
+      "runtime_profile": {
+        "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+        "ImageVersion": "20261026.354.1"
+      },
+      "execution_toolchain": {
+        "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+        "ImageVersion": "20261026.354.1"
+      }
+    }
+  },
+  "shards_equal_after_host_rule": true,
+  "registered_runtime_profiles_equal_after_host_rule": 4,
+  "rust_listing": {
+    "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/final-integration-r2-20261027/ci-40487169246/early/rust-test-listing/rust-test-listing.json",
+    "reconciled": true,
+    "host_platform_difference": {
+      "expected_platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+      "actual_platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39"
+    },
+    "tests_discovered": 904
+  },
+  "scientific_execution": false
+}

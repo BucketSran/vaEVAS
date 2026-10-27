@@ -1,0 +1,382 @@
+{
+  "base": "ac1b6e8d8de743b8da3f862c0f50bdf0a1a1ca14",
+  "source_capture": "08fbc0f6239c76278b5c996c229e24bb311a27c7",
+  "paths_vs_base": [
+    "evas/capabilities/README.md",
+    "evas/capabilities/data/asset-index.json",
+    "evas/capabilities/data/catalog-sources.json",
+    "evas/capabilities/data/entrypoint-index.json",
+    "evas/capabilities/data/method-index.json",
+    "evas/capabilities/data/registry.json",
+    "evas/capabilities/rust_listing.py",
+    "evas/docs/development/TRACEABILITY.md",
+    "scripts/README.md",
+    "scripts/regression_context_registration.py",
+    "scripts/regression_gate.py",
+    "scripts/tests/regression_registration_fixtures.py",
+    "scripts/tests/test_context_registration.py",
+    "scripts/tests/test_regression_gate.py",
+    "scripts/tests/test_regression_transition.py",
+    "scripts/tests/test_rust_catalog_reconcile.py",
+    "scripts/tests/test_trusted_regression_gate.py"
+  ],
+  "render_outputs": 82,
+  "checks": [
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "scripts/traceability.py",
+        "--catalog-data",
+        "evas/capabilities/data"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/traceability-generate.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-27T11:41:03.841082+00:00",
+      "finished_at_utc": "2026-10-27T11:41:49.562046+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "evas/capabilities/render.py"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/capability-render.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-27T11:41:49.569994+00:00",
+      "finished_at_utc": "2026-10-27T11:42:34.085666+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "scripts/ci_lint.py",
+        "--plan",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/maintenance-plan.json"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/maintenance-fast-checks.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-27T11:43:37.973955+00:00",
+      "finished_at_utc": "2026-10-27T11:44:13.695575+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "evas/capabilities/render.py",
+        "--check"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/capability-views.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-27T11:44:13.699207+00:00",
+      "finished_at_utc": "2026-10-27T11:44:59.184611+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "evas/capabilities",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/capability-tests.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-27T11:44:59.186034+00:00",
+      "finished_at_utc": "2026-10-27T11:47:43.571133+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/tests",
+        "-p",
+        "test_regression_gate.py",
+        "-v"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/affected-test_regression_gate.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-27T11:47:43.573854+00:00",
+      "finished_at_utc": "2026-10-27T11:47:45.068925+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/tests",
+        "-p",
+        "test_regression_transition.py",
+        "-v"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/affected-test_regression_transition.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-27T11:47:45.069086+00:00",
+      "finished_at_utc": "2026-10-27T11:47:45.197018+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/tests",
+        "-p",
+        "test_trusted_regression_gate.py",
+        "-v"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/affected-test_trusted_regression_gate.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-27T11:47:45.197148+00:00",
+      "finished_at_utc": "2026-10-27T11:48:40.466949+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/tests",
+        "-p",
+        "test_context_registration.py",
+        "-v"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/affected-test_context_registration.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-27T11:48:40.471373+00:00",
+      "finished_at_utc": "2026-10-27T11:48:42.494581+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/tests",
+        "-p",
+        "test_registration_bundle.py",
+        "-v"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/affected-test_registration_bundle.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-27T11:48:42.494700+00:00",
+      "finished_at_utc": "2026-10-27T11:49:52.297688+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/tests",
+        "-p",
+        "test_regression_admission.py",
+        "-v"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/affected-test_regression_admission.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-27T11:49:52.304467+00:00",
+      "finished_at_utc": "2026-10-27T11:50:04.662488+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/tests",
+        "-p",
+        "test_regression_input_subject.py",
+        "-v"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/affected-test_regression_input_subject.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-27T11:50:04.664271+00:00",
+      "finished_at_utc": "2026-10-27T11:50:06.802178+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/tests",
+        "-p",
+        "test_rust_catalog_reconcile.py",
+        "-v"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/affected-test_rust_catalog_reconcile.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-27T11:50:06.802321+00:00",
+      "finished_at_utc": "2026-10-27T11:50:24.489580+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/tests",
+        "-p",
+        "test_discover_rust.py",
+        "-v"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/affected-test_discover_rust.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-27T11:50:24.493737+00:00",
+      "finished_at_utc": "2026-10-27T11:50:47.068785+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/tests",
+        "-p",
+        "test_ci_evidence_v3.py",
+        "-v"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/affected-test_ci_evidence_v3.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-27T11:50:47.070342+00:00",
+      "finished_at_utc": "2026-10-27T11:51:09.448169+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/tests",
+        "-p",
+        "test_ci_selection.py",
+        "-v"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/affected-test_ci_selection.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-27T11:51:09.448838+00:00",
+      "finished_at_utc": "2026-10-27T11:51:32.474921+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/tests",
+        "-p",
+        "test_ci_inventory.py",
+        "-v"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/affected-test_ci_inventory.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-27T11:51:32.476813+00:00",
+      "finished_at_utc": "2026-10-27T11:51:36.006880+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/tests",
+        "-p",
+        "test_catalog_history_selection.py",
+        "-v"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/affected-test_catalog_history_selection.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-27T11:51:36.007021+00:00",
+      "finished_at_utc": "2026-10-27T11:51:58.870734+00:00"
+    },
+    {
+      "command": [
+        "/usr/bin/git",
+        "--git-dir=/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/source/.git",
+        "--work-tree=/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/source",
+        "diff",
+        "--check",
+        "ac1b6e8d8de743b8da3f862c0f50bdf0a1a1ca14"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/diff-check.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-27T11:52:21.464699+00:00",
+      "finished_at_utc": "2026-10-27T11:52:24.980148+00:00"
+    }
+  ],
+  "real_data_checks": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/real-data-checks.json",
+  "files": {
+    "evas/capabilities/README.md": "ae81480462ecdbd25299e5dcbc1d097a8c92f018673ed817d84b6d16cd363e03",
+    "evas/capabilities/data/asset-index.json": "69607631d9e654477db76afaa976979234f0981cdeeffee80317d939c09262c4",
+    "evas/capabilities/data/catalog-sources.json": "43eedbdace520f0a6ed99755dd8bda8cd9c6c40bc67710d9f6d7c6fb2d27e685",
+    "evas/capabilities/data/entrypoint-index.json": "b64770fc121cdce7491d80a05d73b906511163410d39d7118fb079362cbd8b6f",
+    "evas/capabilities/data/method-index.json": "560359e162d6924c43899567e3e48343725c4e3516e70fffa30f9f09e3c599f6",
+    "evas/capabilities/data/registry.json": "7d239f4dff24067ab3aa3c3897e835dc9805a1ed80b7f60555270f62dbf884f9",
+    "evas/capabilities/rust_listing.py": "ec0f176ef9e9e8f9852032755ab3660e3d9fa5e56a06eb53b56b35e519033901",
+    "evas/docs/development/TRACEABILITY.md": "7f86f45a8001fca4427ef4095f8d84ee1dafe05a9c4b8d8a537275b6d445c1df",
+    "scripts/README.md": "28821597bca75a22ca4ac0182fbeb4cf1d4b018b41934f6ec9bac90907c11372",
+    "scripts/regression_context_registration.py": "138ca3036008c8f0616d0e21019f1e434ab1cd1b6498694cd2613c275c261a22",
+    "scripts/regression_gate.py": "65e3542fa4989b35d31ee6998c9dc14f8975524e4b30a23b76539abf7317b38e",
+    "scripts/tests/regression_registration_fixtures.py": "611cccc3abe8d87167909ab5da3339dc8cc1550ca80cec04a9a74fc2b55e7515",
+    "scripts/tests/test_context_registration.py": "1d3bf03d9857d58a6804a74def22a6eb616654a2002050ca862da9610f99e0ac",
+    "scripts/tests/test_regression_gate.py": "230ebb006017c03c593f02df99027a423c957360f83d810582115c5f004553da",
+    "scripts/tests/test_regression_transition.py": "e37fa0593b59328575e0c74a32fea6648b23a7c83df80466a2efe4a473d12836",
+    "scripts/tests/test_rust_catalog_reconcile.py": "835a658d588d9849df10f6e372ecddafdd326142a9b9d7a442451730c1c62004",
+    "scripts/tests/test_trusted_regression_gate.py": "2ad28df60516ae694e2f19dc12240f937d074a95754f736ae5814cee4d9f6a0c"
+  },
+  "scientific_execution": false,
+  "scientific_qualification": false
+}

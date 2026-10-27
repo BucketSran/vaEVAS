@@ -1,0 +1,45 @@
+{
+  "paths": [
+    "evas/capabilities/data/asset-index.json",
+    "evas/capabilities/data/catalog-sources.json",
+    "evas/capabilities/data/entrypoint-index.json",
+    "evas/capabilities/data/method-index.json",
+    "evas/capabilities/data/registry.json"
+  ],
+  "old_versions_retained": 56194,
+  "objects": {
+    "assets": 4222,
+    "entrypoints": 36,
+    "history": 3260,
+    "methods": 4754,
+    "sources": 39
+  },
+  "namespace_counts": {
+    "calibration": {
+      "entrypoints": 0,
+      "generated": 0,
+      "methods": 0
+    },
+    "maintenance": {
+      "entrypoints": 7,
+      "generated": 0,
+      "methods": 648
+    },
+    "python-regression": {
+      "entrypoints": 1,
+      "generated": 12,
+      "methods": 3257
+    },
+    "rust-tests": {
+      "entrypoints": 5,
+      "generated": 0,
+      "methods": 0
+    },
+    "validation": {
+      "entrypoints": 23,
+      "generated": 22,
+      "methods": 849
+    }
+  },
+  "scientific_qualification": false
+}

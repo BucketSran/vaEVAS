@@ -1,0 +1,51 @@
+{
+  "recorded_at_utc": "2026-10-27T10:47:36.444624+00:00",
+  "run": 40487169246,
+  "head": "c76cb65f7c260712eb77bc9322bb294ec32287c5",
+  "attempt1": {
+    "regression_shards": {
+      "0": "old",
+      "1": "old",
+      "2": "old",
+      "3": "new"
+    },
+    "rust_regression": "new (Rust source/toolchain/profile drift: environment.platform)",
+    "coverage": "incompatible shard metadata",
+    "admission": "artifact python-regression-timings missing"
+  },
+  "attempt2": {
+    "rerun": "shard 3 job 122133125426 at 2026-10-27T10:41:13Z",
+    "shard3": "new again",
+    "rust": "new, drift",
+    "coverage": "incompatible shard metadata"
+  },
+  "images": {
+    "old": {
+      "ImageVersion": "20261023.334.3",
+      "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+      "log_header_version": "20261012.334.1"
+    },
+    "new": {
+      "ImageVersion": "20261026.354.1",
+      "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+      "log_header_version": "20261025.353.1"
+    }
+  },
+  "shard_metadata_difference": "only runtime_profile.platform and variables.ImageVersion (and the same two under execution_toolchain); kernel binary b9574603 identical; DUT and criteria files identical",
+  "registered_contexts": "all 4 bound to ImageVersion 20261023.334.3 (scripts/ci_evidence.py ENVIRONMENT includes ImageOS/ImageVersion; run_regression.py records platform.platform())",
+  "gate_flow": "run_trusted_regression_gate.py compares the PR run with the trusted baseline before reading HEAD; every registration PR must itself run in a registered environment",
+  "rust_listing": "evas/capabilities/rust_listing.py profile_identity includes environment.platform; catalog is HEAD data, so re-registration from a new-image receipt needs no code change",
+  "coordinator_boundary": "environment-only registration path within authority; removal of host fields from identity without equivalent evidence, admin override or branch protection change go to the user",
+  "escalated": [
+    "11:05Z option (T) comparator tolerance with per-run full equivalence vs (R) bootstrap environment registration",
+    "one-time merge of a reviewed fix with admission red"
+  ],
+  "evidence": [
+    "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr6/final-integration-r2-20261027/ci-40487169246/attempt1-run-final.json",
+    "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr6/final-integration-r2-20261027/ci-40487169246/job-logs",
+    "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr6/final-integration-r2-20261027/ci-40487169246/attempt2-logs",
+    "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr6/final-integration-r2-20261027/ci-40487169246/artifacts",
+    "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr6/final-integration-r2-20261027/ci-40487169246/early/rust-test-listing"
+  ],
+  "coordinator_finding": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/local/notes/t3-orchestration-20261026/ci-runner-image-20261027/finding.json"
+}

@@ -1,0 +1,32 @@
+{
+  "mode": "delivery",
+  "paths": [
+    "evas/capabilities/README.md",
+    "evas/capabilities/data/asset-index.json",
+    "evas/capabilities/data/catalog-sources.json",
+    "evas/capabilities/data/entrypoint-index.json",
+    "evas/capabilities/data/method-index.json",
+    "evas/capabilities/data/registry.json",
+    "evas/capabilities/rust_listing.py",
+    "evas/docs/development/TRACEABILITY.md",
+    "scripts/README.md",
+    "scripts/regression_context_registration.py",
+    "scripts/regression_gate.py",
+    "scripts/tests/regression_registration_fixtures.py",
+    "scripts/tests/test_context_registration.py",
+    "scripts/tests/test_regression_gate.py",
+    "scripts/tests/test_regression_transition.py",
+    "scripts/tests/test_rust_catalog_reconcile.py",
+    "scripts/tests/test_trusted_regression_gate.py"
+  ],
+  "maintenance": true,
+  "calibration": true,
+  "provenance": true,
+  "regression": true,
+  "differential": true,
+  "fuzz": true,
+  "package": true,
+  "benchmark": true,
+  "focused": false,
+  "scope": "Complete runner-host fix quick maintenance gate; full scientific regression is CI only."
+}
