@@ -1,0 +1,23 @@
+{('asset', ('consumers', 'role', 'version')): 247, ('entry', ('dependencies', 'listing_source', 'observer_sha256', 'version')): 5, ('source', ('locator', 'sha256', 'version')): 1}
+[('evas/rust_core', 247)]
+== asset consumers
+ old [{"id": "entry:31be033026c87fb6c21b9022", "sha256": "11f563ab916e64b6846ad14d8dceab3c6b4bc35008e873240c8bd50f4eedfefa", "version": "2aa2834ba89e9ecaca15e6161ff79051021db8fc2c3e3d08230e5684d4bf74e0"}, {"id": "entry:875c284ae4c832b541413dbb", "sha256": "7448626a0f3124611e120a0d3a88c9d653d78588d7acffecbe6955bfc5f837af", "version": "2ed3e94272dc73646a16de6e02a96a0bf90c53d027e5809d398e1a8cfd475fbe"}, {"id": "entry:8c3f459a1a336792a4a33ae8", "sha256": "98d3207237e705f5136a2877a93451b9b122e172084814869a952a6124f36626", "version": "0f672280ecc37ae40cdbbe8a20b98ba0a4faaa429d6102b7764854ae51709a85"}, {"
+ new [{"id": "entry:31be033026c87fb6c21b9022", "sha256": "0df12d3d7e4b79cfa1beec75d9f456720262dc36d2ed01e35b1b3dd09c62af0e", "version": "fff6be9e447139304d3ca3086a5bc386e89d030032ae3609dfa63889eda5ae00"}, {"id": "entry:875c284ae4c832b541413dbb", "sha256": "0b6e1d71074b3edda4a5da0b016d4779a51e7e92cf90f5fdd9748d9bc1580339", "version": "7477e435d2f6589f248a763843532b8895b9176be2f6ffc0e7c528478c8253cd"}, {"id": "entry:8c3f459a1a336792a4a33ae8", "sha256": "9a7734ed6012ef535102a4ebfa20747302f17b95cc14081aca59010972821bc0", "version": "f7830c53ecf99c5c03265b9e032e17f2ef9a62b2ddade053647e955b855017e4"}, {"
+== asset role
+ old {"facts": [{"entrypoint": {"id": "entry:31be033026c87fb6c21b9022", "sha256": "11f563ab916e64b6846ad14d8dceab3c6b4bc35008e873240c8bd50f4eedfefa", "version": "2aa2834ba89e9ecaca15e6161ff79051021db8fc2c3e3d08230e5684d4bf74e0"}, "proof": "actual-rust-conservative-source-tree-identity"}, {"entrypoint": {"id": "entry:875c284ae4c832b541413dbb", "sha256": "7448626a0f3124611e120a0d3a88c9d653d78588d7acffecbe6955bfc5f837af", "version": "2ed3e94272dc73646a16de6e02a96a0bf90c53d027e5809d398e1a8cfd475fbe"}, "proof": "actual-rust-conservative-source-tree-identity"}, {"entrypoint": {"id": "entry:8c3f459a1a3367
+ new {"facts": [{"entrypoint": {"id": "entry:31be033026c87fb6c21b9022", "sha256": "0df12d3d7e4b79cfa1beec75d9f456720262dc36d2ed01e35b1b3dd09c62af0e", "version": "fff6be9e447139304d3ca3086a5bc386e89d030032ae3609dfa63889eda5ae00"}, "proof": "actual-rust-conservative-source-tree-identity"}, {"entrypoint": {"id": "entry:875c284ae4c832b541413dbb", "sha256": "0b6e1d71074b3edda4a5da0b016d4779a51e7e92cf90f5fdd9748d9bc1580339", "version": "7477e435d2f6589f248a763843532b8895b9176be2f6ffc0e7c528478c8253cd"}, "proof": "actual-rust-conservative-source-tree-identity"}, {"entrypoint": {"id": "entry:8c3f459a1a3367
+== entry dependencies
+ old [{"id": "source:dd8b4eb4612b272f0eb05592", "sha256": "87ba2d3e6f130f00a1c3554eb7a617fdba6e3131ae20f8810ac29a08598b37b7", "version": "2aa395b1df7c684a4a24a92a024540ce85174d8defc93d7f9a3b46620ebae2a1"}]
+ new [{"id": "source:dd8b4eb4612b272f0eb05592", "sha256": "4dfdae5a715daf0e83f1cb40bdfc7cd45222bdcb84dab7a22e062cd6c82e00c1", "version": "6363af9172e623f12169cf5a27a49a8ece1460c0330e2c038970aa3ce3fda11e"}]
+== entry listing_source
+ old {"id": "source:dd8b4eb4612b272f0eb05592", "sha256": "87ba2d3e6f130f00a1c3554eb7a617fdba6e3131ae20f8810ac29a08598b37b7", "version": "2aa395b1df7c684a4a24a92a024540ce85174d8defc93d7f9a3b46620ebae2a1"}
+ new {"id": "source:dd8b4eb4612b272f0eb05592", "sha256": "4dfdae5a715daf0e83f1cb40bdfc7cd45222bdcb84dab7a22e062cd6c82e00c1", "version": "6363af9172e623f12169cf5a27a49a8ece1460c0330e2c038970aa3ce3fda11e"}
+== entry observer_sha256
+ old "cca906e775b5b83920d2250ec553ca297b72c68a8d034be345b0fe43582be9d1"
+ new "f1ade74617fa171c5048246986d52e772b0913ffce28713af6e2fa4af5904892"
+== source locator
+ old {"kind": "git-object", "path": "evas/capabilities/observations/ci-40274116394/rust-test-listing/rust-test-listing.json", "repository": "vaevas", "revision": "cff75acb26ed43088c26b750cdad0abaf6c4c237"}
+ new {"kind": "git-object", "path": "evas/capabilities/observations/pr6-rust-listing-r4-20261027/rust-listing/rust-test-listing.json", "repository": "vaevas", "revision": "7fe27dbeacc4e285fc0750545408ccba48e67a7c"}
+== source sha256
+ old "f37f2f25473f3b0a445e5a8aeaa85818953e4b4f42925b745b5761907c04f75c"
+ new "7a969f8e1564bbab96e9e0522e895cbb359ba4486ea2410854c90a9c4e00e8f5"

@@ -1,0 +1,45 @@
+{
+  "parent": "93ec69a4352710b26209bd18cf4bda7d1ecfc95d",
+  "delta_vs_parent": [
+    "evas/capabilities/data/asset-index.json",
+    "evas/capabilities/data/catalog-sources.json",
+    "evas/capabilities/data/entrypoint-index.json",
+    "evas/capabilities/data/registry.json"
+  ],
+  "checks": [
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "scripts/traceability.py",
+        "--catalog-data",
+        "evas/capabilities/data"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r4-20261027/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r4-20261027/traceability-generate.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-27T14:45:08.137277+00:00",
+      "finished_at_utc": "2026-10-27T14:45:37.673835+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "evas/capabilities/render.py"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r4-20261027/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r4-20261027/capability-render.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-27T14:45:37.677148+00:00",
+      "finished_at_utc": "2026-10-27T14:46:02.254538+00:00"
+    }
+  ],
+  "files": {
+    "evas/capabilities/data/asset-index.json": "647b91ffd65245236edfa0e4c40a8cebba3f23ec91d7044a4fcd44725bb00138",
+    "evas/capabilities/data/catalog-sources.json": "96b282f4428d88c7d4979b568a0400cea701105db700ba350ac997f163180f60",
+    "evas/capabilities/data/entrypoint-index.json": "15d89ad120de52cbe7305a2933813ea5203ef365db2a028244912d380f24fe2c",
+    "evas/capabilities/data/registry.json": "849d675efe39899dda629748868f5c173019f1c5cde85cd0e1522f51c89bedcb"
+  },
+  "scientific_execution": false,
+  "scientific_qualification": false
+}
