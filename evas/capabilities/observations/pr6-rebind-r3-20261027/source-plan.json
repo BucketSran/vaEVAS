@@ -1,0 +1,280 @@
+{
+  "merge_sources": [
+    {
+      "path": ".agents/skills/evas-develop/SKILL.md",
+      "sha256": "dbb3c0a502457a3829b0f5bbafc88e937a1bb11b60df632bd77323c64fbafeeb",
+      "resolution": "PR6 version (main unchanged since ac1b6e8d)"
+    },
+    {
+      "path": ".agents/skills/evas-validate/SKILL.md",
+      "sha256": "deae834c86a764772152b187cb6b5aa632b120182a3daa81a84ce1376f96d3dd",
+      "resolution": "PR6 version (main unchanged since ac1b6e8d)"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "497fc44080335d9bba65c2cea5c959545512168bfc49d8db3c2fbd71ba322535",
+      "resolution": "PR6 version (main unchanged since ac1b6e8d)"
+    },
+    {
+      "path": "docs/contributing/evidence.md",
+      "sha256": "7f8448af3c5168e9d92df680e85d6942264a8b455577f4c91fcf5a650730fadb",
+      "resolution": "PR6 version (main unchanged since ac1b6e8d)"
+    },
+    {
+      "path": "docs/contributing/validation.md",
+      "sha256": "3d459037c1379eadf125a63d373ae2a6cecb448565e6ec6ba5d8deb845f135a0",
+      "resolution": "PR6 version (main unchanged since ac1b6e8d)"
+    },
+    {
+      "path": "evas/README.md",
+      "sha256": "adb9774cb62b4f679932d2a52a25a5615c8485f17506aa9cd53c1d7f909ea89a",
+      "resolution": "PR6 version (main unchanged since ac1b6e8d)"
+    },
+    {
+      "path": "evas/capabilities/README.md",
+      "sha256": "31c3fff2180e657e0e56cc8db29ac031d2403dfbdfd826aade12ffbae686fb5d",
+      "resolution": "three-way merge of PR6 and main edits"
+    },
+    {
+      "path": "evas/capabilities/render.py",
+      "sha256": "17868f49900a7ab8fb5d961fb635c56feaa1a1ef23adcd3ad87c7eaeca8255b2",
+      "resolution": "PR6 version (main unchanged since ac1b6e8d)"
+    },
+    {
+      "path": "evas/capabilities/support_view.py",
+      "sha256": "b52ecb14d463ab1482db2a46fe953fc8eaf9c1b733108f62f16d020974b32e8d",
+      "resolution": "PR6 version (main unchanged since ac1b6e8d)"
+    },
+    {
+      "path": "evas/capabilities/test_asset_catalog.py",
+      "sha256": "fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806",
+      "resolution": "PR6 version (main unchanged since ac1b6e8d)"
+    },
+    {
+      "path": "evas/capabilities/test_support_view.py",
+      "sha256": "1dadf47f2cdf2a99a8ff7f8ecaa096fd4061a3b83fe1df8421c2e5461e6c6fb0",
+      "resolution": "PR6 version (main unchanged since ac1b6e8d)"
+    },
+    {
+      "path": "evas/docs/COMPARISON-METHODOLOGY.md",
+      "sha256": "0bcc05667b14b96347212197c2e21c04b60a097f2fe405d13cee029e3e8f63ed",
+      "resolution": "PR6 version (main unchanged since ac1b6e8d)"
+    },
+    {
+      "path": "evas/docs/COMPARISON.md",
+      "sha256": "408283f71413782d348412d526f7ffe39b0091a0c4361b248fd9cbb8cfb3888a",
+      "resolution": "PR6 version (main unchanged since ac1b6e8d)"
+    },
+    {
+      "path": "evas/docs/development/PROCESS.md",
+      "sha256": "6ccfabfb211573c18e864c0fcdf9bd79fdbf6232faa8a9f619eca8fb232ffd04",
+      "resolution": "PR6 version (main unchanged since ac1b6e8d)"
+    },
+    {
+      "path": "evas/validation/METHOD_QUALIFICATION.md",
+      "sha256": "622be2cf969223433c6c2966c3dd9bbdfe3edd30cf55d6b86dba8d4612dedd69",
+      "resolution": "PR6 version (main unchanged since ac1b6e8d)"
+    },
+    {
+      "path": "evas/validation/PROTOCOL.md",
+      "sha256": "f08f959d6d8219165171ea5e843fd05ac734e84cbb65bb6228c4ed957e07e9be",
+      "resolution": "PR6 version (main unchanged since ac1b6e8d)"
+    },
+    {
+      "path": "evas/validation/README.md",
+      "sha256": "928fb86e8ffe89a0c1822435b0146c16058317267287afee7caeeba196685ff4",
+      "resolution": "PR6 version (main unchanged since ac1b6e8d)"
+    },
+    {
+      "path": "experiments/README.md",
+      "sha256": "b9242589977158f709ea53cf1478b4e97587528f1f43310ca1e14683d1f98e61",
+      "resolution": "PR6 version (main unchanged since ac1b6e8d)"
+    },
+    {
+      "path": "scripts/capabilities/generate_catalog.py",
+      "sha256": "7cbfe5e9fd00f5b84854e5fe1834b7737781588d7d881720e7cfa3d0ec337b8c",
+      "resolution": "PR6 version (main unchanged since ac1b6e8d)"
+    },
+    {
+      "path": "scripts/ci_selection.py",
+      "sha256": "c4f14d4a72b65de11bc43e12aadab44cfb70967fdc267dab9e039687054f618f",
+      "resolution": "PR6 version (main unchanged since ac1b6e8d)"
+    },
+    {
+      "path": "scripts/tests/test_catalog_derived_outputs.py",
+      "sha256": "9a0371eb292dcea6347caedde7c4077e99b33d48b94a0f27e97c691cf0082498",
+      "resolution": "PR6 version (main unchanged since ac1b6e8d)"
+    },
+    {
+      "path": "scripts/tests/test_ci_selection.py",
+      "sha256": "08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720",
+      "resolution": "PR6 version (main unchanged since ac1b6e8d)"
+    }
+  ],
+  "r3": [
+    {
+      "path": "evas/capabilities/support_view.py",
+      "before_sha256": "b52ecb14d463ab1482db2a46fe953fc8eaf9c1b733108f62f16d020974b32e8d",
+      "after_sha256": "e50584ab40b4b18efbb2b434ee9093abb19331cc074271bb46740652314822e9",
+      "before_git_blob": "b15de3dff517d1228f1e4e8837e82943a9c5b573"
+    },
+    {
+      "path": "evas/capabilities/test_support_view.py",
+      "before_sha256": "1dadf47f2cdf2a99a8ff7f8ecaa096fd4061a3b83fe1df8421c2e5461e6c6fb0",
+      "after_sha256": "937e2e6519aa79c2f6ea69aa2c995180c8c79f76fc6c453c6c0e44d0dc8da414",
+      "before_git_blob": "fa7d6bf9d7ac0cb61338397f564c10bda4103c7e"
+    }
+  ],
+  "rust": [
+    {
+      "path": ".github/workflows/numerical-assurance.yml",
+      "before_sha256": "75da6ea8a3f0e7baa90b99388833ae2d757da66754b1d1dea3a8113d1fd1fa3b",
+      "after_sha256": "c1289f9d76dfeabf105ed9558224bcdaa91038c947b6f7b1d69509ecd42adc74"
+    },
+    {
+      "path": ".github/actions/rust-cache/action.yml",
+      "before_sha256": "6f97c42e84144fa1223c7c19cd122b1b2bd69479016f707ba6946000bace4da7",
+      "after_sha256": "73c072e8d6843cc91aa492e95130b668cd97b47a4ebc7df3eeaf74cc03fe274b"
+    },
+    {
+      "path": "scripts/ci_evidence.py",
+      "before_sha256": "238c45d156225b29e566665997fdd5e1fc19b2301142e69cdc39243ce56c0257",
+      "after_sha256": "c64a7b268f2a8615ac257a19a5edb9fdbe399ad4d577e6c2fe65f6e2a86fc5cc"
+    },
+    {
+      "path": "scripts/ci_lint.py",
+      "before_sha256": "3db707561f073ad72a8347b1b46f65d5e48f6c52e4319543d8bf6249db4bc5a8",
+      "after_sha256": "cefd9fbb99b10adfef780458c56b3b6d64e557748c931111dd4e91800db8a61b"
+    },
+    {
+      "path": "scripts/capabilities/discover_rust.py",
+      "before_sha256": "9827d89f761ef7492230886e3ad7eceb9155bc62cc53ae6faec8e2050d323482",
+      "after_sha256": "f1ade74617fa171c5048246986d52e772b0913ffce28713af6e2fa4af5904892"
+    },
+    {
+      "path": "evas/capabilities/rust_listing.py",
+      "before_sha256": "ec0f176ef9e9e8f9852032755ab3660e3d9fa5e56a06eb53b56b35e519033901",
+      "after_sha256": "c1c9bf5103ff6de928cad864266369067f7996b8b6a16b19091f634236f1af3b"
+    },
+    {
+      "path": "scripts/tests/test_discover_rust.py",
+      "before_sha256": "6071acf9b4de20ed9ea657b800ce0e839e8118772dc4c27148f6f6d79c1eb00d",
+      "after_sha256": "7ab0828aee6e2eedffb94462bdb0fcaf3ed4be817c28b68bade93bb2fa38670b"
+    },
+    {
+      "path": "scripts/tests/test_rust_catalog_reconcile.py",
+      "before_sha256": "a641b2dad6e73b19554510b4479c49b6eeeeaade371e6d6e0d7d1a134464c312",
+      "after_sha256": "33b0f6596980f90219cca0fc44ace42f8739b3dd594a4eb7fa87768a4dce3d60"
+    },
+    {
+      "path": "scripts/README.md",
+      "before_sha256": "28821597bca75a22ca4ac0182fbeb4cf1d4b018b41934f6ec9bac90907c11372",
+      "after_sha256": "5356632fe991e0efb7a245059df0bbfa8e26c76b5ca9beca76f7981c8f0c5aa8"
+    }
+  ],
+  "pr6_render_outputs": [
+    "evas/capabilities/above/README.md",
+    "evas/capabilities/absdelay/README.md",
+    "evas/capabilities/adc-codes/README.md",
+    "evas/capabilities/array-declaration-order/README.md",
+    "evas/capabilities/array-event-update/README.md",
+    "evas/capabilities/array-static-index/README.md",
+    "evas/capabilities/case/README.md",
+    "evas/capabilities/chain-sample-hold-edge-filter/README.md",
+    "evas/capabilities/conditions/README.md",
+    "evas/capabilities/conjugate-poles/README.md",
+    "evas/capabilities/cos/README.md",
+    "evas/capabilities/cross/README.md",
+    "evas/capabilities/ddt-input/README.md",
+    "evas/capabilities/ddt-time/README.md",
+    "evas/capabilities/deeper-slew-cascade/README.md",
+    "evas/capabilities/delay-then-slew/README.md",
+    "evas/capabilities/electrical-vector/README.md",
+    "evas/capabilities/event-dynamics-linear/README.md",
+    "evas/capabilities/event-dynamics-riccati/README.md",
+    "evas/capabilities/event-or/README.md",
+    "evas/capabilities/exp/README.md",
+    "evas/capabilities/filter-ddt-dc/README.md",
+    "evas/capabilities/filter-second-order/README.md",
+    "evas/capabilities/filter-then-sample/README.md",
+    "evas/capabilities/generated/comparison.md",
+    "evas/capabilities/generated/normative.md",
+    "evas/capabilities/generated/paper.md",
+    "evas/capabilities/generated/support-facts.json",
+    "evas/capabilities/generated/support.md",
+    "evas/capabilities/hierarchy/README.md",
+    "evas/capabilities/hysteresis-edge/README.md",
+    "evas/capabilities/idt/README.md",
+    "evas/capabilities/idtmod/README.md",
+    "evas/capabilities/include-guard/README.md",
+    "evas/capabilities/initial-step/README.md",
+    "evas/capabilities/initial-threshold/README.md",
+    "evas/capabilities/instance-integrator-reset/README.md",
+    "evas/capabilities/instance-phase/README.md",
+    "evas/capabilities/integrator-cascade-reset/README.md",
+    "evas/capabilities/interrupted-edge-integrate/README.md",
+    "evas/capabilities/laplace-nd/README.md",
+    "evas/capabilities/laplace-np/README.md",
+    "evas/capabilities/last-crossing/README.md",
+    "evas/capabilities/ln/README.md",
+    "evas/capabilities/loop-bounds/README.md",
+    "evas/capabilities/macro-include/README.md",
+    "evas/capabilities/near-timer-adjacent/README.md",
+    "evas/capabilities/near-timer-chain/README.md",
+    "evas/capabilities/nonlinear-filter-feedthrough/README.md",
+    "evas/capabilities/nonlinear-integral-filter-feedback/README.md",
+    "evas/capabilities/parameter-range/README.md",
+    "evas/capabilities/parameters/README.md",
+    "evas/capabilities/period-update/README.md",
+    "evas/capabilities/phase-cross/README.md",
+    "evas/capabilities/pow-cube/README.md",
+    "evas/capabilities/pow-half/README.md",
+    "evas/capabilities/registry.json",
+    "evas/capabilities/same-time-rules/README.md",
+    "evas/capabilities/sample-hold-cross/README.md",
+    "evas/capabilities/sample-hold-timer/README.md",
+    "evas/capabilities/sample-integrate-ordered/README.md",
+    "evas/capabilities/sample-integrate-timer/README.md",
+    "evas/capabilities/sample-reset-edge/README.md",
+    "evas/capabilities/schedule-cancel/README.md",
+    "evas/capabilities/sequential-assign/README.md",
+    "evas/capabilities/short-pulse/README.md",
+    "evas/capabilities/sin/README.md",
+    "evas/capabilities/sine-response/README.md",
+    "evas/capabilities/slew/README.md",
+    "evas/capabilities/smooth-derivative/README.md",
+    "evas/capabilities/solve-delay-sample/README.md",
+    "evas/capabilities/sqrt/README.md",
+    "evas/capabilities/static-loop/README.md",
+    "evas/capabilities/static-voltage-feedback/README.md",
+    "evas/capabilities/supply-reference-precision/README.md",
+    "evas/capabilities/timer/README.md",
+    "evas/capabilities/transition/README.md",
+    "evas/capabilities/two-absdelay/README.md",
+    "evas/capabilities/two-slew/README.md",
+    "evas/capabilities/user-function/README.md",
+    "evas/capabilities/vco-gated/README.md",
+    "evas/capabilities/vco-long-phase/README.md",
+    "evas/capabilities/vco/README.md",
+    "evas/capabilities/voltage-contribution/README.md"
+  ],
+  "main_paths": [
+    "evas/capabilities/README.md",
+    "evas/capabilities/data/asset-index.json",
+    "evas/capabilities/data/catalog-sources.json",
+    "evas/capabilities/data/entrypoint-index.json",
+    "evas/capabilities/data/method-index.json",
+    "evas/capabilities/data/registry.json",
+    "evas/capabilities/rust_listing.py",
+    "evas/docs/development/TRACEABILITY.md",
+    "scripts/README.md",
+    "scripts/regression_context_registration.py",
+    "scripts/regression_gate.py",
+    "scripts/tests/regression_registration_fixtures.py",
+    "scripts/tests/test_context_registration.py",
+    "scripts/tests/test_regression_gate.py",
+    "scripts/tests/test_regression_transition.py",
+    "scripts/tests/test_rust_catalog_reconcile.py",
+    "scripts/tests/test_trusted_regression_gate.py"
+  ]
+}

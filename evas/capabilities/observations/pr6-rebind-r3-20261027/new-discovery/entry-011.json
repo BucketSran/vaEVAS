@@ -1,0 +1,183 @@
+{
+  "entry": {
+    "workflow": ".github/workflows/numerical-assurance.yml",
+    "line": 203,
+    "job": "static-checks",
+    "step": "Independent mathematics and checker calibration (no simulator)",
+    "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+    "step_if": "needs.selection.outputs.calibration == 'true'",
+    "command": "python3 -B -m unittest discover -s evas/validation/strobe -p 'test_*.py' -v",
+    "environment_overrides": {},
+    "declared_python_versions": [
+      "3.12"
+    ],
+    "start": "evas/validation/strobe",
+    "pattern": "test_*.py",
+    "namespace": "validation",
+    "collector": "unittest",
+    "mode": "declared-ci-literal",
+    "purpose": "role-not-semantic-qualification",
+    "entry_id": "bd38427a5f3255473382a321b8a82d48fb2aeab8c114d7edf3499cf7730a3eaa"
+  },
+  "receipt": {
+    "collector": {
+      "definition_profile": "actual-code-or-registered-native-skip-v1",
+      "native_skip_authority": {
+        "factory_span_sha256": "a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad",
+        "profile": "registered-native-unittest-skip-v1",
+        "runtime_file_sha256": "45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987",
+        "runtime_source": "unittest/case.py",
+        "wrapper_span_sha256": "96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda"
+      },
+      "path": "scripts/capabilities/discover_methods.py",
+      "sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "source_relationship": "owned-source-root"
+    },
+    "complete": true,
+    "discovered_instances": 5,
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONPATH": null,
+      "bytecode_disabled": true,
+      "cache_tag": "cpython-312",
+      "environment_scope": "python-runtime-and-import-path-only",
+      "executable": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+      "implementation": "cpython",
+      "platform": "darwin",
+      "python_version": "3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]",
+      "sys_path_before_selected_imports": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r3-20261027/source",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python312.zip",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/lib/python3.12/site-packages"
+      ]
+    },
+    "error_count": 0,
+    "errors": [],
+    "loader_error_count": 0,
+    "methods": [
+      {
+        "definition": {
+          "line": 11,
+          "name": "test_positive_and_negative_controls",
+          "path": "evas/validation/strobe/test_near_timer.py",
+          "sha256": "478be4f194d898ef017e6866447f6edec0ce7eaa6a14eaec23f0917ce7709952"
+        },
+        "generated": false,
+        "module_path": "evas/validation/strobe/test_near_timer.py",
+        "module_sha256": "d3916fc7e509a83a56b12fb07a40223d169f3d1924269775b47f4ce58051e337",
+        "runtime_id": "test_near_timer.NearTimerChecker.test_positive_and_negative_controls",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 8,
+          "name": "test_exact_forced_terminal_and_window_contract",
+          "path": "evas/validation/strobe/test_output_policy.py",
+          "sha256": "f8e664ce678303e988c311550c3b799daf7c3a9aab2b68c6c27f97d78a57f2e2"
+        },
+        "generated": false,
+        "module_path": "evas/validation/strobe/test_output_policy.py",
+        "module_sha256": "e88b738091e958db727bdecfe08ee632c7a867604aedfaf88890f53c9495b9de",
+        "runtime_id": "test_output_policy.OutputPolicyCalibration.test_exact_forced_terminal_and_window_contract",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 16,
+          "name": "test_period_window_outside_rows_and_wrong_analytic_value",
+          "path": "evas/validation/strobe/test_output_policy.py",
+          "sha256": "bb8c5a09e2b760308d7a7cb0b3da981bc2754d836e0e71783c5d0b4461677546"
+        },
+        "generated": false,
+        "module_path": "evas/validation/strobe/test_output_policy.py",
+        "module_sha256": "e88b738091e958db727bdecfe08ee632c7a867604aedfaf88890f53c9495b9de",
+        "runtime_id": "test_output_policy.OutputPolicyCalibration.test_period_window_outside_rows_and_wrong_analytic_value",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 12,
+          "name": "test_accept_and_reject_history_errors",
+          "path": "evas/validation/strobe/test_timer_composition.py",
+          "sha256": "cf1817f1215edb6995b2ac1922a863f443c8fd91c8db4152c03d13d4b2be413f"
+        },
+        "generated": false,
+        "module_path": "evas/validation/strobe/test_timer_composition.py",
+        "module_sha256": "79db08f910ffa44b69748271c2fa22e377543f67178018ef340b6e17974071ba",
+        "runtime_id": "test_timer_composition.TimerIntegralCalibration.test_accept_and_reject_history_errors",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 7,
+          "name": "test_rectangle_areas",
+          "path": "evas/validation/strobe/test_timer_composition.py",
+          "sha256": "8ca1df2b798049a753e044f429648270b9f5041408498ec247ff152fe34ff923"
+        },
+        "generated": false,
+        "module_path": "evas/validation/strobe/test_timer_composition.py",
+        "module_sha256": "79db08f910ffa44b69748271c2fa22e377543f67178018ef340b6e17974071ba",
+        "runtime_id": "test_timer_composition.TimerIntegralCalibration.test_rectangle_areas",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      }
+    ],
+    "namespace": "validation",
+    "schema_version": 1,
+    "skipped_declarations": 0,
+    "unresolved_instances": [],
+    "transport": {
+      "argv": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-c",
+        "import os,runpy,sys; sys.path[0]=os.getcwd(); tool=sys.argv[1]; sys.argv=sys.argv[1:]; runpy.run_path(tool,run_name=\"__main__\")",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r3-20261027/source/scripts/capabilities/discover_methods.py",
+        "--worker",
+        "--root",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r3-20261027/source",
+        "--start",
+        "evas/validation/strobe",
+        "--pattern",
+        "test_*.py",
+        "--namespace",
+        "validation"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r3-20261027/source",
+      "returncode": 0,
+      "stdout": "{\"collector\": {\"definition_profile\": \"actual-code-or-registered-native-skip-v1\", \"native_skip_authority\": {\"factory_span_sha256\": \"a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad\", \"profile\": \"registered-native-unittest-skip-v1\", \"runtime_file_sha256\": \"45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987\", \"runtime_source\": \"unittest/case.py\", \"wrapper_span_sha256\": \"96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda\"}, \"path\": \"scripts/capabilities/discover_methods.py\", \"sha256\": \"aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17\", \"source_relationship\": \"owned-source-root\"}, \"complete\": true, \"discovered_instances\": 5, \"environment\": {\"PYTHONDONTWRITEBYTECODE\": \"1\", \"PYTHONPATH\": null, \"bytecode_disabled\": true, \"cache_tag\": \"cpython-312\", \"environment_scope\": \"python-runtime-and-import-path-only\", \"executable\": \"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python\", \"implementation\": \"cpython\", \"platform\": \"darwin\", \"python_version\": \"3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"sys_path_before_selected_imports\": [\"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r3-20261027/source\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python312.zip\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload\", \"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/lib/python3.12/site-packages\"]}, \"error_count\": 0, \"errors\": [], \"loader_error_count\": 0, \"methods\": [{\"definition\": {\"line\": 11, \"name\": \"test_positive_and_negative_controls\", \"path\": \"evas/validation/strobe/test_near_timer.py\", \"sha256\": \"478be4f194d898ef017e6866447f6edec0ce7eaa6a14eaec23f0917ce7709952\"}, \"generated\": false, \"module_path\": \"evas/validation/strobe/test_near_timer.py\", \"module_sha256\": \"d3916fc7e509a83a56b12fb07a40223d169f3d1924269775b47f4ce58051e337\", \"runtime_id\": \"test_near_timer.NearTimerChecker.test_positive_and_negative_controls\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 8, \"name\": \"test_exact_forced_terminal_and_window_contract\", \"path\": \"evas/validation/strobe/test_output_policy.py\", \"sha256\": \"f8e664ce678303e988c311550c3b799daf7c3a9aab2b68c6c27f97d78a57f2e2\"}, \"generated\": false, \"module_path\": \"evas/validation/strobe/test_output_policy.py\", \"module_sha256\": \"e88b738091e958db727bdecfe08ee632c7a867604aedfaf88890f53c9495b9de\", \"runtime_id\": \"test_output_policy.OutputPolicyCalibration.test_exact_forced_terminal_and_window_contract\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 16, \"name\": \"test_period_window_outside_rows_and_wrong_analytic_value\", \"path\": \"evas/validation/strobe/test_output_policy.py\", \"sha256\": \"bb8c5a09e2b760308d7a7cb0b3da981bc2754d836e0e71783c5d0b4461677546\"}, \"generated\": false, \"module_path\": \"evas/validation/strobe/test_output_policy.py\", \"module_sha256\": \"e88b738091e958db727bdecfe08ee632c7a867604aedfaf88890f53c9495b9de\", \"runtime_id\": \"test_output_policy.OutputPolicyCalibration.test_period_window_outside_rows_and_wrong_analytic_value\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 12, \"name\": \"test_accept_and_reject_history_errors\", \"path\": \"evas/validation/strobe/test_timer_composition.py\", \"sha256\": \"cf1817f1215edb6995b2ac1922a863f443c8fd91c8db4152c03d13d4b2be413f\"}, \"generated\": false, \"module_path\": \"evas/validation/strobe/test_timer_composition.py\", \"module_sha256\": \"79db08f910ffa44b69748271c2fa22e377543f67178018ef340b6e17974071ba\", \"runtime_id\": \"test_timer_composition.TimerIntegralCalibration.test_accept_and_reject_history_errors\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 7, \"name\": \"test_rectangle_areas\", \"path\": \"evas/validation/strobe/test_timer_composition.py\", \"sha256\": \"8ca1df2b798049a753e044f429648270b9f5041408498ec247ff152fe34ff923\"}, \"generated\": false, \"module_path\": \"evas/validation/strobe/test_timer_composition.py\", \"module_sha256\": \"79db08f910ffa44b69748271c2fa22e377543f67178018ef340b6e17974071ba\", \"runtime_id\": \"test_timer_composition.TimerIntegralCalibration.test_rectangle_areas\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}], \"namespace\": \"validation\", \"schema_version\": 1, \"skipped_declarations\": 0, \"unresolved_instances\": []}\n",
+      "stderr": "",
+      "environment_overrides": {},
+      "actual_resolved_overrides": {},
+      "collection_profile": "inventory-child runtime; not original phase execution/skip results",
+      "original_python_equivalence": "major-minor-declared-only",
+      "sys_path_contract": "repository-cwd first, then literal phase PYTHONPATH; TestLoader adds start directory"
+    }
+  }
+}

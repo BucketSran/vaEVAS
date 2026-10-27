@@ -1,0 +1,550 @@
+{
+  "entry": {
+    "workflow": ".github/workflows/numerical-assurance.yml",
+    "line": 69,
+    "job": "selection",
+    "step": "Check CI routing and changed-line whitespace",
+    "job_if": null,
+    "step_if": null,
+    "command": "python3 -B -m unittest discover -s scripts/tests -p test_regression_runner.py -v",
+    "environment_overrides": {
+      "CI_BASE": "${{ steps.changes.outputs.base }}",
+      "CI_HEAD": "${{ steps.changes.outputs.head }}"
+    },
+    "declared_python_versions": [],
+    "start": "scripts/tests",
+    "pattern": "test_regression_runner.py",
+    "namespace": "maintenance",
+    "collector": "unittest",
+    "mode": "declared-ci-literal",
+    "purpose": "role-not-semantic-qualification",
+    "entry_id": "eff4b2fca783db93715c2329b254a2d3fbb2619803b49e770fd3b073e107cb8c"
+  },
+  "receipt": {
+    "collector": {
+      "definition_profile": "actual-code-or-registered-native-skip-v1",
+      "native_skip_authority": {
+        "factory_span_sha256": "a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad",
+        "profile": "registered-native-unittest-skip-v1",
+        "runtime_file_sha256": "45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987",
+        "runtime_source": "unittest/case.py",
+        "wrapper_span_sha256": "96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda"
+      },
+      "path": "scripts/capabilities/discover_methods.py",
+      "sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "source_relationship": "owned-source-root"
+    },
+    "complete": true,
+    "discovered_instances": 25,
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONPATH": null,
+      "bytecode_disabled": true,
+      "cache_tag": "cpython-312",
+      "environment_scope": "python-runtime-and-import-path-only",
+      "executable": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+      "implementation": "cpython",
+      "platform": "darwin",
+      "python_version": "3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]",
+      "sys_path_before_selected_imports": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r3-20261027/source",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python312.zip",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/lib/python3.12/site-packages"
+      ]
+    },
+    "error_count": 0,
+    "errors": [],
+    "loader_error_count": 0,
+    "methods": [
+      {
+        "definition": {
+          "line": 405,
+          "name": "test_actual_encoded_compiler_configuration_changes_runtime_profile",
+          "path": "scripts/tests/test_regression_runner.py",
+          "sha256": "b81624e90f62994424601a2c45fe47d104d9130c98ebe30c22f6e718fcbe2ee9"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_regression_runner.py",
+        "module_sha256": "62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e",
+        "runtime_id": "test_regression_runner.RegressionRunnerTests.test_actual_encoded_compiler_configuration_changes_runtime_profile",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 88,
+          "name": "test_body_and_teardown_failures_retain_both_phases_and_reasons",
+          "path": "scripts/tests/test_regression_runner.py",
+          "sha256": "acdd8e352da5d6649de3197def06b1aa293ac009eaed6f5c301296d79e29b551"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_regression_runner.py",
+        "module_sha256": "62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e",
+        "runtime_id": "test_regression_runner.RegressionRunnerTests.test_body_and_teardown_failures_retain_both_phases_and_reasons",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 226,
+          "name": "test_callable_global_values_change_identity_and_opaque_state_stays_unmatchable",
+          "path": "scripts/tests/test_regression_runner.py",
+          "sha256": "f706319c2dded6ebd20078b3822f7dd619050c6b9b385e2cabac3a3392174fe3"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_regression_runner.py",
+        "module_sha256": "62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e",
+        "runtime_id": "test_regression_runner.RegressionRunnerTests.test_callable_global_values_change_identity_and_opaque_state_stays_unmatchable",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 148,
+          "name": "test_class_setup_error_cannot_be_hidden_by_a_passing_test",
+          "path": "scripts/tests/test_regression_runner.py",
+          "sha256": "4ee7ee37b5f7e9fe248a14f19ff16d108b959dd187280f57a6d2fd7a21d73a17"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_regression_runner.py",
+        "module_sha256": "62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e",
+        "runtime_id": "test_regression_runner.RegressionRunnerTests.test_class_setup_error_cannot_be_hidden_by_a_passing_test",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 434,
+          "name": "test_complete_failing_shards_merge_without_changing_raw_failure",
+          "path": "scripts/tests/test_regression_runner.py",
+          "sha256": "ce69d9b766f0cbea1b0b180c8d1d90eaafb5b59b81ef9d1e5e43575be48eeeca"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_regression_runner.py",
+        "module_sha256": "62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e",
+        "runtime_id": "test_regression_runner.RegressionRunnerTests.test_complete_failing_shards_merge_without_changing_raw_failure",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 204,
+          "name": "test_dataclass_class_defaults_and_transparent_python_mutators_are_identified",
+          "path": "scripts/tests/test_regression_runner.py",
+          "sha256": "3543d0216b69fe2ce6dde08cccc6dee9df83eef93c34e9eaf503aef21f5bb36f"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_regression_runner.py",
+        "module_sha256": "62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e",
+        "runtime_id": "test_regression_runner.RegressionRunnerTests.test_dataclass_class_defaults_and_transparent_python_mutators_are_identified",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 311,
+          "name": "test_dataclass_descriptors_and_custom_field_metadata_remain_opaque_without_execution",
+          "path": "scripts/tests/test_regression_runner.py",
+          "sha256": "9c2c66809e9836e603324cd4179252e75c7facda7796b2fdef665e7b386a45cd"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_regression_runner.py",
+        "module_sha256": "62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e",
+        "runtime_id": "test_regression_runner.RegressionRunnerTests.test_dataclass_descriptors_and_custom_field_metadata_remain_opaque_without_execution",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 386,
+          "name": "test_dataclass_extra_stored_state_changes_condition_identity",
+          "path": "scripts/tests/test_regression_runner.py",
+          "sha256": "a728138e01455da5eb66b6663e9f3e80be967190e5c9ff3f016ac4c42043b91a"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_regression_runner.py",
+        "module_sha256": "62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e",
+        "runtime_id": "test_regression_runner.RegressionRunnerTests.test_dataclass_extra_stored_state_changes_condition_identity",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 168,
+          "name": "test_dataclass_parameters_retain_values_and_opaque_repetitions_remain_raw_data",
+          "path": "scripts/tests/test_regression_runner.py",
+          "sha256": "db9e248395f1be4b62aae18be74f2bbea074653a6046d30b45f0c6895982e67f"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_regression_runner.py",
+        "module_sha256": "62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e",
+        "runtime_id": "test_regression_runner.RegressionRunnerTests.test_dataclass_parameters_retain_values_and_opaque_repetitions_remain_raw_data",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 246,
+          "name": "test_deferred_annotations_changed_math_and_recursive_state_remain_unmatchable",
+          "path": "scripts/tests/test_regression_runner.py",
+          "sha256": "0c33660950b60aa53c1fc93fd7ed1e94144fe605f863ff7bd067502457b92827"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_regression_runner.py",
+        "module_sha256": "62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e",
+        "runtime_id": "test_regression_runner.RegressionRunnerTests.test_deferred_annotations_changed_math_and_recursive_state_remain_unmatchable",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 189,
+          "name": "test_exact_rational_parameters_and_loop_state_have_stable_distinct_identity",
+          "path": "scripts/tests/test_regression_runner.py",
+          "sha256": "ae7129a8f0e15f2d5ba2e6dac53b54114f7dab4e2e3274a134d9485e87e0d3fe"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_regression_runner.py",
+        "module_sha256": "62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e",
+        "runtime_id": "test_regression_runner.RegressionRunnerTests.test_exact_rational_parameters_and_loop_state_have_stable_distinct_identity",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 414,
+          "name": "test_execution_toolchain_changes_context_but_dut_kernel_content_does_not",
+          "path": "scripts/tests/test_regression_runner.py",
+          "sha256": "c87769ab1754a36b764d6a9d4135ed0c47c6a1f1c118c9c8805d99d72f896db2"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_regression_runner.py",
+        "module_sha256": "62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e",
+        "runtime_id": "test_regression_runner.RegressionRunnerTests.test_execution_toolchain_changes_context_but_dut_kernel_content_does_not",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 132,
+          "name": "test_expected_failure_and_subtest_skip_remain_raw_success_with_visible_conditions",
+          "path": "scripts/tests/test_regression_runner.py",
+          "sha256": "8bf2f0775b7f353a9ed78f6b5a84e29116f0d88afc6dbc49c36bfa4a3c75ec36"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_regression_runner.py",
+        "module_sha256": "62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e",
+        "runtime_id": "test_regression_runner.RegressionRunnerTests.test_expected_failure_and_subtest_skip_remain_raw_success_with_visible_conditions",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 53,
+          "name": "test_failure_error_and_subtest_failure_cannot_become_green",
+          "path": "scripts/tests/test_regression_runner.py",
+          "sha256": "ac431b375cd674ee79a42c810cc03edda42b634880a1d79073dad9c29f8a4361"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_regression_runner.py",
+        "module_sha256": "62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e",
+        "runtime_id": "test_regression_runner.RegressionRunnerTests.test_failure_error_and_subtest_failure_cannot_become_green",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 455,
+          "name": "test_interrupt_keeps_current_test_and_incomplete_status",
+          "path": "scripts/tests/test_regression_runner.py",
+          "sha256": "10c2b33d947179a7315f3c1beb00031747c00f771386b509b428b216a77c0814"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_regression_runner.py",
+        "module_sha256": "62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e",
+        "runtime_id": "test_regression_runner.RegressionRunnerTests.test_interrupt_keeps_current_test_and_incomplete_status",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 271,
+          "name": "test_parameter_identity_does_not_call_shadowed_storage_or_metaclass_properties",
+          "path": "scripts/tests/test_regression_runner.py",
+          "sha256": "9ed6b16a397506c96ed2ecfdb9c10632dfe459e92d67f1b7c6df23b19f1e6f1d"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_regression_runner.py",
+        "module_sha256": "62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e",
+        "runtime_id": "test_regression_runner.RegressionRunnerTests.test_parameter_identity_does_not_call_shadowed_storage_or_metaclass_properties",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 120,
+          "name": "test_parameter_identity_retains_sequence_types_mapping_order_and_float_bits",
+          "path": "scripts/tests/test_regression_runner.py",
+          "sha256": "525fae34e67c286a5eb0da9b8b910c4017aea3cd3265e9c5af98e565aca06339"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_regression_runner.py",
+        "module_sha256": "62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e",
+        "runtime_id": "test_regression_runner.RegressionRunnerTests.test_parameter_identity_retains_sequence_types_mapping_order_and_float_bits",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 294,
+          "name": "test_plain_loop_dictionary_cannot_impersonate_a_typed_float_tag",
+          "path": "scripts/tests/test_regression_runner.py",
+          "sha256": "d4b1622a264f5a73fd4bdf247186c6ee580d03dc6755e7b3db8eb34a4677e788"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_regression_runner.py",
+        "module_sha256": "62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e",
+        "runtime_id": "test_regression_runner.RegressionRunnerTests.test_plain_loop_dictionary_cannot_impersonate_a_typed_float_tag",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 102,
+          "name": "test_plain_loop_replacement_retains_iteration_identity_without_subtest",
+          "path": "scripts/tests/test_regression_runner.py",
+          "sha256": "e93d796d5475b80c4a8181e76a578f059076454277c2663b41b7874d9c2a5f61"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_regression_runner.py",
+        "module_sha256": "62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e",
+        "runtime_id": "test_regression_runner.RegressionRunnerTests.test_plain_loop_replacement_retains_iteration_identity_without_subtest",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 427,
+          "name": "test_report_binds_actual_criteria_and_marks_import_failure_incomplete",
+          "path": "scripts/tests/test_regression_runner.py",
+          "sha256": "87dbadf5ab61bf2d1937392a56814ae15b0ad5438af783e9be2b6aaac46e9304"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_regression_runner.py",
+        "module_sha256": "62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e",
+        "runtime_id": "test_regression_runner.RegressionRunnerTests.test_report_binds_actual_criteria_and_marks_import_failure_incomplete",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 67,
+          "name": "test_subcondition_replacement_preserves_successes_and_distinguishes_new_failure",
+          "path": "scripts/tests/test_regression_runner.py",
+          "sha256": "55a201bc0978c5f35b71525bca38999506dd7184fc052cdf370d6b8c34871c99"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_regression_runner.py",
+        "module_sha256": "62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e",
+        "runtime_id": "test_regression_runner.RegressionRunnerTests.test_subcondition_replacement_preserves_successes_and_distinguishes_new_failure",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 36,
+          "name": "test_success_is_timed_and_skips_remain_visible",
+          "path": "scripts/tests/test_regression_runner.py",
+          "sha256": "5824c8505c1511996ada8b54916befa726ccfec9f669636f5a0c03f9261adf93"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_regression_runner.py",
+        "module_sha256": "62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e",
+        "runtime_id": "test_regression_runner.RegressionRunnerTests.test_success_is_timed_and_skips_remain_visible",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 354,
+          "name": "test_unbound_callable_global_cannot_equal_a_regular_dictionary_value",
+          "path": "scripts/tests/test_regression_runner.py",
+          "sha256": "e63e3cbd45b7e59dfa3eb3b127fc3ded265c64f702bc0e9b88014b983cc84aa8"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_regression_runner.py",
+        "module_sha256": "62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e",
+        "runtime_id": "test_regression_runner.RegressionRunnerTests.test_unbound_callable_global_cannot_equal_a_regular_dictionary_value",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 371,
+          "name": "test_unknown_while_state_cannot_be_a_matchable_failure",
+          "path": "scripts/tests/test_regression_runner.py",
+          "sha256": "996bbda529e541fec072291b0cbdacd7f7bb8ea60c2c560171ea3e13930293b8"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_regression_runner.py",
+        "module_sha256": "62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e",
+        "runtime_id": "test_regression_runner.RegressionRunnerTests.test_unknown_while_state_cannot_be_a_matchable_failure",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 161,
+          "name": "test_zero_tests_is_not_success",
+          "path": "scripts/tests/test_regression_runner.py",
+          "sha256": "924832e9b20a599da5d9f5859dc89558a6c05f080eb29618bdc21a87bc6b7a7b"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_regression_runner.py",
+        "module_sha256": "62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e",
+        "runtime_id": "test_regression_runner.RegressionRunnerTests.test_zero_tests_is_not_success",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      }
+    ],
+    "namespace": "maintenance",
+    "schema_version": 1,
+    "skipped_declarations": 0,
+    "unresolved_instances": [],
+    "transport": {
+      "argv": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-c",
+        "import os,runpy,sys; sys.path[0]=os.getcwd(); tool=sys.argv[1]; sys.argv=sys.argv[1:]; runpy.run_path(tool,run_name=\"__main__\")",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r3-20261027/source/scripts/capabilities/discover_methods.py",
+        "--worker",
+        "--root",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r3-20261027/source",
+        "--start",
+        "scripts/tests",
+        "--pattern",
+        "test_regression_runner.py",
+        "--namespace",
+        "maintenance"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r3-20261027/source",
+      "returncode": 0,
+      "stdout": "{\"collector\": {\"definition_profile\": \"actual-code-or-registered-native-skip-v1\", \"native_skip_authority\": {\"factory_span_sha256\": \"a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad\", \"profile\": \"registered-native-unittest-skip-v1\", \"runtime_file_sha256\": \"45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987\", \"runtime_source\": \"unittest/case.py\", \"wrapper_span_sha256\": \"96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda\"}, \"path\": \"scripts/capabilities/discover_methods.py\", \"sha256\": \"aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17\", \"source_relationship\": \"owned-source-root\"}, \"complete\": true, \"discovered_instances\": 25, \"environment\": {\"PYTHONDONTWRITEBYTECODE\": \"1\", \"PYTHONPATH\": null, \"bytecode_disabled\": true, \"cache_tag\": \"cpython-312\", \"environment_scope\": \"python-runtime-and-import-path-only\", \"executable\": \"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python\", \"implementation\": \"cpython\", \"platform\": \"darwin\", \"python_version\": \"3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"sys_path_before_selected_imports\": [\"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r3-20261027/source\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python312.zip\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload\", \"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/lib/python3.12/site-packages\"]}, \"error_count\": 0, \"errors\": [], \"loader_error_count\": 0, \"methods\": [{\"definition\": {\"line\": 405, \"name\": \"test_actual_encoded_compiler_configuration_changes_runtime_profile\", \"path\": \"scripts/tests/test_regression_runner.py\", \"sha256\": \"b81624e90f62994424601a2c45fe47d104d9130c98ebe30c22f6e718fcbe2ee9\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_regression_runner.py\", \"module_sha256\": \"62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e\", \"runtime_id\": \"test_regression_runner.RegressionRunnerTests.test_actual_encoded_compiler_configuration_changes_runtime_profile\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 88, \"name\": \"test_body_and_teardown_failures_retain_both_phases_and_reasons\", \"path\": \"scripts/tests/test_regression_runner.py\", \"sha256\": \"acdd8e352da5d6649de3197def06b1aa293ac009eaed6f5c301296d79e29b551\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_regression_runner.py\", \"module_sha256\": \"62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e\", \"runtime_id\": \"test_regression_runner.RegressionRunnerTests.test_body_and_teardown_failures_retain_both_phases_and_reasons\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 226, \"name\": \"test_callable_global_values_change_identity_and_opaque_state_stays_unmatchable\", \"path\": \"scripts/tests/test_regression_runner.py\", \"sha256\": \"f706319c2dded6ebd20078b3822f7dd619050c6b9b385e2cabac3a3392174fe3\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_regression_runner.py\", \"module_sha256\": \"62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e\", \"runtime_id\": \"test_regression_runner.RegressionRunnerTests.test_callable_global_values_change_identity_and_opaque_state_stays_unmatchable\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 148, \"name\": \"test_class_setup_error_cannot_be_hidden_by_a_passing_test\", \"path\": \"scripts/tests/test_regression_runner.py\", \"sha256\": \"4ee7ee37b5f7e9fe248a14f19ff16d108b959dd187280f57a6d2fd7a21d73a17\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_regression_runner.py\", \"module_sha256\": \"62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e\", \"runtime_id\": \"test_regression_runner.RegressionRunnerTests.test_class_setup_error_cannot_be_hidden_by_a_passing_test\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 434, \"name\": \"test_complete_failing_shards_merge_without_changing_raw_failure\", \"path\": \"scripts/tests/test_regression_runner.py\", \"sha256\": \"ce69d9b766f0cbea1b0b180c8d1d90eaafb5b59b81ef9d1e5e43575be48eeeca\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_regression_runner.py\", \"module_sha256\": \"62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e\", \"runtime_id\": \"test_regression_runner.RegressionRunnerTests.test_complete_failing_shards_merge_without_changing_raw_failure\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 204, \"name\": \"test_dataclass_class_defaults_and_transparent_python_mutators_are_identified\", \"path\": \"scripts/tests/test_regression_runner.py\", \"sha256\": \"3543d0216b69fe2ce6dde08cccc6dee9df83eef93c34e9eaf503aef21f5bb36f\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_regression_runner.py\", \"module_sha256\": \"62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e\", \"runtime_id\": \"test_regression_runner.RegressionRunnerTests.test_dataclass_class_defaults_and_transparent_python_mutators_are_identified\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 311, \"name\": \"test_dataclass_descriptors_and_custom_field_metadata_remain_opaque_without_execution\", \"path\": \"scripts/tests/test_regression_runner.py\", \"sha256\": \"9c2c66809e9836e603324cd4179252e75c7facda7796b2fdef665e7b386a45cd\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_regression_runner.py\", \"module_sha256\": \"62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e\", \"runtime_id\": \"test_regression_runner.RegressionRunnerTests.test_dataclass_descriptors_and_custom_field_metadata_remain_opaque_without_execution\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 386, \"name\": \"test_dataclass_extra_stored_state_changes_condition_identity\", \"path\": \"scripts/tests/test_regression_runner.py\", \"sha256\": \"a728138e01455da5eb66b6663e9f3e80be967190e5c9ff3f016ac4c42043b91a\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_regression_runner.py\", \"module_sha256\": \"62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e\", \"runtime_id\": \"test_regression_runner.RegressionRunnerTests.test_dataclass_extra_stored_state_changes_condition_identity\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 168, \"name\": \"test_dataclass_parameters_retain_values_and_opaque_repetitions_remain_raw_data\", \"path\": \"scripts/tests/test_regression_runner.py\", \"sha256\": \"db9e248395f1be4b62aae18be74f2bbea074653a6046d30b45f0c6895982e67f\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_regression_runner.py\", \"module_sha256\": \"62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e\", \"runtime_id\": \"test_regression_runner.RegressionRunnerTests.test_dataclass_parameters_retain_values_and_opaque_repetitions_remain_raw_data\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 246, \"name\": \"test_deferred_annotations_changed_math_and_recursive_state_remain_unmatchable\", \"path\": \"scripts/tests/test_regression_runner.py\", \"sha256\": \"0c33660950b60aa53c1fc93fd7ed1e94144fe605f863ff7bd067502457b92827\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_regression_runner.py\", \"module_sha256\": \"62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e\", \"runtime_id\": \"test_regression_runner.RegressionRunnerTests.test_deferred_annotations_changed_math_and_recursive_state_remain_unmatchable\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 189, \"name\": \"test_exact_rational_parameters_and_loop_state_have_stable_distinct_identity\", \"path\": \"scripts/tests/test_regression_runner.py\", \"sha256\": \"ae7129a8f0e15f2d5ba2e6dac53b54114f7dab4e2e3274a134d9485e87e0d3fe\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_regression_runner.py\", \"module_sha256\": \"62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e\", \"runtime_id\": \"test_regression_runner.RegressionRunnerTests.test_exact_rational_parameters_and_loop_state_have_stable_distinct_identity\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 414, \"name\": \"test_execution_toolchain_changes_context_but_dut_kernel_content_does_not\", \"path\": \"scripts/tests/test_regression_runner.py\", \"sha256\": \"c87769ab1754a36b764d6a9d4135ed0c47c6a1f1c118c9c8805d99d72f896db2\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_regression_runner.py\", \"module_sha256\": \"62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e\", \"runtime_id\": \"test_regression_runner.RegressionRunnerTests.test_execution_toolchain_changes_context_but_dut_kernel_content_does_not\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 132, \"name\": \"test_expected_failure_and_subtest_skip_remain_raw_success_with_visible_conditions\", \"path\": \"scripts/tests/test_regression_runner.py\", \"sha256\": \"8bf2f0775b7f353a9ed78f6b5a84e29116f0d88afc6dbc49c36bfa4a3c75ec36\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_regression_runner.py\", \"module_sha256\": \"62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e\", \"runtime_id\": \"test_regression_runner.RegressionRunnerTests.test_expected_failure_and_subtest_skip_remain_raw_success_with_visible_conditions\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 53, \"name\": \"test_failure_error_and_subtest_failure_cannot_become_green\", \"path\": \"scripts/tests/test_regression_runner.py\", \"sha256\": \"ac431b375cd674ee79a42c810cc03edda42b634880a1d79073dad9c29f8a4361\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_regression_runner.py\", \"module_sha256\": \"62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e\", \"runtime_id\": \"test_regression_runner.RegressionRunnerTests.test_failure_error_and_subtest_failure_cannot_become_green\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 455, \"name\": \"test_interrupt_keeps_current_test_and_incomplete_status\", \"path\": \"scripts/tests/test_regression_runner.py\", \"sha256\": \"10c2b33d947179a7315f3c1beb00031747c00f771386b509b428b216a77c0814\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_regression_runner.py\", \"module_sha256\": \"62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e\", \"runtime_id\": \"test_regression_runner.RegressionRunnerTests.test_interrupt_keeps_current_test_and_incomplete_status\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 271, \"name\": \"test_parameter_identity_does_not_call_shadowed_storage_or_metaclass_properties\", \"path\": \"scripts/tests/test_regression_runner.py\", \"sha256\": \"9ed6b16a397506c96ed2ecfdb9c10632dfe459e92d67f1b7c6df23b19f1e6f1d\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_regression_runner.py\", \"module_sha256\": \"62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e\", \"runtime_id\": \"test_regression_runner.RegressionRunnerTests.test_parameter_identity_does_not_call_shadowed_storage_or_metaclass_properties\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 120, \"name\": \"test_parameter_identity_retains_sequence_types_mapping_order_and_float_bits\", \"path\": \"scripts/tests/test_regression_runner.py\", \"sha256\": \"525fae34e67c286a5eb0da9b8b910c4017aea3cd3265e9c5af98e565aca06339\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_regression_runner.py\", \"module_sha256\": \"62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e\", \"runtime_id\": \"test_regression_runner.RegressionRunnerTests.test_parameter_identity_retains_sequence_types_mapping_order_and_float_bits\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 294, \"name\": \"test_plain_loop_dictionary_cannot_impersonate_a_typed_float_tag\", \"path\": \"scripts/tests/test_regression_runner.py\", \"sha256\": \"d4b1622a264f5a73fd4bdf247186c6ee580d03dc6755e7b3db8eb34a4677e788\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_regression_runner.py\", \"module_sha256\": \"62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e\", \"runtime_id\": \"test_regression_runner.RegressionRunnerTests.test_plain_loop_dictionary_cannot_impersonate_a_typed_float_tag\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 102, \"name\": \"test_plain_loop_replacement_retains_iteration_identity_without_subtest\", \"path\": \"scripts/tests/test_regression_runner.py\", \"sha256\": \"e93d796d5475b80c4a8181e76a578f059076454277c2663b41b7874d9c2a5f61\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_regression_runner.py\", \"module_sha256\": \"62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e\", \"runtime_id\": \"test_regression_runner.RegressionRunnerTests.test_plain_loop_replacement_retains_iteration_identity_without_subtest\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 427, \"name\": \"test_report_binds_actual_criteria_and_marks_import_failure_incomplete\", \"path\": \"scripts/tests/test_regression_runner.py\", \"sha256\": \"87dbadf5ab61bf2d1937392a56814ae15b0ad5438af783e9be2b6aaac46e9304\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_regression_runner.py\", \"module_sha256\": \"62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e\", \"runtime_id\": \"test_regression_runner.RegressionRunnerTests.test_report_binds_actual_criteria_and_marks_import_failure_incomplete\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 67, \"name\": \"test_subcondition_replacement_preserves_successes_and_distinguishes_new_failure\", \"path\": \"scripts/tests/test_regression_runner.py\", \"sha256\": \"55a201bc0978c5f35b71525bca38999506dd7184fc052cdf370d6b8c34871c99\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_regression_runner.py\", \"module_sha256\": \"62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e\", \"runtime_id\": \"test_regression_runner.RegressionRunnerTests.test_subcondition_replacement_preserves_successes_and_distinguishes_new_failure\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 36, \"name\": \"test_success_is_timed_and_skips_remain_visible\", \"path\": \"scripts/tests/test_regression_runner.py\", \"sha256\": \"5824c8505c1511996ada8b54916befa726ccfec9f669636f5a0c03f9261adf93\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_regression_runner.py\", \"module_sha256\": \"62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e\", \"runtime_id\": \"test_regression_runner.RegressionRunnerTests.test_success_is_timed_and_skips_remain_visible\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 354, \"name\": \"test_unbound_callable_global_cannot_equal_a_regular_dictionary_value\", \"path\": \"scripts/tests/test_regression_runner.py\", \"sha256\": \"e63e3cbd45b7e59dfa3eb3b127fc3ded265c64f702bc0e9b88014b983cc84aa8\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_regression_runner.py\", \"module_sha256\": \"62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e\", \"runtime_id\": \"test_regression_runner.RegressionRunnerTests.test_unbound_callable_global_cannot_equal_a_regular_dictionary_value\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 371, \"name\": \"test_unknown_while_state_cannot_be_a_matchable_failure\", \"path\": \"scripts/tests/test_regression_runner.py\", \"sha256\": \"996bbda529e541fec072291b0cbdacd7f7bb8ea60c2c560171ea3e13930293b8\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_regression_runner.py\", \"module_sha256\": \"62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e\", \"runtime_id\": \"test_regression_runner.RegressionRunnerTests.test_unknown_while_state_cannot_be_a_matchable_failure\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 161, \"name\": \"test_zero_tests_is_not_success\", \"path\": \"scripts/tests/test_regression_runner.py\", \"sha256\": \"924832e9b20a599da5d9f5859dc89558a6c05f080eb29618bdc21a87bc6b7a7b\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_regression_runner.py\", \"module_sha256\": \"62a91b6ee596e2ea3974359f3d9aa072b6762ae73de1d760acdb20ccb995a77e\", \"runtime_id\": \"test_regression_runner.RegressionRunnerTests.test_zero_tests_is_not_success\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}], \"namespace\": \"maintenance\", \"schema_version\": 1, \"skipped_declarations\": 0, \"unresolved_instances\": []}\n",
+      "stderr": "",
+      "environment_overrides": {
+        "CI_BASE": "${{ steps.changes.outputs.base }}",
+        "CI_HEAD": "${{ steps.changes.outputs.head }}"
+      },
+      "actual_resolved_overrides": {
+        "CI_BASE": "02dee32b2c9b25f166cbd77f8a895953e004f288",
+        "CI_HEAD": "8cb065f534bc30ec73332d6f60f6fa709cb63749"
+      },
+      "collection_profile": "inventory-child runtime; not original phase execution/skip results",
+      "original_python_equivalence": "unpinned-runner-python3-unproven",
+      "sys_path_contract": "repository-cwd first, then literal phase PYTHONPATH; TestLoader adds start directory"
+    }
+  }
+}

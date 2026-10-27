@@ -1,0 +1,605 @@
+{
+  "task": "PR6-ASTRA-R2-01 and PR6-ASTRA-R2-02 markdown audit fix",
+  "head": "c76cb65f7c260712eb77bc9322bb294ec32287c5",
+  "tree": "863e78837993c3116459a91207138da6ef4c9b96",
+  "pr": "https://github.com/BucketSran/vaEVAS/pull/269",
+  "writable_directory": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr6/support-audit-r3-grok-20261027",
+  "model": {
+    "providerInstanceId": "cursor",
+    "model": "grok-4.7",
+    "options": [
+      {
+        "id": "reasoning_effort",
+        "value": "high"
+      },
+      {
+        "id": "fastMode",
+        "value": false
+      }
+    ],
+    "source": "已执行验证：orchestrator_capabilities 的 inheritedProviderInstanceId、inheritedModel、inheritedOptions",
+    "started_at_utc": "2026-10-27T11:22:26Z",
+    "finished_at_utc": "2026-10-27T11:44:23.619036+00:00"
+  },
+  "files": [
+    {
+      "path": "evas/capabilities/support_view.py",
+      "before_sha256": "b52ecb14d463ab1482db2a46fe953fc8eaf9c1b733108f62f16d020974b32e8d",
+      "after_sha256": "e50584ab40b4b18efbb2b434ee9093abb19331cc074271bb46740652314822e9",
+      "before_git_blob": "b15de3dff517d1228f1e4e8837e82943a9c5b573"
+    },
+    {
+      "path": "evas/capabilities/test_support_view.py",
+      "before_sha256": "1dadf47f2cdf2a99a8ff7f8ecaa096fd4061a3b83fe1df8421c2e5461e6c6fb0",
+      "after_sha256": "937e2e6519aa79c2f6ea69aa2c995180c8c79f76fc6c453c6c0e44d0dc8da414",
+      "before_git_blob": "fa7d6bf9d7ac0cb61338397f564c10bda4103c7e"
+    }
+  ],
+  "patch": {
+    "path": "source.patch",
+    "sha256": "e5850306b6ae2e845e9df1d34c178480a913a1b841eb266d9045b2db5395497f",
+    "stat": " evas/capabilities/support_view.py      | 84 +++++++++++++++++++++++++++++-----\n evas/capabilities/test_support_view.py | 66 ++++++++++++++++++++++++++\n 2 files changed, 138 insertions(+), 12 deletions(-)",
+    "apply_check": "已执行验证：在只含 c76cb65f 原文件的 scratch/apply-check 上 git apply --check，返回码 0"
+  },
+  "generated_output_unchanged": {
+    "value": true,
+    "basis": "已执行验证：render.py --check 输出 checked 84 capability files，返回码 0；随后对导出树 49577 个 blob 再核对，除上述两个源文件外 0 个不一致。生成器 markdown()/document() 未改。",
+    "render_check_stdout": "checked 84 capability files",
+    "render_check_stderr": "",
+    "render_check_returncode": 0,
+    "render_check_log": "logs/render-check.stdout.txt",
+    "blob_recheck_other_files_mismatch": 0,
+    "extra_files_in_export": []
+  },
+  "tests": {
+    "command": "python -B -m unittest discover -s evas/capabilities -p 'test_*.py' -v",
+    "cwd": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr6/support-audit-r3-grok-20261027/export",
+    "python": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+    "returncode": 0,
+    "summary": "Ran 97 tests in 182.635s",
+    "ok": true,
+    "stdout_log": "logs/unittest-capabilities.stdout.txt",
+    "stderr_log": "logs/unittest-capabilities.stderr.txt",
+    "stdout_sha256": "0cf96b6121c05988445e84a64ae32f3ed23acbf87882fc7c5ef4b21e438239d5",
+    "stderr_sha256": "13da2ceccb5b6bb7b70bf8bab6146d7821d95cd888ec5f3a8942a5ce1a60f465",
+    "basis": "已执行验证"
+  },
+  "probes": {
+    "script": "probes/synthetic_probes.py",
+    "script_sha256": "a08b5d2edd742e7649bc8e82a0cfcf9a235eaec0181202e5e6467212d2e3eb43",
+    "reviewer_script_sha256": "a08b5d2edd742e7649bc8e82a0cfcf9a235eaec0181202e5e6467212d2e3eb43",
+    "script_unchanged": true,
+    "path_override": "probes/review_common.py 把 AUDIT_SOURCE 指到 W/export，把 AUDIT_OUTPUT 指到 W/probe-before 与 W/probe-after。探针判断逻辑未改。",
+    "before": {
+      "failed_rejection_controls": [
+        "ngspice-drop-consumer-a-toolchain",
+        "ngspice-drop-owner-version",
+        "gnucap-drop-consumer-a-toolchain",
+        "gnucap-drop-owner-version",
+        "requirement__itor-drop-allowed_behavior",
+        "requirement__itor-drop-conditions",
+        "requirement__itor-drop-observables",
+        "requirement__rtoi-drop-allowed_behavior",
+        "requirement__rtoi-drop-conditions",
+        "requirement__rtoi-drop-observables",
+        "requirement_expm1-drop-conditions",
+        "requirement_ln1p-drop-conditions",
+        "markdown-change-view_status",
+        "markdown-drop-view_status",
+        "markdown-change-provisional",
+        "markdown-drop-provisional"
+      ],
+      "false_accepts": 16,
+      "markdown_controls": 28,
+      "preview_audit_errors": [],
+      "log": "logs/synthetic-probes-before.stdout.txt",
+      "result": "probe-before/synthetic-probes.json"
+    },
+    "after": {
+      "failed_rejection_controls": [],
+      "false_accepts": 0,
+      "markdown_controls": 28,
+      "preview_audit_errors": [],
+      "log": "logs/synthetic-probes-after.stdout.txt",
+      "result": "probe-after/synthetic-probes.json"
+    },
+    "classes": {
+      "drop_all_same_component_already_rejected": {
+        "names": [
+          "ngspice-drop-all-simulator-components",
+          "ngspice-drop-all-compiler-components",
+          "gnucap-drop-all-simulator-components",
+          "gnucap-drop-all-compiler-components"
+        ],
+        "before_false_accepts": 0,
+        "after_false_accepts": 0,
+        "after_rejected": 4
+      },
+      "multi_source_drop_one_source": {
+        "names": [
+          "ngspice-drop-consumer-a-toolchain",
+          "gnucap-drop-consumer-a-toolchain"
+        ],
+        "before_false_accepts": 2,
+        "after_false_accepts": 0,
+        "after_rejected": 2
+      },
+      "drop_owner_version": {
+        "names": [
+          "ngspice-drop-owner-version",
+          "gnucap-drop-owner-version"
+        ],
+        "before_false_accepts": 2,
+        "after_false_accepts": 0,
+        "after_rejected": 2
+      },
+      "single_requirement_drop_allowed_behavior": {
+        "names": [
+          "requirement__itor-drop-allowed_behavior",
+          "requirement__rtoi-drop-allowed_behavior",
+          "requirement_expm1-drop-allowed_behavior",
+          "requirement_ln1p-drop-allowed_behavior"
+        ],
+        "before_false_accepts": 2,
+        "after_false_accepts": 0,
+        "after_rejected": 4
+      },
+      "single_requirement_drop_conditions": {
+        "names": [
+          "requirement__itor-drop-conditions",
+          "requirement__rtoi-drop-conditions",
+          "requirement_expm1-drop-conditions",
+          "requirement_ln1p-drop-conditions"
+        ],
+        "before_false_accepts": 4,
+        "after_false_accepts": 0,
+        "after_rejected": 4
+      },
+      "single_requirement_drop_observables": {
+        "names": [
+          "requirement__itor-drop-observables",
+          "requirement__rtoi-drop-observables",
+          "requirement_expm1-drop-observables",
+          "requirement_ln1p-drop-observables"
+        ],
+        "before_false_accepts": 2,
+        "after_false_accepts": 0,
+        "after_rejected": 4
+      },
+      "drop_all_conditions_already_rejected": {
+        "names": [
+          "drop-all-conditions"
+        ],
+        "before_false_accepts": 0,
+        "after_false_accepts": 0,
+        "after_rejected": 1
+      },
+      "change_view_status": {
+        "names": [
+          "markdown-change-view_status"
+        ],
+        "before_false_accepts": 1,
+        "after_false_accepts": 0,
+        "after_rejected": 1
+      },
+      "drop_view_status": {
+        "names": [
+          "markdown-drop-view_status"
+        ],
+        "before_false_accepts": 1,
+        "after_false_accepts": 0,
+        "after_rejected": 1
+      },
+      "change_provisional": {
+        "names": [
+          "markdown-change-provisional"
+        ],
+        "before_false_accepts": 1,
+        "after_false_accepts": 0,
+        "after_rejected": 1
+      },
+      "drop_provisional": {
+        "names": [
+          "markdown-drop-provisional"
+        ],
+        "before_false_accepts": 1,
+        "after_false_accepts": 0,
+        "after_rejected": 1
+      },
+      "adopted_already_rejected": {
+        "names": [
+          "markdown-change-adopted",
+          "markdown-drop-adopted"
+        ],
+        "before_false_accepts": 0,
+        "after_false_accepts": 0,
+        "after_rejected": 2
+      },
+      "preview_text_on_current_document_already_rejected": {
+        "names": [
+          "current-document-with-preview-text"
+        ],
+        "before_false_accepts": 0,
+        "after_false_accepts": 0,
+        "after_rejected": 1
+      }
+    },
+    "controls": [
+      {
+        "name": "ngspice-drop-all-simulator-components",
+        "class": "drop_all_same_component_already_rejected",
+        "expected_reject": true,
+        "before_reject": true,
+        "after_reject": true,
+        "before_errors": [
+          "markdown dropped toolchain component",
+          "markdown dropped toolchain component"
+        ],
+        "after_errors": [
+          "markdown dropped toolchain component",
+          "markdown dropped toolchain component"
+        ]
+      },
+      {
+        "name": "ngspice-drop-all-compiler-components",
+        "class": "drop_all_same_component_already_rejected",
+        "expected_reject": true,
+        "before_reject": true,
+        "after_reject": true,
+        "before_errors": [
+          "markdown dropped toolchain component",
+          "markdown dropped toolchain component"
+        ],
+        "after_errors": [
+          "markdown dropped toolchain component",
+          "markdown dropped toolchain component"
+        ]
+      },
+      {
+        "name": "ngspice-drop-consumer-a-toolchain",
+        "class": "multi_source_drop_one_source",
+        "expected_reject": true,
+        "before_reject": false,
+        "after_reject": true,
+        "before_errors": [],
+        "after_errors": [
+          "markdown dropped toolchain component"
+        ]
+      },
+      {
+        "name": "ngspice-drop-owner-version",
+        "class": "drop_owner_version",
+        "expected_reject": true,
+        "before_reject": false,
+        "after_reject": true,
+        "before_errors": [],
+        "after_errors": [
+          "markdown dropped toolchain component"
+        ]
+      },
+      {
+        "name": "gnucap-drop-all-simulator-components",
+        "class": "drop_all_same_component_already_rejected",
+        "expected_reject": true,
+        "before_reject": true,
+        "after_reject": true,
+        "before_errors": [
+          "markdown dropped toolchain component",
+          "markdown dropped toolchain component"
+        ],
+        "after_errors": [
+          "markdown dropped toolchain component",
+          "markdown dropped toolchain component"
+        ]
+      },
+      {
+        "name": "gnucap-drop-all-compiler-components",
+        "class": "drop_all_same_component_already_rejected",
+        "expected_reject": true,
+        "before_reject": true,
+        "after_reject": true,
+        "before_errors": [
+          "markdown dropped toolchain component",
+          "markdown dropped toolchain component"
+        ],
+        "after_errors": [
+          "markdown dropped toolchain component",
+          "markdown dropped toolchain component"
+        ]
+      },
+      {
+        "name": "gnucap-drop-consumer-a-toolchain",
+        "class": "multi_source_drop_one_source",
+        "expected_reject": true,
+        "before_reject": false,
+        "after_reject": true,
+        "before_errors": [],
+        "after_errors": [
+          "markdown dropped toolchain component"
+        ]
+      },
+      {
+        "name": "gnucap-drop-owner-version",
+        "class": "drop_owner_version",
+        "expected_reject": true,
+        "before_reject": false,
+        "after_reject": true,
+        "before_errors": [],
+        "after_errors": [
+          "markdown dropped toolchain component"
+        ]
+      },
+      {
+        "name": "requirement__itor-drop-allowed_behavior",
+        "class": "single_requirement_drop_allowed_behavior",
+        "expected_reject": true,
+        "before_reject": false,
+        "after_reject": true,
+        "before_errors": [],
+        "after_errors": [
+          "markdown dropped requirement contract field allowed_behavior"
+        ]
+      },
+      {
+        "name": "requirement__itor-drop-conditions",
+        "class": "single_requirement_drop_conditions",
+        "expected_reject": true,
+        "before_reject": false,
+        "after_reject": true,
+        "before_errors": [],
+        "after_errors": [
+          "markdown dropped requirement contract field conditions"
+        ]
+      },
+      {
+        "name": "requirement__itor-drop-observables",
+        "class": "single_requirement_drop_observables",
+        "expected_reject": true,
+        "before_reject": false,
+        "after_reject": true,
+        "before_errors": [],
+        "after_errors": [
+          "markdown dropped requirement contract field observables"
+        ]
+      },
+      {
+        "name": "requirement__rtoi-drop-allowed_behavior",
+        "class": "single_requirement_drop_allowed_behavior",
+        "expected_reject": true,
+        "before_reject": false,
+        "after_reject": true,
+        "before_errors": [],
+        "after_errors": [
+          "markdown dropped requirement contract field allowed_behavior"
+        ]
+      },
+      {
+        "name": "requirement__rtoi-drop-conditions",
+        "class": "single_requirement_drop_conditions",
+        "expected_reject": true,
+        "before_reject": false,
+        "after_reject": true,
+        "before_errors": [],
+        "after_errors": [
+          "markdown dropped requirement contract field conditions"
+        ]
+      },
+      {
+        "name": "requirement__rtoi-drop-observables",
+        "class": "single_requirement_drop_observables",
+        "expected_reject": true,
+        "before_reject": false,
+        "after_reject": true,
+        "before_errors": [],
+        "after_errors": [
+          "markdown dropped requirement contract field observables"
+        ]
+      },
+      {
+        "name": "requirement_expm1-drop-allowed_behavior",
+        "class": "single_requirement_drop_allowed_behavior",
+        "expected_reject": true,
+        "before_reject": true,
+        "after_reject": true,
+        "before_errors": [
+          "markdown dropped requirement contract field allowed_behavior"
+        ],
+        "after_errors": [
+          "markdown dropped requirement contract field allowed_behavior"
+        ]
+      },
+      {
+        "name": "requirement_expm1-drop-conditions",
+        "class": "single_requirement_drop_conditions",
+        "expected_reject": true,
+        "before_reject": false,
+        "after_reject": true,
+        "before_errors": [],
+        "after_errors": [
+          "markdown dropped requirement contract field conditions"
+        ]
+      },
+      {
+        "name": "requirement_expm1-drop-observables",
+        "class": "single_requirement_drop_observables",
+        "expected_reject": true,
+        "before_reject": true,
+        "after_reject": true,
+        "before_errors": [
+          "markdown dropped requirement contract field observables"
+        ],
+        "after_errors": [
+          "markdown dropped requirement contract field observables"
+        ]
+      },
+      {
+        "name": "requirement_ln1p-drop-allowed_behavior",
+        "class": "single_requirement_drop_allowed_behavior",
+        "expected_reject": true,
+        "before_reject": true,
+        "after_reject": true,
+        "before_errors": [
+          "markdown dropped requirement contract field allowed_behavior"
+        ],
+        "after_errors": [
+          "markdown dropped requirement contract field allowed_behavior"
+        ]
+      },
+      {
+        "name": "requirement_ln1p-drop-conditions",
+        "class": "single_requirement_drop_conditions",
+        "expected_reject": true,
+        "before_reject": false,
+        "after_reject": true,
+        "before_errors": [],
+        "after_errors": [
+          "markdown dropped requirement contract field conditions"
+        ]
+      },
+      {
+        "name": "requirement_ln1p-drop-observables",
+        "class": "single_requirement_drop_observables",
+        "expected_reject": true,
+        "before_reject": true,
+        "after_reject": true,
+        "before_errors": [
+          "markdown dropped requirement contract field observables"
+        ],
+        "after_errors": [
+          "markdown dropped requirement contract field observables"
+        ]
+      },
+      {
+        "name": "drop-all-conditions",
+        "class": "drop_all_conditions_already_rejected",
+        "expected_reject": true,
+        "before_reject": true,
+        "after_reject": true,
+        "before_errors": [
+          "markdown dropped requirement contract field conditions",
+          "markdown dropped requirement contract field conditions",
+          "markdown dropped requirement contract field conditions",
+          "markdown dropped requirement contract field conditions"
+        ],
+        "after_errors": [
+          "markdown dropped requirement contract field conditions",
+          "markdown dropped requirement contract field conditions",
+          "markdown dropped requirement contract field conditions",
+          "markdown dropped requirement contract field conditions"
+        ]
+      },
+      {
+        "name": "markdown-change-view_status",
+        "class": "change_view_status",
+        "expected_reject": true,
+        "before_reject": false,
+        "after_reject": true,
+        "before_errors": [],
+        "after_errors": [
+          "markdown view status diverged"
+        ]
+      },
+      {
+        "name": "markdown-drop-view_status",
+        "class": "drop_view_status",
+        "expected_reject": true,
+        "before_reject": false,
+        "after_reject": true,
+        "before_errors": [],
+        "after_errors": [
+          "markdown view status diverged"
+        ]
+      },
+      {
+        "name": "markdown-change-provisional",
+        "class": "change_provisional",
+        "expected_reject": true,
+        "before_reject": false,
+        "after_reject": true,
+        "before_errors": [],
+        "after_errors": [
+          "markdown view status diverged"
+        ]
+      },
+      {
+        "name": "markdown-drop-provisional",
+        "class": "drop_provisional",
+        "expected_reject": true,
+        "before_reject": false,
+        "after_reject": true,
+        "before_errors": [],
+        "after_errors": [
+          "markdown view status diverged"
+        ]
+      },
+      {
+        "name": "markdown-change-adopted",
+        "class": "adopted_already_rejected",
+        "expected_reject": true,
+        "before_reject": true,
+        "after_reject": true,
+        "before_errors": [
+          "markdown view status diverged"
+        ],
+        "after_errors": [
+          "markdown view status diverged"
+        ]
+      },
+      {
+        "name": "markdown-drop-adopted",
+        "class": "adopted_already_rejected",
+        "expected_reject": true,
+        "before_reject": true,
+        "after_reject": true,
+        "before_errors": [
+          "markdown view status diverged"
+        ],
+        "after_errors": [
+          "markdown view status diverged"
+        ]
+      },
+      {
+        "name": "current-document-with-preview-text",
+        "class": "preview_text_on_current_document_already_rejected",
+        "expected_reject": true,
+        "before_reject": true,
+        "after_reject": true,
+        "before_errors": [
+          "markdown view status diverged"
+        ],
+        "after_errors": [
+          "markdown view status diverged"
+        ]
+      }
+    ],
+    "basis": "已执行验证：同一份审核方 synthetic_probes.py，先对未修改的 c76cb65f 导出运行，再对修改后的导出运行。"
+  },
+  "guards": {
+    "before": "guard-before.json",
+    "after": "guard-after.json",
+    "all_unchanged": true,
+    "basis": "已执行验证"
+  },
+  "discarded_attempts": [
+    {
+      "name": "export-blob-diff.txt",
+      "what": "git diff c76cb65f 时 GIT_INDEX_FILE 指向尚不存在的私有 index，输出把 49577 个路径都标成 D。",
+      "disposition": "作废。随后用 blob sha1 与 ls-tree oid 逐文件核对，49577 个全部一致，见 logs/export-blob-verify.txt。"
+    },
+    {
+      "name": "unittest-as-package-import",
+      "what": "曾用 python -m unittest evas.capabilities.test_support_view... 从导出根目录启动，因测试模块按目录导入 render 而失败。",
+      "disposition": "作废。随后按简报执行 discover -s evas/capabilities，97 项通过。未据此改源码。"
+    }
+  ],
+  "scope": {
+    "edited": [
+      "evas/capabilities/support_view.py",
+      "evas/capabilities/test_support_view.py"
+    ],
+    "generation_functions_edited": false,
+    "real_worktree_written": false,
+    "published": false,
+    "delegated": false
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "prepared_at_utc": "2026-10-27T14:13:04.678249+00:00",
+  "base": "02dee32b2c9b25f166cbd77f8a895953e004f288",
+  "base_tree": "a68a89e1c145767f830fd5d602ab1be9f96b6b90",
+  "pr6": "c76cb65f7c260712eb77bc9322bb294ec32287c5",
+  "pr6_tree": "863e78837993c3116459a91207138da6ef4c9b96",
+  "old_base": "ac1b6e8d8de743b8da3f862c0f50bdf0a1a1ca14",
+  "plan": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r3-20261027/source-plan.json",
+  "merge_sources": 22,
+  "three_way": [
+    "evas/capabilities/README.md"
+  ],
+  "pre_render_checks": [
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "evas/capabilities/render.py"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r3-20261027/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r3-20261027/pre-render.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-27T14:12:39.336170+00:00",
+      "finished_at_utc": "2026-10-27T14:13:04.474692+00:00"
+    }
+  ],
+  "before": {
+    "head": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+    "index_sha256": "a2e18b66fd9b3e29093343793d45781c11a717c05c35103d4e9b1da8eec87d71",
+    "shared_config_sha256": "de2b08ef3ba66e96be8b70c87346ff4a96f905e1272934ddd86c218dba501ea8",
+    "shared_config_status": "equal-accepted-reference",
+    "old_candidates": 20
+  },
+  "after": {
+    "head": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+    "index_sha256": "a2e18b66fd9b3e29093343793d45781c11a717c05c35103d4e9b1da8eec87d71",
+    "shared_config_sha256": "de2b08ef3ba66e96be8b70c87346ff4a96f905e1272934ddd86c218dba501ea8",
+    "shared_config_status": "equal-accepted-reference",
+    "old_candidates": 20
+  },
+  "published": false,
+  "scientific_execution": false,
+  "semantic_qualification": false,
+  "executed_by": "tclaude/claude-opus-5-5"
+}
