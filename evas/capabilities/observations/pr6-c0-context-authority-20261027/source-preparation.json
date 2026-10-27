@@ -1,0 +1,34 @@
+{
+  "prepared_at_utc": "2026-10-27T21:56:03.314979+00:00",
+  "base": "4d6ebc71efea35822a28f2861f2b0a2a6db17e59",
+  "base_tree": "33a1a097624a24d46dda3ec289b1d899280d7e18",
+  "export": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/context-registration-20261027/source-c0",
+  "immutable_paths_equal_base": [
+    ".github/workflows/numerical-assurance.yml",
+    "evas/validation/baselines/regression-v1.json",
+    "scripts/run_trusted_regression_gate.py",
+    "scripts/regression_gate.py",
+    "scripts/regression_context_registration.py",
+    "scripts/materialize_registration_bundle.py",
+    "scripts/run_regression.py",
+    "scripts/ci_evidence.py",
+    "scripts/regression_reason_identity.py",
+    "scripts/regression_observation_policy.json"
+  ],
+  "before": {
+    "head": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+    "index_sha256": "a2e18b66fd9b3e29093343793d45781c11a717c05c35103d4e9b1da8eec87d71",
+    "shared_config_sha256": "de2b08ef3ba66e96be8b70c87346ff4a96f905e1272934ddd86c218dba501ea8",
+    "shared_config_status": "equal-accepted-reference",
+    "old_candidates": 20
+  },
+  "after": {
+    "head": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+    "index_sha256": "a2e18b66fd9b3e29093343793d45781c11a717c05c35103d4e9b1da8eec87d71",
+    "shared_config_sha256": "de2b08ef3ba66e96be8b70c87346ff4a96f905e1272934ddd86c218dba501ea8",
+    "shared_config_status": "equal-accepted-reference",
+    "old_candidates": 20
+  },
+  "scientific_execution": false,
+  "executed_by": "tclaude/claude-opus-5-5"
+}

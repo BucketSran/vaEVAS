@@ -1,0 +1,102 @@
+{
+  "main": "4d6ebc71efea35822a28f2861f2b0a2a6db17e59",
+  "e1": "CI 40584762318 attempt 1",
+  "e1_report_sha256": "35d74e62f8933cb10c8f8298f5a65389fa56b1cd6faadb4f8a09108f14d3fa75",
+  "module": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/context-registration-20261027/baseline_layout.py",
+  "module_sha256": "418aa2c99c757f96ad427d0d60bf5cc7bd856a7e6db317b07dc5cf996e35e5ee",
+  "entry_note": "placeholder provenance/review text of PR5 size; the governance stage repeats these checks on the real entry",
+  "checks": {
+    "top_level_fields_unchanged": true,
+    "exactly_one_context_appended": true,
+    "old_contexts_equal_in_order": true,
+    "new_context_equals_authorized_entry": true,
+    "write_from_trusted_plus_entry_equals_head_bytes": true,
+    "rewrite_of_head_equals_head_bytes": true,
+    "repeated_write_identical": true
+  },
+  "negative_controls": [
+    {
+      "case": "old context field changed",
+      "failed_checks": [
+        "old_contexts_equal_in_order",
+        "write_from_trusted_plus_entry_equals_head_bytes"
+      ]
+    },
+    {
+      "case": "old contexts swapped",
+      "failed_checks": [
+        "old_contexts_equal_in_order",
+        "write_from_trusted_plus_entry_equals_head_bytes"
+      ]
+    },
+    {
+      "case": "new entry field changed",
+      "failed_checks": [
+        "new_context_equals_authorized_entry",
+        "write_from_trusted_plus_entry_equals_head_bytes"
+      ]
+    },
+    {
+      "case": "old context dropped",
+      "failed_checks": [
+        "exactly_one_context_appended",
+        "new_context_equals_authorized_entry",
+        "old_contexts_equal_in_order",
+        "write_from_trusted_plus_entry_equals_head_bytes"
+      ]
+    },
+    {
+      "case": "two contexts appended",
+      "failed_checks": [
+        "exactly_one_context_appended",
+        "new_context_equals_authorized_entry",
+        "write_from_trusted_plus_entry_equals_head_bytes"
+      ]
+    },
+    {
+      "case": "schema_version changed",
+      "failed_checks": [
+        "top_level_fields_unchanged",
+        "write_from_trusted_plus_entry_equals_head_bytes"
+      ]
+    },
+    {
+      "case": "indent2 layout of the same document",
+      "failed_checks": [
+        "rewrite_of_head_equals_head_bytes",
+        "write_from_trusted_plus_entry_equals_head_bytes"
+      ]
+    },
+    {
+      "case": "sorted-key compact layout of the same document",
+      "failed_checks": [
+        "rewrite_of_head_equals_head_bytes",
+        "write_from_trusted_plus_entry_equals_head_bytes"
+      ]
+    },
+    {
+      "case": "trailing newline added",
+      "failed_checks": [
+        "rewrite_of_head_equals_head_bytes",
+        "write_from_trusted_plus_entry_equals_head_bytes"
+      ]
+    }
+  ],
+  "sizes": {
+    "trusted_4ctx_indent2": 89943276,
+    "trusted_4ctx_line_per_context": 40444428,
+    "append_5ctx_indent2": 112541793,
+    "append_5ctx_line_per_context": 50578493,
+    "entry_compact_line": 10134065
+  },
+  "limit_bytes": 104857600,
+  "warning_bytes": 52428800,
+  "indent2_exceeds_limit": true,
+  "line_per_context_below_warning": true,
+  "further_appends_before_limit": 5,
+  "canonical": {
+    "trusted": "bcc18beb8a0b89454f686f73016d0b777f609072542f73c528f3b85c4ba29dd4",
+    "entry": "966b79313b48588befa46358b9e1b4f8bfb865011f65b5a406c2d193f47c6ccc",
+    "layout_invariant": true
+  }
+}

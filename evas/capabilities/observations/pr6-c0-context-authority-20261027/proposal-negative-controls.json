@@ -1,0 +1,44 @@
+[
+  {
+    "case": "HEAD-only authorization",
+    "differences": [
+      "head review/receipt/governance fields differs"
+    ]
+  },
+  {
+    "case": "changed raw",
+    "differences": [
+      "E1 raw bytes differs"
+    ]
+  },
+  {
+    "case": "second changed path",
+    "differences": [
+      "registration transaction must change only fixed baseline path"
+    ]
+  },
+  {
+    "case": "changed old context",
+    "differences": [
+      "all existing contexts/order differs"
+    ]
+  },
+  {
+    "case": "swapped old contexts",
+    "differences": [
+      "all existing contexts/order differs"
+    ]
+  },
+  {
+    "case": "changed new entry",
+    "differences": [
+      "expected one exact authorization in trusted-base review"
+    ]
+  },
+  {
+    "case": "registration run on another runner image (ImageVersion changed)",
+    "differences": [
+      "authorized current context differs"
+    ]
+  }
+]

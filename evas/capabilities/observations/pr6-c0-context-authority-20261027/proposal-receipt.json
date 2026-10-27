@@ -1,0 +1,48 @@
+{
+  "kind": "unadopted-exact-context-proposal",
+  "candidate": "fa5556de20de4fecbf9db4e3630cd5d6754b07c2",
+  "e1_run": 40584762318,
+  "trusted_base": "4d6ebc71efea35822a28f2861f2b0a2a6db17e59",
+  "effective_authority": false,
+  "independent_exact_review": "pending",
+  "review_destination": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/night-coordination/pr6-exact-context-astra-r6-20261027/review-report.json",
+  "mapping": "7737 exact preserved; only review_reference updated",
+  "authorization_id": "pr6-support-views-CI40584762318",
+  "context_count_before": 4,
+  "context_count_after": 5,
+  "old_baseline_canonical_sha256": "bcc18beb8a0b89454f686f73016d0b777f609072542f73c528f3b85c4ba29dd4",
+  "previous_context_sha256": "0d3abdb5a49f1b792c2b8de5abca3c836657d655570e74ae4b29e1861ee8b93f",
+  "entry_canonical_sha256": "4ae199f17a6cc24901601a667babc40e66b4546b5d3cc814d1643963dac7e566",
+  "authority_canonical_sha256": "68bfa2aedb803d8607c6e589b0fd679eb302234b46a20dabaed75f9b095ebf5c",
+  "baseline_layout": {
+    "module": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/context-registration-20261027/baseline_layout.py",
+    "module_sha256": "418aa2c99c757f96ad427d0d60bf5cc7bd856a7e6db317b07dc5cf996e35e5ee",
+    "function": "line_per_context",
+    "checks": {
+      "top_level_fields_unchanged": true,
+      "exactly_one_context_appended": true,
+      "old_contexts_equal_in_order": true,
+      "new_context_equals_authorized_entry": true,
+      "write_from_trusted_plus_entry_equals_head_bytes": true,
+      "rewrite_of_head_equals_head_bytes": true,
+      "repeated_write_identical": true
+    },
+    "trusted_bytes": 89943276,
+    "head_bytes": 50578629,
+    "head_sha256": "6b1a58754c81b938d036ad71a2a42ef75c06a4da2972d325fb5508e183b5b343",
+    "limit_bytes": 104857600,
+    "warning_bytes": 52428800
+  },
+  "e1_pool": "old runner pool; runtime_profile equal to every trusted context; record /Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-precheck-20261027/e1-acceptance.json",
+  "old_contexts_unchanged": true,
+  "scientific_qualification": false,
+  "files": {
+    "authority.json": "72d3e7bc49ed3da11d0843851ea13262759349f24eb916ece99ce3bafb089cb6",
+    "baseline-append.json": "6b1a58754c81b938d036ad71a2a42ef75c06a4da2972d325fb5508e183b5b343",
+    "bundle-pointer.json": "66c0cb64cbab4c12fcf227ef4549717882b7cbab10213b13e0192a18237f0f9e",
+    "entry.json": "79e67cb073c36b976c40d76f509980aba09295a7879b019d362eaf019aeb660d",
+    "negative-controls.json": "5b75158b4b25663a09e18f51f6be5b61a150739c0e0c2b22e566619d45057721",
+    "review.json": "f72d3c725db7edf85007d1e0b2086e93e8f911c39a69d0f47ca99cc0061c880c",
+    "validation.json": "e7003215112ef761d4efa2ca255c425830225eb17b654c0aff1d76cd156ab130"
+  }
+}

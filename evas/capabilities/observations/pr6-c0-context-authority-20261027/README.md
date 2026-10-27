@@ -1,0 +1,3 @@
+# Exact PR6 context authority proposal
+
+The C0 candidate changes only the exact authority record and the bundle pointer, plus the generated catalog and traceability. It keeps main criteria, DUT, collector, baseline and workflow. All 31 Python discovery entries are reused by exact source identity; no new collection or scientific execution is represented. The authority fields are proposed bytes and take effect only after an independent exact review and the C0 merge. E1 ran on the old runner pool with a runtime_profile equal to every trusted context; the baseline PR must run there too. The baseline append and PR6 activation remain separate steps; the append uses baseline_layout.line_per_context.
