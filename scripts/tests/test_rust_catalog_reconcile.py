@@ -139,4 +139,34 @@ class RustCatalogReconciliation(unittest.TestCase):
         self.assertFalse(payload['catalog_reconciliation']['reconciled'])
         self.assertEqual(payload['tests_discovered'],3)
 
+    def on_platform(self,receipt,platform):
+        receipt=copy.deepcopy(receipt);receipt['environment'].update(platform=platform,machine='x86_64')
+        return receipt
+
+    def register(self,receipt):
+        scratch=Path(self.fx.tmp.name);(self.archive/'rust.json').write_text(json.dumps(receipt))
+        for args in [('add','.'),('-c','user.name=Fixture','-c','user.email=fixture@example.invalid','commit','-m','Linux receipt')]:
+            git_fixture.run(['-C',str(self.archive),*args],scratch=scratch,check=True,capture_output=True)
+        commit=git_fixture.run(['-C',str(self.archive),'rev-parse','HEAD'],scratch=scratch,check=True,capture_output=True,text=True).stdout.strip()
+        self.source.update(locator=dict(self.source['locator'],revision=commit),
+                           sha256=__import__('hashlib').sha256((self.archive/'rust.json').read_bytes()).hexdigest())
+        for entry in self.entries:entry.update(listing_source=registry.reference(self.source),dependencies=[registry.reference(self.source)])
+        self.save()
+
+    def test_runner_image_may_change_only_the_kernel_release(self):
+        self.register(self.on_platform(self.receipt,'Linux-6.17.0-1022-azure-x86_64-with-glibc2.39'))
+        facts=self.require(self.on_platform(self.receipt,'Linux-7.0.0-1017-azure-x86_64-with-glibc2.39'))
+        self.assertTrue(facts['reconciled'])
+        self.assertEqual(facts['host_platform_difference'],dict(
+            expected_platform='Linux-6.17.0-1022-azure-x86_64-with-glibc2.39',
+            actual_platform='Linux-7.0.0-1017-azure-x86_64-with-glibc2.39'))
+        self.assertNotIn('host_platform_difference',self.require(self.on_platform(self.receipt,'Linux-6.17.0-1022-azure-x86_64-with-glibc2.39')))
+        for platform in ('Linux-7.0.0-1017-azure-x86_64-with-glibc2.40','Linux-7.0.0-1017-azure-aarch64-with-glibc2.39',
+                         'Darwin-7.0.0-x86_64-with-glibc2.39'):
+            with self.subTest(platform=platform):
+                with self.assertRaisesRegex(ValueError,'profile drift'):self.require(self.on_platform(self.receipt,platform))
+        changed=self.on_platform(self.receipt,'Linux-7.0.0-1017-azure-x86_64-with-glibc2.39')
+        changed['environment']['variables']=dict(changed['environment']['variables'],RUSTFLAGS='-Copt-level=3')
+        with self.assertRaisesRegex(ValueError,'profile drift'):self.require(changed)
+
 if __name__=='__main__':unittest.main()

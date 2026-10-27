@@ -38,6 +38,25 @@ class ContextRegistrationTests(unittest.TestCase):
                 result = fx.evaluate(fx.make_fixture(new_criteria=criteria, new_collector=collector))
                 self.assertTrue(result['merge_allowed'], result)
 
+    def test_registration_finds_the_current_context_across_a_runner_host_change(self):
+        def host(platform, image):
+            return dict(platform=platform, machine='x86_64', variables={'ImageVersion': image},
+                        execution_toolchain=dict(platform=platform, machine='x86_64',
+                                                 variables={'ImageVersion': image}))
+        old = host('Linux-6.17.0-1022-azure-x86_64-with-glibc2.39', '20261023.334.3')
+        new = host('Linux-7.0.0-1017-azure-x86_64-with-glibc2.39', '20261026.354.1')
+        def registered_on_old_host(baseline):
+            for entry in baseline['contexts']:
+                for target in (entry['context'], entry['observations']['metadata']):
+                    target['runtime_profile'] = copy.deepcopy(old)
+        result = fx.evaluate(fx.make_fixture(runtime=new, alter_baseline=registered_on_old_host))
+        self.assertTrue(result['merge_allowed'], result)
+        self.assertEqual(result['trusted_comparison']['host_runtime_difference']['actual']['runtime_profile'],
+                         dict(platform=new['platform'], ImageVersion='20261026.354.1'))
+        other = host('Linux-7.0.0-1017-azure-x86_64-with-glibc2.39', '20261027.360.1')
+        self.reject(fx.make_fixture(runtime=new, e1_runtime=other, alter_baseline=registered_on_old_host),
+                    'fixed runtime_profile')
+
     def test_old_compare_rejection_stops_before_head_or_authority_or_E1(self):
         f = fx.make_fixture()
         current = copy.deepcopy(f['current'])

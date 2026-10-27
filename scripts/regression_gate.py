@@ -19,10 +19,62 @@ BASELINE_PATH = 'evas/validation/baselines/regression-v1.json'
 OUTCOMES = {'passed', 'failed', 'error', 'skipped', 'expected_failure', 'unexpected_success'}
 COUNTERS = ('tests_run', 'failures', 'errors', 'skipped', 'expected_failures', 'unexpected_successes')
 CONTEXT_KEYS = ('criteria_id', 'language_profile', 'collector_sha256', 'runtime_profile', 'invocation')
+# A runner image update changes the kernel release inside platform.platform()
+# and ImageVersion. Python, Rust, PATH, glibc, architecture and the other
+# variables stay exact; every observation is still compared.
+HOST_PLATFORM = r'Linux-([0-9][0-9A-Za-z.+_~-]*?)-{machine}-with-(glibc[0-9]+\.[0-9]+)'
 
 
 def _json(value):
     return json.dumps(value, sort_keys=True, separators=(',', ':'), allow_nan=False)
+
+
+def _host_split(context):
+    """Return (context without runner-host fields, those fields), or None."""
+    if not isinstance(context, dict) or not isinstance(context.get('runtime_profile'), dict):
+        return None
+    neutral = copy.deepcopy(context)
+    profiles = {'runtime_profile': neutral['runtime_profile']}
+    if 'execution_toolchain' in neutral['runtime_profile']:
+        profiles['execution_toolchain'] = neutral['runtime_profile']['execution_toolchain']
+    host = {}
+    for name, profile in profiles.items():
+        if not isinstance(profile, dict) or not isinstance(profile.get('variables'), dict):
+            return None
+        machine, platform, image = profile.get('machine'), profile.get('platform'), profile['variables'].get('ImageVersion')
+        if (not isinstance(machine, str) or not re.fullmatch('[A-Za-z0-9_]+', machine)
+                or not isinstance(platform, str) or not isinstance(image, str) or not image):
+            return None
+        match = re.fullmatch(HOST_PLATFORM.format(machine=re.escape(machine)), platform)
+        if not match:
+            return None
+        host[name] = dict(platform=platform, ImageVersion=image)
+        profile['platform'] = 'Linux-' + machine + '-with-' + match.group(2)
+        del profile['variables']['ImageVersion']
+    return neutral, host
+
+
+def _matching_contexts(entries, context):
+    """Return exact matches, else the entries differing only in runner-host fields.
+
+    Only a single host-only candidate is a match; it also returns both host values.
+    Several candidates are returned without a host difference, so callers reject them.
+    """
+    exact = [entry for entry in entries if isinstance(entry, dict)
+             and _json(entry.get('context')) == _json(context)]
+    if exact:
+        return exact, None
+    actual = _host_split(context)
+    if actual is None:
+        return [], None
+    candidates = []
+    for entry in entries:
+        trusted = _host_split(entry.get('context')) if isinstance(entry, dict) else None
+        if trusted is not None and _json(trusted[0]) == _json(actual[0]):
+            candidates.append((entry, trusted[1]))
+    if len(candidates) != 1:
+        return [entry for entry, _ in candidates], None
+    return [candidates[0][0]], dict(trusted=candidates[0][1], actual=actual[1])
 
 
 def _manifest(value, label):
@@ -465,11 +517,15 @@ def compare_report(report, baseline):
     except (TypeError, ValueError):
         differences.append('baseline is not finite JSON data')
         return result
-    matches = [entry for entry in baseline['contexts'] if isinstance(entry, dict)
-               and _json(entry.get('context')) == _json(_context(report))]
+    context = _context(report)
+    matches, host = _matching_contexts(baseline['contexts'], context)
     if len(matches) != 1:
         differences.append('expected exactly one matching trusted baseline context')
+        if matches and _json(matches[0].get('context')) != _json(context):
+            differences.append('runner-host difference matches more than one trusted context')
         return result
+    if host is not None:
+        result['host_runtime_difference'] = host
     entry = matches[0]
     try:
         old = _expand_baseline_observations(entry)
@@ -699,13 +755,18 @@ def validate_baseline_transition(report, trusted_baseline, head_proposal):
                   semantic_qualification=False, trusted_comparison=trusted,
                   transition=dict(proposal_evaluated=False, refresh_required=None,
                                   accepted=False, differences=[]))
+    if 'host_runtime_difference' in trusted:
+        result['host_runtime_difference'] = copy.deepcopy(trusted['host_runtime_difference'])
     # Do not even inspect head data when the authority comparison rejected.
     if not trusted['merge_allowed']:
         return result
     differences = result['transition']['differences']
     try:
         context = _context(report)
-        old_entry = next(e for e in trusted_baseline['contexts'] if _json(e['context']) == _json(context))
+        matched, host = _matching_contexts(trusted_baseline['contexts'], context)
+        if len(matched) != 1:
+            raise ValueError('trusted context match differs from the comparison')
+        old_entry = matched[0]
         old = _expand_baseline_observations(old_entry)
         actual_conditions = [c for row in report['tests'] for c in row['conditions']] + report['fixtures']
         if any(c['outcome'] != 'passed' and not _matchable(c) for c in actual_conditions):
@@ -725,8 +786,9 @@ def validate_baseline_transition(report, trusted_baseline, head_proposal):
                 or head_proposal['schema_version'] != 1 or not isinstance(head_proposal.get('contexts'), list)):
             raise ValueError('unknown or incomplete head baseline proposal')
         _json(head_proposal)
+        # A refresh keeps the registered context, including its runner host.
         matches = [e for e in head_proposal['contexts'] if isinstance(e, dict)
-                   and _json(e.get('context')) == _json(context)]
+                   and _json(e.get('context')) == _json(old_entry['context'])]
         if len(matches) != 1:
             raise ValueError('head proposal must retain exactly one current context')
         proposed_entry = matches[0]
@@ -743,7 +805,16 @@ def validate_baseline_transition(report, trusted_baseline, head_proposal):
         proposed_conditions = [c for row in proposed['tests'] for c in row['conditions']] + proposed['fixtures']
         if any(c['outcome'] != 'passed' and not _matchable(c) for c in proposed_conditions):
             raise ValueError('unknown or incomplete proposed condition identity')
-        if _json(_retention_observations(proposed)) != _json(_retention_observations(report)):
+        actual = _retention_observations(report)
+        if host is not None:
+            # Observations from another runner host keep the registered context;
+            # the entry's provenance must name the host they were actually taken on.
+            actual['metadata'] = copy.deepcopy(old_entry['context'])
+            source = proposed_entry.get('source_identity')
+            if (not isinstance(source, dict) or _json(source.get('observed_host')) != _json(host['actual'])
+                    or not isinstance(source.get('observed_run'), str) or not source['observed_run'].strip()):
+                raise ValueError('refreshed entry must record the actual runner host and run')
+        if _json(_retention_observations(proposed)) != _json(actual):
             raise ValueError('head proposal does not retain every actual observation and context')
         subject = execution_subject(report)
         if _json(proposed_entry.get('execution_subject')) != _json(subject):

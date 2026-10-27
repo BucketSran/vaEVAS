@@ -6,9 +6,13 @@ is not assumed. Only published immutable Git source receipts authorize require.
 """
 import hashlib
 import json
+import re
 
 TARGET = ('package', 'version', 'target_kind', 'name')
 IDENTITY = ('src_path', 'src_sha256', 'manifest', 'source_tree_sha256', 'lockfile_sha256', 'cargo_profile')
+# Same runner-host rule as scripts/regression_gate.py: a runner image update may change
+# only the kernel release inside platform.platform(); glibc and architecture stay exact.
+HOST_PLATFORM = r'Linux-([0-9][0-9A-Za-z.+_~-]*?)-{machine}-with-(glibc[0-9]+\.[0-9]+)'
 
 def canonical(value):
     return hashlib.sha256(json.dumps(value, sort_keys=True, ensure_ascii=False, separators=(',', ':'), allow_nan=False).encode()).hexdigest()
@@ -104,6 +108,17 @@ def profile_identity(receipt):
             'toolchain':{name:receipt['toolchain'][name]['stdout'] for name in ('cargo','rustc')},
             'environment':{key:receipt['environment'][key] for key in ('platform','machine','variables')}}
 
+def host_neutral(identity):
+    """Return the profile identity without the kernel release, or None if not in the fixed form."""
+    environment=identity['environment']
+    machine,platform=environment.get('machine'),environment.get('platform')
+    if not isinstance(machine,str) or not re.fullmatch('[A-Za-z0-9_]+',machine) or not isinstance(platform,str):
+        return None
+    match=re.fullmatch(HOST_PLATFORM.format(machine=re.escape(machine)),platform)
+    if not match:
+        return None
+    return dict(identity,environment=dict(environment,platform='Linux-'+machine+'-with-'+match.group(2)))
+
 def reconcile(catalog, receipt, profile):
     """Require exact coverage of one explicitly registered profile's targets."""
     try:
@@ -121,7 +136,7 @@ def reconcile(catalog, receipt, profile):
             if key in registered:raise ValueError('duplicate registered Rust target')
             registered[key]=entry
         if set(registered) != set(actual):raise ValueError('missing/extra owned Rust targets versus Registry')
-        facts=[]
+        facts=[];hosts=[]
         for key,entry in registered.items():
             source=catalog.bound(entry['listing_source'],'source')
             if source.get('status') != 'active' or source.get('availability') != 'published-archive' or source.get('locator',{}).get('kind') != 'git-object':
@@ -129,8 +144,13 @@ def reconcile(catalog, receipt, profile):
             expected_receipt=json.loads(catalog.registry.read_source(source))
             expected=checked(expected_receipt)
             if set(expected) != set(actual):raise ValueError('original receipt owned-target set differs')
-            if profile_identity(expected_receipt) != profile_identity(receipt):
-                raise ValueError('Rust source/toolchain/profile drift')
+            expected_identity,actual_identity=profile_identity(expected_receipt),profile_identity(receipt)
+            if expected_identity != actual_identity:
+                neutral=host_neutral(expected_identity),host_neutral(actual_identity)
+                if None in neutral or neutral[0] != neutral[1]:
+                    raise ValueError('Rust source/toolchain/profile drift')
+                hosts.append(dict(expected_platform=expected_identity['environment']['platform'],
+                                  actual_platform=actual_identity['environment']['platform']))
             old,old_rows=expected[key]
             new,new_rows=actual[key]
             if any(old[field] != new[field] for field in IDENTITY) or old_rows != new_rows:
@@ -140,7 +160,10 @@ def reconcile(catalog, receipt, profile):
                 actual_binary_sha256=new['binary_sha256'],binary_sha256_equal=old['binary_sha256']==new['binary_sha256'],
                 expected_source_commit=expected_receipt['source']['commit'],actual_source_commit=receipt['source']['commit'],
                 expected_observer_sha256=expected_receipt['observer']['sha256'],actual_observer_sha256=receipt['observer']['sha256']))
-        return dict(reconciled=True,profile=profile,listing_only=True,
+        host={} if not hosts else {'host_platform_difference':hosts[0]}
+        if any(item != hosts[0] for item in hosts):
+            raise ValueError('inconsistent Rust runner-host difference')
+        return dict(reconciled=True,profile=profile,listing_only=True,**host,
                     test_body_execution='not_observed_by_this_helper',
                     binary_sha256_policy='separate-observations-no-cross-run-reproducibility-assumption',
                     tests_discovered=receipt['tests_discovered'],ignored_tests_discovered=receipt['ignored_tests_discovered'],
