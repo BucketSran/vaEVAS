@@ -675,15 +675,6 @@ def _toolchain_source(source):
     return (f"{owner}@{source.get('version', 'unknown')}: " if owner else '') + ', '.join(parts)
 
 
-def _toolchain_fragments(fact):
-    """Rendered owner@version and components for each source in one toolchain fact."""
-    if fact.get('state') == 'unknown':
-        return []
-    if fact.get('state') == 'records_listed':
-        return [_toolchain_source(source) for source in (fact.get('components') or [])]
-    return [_toolchain_source(fact)]
-
-
 def _heading_blocks(text, prefix):
     """Blocks that start at prefix and stop before the next peer or section."""
     lines = text.splitlines()
@@ -704,17 +695,6 @@ def _take_heading(blocks, heading):
         if block and block[0] == heading:
             return blocks.pop(index)
     return []
-
-
-def _markdown_records(document):
-    """Qualification records in the same order markdown() emits them."""
-    rows = []
-    for requirement in document['requirements']:
-        for cell in requirement['backends'].values():
-            rows.extend(cell['records'])
-        rows.extend(requirement['unassigned_backend_records'])
-    rows.extend(document['unbound_qualifications'])
-    return rows
 
 
 def _show_toolchain(fact):
@@ -920,6 +900,66 @@ def _table_cells(line):
     return [part.strip() for part in line.strip().strip('|').split('|')]
 
 
+def _header_status_fields(text):
+    """view_status, adopted, and provisional values in the preamble, in order."""
+    found = {key: [] for key in ('view_status', 'adopted', 'provisional')}
+    for line in text.splitlines():
+        if line.startswith('## '):
+            break
+        for key in found:
+            prefix = key + ':'
+            if line.startswith(prefix):
+                rest = line[len(prefix):]
+                found[key].append(rest[1:] if rest.startswith(' ') else rest)
+                break
+    return found
+
+
+def _lines_after_heading(lines, heading):
+    """Lines after one section heading and before the next ## heading."""
+    try:
+        start = lines.index(heading)
+    except ValueError:
+        return None
+    end = len(lines)
+    for cursor in range(start + 1, len(lines)):
+        if lines[cursor].startswith('## '):
+            end = cursor
+            break
+    return lines[start + 1:end]
+
+
+def _audit_qualification_records(section_lines, records):
+    """Match this section's qualification records and reject extras or conflicting toolchain lines."""
+    errors = []
+    blocks = _heading_blocks('\n'.join(section_lines), '资格记录：')
+    accounted = []
+    for record in records:
+        qualification = record['qualification']
+        heading = (
+            f"资格记录：{qualification['id']}@{qualification['version']} "
+            f"sha256 {qualification['sha256']}"
+        )
+        block = _take_heading(blocks, heading)
+        if not block:
+            errors.append('markdown qualification record missing')
+            continue
+        expected = f"工具链：{_show_toolchain(record['toolchain'])}"
+        tool_lines = [line for line in block if line.startswith('工具链：')]
+        accounted.extend(tool_lines)
+        if tool_lines != [expected]:
+            if expected not in tool_lines:
+                errors.append('markdown dropped toolchain component')
+            if len(tool_lines) > (1 if expected in tool_lines else 0):
+                errors.append('markdown extra toolchain line')
+    if blocks:
+        errors.append('markdown extra qualification record')
+    section_tools = [line for line in section_lines if line.startswith('工具链：')]
+    if len(section_tools) != len(accounted):
+        errors.append('markdown extra toolchain line')
+    return errors
+
+
 def audit(document):
     """Check denominators, classifications, and the ban on collapsed marks."""
     errors = []
@@ -1026,8 +1066,16 @@ def audit_markdown(document, text):
         and document.get('adopted') is (status == 'current-default')
         and document.get('provisional') is (status == 'preview')
     )
-    if (not legal_status or expected['title'] not in top or expected['note'] not in top
-            or view_line not in top or adopted_line not in top or provisional_line not in top):
+    # The preamble must contain each status key once, with this document's value.
+    header_fields = _header_status_fields(text)
+    expected_header = {
+        'view_status': [view_line.split(': ', 1)[1]],
+        'adopted': [adopted_line.split(': ', 1)[1]],
+        'provisional': [provisional_line.split(': ', 1)[1]],
+    }
+    if (not legal_status or header_fields != expected_header or expected['title'] not in top
+            or expected['note'] not in top or view_line not in top or adopted_line not in top
+            or provisional_line not in top):
         errors.append('markdown view status diverged')
     head, separator, _historical = text.partition('## 历史引用')
     if not separator:
@@ -1056,19 +1104,19 @@ def audit_markdown(document, text):
         for key in CONTRACT_FIELDS:
             if _contract_line(key, requirement['source_fields']) not in section:
                 errors.append('markdown dropped requirement contract field ' + key)
-    record_blocks = _heading_blocks(head, '资格记录：')
-    for record in _markdown_records(document):
-        qualification = record['qualification']
-        heading = f"资格记录：{qualification['id']}@{qualification['version']} sha256 {qualification['sha256']}"
-        block = _take_heading(record_blocks, heading)
-        fragments = _toolchain_fragments(record['toolchain'])
-        if not fragments:
-            continue
-        # The canonical toolchain line lists every source's owner@version and
-        # components. The same component on another record does not count.
-        expected = f"工具链：{_show_toolchain(record['toolchain'])}"
-        if expected not in block:
-            errors.append('markdown dropped toolchain component')
+        owned = []
+        for cell in requirement['backends'].values():
+            owned.extend(cell['records'])
+        owned.extend(requirement['unassigned_backend_records'])
+        # Records match inside this requirement. Another requirement's block does not count.
+        errors.extend(_audit_qualification_records(section, owned))
+    if requirement_blocks:
+        errors.append('markdown requirement headings')
+    unbound = _lines_after_heading(head.splitlines(), '## 未绑定当前要求的资格')
+    if unbound is None:
+        errors.append('markdown unbound qualifications diverged')
+    else:
+        errors.extend(_audit_qualification_records(unbound, document['unbound_qualifications']))
     counts = document['classifications']['exception_counts']
     for kind, count in counts.items():
         if f'exception: {kind} {count}' not in text:

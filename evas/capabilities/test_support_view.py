@@ -5,6 +5,7 @@ scientific qualification.
 """
 import copy
 import json
+import re
 import unittest
 from pathlib import Path
 
@@ -611,6 +612,77 @@ class SupportViewFixtures(unittest.TestCase):
             self.assertIn('markdown view status diverged', audit_markdown(projected, changed))
             dropped = text.replace(old + '\n', '', 1)
             self.assertIn('markdown view status diverged', audit_markdown(projected, dropped))
+
+    def test_records_stay_with_their_requirement_and_header_status_is_unique(self):
+        data = retarget(copy.deepcopy(bare_registry().data), 'ngspice')
+        for index, name in enumerate(('bare-requirement', 'fixture-requirement')):
+            by_id(data, name).update(
+                allowed_behavior=f'independent behavior {index}',
+                conditions=[f'independent condition {index}'],
+                observables=[f'independent observable {index}'],
+            )
+        by_id(data, 'fixture-execution')['toolchain'] = [
+            {'role': 'simulator', 'name': 'ngspice', 'version': 'sim-12345'}]
+        for name in ('consumer-a', 'consumer-b'):
+            by_id(data, name)['toolchain'] = [
+                {'role': 'compiler', 'name': 'OpenVAF-R', 'version': 'cc-67890'}]
+        registry = Registry(refresh(data))
+        projected = document(registry)
+        text = markdown(projected)
+        self.assertEqual(audit(projected) + audit_markdown(projected, text), [])
+
+        pre, body = text.split('## 当前要求\n\n', 1)
+        body, post = body.split('## 未绑定当前要求的资格', 1)
+        sections = [item for item in re.split(r'(?=^### )', body, flags=re.M) if item.strip()]
+        self.assertEqual(len(sections), 2)
+        first, second = sections
+        self.assertIn('bare-requirement', first.splitlines()[0])
+        record_start = second.index('资格记录：')
+        record_block = second[record_start:]
+        chunks = [item for item in re.split(r'(?=^资格记录：)', record_block, flags=re.M) if item.strip()]
+        self.assertEqual(len(chunks), 2)
+        line = next(item for item in text.splitlines() if item.startswith('工具链：'))
+        current = '## 当前要求\n\n'
+        unbound = '## 未绑定当前要求的资格'
+        variants = (
+            ('requirement-order-only', pre + current + ''.join(reversed(sections)) + unbound + post, False),
+            ('record-order-only', text.replace(record_block, ''.join(reversed(chunks)), 1), False),
+            ('move-all-records-to-wrong-requirement',
+             pre + current + first + record_block + second[:record_start] + unbound + post, True),
+            ('duplicate-all-records', pre + current + first + second + record_block + unbound + post, True),
+            ('move-records-to-unbound-section',
+             pre + current + first + second[:record_start] + unbound + '\n\n' + record_block + post, True),
+            ('duplicate-toolchain-line', text.replace(line, line + '\n' + line, 1), True),
+            ('contradictory-toolchain-line',
+             text.replace(line, line + '\n工具链：consumer-a@1: OpenVAF-R/compiler@wrong-version', 1), True),
+            ('wrong-toolchain-line-only',
+             text.replace(line, '工具链：consumer-a@1: OpenVAF-R/compiler@wrong-version', 1), True),
+            ('duplicate-requirement-section', pre + current + first + first + second + unbound + post, True),
+        )
+        for name, changed, expect_reject in variants:
+            self.assertNotEqual(changed, text, name)
+            errors = audit_markdown(projected, changed)
+            if expect_reject:
+                self.assertTrue(errors, name)
+            else:
+                self.assertEqual(errors, [], name)
+        self.assertIn('markdown extra qualification record', audit_markdown(
+            projected, variants[2][1]))
+        self.assertIn('markdown qualification record missing', audit_markdown(
+            projected, variants[2][1]))
+        self.assertIn('markdown extra toolchain line', audit_markdown(projected, variants[5][1]))
+        self.assertIn('markdown extra toolchain line', audit_markdown(projected, variants[6][1]))
+        self.assertIn('markdown dropped toolchain component', audit_markdown(projected, variants[7][1]))
+        self.assertIn('markdown requirement headings', audit_markdown(projected, variants[8][1]))
+
+        for status in ('current-default', 'preview'):
+            facts = document(registry, status=status)
+            rendered = markdown(facts)
+            self.assertEqual(audit(facts) + audit_markdown(facts, rendered), [])
+            wrong = 'preview' if status == 'current-default' else 'current-default'
+            changed = rendered.replace('\n\n', '\nview_status: ' + wrong + '\n', 1)
+            self.assertNotEqual(changed, rendered, status)
+            self.assertIn('markdown view status diverged', audit_markdown(facts, changed))
 
 
 def _drop_line_under_heading(text, heading, line):
