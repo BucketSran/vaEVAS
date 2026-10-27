@@ -1,0 +1,63 @@
+{
+  "prepared_at_utc": "2026-10-27T19:20:59.940236+00:00",
+  "base": "02dee32b2c9b25f166cbd77f8a895953e004f288",
+  "base_tree": "a68a89e1c145767f830fd5d602ab1be9f96b6b90",
+  "patch": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/catalog-split-grok-20261027/source.patch",
+  "patch_sha256": "5e01adc5a83fd36cb15e7add4690407805978cc995734617568b70cd09013090",
+  "paths": [
+    "evas/capabilities/README.md",
+    "scripts/capabilities/generate_catalog.py",
+    "scripts/tests/test_catalog_part_split.py"
+  ],
+  "retired": [
+    "evas/capabilities/data/historical-index.json",
+    "evas/capabilities/data/method-index.json"
+  ],
+  "files": {
+    "evas/capabilities/README.md": {
+      "before": "ae81480462ecdbd25299e5dcbc1d097a8c92f018673ed817d84b6d16cd363e03",
+      "after": "6d5f5a962d0291407d0002cd26d381e23b08b0a75093e5380d2acc1507db8321"
+    },
+    "scripts/capabilities/generate_catalog.py": {
+      "before": "8755b5ddd430f83e82325074c495717d18508edadef35266d0882115cdb88fb1",
+      "after": "459944842e050846c58aa28e5c9df2fd4aaa98bd4421a9c420f7374c9108e8df"
+    },
+    "scripts/tests/test_catalog_part_split.py": {
+      "before": null,
+      "after": "2884db40d1f8c84dea5c75920c5feb2a44523757f657a96571408bb37a025b4e"
+    }
+  },
+  "pre_render_checks": [
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "evas/capabilities/render.py"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/catalog-split-build-r3-20261027/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/catalog-split-build-r3-20261027/pre-render.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-27T19:19:38.059059+00:00",
+      "finished_at_utc": "2026-10-27T19:20:20.401104+00:00"
+    }
+  ],
+  "criteria_dut_collector_workflow_unchanged": true,
+  "before": {
+    "head": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+    "index_sha256": "a2e18b66fd9b3e29093343793d45781c11a717c05c35103d4e9b1da8eec87d71",
+    "shared_config_sha256": "de2b08ef3ba66e96be8b70c87346ff4a96f905e1272934ddd86c218dba501ea8",
+    "shared_config_status": "equal-accepted-reference",
+    "old_candidates": 20
+  },
+  "after": {
+    "head": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+    "index_sha256": "a2e18b66fd9b3e29093343793d45781c11a717c05c35103d4e9b1da8eec87d71",
+    "shared_config_sha256": "de2b08ef3ba66e96be8b70c87346ff4a96f905e1272934ddd86c218dba501ea8",
+    "shared_config_status": "equal-accepted-reference",
+    "old_candidates": 20
+  },
+  "published": false,
+  "scientific_execution": false,
+  "semantic_qualification": false,
+  "executed_by": "tclaude/claude-opus-5-5"
+}

@@ -1,0 +1,243 @@
+diff --git a/evas/capabilities/README.md b/evas/capabilities/README.md
+index 7110d0ce..0d854794 100644
+--- a/evas/capabilities/README.md
++++ b/evas/capabilities/README.md
+@@ -61,6 +61,7 @@ python3 -B -m unittest discover -s evas/capabilities -p 'test_*.py' -v
+ ## 资产、实际方法与历史来源
+ 
+ `data/registry.json` 的 `current` 选择当前版本，`object_parts` 只把同一逻辑登记拆成文件。
++方法和历史对象按对象 id 的 SHA-256 前 8 字节（大端整数）对 16 取模，分别写入 `method-index-00.json` 至 `method-index-15.json`、`historical-index-00.json` 至 `historical-index-15.json`。同一 id 的全部版本进入同一个 part，没有对象的 part 也写出。来源、资产和入口仍各用一个文件。读取端按 `object_parts` 合并这些文件。
+ `asset_catalog.py` 通过原 Registry 解析资产、方法、入口及历史记录，沿用同一内容绑定规则。
+ 文件级 GUARDS、实际发现方法和语义资格分别保存。生成方法保留工厂定义身份，
+ 原生 `unittest.skip` 包装器保留跳过声明及原方法定义；发现过程不执行测试体或 `setUp`。
+diff --git a/scripts/capabilities/generate_catalog.py b/scripts/capabilities/generate_catalog.py
+index e1ed9ba7..8ab5ce62 100644
+--- a/scripts/capabilities/generate_catalog.py
++++ b/scripts/capabilities/generate_catalog.py
+@@ -10,10 +10,38 @@ import re
+ import shutil
+ import subprocess
+ 
+-PARTS={'catalog-sources.json':'sources','asset-index.json':'assets','method-index.json':'methods','entrypoint-index.json':'entrypoints','historical-index.json':'history'}
++PART_COUNT=16
++RETIRED_MONOLITHS={'historical-index.json','method-index.json'}
++KIND_FOR={'sources':{'source'},'assets':{'asset'},'methods':{'method'},'entrypoints':{'entrypoint'},'history':{'historical-audit-record','historical-finding'}}
++OBJECT_PART_KIND={kind:part for part,kinds in KIND_FOR.items() for kind in kinds}
+ GOVERNANCE={'evas/validation/baselines/regression-v1.json','evas/validation/baselines/regression-v1.review.json'}
+ PREFIXES=['.agents/','.github/','docs/','evas/','experiments/','scripts/']
+ 
++def part_slot(object_id,count=PART_COUNT):
++ """Stable slot: big-endian integer of the first 8 sha256 bytes of the utf-8 id, modulo count."""
++ return int.from_bytes(hashlib.sha256(object_id.encode('utf-8')).digest()[:8],'big')%count
++
++def ordered_parts(count=PART_COUNT):
++ rows=[('catalog-sources.json','sources'),('asset-index.json','assets')]
++ rows+=[('method-index-%02d.json'%index,'methods') for index in range(count)]
++ rows.append(('entrypoint-index.json','entrypoints'))
++ rows+=[('historical-index-%02d.json'%index,'history') for index in range(count)]
++ return rows
++
++PARTS=dict(ordered_parts())
++
++def part_file(kind,object_id,count=PART_COUNT):
++ if kind=='methods':return 'method-index-%02d.json'%part_slot(object_id,count)
++ if kind=='history':return 'historical-index-%02d.json'%part_slot(object_id,count)
++ return next(name for name,value in ordered_parts(count) if value==kind)
++
++def partition_objects(objects,count=PART_COUNT):
++ """One id keeps every version in one part. Empty parts stay in the fixed file set."""
++ buckets={name:[] for name,_kind in ordered_parts(count)}
++ for obj in objects:
++  buckets[part_file(OBJECT_PART_KIND[obj['kind']],obj['id'],count)].append(obj)
++ return {name:sorted(rows,key=lambda obj:(obj['id'],obj['version'])) for name,rows in buckets.items()}
++
+ def canonical(value):return hashlib.sha256(json.dumps(value,ensure_ascii=False,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+ def file_sha(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+ def ref(obj):return {'id':obj['id'],'version':obj['version'],'sha256':canonical(obj)}
+@@ -356,12 +384,12 @@ def build(config,out):
+   asset_report=error.report
+   if asset_report['extra'] or asset_report['unknown'] or asset_report['drift'] or asset_report['external_identity_missing'] or set(asset_report['missing']) != (metadata_paths-observed.keys()):raise
+  # Keep all preexisting normative files unchanged. No raw history/discovery payloads go into main parts.
+- for path in (root/'evas/capabilities/data').glob('*.json'):data_dir.mkdir(parents=True,exist_ok=True);shutil.copyfile(path,data_dir/path.name)
+- kind_for={'sources':{'source'},'assets':{'asset'},'methods':{'method'},'entrypoints':{'entrypoint'},'history':{'historical-audit-record','historical-finding'}}
++ for path in (root/'evas/capabilities/data').glob('*.json'):
++  if path.name not in RETIRED_MONOLITHS:data_dir.mkdir(parents=True,exist_ok=True);shutil.copyfile(path,data_dir/path.name)
+  base_keys={(o['id'],o['version']) for o in oldobjects}
+- for name,kind in PARTS.items():
+-  objects=[obj for key,obj in merged.items() if key not in base_keys and obj['kind'] in kind_for[kind]]
+-  write(data_dir/name,{'schema_version':1,'kind':kind,'objects':sorted(objects,key=lambda o:(o['id'],o['version']))})
++ fresh=[obj for key,obj in merged.items() if key not in base_keys and obj['kind'] in OBJECT_PART_KIND]
++ for name,objects in partition_objects(fresh).items():
++  write(data_dir/name,{'schema_version':1,'kind':PARTS[name],'objects':objects})
+  for key in ('inventory','dispositions','inventory_identity','target_scope','language_profile','_catalog_metadata_paths'):base.pop(key,None)
+  write(data_dir/'registry.json',base)
+  write(out/'guards-transition.json',{'schema_version':1,'facts':guardfacts,'legacy_node_ids':[n['id'] for n in legacy['nodes']],
+diff --git a/scripts/tests/test_catalog_part_split.py b/scripts/tests/test_catalog_part_split.py
+new file mode 100644
+index 00000000..f9ab528f
+--- /dev/null
++++ b/scripts/tests/test_catalog_part_split.py
+@@ -0,0 +1,163 @@
++"""Part files for methods and history stay deterministic on synthetic objects."""
++import ast
++import hashlib
++import importlib.util
++import json
++from pathlib import Path
++import tempfile
++import unittest
++
++ROOT = Path(__file__).resolve().parents[2]
++
++
++def module(name, path):
++    spec = importlib.util.spec_from_file_location(name, path)
++    result = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(result)
++    return result
++
++
++class CatalogPartSplitTests(unittest.TestCase):
++    @classmethod
++    def setUpClass(cls):
++        cls.generator = module('catalog_part_generator', ROOT / 'scripts/capabilities/generate_catalog.py')
++        cls.registry = module('catalog_part_registry', ROOT / 'evas/capabilities/registry.py')
++
++    def test_slot_is_sha256_prefix_and_part_count_is_fixed(self):
++        self.assertEqual(self.generator.PART_COUNT, 16)
++        vectors = (('catalog-part-split:fixed', 8), ('method:stable', 15), ('history:fixed', 6))
++        for object_id, slot in vectors:
++            digest = hashlib.sha256(object_id.encode('utf-8')).digest()
++            self.assertEqual(int.from_bytes(digest[:8], 'big') % 16, slot)
++            self.assertEqual(self.generator.part_slot(object_id), slot)
++        names = list(self.generator.PARTS)
++        self.assertEqual(names, [name for name, _kind in self.generator.ordered_parts()])
++        self.assertEqual(names[:2], ['catalog-sources.json', 'asset-index.json'])
++        self.assertEqual(names[2:18], ['method-index-%02d.json' % index for index in range(16)])
++        self.assertEqual(names[18], 'entrypoint-index.json')
++        self.assertEqual(names[19:], ['historical-index-%02d.json' % index for index in range(16)])
++        self.assertNotIn('method-index.json', names)
++        self.assertNotIn('historical-index.json', names)
++        metadata = {'evas/capabilities/data/registry.json',
++                    *('evas/capabilities/data/' + name for name in self.generator.PARTS)}
++        self.assertEqual(len(metadata), 1 + len(names))
++        self.assertIn('evas/capabilities/data/method-index-00.json', metadata)
++        self.assertIn('evas/capabilities/data/historical-index-15.json', metadata)
++        self.assertNotIn('evas/capabilities/data/method-index.json', metadata)
++
++    def test_same_id_stays_together_and_empty_parts_remain(self):
++        objects = self.objects()
++        buckets = self.generator.partition_objects(list(reversed(objects)))
++        self.assertEqual(set(buckets), set(self.generator.PARTS))
++        method_name = 'method-index-15.json'
++        history_name = 'historical-index-06.json'
++        self.assertEqual([obj['version'] for obj in buckets[method_name]], ['1', '2'])
++        self.assertEqual({obj['id'] for obj in buckets[method_name]}, {'method:stable'})
++        self.assertEqual([obj['version'] for obj in buckets[history_name]], ['1', '2'])
++        self.assertEqual({obj['id'] for obj in buckets[history_name]}, {'history:fixed'})
++        self.assertEqual(buckets['method-index-00.json'], [])
++        self.assertEqual(buckets['historical-index-00.json'], [])
++        self.assertEqual(len(buckets['catalog-sources.json']), 1)
++        self.assertEqual(len(buckets['asset-index.json']), 1)
++        self.assertEqual(len(buckets['entrypoint-index.json']), 1)
++        self.assertEqual(self.generator.partition_objects(objects), buckets)
++        rotated = objects[1:] + objects[:1]
++        self.assertEqual(self.generator.partition_objects(rotated), buckets)
++
++    def test_written_bytes_ignore_insertion_order_and_load_returns_the_same_objects(self):
++        objects = self.objects()
++        orders = (objects, list(reversed(objects)), objects[1:] + objects[:1])
++        rendered = [self.render(order) for order in orders]
++        self.assertEqual(rendered[0], rendered[1])
++        self.assertEqual(rendered[0], rendered[2])
++        with tempfile.TemporaryDirectory() as directory:
++            root = Path(directory)
++            data = root / 'evas/capabilities/data'
++            for name, payload in rendered[0].items():
++                target = data / name
++                target.parent.mkdir(parents=True, exist_ok=True)
++                target.write_bytes(payload)
++            self.write_sidecars(data)
++            empty = json.loads((data / 'method-index-00.json').read_text())
++            self.assertEqual(empty, {'schema_version': 1, 'kind': 'methods', 'objects': []})
++            loaded = self.registry.load(data, root=root)
++            self.assertEqual(set(loaded.objects), {(obj['id'], obj['version']) for obj in objects})
++            self.assertEqual(loaded.data['object_parts'], list(self.generator.PARTS))
++            for obj in objects:
++                self.assertEqual(loaded.objects[(obj['id'], obj['version'])], obj)
++
++    def test_build_keeps_the_existing_history_loops_and_calls_partition(self):
++        tree = ast.parse((ROOT / 'scripts/capabilities/generate_catalog.py').read_text())
++        build = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == 'build')
++        calls = [node.func.id for node in ast.walk(build)
++                 if isinstance(node, ast.Call) and isinstance(node.func, ast.Name)]
++        self.assertIn('partition_objects', calls)
++        def loops(names):
++            return [node for node in build.body if isinstance(node, ast.For)
++                    and isinstance(node.target, ast.Tuple)
++                    and [item.id for item in node.target.elts] == names]
++        self.assertEqual(len(loops(['index', 'row'])), 1)
++        self.assertEqual(len(loops(['group', 'protocol', 'key', 'scope_pointer'])), 1)
++
++    def objects(self):
++        reference = self.registry.reference
++        source = {'schema_version': 1, 'id': 'source:fixture', 'version': '1', 'kind': 'source',
++                  'status': 'active', 'origin': 'fixture-only', 'availability': 'repository-contained',
++                  'locator': {'kind': 'embedded', 'value': {'data': 'fixture'}},
++                  'sha256': self.registry.digest({'data': 'fixture'}), 'dependencies': []}
++        entry = {'schema_version': 1, 'id': 'entry:python', 'version': '1', 'kind': 'entrypoint',
++                 'status': 'active', 'namespace': 'python-regression', 'collector': 'unittest',
++                 'start': 'evas/tests', 'pattern': 'test*.py', 'dependencies': []}
++        asset = {'schema_version': 1, 'id': 'asset:stable', 'version': '1', 'kind': 'asset',
++                 'status': 'active', 'namespace': 'EVAS-assets', 'current_path': 'evas/tests/test_demo.py',
++                 'content': {'algorithm': 'sha256', 'value': 'a' * 64},
++                 'role': {'status': 'pending', 'reason': 'fixture role not reviewed'},
++                 'consumers': [reference(entry)], 'consumer_status': 'pending', 'location_history': [],
++                 'dependencies': [reference(source)]}
++        def method(version):
++            return {'schema_version': 1, 'id': 'method:stable', 'version': version, 'kind': 'method',
++                    'status': 'active', 'namespace': 'python-regression',
++                    'runtime_id': 'test_demo.Case.test_one', 'module': reference(asset),
++                    'definition': {'path': asset['current_path'], 'sha256': 'b' * 64, 'line': 1,
++                                   'name': 'test_one'},
++                    'generated': False, 'entrypoints': [reference(entry)], 'runtime_history': [],
++                    'semantic_status': 'pending', 'dependencies': [reference(asset)]}
++        def history(version):
++            current = method('2')
++            return {'schema_version': 1, 'id': 'history:fixed', 'version': version,
++                    'kind': 'historical-audit-record', 'status': 'active', 'source': reference(source),
++                    'row_pointer': '/rows/0', 'original_row_sha256': 'c' * 64,
++                    'scope_pointer': '/summary/scope', 'scope_sha256': 'd' * 64,
++                    'identity_binding': 'bound', 'history_protocol': 'evas-method-audit-3257-v1',
++                    'method': reference(current),
++                    'alignment': {'status': 'pending', 'reason': 'fixture alignment is not a match'},
++                    'qualification_status': 'not-granted', 'dependencies': [reference(source)]}
++        return [source, entry, asset, method('1'), method('2'), history('1'), history('2')]
++
++    def render(self, objects):
++        buckets = self.generator.partition_objects(objects)
++        rendered = {}
++        for name, rows in buckets.items():
++            rendered[name] = (json.dumps({'schema_version': 1, 'kind': self.generator.PARTS[name], 'objects': rows},
++                                         ensure_ascii=False, sort_keys=True, indent=2) + '\n').encode()
++        header = {'schema_version': 1, 'objects': [], 'object_parts': list(self.generator.PARTS),
++                  'current': {obj['id']: '2' if obj['id'] in ('method:stable', 'history:fixed') else obj['version']
++                              for obj in objects}}
++        rendered['registry.json'] = (json.dumps(header, ensure_ascii=False, sort_keys=True, indent=2) + '\n').encode()
++        return rendered
++
++    def write_sidecars(self, data):
++        empty = self.registry.digest([])
++        payloads = {
++            'source-inventory.json': {'items': []},
++            'dispositions.json': {'items': []},
++            'boundary-audit.json': {'normalized_inventory_identity': empty},
++            'target-scope.json': {},
++            'language-profile.json': {'base': '2.4', 'selected_changes': [], 'changes': {}},
++        }
++        for name, payload in payloads.items():
++            (data / name).write_text(json.dumps(payload))
++
++
++if __name__ == '__main__':
++    unittest.main()
