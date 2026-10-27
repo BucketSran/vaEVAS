@@ -52,13 +52,14 @@ def input_curve_bound(card,request):
     return max((b['bound_V'] for b in maxima.values()),default=0),{'inputs':maxima,'domain_s':[0,request['stop']],'reference_endpoint_semantics':'oracle.pwl endpoint hold; no actual-source extension'}
 
 
+EVAS_WORKER_ADAPTER = 'evas/validation/adapters/paper_evas_worker.py'
 PAPER_WORKERS = tuple('experiments/backends/paper/'+name+'.py' for name in
                       ('runner','inputs','process','settings_readback','observations'))
 SHARED_READER_FILES = ('experiments/backends/evidence/legacy_waveforms.py',)
 LEGACY_READER_FILES = ('experiments/archive/dvs2-starter-pilot/analyze.py',
                        'experiments/archive/dvs2-starter-pilot/suite.py')
 CASE_INPUTS_FILE = 'evas/validation/paper/case_inputs.py'
-WORKER_DEPENDENCIES = PAPER_WORKERS + SHARED_READER_FILES
+WORKER_DEPENDENCIES = PAPER_WORKERS + (EVAS_WORKER_ADAPTER,) + SHARED_READER_FILES
 
 
 def _assignment(tree, name):
@@ -83,6 +84,7 @@ def worker_dependencies(repo):
     try:
         observations = ast.parse((repo/'experiments/backends/paper/observations.py').read_text())
         inputs = ast.parse((repo/'experiments/backends/paper/inputs.py').read_text())
+        runner = ast.parse((repo/'experiments/backends/paper/runner.py').read_text())
     except (OSError, SyntaxError) as exc:
         raise ValueError('audited worker dependency contract unavailable') from exc
     reader_files = _assignment(observations, 'READER_FILES')
@@ -109,7 +111,19 @@ def worker_dependencies(repo):
                and n.value.endswith('/case_inputs.py') for n in ast.walk(inputs)):
             raise ValueError('unregistered audited case-input dependency contract')
         constructors = ()
-    return PAPER_WORKERS + readers + constructors
+    # Select the dependency from the audited source, never file existence.
+    loaders = [node for node in runner.body if isinstance(node, ast.FunctionDef)
+               and node.name == 'evas_worker_adapter']
+    adapters = ()
+    if loaders:
+        if len(loaders) != 1 or not _expression_matches(_assignment(loaders[0], 'path'),
+                "Path(__file__).resolve().parents[3] / 'evas/validation/adapters/paper_evas_worker.py'"):
+            raise ValueError('unknown audited EVAS worker adapter contract')
+        adapters = (EVAS_WORKER_ADAPTER,)
+    elif any(isinstance(node, ast.Constant) and isinstance(node.value, str)
+             and node.value.endswith('/paper_evas_worker.py') for node in ast.walk(runner)):
+        raise ValueError('unregistered audited EVAS worker adapter contract')
+    return PAPER_WORKERS + adapters + readers + constructors
 
 
 BUILD_METADATA=('evas/pyproject.toml','evas/rust_core/Cargo.toml','evas/rust_core/Cargo.lock',

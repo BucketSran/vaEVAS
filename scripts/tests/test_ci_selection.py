@@ -17,6 +17,14 @@ spec.loader.exec_module(ci)
 
 
 class RoutingTests(unittest.TestCase):
+    def test_comparison_worker_migration_routes_actual_consumers(self):
+        for path in ('experiments/backends/comparison/runner.py',
+                     'experiments/backends/comparison/freeze.py',
+                     'experiments/backends/comparison/ingest.py',
+                     'evas/validation/adapters/comparison_evas_worker.py'):
+            with self.subTest(path=path):
+                self.assertEqual(ci.classify([path]), ci.flags('calibration', 'provenance'))
+
     def test_continuation_controls_only_select_maintenance(self):
         paths = ('scripts/check_task_continuation.py',
                  'scripts/task_continuation_policy.py',

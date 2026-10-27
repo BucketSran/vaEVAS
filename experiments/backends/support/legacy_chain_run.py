@@ -74,6 +74,7 @@ def source_identity():
          ROOT/'experiments/backends/paper/actual_observation.py',ROOT/'experiments/backends/dvs2-spectre-validation/run_suite.py',
          ROOT/'experiments/backends/dvs2-spectre-validation/check_results.py',ROOT/'experiments/archive/dvs2-history-validation/history.py',ROOT/'experiments/archive/dvs2-history-validation/recheck.py',
          ROOT/'evas/validation/cases/n_v4_02/dut.va',ROOT/'evas/validation/cases/d2_v6_01_standard/dut.va'))
+    paths.update(str(p.relative_to(ROOT)) for p in execution.worker_source_files())
     return {p:sha(ROOT/p) for p in sorted(paths)}
 
 

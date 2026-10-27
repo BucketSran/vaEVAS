@@ -3,7 +3,7 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from actual_observation import production_dependencies, producer_identity
+from actual_observation import EVAS_WORKER_ADAPTER, production_dependencies, producer_identity
 
 PAPER = 'experiments/backends/paper/'
 SHARED = 'experiments/backends/evidence/legacy_waveforms.py'
@@ -38,6 +38,33 @@ def fixture(root, *, legacy=False, constructor=False):
 
 
 class ProducerDependencyContracts(unittest.TestCase):
+    def test_audited_migrated_worker_requires_adapter_without_changing_legacy(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            fixture(root)
+            self.assertNotIn(EVAS_WORKER_ADAPTER, production_dependencies(root))
+            runner = root/'experiments/backends/paper/runner.py'
+            loader = ("def evas_worker_adapter():\n"
+                      "    path = Path(__file__).resolve().parents[3] / "
+                      "'evas/validation/adapters/paper_evas_worker.py'\n")
+            runner.write_text(loader)
+            with self.assertRaisesRegex(ValueError, 'audited production dependency missing'):
+                production_dependencies(root)
+            adapter = root/EVAS_WORKER_ADAPTER
+            adapter.parent.mkdir(parents=True)
+            adapter.write_text('# synthetic migrated worker\n')
+            sources = production_dependencies(root)
+            self.assertIn(EVAS_WORKER_ADAPTER, sources)
+            missing = dict(sources)
+            missing.pop(EVAS_WORKER_ADAPTER)
+            self.assertIn(EVAS_WORKER_ADAPTER, producer_identity(missing, root)['missing_dependencies'])
+            changed = dict(sources)
+            changed[EVAS_WORKER_ADAPTER] = '0'*64
+            self.assertIn(EVAS_WORKER_ADAPTER, producer_identity(changed, root)['changed_dependencies'])
+            runner.write_text(loader.replace('parents[3]', 'parents[2]'))
+            with self.assertRaisesRegex(ValueError, 'unknown audited EVAS worker adapter contract'):
+                production_dependencies(root)
+
     def test_legacy_and_current_producers_keep_distinct_reader_contracts(self):
         for legacy in (False, True):
             with self.subTest(legacy=legacy), tempfile.TemporaryDirectory() as temporary:
