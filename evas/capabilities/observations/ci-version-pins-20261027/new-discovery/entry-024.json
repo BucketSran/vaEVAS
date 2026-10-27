@@ -1,0 +1,291 @@
+{
+  "entry": {
+    "workflow": ".github/workflows/numerical-assurance.yml",
+    "line": 226,
+    "job": "provenance-paper",
+    "step": "Paper contracts, observable criteria and table provenance",
+    "job_if": "needs.selection.outputs.provenance == 'true'",
+    "step_if": null,
+    "command": "python3 -B -m unittest discover -s evas/validation/paper -p 'test_primitives.py' -v",
+    "environment_overrides": {},
+    "declared_python_versions": [
+      "3.12.15"
+    ],
+    "start": "evas/validation/paper",
+    "pattern": "test_primitives.py",
+    "namespace": "validation",
+    "collector": "unittest",
+    "mode": "declared-ci-literal",
+    "purpose": "role-not-semantic-qualification",
+    "entry_id": "1d788cc5ccd61f58d3505ded3df0c99f62c0a1cd72823c05243abe342622920d"
+  },
+  "receipt": {
+    "collector": {
+      "definition_profile": "actual-code-or-registered-native-skip-v1",
+      "native_skip_authority": {
+        "factory_span_sha256": "a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad",
+        "profile": "registered-native-unittest-skip-v1",
+        "runtime_file_sha256": "45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987",
+        "runtime_source": "unittest/case.py",
+        "wrapper_span_sha256": "96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda"
+      },
+      "path": "scripts/capabilities/discover_methods.py",
+      "sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "source_relationship": "owned-source-root"
+    },
+    "complete": true,
+    "discovered_instances": 11,
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONPATH": null,
+      "bytecode_disabled": true,
+      "cache_tag": "cpython-312",
+      "environment_scope": "python-runtime-and-import-path-only",
+      "executable": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+      "implementation": "cpython",
+      "platform": "darwin",
+      "python_version": "3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]",
+      "sys_path_before_selected_imports": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/source",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python312.zip",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/lib/python3.12/site-packages"
+      ]
+    },
+    "error_count": 0,
+    "errors": [],
+    "loader_error_count": 0,
+    "methods": [
+      {
+        "definition": {
+          "line": 58,
+          "name": "test_accept_all_cards_and_tiers",
+          "path": "evas/validation/paper/test_primitives.py",
+          "sha256": "92f3dc8c0e78109144192eaecf1fef61ac7debe949f214fba7b123235d504b08"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_primitives.py",
+        "module_sha256": "1104bd3731e7485f2e3460d22f7ab0b55d4ea471d7401da7384fb5ce317ad236",
+        "runtime_id": "test_primitives.Calibration.test_accept_all_cards_and_tiers",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 85,
+          "name": "test_budget_overlap_is_inconclusive",
+          "path": "evas/validation/paper/test_primitives.py",
+          "sha256": "be447639dfa3a1daf5a88f5b215881e841f9687101f1bdd9fd0811872d545823"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_primitives.py",
+        "module_sha256": "1104bd3731e7485f2e3460d22f7ab0b55d4ea471d7401da7384fb5ce317ad236",
+        "runtime_id": "test_primitives.Calibration.test_budget_overlap_is_inconclusive",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 8,
+          "name": "test_exact_anchors_and_domains",
+          "path": "evas/validation/paper/test_primitives.py",
+          "sha256": "6eca006df6546f2a714db41d383d25ea85c515b21f58e074742dd37caebf9054"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_primitives.py",
+        "module_sha256": "1104bd3731e7485f2e3460d22f7ab0b55d4ea471d7401da7384fb5ce317ad236",
+        "runtime_id": "test_primitives.Calibration.test_exact_anchors_and_domains",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 25,
+          "name": "test_independent_nonzero_anchors",
+          "path": "evas/validation/paper/test_primitives.py",
+          "sha256": "63bd0772c17cb52e5ad9325606bc0ee789edaa81c6ba192cb272ed689e291a3f"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_primitives.py",
+        "module_sha256": "1104bd3731e7485f2e3460d22f7ab0b55d4ea471d7401da7384fb5ce317ad236",
+        "runtime_id": "test_primitives.Calibration.test_independent_nonzero_anchors",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 102,
+          "name": "test_integral_signed_area_and_derivative",
+          "path": "evas/validation/paper/test_primitives.py",
+          "sha256": "be1a802026f26bbb35bbbe30c3339bec7918c06a8f79f194f74f06c54ef7c154"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_primitives.py",
+        "module_sha256": "1104bd3731e7485f2e3460d22f7ab0b55d4ea471d7401da7384fb5ce317ad236",
+        "runtime_id": "test_primitives.Calibration.test_integral_signed_area_and_derivative",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 95,
+          "name": "test_integrated_input_uncertainty_prevents_false_pass",
+          "path": "evas/validation/paper/test_primitives.py",
+          "sha256": "1fb38778b414a04067929c071cb053b5514a13a5f4ac78db09792a020c031a3a"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_primitives.py",
+        "module_sha256": "1104bd3731e7485f2e3460d22f7ab0b55d4ea471d7401da7384fb5ce317ad236",
+        "runtime_id": "test_primitives.Calibration.test_integrated_input_uncertainty_prevents_false_pass",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 71,
+          "name": "test_missing_corner_and_observation_gap",
+          "path": "evas/validation/paper/test_primitives.py",
+          "sha256": "ef15b817a0d9972908143ecfacd824585c9868c13693a4347ac2ad2bf2b8f0d0"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_primitives.py",
+        "module_sha256": "1104bd3731e7485f2e3460d22f7ab0b55d4ea471d7401da7384fb5ce317ad236",
+        "runtime_id": "test_primitives.Calibration.test_missing_corner_and_observation_gap",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 80,
+          "name": "test_near_zero_input_error_cannot_hide_sqrt_error",
+          "path": "evas/validation/paper/test_primitives.py",
+          "sha256": "27fe548ef7da17f5121fb532d416c1d9710d2af875faf592c2c4614303521695"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_primitives.py",
+        "module_sha256": "1104bd3731e7485f2e3460d22f7ab0b55d4ea471d7401da7384fb5ce317ad236",
+        "runtime_id": "test_primitives.Calibration.test_near_zero_input_error_cannot_hide_sqrt_error",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 64,
+          "name": "test_reject_wrong_output_and_input",
+          "path": "evas/validation/paper/test_primitives.py",
+          "sha256": "2190d1a7ff443aa6a9aa2d89b0618431b481397dbe73c181c3bc8d3593043ff1"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_primitives.py",
+        "module_sha256": "1104bd3731e7485f2e3460d22f7ab0b55d4ea471d7401da7384fb5ce317ad236",
+        "runtime_id": "test_primitives.Calibration.test_reject_wrong_output_and_input",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 18,
+          "name": "test_trigonometric_symmetry_and_extrema",
+          "path": "evas/validation/paper/test_primitives.py",
+          "sha256": "941f84cfab6516dc2bde7c6677f7c299243d10083f813142dba5a352f32914bd"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_primitives.py",
+        "module_sha256": "1104bd3731e7485f2e3460d22f7ab0b55d4ea471d7401da7384fb5ce317ad236",
+        "runtime_id": "test_primitives.Calibration.test_trigonometric_symmetry_and_extrema",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 41,
+          "name": "test_trigonometric_tail_range_boundary",
+          "path": "evas/validation/paper/test_primitives.py",
+          "sha256": "b6df83697d1506bc477af05d86af2ddac6d5e8692757f48e52769c0a96c217bf"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_primitives.py",
+        "module_sha256": "1104bd3731e7485f2e3460d22f7ab0b55d4ea471d7401da7384fb5ce317ad236",
+        "runtime_id": "test_primitives.Calibration.test_trigonometric_tail_range_boundary",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      }
+    ],
+    "namespace": "validation",
+    "schema_version": 1,
+    "skipped_declarations": 0,
+    "unresolved_instances": [],
+    "transport": {
+      "argv": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-c",
+        "import os,runpy,sys; sys.path[0]=os.getcwd(); tool=sys.argv[1]; sys.argv=sys.argv[1:]; runpy.run_path(tool,run_name=\"__main__\")",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/source/scripts/capabilities/discover_methods.py",
+        "--worker",
+        "--root",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/source",
+        "--start",
+        "evas/validation/paper",
+        "--pattern",
+        "test_primitives.py",
+        "--namespace",
+        "validation"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/source",
+      "returncode": 0,
+      "stdout": "{\"collector\": {\"definition_profile\": \"actual-code-or-registered-native-skip-v1\", \"native_skip_authority\": {\"factory_span_sha256\": \"a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad\", \"profile\": \"registered-native-unittest-skip-v1\", \"runtime_file_sha256\": \"45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987\", \"runtime_source\": \"unittest/case.py\", \"wrapper_span_sha256\": \"96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda\"}, \"path\": \"scripts/capabilities/discover_methods.py\", \"sha256\": \"aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17\", \"source_relationship\": \"owned-source-root\"}, \"complete\": true, \"discovered_instances\": 11, \"environment\": {\"PYTHONDONTWRITEBYTECODE\": \"1\", \"PYTHONPATH\": null, \"bytecode_disabled\": true, \"cache_tag\": \"cpython-312\", \"environment_scope\": \"python-runtime-and-import-path-only\", \"executable\": \"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python\", \"implementation\": \"cpython\", \"platform\": \"darwin\", \"python_version\": \"3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"sys_path_before_selected_imports\": [\"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/source\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python312.zip\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload\", \"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/lib/python3.12/site-packages\"]}, \"error_count\": 0, \"errors\": [], \"loader_error_count\": 0, \"methods\": [{\"definition\": {\"line\": 58, \"name\": \"test_accept_all_cards_and_tiers\", \"path\": \"evas/validation/paper/test_primitives.py\", \"sha256\": \"92f3dc8c0e78109144192eaecf1fef61ac7debe949f214fba7b123235d504b08\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_primitives.py\", \"module_sha256\": \"1104bd3731e7485f2e3460d22f7ab0b55d4ea471d7401da7384fb5ce317ad236\", \"runtime_id\": \"test_primitives.Calibration.test_accept_all_cards_and_tiers\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 85, \"name\": \"test_budget_overlap_is_inconclusive\", \"path\": \"evas/validation/paper/test_primitives.py\", \"sha256\": \"be447639dfa3a1daf5a88f5b215881e841f9687101f1bdd9fd0811872d545823\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_primitives.py\", \"module_sha256\": \"1104bd3731e7485f2e3460d22f7ab0b55d4ea471d7401da7384fb5ce317ad236\", \"runtime_id\": \"test_primitives.Calibration.test_budget_overlap_is_inconclusive\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 8, \"name\": \"test_exact_anchors_and_domains\", \"path\": \"evas/validation/paper/test_primitives.py\", \"sha256\": \"6eca006df6546f2a714db41d383d25ea85c515b21f58e074742dd37caebf9054\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_primitives.py\", \"module_sha256\": \"1104bd3731e7485f2e3460d22f7ab0b55d4ea471d7401da7384fb5ce317ad236\", \"runtime_id\": \"test_primitives.Calibration.test_exact_anchors_and_domains\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 25, \"name\": \"test_independent_nonzero_anchors\", \"path\": \"evas/validation/paper/test_primitives.py\", \"sha256\": \"63bd0772c17cb52e5ad9325606bc0ee789edaa81c6ba192cb272ed689e291a3f\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_primitives.py\", \"module_sha256\": \"1104bd3731e7485f2e3460d22f7ab0b55d4ea471d7401da7384fb5ce317ad236\", \"runtime_id\": \"test_primitives.Calibration.test_independent_nonzero_anchors\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 102, \"name\": \"test_integral_signed_area_and_derivative\", \"path\": \"evas/validation/paper/test_primitives.py\", \"sha256\": \"be1a802026f26bbb35bbbe30c3339bec7918c06a8f79f194f74f06c54ef7c154\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_primitives.py\", \"module_sha256\": \"1104bd3731e7485f2e3460d22f7ab0b55d4ea471d7401da7384fb5ce317ad236\", \"runtime_id\": \"test_primitives.Calibration.test_integral_signed_area_and_derivative\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 95, \"name\": \"test_integrated_input_uncertainty_prevents_false_pass\", \"path\": \"evas/validation/paper/test_primitives.py\", \"sha256\": \"1fb38778b414a04067929c071cb053b5514a13a5f4ac78db09792a020c031a3a\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_primitives.py\", \"module_sha256\": \"1104bd3731e7485f2e3460d22f7ab0b55d4ea471d7401da7384fb5ce317ad236\", \"runtime_id\": \"test_primitives.Calibration.test_integrated_input_uncertainty_prevents_false_pass\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 71, \"name\": \"test_missing_corner_and_observation_gap\", \"path\": \"evas/validation/paper/test_primitives.py\", \"sha256\": \"ef15b817a0d9972908143ecfacd824585c9868c13693a4347ac2ad2bf2b8f0d0\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_primitives.py\", \"module_sha256\": \"1104bd3731e7485f2e3460d22f7ab0b55d4ea471d7401da7384fb5ce317ad236\", \"runtime_id\": \"test_primitives.Calibration.test_missing_corner_and_observation_gap\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 80, \"name\": \"test_near_zero_input_error_cannot_hide_sqrt_error\", \"path\": \"evas/validation/paper/test_primitives.py\", \"sha256\": \"27fe548ef7da17f5121fb532d416c1d9710d2af875faf592c2c4614303521695\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_primitives.py\", \"module_sha256\": \"1104bd3731e7485f2e3460d22f7ab0b55d4ea471d7401da7384fb5ce317ad236\", \"runtime_id\": \"test_primitives.Calibration.test_near_zero_input_error_cannot_hide_sqrt_error\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 64, \"name\": \"test_reject_wrong_output_and_input\", \"path\": \"evas/validation/paper/test_primitives.py\", \"sha256\": \"2190d1a7ff443aa6a9aa2d89b0618431b481397dbe73c181c3bc8d3593043ff1\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_primitives.py\", \"module_sha256\": \"1104bd3731e7485f2e3460d22f7ab0b55d4ea471d7401da7384fb5ce317ad236\", \"runtime_id\": \"test_primitives.Calibration.test_reject_wrong_output_and_input\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 18, \"name\": \"test_trigonometric_symmetry_and_extrema\", \"path\": \"evas/validation/paper/test_primitives.py\", \"sha256\": \"941f84cfab6516dc2bde7c6677f7c299243d10083f813142dba5a352f32914bd\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_primitives.py\", \"module_sha256\": \"1104bd3731e7485f2e3460d22f7ab0b55d4ea471d7401da7384fb5ce317ad236\", \"runtime_id\": \"test_primitives.Calibration.test_trigonometric_symmetry_and_extrema\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 41, \"name\": \"test_trigonometric_tail_range_boundary\", \"path\": \"evas/validation/paper/test_primitives.py\", \"sha256\": \"b6df83697d1506bc477af05d86af2ddac6d5e8692757f48e52769c0a96c217bf\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_primitives.py\", \"module_sha256\": \"1104bd3731e7485f2e3460d22f7ab0b55d4ea471d7401da7384fb5ce317ad236\", \"runtime_id\": \"test_primitives.Calibration.test_trigonometric_tail_range_boundary\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}], \"namespace\": \"validation\", \"schema_version\": 1, \"skipped_declarations\": 0, \"unresolved_instances\": []}\n",
+      "stderr": "",
+      "environment_overrides": {},
+      "actual_resolved_overrides": {},
+      "collection_profile": "inventory-child runtime; not original phase execution/skip results",
+      "original_python_equivalence": "major-minor-declared-only",
+      "sys_path_contract": "repository-cwd first, then literal phase PYTHONPATH; TestLoader adds start directory"
+    }
+  }
+}

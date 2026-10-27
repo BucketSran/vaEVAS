@@ -1,0 +1,414 @@
+diff --git a/.github/workflows/benchmark-evidence.yml b/.github/workflows/benchmark-evidence.yml
+index 39bb4acc..33739d76 100644
+--- a/.github/workflows/benchmark-evidence.yml
++++ b/.github/workflows/benchmark-evidence.yml
+@@ -15,7 +15,7 @@ jobs:
+   identity:
+     outputs:
+       result: ${{ steps.verified.outputs.result }}
+-    runs-on: ubuntu-latest
++    runs-on: ubuntu-24.04
+     timeout-minutes: 5
+     steps:
+       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+@@ -23,7 +23,7 @@ jobs:
+           fetch-depth: 0
+       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+         with:
+-          python-version: '3.12'
++          python-version: '3.12.15'
+       - name: Frozen sources and current calibration consumers
+         run: python3 -B -m experiments.va_screen.identity --historical
+       - name: Current task registration and generated indexes
+@@ -42,13 +42,13 @@ jobs:
+   first-batch:
+     outputs:
+       result: ${{ steps.verified.outputs.result }}
+-    runs-on: ubuntu-latest
++    runs-on: ubuntu-24.04
+     timeout-minutes: 5
+     steps:
+       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+         with:
+-          python-version: '3.12'
++          python-version: '3.12.15'
+       - name: Portable checker copies and task lineage
+         run: |
+           python3 -B experiments/benchmark_first_batch/sync_runtime.py --check
+diff --git a/.github/workflows/numerical-assurance.yml b/.github/workflows/numerical-assurance.yml
+index a11e3f47..cceeb072 100644
+--- a/.github/workflows/numerical-assurance.yml
++++ b/.github/workflows/numerical-assurance.yml
+@@ -28,7 +28,7 @@ concurrency:
+ 
+ jobs:
+   selection:
+-    runs-on: ubuntu-latest
++    runs-on: ubuntu-24.04
+     timeout-minutes: 5
+     outputs:
+       maintenance: ${{ steps.changes.outputs.maintenance }}
+@@ -67,7 +67,7 @@ jobs:
+           fi
+   fast-checks:
+     needs: selection
+-    runs-on: ubuntu-latest
++    runs-on: ubuntu-24.04
+     timeout-minutes: 15
+     env:
+       PYTHONPATH: evas/src
+@@ -80,7 +80,7 @@ jobs:
+           fetch-depth: 0
+       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+         with:
+-          python-version: '3.12'
++          python-version: '3.12.15'
+       - run: python -m pip install ruff==0.14.1
+       - run: rustup toolchain install stable --profile minimal --component clippy --component rustfmt
+         if: needs.selection.outputs.regression == 'true' || needs.selection.outputs.focused == 'true'
+@@ -131,7 +131,7 @@ jobs:
+   catalog-inventory:
+     needs: [selection, fast-checks]
+     if: always() && needs.selection.result == 'success' && needs.fast-checks.result == 'success'
+-    runs-on: ubuntu-latest
++    runs-on: ubuntu-24.04
+     timeout-minutes: 15
+     steps:
+       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+@@ -139,7 +139,7 @@ jobs:
+           fetch-depth: 0
+       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+         with:
+-          python-version: '3.12'
++          python-version: '3.12.15'
+       - name: Observe declared Python entries and tracked asset facts
+         env:
+           CI_INVENTORY_BASE: ${{ needs.selection.outputs.base }}
+@@ -155,7 +155,7 @@ jobs:
+   static-checks:
+     needs: [selection, fast-checks]
+     if: needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'
+-    runs-on: ubuntu-latest
++    runs-on: ubuntu-24.04
+     timeout-minutes: 30
+     steps:
+       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+@@ -164,7 +164,7 @@ jobs:
+           fetch-depth: 0
+       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+         with:
+-          python-version: '3.12'
++          python-version: '3.12.15'
+       - name: Traceability and frozen validation identities
+         if: needs.selection.outputs.maintenance == 'true'
+         env:
+@@ -204,7 +204,7 @@ jobs:
+   provenance-paper:
+     needs: [selection, fast-checks]
+     if: needs.selection.outputs.provenance == 'true'
+-    runs-on: ubuntu-latest
++    runs-on: ubuntu-24.04
+     timeout-minutes: 10
+     steps:
+       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+@@ -212,7 +212,7 @@ jobs:
+           fetch-depth: 0
+       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+         with:
+-          python-version: '3.12'
++          python-version: '3.12.15'
+       - name: Paper contracts, observable criteria and table provenance
+         run: |
+           python3 -B evas/validation/paper/check_design.py
+@@ -230,7 +230,7 @@ jobs:
+   provenance-support:
+     needs: [selection, fast-checks]
+     if: needs.selection.outputs.provenance == 'true'
+-    runs-on: ubuntu-latest
++    runs-on: ubuntu-24.04
+     timeout-minutes: 10
+     steps:
+       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+@@ -238,13 +238,13 @@ jobs:
+           fetch-depth: 0
+       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+         with:
+-          python-version: '3.12'
++          python-version: '3.12.15'
+       - name: Backend support checker tests
+         run: python3 -B -m unittest discover -s experiments/backends/support -p 'test_*.py' -v
+   rust-regression:
+     needs: [selection, fast-checks]
+     if: needs.selection.outputs.regression == 'true'
+-    runs-on: ubuntu-latest
++    runs-on: ubuntu-24.04
+     timeout-minutes: 30
+     env:
+       CARGO_PROFILE_DEV_OPT_LEVEL: '1'
+@@ -256,7 +256,7 @@ jobs:
+           fetch-depth: 0
+       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+         with:
+-          python-version: '3.12'
++          python-version: '3.12.15'
+       - run: rustup toolchain install stable --profile minimal --component clippy --component rustfmt
+       - uses: ./.github/actions/rust-cache
+         with:
+@@ -305,7 +305,7 @@ jobs:
+         shard: [0, 1, 2, 3]
+     needs: [selection, fast-checks]
+     if: needs.selection.outputs.regression == 'true'
+-    runs-on: ubuntu-latest
++    runs-on: ubuntu-24.04
+     env:
+       # Retain runtime checks while avoiding unoptimized interval arithmetic.
+       PYTHONPATH: evas/src
+@@ -321,7 +321,7 @@ jobs:
+           fetch-depth: 0
+       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+         with:
+-          python-version: '3.12'
++          python-version: '3.12.15'
+       - run: rustup toolchain install stable --profile minimal --component clippy --component rustfmt
+       - uses: ./.github/actions/rust-cache
+         with:
+@@ -397,13 +397,13 @@ jobs:
+   regression-coverage:
+     needs: [selection, regression]
+     if: always() && needs.selection.outputs.regression == 'true'
+-    runs-on: ubuntu-latest
++    runs-on: ubuntu-24.04
+     timeout-minutes: 5
+     steps:
+       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+         with:
+-          python-version: '3.12'
++          python-version: '3.12.15'
+       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+         with:
+           pattern: python-regression-shard-*
+@@ -445,7 +445,7 @@ jobs:
+   regression-admission:
+     needs: [selection, regression-coverage]
+     if: always() && needs.selection.outputs.regression == 'true'
+-    runs-on: ubuntu-latest
++    runs-on: ubuntu-24.04
+     timeout-minutes: 5
+     steps:
+       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+@@ -453,7 +453,7 @@ jobs:
+           fetch-depth: 0
+       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+         with:
+-          python-version: '3.12'
++          python-version: '3.12.15'
+       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+         with:
+           name: python-regression-timings
+@@ -628,14 +628,14 @@ jobs:
+   properties-and-ngspice:
+     needs: [selection, fast-checks]
+     if: needs.selection.outputs.differential == 'true'
+-    runs-on: ubuntu-latest
++    runs-on: ubuntu-24.04
+     timeout-minutes: 15
+     steps:
+       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+         with:
+-          python-version: '3.12'
+-      - run: sudo apt-get update && sudo apt-get install -y ngspice
++          python-version: '3.12.15'
++      - run: sudo apt-get update && sudo apt-get install -y ngspice=42+ds-3build1
+       - run: rustup update stable --no-self-update
+       - uses: ./.github/actions/rust-cache
+         with:
+@@ -657,7 +657,7 @@ jobs:
+   fuzz-smoke:
+     needs: [selection, fast-checks]
+     if: needs.selection.outputs.fuzz == 'true'
+-    runs-on: ubuntu-latest
++    runs-on: ubuntu-24.04
+     timeout-minutes: 15
+     strategy:
+       fail-fast: false
+@@ -669,11 +669,11 @@ jobs:
+             max_len: 24
+     steps:
+       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+-      - run: rustup toolchain install nightly --profile minimal
++      - run: rustup toolchain install nightly-2026-10-27 --profile minimal
+       - uses: ./.github/actions/rust-cache
+         id: rust-cache
+         with:
+-          toolchain: nightly
++          toolchain: nightly-2026-10-27
+           lane: fuzz
+           targets: evas/rust_core/fuzz/target
+       - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+@@ -683,7 +683,7 @@ jobs:
+           key: cargo-fuzz-v1-${{ runner.os }}-${{ runner.arch }}-0.13.2-${{ steps.rust-cache.outputs.compiler }}
+       - name: Install cargo-fuzz when absent from cache
+         if: steps.fuzz-cli.outputs.cache-hit != 'true'
+-        run: cargo +nightly install cargo-fuzz --version 0.13.2 --locked --root "$HOME/.local/share/evas-ci/cargo-fuzz"
++        run: cargo +nightly-2026-10-27 install cargo-fuzz --version 0.13.2 --locked --root "$HOME/.local/share/evas-ci/cargo-fuzz"
+       - name: Put cargo-fuzz on PATH
+         run: echo "$HOME/.local/share/evas-ci/cargo-fuzz/bin" >> "$GITHUB_PATH"
+       - working-directory: evas/rust_core
+@@ -694,7 +694,7 @@ jobs:
+           fi
+           fuzz_seconds=45
+           if [ "$GITHUB_EVENT_NAME" = schedule ]; then fuzz_seconds=300; fi
+-          cargo +nightly fuzz run "${{ matrix.target }}" -- -max_total_time="$fuzz_seconds" -max_len="${{ matrix.max_len }}"
++          cargo +nightly-2026-10-27 fuzz run "${{ matrix.target }}" -- -max_total_time="$fuzz_seconds" -max_len="${{ matrix.max_len }}"
+       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+         if: failure()
+         with:
+@@ -714,7 +714,7 @@ jobs:
+     name: ${{ needs.selection.outputs.mode == 'iteration' && 'iteration-result' || 'ci-result' }}
+     needs: [selection, fast-checks, catalog-inventory, static-checks, provenance-paper, provenance-support, regression, rust-regression, regression-coverage, regression-admission, properties-and-ngspice, fuzz-smoke, package, benchmark]
+     if: always()
+-    runs-on: ubuntu-latest
++    runs-on: ubuntu-24.04
+     timeout-minutes: 5
+     steps:
+       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+diff --git a/.github/workflows/package-install.yml b/.github/workflows/package-install.yml
+index 907b8ee5..ce3a9019 100644
+--- a/.github/workflows/package-install.yml
++++ b/.github/workflows/package-install.yml
+@@ -9,6 +9,10 @@ on:
+ permissions:
+   contents: read
+ 
++# Same fixed Rust toolchain as numerical-assurance.yml; the sdist build uses it through rustup.
++env:
++  RUSTUP_TOOLCHAIN: '1.99.1'
++
+ jobs:
+   install:
+     outputs:
+@@ -19,10 +23,10 @@ jobs:
+         include:
+           - runner: ubuntu-24.04
+             arch: x86_64
+-            python: '3.10'
++            python: '3.10.22'
+           - runner: macos-14
+             arch: arm64
+-            python: '3.12'
++            python: '3.12.10'
+     runs-on: ${{ matrix.runner }}
+     timeout-minutes: 20
+     steps:
+@@ -32,7 +36,7 @@ jobs:
+           python-version: ${{ matrix.python }}
+           cache: pip
+           cache-dependency-path: evas/pyproject.toml
+-      - run: rustup toolchain install stable --profile minimal
++      - run: rustup toolchain install "$RUSTUP_TOOLCHAIN" --profile minimal
+       - uses: ./.github/actions/rust-cache
+         with:
+           # Cache downloads only. The sdist must build its own fresh executable.
+@@ -41,7 +45,7 @@ jobs:
+         env:
+           EXPECTED_ARCH: ${{ matrix.arch }}
+         run: python -c "import os,platform; assert platform.machine() == os.environ['EXPECTED_ARCH'], platform.machine()"
+-      - run: python -m pip install build
++      - run: python -m pip install build==1.6.1
+       - name: Build sdist, then build native wheel from that archive
+         run: |
+           python -m build --sdist --outdir runs/package-dist evas
+diff --git a/scripts/capabilities/collect_ci_inventory.py b/scripts/capabilities/collect_ci_inventory.py
+index e29723f1..d3d8c23b 100644
+--- a/scripts/capabilities/collect_ci_inventory.py
++++ b/scripts/capabilities/collect_ci_inventory.py
+@@ -254,7 +254,8 @@ def error_details(error):
+ def child(root, entry, timeout):
+     tool = Path(root) / 'scripts/capabilities/discover_methods.py'
+     declared = entry['declared_python_versions']
+-    if declared and (len(declared) != 1 or declared[0] != str(sys.version_info.major) + '.' + str(sys.version_info.minor)):
++    actual = str(sys.version_info.major) + '.' + str(sys.version_info.minor)
++    if declared and (len(declared) != 1 or '.'.join(declared[0].split('.')[:2]) != actual):
+         raise ValueError('inventory interpreter does not match unique declared phase Python major/minor')
+     environment = os.environ.copy()
+     # python -m at repository cwd places the cwd on sys.path[0]. The wrapper
+diff --git a/scripts/tests/test_ci_inventory.py b/scripts/tests/test_ci_inventory.py
+index de66e9b4..546b700b 100644
+--- a/scripts/tests/test_ci_inventory.py
++++ b/scripts/tests/test_ci_inventory.py
+@@ -6,6 +6,7 @@ import importlib.util
+ import json
+ import os
+ from pathlib import Path
++import sys
+ import tempfile
+ import types
+ import unittest
+@@ -429,6 +430,20 @@ setattr(Main,'test_generated',factory())
+         self.assertEqual(receipt['transport']['stdout'], proc.stdout)
+         self.assertEqual(receipt['transport']['stderr'], proc.stderr)
+ 
++    def test_patch_pinned_workflow_python_matches_by_major_minor(self):
++        current = '%d.%d' % sys.version_info[:2]
++        proc = types.SimpleNamespace(returncode=2, stdout='fixture non-JSON stream\n', stderr='')
++        for declared in ([current], [current + '.99']):
++            entry = dict(start='scripts/tests', pattern='test*.py', namespace='maintenance',
++                         environment_overrides={}, declared_python_versions=declared)
++            with patch.object(inventory.subprocess, 'run', return_value=proc):
++                self.assertFalse(inventory.child(self.root, entry, 1)['complete'])
++        for declared in (['%d.%d.1' % (sys.version_info[0], sys.version_info[1] + 1)], [current, current]):
++            entry = dict(start='scripts/tests', pattern='test*.py', namespace='maintenance',
++                         environment_overrides={}, declared_python_versions=declared)
++            with self.assertRaisesRegex(ValueError, 'major/minor'):
++                inventory.child(self.root, entry, 1)
++
+ 
+ class RequiredGateTests(unittest.TestCase):
+     def setUp(self):
+diff --git a/scripts/tests/test_ci_pins.py b/scripts/tests/test_ci_pins.py
+new file mode 100644
+index 00000000..e35b5989
+--- /dev/null
++++ b/scripts/tests/test_ci_pins.py
+@@ -0,0 +1,38 @@
++"""The CI workflows name fixed runner, interpreter and tool versions; no simulator runs here."""
++from pathlib import Path
++import re
++import unittest
++
++ROOT = Path(__file__).resolve().parents[2]
++WORKFLOWS = ROOT / '.github/workflows'
++
++
++class CiVersionPins(unittest.TestCase):
++    def test_hosted_runners_name_one_ubuntu_release(self):
++        for path in sorted(WORKFLOWS.glob('*.yml')):
++            text = path.read_text()
++            with self.subTest(workflow=path.name):
++                self.assertNotIn('ubuntu-latest', text)
++                for label in re.findall(r'runs-on: (\S+)', text):
++                    self.assertIn(label, ('ubuntu-24.04', '${{'))
++
++    def test_python_versions_name_a_patch_release(self):
++        versions = [v for path in sorted(WORKFLOWS.glob('*.yml'))
++                    for v in re.findall(r"python(?:-version)?: '([^']+)'", path.read_text())]
++        self.assertTrue(versions)
++        for version in versions:
++            self.assertRegex(version, r'^3\.[0-9]+\.[0-9]+$')
++
++    def test_ngspice_nightly_build_and_package_rust_are_pinned(self):
++        assurance = (WORKFLOWS / 'numerical-assurance.yml').read_text()
++        self.assertIn('apt-get install -y ngspice=42+ds-3build1', assurance)
++        self.assertTrue(re.findall(r'nightly-[0-9]{4}-[0-9]{2}-[0-9]{2}', assurance))
++        self.assertNotRegex(assurance, r'\bnightly\b(?!-[0-9]{4}-[0-9]{2}-[0-9]{2})')
++        package = (WORKFLOWS / 'package-install.yml').read_text()
++        self.assertIn('pip install build==1.6.1', package)
++        self.assertRegex(package, r"(?m)^env:\n  RUSTUP_TOOLCHAIN: '[0-9]+\.[0-9]+\.[0-9]+'$")
++        self.assertNotRegex(package, r'rustup toolchain install stable|\+stable')
++
++
++if __name__ == '__main__':
++    unittest.main()

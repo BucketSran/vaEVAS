@@ -1,0 +1,147 @@
+{
+  "entry": {
+    "workflow": ".github/workflows/numerical-assurance.yml",
+    "line": 222,
+    "job": "provenance-paper",
+    "step": "Paper contracts, observable criteria and table provenance",
+    "job_if": "needs.selection.outputs.provenance == 'true'",
+    "step_if": null,
+    "command": "python3 -B -m unittest discover -s evas/validation/paper -p 'test_coefficient_first_order.py' -v",
+    "environment_overrides": {},
+    "declared_python_versions": [
+      "3.12.15"
+    ],
+    "start": "evas/validation/paper",
+    "pattern": "test_coefficient_first_order.py",
+    "namespace": "validation",
+    "collector": "unittest",
+    "mode": "declared-ci-literal",
+    "purpose": "role-not-semantic-qualification",
+    "entry_id": "9771afe3951550ee6b750c513c5171480e2d254d49074bede8e180fc728be24a"
+  },
+  "receipt": {
+    "collector": {
+      "definition_profile": "actual-code-or-registered-native-skip-v1",
+      "native_skip_authority": {
+        "factory_span_sha256": "a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad",
+        "profile": "registered-native-unittest-skip-v1",
+        "runtime_file_sha256": "45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987",
+        "runtime_source": "unittest/case.py",
+        "wrapper_span_sha256": "96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda"
+      },
+      "path": "scripts/capabilities/discover_methods.py",
+      "sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "source_relationship": "owned-source-root"
+    },
+    "complete": true,
+    "discovered_instances": 3,
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONPATH": null,
+      "bytecode_disabled": true,
+      "cache_tag": "cpython-312",
+      "environment_scope": "python-runtime-and-import-path-only",
+      "executable": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+      "implementation": "cpython",
+      "platform": "darwin",
+      "python_version": "3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]",
+      "sys_path_before_selected_imports": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/source",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python312.zip",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/lib/python3.12/site-packages"
+      ]
+    },
+    "error_count": 0,
+    "errors": [],
+    "loader_error_count": 0,
+    "methods": [
+      {
+        "definition": {
+          "line": 41,
+          "name": "test_coefficient_ratio_uses_exact_binary64_not_decimal_token",
+          "path": "evas/validation/paper/test_coefficient_first_order.py",
+          "sha256": "9326de98b54d06d70ba3d2092d262113d04edc9eebe1b651ae65a761a3dd2ac3"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_coefficient_first_order.py",
+        "module_sha256": "63a7a4bcc5ca20fc437a579bbe411844e5366e1d62f002f7e270eaa8016b9a04",
+        "runtime_id": "test_coefficient_first_order.CoefficientFirstOrderCalibration.test_coefficient_ratio_uses_exact_binary64_not_decimal_token",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 33,
+          "name": "test_constant_input_stays_at_dc_equilibrium",
+          "path": "evas/validation/paper/test_coefficient_first_order.py",
+          "sha256": "00714ea9e1756c3fd9d6aa5356dd6395dc8fd303756fad3806c3c462474f3bc0"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_coefficient_first_order.py",
+        "module_sha256": "63a7a4bcc5ca20fc437a579bbe411844e5366e1d62f002f7e270eaa8016b9a04",
+        "runtime_id": "test_coefficient_first_order.CoefficientFirstOrderCalibration.test_constant_input_stays_at_dc_equilibrium",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 22,
+          "name": "test_ramp_bounds_contain_hand_integrated_answer_and_reject_lagless_endpoint",
+          "path": "evas/validation/paper/test_coefficient_first_order.py",
+          "sha256": "bab2b4a5befbcc63a2b76d43abf2390124b8598f5dcd6c25de23760b46ed726f"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_coefficient_first_order.py",
+        "module_sha256": "63a7a4bcc5ca20fc437a579bbe411844e5366e1d62f002f7e270eaa8016b9a04",
+        "runtime_id": "test_coefficient_first_order.CoefficientFirstOrderCalibration.test_ramp_bounds_contain_hand_integrated_answer_and_reject_lagless_endpoint",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      }
+    ],
+    "namespace": "validation",
+    "schema_version": 1,
+    "skipped_declarations": 0,
+    "unresolved_instances": [],
+    "transport": {
+      "argv": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-c",
+        "import os,runpy,sys; sys.path[0]=os.getcwd(); tool=sys.argv[1]; sys.argv=sys.argv[1:]; runpy.run_path(tool,run_name=\"__main__\")",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/source/scripts/capabilities/discover_methods.py",
+        "--worker",
+        "--root",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/source",
+        "--start",
+        "evas/validation/paper",
+        "--pattern",
+        "test_coefficient_first_order.py",
+        "--namespace",
+        "validation"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/source",
+      "returncode": 0,
+      "stdout": "{\"collector\": {\"definition_profile\": \"actual-code-or-registered-native-skip-v1\", \"native_skip_authority\": {\"factory_span_sha256\": \"a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad\", \"profile\": \"registered-native-unittest-skip-v1\", \"runtime_file_sha256\": \"45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987\", \"runtime_source\": \"unittest/case.py\", \"wrapper_span_sha256\": \"96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda\"}, \"path\": \"scripts/capabilities/discover_methods.py\", \"sha256\": \"aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17\", \"source_relationship\": \"owned-source-root\"}, \"complete\": true, \"discovered_instances\": 3, \"environment\": {\"PYTHONDONTWRITEBYTECODE\": \"1\", \"PYTHONPATH\": null, \"bytecode_disabled\": true, \"cache_tag\": \"cpython-312\", \"environment_scope\": \"python-runtime-and-import-path-only\", \"executable\": \"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python\", \"implementation\": \"cpython\", \"platform\": \"darwin\", \"python_version\": \"3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"sys_path_before_selected_imports\": [\"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/source\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python312.zip\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload\", \"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/lib/python3.12/site-packages\"]}, \"error_count\": 0, \"errors\": [], \"loader_error_count\": 0, \"methods\": [{\"definition\": {\"line\": 41, \"name\": \"test_coefficient_ratio_uses_exact_binary64_not_decimal_token\", \"path\": \"evas/validation/paper/test_coefficient_first_order.py\", \"sha256\": \"9326de98b54d06d70ba3d2092d262113d04edc9eebe1b651ae65a761a3dd2ac3\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_coefficient_first_order.py\", \"module_sha256\": \"63a7a4bcc5ca20fc437a579bbe411844e5366e1d62f002f7e270eaa8016b9a04\", \"runtime_id\": \"test_coefficient_first_order.CoefficientFirstOrderCalibration.test_coefficient_ratio_uses_exact_binary64_not_decimal_token\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 33, \"name\": \"test_constant_input_stays_at_dc_equilibrium\", \"path\": \"evas/validation/paper/test_coefficient_first_order.py\", \"sha256\": \"00714ea9e1756c3fd9d6aa5356dd6395dc8fd303756fad3806c3c462474f3bc0\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_coefficient_first_order.py\", \"module_sha256\": \"63a7a4bcc5ca20fc437a579bbe411844e5366e1d62f002f7e270eaa8016b9a04\", \"runtime_id\": \"test_coefficient_first_order.CoefficientFirstOrderCalibration.test_constant_input_stays_at_dc_equilibrium\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 22, \"name\": \"test_ramp_bounds_contain_hand_integrated_answer_and_reject_lagless_endpoint\", \"path\": \"evas/validation/paper/test_coefficient_first_order.py\", \"sha256\": \"bab2b4a5befbcc63a2b76d43abf2390124b8598f5dcd6c25de23760b46ed726f\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_coefficient_first_order.py\", \"module_sha256\": \"63a7a4bcc5ca20fc437a579bbe411844e5366e1d62f002f7e270eaa8016b9a04\", \"runtime_id\": \"test_coefficient_first_order.CoefficientFirstOrderCalibration.test_ramp_bounds_contain_hand_integrated_answer_and_reject_lagless_endpoint\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}], \"namespace\": \"validation\", \"schema_version\": 1, \"skipped_declarations\": 0, \"unresolved_instances\": []}\n",
+      "stderr": "",
+      "environment_overrides": {},
+      "actual_resolved_overrides": {},
+      "collection_profile": "inventory-child runtime; not original phase execution/skip results",
+      "original_python_equivalence": "major-minor-declared-only",
+      "sys_path_contract": "repository-cwd first, then literal phase PYTHONPATH; TestLoader adds start directory"
+    }
+  }
+}

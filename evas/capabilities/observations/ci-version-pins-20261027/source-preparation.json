@@ -1,0 +1,97 @@
+{
+  "prepared_at_utc": "2026-10-27T13:47:39.094513+00:00",
+  "base": "02dee32b2c9b25f166cbd77f8a895953e004f288",
+  "base_tree": "a68a89e1c145767f830fd5d602ab1be9f96b6b90",
+  "pin_script": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/apply_pins_a.py",
+  "pin_script_sha256": "6f829d90bf55e6830cface52a3e354786bac9dea840783e8818a6f52a48dfb09",
+  "test_sha256": "de70f901b0753cb068c908f1da5823acccebe1a72125812521c135f5fa1cc645",
+  "pin_sources": [
+    ".github/workflows/numerical-assurance.yml",
+    ".github/workflows/benchmark-evidence.yml",
+    ".github/workflows/package-install.yml",
+    "scripts/tests/test_ci_pins.py",
+    "scripts/capabilities/collect_ci_inventory.py",
+    "scripts/tests/test_ci_inventory.py"
+  ],
+  "files": {
+    ".github/workflows/numerical-assurance.yml": {
+      "before": "75da6ea8a3f0e7baa90b99388833ae2d757da66754b1d1dea3a8113d1fd1fa3b",
+      "after": "b2d897da3f8b794d4709849a0bd91bc1ada1b518513db06df60fcd9a705c1aaa"
+    },
+    ".github/workflows/benchmark-evidence.yml": {
+      "before": "327cdecad711de592e9b62ac858a6e7eb48fa5ea1fdeeada5d3bf551726ff827",
+      "after": "a1bce4e1a0dc7a62276839de3e6d98caa3a4cb0cb8cdfa325b6be722bc03ccb0"
+    },
+    ".github/workflows/package-install.yml": {
+      "before": "cdbeb49ac0676fc6c8a9f372753a96833fb4f60d9cdd3bbbb75d80ddcf1bd357",
+      "after": "d09f17ec5313406456eb8bbfe8be194fef6c3869d5c8a2a451b31ff589875c70"
+    },
+    "scripts/tests/test_ci_pins.py": {
+      "before": null,
+      "after": "de70f901b0753cb068c908f1da5823acccebe1a72125812521c135f5fa1cc645"
+    },
+    "scripts/capabilities/collect_ci_inventory.py": {
+      "before": "c395291c70775bad84664f7e201a7c9d3ad9f40219ff80d988a6ddc1be7e6a1e",
+      "after": "7031390d9ac27029d571805e4cecea5e417a71f06639ef01980b6c37b564fc45"
+    },
+    "scripts/tests/test_ci_inventory.py": {
+      "before": "c297e26c71e1ddce4875b909049d267b7afd67f0d9a6f67a79fc952b999ed7b6",
+      "after": "3e2b78fa28a06ef4689e15abd4b6253783e1e39308b238e5e75e152dddff4bf6"
+    }
+  },
+  "pre_render_checks": [
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "evas/capabilities/render.py"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/pre-render.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-27T13:44:42.006594+00:00",
+      "finished_at_utc": "2026-10-27T13:45:24.892458+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "scripts/traceability.py",
+        "--catalog-data",
+        "evas/capabilities/data"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/pre-traceability.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-27T13:45:24.892640+00:00",
+      "finished_at_utc": "2026-10-27T13:46:03.906943+00:00"
+    }
+  ],
+  "paths": [
+    ".github/workflows/benchmark-evidence.yml",
+    ".github/workflows/numerical-assurance.yml",
+    ".github/workflows/package-install.yml",
+    "scripts/capabilities/collect_ci_inventory.py",
+    "scripts/tests/test_ci_inventory.py",
+    "scripts/tests/test_ci_pins.py"
+  ],
+  "criteria_collector_language_unchanged": true,
+  "before": {
+    "head": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+    "index_sha256": "a2e18b66fd9b3e29093343793d45781c11a717c05c35103d4e9b1da8eec87d71",
+    "shared_config_sha256": "de2b08ef3ba66e96be8b70c87346ff4a96f905e1272934ddd86c218dba501ea8",
+    "shared_config_status": "equal-accepted-reference",
+    "old_candidates": 20
+  },
+  "after": {
+    "head": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+    "index_sha256": "a2e18b66fd9b3e29093343793d45781c11a717c05c35103d4e9b1da8eec87d71",
+    "shared_config_sha256": "de2b08ef3ba66e96be8b70c87346ff4a96f905e1272934ddd86c218dba501ea8",
+    "shared_config_status": "equal-accepted-reference",
+    "old_candidates": 20
+  },
+  "published": false,
+  "scientific_execution": false,
+  "semantic_qualification": false,
+  "executed_by": "tclaude/claude-opus-5-5"
+}

@@ -1,0 +1,1497 @@
+{
+  "entry": {
+    "workflow": ".github/workflows/numerical-assurance.yml",
+    "line": 228,
+    "job": "provenance-paper",
+    "step": "Paper contracts, observable criteria and table provenance",
+    "job_if": "needs.selection.outputs.provenance == 'true'",
+    "step_if": null,
+    "command": "python3 -B -m unittest discover -s experiments/backends/comparison -p 'test_*.py' -v",
+    "environment_overrides": {},
+    "declared_python_versions": [
+      "3.12.15"
+    ],
+    "start": "experiments/backends/comparison",
+    "pattern": "test_*.py",
+    "namespace": "validation",
+    "collector": "unittest",
+    "mode": "declared-ci-literal",
+    "purpose": "role-not-semantic-qualification",
+    "entry_id": "f41bfd52937150500c54cdff397f0670c3aa2c7bdfecf91517c151c670e4f18b"
+  },
+  "receipt": {
+    "collector": {
+      "definition_profile": "actual-code-or-registered-native-skip-v1",
+      "native_skip_authority": {
+        "factory_span_sha256": "a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad",
+        "profile": "registered-native-unittest-skip-v1",
+        "runtime_file_sha256": "45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987",
+        "runtime_source": "unittest/case.py",
+        "wrapper_span_sha256": "96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda"
+      },
+      "path": "scripts/capabilities/discover_methods.py",
+      "sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "source_relationship": "owned-source-root"
+    },
+    "complete": true,
+    "discovered_instances": 78,
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONPATH": null,
+      "bytecode_disabled": true,
+      "cache_tag": "cpython-312",
+      "environment_scope": "python-runtime-and-import-path-only",
+      "executable": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+      "implementation": "cpython",
+      "platform": "darwin",
+      "python_version": "3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]",
+      "sys_path_before_selected_imports": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/source",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python312.zip",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/lib/python3.12/site-packages"
+      ]
+    },
+    "error_count": 0,
+    "errors": [],
+    "loader_error_count": 0,
+    "methods": [
+      {
+        "definition": {
+          "line": 218,
+          "name": "test_frozen_bridge_and_tampering",
+          "path": "experiments/backends/comparison/test_completion.py",
+          "sha256": "5a30fae15af4d6d8c673e02f67637ae4f3357c3d378bf972d6a4e535c6577fa9"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_completion.py",
+        "module_sha256": "1f2fc588ddc3541f78ceb50b03491e0bd50afbddd0e4f8d37d6326d4d69f4ab6",
+        "runtime_id": "test_completion.CheckerReanalysisControls.test_frozen_bridge_and_tampering",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 236,
+          "name": "test_missing_fixed_git_objects_are_clear_rejections",
+          "path": "experiments/backends/comparison/test_completion.py",
+          "sha256": "3420c81aa7fff1421f2063c970735d9daaada42ffcd044235068f7b821d6fe58"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_completion.py",
+        "module_sha256": "1f2fc588ddc3541f78ceb50b03491e0bd50afbddd0e4f8d37d6326d4d69f4ab6",
+        "runtime_id": "test_completion.CheckerReanalysisControls.test_missing_fixed_git_objects_are_clear_rejections",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 209,
+          "name": "test_complete_failure_cannot_be_renamed_as_pass",
+          "path": "experiments/backends/comparison/test_completion.py",
+          "sha256": "7c734c5dd9b836c67c45f839b1bc087c8ce23be59bf05deeddb8a58d44a08925"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_completion.py",
+        "module_sha256": "1f2fc588ddc3541f78ceb50b03491e0bd50afbddd0e4f8d37d6326d4d69f4ab6",
+        "runtime_id": "test_completion.CompletionControls.test_complete_failure_cannot_be_renamed_as_pass",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 202,
+          "name": "test_completion_updated_is_bound_to_fresh",
+          "path": "experiments/backends/comparison/test_completion.py",
+          "sha256": "abbf724ab2492b145f7012e78c5e834aef593458f3ce308c38e4a6f46a00745b"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_completion.py",
+        "module_sha256": "1f2fc588ddc3541f78ceb50b03491e0bd50afbddd0e4f8d37d6326d4d69f4ab6",
+        "runtime_id": "test_completion.CompletionControls.test_completion_updated_is_bound_to_fresh",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 88,
+          "name": "test_fixed_checker_reanalysis_bridge_keeps_old_receipts",
+          "path": "experiments/backends/comparison/test_completion.py",
+          "sha256": "d90013d4fa0a5aaee86033d3fb07483e630e7247eec7fb34a55f1780de7cd45c"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_completion.py",
+        "module_sha256": "1f2fc588ddc3541f78ceb50b03491e0bd50afbddd0e4f8d37d6326d4d69f4ab6",
+        "runtime_id": "test_completion.CompletionControls.test_fixed_checker_reanalysis_bridge_keeps_old_receipts",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 163,
+          "name": "test_forged_tool_source_runtime_and_duplicate_run_are_rejected",
+          "path": "experiments/backends/comparison/test_completion.py",
+          "sha256": "6329693bc7889e25b5d123ce7c1aad7d476ab05100f6fbb3f03904a26968fbfe"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_completion.py",
+        "module_sha256": "1f2fc588ddc3541f78ceb50b03491e0bd50afbddd0e4f8d37d6326d4d69f4ab6",
+        "runtime_id": "test_completion.CompletionControls.test_forged_tool_source_runtime_and_duplicate_run_are_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 158,
+          "name": "test_incomplete_new_batch_is_rejected",
+          "path": "experiments/backends/comparison/test_completion.py",
+          "sha256": "d0045e6f7e8c5f52325ca531411a2b7a217d6cca0ae4e1fb27902dbbf78f27e1"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_completion.py",
+        "module_sha256": "1f2fc588ddc3541f78ceb50b03491e0bd50afbddd0e4f8d37d6326d4d69f4ab6",
+        "runtime_id": "test_completion.CompletionControls.test_incomplete_new_batch_is_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 68,
+          "name": "test_three_full_batches_retain_failed_case_and_parent_evidence",
+          "path": "experiments/backends/comparison/test_completion.py",
+          "sha256": "32ffe6719b0d610d5bd212da223d48110892adea3726b296db8e80bd9bdaad54"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_completion.py",
+        "module_sha256": "1f2fc588ddc3541f78ceb50b03491e0bd50afbddd0e4f8d37d6326d4d69f4ab6",
+        "runtime_id": "test_completion.CompletionControls.test_three_full_batches_retain_failed_case_and_parent_evidence",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 187,
+          "name": "test_transient_completion_archive_and_references_are_rejected",
+          "path": "experiments/backends/comparison/test_completion.py",
+          "sha256": "15a9dce258c8790c0aff8e5b1409a4baeff5471bee2e80904f5ce6208c72ae90"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_completion.py",
+        "module_sha256": "1f2fc588ddc3541f78ceb50b03491e0bd50afbddd0e4f8d37d6326d4d69f4ab6",
+        "runtime_id": "test_completion.CompletionControls.test_transient_completion_archive_and_references_are_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 69,
+          "name": "test_actual_c7_started_without_nanoseconds_remains_valid",
+          "path": "experiments/backends/comparison/test_glm_controls.py",
+          "sha256": "6fa60cc5a18609ef303c0087fb7fe595376c61ad539db9bb2903890dda5a3e88"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_glm_controls.py",
+        "module_sha256": "7a7b6b00e1451dbc67522da1e72cc6366af4797f24190ccf8bfd2345239049c7",
+        "runtime_id": "test_glm_controls.GlmControls.test_actual_c7_started_without_nanoseconds_remains_valid",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 81,
+          "name": "test_ingest_new_receipts_preserve_status_and_canonical_raw_availability",
+          "path": "experiments/backends/comparison/test_glm_controls.py",
+          "sha256": "3e02fa88073b3a15d33614eb2d17e89652d7b499f91481847590299d3546a3d2"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_glm_controls.py",
+        "module_sha256": "7a7b6b00e1451dbc67522da1e72cc6366af4797f24190ccf8bfd2345239049c7",
+        "runtime_id": "test_glm_controls.GlmControls.test_ingest_new_receipts_preserve_status_and_canonical_raw_availability",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 59,
+          "name": "test_plain_ingest_measurement_run_id_is_bound_to_started_receipt",
+          "path": "experiments/backends/comparison/test_glm_controls.py",
+          "sha256": "64ed81fd8795348f4cf499484951593f00e30b0e9bcd9ea42193306e61ce5246"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_glm_controls.py",
+        "module_sha256": "7a7b6b00e1451dbc67522da1e72cc6366af4797f24190ccf8bfd2345239049c7",
+        "runtime_id": "test_glm_controls.GlmControls.test_plain_ingest_measurement_run_id_is_bound_to_started_receipt",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 44,
+          "name": "test_seed_accepts_explicit_unsupported_and_missing_compile_artifact",
+          "path": "experiments/backends/comparison/test_glm_controls.py",
+          "sha256": "9b5ca81a06c4b5dd3c60b1f97523dc5450c030e9a821aee85304148191361aaf"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_glm_controls.py",
+        "module_sha256": "7a7b6b00e1451dbc67522da1e72cc6366af4797f24190ccf8bfd2345239049c7",
+        "runtime_id": "test_glm_controls.GlmControls.test_seed_accepts_explicit_unsupported_and_missing_compile_artifact",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 20,
+          "name": "test_worker_exit_failure_stays_simulate_and_missing_success_result_is_worker",
+          "path": "experiments/backends/comparison/test_glm_controls.py",
+          "sha256": "295afdbad8d7e7cf1ba436b9139061916c2ea928e160665cd37adfbe7a308fb3"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_glm_controls.py",
+        "module_sha256": "7a7b6b00e1451dbc67522da1e72cc6366af4797f24190ccf8bfd2345239049c7",
+        "runtime_id": "test_glm_controls.GlmControls.test_worker_exit_failure_stays_simulate_and_missing_success_result_is_worker",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 236,
+          "name": "test_exact_32_shared_dut_and_current_base_wrapper",
+          "path": "experiments/backends/comparison/test_records.py",
+          "sha256": "c1005c229a346664bb67892b4233c3a2189a338f10fa6c290261ce501b5a44f5"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_records.py",
+        "module_sha256": "ce064549e74d8d67df433235cdea73c452e3e0a266c4c86a05c3110308a719db",
+        "runtime_id": "test_records.FrozenBatchControls.test_exact_32_shared_dut_and_current_base_wrapper",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 128,
+          "name": "test_common_subset_units_and_budget_retained",
+          "path": "experiments/backends/comparison/test_records.py",
+          "sha256": "9a1b5e9698dc6a17ac9f5138a52482c77f64790b42c5afdeb2a1b48b5f3d6d40"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_records.py",
+        "module_sha256": "ce064549e74d8d67df433235cdea73c452e3e0a266c4c86a05c3110308a719db",
+        "runtime_id": "test_records.RecordControls.test_common_subset_units_and_budget_retained",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 49,
+          "name": "test_counts_round_trip_and_pending_unknown",
+          "path": "experiments/backends/comparison/test_records.py",
+          "sha256": "42411faa2fa2464491b62950ba074e9379c3e0ae60e7c261b4aff12dda311721"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_records.py",
+        "module_sha256": "ce064549e74d8d67df433235cdea73c452e3e0a266c4c86a05c3110308a719db",
+        "runtime_id": "test_records.RecordControls.test_counts_round_trip_and_pending_unknown",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 87,
+          "name": "test_denominator_shrinkage_rejected",
+          "path": "experiments/backends/comparison/test_records.py",
+          "sha256": "cab9b30e0fbc09d0411149a07d708a09cb607931c0057d70e97e29a2346502af"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_records.py",
+        "module_sha256": "ce064549e74d8d67df433235cdea73c452e3e0a266c4c86a05c3110308a719db",
+        "runtime_id": "test_records.RecordControls.test_denominator_shrinkage_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 111,
+          "name": "test_docs_only_reuse_needs_identity_and_justification",
+          "path": "experiments/backends/comparison/test_records.py",
+          "sha256": "0ac0e2945d6b6caf3dd0c502a222e6b7683ff0e17eaf56c4e500cf88ecc8d3c6"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_records.py",
+        "module_sha256": "ce064549e74d8d67df433235cdea73c452e3e0a266c4c86a05c3110308a719db",
+        "runtime_id": "test_records.RecordControls.test_docs_only_reuse_needs_identity_and_justification",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 82,
+          "name": "test_duplicate_case_assignment_rejected",
+          "path": "experiments/backends/comparison/test_records.py",
+          "sha256": "7de965195af925113fc978bb5022a1397ef143bdeb6992e7ef7598e2cadb255c"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_records.py",
+        "module_sha256": "ce064549e74d8d67df433235cdea73c452e3e0a266c4c86a05c3110308a719db",
+        "runtime_id": "test_records.RecordControls.test_duplicate_case_assignment_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 218,
+          "name": "test_fail_unknown_unsupported_and_unrun_distinct",
+          "path": "experiments/backends/comparison/test_records.py",
+          "sha256": "a294e42b902081c9ec3dd25399a2d74de576108977908fbd14cbe773c80e395c"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_records.py",
+        "module_sha256": "ce064549e74d8d67df433235cdea73c452e3e0a266c4c86a05c3110308a719db",
+        "runtime_id": "test_records.RecordControls.test_fail_unknown_unsupported_and_unrun_distinct",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 92,
+          "name": "test_missing_evidence_cannot_pass",
+          "path": "experiments/backends/comparison/test_records.py",
+          "sha256": "5a54809c6eccfdbd81f94c554fe0e288d4e2443199715d5f4dcc20f98cdd4cf4"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_records.py",
+        "module_sha256": "ce064549e74d8d67df433235cdea73c452e3e0a266c4c86a05c3110308a719db",
+        "runtime_id": "test_records.RecordControls.test_missing_evidence_cannot_pass",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 120,
+          "name": "test_missing_output_never_becomes_zero_error",
+          "path": "experiments/backends/comparison/test_records.py",
+          "sha256": "415c9eeba7688c6b7dd7e37293061cce151f9225cd7fbb2d1e8b2e97c8b09179"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_records.py",
+        "module_sha256": "ce064549e74d8d67df433235cdea73c452e3e0a266c4c86a05c3110308a719db",
+        "runtime_id": "test_records.RecordControls.test_missing_output_never_becomes_zero_error",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 198,
+          "name": "test_new_observation_requires_real_receipt_and_kernel",
+          "path": "experiments/backends/comparison/test_records.py",
+          "sha256": "bf48a6e9d85dd7ca7874086664b699808c382f98df795c5fa942de1f84631fba"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_records.py",
+        "module_sha256": "ce064549e74d8d67df433235cdea73c452e3e0a266c4c86a05c3110308a719db",
+        "runtime_id": "test_records.RecordControls.test_new_observation_requires_real_receipt_and_kernel",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 139,
+          "name": "test_nonfinite_or_zero_budget_rejected",
+          "path": "experiments/backends/comparison/test_records.py",
+          "sha256": "a4ce794d8720ccd29056ba843d50c8c13e1641ea890b93a63c9e726af2aada3e"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_records.py",
+        "module_sha256": "ce064549e74d8d67df433235cdea73c452e3e0a266c4c86a05c3110308a719db",
+        "runtime_id": "test_records.RecordControls.test_nonfinite_or_zero_budget_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 59,
+          "name": "test_pending_application_candidate_still_checks_frozen_source",
+          "path": "experiments/backends/comparison/test_records.py",
+          "sha256": "7d9425e285537d9d61fc4703f6b9d6787ecfbe2b2f4b10bd2a90fe1d4bf360c1"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_records.py",
+        "module_sha256": "ce064549e74d8d67df433235cdea73c452e3e0a266c4c86a05c3110308a719db",
+        "runtime_id": "test_records.RecordControls.test_pending_application_candidate_still_checks_frozen_source",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 146,
+          "name": "test_raw_absence_does_not_invalidate_compact_receipt",
+          "path": "experiments/backends/comparison/test_records.py",
+          "sha256": "ffdee855b8104bfb0b3dd7831a05396044097eee7944a250c162796636d6eb6d"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_records.py",
+        "module_sha256": "ce064549e74d8d67df433235cdea73c452e3e0a266c4c86a05c3110308a719db",
+        "runtime_id": "test_records.RecordControls.test_raw_absence_does_not_invalidate_compact_receipt",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 210,
+          "name": "test_receipt_bound_to_actual_configuration",
+          "path": "experiments/backends/comparison/test_records.py",
+          "sha256": "ea7317b252352ca76685346607ba55a82475255ca1edac7bd6c7ce7b0ef14257"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_records.py",
+        "module_sha256": "ce064549e74d8d67df433235cdea73c452e3e0a266c4c86a05c3110308a719db",
+        "runtime_id": "test_records.RecordControls.test_receipt_bound_to_actual_configuration",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 181,
+          "name": "test_receipt_tool_identity_must_match_measured_identity",
+          "path": "experiments/backends/comparison/test_records.py",
+          "sha256": "4c6728e7b8079366f589c11637b888d4ed502a5df98d09f27ae7b8cfec61695c"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_records.py",
+        "module_sha256": "ce064549e74d8d67df433235cdea73c452e3e0a266c4c86a05c3110308a719db",
+        "runtime_id": "test_records.RecordControls.test_receipt_tool_identity_must_match_measured_identity",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 97,
+          "name": "test_stage_failure_cannot_pass",
+          "path": "experiments/backends/comparison/test_records.py",
+          "sha256": "dfb241a61126e91161f1f79e683411c0614a7149c7ce97ee5a5c44558cf6aded"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_records.py",
+        "module_sha256": "ce064549e74d8d67df433235cdea73c452e3e0a266c4c86a05c3110308a719db",
+        "runtime_id": "test_records.RecordControls.test_stage_failure_cannot_pass",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 102,
+          "name": "test_stale_measurement_cannot_claim_latest",
+          "path": "experiments/backends/comparison/test_records.py",
+          "sha256": "13d355efff657c654146f146bcf92850f1d88fcd81c41e5a2489e0527f6e51e4"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_records.py",
+        "module_sha256": "ce064549e74d8d67df433235cdea73c452e3e0a266c4c86a05c3110308a719db",
+        "runtime_id": "test_records.RecordControls.test_stale_measurement_cannot_claim_latest",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 155,
+          "name": "test_unrun_cannot_contain_observations",
+          "path": "experiments/backends/comparison/test_records.py",
+          "sha256": "5363a260a1a3b530b4d75edd6a1a216dc4c0dd5fb6055305279bc72fb6414cf7"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_records.py",
+        "module_sha256": "ce064549e74d8d67df433235cdea73c452e3e0a266c4c86a05c3110308a719db",
+        "runtime_id": "test_records.RecordControls.test_unrun_cannot_contain_observations",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 172,
+          "name": "test_archived_manifest_and_receipt_run_id_cannot_drift",
+          "path": "experiments/backends/comparison/test_refresh.py",
+          "sha256": "6bbec743038d1e46dccb6e7e712eee4c1aeed96e761c3d0eec6a9633b7843c1b"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_refresh.py",
+        "module_sha256": "9f66c52415f5179fe94e9720d345a96ed6e62cf276944ac46dd0b321b7d1de72",
+        "runtime_id": "test_refresh.RefreshControls.test_archived_manifest_and_receipt_run_id_cannot_drift",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 132,
+          "name": "test_checker_drift_and_manifest_tampering_are_rejected",
+          "path": "experiments/backends/comparison/test_refresh.py",
+          "sha256": "f205afdae90da379f982cb545c0601718472aaf515964975e87e94af312bb8ca"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_refresh.py",
+        "module_sha256": "9f66c52415f5179fe94e9720d345a96ed6e62cf276944ac46dd0b321b7d1de72",
+        "runtime_id": "test_refresh.RefreshControls.test_checker_drift_and_manifest_tampering_are_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 182,
+          "name": "test_mixed_new_execution_identity_and_failed_grade_boundaries",
+          "path": "experiments/backends/comparison/test_refresh.py",
+          "sha256": "e1c33003df2d0a5e0137e90563aec8bf83f112efc7e907e430f373e6b4a4b6f2"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_refresh.py",
+        "module_sha256": "9f66c52415f5179fe94e9720d345a96ed6e62cf276944ac46dd0b321b7d1de72",
+        "runtime_id": "test_refresh.RefreshControls.test_mixed_new_execution_identity_and_failed_grade_boundaries",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 57,
+          "name": "test_named_receipt_reuse_is_a_valid_refresh_observation",
+          "path": "experiments/backends/comparison/test_refresh.py",
+          "sha256": "9b0fdb050abaff5fcc064f25899b0a3af11f9aab7da53d8ee5519fe18332865c"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_refresh.py",
+        "module_sha256": "9f66c52415f5179fe94e9720d345a96ed6e62cf276944ac46dd0b321b7d1de72",
+        "runtime_id": "test_refresh.RefreshControls.test_named_receipt_reuse_is_a_valid_refresh_observation",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 90,
+          "name": "test_new_receipt_reuse_and_current_evas_render_and_derive",
+          "path": "experiments/backends/comparison/test_refresh.py",
+          "sha256": "cc033e8d3f39e22a075b51af28f5db529f5436384441683b110c1cdd83aec2a9"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_refresh.py",
+        "module_sha256": "9f66c52415f5179fe94e9720d345a96ed6e62cf276944ac46dd0b321b7d1de72",
+        "runtime_id": "test_refresh.RefreshControls.test_new_receipt_reuse_and_current_evas_render_and_derive",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 211,
+          "name": "test_original_snapshots_and_matrix_reuse_stay_valid",
+          "path": "experiments/backends/comparison/test_refresh.py",
+          "sha256": "116514fbf23b8fda977da99647a507621101393b64a62e5afee415b52e594ff8"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_refresh.py",
+        "module_sha256": "9f66c52415f5179fe94e9720d345a96ed6e62cf276944ac46dd0b321b7d1de72",
+        "runtime_id": "test_refresh.RefreshControls.test_original_snapshots_and_matrix_reuse_stay_valid",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 78,
+          "name": "test_outer_new_identity_cannot_hide_old_executed_tool",
+          "path": "experiments/backends/comparison/test_refresh.py",
+          "sha256": "5d1bd6484b8e5ab3c4c6bc222c5c504fd263aa5609c7ebf64c98860f188beb27"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_refresh.py",
+        "module_sha256": "9f66c52415f5179fe94e9720d345a96ed6e62cf276944ac46dd0b321b7d1de72",
+        "runtime_id": "test_refresh.RefreshControls.test_outer_new_identity_cannot_hide_old_executed_tool",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 154,
+          "name": "test_parent_and_fresh_exact_configuration_boundaries",
+          "path": "experiments/backends/comparison/test_refresh.py",
+          "sha256": "3c31704264c8f080e0741d6b5e03d619e24f3bffe8ab43051374e3b30f0a247b"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_refresh.py",
+        "module_sha256": "9f66c52415f5179fe94e9720d345a96ed6e62cf276944ac46dd0b321b7d1de72",
+        "runtime_id": "test_refresh.RefreshControls.test_parent_and_fresh_exact_configuration_boundaries",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 117,
+          "name": "test_physical_deck_request_source_and_condition_changes_are_rejected",
+          "path": "experiments/backends/comparison/test_refresh.py",
+          "sha256": "898968182c96bf6aee2f0da07ada9e859ef74a3df44e6032b8dac472d6e8f277"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_refresh.py",
+        "module_sha256": "9f66c52415f5179fe94e9720d345a96ed6e62cf276944ac46dd0b321b7d1de72",
+        "runtime_id": "test_refresh.RefreshControls.test_physical_deck_request_source_and_condition_changes_are_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 140,
+          "name": "test_refreshed_snapshot_mutations_fail_full_validation",
+          "path": "experiments/backends/comparison/test_refresh.py",
+          "sha256": "623f24906eda525b4acebe62fb32d6b033de807424004f6dd90cc27384e45503"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_refresh.py",
+        "module_sha256": "9f66c52415f5179fe94e9720d345a96ed6e62cf276944ac46dd0b321b7d1de72",
+        "runtime_id": "test_refresh.RefreshControls.test_refreshed_snapshot_mutations_fail_full_validation",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 112,
+          "name": "test_archived_source_is_bound_to_original_revision_and_hash",
+          "path": "experiments/backends/comparison/test_review_controls.py",
+          "sha256": "714ed81f990659eedd19da05faf1e82bfaa47222deb1060b7fb93691b556cfed"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_review_controls.py",
+        "module_sha256": "625942af5d2c271ca607638d4d7ea5880138edef706d7955d5255aa975605ff7",
+        "runtime_id": "test_review_controls.ReviewControls.test_archived_source_is_bound_to_original_revision_and_hash",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 129,
+          "name": "test_common_aggregate_uses_maximum_of_both_v2_normalized_properties",
+          "path": "experiments/backends/comparison/test_review_controls.py",
+          "sha256": "36f451d8d89c8dc4dcacf910b28b9ee300e1d0649796236c0effc7334374d56d"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_review_controls.py",
+        "module_sha256": "625942af5d2c271ca607638d4d7ea5880138edef706d7955d5255aa975605ff7",
+        "runtime_id": "test_review_controls.ReviewControls.test_common_aggregate_uses_maximum_of_both_v2_normalized_properties",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 150,
+          "name": "test_deriving_old_snapshot_survives_real_base1006_checker_drift",
+          "path": "experiments/backends/comparison/test_review_controls.py",
+          "sha256": "6636c4d6d7eea115ba3e125b7f5de2a4148ee88b32d3da95a6a3b2e3afacaef0"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_review_controls.py",
+        "module_sha256": "625942af5d2c271ca607638d4d7ea5880138edef706d7955d5255aa975605ff7",
+        "runtime_id": "test_review_controls.ReviewControls.test_deriving_old_snapshot_survives_real_base1006_checker_drift",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 42,
+          "name": "test_historical_candidate_survives_real_checker_fix_blob",
+          "path": "experiments/backends/comparison/test_review_controls.py",
+          "sha256": "75980c1717685dce049efe3344f1810c6443311fc16bea32adccfa8ddd33f12c"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_review_controls.py",
+        "module_sha256": "625942af5d2c271ca607638d4d7ea5880138edef706d7955d5255aa975605ff7",
+        "runtime_id": "test_review_controls.ReviewControls.test_historical_candidate_survives_real_checker_fix_blob",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 61,
+          "name": "test_legacy_v2_metric_is_explicitly_excluded_from_rendered_common_subset",
+          "path": "experiments/backends/comparison/test_review_controls.py",
+          "sha256": "54930054f9e7ef43215a4604f03cf978951b67b8d6a6178c53a9a84abc1adf7d"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_review_controls.py",
+        "module_sha256": "625942af5d2c271ca607638d4d7ea5880138edef706d7955d5255aa975605ff7",
+        "runtime_id": "test_review_controls.ReviewControls.test_legacy_v2_metric_is_explicitly_excluded_from_rendered_common_subset",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 22,
+          "name": "test_metric_is_bound_to_receipt_observation_and_budget",
+          "path": "experiments/backends/comparison/test_review_controls.py",
+          "sha256": "9a0ae01c1b16b9ba6ac6985e5b2420cb0c5d6a61f2515ffbcf227d0ba5209a89"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_review_controls.py",
+        "module_sha256": "625942af5d2c271ca607638d4d7ea5880138edef706d7955d5255aa975605ff7",
+        "runtime_id": "test_review_controls.ReviewControls.test_metric_is_bound_to_receipt_observation_and_budget",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 97,
+          "name": "test_old_and_derived_snapshots_survive_base1006_combination",
+          "path": "experiments/backends/comparison/test_review_controls.py",
+          "sha256": "bf8759583b06626716a7d55f0f983f207edd2b5c63019151fcad28e5e0877d7f"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_review_controls.py",
+        "module_sha256": "625942af5d2c271ca607638d4d7ea5880138edef706d7955d5255aa975605ff7",
+        "runtime_id": "test_review_controls.ReviewControls.test_old_and_derived_snapshots_survive_base1006_combination",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 14,
+          "name": "test_reused_verdict_is_bound_to_named_matrix_observation",
+          "path": "experiments/backends/comparison/test_review_controls.py",
+          "sha256": "a6904b18323c18ce973de4e98df44a9a7bb18a8ddca6909d49604cc74966e3fc"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_review_controls.py",
+        "module_sha256": "625942af5d2c271ca607638d4d7ea5880138edef706d7955d5255aa975605ff7",
+        "runtime_id": "test_review_controls.ReviewControls.test_reused_verdict_is_bound_to_named_matrix_observation",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 69,
+          "name": "test_schema2_binds_every_actual_observation_and_retains_launch_count",
+          "path": "experiments/backends/comparison/test_review_controls.py",
+          "sha256": "edd29fcc8530db820da4cbb4deafc5cc366b241ceda134951e22d0ea476b3227"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_review_controls.py",
+        "module_sha256": "625942af5d2c271ca607638d4d7ea5880138edef706d7955d5255aa975605ff7",
+        "runtime_id": "test_review_controls.ReviewControls.test_schema2_binds_every_actual_observation_and_retains_launch_count",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 83,
+          "name": "test_schema2_mutations_cannot_change_normalized_properties",
+          "path": "experiments/backends/comparison/test_review_controls.py",
+          "sha256": "5025a8d2879bb9403ea6947b97c9463554f3fb77046c7016f8041cc3882b8ff1"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_review_controls.py",
+        "module_sha256": "625942af5d2c271ca607638d4d7ea5880138edef706d7955d5255aa975605ff7",
+        "runtime_id": "test_review_controls.ReviewControls.test_schema2_mutations_cannot_change_normalized_properties",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 143,
+          "name": "test_static_derivation_cannot_relabel_original_execution_identity",
+          "path": "experiments/backends/comparison/test_review_controls.py",
+          "sha256": "d5daa7c073c40013f36812c531f79cf835e79c7be7e1430f4dc39a22d10f0e0d"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_review_controls.py",
+        "module_sha256": "625942af5d2c271ca607638d4d7ea5880138edef706d7955d5255aa975605ff7",
+        "runtime_id": "test_review_controls.ReviewControls.test_static_derivation_cannot_relabel_original_execution_identity",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 31,
+          "name": "test_v2_differential_and_common_mode_have_separate_budgets",
+          "path": "experiments/backends/comparison/test_review_controls.py",
+          "sha256": "7fb7ba63f738e9180eec805abc2d22480a1a437cddc80ec06529f97b67a2ec65"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_review_controls.py",
+        "module_sha256": "625942af5d2c271ca607638d4d7ea5880138edef706d7955d5255aa975605ff7",
+        "runtime_id": "test_review_controls.ReviewControls.test_v2_differential_and_common_mode_have_separate_budgets",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 50,
+          "name": "test_v2_independent_differential_and_common_mode_failures",
+          "path": "experiments/backends/comparison/test_review_controls.py",
+          "sha256": "1fc3c56f40cfe63807216cc75f86f8cf2ade204a295e85e6b34ac4013eebc838"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_review_controls.py",
+        "module_sha256": "625942af5d2c271ca607638d4d7ea5880138edef706d7955d5255aa975605ff7",
+        "runtime_id": "test_review_controls.ReviewControls.test_v2_independent_differential_and_common_mode_failures",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 44,
+          "name": "test_checker_drift_prevents_any_launch",
+          "path": "experiments/backends/comparison/test_runner.py",
+          "sha256": "0a96083663128e1e8f6eb9ca1f05558eedf33d8231377d5f4a0c4994adb12a61"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_runner.py",
+        "module_sha256": "fd2a624dbd50dc768d7ee44d638444eaa64ea6ca44b472f751a47a27d57976dc",
+        "runtime_id": "test_runner.RunnerControls.test_checker_drift_prevents_any_launch",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 121,
+          "name": "test_environment_image_inspection_has_bounded_timeout",
+          "path": "experiments/backends/comparison/test_runner.py",
+          "sha256": "8b0ccca775c49abb7b48922b7940118217cbc67eaedb04e8047be8bb06b4ceed"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_runner.py",
+        "module_sha256": "fd2a624dbd50dc768d7ee44d638444eaa64ea6ca44b472f751a47a27d57976dc",
+        "runtime_id": "test_runner.RunnerControls.test_environment_image_inspection_has_bounded_timeout",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 32,
+          "name": "test_input_drift_prevents_any_launch",
+          "path": "experiments/backends/comparison/test_runner.py",
+          "sha256": "e33f03d63881cc1e4a2f9ccdcfe54786110510b3dee90d0ff534443f4929890b"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_runner.py",
+        "module_sha256": "fd2a624dbd50dc768d7ee44d638444eaa64ea6ca44b472f751a47a27d57976dc",
+        "runtime_id": "test_runner.RunnerControls.test_input_drift_prevents_any_launch",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 96,
+          "name": "test_invalid_selected_kernel_identity_prevents_simulation",
+          "path": "experiments/backends/comparison/test_runner.py",
+          "sha256": "625a3fa3e2f8e9ac1a0b6b95a87db843a6eb8e0d72519c8302d949cb5b637e4d"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_runner.py",
+        "module_sha256": "fd2a624dbd50dc768d7ee44d638444eaa64ea6ca44b472f751a47a27d57976dc",
+        "runtime_id": "test_runner.RunnerControls.test_invalid_selected_kernel_identity_prevents_simulation",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 67,
+          "name": "test_selected_kernel_identity_is_recorded_before_simulation",
+          "path": "experiments/backends/comparison/test_runner.py",
+          "sha256": "82bcf69e9f434898902a44ef8e864fe7e74805d6cce1dcfa4c48c98e90a90f2e"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_runner.py",
+        "module_sha256": "fd2a624dbd50dc768d7ee44d638444eaa64ea6ca44b472f751a47a27d57976dc",
+        "runtime_id": "test_runner.RunnerControls.test_selected_kernel_identity_is_recorded_before_simulation",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 12,
+          "name": "test_shared_scientific_source_change_invalidates_checker_identity",
+          "path": "experiments/backends/comparison/test_runner.py",
+          "sha256": "d7b4a8ab8875c23942bda8a177fa83f3d67c26a576b248e8e6800572efc8560c"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_runner.py",
+        "module_sha256": "fd2a624dbd50dc768d7ee44d638444eaa64ea6ca44b472f751a47a27d57976dc",
+        "runtime_id": "test_runner.RunnerControls.test_shared_scientific_source_change_invalidates_checker_identity",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 53,
+          "name": "test_spectre_settings_uses_exact_module_despite_name_collision",
+          "path": "experiments/backends/comparison/test_runner.py",
+          "sha256": "9262a22cc8325333d72b27d73105b6026c3474242e6f9030971a5b65daa60929"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_runner.py",
+        "module_sha256": "fd2a624dbd50dc768d7ee44d638444eaa64ea6ca44b472f751a47a27d57976dc",
+        "runtime_id": "test_runner.RunnerControls.test_spectre_settings_uses_exact_module_despite_name_collision",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 147,
+          "name": "test_timeout_records_failure_and_never_retries",
+          "path": "experiments/backends/comparison/test_runner.py",
+          "sha256": "2f02c53270fa7d5bd7117b005d469cca67fed7f7cf9f0af44784d9d4391a5309"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_runner.py",
+        "module_sha256": "fd2a624dbd50dc768d7ee44d638444eaa64ea6ca44b472f751a47a27d57976dc",
+        "runtime_id": "test_runner.RunnerControls.test_timeout_records_failure_and_never_retries",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 201,
+          "name": "test_legacy_continuation_without_worker_contract_to_actual_ingest",
+          "path": "experiments/backends/comparison/test_worker_adapter.py",
+          "sha256": "e8943ecd37efe022fb0f3ac83b99f8f5fea99b4fae5aacc8dce660c966222815"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_worker_adapter.py",
+        "module_sha256": "653fefd7133825d6f805c8ab86c55f4a0dda630f8fa1e3535117cc37df1c7d76",
+        "runtime_id": "test_worker_adapter.ContinuationIngestControls.test_legacy_continuation_without_worker_contract_to_actual_ingest",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 198,
+          "name": "test_legacy_execution_to_actual_ingest",
+          "path": "experiments/backends/comparison/test_worker_adapter.py",
+          "sha256": "94b749a5999c4d9e25ac617884b33bf3ee18a6727bb33201557ee26e3e29129b"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_worker_adapter.py",
+        "module_sha256": "653fefd7133825d6f805c8ab86c55f4a0dda630f8fa1e3535117cc37df1c7d76",
+        "runtime_id": "test_worker_adapter.ContinuationIngestControls.test_legacy_execution_to_actual_ingest",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 195,
+          "name": "test_new_execution_to_actual_ingest",
+          "path": "experiments/backends/comparison/test_worker_adapter.py",
+          "sha256": "72883f2509cce57a1b53f72b3b0b3683461936b362dc737dac0bc0fd259a4324"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_worker_adapter.py",
+        "module_sha256": "653fefd7133825d6f805c8ab86c55f4a0dda630f8fa1e3535117cc37df1c7d76",
+        "runtime_id": "test_worker_adapter.ContinuationIngestControls.test_new_execution_to_actual_ingest",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 204,
+          "name": "test_resume_rejects_missing_analysis_workers",
+          "path": "experiments/backends/comparison/test_worker_adapter.py",
+          "sha256": "be9250647410916282b0b957ea7e57c5dc0dbc0dcc7795f3602f8ac6e8f129c1"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_worker_adapter.py",
+        "module_sha256": "653fefd7133825d6f805c8ab86c55f4a0dda630f8fa1e3535117cc37df1c7d76",
+        "runtime_id": "test_worker_adapter.ContinuationIngestControls.test_resume_rejects_missing_analysis_workers",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 219,
+          "name": "test_resume_rejects_missing_continuation",
+          "path": "experiments/backends/comparison/test_worker_adapter.py",
+          "sha256": "089d9eec538721d4cdaa6ac04c9a3bee53e2c3c9a1845532fe57fb17f28be667"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_worker_adapter.py",
+        "module_sha256": "653fefd7133825d6f805c8ab86c55f4a0dda630f8fa1e3535117cc37df1c7d76",
+        "runtime_id": "test_worker_adapter.ContinuationIngestControls.test_resume_rejects_missing_continuation",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 222,
+          "name": "test_resume_rejects_unknown_analysis_contract",
+          "path": "experiments/backends/comparison/test_worker_adapter.py",
+          "sha256": "74f271ce72f1097e37b36002ce67b582e1250f4dc8fd0c7826a3e7e309a83e1c"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_worker_adapter.py",
+        "module_sha256": "653fefd7133825d6f805c8ab86c55f4a0dda630f8fa1e3535117cc37df1c7d76",
+        "runtime_id": "test_worker_adapter.ContinuationIngestControls.test_resume_rejects_unknown_analysis_contract",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 210,
+          "name": "test_resume_rejects_unknown_extra_dependency",
+          "path": "experiments/backends/comparison/test_worker_adapter.py",
+          "sha256": "5d3d865c8ffddb7eccb30d5d810f618c6e2854aa95d753d374638faad405fdf9"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_worker_adapter.py",
+        "module_sha256": "653fefd7133825d6f805c8ab86c55f4a0dda630f8fa1e3535117cc37df1c7d76",
+        "runtime_id": "test_worker_adapter.ContinuationIngestControls.test_resume_rejects_unknown_extra_dependency",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 216,
+          "name": "test_resume_rejects_wrong_analysis_runner_digest",
+          "path": "experiments/backends/comparison/test_worker_adapter.py",
+          "sha256": "c3b992cba5c221cf564414abd9ec02ad5eaaf6b4da0b30a85a3c85e0eb582447"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_worker_adapter.py",
+        "module_sha256": "653fefd7133825d6f805c8ab86c55f4a0dda630f8fa1e3535117cc37df1c7d76",
+        "runtime_id": "test_worker_adapter.ContinuationIngestControls.test_resume_rejects_wrong_analysis_runner_digest",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 207,
+          "name": "test_resume_rejects_wrong_analysis_worker_digest",
+          "path": "experiments/backends/comparison/test_worker_adapter.py",
+          "sha256": "2689cbf30b477ad23b81a691b78f7e628080ef1e6f91874029b4315151edd64f"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_worker_adapter.py",
+        "module_sha256": "653fefd7133825d6f805c8ab86c55f4a0dda630f8fa1e3535117cc37df1c7d76",
+        "runtime_id": "test_worker_adapter.ContinuationIngestControls.test_resume_rejects_wrong_analysis_worker_digest",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 213,
+          "name": "test_resume_rejects_wrong_started_digest",
+          "path": "experiments/backends/comparison/test_worker_adapter.py",
+          "sha256": "2ed6a0e15bf512c93a9281d7a99e4f947139c6ba8508805679386c1c09e0b6d4"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_worker_adapter.py",
+        "module_sha256": "653fefd7133825d6f805c8ab86c55f4a0dda630f8fa1e3535117cc37df1c7d76",
+        "runtime_id": "test_worker_adapter.ContinuationIngestControls.test_resume_rejects_wrong_started_digest",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 192,
+          "name": "test_resume_to_actual_ingest_preserves_started_and_binds_analysis",
+          "path": "experiments/backends/comparison/test_worker_adapter.py",
+          "sha256": "f275480031250c0ce2a6fe9110616a7a41745d188d07949903c754760893d9c7"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_worker_adapter.py",
+        "module_sha256": "653fefd7133825d6f805c8ab86c55f4a0dda630f8fa1e3535117cc37df1c7d76",
+        "runtime_id": "test_worker_adapter.ContinuationIngestControls.test_resume_to_actual_ingest_preserves_started_and_binds_analysis",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 47,
+          "name": "test_archive_closure_old_new_and_missing_or_changed",
+          "path": "experiments/backends/comparison/test_worker_adapter.py",
+          "sha256": "826f7b23a7bf406772877896605a00dbd3e04b2083f3ca7d71c05ee8e5b6b802"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_worker_adapter.py",
+        "module_sha256": "653fefd7133825d6f805c8ab86c55f4a0dda630f8fa1e3535117cc37df1c7d76",
+        "runtime_id": "test_worker_adapter.WorkerAdapterControls.test_archive_closure_old_new_and_missing_or_changed",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 19,
+          "name": "test_contract_uses_audited_source_not_file_presence",
+          "path": "experiments/backends/comparison/test_worker_adapter.py",
+          "sha256": "57c41e9d0c6acc0521418fb496016aac6db29b5b988da108d2a3fbf7b92d3cbc"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_worker_adapter.py",
+        "module_sha256": "653fefd7133825d6f805c8ab86c55f4a0dda630f8fa1e3535117cc37df1c7d76",
+        "runtime_id": "test_worker_adapter.WorkerAdapterControls.test_contract_uses_audited_source_not_file_presence",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 13,
+          "name": "test_legacy_worker_dispatches_original_root",
+          "path": "experiments/backends/comparison/test_worker_adapter.py",
+          "sha256": "7bd292117e7f7a437d3f039b0f8e64d2bbccbece912b6ae4593940b22e9275ba"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_worker_adapter.py",
+        "module_sha256": "653fefd7133825d6f805c8ab86c55f4a0dda630f8fa1e3535117cc37df1c7d76",
+        "runtime_id": "test_worker_adapter.WorkerAdapterControls.test_legacy_worker_dispatches_original_root",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 28,
+          "name": "test_runtime_identity_binds_adapter_and_rejects_missing",
+          "path": "experiments/backends/comparison/test_worker_adapter.py",
+          "sha256": "9f5e82ebdbe990c8b76ea072ecc2d5ccdf43c4e1cb9e8993b0d78b0c3db85d1d"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/comparison/test_worker_adapter.py",
+        "module_sha256": "653fefd7133825d6f805c8ab86c55f4a0dda630f8fa1e3535117cc37df1c7d76",
+        "runtime_id": "test_worker_adapter.WorkerAdapterControls.test_runtime_identity_binds_adapter_and_rejects_missing",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      }
+    ],
+    "namespace": "validation",
+    "schema_version": 1,
+    "skipped_declarations": 0,
+    "unresolved_instances": [],
+    "transport": {
+      "argv": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-c",
+        "import os,runpy,sys; sys.path[0]=os.getcwd(); tool=sys.argv[1]; sys.argv=sys.argv[1:]; runpy.run_path(tool,run_name=\"__main__\")",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/source/scripts/capabilities/discover_methods.py",
+        "--worker",
+        "--root",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/source",
+        "--start",
+        "experiments/backends/comparison",
+        "--pattern",
+        "test_*.py",
+        "--namespace",
+        "validation"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/source",
+      "returncode": 0,
+      "stdout": "{\"collector\": {\"definition_profile\": \"actual-code-or-registered-native-skip-v1\", \"native_skip_authority\": {\"factory_span_sha256\": \"a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad\", \"profile\": \"registered-native-unittest-skip-v1\", \"runtime_file_sha256\": \"45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987\", \"runtime_source\": \"unittest/case.py\", \"wrapper_span_sha256\": \"96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda\"}, \"path\": \"scripts/capabilities/discover_methods.py\", \"sha256\": \"aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17\", \"source_relationship\": \"owned-source-root\"}, \"complete\": true, \"discovered_instances\": 78, \"environment\": {\"PYTHONDONTWRITEBYTECODE\": \"1\", \"PYTHONPATH\": null, \"bytecode_disabled\": true, \"cache_tag\": \"cpython-312\", \"environment_scope\": \"python-runtime-and-import-path-only\", \"executable\": \"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python\", \"implementation\": \"cpython\", \"platform\": \"darwin\", \"python_version\": \"3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"sys_path_before_selected_imports\": [\"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/source\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python312.zip\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload\", \"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/lib/python3.12/site-packages\"]}, \"error_count\": 0, \"errors\": [], \"loader_error_count\": 0, \"methods\": [{\"definition\": {\"line\": 218, \"name\": \"test_frozen_bridge_and_tampering\", \"path\": \"experiments/backends/comparison/test_completion.py\", \"sha256\": \"5a30fae15af4d6d8c673e02f67637ae4f3357c3d378bf972d6a4e535c6577fa9\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_completion.py\", \"module_sha256\": \"1f2fc588ddc3541f78ceb50b03491e0bd50afbddd0e4f8d37d6326d4d69f4ab6\", \"runtime_id\": \"test_completion.CheckerReanalysisControls.test_frozen_bridge_and_tampering\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 236, \"name\": \"test_missing_fixed_git_objects_are_clear_rejections\", \"path\": \"experiments/backends/comparison/test_completion.py\", \"sha256\": \"3420c81aa7fff1421f2063c970735d9daaada42ffcd044235068f7b821d6fe58\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_completion.py\", \"module_sha256\": \"1f2fc588ddc3541f78ceb50b03491e0bd50afbddd0e4f8d37d6326d4d69f4ab6\", \"runtime_id\": \"test_completion.CheckerReanalysisControls.test_missing_fixed_git_objects_are_clear_rejections\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 209, \"name\": \"test_complete_failure_cannot_be_renamed_as_pass\", \"path\": \"experiments/backends/comparison/test_completion.py\", \"sha256\": \"7c734c5dd9b836c67c45f839b1bc087c8ce23be59bf05deeddb8a58d44a08925\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_completion.py\", \"module_sha256\": \"1f2fc588ddc3541f78ceb50b03491e0bd50afbddd0e4f8d37d6326d4d69f4ab6\", \"runtime_id\": \"test_completion.CompletionControls.test_complete_failure_cannot_be_renamed_as_pass\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 202, \"name\": \"test_completion_updated_is_bound_to_fresh\", \"path\": \"experiments/backends/comparison/test_completion.py\", \"sha256\": \"abbf724ab2492b145f7012e78c5e834aef593458f3ce308c38e4a6f46a00745b\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_completion.py\", \"module_sha256\": \"1f2fc588ddc3541f78ceb50b03491e0bd50afbddd0e4f8d37d6326d4d69f4ab6\", \"runtime_id\": \"test_completion.CompletionControls.test_completion_updated_is_bound_to_fresh\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 88, \"name\": \"test_fixed_checker_reanalysis_bridge_keeps_old_receipts\", \"path\": \"experiments/backends/comparison/test_completion.py\", \"sha256\": \"d90013d4fa0a5aaee86033d3fb07483e630e7247eec7fb34a55f1780de7cd45c\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_completion.py\", \"module_sha256\": \"1f2fc588ddc3541f78ceb50b03491e0bd50afbddd0e4f8d37d6326d4d69f4ab6\", \"runtime_id\": \"test_completion.CompletionControls.test_fixed_checker_reanalysis_bridge_keeps_old_receipts\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 163, \"name\": \"test_forged_tool_source_runtime_and_duplicate_run_are_rejected\", \"path\": \"experiments/backends/comparison/test_completion.py\", \"sha256\": \"6329693bc7889e25b5d123ce7c1aad7d476ab05100f6fbb3f03904a26968fbfe\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_completion.py\", \"module_sha256\": \"1f2fc588ddc3541f78ceb50b03491e0bd50afbddd0e4f8d37d6326d4d69f4ab6\", \"runtime_id\": \"test_completion.CompletionControls.test_forged_tool_source_runtime_and_duplicate_run_are_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 158, \"name\": \"test_incomplete_new_batch_is_rejected\", \"path\": \"experiments/backends/comparison/test_completion.py\", \"sha256\": \"d0045e6f7e8c5f52325ca531411a2b7a217d6cca0ae4e1fb27902dbbf78f27e1\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_completion.py\", \"module_sha256\": \"1f2fc588ddc3541f78ceb50b03491e0bd50afbddd0e4f8d37d6326d4d69f4ab6\", \"runtime_id\": \"test_completion.CompletionControls.test_incomplete_new_batch_is_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 68, \"name\": \"test_three_full_batches_retain_failed_case_and_parent_evidence\", \"path\": \"experiments/backends/comparison/test_completion.py\", \"sha256\": \"32ffe6719b0d610d5bd212da223d48110892adea3726b296db8e80bd9bdaad54\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_completion.py\", \"module_sha256\": \"1f2fc588ddc3541f78ceb50b03491e0bd50afbddd0e4f8d37d6326d4d69f4ab6\", \"runtime_id\": \"test_completion.CompletionControls.test_three_full_batches_retain_failed_case_and_parent_evidence\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 187, \"name\": \"test_transient_completion_archive_and_references_are_rejected\", \"path\": \"experiments/backends/comparison/test_completion.py\", \"sha256\": \"15a9dce258c8790c0aff8e5b1409a4baeff5471bee2e80904f5ce6208c72ae90\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_completion.py\", \"module_sha256\": \"1f2fc588ddc3541f78ceb50b03491e0bd50afbddd0e4f8d37d6326d4d69f4ab6\", \"runtime_id\": \"test_completion.CompletionControls.test_transient_completion_archive_and_references_are_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 69, \"name\": \"test_actual_c7_started_without_nanoseconds_remains_valid\", \"path\": \"experiments/backends/comparison/test_glm_controls.py\", \"sha256\": \"6fa60cc5a18609ef303c0087fb7fe595376c61ad539db9bb2903890dda5a3e88\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_glm_controls.py\", \"module_sha256\": \"7a7b6b00e1451dbc67522da1e72cc6366af4797f24190ccf8bfd2345239049c7\", \"runtime_id\": \"test_glm_controls.GlmControls.test_actual_c7_started_without_nanoseconds_remains_valid\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 81, \"name\": \"test_ingest_new_receipts_preserve_status_and_canonical_raw_availability\", \"path\": \"experiments/backends/comparison/test_glm_controls.py\", \"sha256\": \"3e02fa88073b3a15d33614eb2d17e89652d7b499f91481847590299d3546a3d2\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_glm_controls.py\", \"module_sha256\": \"7a7b6b00e1451dbc67522da1e72cc6366af4797f24190ccf8bfd2345239049c7\", \"runtime_id\": \"test_glm_controls.GlmControls.test_ingest_new_receipts_preserve_status_and_canonical_raw_availability\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 59, \"name\": \"test_plain_ingest_measurement_run_id_is_bound_to_started_receipt\", \"path\": \"experiments/backends/comparison/test_glm_controls.py\", \"sha256\": \"64ed81fd8795348f4cf499484951593f00e30b0e9bcd9ea42193306e61ce5246\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_glm_controls.py\", \"module_sha256\": \"7a7b6b00e1451dbc67522da1e72cc6366af4797f24190ccf8bfd2345239049c7\", \"runtime_id\": \"test_glm_controls.GlmControls.test_plain_ingest_measurement_run_id_is_bound_to_started_receipt\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 44, \"name\": \"test_seed_accepts_explicit_unsupported_and_missing_compile_artifact\", \"path\": \"experiments/backends/comparison/test_glm_controls.py\", \"sha256\": \"9b5ca81a06c4b5dd3c60b1f97523dc5450c030e9a821aee85304148191361aaf\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_glm_controls.py\", \"module_sha256\": \"7a7b6b00e1451dbc67522da1e72cc6366af4797f24190ccf8bfd2345239049c7\", \"runtime_id\": \"test_glm_controls.GlmControls.test_seed_accepts_explicit_unsupported_and_missing_compile_artifact\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 20, \"name\": \"test_worker_exit_failure_stays_simulate_and_missing_success_result_is_worker\", \"path\": \"experiments/backends/comparison/test_glm_controls.py\", \"sha256\": \"295afdbad8d7e7cf1ba436b9139061916c2ea928e160665cd37adfbe7a308fb3\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_glm_controls.py\", \"module_sha256\": \"7a7b6b00e1451dbc67522da1e72cc6366af4797f24190ccf8bfd2345239049c7\", \"runtime_id\": \"test_glm_controls.GlmControls.test_worker_exit_failure_stays_simulate_and_missing_success_result_is_worker\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 236, \"name\": \"test_exact_32_shared_dut_and_current_base_wrapper\", \"path\": \"experiments/backends/comparison/test_records.py\", \"sha256\": \"c1005c229a346664bb67892b4233c3a2189a338f10fa6c290261ce501b5a44f5\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_records.py\", \"module_sha256\": \"ce064549e74d8d67df433235cdea73c452e3e0a266c4c86a05c3110308a719db\", \"runtime_id\": \"test_records.FrozenBatchControls.test_exact_32_shared_dut_and_current_base_wrapper\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 128, \"name\": \"test_common_subset_units_and_budget_retained\", \"path\": \"experiments/backends/comparison/test_records.py\", \"sha256\": \"9a1b5e9698dc6a17ac9f5138a52482c77f64790b42c5afdeb2a1b48b5f3d6d40\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_records.py\", \"module_sha256\": \"ce064549e74d8d67df433235cdea73c452e3e0a266c4c86a05c3110308a719db\", \"runtime_id\": \"test_records.RecordControls.test_common_subset_units_and_budget_retained\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 49, \"name\": \"test_counts_round_trip_and_pending_unknown\", \"path\": \"experiments/backends/comparison/test_records.py\", \"sha256\": \"42411faa2fa2464491b62950ba074e9379c3e0ae60e7c261b4aff12dda311721\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_records.py\", \"module_sha256\": \"ce064549e74d8d67df433235cdea73c452e3e0a266c4c86a05c3110308a719db\", \"runtime_id\": \"test_records.RecordControls.test_counts_round_trip_and_pending_unknown\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 87, \"name\": \"test_denominator_shrinkage_rejected\", \"path\": \"experiments/backends/comparison/test_records.py\", \"sha256\": \"cab9b30e0fbc09d0411149a07d708a09cb607931c0057d70e97e29a2346502af\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_records.py\", \"module_sha256\": \"ce064549e74d8d67df433235cdea73c452e3e0a266c4c86a05c3110308a719db\", \"runtime_id\": \"test_records.RecordControls.test_denominator_shrinkage_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 111, \"name\": \"test_docs_only_reuse_needs_identity_and_justification\", \"path\": \"experiments/backends/comparison/test_records.py\", \"sha256\": \"0ac0e2945d6b6caf3dd0c502a222e6b7683ff0e17eaf56c4e500cf88ecc8d3c6\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_records.py\", \"module_sha256\": \"ce064549e74d8d67df433235cdea73c452e3e0a266c4c86a05c3110308a719db\", \"runtime_id\": \"test_records.RecordControls.test_docs_only_reuse_needs_identity_and_justification\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 82, \"name\": \"test_duplicate_case_assignment_rejected\", \"path\": \"experiments/backends/comparison/test_records.py\", \"sha256\": \"7de965195af925113fc978bb5022a1397ef143bdeb6992e7ef7598e2cadb255c\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_records.py\", \"module_sha256\": \"ce064549e74d8d67df433235cdea73c452e3e0a266c4c86a05c3110308a719db\", \"runtime_id\": \"test_records.RecordControls.test_duplicate_case_assignment_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 218, \"name\": \"test_fail_unknown_unsupported_and_unrun_distinct\", \"path\": \"experiments/backends/comparison/test_records.py\", \"sha256\": \"a294e42b902081c9ec3dd25399a2d74de576108977908fbd14cbe773c80e395c\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_records.py\", \"module_sha256\": \"ce064549e74d8d67df433235cdea73c452e3e0a266c4c86a05c3110308a719db\", \"runtime_id\": \"test_records.RecordControls.test_fail_unknown_unsupported_and_unrun_distinct\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 92, \"name\": \"test_missing_evidence_cannot_pass\", \"path\": \"experiments/backends/comparison/test_records.py\", \"sha256\": \"5a54809c6eccfdbd81f94c554fe0e288d4e2443199715d5f4dcc20f98cdd4cf4\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_records.py\", \"module_sha256\": \"ce064549e74d8d67df433235cdea73c452e3e0a266c4c86a05c3110308a719db\", \"runtime_id\": \"test_records.RecordControls.test_missing_evidence_cannot_pass\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 120, \"name\": \"test_missing_output_never_becomes_zero_error\", \"path\": \"experiments/backends/comparison/test_records.py\", \"sha256\": \"415c9eeba7688c6b7dd7e37293061cce151f9225cd7fbb2d1e8b2e97c8b09179\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_records.py\", \"module_sha256\": \"ce064549e74d8d67df433235cdea73c452e3e0a266c4c86a05c3110308a719db\", \"runtime_id\": \"test_records.RecordControls.test_missing_output_never_becomes_zero_error\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 198, \"name\": \"test_new_observation_requires_real_receipt_and_kernel\", \"path\": \"experiments/backends/comparison/test_records.py\", \"sha256\": \"bf48a6e9d85dd7ca7874086664b699808c382f98df795c5fa942de1f84631fba\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_records.py\", \"module_sha256\": \"ce064549e74d8d67df433235cdea73c452e3e0a266c4c86a05c3110308a719db\", \"runtime_id\": \"test_records.RecordControls.test_new_observation_requires_real_receipt_and_kernel\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 139, \"name\": \"test_nonfinite_or_zero_budget_rejected\", \"path\": \"experiments/backends/comparison/test_records.py\", \"sha256\": \"a4ce794d8720ccd29056ba843d50c8c13e1641ea890b93a63c9e726af2aada3e\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_records.py\", \"module_sha256\": \"ce064549e74d8d67df433235cdea73c452e3e0a266c4c86a05c3110308a719db\", \"runtime_id\": \"test_records.RecordControls.test_nonfinite_or_zero_budget_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 59, \"name\": \"test_pending_application_candidate_still_checks_frozen_source\", \"path\": \"experiments/backends/comparison/test_records.py\", \"sha256\": \"7d9425e285537d9d61fc4703f6b9d6787ecfbe2b2f4b10bd2a90fe1d4bf360c1\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_records.py\", \"module_sha256\": \"ce064549e74d8d67df433235cdea73c452e3e0a266c4c86a05c3110308a719db\", \"runtime_id\": \"test_records.RecordControls.test_pending_application_candidate_still_checks_frozen_source\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 146, \"name\": \"test_raw_absence_does_not_invalidate_compact_receipt\", \"path\": \"experiments/backends/comparison/test_records.py\", \"sha256\": \"ffdee855b8104bfb0b3dd7831a05396044097eee7944a250c162796636d6eb6d\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_records.py\", \"module_sha256\": \"ce064549e74d8d67df433235cdea73c452e3e0a266c4c86a05c3110308a719db\", \"runtime_id\": \"test_records.RecordControls.test_raw_absence_does_not_invalidate_compact_receipt\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 210, \"name\": \"test_receipt_bound_to_actual_configuration\", \"path\": \"experiments/backends/comparison/test_records.py\", \"sha256\": \"ea7317b252352ca76685346607ba55a82475255ca1edac7bd6c7ce7b0ef14257\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_records.py\", \"module_sha256\": \"ce064549e74d8d67df433235cdea73c452e3e0a266c4c86a05c3110308a719db\", \"runtime_id\": \"test_records.RecordControls.test_receipt_bound_to_actual_configuration\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 181, \"name\": \"test_receipt_tool_identity_must_match_measured_identity\", \"path\": \"experiments/backends/comparison/test_records.py\", \"sha256\": \"4c6728e7b8079366f589c11637b888d4ed502a5df98d09f27ae7b8cfec61695c\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_records.py\", \"module_sha256\": \"ce064549e74d8d67df433235cdea73c452e3e0a266c4c86a05c3110308a719db\", \"runtime_id\": \"test_records.RecordControls.test_receipt_tool_identity_must_match_measured_identity\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 97, \"name\": \"test_stage_failure_cannot_pass\", \"path\": \"experiments/backends/comparison/test_records.py\", \"sha256\": \"dfb241a61126e91161f1f79e683411c0614a7149c7ce97ee5a5c44558cf6aded\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_records.py\", \"module_sha256\": \"ce064549e74d8d67df433235cdea73c452e3e0a266c4c86a05c3110308a719db\", \"runtime_id\": \"test_records.RecordControls.test_stage_failure_cannot_pass\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 102, \"name\": \"test_stale_measurement_cannot_claim_latest\", \"path\": \"experiments/backends/comparison/test_records.py\", \"sha256\": \"13d355efff657c654146f146bcf92850f1d88fcd81c41e5a2489e0527f6e51e4\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_records.py\", \"module_sha256\": \"ce064549e74d8d67df433235cdea73c452e3e0a266c4c86a05c3110308a719db\", \"runtime_id\": \"test_records.RecordControls.test_stale_measurement_cannot_claim_latest\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 155, \"name\": \"test_unrun_cannot_contain_observations\", \"path\": \"experiments/backends/comparison/test_records.py\", \"sha256\": \"5363a260a1a3b530b4d75edd6a1a216dc4c0dd5fb6055305279bc72fb6414cf7\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_records.py\", \"module_sha256\": \"ce064549e74d8d67df433235cdea73c452e3e0a266c4c86a05c3110308a719db\", \"runtime_id\": \"test_records.RecordControls.test_unrun_cannot_contain_observations\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 172, \"name\": \"test_archived_manifest_and_receipt_run_id_cannot_drift\", \"path\": \"experiments/backends/comparison/test_refresh.py\", \"sha256\": \"6bbec743038d1e46dccb6e7e712eee4c1aeed96e761c3d0eec6a9633b7843c1b\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_refresh.py\", \"module_sha256\": \"9f66c52415f5179fe94e9720d345a96ed6e62cf276944ac46dd0b321b7d1de72\", \"runtime_id\": \"test_refresh.RefreshControls.test_archived_manifest_and_receipt_run_id_cannot_drift\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 132, \"name\": \"test_checker_drift_and_manifest_tampering_are_rejected\", \"path\": \"experiments/backends/comparison/test_refresh.py\", \"sha256\": \"f205afdae90da379f982cb545c0601718472aaf515964975e87e94af312bb8ca\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_refresh.py\", \"module_sha256\": \"9f66c52415f5179fe94e9720d345a96ed6e62cf276944ac46dd0b321b7d1de72\", \"runtime_id\": \"test_refresh.RefreshControls.test_checker_drift_and_manifest_tampering_are_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 182, \"name\": \"test_mixed_new_execution_identity_and_failed_grade_boundaries\", \"path\": \"experiments/backends/comparison/test_refresh.py\", \"sha256\": \"e1c33003df2d0a5e0137e90563aec8bf83f112efc7e907e430f373e6b4a4b6f2\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_refresh.py\", \"module_sha256\": \"9f66c52415f5179fe94e9720d345a96ed6e62cf276944ac46dd0b321b7d1de72\", \"runtime_id\": \"test_refresh.RefreshControls.test_mixed_new_execution_identity_and_failed_grade_boundaries\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 57, \"name\": \"test_named_receipt_reuse_is_a_valid_refresh_observation\", \"path\": \"experiments/backends/comparison/test_refresh.py\", \"sha256\": \"9b0fdb050abaff5fcc064f25899b0a3af11f9aab7da53d8ee5519fe18332865c\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_refresh.py\", \"module_sha256\": \"9f66c52415f5179fe94e9720d345a96ed6e62cf276944ac46dd0b321b7d1de72\", \"runtime_id\": \"test_refresh.RefreshControls.test_named_receipt_reuse_is_a_valid_refresh_observation\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 90, \"name\": \"test_new_receipt_reuse_and_current_evas_render_and_derive\", \"path\": \"experiments/backends/comparison/test_refresh.py\", \"sha256\": \"cc033e8d3f39e22a075b51af28f5db529f5436384441683b110c1cdd83aec2a9\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_refresh.py\", \"module_sha256\": \"9f66c52415f5179fe94e9720d345a96ed6e62cf276944ac46dd0b321b7d1de72\", \"runtime_id\": \"test_refresh.RefreshControls.test_new_receipt_reuse_and_current_evas_render_and_derive\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 211, \"name\": \"test_original_snapshots_and_matrix_reuse_stay_valid\", \"path\": \"experiments/backends/comparison/test_refresh.py\", \"sha256\": \"116514fbf23b8fda977da99647a507621101393b64a62e5afee415b52e594ff8\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_refresh.py\", \"module_sha256\": \"9f66c52415f5179fe94e9720d345a96ed6e62cf276944ac46dd0b321b7d1de72\", \"runtime_id\": \"test_refresh.RefreshControls.test_original_snapshots_and_matrix_reuse_stay_valid\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 78, \"name\": \"test_outer_new_identity_cannot_hide_old_executed_tool\", \"path\": \"experiments/backends/comparison/test_refresh.py\", \"sha256\": \"5d1bd6484b8e5ab3c4c6bc222c5c504fd263aa5609c7ebf64c98860f188beb27\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_refresh.py\", \"module_sha256\": \"9f66c52415f5179fe94e9720d345a96ed6e62cf276944ac46dd0b321b7d1de72\", \"runtime_id\": \"test_refresh.RefreshControls.test_outer_new_identity_cannot_hide_old_executed_tool\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 154, \"name\": \"test_parent_and_fresh_exact_configuration_boundaries\", \"path\": \"experiments/backends/comparison/test_refresh.py\", \"sha256\": \"3c31704264c8f080e0741d6b5e03d619e24f3bffe8ab43051374e3b30f0a247b\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_refresh.py\", \"module_sha256\": \"9f66c52415f5179fe94e9720d345a96ed6e62cf276944ac46dd0b321b7d1de72\", \"runtime_id\": \"test_refresh.RefreshControls.test_parent_and_fresh_exact_configuration_boundaries\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 117, \"name\": \"test_physical_deck_request_source_and_condition_changes_are_rejected\", \"path\": \"experiments/backends/comparison/test_refresh.py\", \"sha256\": \"898968182c96bf6aee2f0da07ada9e859ef74a3df44e6032b8dac472d6e8f277\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_refresh.py\", \"module_sha256\": \"9f66c52415f5179fe94e9720d345a96ed6e62cf276944ac46dd0b321b7d1de72\", \"runtime_id\": \"test_refresh.RefreshControls.test_physical_deck_request_source_and_condition_changes_are_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 140, \"name\": \"test_refreshed_snapshot_mutations_fail_full_validation\", \"path\": \"experiments/backends/comparison/test_refresh.py\", \"sha256\": \"623f24906eda525b4acebe62fb32d6b033de807424004f6dd90cc27384e45503\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_refresh.py\", \"module_sha256\": \"9f66c52415f5179fe94e9720d345a96ed6e62cf276944ac46dd0b321b7d1de72\", \"runtime_id\": \"test_refresh.RefreshControls.test_refreshed_snapshot_mutations_fail_full_validation\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 112, \"name\": \"test_archived_source_is_bound_to_original_revision_and_hash\", \"path\": \"experiments/backends/comparison/test_review_controls.py\", \"sha256\": \"714ed81f990659eedd19da05faf1e82bfaa47222deb1060b7fb93691b556cfed\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_review_controls.py\", \"module_sha256\": \"625942af5d2c271ca607638d4d7ea5880138edef706d7955d5255aa975605ff7\", \"runtime_id\": \"test_review_controls.ReviewControls.test_archived_source_is_bound_to_original_revision_and_hash\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 129, \"name\": \"test_common_aggregate_uses_maximum_of_both_v2_normalized_properties\", \"path\": \"experiments/backends/comparison/test_review_controls.py\", \"sha256\": \"36f451d8d89c8dc4dcacf910b28b9ee300e1d0649796236c0effc7334374d56d\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_review_controls.py\", \"module_sha256\": \"625942af5d2c271ca607638d4d7ea5880138edef706d7955d5255aa975605ff7\", \"runtime_id\": \"test_review_controls.ReviewControls.test_common_aggregate_uses_maximum_of_both_v2_normalized_properties\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 150, \"name\": \"test_deriving_old_snapshot_survives_real_base1006_checker_drift\", \"path\": \"experiments/backends/comparison/test_review_controls.py\", \"sha256\": \"6636c4d6d7eea115ba3e125b7f5de2a4148ee88b32d3da95a6a3b2e3afacaef0\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_review_controls.py\", \"module_sha256\": \"625942af5d2c271ca607638d4d7ea5880138edef706d7955d5255aa975605ff7\", \"runtime_id\": \"test_review_controls.ReviewControls.test_deriving_old_snapshot_survives_real_base1006_checker_drift\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 42, \"name\": \"test_historical_candidate_survives_real_checker_fix_blob\", \"path\": \"experiments/backends/comparison/test_review_controls.py\", \"sha256\": \"75980c1717685dce049efe3344f1810c6443311fc16bea32adccfa8ddd33f12c\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_review_controls.py\", \"module_sha256\": \"625942af5d2c271ca607638d4d7ea5880138edef706d7955d5255aa975605ff7\", \"runtime_id\": \"test_review_controls.ReviewControls.test_historical_candidate_survives_real_checker_fix_blob\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 61, \"name\": \"test_legacy_v2_metric_is_explicitly_excluded_from_rendered_common_subset\", \"path\": \"experiments/backends/comparison/test_review_controls.py\", \"sha256\": \"54930054f9e7ef43215a4604f03cf978951b67b8d6a6178c53a9a84abc1adf7d\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_review_controls.py\", \"module_sha256\": \"625942af5d2c271ca607638d4d7ea5880138edef706d7955d5255aa975605ff7\", \"runtime_id\": \"test_review_controls.ReviewControls.test_legacy_v2_metric_is_explicitly_excluded_from_rendered_common_subset\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 22, \"name\": \"test_metric_is_bound_to_receipt_observation_and_budget\", \"path\": \"experiments/backends/comparison/test_review_controls.py\", \"sha256\": \"9a0ae01c1b16b9ba6ac6985e5b2420cb0c5d6a61f2515ffbcf227d0ba5209a89\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_review_controls.py\", \"module_sha256\": \"625942af5d2c271ca607638d4d7ea5880138edef706d7955d5255aa975605ff7\", \"runtime_id\": \"test_review_controls.ReviewControls.test_metric_is_bound_to_receipt_observation_and_budget\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 97, \"name\": \"test_old_and_derived_snapshots_survive_base1006_combination\", \"path\": \"experiments/backends/comparison/test_review_controls.py\", \"sha256\": \"bf8759583b06626716a7d55f0f983f207edd2b5c63019151fcad28e5e0877d7f\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_review_controls.py\", \"module_sha256\": \"625942af5d2c271ca607638d4d7ea5880138edef706d7955d5255aa975605ff7\", \"runtime_id\": \"test_review_controls.ReviewControls.test_old_and_derived_snapshots_survive_base1006_combination\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 14, \"name\": \"test_reused_verdict_is_bound_to_named_matrix_observation\", \"path\": \"experiments/backends/comparison/test_review_controls.py\", \"sha256\": \"a6904b18323c18ce973de4e98df44a9a7bb18a8ddca6909d49604cc74966e3fc\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_review_controls.py\", \"module_sha256\": \"625942af5d2c271ca607638d4d7ea5880138edef706d7955d5255aa975605ff7\", \"runtime_id\": \"test_review_controls.ReviewControls.test_reused_verdict_is_bound_to_named_matrix_observation\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 69, \"name\": \"test_schema2_binds_every_actual_observation_and_retains_launch_count\", \"path\": \"experiments/backends/comparison/test_review_controls.py\", \"sha256\": \"edd29fcc8530db820da4cbb4deafc5cc366b241ceda134951e22d0ea476b3227\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_review_controls.py\", \"module_sha256\": \"625942af5d2c271ca607638d4d7ea5880138edef706d7955d5255aa975605ff7\", \"runtime_id\": \"test_review_controls.ReviewControls.test_schema2_binds_every_actual_observation_and_retains_launch_count\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 83, \"name\": \"test_schema2_mutations_cannot_change_normalized_properties\", \"path\": \"experiments/backends/comparison/test_review_controls.py\", \"sha256\": \"5025a8d2879bb9403ea6947b97c9463554f3fb77046c7016f8041cc3882b8ff1\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_review_controls.py\", \"module_sha256\": \"625942af5d2c271ca607638d4d7ea5880138edef706d7955d5255aa975605ff7\", \"runtime_id\": \"test_review_controls.ReviewControls.test_schema2_mutations_cannot_change_normalized_properties\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 143, \"name\": \"test_static_derivation_cannot_relabel_original_execution_identity\", \"path\": \"experiments/backends/comparison/test_review_controls.py\", \"sha256\": \"d5daa7c073c40013f36812c531f79cf835e79c7be7e1430f4dc39a22d10f0e0d\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_review_controls.py\", \"module_sha256\": \"625942af5d2c271ca607638d4d7ea5880138edef706d7955d5255aa975605ff7\", \"runtime_id\": \"test_review_controls.ReviewControls.test_static_derivation_cannot_relabel_original_execution_identity\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 31, \"name\": \"test_v2_differential_and_common_mode_have_separate_budgets\", \"path\": \"experiments/backends/comparison/test_review_controls.py\", \"sha256\": \"7fb7ba63f738e9180eec805abc2d22480a1a437cddc80ec06529f97b67a2ec65\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_review_controls.py\", \"module_sha256\": \"625942af5d2c271ca607638d4d7ea5880138edef706d7955d5255aa975605ff7\", \"runtime_id\": \"test_review_controls.ReviewControls.test_v2_differential_and_common_mode_have_separate_budgets\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 50, \"name\": \"test_v2_independent_differential_and_common_mode_failures\", \"path\": \"experiments/backends/comparison/test_review_controls.py\", \"sha256\": \"1fc3c56f40cfe63807216cc75f86f8cf2ade204a295e85e6b34ac4013eebc838\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_review_controls.py\", \"module_sha256\": \"625942af5d2c271ca607638d4d7ea5880138edef706d7955d5255aa975605ff7\", \"runtime_id\": \"test_review_controls.ReviewControls.test_v2_independent_differential_and_common_mode_failures\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 44, \"name\": \"test_checker_drift_prevents_any_launch\", \"path\": \"experiments/backends/comparison/test_runner.py\", \"sha256\": \"0a96083663128e1e8f6eb9ca1f05558eedf33d8231377d5f4a0c4994adb12a61\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_runner.py\", \"module_sha256\": \"fd2a624dbd50dc768d7ee44d638444eaa64ea6ca44b472f751a47a27d57976dc\", \"runtime_id\": \"test_runner.RunnerControls.test_checker_drift_prevents_any_launch\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 121, \"name\": \"test_environment_image_inspection_has_bounded_timeout\", \"path\": \"experiments/backends/comparison/test_runner.py\", \"sha256\": \"8b0ccca775c49abb7b48922b7940118217cbc67eaedb04e8047be8bb06b4ceed\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_runner.py\", \"module_sha256\": \"fd2a624dbd50dc768d7ee44d638444eaa64ea6ca44b472f751a47a27d57976dc\", \"runtime_id\": \"test_runner.RunnerControls.test_environment_image_inspection_has_bounded_timeout\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 32, \"name\": \"test_input_drift_prevents_any_launch\", \"path\": \"experiments/backends/comparison/test_runner.py\", \"sha256\": \"e33f03d63881cc1e4a2f9ccdcfe54786110510b3dee90d0ff534443f4929890b\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_runner.py\", \"module_sha256\": \"fd2a624dbd50dc768d7ee44d638444eaa64ea6ca44b472f751a47a27d57976dc\", \"runtime_id\": \"test_runner.RunnerControls.test_input_drift_prevents_any_launch\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 96, \"name\": \"test_invalid_selected_kernel_identity_prevents_simulation\", \"path\": \"experiments/backends/comparison/test_runner.py\", \"sha256\": \"625a3fa3e2f8e9ac1a0b6b95a87db843a6eb8e0d72519c8302d949cb5b637e4d\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_runner.py\", \"module_sha256\": \"fd2a624dbd50dc768d7ee44d638444eaa64ea6ca44b472f751a47a27d57976dc\", \"runtime_id\": \"test_runner.RunnerControls.test_invalid_selected_kernel_identity_prevents_simulation\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 67, \"name\": \"test_selected_kernel_identity_is_recorded_before_simulation\", \"path\": \"experiments/backends/comparison/test_runner.py\", \"sha256\": \"82bcf69e9f434898902a44ef8e864fe7e74805d6cce1dcfa4c48c98e90a90f2e\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_runner.py\", \"module_sha256\": \"fd2a624dbd50dc768d7ee44d638444eaa64ea6ca44b472f751a47a27d57976dc\", \"runtime_id\": \"test_runner.RunnerControls.test_selected_kernel_identity_is_recorded_before_simulation\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 12, \"name\": \"test_shared_scientific_source_change_invalidates_checker_identity\", \"path\": \"experiments/backends/comparison/test_runner.py\", \"sha256\": \"d7b4a8ab8875c23942bda8a177fa83f3d67c26a576b248e8e6800572efc8560c\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_runner.py\", \"module_sha256\": \"fd2a624dbd50dc768d7ee44d638444eaa64ea6ca44b472f751a47a27d57976dc\", \"runtime_id\": \"test_runner.RunnerControls.test_shared_scientific_source_change_invalidates_checker_identity\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 53, \"name\": \"test_spectre_settings_uses_exact_module_despite_name_collision\", \"path\": \"experiments/backends/comparison/test_runner.py\", \"sha256\": \"9262a22cc8325333d72b27d73105b6026c3474242e6f9030971a5b65daa60929\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_runner.py\", \"module_sha256\": \"fd2a624dbd50dc768d7ee44d638444eaa64ea6ca44b472f751a47a27d57976dc\", \"runtime_id\": \"test_runner.RunnerControls.test_spectre_settings_uses_exact_module_despite_name_collision\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 147, \"name\": \"test_timeout_records_failure_and_never_retries\", \"path\": \"experiments/backends/comparison/test_runner.py\", \"sha256\": \"2f02c53270fa7d5bd7117b005d469cca67fed7f7cf9f0af44784d9d4391a5309\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_runner.py\", \"module_sha256\": \"fd2a624dbd50dc768d7ee44d638444eaa64ea6ca44b472f751a47a27d57976dc\", \"runtime_id\": \"test_runner.RunnerControls.test_timeout_records_failure_and_never_retries\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 201, \"name\": \"test_legacy_continuation_without_worker_contract_to_actual_ingest\", \"path\": \"experiments/backends/comparison/test_worker_adapter.py\", \"sha256\": \"e8943ecd37efe022fb0f3ac83b99f8f5fea99b4fae5aacc8dce660c966222815\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_worker_adapter.py\", \"module_sha256\": \"653fefd7133825d6f805c8ab86c55f4a0dda630f8fa1e3535117cc37df1c7d76\", \"runtime_id\": \"test_worker_adapter.ContinuationIngestControls.test_legacy_continuation_without_worker_contract_to_actual_ingest\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 198, \"name\": \"test_legacy_execution_to_actual_ingest\", \"path\": \"experiments/backends/comparison/test_worker_adapter.py\", \"sha256\": \"94b749a5999c4d9e25ac617884b33bf3ee18a6727bb33201557ee26e3e29129b\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_worker_adapter.py\", \"module_sha256\": \"653fefd7133825d6f805c8ab86c55f4a0dda630f8fa1e3535117cc37df1c7d76\", \"runtime_id\": \"test_worker_adapter.ContinuationIngestControls.test_legacy_execution_to_actual_ingest\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 195, \"name\": \"test_new_execution_to_actual_ingest\", \"path\": \"experiments/backends/comparison/test_worker_adapter.py\", \"sha256\": \"72883f2509cce57a1b53f72b3b0b3683461936b362dc737dac0bc0fd259a4324\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_worker_adapter.py\", \"module_sha256\": \"653fefd7133825d6f805c8ab86c55f4a0dda630f8fa1e3535117cc37df1c7d76\", \"runtime_id\": \"test_worker_adapter.ContinuationIngestControls.test_new_execution_to_actual_ingest\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 204, \"name\": \"test_resume_rejects_missing_analysis_workers\", \"path\": \"experiments/backends/comparison/test_worker_adapter.py\", \"sha256\": \"be9250647410916282b0b957ea7e57c5dc0dbc0dcc7795f3602f8ac6e8f129c1\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_worker_adapter.py\", \"module_sha256\": \"653fefd7133825d6f805c8ab86c55f4a0dda630f8fa1e3535117cc37df1c7d76\", \"runtime_id\": \"test_worker_adapter.ContinuationIngestControls.test_resume_rejects_missing_analysis_workers\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 219, \"name\": \"test_resume_rejects_missing_continuation\", \"path\": \"experiments/backends/comparison/test_worker_adapter.py\", \"sha256\": \"089d9eec538721d4cdaa6ac04c9a3bee53e2c3c9a1845532fe57fb17f28be667\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_worker_adapter.py\", \"module_sha256\": \"653fefd7133825d6f805c8ab86c55f4a0dda630f8fa1e3535117cc37df1c7d76\", \"runtime_id\": \"test_worker_adapter.ContinuationIngestControls.test_resume_rejects_missing_continuation\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 222, \"name\": \"test_resume_rejects_unknown_analysis_contract\", \"path\": \"experiments/backends/comparison/test_worker_adapter.py\", \"sha256\": \"74f271ce72f1097e37b36002ce67b582e1250f4dc8fd0c7826a3e7e309a83e1c\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_worker_adapter.py\", \"module_sha256\": \"653fefd7133825d6f805c8ab86c55f4a0dda630f8fa1e3535117cc37df1c7d76\", \"runtime_id\": \"test_worker_adapter.ContinuationIngestControls.test_resume_rejects_unknown_analysis_contract\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 210, \"name\": \"test_resume_rejects_unknown_extra_dependency\", \"path\": \"experiments/backends/comparison/test_worker_adapter.py\", \"sha256\": \"5d3d865c8ffddb7eccb30d5d810f618c6e2854aa95d753d374638faad405fdf9\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_worker_adapter.py\", \"module_sha256\": \"653fefd7133825d6f805c8ab86c55f4a0dda630f8fa1e3535117cc37df1c7d76\", \"runtime_id\": \"test_worker_adapter.ContinuationIngestControls.test_resume_rejects_unknown_extra_dependency\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 216, \"name\": \"test_resume_rejects_wrong_analysis_runner_digest\", \"path\": \"experiments/backends/comparison/test_worker_adapter.py\", \"sha256\": \"c3b992cba5c221cf564414abd9ec02ad5eaaf6b4da0b30a85a3c85e0eb582447\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_worker_adapter.py\", \"module_sha256\": \"653fefd7133825d6f805c8ab86c55f4a0dda630f8fa1e3535117cc37df1c7d76\", \"runtime_id\": \"test_worker_adapter.ContinuationIngestControls.test_resume_rejects_wrong_analysis_runner_digest\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 207, \"name\": \"test_resume_rejects_wrong_analysis_worker_digest\", \"path\": \"experiments/backends/comparison/test_worker_adapter.py\", \"sha256\": \"2689cbf30b477ad23b81a691b78f7e628080ef1e6f91874029b4315151edd64f\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_worker_adapter.py\", \"module_sha256\": \"653fefd7133825d6f805c8ab86c55f4a0dda630f8fa1e3535117cc37df1c7d76\", \"runtime_id\": \"test_worker_adapter.ContinuationIngestControls.test_resume_rejects_wrong_analysis_worker_digest\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 213, \"name\": \"test_resume_rejects_wrong_started_digest\", \"path\": \"experiments/backends/comparison/test_worker_adapter.py\", \"sha256\": \"2ed6a0e15bf512c93a9281d7a99e4f947139c6ba8508805679386c1c09e0b6d4\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_worker_adapter.py\", \"module_sha256\": \"653fefd7133825d6f805c8ab86c55f4a0dda630f8fa1e3535117cc37df1c7d76\", \"runtime_id\": \"test_worker_adapter.ContinuationIngestControls.test_resume_rejects_wrong_started_digest\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 192, \"name\": \"test_resume_to_actual_ingest_preserves_started_and_binds_analysis\", \"path\": \"experiments/backends/comparison/test_worker_adapter.py\", \"sha256\": \"f275480031250c0ce2a6fe9110616a7a41745d188d07949903c754760893d9c7\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_worker_adapter.py\", \"module_sha256\": \"653fefd7133825d6f805c8ab86c55f4a0dda630f8fa1e3535117cc37df1c7d76\", \"runtime_id\": \"test_worker_adapter.ContinuationIngestControls.test_resume_to_actual_ingest_preserves_started_and_binds_analysis\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 47, \"name\": \"test_archive_closure_old_new_and_missing_or_changed\", \"path\": \"experiments/backends/comparison/test_worker_adapter.py\", \"sha256\": \"826f7b23a7bf406772877896605a00dbd3e04b2083f3ca7d71c05ee8e5b6b802\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_worker_adapter.py\", \"module_sha256\": \"653fefd7133825d6f805c8ab86c55f4a0dda630f8fa1e3535117cc37df1c7d76\", \"runtime_id\": \"test_worker_adapter.WorkerAdapterControls.test_archive_closure_old_new_and_missing_or_changed\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 19, \"name\": \"test_contract_uses_audited_source_not_file_presence\", \"path\": \"experiments/backends/comparison/test_worker_adapter.py\", \"sha256\": \"57c41e9d0c6acc0521418fb496016aac6db29b5b988da108d2a3fbf7b92d3cbc\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_worker_adapter.py\", \"module_sha256\": \"653fefd7133825d6f805c8ab86c55f4a0dda630f8fa1e3535117cc37df1c7d76\", \"runtime_id\": \"test_worker_adapter.WorkerAdapterControls.test_contract_uses_audited_source_not_file_presence\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 13, \"name\": \"test_legacy_worker_dispatches_original_root\", \"path\": \"experiments/backends/comparison/test_worker_adapter.py\", \"sha256\": \"7bd292117e7f7a437d3f039b0f8e64d2bbccbece912b6ae4593940b22e9275ba\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_worker_adapter.py\", \"module_sha256\": \"653fefd7133825d6f805c8ab86c55f4a0dda630f8fa1e3535117cc37df1c7d76\", \"runtime_id\": \"test_worker_adapter.WorkerAdapterControls.test_legacy_worker_dispatches_original_root\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 28, \"name\": \"test_runtime_identity_binds_adapter_and_rejects_missing\", \"path\": \"experiments/backends/comparison/test_worker_adapter.py\", \"sha256\": \"9f5e82ebdbe990c8b76ea072ecc2d5ccdf43c4e1cb9e8993b0d78b0c3db85d1d\"}, \"generated\": false, \"module_path\": \"experiments/backends/comparison/test_worker_adapter.py\", \"module_sha256\": \"653fefd7133825d6f805c8ab86c55f4a0dda630f8fa1e3535117cc37df1c7d76\", \"runtime_id\": \"test_worker_adapter.WorkerAdapterControls.test_runtime_identity_binds_adapter_and_rejects_missing\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}], \"namespace\": \"validation\", \"schema_version\": 1, \"skipped_declarations\": 0, \"unresolved_instances\": []}\n",
+      "stderr": "",
+      "environment_overrides": {},
+      "actual_resolved_overrides": {},
+      "collection_profile": "inventory-child runtime; not original phase execution/skip results",
+      "original_python_equivalence": "major-minor-declared-only",
+      "sys_path_contract": "repository-cwd first, then literal phase PYTHONPATH; TestLoader adds start directory"
+    }
+  }
+}

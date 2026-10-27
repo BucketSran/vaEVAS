@@ -1,0 +1,381 @@
+{
+  "entry": {
+    "workflow": ".github/workflows/numerical-assurance.yml",
+    "line": 194,
+    "job": "static-checks",
+    "step": "Independent mathematics and checker calibration (no simulator)",
+    "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+    "step_if": "needs.selection.outputs.calibration == 'true'",
+    "command": "python3 -B -m unittest discover -s experiments/backends/evidence -v",
+    "environment_overrides": {},
+    "declared_python_versions": [
+      "3.12.15"
+    ],
+    "start": "experiments/backends/evidence",
+    "pattern": "test*.py",
+    "namespace": "validation",
+    "collector": "unittest",
+    "mode": "declared-ci-literal",
+    "purpose": "role-not-semantic-qualification",
+    "entry_id": "33a1ba44b64966e0dfc8f20035d908f1705700a0d8e0fa5ed6a80d6697cfade7"
+  },
+  "receipt": {
+    "collector": {
+      "definition_profile": "actual-code-or-registered-native-skip-v1",
+      "native_skip_authority": {
+        "factory_span_sha256": "a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad",
+        "profile": "registered-native-unittest-skip-v1",
+        "runtime_file_sha256": "45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987",
+        "runtime_source": "unittest/case.py",
+        "wrapper_span_sha256": "96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda"
+      },
+      "path": "scripts/capabilities/discover_methods.py",
+      "sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "source_relationship": "owned-source-root"
+    },
+    "complete": true,
+    "discovered_instances": 16,
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONPATH": null,
+      "bytecode_disabled": true,
+      "cache_tag": "cpython-312",
+      "environment_scope": "python-runtime-and-import-path-only",
+      "executable": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+      "implementation": "cpython",
+      "platform": "darwin",
+      "python_version": "3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]",
+      "sys_path_before_selected_imports": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/source",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python312.zip",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/lib/python3.12/site-packages"
+      ]
+    },
+    "error_count": 0,
+    "errors": [],
+    "loader_error_count": 0,
+    "methods": [
+      {
+        "definition": {
+          "line": 85,
+          "name": "test_duplicate_and_unsafe_member_names_rejected",
+          "path": "experiments/backends/evidence/test_archive.py",
+          "sha256": "93176c77575972a3dc9e54671c4e5686dd48f40d2c90a778136d1333009aaa78"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/evidence/test_archive.py",
+        "module_sha256": "e492483ce4ddff0d0f5244d16c644a2cd35269ec587eee9d129602f05559cd60",
+        "runtime_id": "test_archive.ArchiveCalibration.test_duplicate_and_unsafe_member_names_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 77,
+          "name": "test_empty_archive_and_directory_only_archive_rejected",
+          "path": "experiments/backends/evidence/test_archive.py",
+          "sha256": "2e5534730914f59ba279bc962bf798aa40669c41b249c3fd6ec90d17bed04f42"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/evidence/test_archive.py",
+        "module_sha256": "e492483ce4ddff0d0f5244d16c644a2cd35269ec587eee9d129602f05559cd60",
+        "runtime_id": "test_archive.ArchiveCalibration.test_empty_archive_and_directory_only_archive_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 12,
+          "name": "test_manifest_mutation_cannot_skip_archived_file_binding",
+          "path": "experiments/backends/evidence/test_archive.py",
+          "sha256": "caf9a93d2854722572035287c2b5928c6a02af0c0f169a7d8fcf810ca656cba3"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/evidence/test_archive.py",
+        "module_sha256": "e492483ce4ddff0d0f5244d16c644a2cd35269ec587eee9d129602f05559cd60",
+        "runtime_id": "test_archive.ArchiveCalibration.test_manifest_mutation_cannot_skip_archived_file_binding",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 56,
+          "name": "test_missing_unpacked_member_rejected",
+          "path": "experiments/backends/evidence/test_archive.py",
+          "sha256": "4e8b83d6c15daeaa93c38cf0b76f263112f28dd7efbf2e4f1fb0347cb7bf06d4"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/evidence/test_archive.py",
+        "module_sha256": "e492483ce4ddff0d0f5244d16c644a2cd35269ec587eee9d129602f05559cd60",
+        "runtime_id": "test_archive.ArchiveCalibration.test_missing_unpacked_member_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 97,
+          "name": "test_nonregular_payload_types_rejected",
+          "path": "experiments/backends/evidence/test_archive.py",
+          "sha256": "9b038ce043d057796fc689186b61c612b407837b59bf52cb2d784cd53893df5e"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/evidence/test_archive.py",
+        "module_sha256": "e492483ce4ddff0d0f5244d16c644a2cd35269ec587eee9d129602f05559cd60",
+        "runtime_id": "test_archive.ArchiveCalibration.test_nonregular_payload_types_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 71,
+          "name": "test_required_members_nonempty_regular_and_present",
+          "path": "experiments/backends/evidence/test_archive.py",
+          "sha256": "f99d35f3fe4b983cba2d9eb18cdc1a82e3bc741260f0b1d113fd6f8a4718cd36"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/evidence/test_archive.py",
+        "module_sha256": "e492483ce4ddff0d0f5244d16c644a2cd35269ec587eee9d129602f05559cd60",
+        "runtime_id": "test_archive.ArchiveCalibration.test_required_members_nonempty_regular_and_present",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 62,
+          "name": "test_reviewed_hash_required_before_tar_parsing",
+          "path": "experiments/backends/evidence/test_archive.py",
+          "sha256": "6fbbd65faafe4713a5126c369f325281729e874eda7c7a15805e4e1881d7be01"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/evidence/test_archive.py",
+        "module_sha256": "e492483ce4ddff0d0f5244d16c644a2cd35269ec587eee9d129602f05559cd60",
+        "runtime_id": "test_archive.ArchiveCalibration.test_reviewed_hash_required_before_tar_parsing",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 50,
+          "name": "test_same_shape_same_size_psf_mutation_rejected",
+          "path": "experiments/backends/evidence/test_archive.py",
+          "sha256": "192aa4ebcb97aaa83f05d578e378a19cf486296b8ebb54ca1d1ec2aa3379f536"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/evidence/test_archive.py",
+        "module_sha256": "e492483ce4ddff0d0f5244d16c644a2cd35269ec587eee9d129602f05559cd60",
+        "runtime_id": "test_archive.ArchiveCalibration.test_same_shape_same_size_psf_mutation_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 106,
+          "name": "test_unpacked_file_directory_and_archive_symlinks_rejected",
+          "path": "experiments/backends/evidence/test_archive.py",
+          "sha256": "dd9584f3808c8738c18cf6b2760f843ae6057421ba0a3be1fbe5daa99fc83b08"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/evidence/test_archive.py",
+        "module_sha256": "e492483ce4ddff0d0f5244d16c644a2cd35269ec587eee9d129602f05559cd60",
+        "runtime_id": "test_archive.ArchiveCalibration.test_unpacked_file_directory_and_archive_symlinks_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 42,
+          "name": "test_valid_archive_returns_all_regular_members_without_extraction",
+          "path": "experiments/backends/evidence/test_archive.py",
+          "sha256": "26e4ee4f85e97bc53a65ebfd6cbf606a7b8f87e3621c2d1a3c22aed61d855f50"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/evidence/test_archive.py",
+        "module_sha256": "e492483ce4ddff0d0f5244d16c644a2cd35269ec587eee9d129602f05559cd60",
+        "runtime_id": "test_archive.ArchiveCalibration.test_valid_archive_returns_all_regular_members_without_extraction",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 32,
+          "name": "test_csv_and_text_keep_original_columns_units_and_row_order",
+          "path": "experiments/backends/evidence/test_legacy_waveforms.py",
+          "sha256": "43939748740acd2627cf24b1a70ef8541559eac1a6285361704ce68b6f2bb2cb"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/evidence/test_legacy_waveforms.py",
+        "module_sha256": "e961a26003198a8308dad7f224ad3e46021c66fe9d7771582570c53959a049af",
+        "runtime_id": "test_legacy_waveforms.LegacyWaveformContracts.test_csv_and_text_keep_original_columns_units_and_row_order",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 53,
+          "name": "test_damaged_formats_still_fail_instead_of_returning_a_partial_export",
+          "path": "experiments/backends/evidence/test_legacy_waveforms.py",
+          "sha256": "8a11dbd055f5a99b46690d797a75963119bcb342a98c6f757cdf31c4098b81a6"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/evidence/test_legacy_waveforms.py",
+        "module_sha256": "e961a26003198a8308dad7f224ad3e46021c66fe9d7771582570c53959a049af",
+        "runtime_id": "test_legacy_waveforms.LegacyWaveformContracts.test_damaged_formats_still_fail_instead_of_returning_a_partial_export",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 13,
+          "name": "test_duplicate_psf_times_order_and_original_file_survive_float_projection",
+          "path": "experiments/backends/evidence/test_legacy_waveforms.py",
+          "sha256": "a0a88d792fa1d2eff5a557278a7b2092042f7ef12f34aa82528355c7c7cdf096"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/evidence/test_legacy_waveforms.py",
+        "module_sha256": "e961a26003198a8308dad7f224ad3e46021c66fe9d7771582570c53959a049af",
+        "runtime_id": "test_legacy_waveforms.LegacyWaveformContracts.test_duplicate_psf_times_order_and_original_file_survive_float_projection",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 44,
+          "name": "test_spice_number_rounding_and_unsupported_suffixes_keep_their_contract",
+          "path": "experiments/backends/evidence/test_legacy_waveforms.py",
+          "sha256": "da38cf7efc4e5631f2b6fb28c2d689fd575a51663f19be7feebdb5f642cfc4db"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/evidence/test_legacy_waveforms.py",
+        "module_sha256": "e961a26003198a8308dad7f224ad3e46021c66fe9d7771582570c53959a049af",
+        "runtime_id": "test_legacy_waveforms.LegacyWaveformContracts.test_spice_number_rounding_and_unsupported_suffixes_keep_their_contract",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 10,
+          "name": "test_duplicate_times_and_original_tokens_survive",
+          "path": "experiments/backends/evidence/test_psf.py",
+          "sha256": "81e8028241497f0d0924a2129872df6d27f32383d1e2eb723b689e7fc965d963"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/evidence/test_psf.py",
+        "module_sha256": "74cd51f2df122d049e98e3d471a41d15aaaa59c58c06d51cbd5c66ef2d1c2343",
+        "runtime_id": "test_psf.Observations.test_duplicate_times_and_original_tokens_survive",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 22,
+          "name": "test_missing_truncated_duplicate_or_nonfinite_values_fail",
+          "path": "experiments/backends/evidence/test_psf.py",
+          "sha256": "8a905ec8d6a2271344efec38ce948cb15a0ee81608333c64255109977ebad6c6"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/evidence/test_psf.py",
+        "module_sha256": "74cd51f2df122d049e98e3d471a41d15aaaa59c58c06d51cbd5c66ef2d1c2343",
+        "runtime_id": "test_psf.Observations.test_missing_truncated_duplicate_or_nonfinite_values_fail",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      }
+    ],
+    "namespace": "validation",
+    "schema_version": 1,
+    "skipped_declarations": 0,
+    "unresolved_instances": [],
+    "transport": {
+      "argv": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-c",
+        "import os,runpy,sys; sys.path[0]=os.getcwd(); tool=sys.argv[1]; sys.argv=sys.argv[1:]; runpy.run_path(tool,run_name=\"__main__\")",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/source/scripts/capabilities/discover_methods.py",
+        "--worker",
+        "--root",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/source",
+        "--start",
+        "experiments/backends/evidence",
+        "--pattern",
+        "test*.py",
+        "--namespace",
+        "validation"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/source",
+      "returncode": 0,
+      "stdout": "{\"collector\": {\"definition_profile\": \"actual-code-or-registered-native-skip-v1\", \"native_skip_authority\": {\"factory_span_sha256\": \"a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad\", \"profile\": \"registered-native-unittest-skip-v1\", \"runtime_file_sha256\": \"45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987\", \"runtime_source\": \"unittest/case.py\", \"wrapper_span_sha256\": \"96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda\"}, \"path\": \"scripts/capabilities/discover_methods.py\", \"sha256\": \"aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17\", \"source_relationship\": \"owned-source-root\"}, \"complete\": true, \"discovered_instances\": 16, \"environment\": {\"PYTHONDONTWRITEBYTECODE\": \"1\", \"PYTHONPATH\": null, \"bytecode_disabled\": true, \"cache_tag\": \"cpython-312\", \"environment_scope\": \"python-runtime-and-import-path-only\", \"executable\": \"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python\", \"implementation\": \"cpython\", \"platform\": \"darwin\", \"python_version\": \"3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"sys_path_before_selected_imports\": [\"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/source\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python312.zip\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload\", \"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/lib/python3.12/site-packages\"]}, \"error_count\": 0, \"errors\": [], \"loader_error_count\": 0, \"methods\": [{\"definition\": {\"line\": 85, \"name\": \"test_duplicate_and_unsafe_member_names_rejected\", \"path\": \"experiments/backends/evidence/test_archive.py\", \"sha256\": \"93176c77575972a3dc9e54671c4e5686dd48f40d2c90a778136d1333009aaa78\"}, \"generated\": false, \"module_path\": \"experiments/backends/evidence/test_archive.py\", \"module_sha256\": \"e492483ce4ddff0d0f5244d16c644a2cd35269ec587eee9d129602f05559cd60\", \"runtime_id\": \"test_archive.ArchiveCalibration.test_duplicate_and_unsafe_member_names_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 77, \"name\": \"test_empty_archive_and_directory_only_archive_rejected\", \"path\": \"experiments/backends/evidence/test_archive.py\", \"sha256\": \"2e5534730914f59ba279bc962bf798aa40669c41b249c3fd6ec90d17bed04f42\"}, \"generated\": false, \"module_path\": \"experiments/backends/evidence/test_archive.py\", \"module_sha256\": \"e492483ce4ddff0d0f5244d16c644a2cd35269ec587eee9d129602f05559cd60\", \"runtime_id\": \"test_archive.ArchiveCalibration.test_empty_archive_and_directory_only_archive_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 12, \"name\": \"test_manifest_mutation_cannot_skip_archived_file_binding\", \"path\": \"experiments/backends/evidence/test_archive.py\", \"sha256\": \"caf9a93d2854722572035287c2b5928c6a02af0c0f169a7d8fcf810ca656cba3\"}, \"generated\": false, \"module_path\": \"experiments/backends/evidence/test_archive.py\", \"module_sha256\": \"e492483ce4ddff0d0f5244d16c644a2cd35269ec587eee9d129602f05559cd60\", \"runtime_id\": \"test_archive.ArchiveCalibration.test_manifest_mutation_cannot_skip_archived_file_binding\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 56, \"name\": \"test_missing_unpacked_member_rejected\", \"path\": \"experiments/backends/evidence/test_archive.py\", \"sha256\": \"4e8b83d6c15daeaa93c38cf0b76f263112f28dd7efbf2e4f1fb0347cb7bf06d4\"}, \"generated\": false, \"module_path\": \"experiments/backends/evidence/test_archive.py\", \"module_sha256\": \"e492483ce4ddff0d0f5244d16c644a2cd35269ec587eee9d129602f05559cd60\", \"runtime_id\": \"test_archive.ArchiveCalibration.test_missing_unpacked_member_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 97, \"name\": \"test_nonregular_payload_types_rejected\", \"path\": \"experiments/backends/evidence/test_archive.py\", \"sha256\": \"9b038ce043d057796fc689186b61c612b407837b59bf52cb2d784cd53893df5e\"}, \"generated\": false, \"module_path\": \"experiments/backends/evidence/test_archive.py\", \"module_sha256\": \"e492483ce4ddff0d0f5244d16c644a2cd35269ec587eee9d129602f05559cd60\", \"runtime_id\": \"test_archive.ArchiveCalibration.test_nonregular_payload_types_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 71, \"name\": \"test_required_members_nonempty_regular_and_present\", \"path\": \"experiments/backends/evidence/test_archive.py\", \"sha256\": \"f99d35f3fe4b983cba2d9eb18cdc1a82e3bc741260f0b1d113fd6f8a4718cd36\"}, \"generated\": false, \"module_path\": \"experiments/backends/evidence/test_archive.py\", \"module_sha256\": \"e492483ce4ddff0d0f5244d16c644a2cd35269ec587eee9d129602f05559cd60\", \"runtime_id\": \"test_archive.ArchiveCalibration.test_required_members_nonempty_regular_and_present\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 62, \"name\": \"test_reviewed_hash_required_before_tar_parsing\", \"path\": \"experiments/backends/evidence/test_archive.py\", \"sha256\": \"6fbbd65faafe4713a5126c369f325281729e874eda7c7a15805e4e1881d7be01\"}, \"generated\": false, \"module_path\": \"experiments/backends/evidence/test_archive.py\", \"module_sha256\": \"e492483ce4ddff0d0f5244d16c644a2cd35269ec587eee9d129602f05559cd60\", \"runtime_id\": \"test_archive.ArchiveCalibration.test_reviewed_hash_required_before_tar_parsing\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 50, \"name\": \"test_same_shape_same_size_psf_mutation_rejected\", \"path\": \"experiments/backends/evidence/test_archive.py\", \"sha256\": \"192aa4ebcb97aaa83f05d578e378a19cf486296b8ebb54ca1d1ec2aa3379f536\"}, \"generated\": false, \"module_path\": \"experiments/backends/evidence/test_archive.py\", \"module_sha256\": \"e492483ce4ddff0d0f5244d16c644a2cd35269ec587eee9d129602f05559cd60\", \"runtime_id\": \"test_archive.ArchiveCalibration.test_same_shape_same_size_psf_mutation_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 106, \"name\": \"test_unpacked_file_directory_and_archive_symlinks_rejected\", \"path\": \"experiments/backends/evidence/test_archive.py\", \"sha256\": \"dd9584f3808c8738c18cf6b2760f843ae6057421ba0a3be1fbe5daa99fc83b08\"}, \"generated\": false, \"module_path\": \"experiments/backends/evidence/test_archive.py\", \"module_sha256\": \"e492483ce4ddff0d0f5244d16c644a2cd35269ec587eee9d129602f05559cd60\", \"runtime_id\": \"test_archive.ArchiveCalibration.test_unpacked_file_directory_and_archive_symlinks_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 42, \"name\": \"test_valid_archive_returns_all_regular_members_without_extraction\", \"path\": \"experiments/backends/evidence/test_archive.py\", \"sha256\": \"26e4ee4f85e97bc53a65ebfd6cbf606a7b8f87e3621c2d1a3c22aed61d855f50\"}, \"generated\": false, \"module_path\": \"experiments/backends/evidence/test_archive.py\", \"module_sha256\": \"e492483ce4ddff0d0f5244d16c644a2cd35269ec587eee9d129602f05559cd60\", \"runtime_id\": \"test_archive.ArchiveCalibration.test_valid_archive_returns_all_regular_members_without_extraction\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 32, \"name\": \"test_csv_and_text_keep_original_columns_units_and_row_order\", \"path\": \"experiments/backends/evidence/test_legacy_waveforms.py\", \"sha256\": \"43939748740acd2627cf24b1a70ef8541559eac1a6285361704ce68b6f2bb2cb\"}, \"generated\": false, \"module_path\": \"experiments/backends/evidence/test_legacy_waveforms.py\", \"module_sha256\": \"e961a26003198a8308dad7f224ad3e46021c66fe9d7771582570c53959a049af\", \"runtime_id\": \"test_legacy_waveforms.LegacyWaveformContracts.test_csv_and_text_keep_original_columns_units_and_row_order\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 53, \"name\": \"test_damaged_formats_still_fail_instead_of_returning_a_partial_export\", \"path\": \"experiments/backends/evidence/test_legacy_waveforms.py\", \"sha256\": \"8a11dbd055f5a99b46690d797a75963119bcb342a98c6f757cdf31c4098b81a6\"}, \"generated\": false, \"module_path\": \"experiments/backends/evidence/test_legacy_waveforms.py\", \"module_sha256\": \"e961a26003198a8308dad7f224ad3e46021c66fe9d7771582570c53959a049af\", \"runtime_id\": \"test_legacy_waveforms.LegacyWaveformContracts.test_damaged_formats_still_fail_instead_of_returning_a_partial_export\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 13, \"name\": \"test_duplicate_psf_times_order_and_original_file_survive_float_projection\", \"path\": \"experiments/backends/evidence/test_legacy_waveforms.py\", \"sha256\": \"a0a88d792fa1d2eff5a557278a7b2092042f7ef12f34aa82528355c7c7cdf096\"}, \"generated\": false, \"module_path\": \"experiments/backends/evidence/test_legacy_waveforms.py\", \"module_sha256\": \"e961a26003198a8308dad7f224ad3e46021c66fe9d7771582570c53959a049af\", \"runtime_id\": \"test_legacy_waveforms.LegacyWaveformContracts.test_duplicate_psf_times_order_and_original_file_survive_float_projection\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 44, \"name\": \"test_spice_number_rounding_and_unsupported_suffixes_keep_their_contract\", \"path\": \"experiments/backends/evidence/test_legacy_waveforms.py\", \"sha256\": \"da38cf7efc4e5631f2b6fb28c2d689fd575a51663f19be7feebdb5f642cfc4db\"}, \"generated\": false, \"module_path\": \"experiments/backends/evidence/test_legacy_waveforms.py\", \"module_sha256\": \"e961a26003198a8308dad7f224ad3e46021c66fe9d7771582570c53959a049af\", \"runtime_id\": \"test_legacy_waveforms.LegacyWaveformContracts.test_spice_number_rounding_and_unsupported_suffixes_keep_their_contract\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 10, \"name\": \"test_duplicate_times_and_original_tokens_survive\", \"path\": \"experiments/backends/evidence/test_psf.py\", \"sha256\": \"81e8028241497f0d0924a2129872df6d27f32383d1e2eb723b689e7fc965d963\"}, \"generated\": false, \"module_path\": \"experiments/backends/evidence/test_psf.py\", \"module_sha256\": \"74cd51f2df122d049e98e3d471a41d15aaaa59c58c06d51cbd5c66ef2d1c2343\", \"runtime_id\": \"test_psf.Observations.test_duplicate_times_and_original_tokens_survive\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 22, \"name\": \"test_missing_truncated_duplicate_or_nonfinite_values_fail\", \"path\": \"experiments/backends/evidence/test_psf.py\", \"sha256\": \"8a905ec8d6a2271344efec38ce948cb15a0ee81608333c64255109977ebad6c6\"}, \"generated\": false, \"module_path\": \"experiments/backends/evidence/test_psf.py\", \"module_sha256\": \"74cd51f2df122d049e98e3d471a41d15aaaa59c58c06d51cbd5c66ef2d1c2343\", \"runtime_id\": \"test_psf.Observations.test_missing_truncated_duplicate_or_nonfinite_values_fail\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}], \"namespace\": \"validation\", \"schema_version\": 1, \"skipped_declarations\": 0, \"unresolved_instances\": []}\n",
+      "stderr": "",
+      "environment_overrides": {},
+      "actual_resolved_overrides": {},
+      "collection_profile": "inventory-child runtime; not original phase execution/skip results",
+      "original_python_equivalence": "major-minor-declared-only",
+      "sys_path_contract": "repository-cwd first, then literal phase PYTHONPATH; TestLoader adds start directory"
+    }
+  }
+}

@@ -1,0 +1,741 @@
+{
+  "entry": {
+    "workflow": ".github/workflows/numerical-assurance.yml",
+    "line": 201,
+    "job": "static-checks",
+    "step": "Independent mathematics and checker calibration (no simulator)",
+    "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+    "step_if": "needs.selection.outputs.calibration == 'true'",
+    "command": "python3 -B -m unittest discover -s experiments/backends/sample-edge-filter -p 'test_*.py' -v",
+    "environment_overrides": {},
+    "declared_python_versions": [
+      "3.12.15"
+    ],
+    "start": "experiments/backends/sample-edge-filter",
+    "pattern": "test_*.py",
+    "namespace": "validation",
+    "collector": "unittest",
+    "mode": "declared-ci-literal",
+    "purpose": "role-not-semantic-qualification",
+    "entry_id": "4807ed83e7ada15164219e8998f0bbdc4f553683d73064c587adb6b1b623fefc"
+  },
+  "receipt": {
+    "collector": {
+      "definition_profile": "actual-code-or-registered-native-skip-v1",
+      "native_skip_authority": {
+        "factory_span_sha256": "a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad",
+        "profile": "registered-native-unittest-skip-v1",
+        "runtime_file_sha256": "45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987",
+        "runtime_source": "unittest/case.py",
+        "wrapper_span_sha256": "96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda"
+      },
+      "path": "scripts/capabilities/discover_methods.py",
+      "sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "source_relationship": "owned-source-root"
+    },
+    "complete": true,
+    "discovered_instances": 36,
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONPATH": null,
+      "bytecode_disabled": true,
+      "cache_tag": "cpython-312",
+      "environment_scope": "python-runtime-and-import-path-only",
+      "executable": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+      "implementation": "cpython",
+      "platform": "darwin",
+      "python_version": "3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]",
+      "sys_path_before_selected_imports": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/source",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python312.zip",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/lib/python3.12/site-packages"
+      ]
+    },
+    "error_count": 0,
+    "errors": [],
+    "loader_error_count": 0,
+    "methods": [
+      {
+        "definition": {
+          "line": 6,
+          "name": "test_boundary_jump_is_retained_beside_windowed_values",
+          "path": "experiments/backends/sample-edge-filter/test_analyze.py",
+          "sha256": "9ab9f23bbb5243f1c86798d81c8c51aea65d938ff1728fba4c2a1067aaaadb1f"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/sample-edge-filter/test_analyze.py",
+        "module_sha256": "dd5a937fda467445e2cbb65c63ca12562d2c7d466c32325139076b2661423673",
+        "runtime_id": "test_analyze.NativePairing.test_boundary_jump_is_retained_beside_windowed_values",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 18,
+          "name": "test_nearby_time_cannot_substitute_for_same_time",
+          "path": "experiments/backends/sample-edge-filter/test_analyze.py",
+          "sha256": "d5289de4d5848b35e2f15ec1e941fd27d9849424808d9f6f241268826af7fca5"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/sample-edge-filter/test_analyze.py",
+        "module_sha256": "dd5a937fda467445e2cbb65c63ca12562d2c7d466c32325139076b2661423673",
+        "runtime_id": "test_analyze.NativePairing.test_nearby_time_cannot_substitute_for_same_time",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 20,
+          "name": "test_empty_or_truncated_window_is_not_coverage",
+          "path": "experiments/backends/sample-edge-filter/test_callback_policy.py",
+          "sha256": "0436a9266eaf2fec5a3d576096c4a3eb857bbd38c66a9be52bf84894846dc586"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/sample-edge-filter/test_callback_policy.py",
+        "module_sha256": "7446e1a2313ac0b1c86da26096fbb2c0ce9eb5d99f5324e6de9881d52c70db58",
+        "runtime_id": "test_callback_policy.AcceptedGridPolicy.test_empty_or_truncated_window_is_not_coverage",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 6,
+          "name": "test_first_point_inside_window",
+          "path": "experiments/backends/sample-edge-filter/test_callback_policy.py",
+          "sha256": "21992488ac79f986fd44ba2a84a77b7aa238bed997e8fbb3fd43a883ebe8df19"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/sample-edge-filter/test_callback_policy.py",
+        "module_sha256": "7446e1a2313ac0b1c86da26096fbb2c0ce9eb5d99f5324e6de9881d52c70db58",
+        "runtime_id": "test_callback_policy.AcceptedGridPolicy.test_first_point_inside_window",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 14,
+          "name": "test_grid_missing_window_is_not_silent_success",
+          "path": "experiments/backends/sample-edge-filter/test_callback_policy.py",
+          "sha256": "37c72309ff0f69f54e4ab492e2887fa75e34ec5fc665bf05d0f1524e7b52b62c"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/sample-edge-filter/test_callback_policy.py",
+        "module_sha256": "7446e1a2313ac0b1c86da26096fbb2c0ce9eb5d99f5324e6de9881d52c70db58",
+        "runtime_id": "test_callback_policy.AcceptedGridPolicy.test_grid_missing_window_is_not_silent_success",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 11,
+          "name": "test_one_shot_does_not_repeat",
+          "path": "experiments/backends/sample-edge-filter/test_callback_policy.py",
+          "sha256": "5ca5d92e44668eec613449587bebf361e1dce7790e0b1eb92d82dc45b316825b"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/sample-edge-filter/test_callback_policy.py",
+        "module_sha256": "7446e1a2313ac0b1c86da26096fbb2c0ce9eb5d99f5324e6de9881d52c70db58",
+        "runtime_id": "test_callback_policy.AcceptedGridPolicy.test_one_shot_does_not_repeat",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 17,
+          "name": "test_zero_tolerance_is_outside_hypothesis",
+          "path": "experiments/backends/sample-edge-filter/test_callback_policy.py",
+          "sha256": "3785aa80cf4b3fb8fd485c196111e9f7b64a90d6f748bcc36531e1e072992715"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/sample-edge-filter/test_callback_policy.py",
+        "module_sha256": "7446e1a2313ac0b1c86da26096fbb2c0ce9eb5d99f5324e6de9881d52c70db58",
+        "runtime_id": "test_callback_policy.AcceptedGridPolicy.test_zero_tolerance_is_outside_hypothesis",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 11,
+          "name": "test_execution_failure_preserves_receipt_and_returns_failure",
+          "path": "experiments/backends/sample-edge-filter/test_callback_probe.py",
+          "sha256": "ebbed6133777b802356bfe4e0bc644f732ac908e3d8b2928c13e1be08d7e01b4"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/sample-edge-filter/test_callback_probe.py",
+        "module_sha256": "5131dd0290a4942611d9c0b33cd044d5775bd45ac6954b00399c1efedd7a7731",
+        "runtime_id": "test_callback_probe.ProbeFailureReceipt.test_execution_failure_preserves_receipt_and_returns_failure",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 66,
+          "name": "test_changed_executed_source_is_rejected",
+          "path": "experiments/backends/sample-edge-filter/test_callback_rules.py",
+          "sha256": "f24bc074ef074bc2ad85dffcc95e694873dfe7ea0ac3090530dc2e87d631f675"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/sample-edge-filter/test_callback_rules.py",
+        "module_sha256": "27743d653896f5850141fac4f503665ba1abf2ff1c3c431e0a4d16d98335fd13",
+        "runtime_id": "test_callback_rules.CallbackReceipt.test_changed_executed_source_is_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 72,
+          "name": "test_duplicate_callback_is_rejected",
+          "path": "experiments/backends/sample-edge-filter/test_callback_rules.py",
+          "sha256": "e3ab2bb4dfd0426f7ee3c0ca6eb14d11e9715849fef3cc13925d5faae52723d8"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/sample-edge-filter/test_callback_rules.py",
+        "module_sha256": "27743d653896f5850141fac4f503665ba1abf2ff1c3c431e0a4d16d98335fd13",
+        "runtime_id": "test_callback_rules.CallbackReceipt.test_duplicate_callback_is_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 59,
+          "name": "test_failed_process_with_complete_rows_is_not_success",
+          "path": "experiments/backends/sample-edge-filter/test_callback_rules.py",
+          "sha256": "0513580aa87e2544d067510be8897b71b2d261f20b647e5926d80df3167d8ca1"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/sample-edge-filter/test_callback_rules.py",
+        "module_sha256": "27743d653896f5850141fac4f503665ba1abf2ff1c3c431e0a4d16d98335fd13",
+        "runtime_id": "test_callback_rules.CallbackReceipt.test_failed_process_with_complete_rows_is_not_success",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 50,
+          "name": "test_missing_condition_keeps_denominator",
+          "path": "experiments/backends/sample-edge-filter/test_callback_rules.py",
+          "sha256": "2e8a48455afd75b1c2c9689556b956ea5329b1d062e6603d32fa6d6dfb8aee76"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/sample-edge-filter/test_callback_rules.py",
+        "module_sha256": "27743d653896f5850141fac4f503665ba1abf2ff1c3c431e0a4d16d98335fd13",
+        "runtime_id": "test_callback_rules.CallbackReceipt.test_missing_condition_keeps_denominator",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 45,
+          "name": "test_progress_prefixed_callback_is_read",
+          "path": "experiments/backends/sample-edge-filter/test_callback_rules.py",
+          "sha256": "88e0063739b63a25643bddeb0356ce8211888c18271adfa4c48a4bce5b39b114"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/sample-edge-filter/test_callback_rules.py",
+        "module_sha256": "27743d653896f5850141fac4f503665ba1abf2ff1c3c431e0a4d16d98335fd13",
+        "runtime_id": "test_callback_rules.CallbackReceipt.test_progress_prefixed_callback_is_read",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 84,
+          "name": "test_raw_hash_must_match_receipt",
+          "path": "experiments/backends/sample-edge-filter/test_callback_rules.py",
+          "sha256": "ad4e3c6febe7fc18c71577ed954e511bd2dabd9920278aba4ccfbe26b4b7c2a7"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/sample-edge-filter/test_callback_rules.py",
+        "module_sha256": "27743d653896f5850141fac4f503665ba1abf2ff1c3c431e0a4d16d98335fd13",
+        "runtime_id": "test_callback_rules.CallbackReceipt.test_raw_hash_must_match_receipt",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 78,
+          "name": "test_rows_cannot_be_substituted_for_native_waveform",
+          "path": "experiments/backends/sample-edge-filter/test_callback_rules.py",
+          "sha256": "ba7d029b3805dbe40957904e541708b8ac74129dc3a21b7aa2fcb90426b971e5"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/sample-edge-filter/test_callback_rules.py",
+        "module_sha256": "27743d653896f5850141fac4f503665ba1abf2ff1c3c431e0a4d16d98335fd13",
+        "runtime_id": "test_callback_rules.CallbackReceipt.test_rows_cannot_be_substituted_for_native_waveform",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 45,
+          "name": "test_early_event_and_wrong_input_fail",
+          "path": "experiments/backends/sample-edge-filter/test_direct_sample.py",
+          "sha256": "4b9ad9d7cfa7b594ca094c7f8071842e7e8773dd8e3677ee54cf62b38603d1ea"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/sample-edge-filter/test_direct_sample.py",
+        "module_sha256": "3a230f1c162d4a82784a7afacbc562896cf07b36f785792c45b96ce509ba917e",
+        "runtime_id": "test_direct_sample.Calibration.test_early_event_and_wrong_input_fail",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 20,
+          "name": "test_explicit_event_representative_is_separate_and_legal",
+          "path": "experiments/backends/sample-edge-filter/test_direct_sample.py",
+          "sha256": "63cab3b04cd2d898d1599fde6d868ff95484833be1a2b9b552b73d8beef5f1a7"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/sample-edge-filter/test_direct_sample.py",
+        "module_sha256": "3a230f1c162d4a82784a7afacbc562896cf07b36f785792c45b96ce509ba917e",
+        "runtime_id": "test_direct_sample.Calibration.test_explicit_event_representative_is_separate_and_legal",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 53,
+          "name": "test_missing_boundary_and_nonfinite_are_inconclusive",
+          "path": "experiments/backends/sample-edge-filter/test_direct_sample.py",
+          "sha256": "20b61325af7f2f863468c52f8b06a597edc1b10717b234204058a324bdc3c69a"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/sample-edge-filter/test_direct_sample.py",
+        "module_sha256": "3a230f1c162d4a82784a7afacbc562896cf07b36f785792c45b96ce509ba917e",
+        "runtime_id": "test_direct_sample.Calibration.test_missing_boundary_and_nonfinite_are_inconclusive",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 40,
+          "name": "test_missing_repeated_or_fractional_events_fail",
+          "path": "experiments/backends/sample-edge-filter/test_direct_sample.py",
+          "sha256": "3dc5671aa3737d83455bf2d264545d50ea01aefc4395f56888a7bec86a85feba"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/sample-edge-filter/test_direct_sample.py",
+        "module_sha256": "3a230f1c162d4a82784a7afacbc562896cf07b36f785792c45b96ce509ba917e",
+        "runtime_id": "test_direct_sample.Calibration.test_missing_repeated_or_fractional_events_fail",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 27,
+          "name": "test_positive_negative_and_small_answers",
+          "path": "experiments/backends/sample-edge-filter/test_direct_sample.py",
+          "sha256": "fd1978085d904d5124d7a2a1cc6e370f4c6b969a8f3afae5da623900bb6140fe"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/sample-edge-filter/test_direct_sample.py",
+        "module_sha256": "3a230f1c162d4a82784a7afacbc562896cf07b36f785792c45b96ce509ba917e",
+        "runtime_id": "test_direct_sample.Calibration.test_positive_negative_and_small_answers",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 32,
+          "name": "test_voltage_bias_and_hold_drift_fail",
+          "path": "experiments/backends/sample-edge-filter/test_direct_sample.py",
+          "sha256": "de3b842a39c894ff338198d8d09cf3954ac97ae9f33dd2b03ae6947f24014b94"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/sample-edge-filter/test_direct_sample.py",
+        "module_sha256": "3a230f1c162d4a82784a7afacbc562896cf07b36f785792c45b96ce509ba917e",
+        "runtime_id": "test_direct_sample.Calibration.test_voltage_bias_and_hold_drift_fail",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 60,
+          "name": "test_binary64_time_side_is_not_rounded_to_decimal_label",
+          "path": "experiments/backends/sample-edge-filter/test_error_decomposition.py",
+          "sha256": "c0c3a2d8a8b99977a3c10f00975c78b36c51a106d8bb316df589c74d37c881c4"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/sample-edge-filter/test_error_decomposition.py",
+        "module_sha256": "df98115f8903a12926e98a6ebac168954f4e265ea1089617dfa374a763784bb0",
+        "runtime_id": "test_error_decomposition.ErrorDecomposition.test_binary64_time_side_is_not_rounded_to_decimal_label",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 44,
+          "name": "test_callback_conditioning_recomputes_sample_from_source",
+          "path": "experiments/backends/sample-edge-filter/test_error_decomposition.py",
+          "sha256": "1fb472bf2b88c668b2517952fe0932b8a83f459ad0a4b07c0f82551c0584866d"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/sample-edge-filter/test_error_decomposition.py",
+        "module_sha256": "df98115f8903a12926e98a6ebac168954f4e265ea1089617dfa374a763784bb0",
+        "runtime_id": "test_error_decomposition.ErrorDecomposition.test_callback_conditioning_recomputes_sample_from_source",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 66,
+          "name": "test_counter_extraction_rejects_missing_repeated_and_nonfinite_evidence",
+          "path": "experiments/backends/sample-edge-filter/test_error_decomposition.py",
+          "sha256": "15023759ded012ecac43e7cb09476c4908572142543c50d78c99d4a1fa451dc7"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/sample-edge-filter/test_error_decomposition.py",
+        "module_sha256": "df98115f8903a12926e98a6ebac168954f4e265ea1089617dfa374a763784bb0",
+        "runtime_id": "test_error_decomposition.ErrorDecomposition.test_counter_extraction_rejects_missing_repeated_and_nonfinite_evidence",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 49,
+          "name": "test_delayed_event_splits_phase_difference_from_wrong_sample",
+          "path": "experiments/backends/sample-edge-filter/test_error_decomposition.py",
+          "sha256": "68a35a460cd21d6cded4d9046d248a0ca425025c45c1ab6fb4b0593f3ac803c3"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/sample-edge-filter/test_error_decomposition.py",
+        "module_sha256": "df98115f8903a12926e98a6ebac168954f4e265ea1089617dfa374a763784bb0",
+        "runtime_id": "test_error_decomposition.ErrorDecomposition.test_delayed_event_splits_phase_difference_from_wrong_sample",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 34,
+          "name": "test_ramp_and_filter_have_independent_closed_form_anchor",
+          "path": "experiments/backends/sample-edge-filter/test_error_decomposition.py",
+          "sha256": "297c056890fff4415264ba3f835db2ec4774a4575e9e2212f90b3d49df4982fe"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/sample-edge-filter/test_error_decomposition.py",
+        "module_sha256": "df98115f8903a12926e98a6ebac168954f4e265ea1089617dfa374a763784bb0",
+        "runtime_id": "test_error_decomposition.ErrorDecomposition.test_ramp_and_filter_have_independent_closed_form_anchor",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 21,
+          "name": "test_rehashed_replacement_manifest_does_not_replace_retained_identity",
+          "path": "experiments/backends/sample-edge-filter/test_error_decomposition.py",
+          "sha256": "4cf3c1212ade3009b71434e8005ddfffc44e31778876fcd01ea343ec54067ce3"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/sample-edge-filter/test_error_decomposition.py",
+        "module_sha256": "df98115f8903a12926e98a6ebac168954f4e265ea1089617dfa374a763784bb0",
+        "runtime_id": "test_error_decomposition.ErrorDecomposition.test_rehashed_replacement_manifest_does_not_replace_retained_identity",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 37,
+          "name": "test_exact_response_passes_and_output_or_input_corruption_fails",
+          "path": "experiments/backends/sample-edge-filter/test_filter_budget_compare.py",
+          "sha256": "17b17222e63393776e28d354339ef3311934ba60e4d20b5ff4344be91ee1dbe1"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/sample-edge-filter/test_filter_budget_compare.py",
+        "module_sha256": "a8815e18778fe0e3be749e9e5ce304097dcec9fd2cc07a0bc9bf55d2b56c5fc3",
+        "runtime_id": "test_filter_budget_compare.FilterBudgetChecker.test_exact_response_passes_and_output_or_input_corruption_fails",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 56,
+          "name": "test_freeze_preserves_all_original_budgets_and_profiles",
+          "path": "experiments/backends/sample-edge-filter/test_filter_budget_compare.py",
+          "sha256": "9a1171ff8e3a05f18d1e75d1284f2aa5f0a7a790408e5a2523149f7600528007"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/sample-edge-filter/test_filter_budget_compare.py",
+        "module_sha256": "a8815e18778fe0e3be749e9e5ce304097dcec9fd2cc07a0bc9bf55d2b56c5fc3",
+        "runtime_id": "test_filter_budget_compare.FilterBudgetChecker.test_freeze_preserves_all_original_budgets_and_profiles",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 43,
+          "name": "test_missing_boundary_nonfinite_and_missing_data_are_not_passes",
+          "path": "experiments/backends/sample-edge-filter/test_filter_budget_compare.py",
+          "sha256": "d6fb5ee075c4a09f7dd38f1098a198f65ebbdee51622ddd1e1eb40a7f5e1a995"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/sample-edge-filter/test_filter_budget_compare.py",
+        "module_sha256": "a8815e18778fe0e3be749e9e5ce304097dcec9fd2cc07a0bc9bf55d2b56c5fc3",
+        "runtime_id": "test_filter_budget_compare.FilterBudgetChecker.test_missing_boundary_nonfinite_and_missing_data_are_not_passes",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 72,
+          "name": "test_observation_control_requires_unmodified_source_and_actual_callback",
+          "path": "experiments/backends/sample-edge-filter/test_filter_budget_compare.py",
+          "sha256": "f440d95b3032d5e69350c7c5ff78cfd130132b6758699cb410c9824d0c70aeb9"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/sample-edge-filter/test_filter_budget_compare.py",
+        "module_sha256": "a8815e18778fe0e3be749e9e5ce304097dcec9fd2cc07a0bc9bf55d2b56c5fc3",
+        "runtime_id": "test_filter_budget_compare.FilterBudgetChecker.test_observation_control_requires_unmodified_source_and_actual_callback",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 51,
+          "name": "test_old_export_without_right_edge_end_is_insufficient",
+          "path": "experiments/backends/sample-edge-filter/test_filter_budget_compare.py",
+          "sha256": "4a6b82b5377b28ab5cfdcebfaca3f1c5fbfbc1a5f4e39f1eb6144ae8a5c8e9a3"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/sample-edge-filter/test_filter_budget_compare.py",
+        "module_sha256": "a8815e18778fe0e3be749e9e5ce304097dcec9fd2cc07a0bc9bf55d2b56c5fc3",
+        "runtime_id": "test_filter_budget_compare.FilterBudgetChecker.test_old_export_without_right_edge_end_is_insufficient",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 55,
+          "name": "test_empty_reference_cannot_report_success",
+          "path": "experiments/backends/sample-edge-filter/test_root_compare.py",
+          "sha256": "b7bc5cf58d14928a92751ac5ab6670963e0bf521f905a8903c49d2750db39b8f"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/sample-edge-filter/test_root_compare.py",
+        "module_sha256": "cd2a1eb3c8f1950c77ad480faed60ee144956a76de929535ec3de2f6f811ddde",
+        "runtime_id": "test_root_compare.RootComparison.test_empty_reference_cannot_report_success",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 65,
+          "name": "test_old_rejection_and_new_recovery_are_distinct_obligations",
+          "path": "experiments/backends/sample-edge-filter/test_root_compare.py",
+          "sha256": "01bb181db74639fb3535c9532b75fde40b66c790c3fdb56e8cb44850246b2864"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/sample-edge-filter/test_root_compare.py",
+        "module_sha256": "cd2a1eb3c8f1950c77ad480faed60ee144956a76de929535ec3de2f6f811ddde",
+        "runtime_id": "test_root_compare.RootComparison.test_old_rejection_and_new_recovery_are_distinct_obligations",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 26,
+          "name": "test_reference_denominator_survives_rehashed_partial_archive",
+          "path": "experiments/backends/sample-edge-filter/test_root_compare.py",
+          "sha256": "69a55308bd8b77041742248e186f5da6e9f3434016682c13c261a6a92b88c1e9"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/sample-edge-filter/test_root_compare.py",
+        "module_sha256": "cd2a1eb3c8f1950c77ad480faed60ee144956a76de929535ec3de2f6f811ddde",
+        "runtime_id": "test_root_compare.RootComparison.test_reference_denominator_survives_rehashed_partial_archive",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 75,
+          "name": "test_same_fixed_observations_detect_corruption",
+          "path": "experiments/backends/sample-edge-filter/test_root_compare.py",
+          "sha256": "4d4b732b1f3927a8f63450ab969e4e3a20882275cc360942dff147acffe5ba9f"
+        },
+        "generated": false,
+        "module_path": "experiments/backends/sample-edge-filter/test_root_compare.py",
+        "module_sha256": "cd2a1eb3c8f1950c77ad480faed60ee144956a76de929535ec3de2f6f811ddde",
+        "runtime_id": "test_root_compare.RootComparison.test_same_fixed_observations_detect_corruption",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      }
+    ],
+    "namespace": "validation",
+    "schema_version": 1,
+    "skipped_declarations": 0,
+    "unresolved_instances": [],
+    "transport": {
+      "argv": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-c",
+        "import os,runpy,sys; sys.path[0]=os.getcwd(); tool=sys.argv[1]; sys.argv=sys.argv[1:]; runpy.run_path(tool,run_name=\"__main__\")",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/source/scripts/capabilities/discover_methods.py",
+        "--worker",
+        "--root",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/source",
+        "--start",
+        "experiments/backends/sample-edge-filter",
+        "--pattern",
+        "test_*.py",
+        "--namespace",
+        "validation"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/source",
+      "returncode": 0,
+      "stdout": "{\"collector\": {\"definition_profile\": \"actual-code-or-registered-native-skip-v1\", \"native_skip_authority\": {\"factory_span_sha256\": \"a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad\", \"profile\": \"registered-native-unittest-skip-v1\", \"runtime_file_sha256\": \"45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987\", \"runtime_source\": \"unittest/case.py\", \"wrapper_span_sha256\": \"96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda\"}, \"path\": \"scripts/capabilities/discover_methods.py\", \"sha256\": \"aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17\", \"source_relationship\": \"owned-source-root\"}, \"complete\": true, \"discovered_instances\": 36, \"environment\": {\"PYTHONDONTWRITEBYTECODE\": \"1\", \"PYTHONPATH\": null, \"bytecode_disabled\": true, \"cache_tag\": \"cpython-312\", \"environment_scope\": \"python-runtime-and-import-path-only\", \"executable\": \"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python\", \"implementation\": \"cpython\", \"platform\": \"darwin\", \"python_version\": \"3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"sys_path_before_selected_imports\": [\"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/source\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python312.zip\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload\", \"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/lib/python3.12/site-packages\"]}, \"error_count\": 0, \"errors\": [], \"loader_error_count\": 0, \"methods\": [{\"definition\": {\"line\": 6, \"name\": \"test_boundary_jump_is_retained_beside_windowed_values\", \"path\": \"experiments/backends/sample-edge-filter/test_analyze.py\", \"sha256\": \"9ab9f23bbb5243f1c86798d81c8c51aea65d938ff1728fba4c2a1067aaaadb1f\"}, \"generated\": false, \"module_path\": \"experiments/backends/sample-edge-filter/test_analyze.py\", \"module_sha256\": \"dd5a937fda467445e2cbb65c63ca12562d2c7d466c32325139076b2661423673\", \"runtime_id\": \"test_analyze.NativePairing.test_boundary_jump_is_retained_beside_windowed_values\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 18, \"name\": \"test_nearby_time_cannot_substitute_for_same_time\", \"path\": \"experiments/backends/sample-edge-filter/test_analyze.py\", \"sha256\": \"d5289de4d5848b35e2f15ec1e941fd27d9849424808d9f6f241268826af7fca5\"}, \"generated\": false, \"module_path\": \"experiments/backends/sample-edge-filter/test_analyze.py\", \"module_sha256\": \"dd5a937fda467445e2cbb65c63ca12562d2c7d466c32325139076b2661423673\", \"runtime_id\": \"test_analyze.NativePairing.test_nearby_time_cannot_substitute_for_same_time\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 20, \"name\": \"test_empty_or_truncated_window_is_not_coverage\", \"path\": \"experiments/backends/sample-edge-filter/test_callback_policy.py\", \"sha256\": \"0436a9266eaf2fec5a3d576096c4a3eb857bbd38c66a9be52bf84894846dc586\"}, \"generated\": false, \"module_path\": \"experiments/backends/sample-edge-filter/test_callback_policy.py\", \"module_sha256\": \"7446e1a2313ac0b1c86da26096fbb2c0ce9eb5d99f5324e6de9881d52c70db58\", \"runtime_id\": \"test_callback_policy.AcceptedGridPolicy.test_empty_or_truncated_window_is_not_coverage\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 6, \"name\": \"test_first_point_inside_window\", \"path\": \"experiments/backends/sample-edge-filter/test_callback_policy.py\", \"sha256\": \"21992488ac79f986fd44ba2a84a77b7aa238bed997e8fbb3fd43a883ebe8df19\"}, \"generated\": false, \"module_path\": \"experiments/backends/sample-edge-filter/test_callback_policy.py\", \"module_sha256\": \"7446e1a2313ac0b1c86da26096fbb2c0ce9eb5d99f5324e6de9881d52c70db58\", \"runtime_id\": \"test_callback_policy.AcceptedGridPolicy.test_first_point_inside_window\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 14, \"name\": \"test_grid_missing_window_is_not_silent_success\", \"path\": \"experiments/backends/sample-edge-filter/test_callback_policy.py\", \"sha256\": \"37c72309ff0f69f54e4ab492e2887fa75e34ec5fc665bf05d0f1524e7b52b62c\"}, \"generated\": false, \"module_path\": \"experiments/backends/sample-edge-filter/test_callback_policy.py\", \"module_sha256\": \"7446e1a2313ac0b1c86da26096fbb2c0ce9eb5d99f5324e6de9881d52c70db58\", \"runtime_id\": \"test_callback_policy.AcceptedGridPolicy.test_grid_missing_window_is_not_silent_success\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 11, \"name\": \"test_one_shot_does_not_repeat\", \"path\": \"experiments/backends/sample-edge-filter/test_callback_policy.py\", \"sha256\": \"5ca5d92e44668eec613449587bebf361e1dce7790e0b1eb92d82dc45b316825b\"}, \"generated\": false, \"module_path\": \"experiments/backends/sample-edge-filter/test_callback_policy.py\", \"module_sha256\": \"7446e1a2313ac0b1c86da26096fbb2c0ce9eb5d99f5324e6de9881d52c70db58\", \"runtime_id\": \"test_callback_policy.AcceptedGridPolicy.test_one_shot_does_not_repeat\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 17, \"name\": \"test_zero_tolerance_is_outside_hypothesis\", \"path\": \"experiments/backends/sample-edge-filter/test_callback_policy.py\", \"sha256\": \"3785aa80cf4b3fb8fd485c196111e9f7b64a90d6f748bcc36531e1e072992715\"}, \"generated\": false, \"module_path\": \"experiments/backends/sample-edge-filter/test_callback_policy.py\", \"module_sha256\": \"7446e1a2313ac0b1c86da26096fbb2c0ce9eb5d99f5324e6de9881d52c70db58\", \"runtime_id\": \"test_callback_policy.AcceptedGridPolicy.test_zero_tolerance_is_outside_hypothesis\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 11, \"name\": \"test_execution_failure_preserves_receipt_and_returns_failure\", \"path\": \"experiments/backends/sample-edge-filter/test_callback_probe.py\", \"sha256\": \"ebbed6133777b802356bfe4e0bc644f732ac908e3d8b2928c13e1be08d7e01b4\"}, \"generated\": false, \"module_path\": \"experiments/backends/sample-edge-filter/test_callback_probe.py\", \"module_sha256\": \"5131dd0290a4942611d9c0b33cd044d5775bd45ac6954b00399c1efedd7a7731\", \"runtime_id\": \"test_callback_probe.ProbeFailureReceipt.test_execution_failure_preserves_receipt_and_returns_failure\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 66, \"name\": \"test_changed_executed_source_is_rejected\", \"path\": \"experiments/backends/sample-edge-filter/test_callback_rules.py\", \"sha256\": \"f24bc074ef074bc2ad85dffcc95e694873dfe7ea0ac3090530dc2e87d631f675\"}, \"generated\": false, \"module_path\": \"experiments/backends/sample-edge-filter/test_callback_rules.py\", \"module_sha256\": \"27743d653896f5850141fac4f503665ba1abf2ff1c3c431e0a4d16d98335fd13\", \"runtime_id\": \"test_callback_rules.CallbackReceipt.test_changed_executed_source_is_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 72, \"name\": \"test_duplicate_callback_is_rejected\", \"path\": \"experiments/backends/sample-edge-filter/test_callback_rules.py\", \"sha256\": \"e3ab2bb4dfd0426f7ee3c0ca6eb14d11e9715849fef3cc13925d5faae52723d8\"}, \"generated\": false, \"module_path\": \"experiments/backends/sample-edge-filter/test_callback_rules.py\", \"module_sha256\": \"27743d653896f5850141fac4f503665ba1abf2ff1c3c431e0a4d16d98335fd13\", \"runtime_id\": \"test_callback_rules.CallbackReceipt.test_duplicate_callback_is_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 59, \"name\": \"test_failed_process_with_complete_rows_is_not_success\", \"path\": \"experiments/backends/sample-edge-filter/test_callback_rules.py\", \"sha256\": \"0513580aa87e2544d067510be8897b71b2d261f20b647e5926d80df3167d8ca1\"}, \"generated\": false, \"module_path\": \"experiments/backends/sample-edge-filter/test_callback_rules.py\", \"module_sha256\": \"27743d653896f5850141fac4f503665ba1abf2ff1c3c431e0a4d16d98335fd13\", \"runtime_id\": \"test_callback_rules.CallbackReceipt.test_failed_process_with_complete_rows_is_not_success\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 50, \"name\": \"test_missing_condition_keeps_denominator\", \"path\": \"experiments/backends/sample-edge-filter/test_callback_rules.py\", \"sha256\": \"2e8a48455afd75b1c2c9689556b956ea5329b1d062e6603d32fa6d6dfb8aee76\"}, \"generated\": false, \"module_path\": \"experiments/backends/sample-edge-filter/test_callback_rules.py\", \"module_sha256\": \"27743d653896f5850141fac4f503665ba1abf2ff1c3c431e0a4d16d98335fd13\", \"runtime_id\": \"test_callback_rules.CallbackReceipt.test_missing_condition_keeps_denominator\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 45, \"name\": \"test_progress_prefixed_callback_is_read\", \"path\": \"experiments/backends/sample-edge-filter/test_callback_rules.py\", \"sha256\": \"88e0063739b63a25643bddeb0356ce8211888c18271adfa4c48a4bce5b39b114\"}, \"generated\": false, \"module_path\": \"experiments/backends/sample-edge-filter/test_callback_rules.py\", \"module_sha256\": \"27743d653896f5850141fac4f503665ba1abf2ff1c3c431e0a4d16d98335fd13\", \"runtime_id\": \"test_callback_rules.CallbackReceipt.test_progress_prefixed_callback_is_read\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 84, \"name\": \"test_raw_hash_must_match_receipt\", \"path\": \"experiments/backends/sample-edge-filter/test_callback_rules.py\", \"sha256\": \"ad4e3c6febe7fc18c71577ed954e511bd2dabd9920278aba4ccfbe26b4b7c2a7\"}, \"generated\": false, \"module_path\": \"experiments/backends/sample-edge-filter/test_callback_rules.py\", \"module_sha256\": \"27743d653896f5850141fac4f503665ba1abf2ff1c3c431e0a4d16d98335fd13\", \"runtime_id\": \"test_callback_rules.CallbackReceipt.test_raw_hash_must_match_receipt\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 78, \"name\": \"test_rows_cannot_be_substituted_for_native_waveform\", \"path\": \"experiments/backends/sample-edge-filter/test_callback_rules.py\", \"sha256\": \"ba7d029b3805dbe40957904e541708b8ac74129dc3a21b7aa2fcb90426b971e5\"}, \"generated\": false, \"module_path\": \"experiments/backends/sample-edge-filter/test_callback_rules.py\", \"module_sha256\": \"27743d653896f5850141fac4f503665ba1abf2ff1c3c431e0a4d16d98335fd13\", \"runtime_id\": \"test_callback_rules.CallbackReceipt.test_rows_cannot_be_substituted_for_native_waveform\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 45, \"name\": \"test_early_event_and_wrong_input_fail\", \"path\": \"experiments/backends/sample-edge-filter/test_direct_sample.py\", \"sha256\": \"4b9ad9d7cfa7b594ca094c7f8071842e7e8773dd8e3677ee54cf62b38603d1ea\"}, \"generated\": false, \"module_path\": \"experiments/backends/sample-edge-filter/test_direct_sample.py\", \"module_sha256\": \"3a230f1c162d4a82784a7afacbc562896cf07b36f785792c45b96ce509ba917e\", \"runtime_id\": \"test_direct_sample.Calibration.test_early_event_and_wrong_input_fail\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 20, \"name\": \"test_explicit_event_representative_is_separate_and_legal\", \"path\": \"experiments/backends/sample-edge-filter/test_direct_sample.py\", \"sha256\": \"63cab3b04cd2d898d1599fde6d868ff95484833be1a2b9b552b73d8beef5f1a7\"}, \"generated\": false, \"module_path\": \"experiments/backends/sample-edge-filter/test_direct_sample.py\", \"module_sha256\": \"3a230f1c162d4a82784a7afacbc562896cf07b36f785792c45b96ce509ba917e\", \"runtime_id\": \"test_direct_sample.Calibration.test_explicit_event_representative_is_separate_and_legal\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 53, \"name\": \"test_missing_boundary_and_nonfinite_are_inconclusive\", \"path\": \"experiments/backends/sample-edge-filter/test_direct_sample.py\", \"sha256\": \"20b61325af7f2f863468c52f8b06a597edc1b10717b234204058a324bdc3c69a\"}, \"generated\": false, \"module_path\": \"experiments/backends/sample-edge-filter/test_direct_sample.py\", \"module_sha256\": \"3a230f1c162d4a82784a7afacbc562896cf07b36f785792c45b96ce509ba917e\", \"runtime_id\": \"test_direct_sample.Calibration.test_missing_boundary_and_nonfinite_are_inconclusive\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 40, \"name\": \"test_missing_repeated_or_fractional_events_fail\", \"path\": \"experiments/backends/sample-edge-filter/test_direct_sample.py\", \"sha256\": \"3dc5671aa3737d83455bf2d264545d50ea01aefc4395f56888a7bec86a85feba\"}, \"generated\": false, \"module_path\": \"experiments/backends/sample-edge-filter/test_direct_sample.py\", \"module_sha256\": \"3a230f1c162d4a82784a7afacbc562896cf07b36f785792c45b96ce509ba917e\", \"runtime_id\": \"test_direct_sample.Calibration.test_missing_repeated_or_fractional_events_fail\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 27, \"name\": \"test_positive_negative_and_small_answers\", \"path\": \"experiments/backends/sample-edge-filter/test_direct_sample.py\", \"sha256\": \"fd1978085d904d5124d7a2a1cc6e370f4c6b969a8f3afae5da623900bb6140fe\"}, \"generated\": false, \"module_path\": \"experiments/backends/sample-edge-filter/test_direct_sample.py\", \"module_sha256\": \"3a230f1c162d4a82784a7afacbc562896cf07b36f785792c45b96ce509ba917e\", \"runtime_id\": \"test_direct_sample.Calibration.test_positive_negative_and_small_answers\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 32, \"name\": \"test_voltage_bias_and_hold_drift_fail\", \"path\": \"experiments/backends/sample-edge-filter/test_direct_sample.py\", \"sha256\": \"de3b842a39c894ff338198d8d09cf3954ac97ae9f33dd2b03ae6947f24014b94\"}, \"generated\": false, \"module_path\": \"experiments/backends/sample-edge-filter/test_direct_sample.py\", \"module_sha256\": \"3a230f1c162d4a82784a7afacbc562896cf07b36f785792c45b96ce509ba917e\", \"runtime_id\": \"test_direct_sample.Calibration.test_voltage_bias_and_hold_drift_fail\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 60, \"name\": \"test_binary64_time_side_is_not_rounded_to_decimal_label\", \"path\": \"experiments/backends/sample-edge-filter/test_error_decomposition.py\", \"sha256\": \"c0c3a2d8a8b99977a3c10f00975c78b36c51a106d8bb316df589c74d37c881c4\"}, \"generated\": false, \"module_path\": \"experiments/backends/sample-edge-filter/test_error_decomposition.py\", \"module_sha256\": \"df98115f8903a12926e98a6ebac168954f4e265ea1089617dfa374a763784bb0\", \"runtime_id\": \"test_error_decomposition.ErrorDecomposition.test_binary64_time_side_is_not_rounded_to_decimal_label\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 44, \"name\": \"test_callback_conditioning_recomputes_sample_from_source\", \"path\": \"experiments/backends/sample-edge-filter/test_error_decomposition.py\", \"sha256\": \"1fb472bf2b88c668b2517952fe0932b8a83f459ad0a4b07c0f82551c0584866d\"}, \"generated\": false, \"module_path\": \"experiments/backends/sample-edge-filter/test_error_decomposition.py\", \"module_sha256\": \"df98115f8903a12926e98a6ebac168954f4e265ea1089617dfa374a763784bb0\", \"runtime_id\": \"test_error_decomposition.ErrorDecomposition.test_callback_conditioning_recomputes_sample_from_source\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 66, \"name\": \"test_counter_extraction_rejects_missing_repeated_and_nonfinite_evidence\", \"path\": \"experiments/backends/sample-edge-filter/test_error_decomposition.py\", \"sha256\": \"15023759ded012ecac43e7cb09476c4908572142543c50d78c99d4a1fa451dc7\"}, \"generated\": false, \"module_path\": \"experiments/backends/sample-edge-filter/test_error_decomposition.py\", \"module_sha256\": \"df98115f8903a12926e98a6ebac168954f4e265ea1089617dfa374a763784bb0\", \"runtime_id\": \"test_error_decomposition.ErrorDecomposition.test_counter_extraction_rejects_missing_repeated_and_nonfinite_evidence\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 49, \"name\": \"test_delayed_event_splits_phase_difference_from_wrong_sample\", \"path\": \"experiments/backends/sample-edge-filter/test_error_decomposition.py\", \"sha256\": \"68a35a460cd21d6cded4d9046d248a0ca425025c45c1ab6fb4b0593f3ac803c3\"}, \"generated\": false, \"module_path\": \"experiments/backends/sample-edge-filter/test_error_decomposition.py\", \"module_sha256\": \"df98115f8903a12926e98a6ebac168954f4e265ea1089617dfa374a763784bb0\", \"runtime_id\": \"test_error_decomposition.ErrorDecomposition.test_delayed_event_splits_phase_difference_from_wrong_sample\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 34, \"name\": \"test_ramp_and_filter_have_independent_closed_form_anchor\", \"path\": \"experiments/backends/sample-edge-filter/test_error_decomposition.py\", \"sha256\": \"297c056890fff4415264ba3f835db2ec4774a4575e9e2212f90b3d49df4982fe\"}, \"generated\": false, \"module_path\": \"experiments/backends/sample-edge-filter/test_error_decomposition.py\", \"module_sha256\": \"df98115f8903a12926e98a6ebac168954f4e265ea1089617dfa374a763784bb0\", \"runtime_id\": \"test_error_decomposition.ErrorDecomposition.test_ramp_and_filter_have_independent_closed_form_anchor\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 21, \"name\": \"test_rehashed_replacement_manifest_does_not_replace_retained_identity\", \"path\": \"experiments/backends/sample-edge-filter/test_error_decomposition.py\", \"sha256\": \"4cf3c1212ade3009b71434e8005ddfffc44e31778876fcd01ea343ec54067ce3\"}, \"generated\": false, \"module_path\": \"experiments/backends/sample-edge-filter/test_error_decomposition.py\", \"module_sha256\": \"df98115f8903a12926e98a6ebac168954f4e265ea1089617dfa374a763784bb0\", \"runtime_id\": \"test_error_decomposition.ErrorDecomposition.test_rehashed_replacement_manifest_does_not_replace_retained_identity\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 37, \"name\": \"test_exact_response_passes_and_output_or_input_corruption_fails\", \"path\": \"experiments/backends/sample-edge-filter/test_filter_budget_compare.py\", \"sha256\": \"17b17222e63393776e28d354339ef3311934ba60e4d20b5ff4344be91ee1dbe1\"}, \"generated\": false, \"module_path\": \"experiments/backends/sample-edge-filter/test_filter_budget_compare.py\", \"module_sha256\": \"a8815e18778fe0e3be749e9e5ce304097dcec9fd2cc07a0bc9bf55d2b56c5fc3\", \"runtime_id\": \"test_filter_budget_compare.FilterBudgetChecker.test_exact_response_passes_and_output_or_input_corruption_fails\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 56, \"name\": \"test_freeze_preserves_all_original_budgets_and_profiles\", \"path\": \"experiments/backends/sample-edge-filter/test_filter_budget_compare.py\", \"sha256\": \"9a1171ff8e3a05f18d1e75d1284f2aa5f0a7a790408e5a2523149f7600528007\"}, \"generated\": false, \"module_path\": \"experiments/backends/sample-edge-filter/test_filter_budget_compare.py\", \"module_sha256\": \"a8815e18778fe0e3be749e9e5ce304097dcec9fd2cc07a0bc9bf55d2b56c5fc3\", \"runtime_id\": \"test_filter_budget_compare.FilterBudgetChecker.test_freeze_preserves_all_original_budgets_and_profiles\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 43, \"name\": \"test_missing_boundary_nonfinite_and_missing_data_are_not_passes\", \"path\": \"experiments/backends/sample-edge-filter/test_filter_budget_compare.py\", \"sha256\": \"d6fb5ee075c4a09f7dd38f1098a198f65ebbdee51622ddd1e1eb40a7f5e1a995\"}, \"generated\": false, \"module_path\": \"experiments/backends/sample-edge-filter/test_filter_budget_compare.py\", \"module_sha256\": \"a8815e18778fe0e3be749e9e5ce304097dcec9fd2cc07a0bc9bf55d2b56c5fc3\", \"runtime_id\": \"test_filter_budget_compare.FilterBudgetChecker.test_missing_boundary_nonfinite_and_missing_data_are_not_passes\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 72, \"name\": \"test_observation_control_requires_unmodified_source_and_actual_callback\", \"path\": \"experiments/backends/sample-edge-filter/test_filter_budget_compare.py\", \"sha256\": \"f440d95b3032d5e69350c7c5ff78cfd130132b6758699cb410c9824d0c70aeb9\"}, \"generated\": false, \"module_path\": \"experiments/backends/sample-edge-filter/test_filter_budget_compare.py\", \"module_sha256\": \"a8815e18778fe0e3be749e9e5ce304097dcec9fd2cc07a0bc9bf55d2b56c5fc3\", \"runtime_id\": \"test_filter_budget_compare.FilterBudgetChecker.test_observation_control_requires_unmodified_source_and_actual_callback\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 51, \"name\": \"test_old_export_without_right_edge_end_is_insufficient\", \"path\": \"experiments/backends/sample-edge-filter/test_filter_budget_compare.py\", \"sha256\": \"4a6b82b5377b28ab5cfdcebfaca3f1c5fbfbc1a5f4e39f1eb6144ae8a5c8e9a3\"}, \"generated\": false, \"module_path\": \"experiments/backends/sample-edge-filter/test_filter_budget_compare.py\", \"module_sha256\": \"a8815e18778fe0e3be749e9e5ce304097dcec9fd2cc07a0bc9bf55d2b56c5fc3\", \"runtime_id\": \"test_filter_budget_compare.FilterBudgetChecker.test_old_export_without_right_edge_end_is_insufficient\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 55, \"name\": \"test_empty_reference_cannot_report_success\", \"path\": \"experiments/backends/sample-edge-filter/test_root_compare.py\", \"sha256\": \"b7bc5cf58d14928a92751ac5ab6670963e0bf521f905a8903c49d2750db39b8f\"}, \"generated\": false, \"module_path\": \"experiments/backends/sample-edge-filter/test_root_compare.py\", \"module_sha256\": \"cd2a1eb3c8f1950c77ad480faed60ee144956a76de929535ec3de2f6f811ddde\", \"runtime_id\": \"test_root_compare.RootComparison.test_empty_reference_cannot_report_success\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 65, \"name\": \"test_old_rejection_and_new_recovery_are_distinct_obligations\", \"path\": \"experiments/backends/sample-edge-filter/test_root_compare.py\", \"sha256\": \"01bb181db74639fb3535c9532b75fde40b66c790c3fdb56e8cb44850246b2864\"}, \"generated\": false, \"module_path\": \"experiments/backends/sample-edge-filter/test_root_compare.py\", \"module_sha256\": \"cd2a1eb3c8f1950c77ad480faed60ee144956a76de929535ec3de2f6f811ddde\", \"runtime_id\": \"test_root_compare.RootComparison.test_old_rejection_and_new_recovery_are_distinct_obligations\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 26, \"name\": \"test_reference_denominator_survives_rehashed_partial_archive\", \"path\": \"experiments/backends/sample-edge-filter/test_root_compare.py\", \"sha256\": \"69a55308bd8b77041742248e186f5da6e9f3434016682c13c261a6a92b88c1e9\"}, \"generated\": false, \"module_path\": \"experiments/backends/sample-edge-filter/test_root_compare.py\", \"module_sha256\": \"cd2a1eb3c8f1950c77ad480faed60ee144956a76de929535ec3de2f6f811ddde\", \"runtime_id\": \"test_root_compare.RootComparison.test_reference_denominator_survives_rehashed_partial_archive\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 75, \"name\": \"test_same_fixed_observations_detect_corruption\", \"path\": \"experiments/backends/sample-edge-filter/test_root_compare.py\", \"sha256\": \"4d4b732b1f3927a8f63450ab969e4e3a20882275cc360942dff147acffe5ba9f\"}, \"generated\": false, \"module_path\": \"experiments/backends/sample-edge-filter/test_root_compare.py\", \"module_sha256\": \"cd2a1eb3c8f1950c77ad480faed60ee144956a76de929535ec3de2f6f811ddde\", \"runtime_id\": \"test_root_compare.RootComparison.test_same_fixed_observations_detect_corruption\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}], \"namespace\": \"validation\", \"schema_version\": 1, \"skipped_declarations\": 0, \"unresolved_instances\": []}\n",
+      "stderr": "",
+      "environment_overrides": {},
+      "actual_resolved_overrides": {},
+      "collection_profile": "inventory-child runtime; not original phase execution/skip results",
+      "original_python_equivalence": "major-minor-declared-only",
+      "sys_path_contract": "repository-cwd first, then literal phase PYTHONPATH; TestLoader adds start directory"
+    }
+  }
+}

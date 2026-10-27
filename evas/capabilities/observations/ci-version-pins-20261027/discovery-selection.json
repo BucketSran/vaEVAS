@@ -1,0 +1,348 @@
+{
+  "entries": [
+    {
+      "entry_file": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/consumer-integration-20261027/new-discovery/entry-000.json",
+      "entry_id": "8728e565f4468c702b40aba87fcffd8b90398dd6078040c590b2a72ba63b4cc8",
+      "reused": true,
+      "source_locator": {
+        "kind": "git-object",
+        "repository": "vaevas",
+        "revision": "8d019391be67a18cbd5111b95990d89222eb45c2",
+        "path": "evas/capabilities/observations/pr5-consumer-migration-20261027/new-discovery/entry-000.json"
+      },
+      "sha256": "03f6bf0bb253c8269a0f8f3c7f8210c3bab9b968891be3f79899575c9461ae23",
+      "instances": 36,
+      "start": "scripts/tests",
+      "pattern": "test_ci_selection.py"
+    },
+    {
+      "entry_file": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/c0-candidate/discovery/entry-001.json",
+      "entry_id": "dc743147439e4d27f4838becc5e46dee3923e866fdeea0100d9d7479af10108e",
+      "reused": true,
+      "source_locator": {
+        "kind": "git-object",
+        "repository": "vaevas",
+        "revision": "08f0977e9a22357afa8cdeb9f64231fabab171fa",
+        "path": "evas/capabilities/observations/pr4-c0-prerequisite-20261027/discovery/entry-001.json"
+      },
+      "sha256": "4bfde9f9259e3fc5282381a6fc91961da04e6f682c0b5e9d3d8984c330609dde",
+      "instances": 12,
+      "start": "scripts/tests",
+      "pattern": "test_evas_check_policy.py"
+    },
+    {
+      "entry_file": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/c0-candidate/discovery/entry-002.json",
+      "entry_id": "8d48624992909fcbef141935e46aea903f6db22057a4a96a055e148bf193e2da",
+      "reused": true,
+      "source_locator": {
+        "kind": "git-object",
+        "repository": "vaevas",
+        "revision": "08f0977e9a22357afa8cdeb9f64231fabab171fa",
+        "path": "evas/capabilities/observations/pr4-c0-prerequisite-20261027/discovery/entry-002.json"
+      },
+      "sha256": "a70f6cbf50ba57dad07d5be80e46bd2ffb9ea150ee4c2f8ddc74fc6125f0d52c",
+      "instances": 14,
+      "start": "scripts/tests",
+      "pattern": "test_fast_feedback.py"
+    },
+    {
+      "entry_file": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/c0-candidate/discovery/entry-003.json",
+      "entry_id": "3cf39003351ddf1d15048a7571870fbc1472d6c396a033051e2edd622423c133",
+      "reused": true,
+      "source_locator": {
+        "kind": "git-object",
+        "repository": "vaevas",
+        "revision": "08f0977e9a22357afa8cdeb9f64231fabab171fa",
+        "path": "evas/capabilities/observations/pr4-c0-prerequisite-20261027/discovery/entry-003.json"
+      },
+      "sha256": "911df3710be0a5c1cb3ea2c4c4228ff16ce8b3262151d1f0e2a6da185b0e7150",
+      "instances": 7,
+      "start": "scripts/tests",
+      "pattern": "test_independent_ci.py"
+    },
+    {
+      "entry_file": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/c0-candidate/discovery/entry-004.json",
+      "entry_id": "a1d1e85dc7ec2626dbf63f201cfc1e51882c04eaed16db13f11d549e3eb08773",
+      "reused": true,
+      "source_locator": {
+        "kind": "git-object",
+        "repository": "vaevas",
+        "revision": "08f0977e9a22357afa8cdeb9f64231fabab171fa",
+        "path": "evas/capabilities/observations/pr4-c0-prerequisite-20261027/discovery/entry-004.json"
+      },
+      "sha256": "ffbcbe435c3526f73bed26dffc2cc8b40871192a1374d24d0e45113f96929103",
+      "instances": 25,
+      "start": "scripts/tests",
+      "pattern": "test_regression_runner.py"
+    },
+    {
+      "entry_file": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/new-discovery/entry-005.json",
+      "entry_id": "731c212693179dd8da1abe60e53fbe6689c67e9467f0ac2969d322297420e8cb",
+      "reused": false,
+      "forced_by_changed_paths": [
+        "scripts/tests/test_ci_inventory.py",
+        "scripts/tests/test_ci_pins.py"
+      ],
+      "sha256": "3e8341a2b472c7803eea50907806fdbd06d45a7152cfe9baeac3539e316afaf3",
+      "instances": 575,
+      "start": "scripts/tests",
+      "pattern": "test*.py"
+    },
+    {
+      "entry_file": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/new-discovery/entry-006.json",
+      "entry_id": "72f763d5f35f41da943f4b98ec0fccd720c7e84957452773dda559188e8fba55",
+      "reused": false,
+      "forced_by_changed_paths": [],
+      "sha256": "c35a9280801023328fd7ed2a1464e500f5e4c64ead48aca14cfbc342c4cfb67c",
+      "instances": 77,
+      "start": "evas/capabilities",
+      "pattern": "test_*.py"
+    },
+    {
+      "entry_file": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/new-discovery/entry-007.json",
+      "entry_id": "33a1ba44b64966e0dfc8f20035d908f1705700a0d8e0fa5ed6a80d6697cfade7",
+      "reused": false,
+      "forced_by_changed_paths": [],
+      "sha256": "8c1c1f0bbac9f74f77ec80146f2c3fee314b6f8dc4438bf3d13b0400dba61cef",
+      "instances": 16,
+      "start": "experiments/backends/evidence",
+      "pattern": "test*.py"
+    },
+    {
+      "entry_file": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/new-discovery/entry-008.json",
+      "entry_id": "6910c1164c4078bf4b2dda12f3482956bd390d1edb350f6797e36405b1e7ce14",
+      "reused": false,
+      "forced_by_changed_paths": [],
+      "sha256": "42506a9d70452edb176e00787c1eb3c472a6b98dd02a04d873a152a45ce9a680",
+      "instances": 100,
+      "start": "experiments/backends/dvs2-spectre-validation",
+      "pattern": "test_*.py"
+    },
+    {
+      "entry_file": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/new-discovery/entry-009.json",
+      "entry_id": "460bdab1f152b81b15153f724fd3e43af67b28229be81c4b458272183f419eef",
+      "reused": false,
+      "forced_by_changed_paths": [],
+      "sha256": "8279b8def0b6f06ec4ab1702a91f5e1188b446a8a9d1c13c70c5708ba283f698",
+      "instances": 20,
+      "start": "experiments/backends/spectre-alignment",
+      "pattern": "test_*.py"
+    },
+    {
+      "entry_file": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/new-discovery/entry-010.json",
+      "entry_id": "10fb900f8aa38e1af1509a6abf92db3171a1de24aef43b7d0f2a31960ff2f198",
+      "reused": false,
+      "forced_by_changed_paths": [],
+      "sha256": "28177b23c7acbafc1aaf1df337280c7e9bb0a1e4739ec1bb0e8fd94c7c8e92cc",
+      "instances": 19,
+      "start": "evas/validation/event_alignment",
+      "pattern": "test_checker.py"
+    },
+    {
+      "entry_file": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/new-discovery/entry-011.json",
+      "entry_id": "02b90032e15fa10a03e7a1207faa7446c7c66a8460d7ba3f957a99018ca70d79",
+      "reused": false,
+      "forced_by_changed_paths": [],
+      "sha256": "f1add578ee3482901cc8557c702298337ac1e7a6665d847aa70054b03f3c3c63",
+      "instances": 5,
+      "start": "evas/validation/strobe",
+      "pattern": "test_*.py"
+    },
+    {
+      "entry_file": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/new-discovery/entry-012.json",
+      "entry_id": "3f87c6b9757cefac692a9be744f4174bbbd5612a6694a976ebf0761676a4e30f",
+      "reused": false,
+      "forced_by_changed_paths": [],
+      "sha256": "881d18224c1e6684bd3b24d0a9ad400fd9ef96e69afc82ce872308ecceab8a4f",
+      "instances": 35,
+      "start": "experiments/backends/event-alignment",
+      "pattern": "test_*.py"
+    },
+    {
+      "entry_file": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/new-discovery/entry-013.json",
+      "entry_id": "6d1154820095a4e7cffe5c58b32ee0429c6a645a96b1032a9ad1d62cdb1a5330",
+      "reused": false,
+      "forced_by_changed_paths": [],
+      "sha256": "910fcd5a4e03c4a08edfeeccdd23ecd0bcdb0d6c3997a60e39a9b929f1a50a2c",
+      "instances": 4,
+      "start": "evas/validation/sample_edge_filter",
+      "pattern": "test_*.py"
+    },
+    {
+      "entry_file": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/new-discovery/entry-014.json",
+      "entry_id": "4807ed83e7ada15164219e8998f0bbdc4f553683d73064c587adb6b1b623fefc",
+      "reused": false,
+      "forced_by_changed_paths": [],
+      "sha256": "02c157d78d82616cfecd581914859d24f774bf4e8750f26256c4f06c5846a46b",
+      "instances": 36,
+      "start": "experiments/backends/sample-edge-filter",
+      "pattern": "test_*.py"
+    },
+    {
+      "entry_file": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/new-discovery/entry-015.json",
+      "entry_id": "8efdea8a1e7c2ea2ae55dd638a941babe504f9d8bcb436878ea84a358559db1d",
+      "reused": false,
+      "forced_by_changed_paths": [],
+      "sha256": "03f93ca86c3fa5e637af80327d5457b276a6afab2d76598f3a26ab5563d23e23",
+      "instances": 26,
+      "start": "experiments/backends/implicit-event-restart",
+      "pattern": "test_check.py"
+    },
+    {
+      "entry_file": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/new-discovery/entry-016.json",
+      "entry_id": "0993be1a9e8845c4529dc349f6b5e3e8d3b62c1ea24fcb428920eb08106882ab",
+      "reused": false,
+      "forced_by_changed_paths": [],
+      "sha256": "214f4cb9e63af8ca72b8f5d9ce6c9498f9cd5835597f8c0bc3aec06bb6f734f5",
+      "instances": 5,
+      "start": "experiments/performance",
+      "pattern": "test_*.py"
+    },
+    {
+      "entry_file": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/new-discovery/entry-017.json",
+      "entry_id": "3ef97407179ad0980dcf4a4980bb8d7189bf97f89c94ac7ce3696520815b7181",
+      "reused": false,
+      "forced_by_changed_paths": [],
+      "sha256": "c32948593761b480dcbbfcdd64705c39d7f5946d5e6250ae8fc946dbb8a5ecd5",
+      "instances": 29,
+      "start": "evas/validation/paper",
+      "pattern": "test_criteria.py"
+    },
+    {
+      "entry_file": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/new-discovery/entry-018.json",
+      "entry_id": "20b2470f2a953a370b9bdbfeed162df8e1160ab72c5e07f6c2b13d07daf09b83",
+      "reused": false,
+      "forced_by_changed_paths": [],
+      "sha256": "bb827963af3a50f058d0de89202ebb14e708fc4deb857af1d06bbfdb72730c3c",
+      "instances": 34,
+      "start": "evas/validation/paper",
+      "pattern": "test_*root*.py"
+    },
+    {
+      "entry_file": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/new-discovery/entry-019.json",
+      "entry_id": "e12630669ce6f09b19ea100de756129a2dfa498cb742ec7ad43c79f11f6c9825",
+      "reused": false,
+      "forced_by_changed_paths": [],
+      "sha256": "ecbe14f6d3d67afdbe910f40230d02b3401a2bb74dba8db58dfda53cb2fe8f6f",
+      "instances": 22,
+      "start": "evas/validation/checker_calibration",
+      "pattern": "test*.py"
+    },
+    {
+      "entry_file": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/new-discovery/entry-020.json",
+      "entry_id": "9771afe3951550ee6b750c513c5171480e2d254d49074bede8e180fc728be24a",
+      "reused": false,
+      "forced_by_changed_paths": [],
+      "sha256": "31efe8f69b1adb796ed85b4dcbf522ad59d3d395fee750857207c2ba5be5eed0",
+      "instances": 3,
+      "start": "evas/validation/paper",
+      "pattern": "test_coefficient_first_order.py"
+    },
+    {
+      "entry_file": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/new-discovery/entry-021.json",
+      "entry_id": "bf4aadf4ee3e39ccfef7cac1e2bc0c9df50e17b35d3be19aeb069ee3c6d6fdce",
+      "reused": false,
+      "forced_by_changed_paths": [],
+      "sha256": "5e7121a34f36b0148fc8a6779553596b3100e7156d81eb08e4381c48f5ba2545",
+      "instances": 12,
+      "start": "evas/validation/paper",
+      "pattern": "test_precision.py"
+    },
+    {
+      "entry_file": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/new-discovery/entry-022.json",
+      "entry_id": "f78c62a05f84b001cd7f32b548e5726cfd79a05e2e13a55f4198d4a3a758e005",
+      "reused": false,
+      "forced_by_changed_paths": [],
+      "sha256": "f2cacb3888fddb0246780cc2daa6b2bf880911f84f81ad9cfe2772cec6e3dc72",
+      "instances": 5,
+      "start": "evas/validation/paper",
+      "pattern": "test_precision_binding.py"
+    },
+    {
+      "entry_file": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/new-discovery/entry-023.json",
+      "entry_id": "d2d875ac8fb62574663baf77bf46d002c353e04b9ea54d269926e3bb0dde3362",
+      "reused": false,
+      "forced_by_changed_paths": [],
+      "sha256": "9cf4101afa9bd5b3eafc747443d5d9302916979377ae73caa2223be8b2a9b271",
+      "instances": 16,
+      "start": "evas/validation/paper",
+      "pattern": "test_precision_v2.py"
+    },
+    {
+      "entry_file": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/new-discovery/entry-024.json",
+      "entry_id": "1d788cc5ccd61f58d3505ded3df0c99f62c0a1cd72823c05243abe342622920d",
+      "reused": false,
+      "forced_by_changed_paths": [],
+      "sha256": "c0f4f1374de28047dda8ff88f2c424c823dfb343a44a487be22111a2d4318f96",
+      "instances": 11,
+      "start": "evas/validation/paper",
+      "pattern": "test_primitives.py"
+    },
+    {
+      "entry_file": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/new-discovery/entry-025.json",
+      "entry_id": "0bac335b3cc3331a1ec5b14ad0b0c4c715c6f83da8b318e3cee3f065bf4b0495",
+      "reused": false,
+      "forced_by_changed_paths": [],
+      "sha256": "752b83ba2be6e9f592f13a488db7a05c088941d438a7558aa4f5d14c0411c5fb",
+      "instances": 135,
+      "start": "experiments/backends/paper",
+      "pattern": "test_*.py"
+    },
+    {
+      "entry_file": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/new-discovery/entry-026.json",
+      "entry_id": "f41bfd52937150500c54cdff397f0670c3aa2c7bdfecf91517c151c670e4f18b",
+      "reused": false,
+      "forced_by_changed_paths": [],
+      "sha256": "0b6b08cea49ecd179ea3b913b6b0090561717a502c8af667d2d4f8c40d82ca8f",
+      "instances": 78,
+      "start": "experiments/backends/comparison",
+      "pattern": "test_*.py"
+    },
+    {
+      "entry_file": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/new-discovery/entry-027.json",
+      "entry_id": "a8408c15755ce2e7c6a76ac794dafafd601814160af7cb5365e36987b4a0104d",
+      "reused": false,
+      "forced_by_changed_paths": [],
+      "sha256": "6640c408e6f240df589c14c9cc3736e08cf3011a0d969674ed9b74ebb50e00fb",
+      "instances": 3,
+      "start": "evas/validation/support",
+      "pattern": "test_*.py"
+    },
+    {
+      "entry_file": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/new-discovery/entry-028.json",
+      "entry_id": "01adfd70b78e6ee75f4bb197f332193e0947d157edcc0cbe27c3c816aba66dbf",
+      "reused": false,
+      "forced_by_changed_paths": [],
+      "sha256": "8810f4ae9e5593b482dbd4824eb96667448ab61a3e7243cdd83c938e514d5c42",
+      "instances": 226,
+      "start": "experiments/backends/support",
+      "pattern": "test_*.py"
+    },
+    {
+      "entry_file": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/new-discovery/entry-029.json",
+      "entry_id": "26b7bf1957812e5019286dfbefcf4a5173cee1c2df363e0d8d11301ea2543dba",
+      "reused": false,
+      "forced_by_changed_paths": [],
+      "sha256": "8e911b460ee57fc4569ce29af3a8bc5d259d951d0ac49a5b37cf5c7ac3ec42d2",
+      "instances": 9,
+      "start": "evas/validation/differential",
+      "pattern": "test*.py"
+    },
+    {
+      "entry_file": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/new-discovery/entry-030.json",
+      "entry_id": "1957622d28fe1eb11750ee78e7b76a23378cf3a59dcecb264d9fdec3a17f73ce",
+      "reused": false,
+      "forced_by_changed_paths": [],
+      "sha256": "d7603965a467047fed4be416375facec9658a9cc777d8b5ed5f3ff40da0c4642",
+      "instances": 3257,
+      "start": "evas/tests",
+      "pattern": "test*.py"
+    }
+  ],
+  "entry_count": 31,
+  "reused": 5,
+  "new_collections": 26,
+  "reuse_basis": "Exact workflow entry, collector and owner-module hashes from the PR271 receipts; entries whose start/pattern match a changed path are recollected.",
+  "test_bodies_executed": false,
+  "scientific_qualification": false
+}
