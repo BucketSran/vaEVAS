@@ -59,4 +59,3 @@ def worker(work, kernel, root):
     except KernelError as exc:
         result = {'status': 'execution_failed', 'failure_stage': 'kernel', 'reason': str(exc), 'detail': exc.detail}
     save(work / 'worker-result.json', result)
-
