@@ -1,0 +1,93 @@
+{
+  "prepared_at_utc": "2026-10-27T08:52:11.389670+00:00",
+  "base": "ac1b6e8d8de743b8da3f862c0f50bdf0a1a1ca14",
+  "base_tree": "1b83f28af63dbaddc60fea500309f19962e7f947",
+  "patches": [
+    {
+      "name": "support-view-binding-fix-grok-20261027",
+      "sha256": "aaf946299b8364648c8c1c1d4332bfeb5d0579a5337cf87f8e208978c8304573"
+    },
+    {
+      "name": "view-consumers-grok-20261027",
+      "sha256": "5f2f87f91cd4d181e2f05a3974db2a69e51a3145032eb0e54efe9a1dfc650e7e"
+    },
+    {
+      "name": "catalog-flow-completion-grok-20261027",
+      "sha256": "f57e438a8cc7d7d7acd1933d28fdf7be7e71ef87b73ffb59a4d4834798c9b063"
+    }
+  ],
+  "paths": [
+    ".agents/skills/evas-develop/SKILL.md",
+    ".agents/skills/evas-validate/SKILL.md",
+    "AGENTS.md",
+    "docs/contributing/evidence.md",
+    "docs/contributing/validation.md",
+    "evas/README.md",
+    "evas/capabilities/README.md",
+    "evas/capabilities/render.py",
+    "evas/capabilities/support_view.py",
+    "evas/capabilities/test_asset_catalog.py",
+    "evas/capabilities/test_support_view.py",
+    "evas/docs/COMPARISON-METHODOLOGY.md",
+    "evas/docs/COMPARISON.md",
+    "evas/docs/development/PROCESS.md",
+    "evas/validation/METHOD_QUALIFICATION.md",
+    "evas/validation/PROTOCOL.md",
+    "evas/validation/README.md",
+    "experiments/README.md",
+    "scripts/capabilities/generate_catalog.py",
+    "scripts/ci_selection.py",
+    "scripts/tests/test_catalog_derived_outputs.py",
+    "scripts/tests/test_ci_selection.py"
+  ],
+  "new_files": [
+    "evas/capabilities/support_view.py",
+    "evas/capabilities/test_support_view.py",
+    "scripts/tests/test_catalog_derived_outputs.py"
+  ],
+  "files": {
+    ".agents/skills/evas-develop/SKILL.md": "dbb3c0a502457a3829b0f5bbafc88e937a1bb11b60df632bd77323c64fbafeeb",
+    ".agents/skills/evas-validate/SKILL.md": "deae834c86a764772152b187cb6b5aa632b120182a3daa81a84ce1376f96d3dd",
+    "AGENTS.md": "497fc44080335d9bba65c2cea5c959545512168bfc49d8db3c2fbd71ba322535",
+    "docs/contributing/evidence.md": "7f8448af3c5168e9d92df680e85d6942264a8b455577f4c91fcf5a650730fadb",
+    "docs/contributing/validation.md": "3d459037c1379eadf125a63d373ae2a6cecb448565e6ec6ba5d8deb845f135a0",
+    "evas/README.md": "adb9774cb62b4f679932d2a52a25a5615c8485f17506aa9cd53c1d7f909ea89a",
+    "evas/capabilities/README.md": "a16c8e5ff920a6d3b26508a083b1cd266a824965ba6b151e819c7187bc7823b7",
+    "evas/capabilities/render.py": "55b685e39ede2c31b9ecc3c2def3b9638910f0e8552b9a12b9aca366a33f80d3",
+    "evas/capabilities/support_view.py": "ab82851eca6a3495c6481b3c9a99ecdbcb362acf7e7304ffa770ff8ad1d09f2f",
+    "evas/capabilities/test_asset_catalog.py": "fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806",
+    "evas/capabilities/test_support_view.py": "19e1bc4f165952b59182271bfa53c756aa9134f03748ab661746890ee36c18eb",
+    "evas/docs/COMPARISON-METHODOLOGY.md": "0bcc05667b14b96347212197c2e21c04b60a097f2fe405d13cee029e3e8f63ed",
+    "evas/docs/COMPARISON.md": "408283f71413782d348412d526f7ffe39b0091a0c4361b248fd9cbb8cfb3888a",
+    "evas/docs/development/PROCESS.md": "6ccfabfb211573c18e864c0fcdf9bd79fdbf6232faa8a9f619eca8fb232ffd04",
+    "evas/validation/METHOD_QUALIFICATION.md": "622be2cf969223433c6c2966c3dd9bbdfe3edd30cf55d6b86dba8d4612dedd69",
+    "evas/validation/PROTOCOL.md": "f08f959d6d8219165171ea5e843fd05ac734e84cbb65bb6228c4ed957e07e9be",
+    "evas/validation/README.md": "928fb86e8ffe89a0c1822435b0146c16058317267287afee7caeeba196685ff4",
+    "experiments/README.md": "b9242589977158f709ea53cf1478b4e97587528f1f43310ca1e14683d1f98e61",
+    "scripts/capabilities/generate_catalog.py": "7cbfe5e9fd00f5b84854e5fe1834b7737781588d7d881720e7cfa3d0ec337b8c",
+    "scripts/ci_selection.py": "c4f14d4a72b65de11bc43e12aadab44cfb70967fdc267dab9e039687054f618f",
+    "scripts/tests/test_catalog_derived_outputs.py": "9a0371eb292dcea6347caedde7c4077e99b33d48b94a0f27e97c691cf0082498",
+    "scripts/tests/test_ci_selection.py": "08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720"
+  },
+  "composition_identical_to_preview": true,
+  "preview": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/integration-preview-on-pr5-20261027/composition.json",
+  "main_changes_since_preview_base_overlap": [],
+  "before": {
+    "head": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+    "index_sha256": "a2e18b66fd9b3e29093343793d45781c11a717c05c35103d4e9b1da8eec87d71",
+    "shared_config_sha256": "de2b08ef3ba66e96be8b70c87346ff4a96f905e1272934ddd86c218dba501ea8",
+    "shared_config_status": "equal-accepted-reference",
+    "old_candidates": 20
+  },
+  "after": {
+    "head": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+    "index_sha256": "a2e18b66fd9b3e29093343793d45781c11a717c05c35103d4e9b1da8eec87d71",
+    "shared_config_sha256": "de2b08ef3ba66e96be8b70c87346ff4a96f905e1272934ddd86c218dba501ea8",
+    "shared_config_status": "equal-accepted-reference",
+    "old_candidates": 20
+  },
+  "published": false,
+  "scientific_execution": false,
+  "semantic_qualification": false,
+  "executed_by": "tclaude/claude-opus-5-5"
+}

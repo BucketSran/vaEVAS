@@ -1,0 +1,2299 @@
+diff --git a/.agents/skills/evas-develop/SKILL.md b/.agents/skills/evas-develop/SKILL.md
+index b924e918..b5118fba 100644
+--- a/.agents/skills/evas-develop/SKILL.md
++++ b/.agents/skills/evas-develop/SKILL.md
+@@ -134,7 +134,9 @@ benchmark construction unless it is part of the requested scope.
+ For semantic/numerical work, update the relevant handbook chapter using the
+ [feature documentation contract](../../../evas/docs/README.md#feature-documentation-contract):
+ behavior, source/assumption distinction, mathematics, numerical method, code map,
+-independent evidence and limits. Update affected support summaries and evidence-index entries; do not
++independent evidence and limits. When support facts change, regenerate the current requirement view
++from the capability registration and update affected evidence-index entries. Leave historical scores in
++`evas/docs/COMPARISON.md` under their original identity. Do not
+ promote branch work to merged support or an old run to verification of a new base.
+ Hand off the requirements, actual diff and evidence for the independent review
+ required by the [review policy](../../../CONTRIBUTING.md#reviewing-diffs).
+diff --git a/.agents/skills/evas-validate/SKILL.md b/.agents/skills/evas-validate/SKILL.md
+index 4f82c6fd..4d8a90f5 100644
+--- a/.agents/skills/evas-validate/SKILL.md
++++ b/.agents/skills/evas-validate/SKILL.md
+@@ -258,8 +258,10 @@ outcomes. State what ran, what failed or was unsupported, evidence paths, and
+ what the observations cannot establish. Keep curated summaries according to
+ [experiment ownership](../../../experiments/README.md), without tracking raw
+ runs or machine-specific configuration.
+-Update affected entries in the [evidence index](../../../evas/docs/development/capability-evidence.md)
+-and support conclusions in the [support matrix](../../../evas/docs/COMPARISON.md)
+-separately from review/release status. Backend differences such as
++Update affected entries in the [evidence index](../../../evas/docs/development/capability-evidence.md).
++Regenerate current requirement facts with `evas/capabilities/render.py` into
++[support.md](../../../evas/capabilities/generated/support.md).
++Keep historical scores in the [support matrix](../../../evas/docs/COMPARISON.md)
++under their original identity, separately from review/release status. Backend differences such as
+ same-time event reads stay visible; do not label them LRM violations without a
+ supporting contract or silently rewrite the expected answer to match a backend.
+diff --git a/AGENTS.md b/AGENTS.md
+index ab644941..1ac71b40 100644
+--- a/AGENTS.md
++++ b/AGENTS.md
+@@ -44,7 +44,11 @@ Known component tasks can enter their skill directly. Name skills briefly and re
+ checks actually run. No mandatory interview, plan, KPI or separate workflow file.
+ For EVAS build/run commands, use [evas/README](evas/README.md#构建与运行).
+ EVAS behavior or support claims require the component's capability/evidence gates;
+-documentation-only changes need no simulator run. Keep failing cases and denominators,
++documentation-only changes need no simulator run. Current four-backend requirement facts
++come from [render.py](evas/capabilities/render.py) into
++[support.md](evas/capabilities/generated/support.md).
++[COMPARISON.md](evas/docs/COMPARISON.md) keeps historical score identity
++`historical-comparison-import-f210ebd5`. Keep failing cases and denominators,
+ source identities and local/published status truthful. Publishing, merging and cleanup
+ require authorization for that action and target.
+ 
+diff --git a/docs/contributing/evidence.md b/docs/contributing/evidence.md
+index 33f03297..e44a9f44 100644
+--- a/docs/contributing/evidence.md
++++ b/docs/contributing/evidence.md
+@@ -7,6 +7,8 @@ and publication rules.
+ ## Evidence and assets
+ 
+ For EVAS behavior or support/evidence changes, use stable capability IDs and update affected rows.
++Current requirement facts are regenerated from the capability registration by `evas/capabilities/render.py`.
++Historical scores stay in `evas/docs/COMPARISON.md` under identity `historical-comparison-import-f210ebd5`.
+ Keep implementation, evidence and review/release status separate; preserve known counterexamples.
+ EVAS semantic/numerical changes include the
+ [feature explanation](../../evas/docs/README.md#feature-documentation-contract) and independent checks.
+diff --git a/docs/contributing/validation.md b/docs/contributing/validation.md
+index b1c3487f..fb39af94 100644
+--- a/docs/contributing/validation.md
++++ b/docs/contributing/validation.md
+@@ -4,6 +4,17 @@ For behavior changes, read the test rules below and select checks with the ownin
+ component skill. Read candidate capture or migration rules only when that work applies.
+ See [CONTRIBUTING](../../CONTRIBUTING.md) for the contribution workflow.
+ 
++## Current requirement view
++
++Current four-backend requirement facts are generated from the capability registration by
++`evas/capabilities/render.py`. The JSON and Markdown views are
++`evas/capabilities/generated/support-facts.json` and `support.md`.
++`evas/docs/COMPARISON.md` keeps historical score identity `historical-comparison-import-f210ebd5`.
++Its compared and waiting rows stay retrievable. The current requirement denominator counts
++only current registration requirements.
++Check selection stays in `scripts/ci_selection.py` and `scripts/evas_check_policy.py`.
++This page does not add a gate those selectors do not already express.
++
+ ## Behavior-first tests
+ 
+ <a id="behavior-first-tests"></a>
+diff --git a/evas/README.md b/evas/README.md
+index bce5cdb8..8ad5e754 100644
+--- a/evas/README.md
++++ b/evas/README.md
+@@ -29,6 +29,8 @@ EVAS主要使用以下三类验证材料，各自保留明确的范围：
+ - **独立验证与共同比较条件**在 `evas/validation/`，包含模型、输入、数学答案、判定程序和错误对照。[验证入口](validation/README.md)说明用法，[COVERAGE](validation/paper/COVERAGE.md#summary-scopes)登记比较表每行的固定条件。
+ - **工程原件重放**使用历史400家族以及实际工程请求，核对完整模型和消费者。原始材料见[来源库](../benchmark/material/historyref/README.md)，具体输入与checker修订以对应任务的记录为准。
+ 
++Paper、comparison 与 precision 的 EVAS 执行职责在 `validation/adapters/`。现行命令见[已组合的 EVAS 执行入口](docs/development/PROCESS.md#current-consumers)。
++
+ 模型规定要模拟的问题；独立答案和容差规定对错；实际运行产生波形与事件记录；判定程序据此给出结果。
+ 比较表引用这些结果及其固定范围。开发测试方法数、比较条件数和工程家族数分别报告。
+ 新增测试可以扩展覆盖，但每次验收都须固定源码、用例和判据，保留原失败。
+diff --git a/evas/capabilities/README.md b/evas/capabilities/README.md
+index 9ed421db..be3d928e 100644
+--- a/evas/capabilities/README.md
++++ b/evas/capabilities/README.md
+@@ -14,7 +14,8 @@
+ | [generated/normative.md](generated/normative.md) | 从登记生成的规范处置与资格缺口视图 |
+ | [data/historical-comparison.json](data/historical-comparison.json) | 固定 `f210ebd5` 的旧成绩转录，保留历史范围，不授予当前 main 资格 |
+ | [catalog.py](catalog.py) | 读取历史登记的兼容接口，不再维护 Python 成绩常量 |
+-| [generated/comparison.md](generated/comparison.md) 与 [generated/paper.md](generated/paper.md) | 历史比较视图 |
++| [generated/comparison.md](generated/comparison.md) 与 [generated/paper.md](generated/paper.md) | 历史比较视图。身份来自 `data/historical-comparison.json`，原成绩可按各行链接检索 |
++| [generated/support.md](generated/support.md) 与 [generated/support-facts.json](generated/support-facts.json) | 登记生成的当前逐要求四后端事实。JSON 与 Markdown 同源。资格未授予时保持 pending |
+ 
+ 规范索引的分母来自官方文件，不从已有能力或通过测试反推。条款、表项、语法和附录的
+ 来源处置与语义要求审核分开；待判定项必须可枚举，不能当作已经排除或已经验证。
+@@ -58,6 +59,9 @@ python3 -B evas/capabilities/render.py --check
+ python3 -B -m unittest discover -s evas/capabilities -p 'test_*.py' -v
+ ```
+ 
++默认写入和 `--check` 使用同一次登记投影。当前要求事实写入上面两个 support 文件。
++历史比较页、节点页和 `registry.json` 的 `historical_view` 保留原输入与判据身份。
++
+ ## 资产、实际方法与历史来源
+ 
+ `data/registry.json` 的 `current` 选择当前版本，`object_parts` 只把同一逻辑登记拆成文件。
+diff --git a/evas/capabilities/render.py b/evas/capabilities/render.py
+index 14bd66e4..9bc97a3e 100644
+--- a/evas/capabilities/render.py
++++ b/evas/capabilities/render.py
+@@ -1,8 +1,12 @@
+ #!/usr/bin/env python3
+-"""Write the capability registry and the two views derived from it.
++"""Write historical capability views and the current requirement view.
+ 
+-    python3 evas/capabilities/render.py          # write registry, views, node pages
+-    python3 evas/capabilities/render.py --check  # fail if those files drift
++    python3 evas/capabilities/render.py
++    python3 evas/capabilities/render.py --check
++
++The default write and --check emit the historical pages together with
++generated/support.md and generated/support-facts.json. Both current files
++come from one registry projection.
+ """
+ import argparse
+ import json
+@@ -18,6 +22,8 @@ HERE = Path(__file__).resolve().parent
+ REGISTRY = HERE / "registry.json"
+ COMPARISON = HERE / "generated" / "comparison.md"
+ PAPER = HERE / "generated" / "paper.md"
++SUPPORT = HERE / "generated" / "support.md"
++SUPPORT_FACTS = HERE / "generated" / "support-facts.json"
+ BACKEND_HEADINGS = {
+     "spectre": "Spectre",
+     "ngspice": "ngspice + OpenVAF-R",
+@@ -26,8 +32,20 @@ BACKEND_HEADINGS = {
+ }
+ 
+ 
+-def registry():
+-    normative = load()
++def historical_view():
++    from support_view import load_historical_import
++    raw = load_historical_import()
++    return {
++        "identity": raw["identity"],
++        "source": raw["source"],
++        "scope": raw["scope"],
++        "role": "historical-index",
++        "in_current_requirement_denominator": False,
++    }
++
++
++def registry(reg=None):
++    normative = load() if reg is None else reg
+     return {
+         "language_profile": normative.data["language_profile"]["id"],
+         "target_scope": normative.data["target_scope"]["id"],
+@@ -36,6 +54,7 @@ def registry():
+                                 x["decision"] for x in normative.data["dispositions"]).items()))},
+         "chapters": list(CHAPTERS),
+         "campaigns": CAMPAIGNS,
++        "historical_view": historical_view(),
+         "nodes": NODES,
+     }
+ 
+@@ -59,10 +78,26 @@ def evidence_scope():
+     ]
+ 
+ 
++def historical_lines(data, view_link, facts_link):
++    view = data.get("historical_view") or {}
++    identity = view.get("identity") or "unknown"
++    source = view.get("source") or "unknown"
++    scope = view.get("scope") or "unknown"
++    return [
++        f"历史视图身份：`{identity}`。",
++        f"原输入：`{source}`。",
++        f"原判据范围：{scope}。",
++        "这些成绩留在该历史身份下。当前要求分母只计登记中的当前要求。",
++        f"当前逐要求四后端事实见 [support.md]({view_link}) 与 [support-facts.json]({facts_link})。",
++        "",
++    ]
++
++
+ def comparison_markdown(data):
+     lines = [
+         "# 能力比较表",
+         "",
++        *historical_lines(data, "support.md", "support-facts.json"),
+         "由 `evas/capabilities/data/` 生成。已比较的成绩转录自",
+         "[四后端支持表前五节](../../docs/COMPARISON.md#支持矩阵)，不改写该文的历史说明。",
+         "没有四后端成绩的节点标为等待跑，不填通过或失败。",
+@@ -92,6 +127,7 @@ def paper_markdown(data):
+     lines = [
+         "# 给使用者和审稿人的能力比较",
+         "",
++        *historical_lines(data, "support.md", "support-facts.json"),
+         "由 `evas/capabilities/data/` 生成。只包含已经有四后端成绩的能力节点。",
+         "这一页不是实验开发的登记簿。落后和未验收留在格子里。",
+         "",
+@@ -107,10 +143,11 @@ def paper_markdown(data):
+     return "\n".join(lines)
+ 
+ 
+-def node_page(node):
++def node_page(node, data=None):
+     lines = [
+         f"# {node['title']}",
+         "",
++        *historical_lines(data or {}, "../generated/support.md", "../generated/support-facts.json"),
+         f"章节：{node['chapter']}。",
+         f"状态：{'已比较' if node['status'] == 'compared' else '等待跑'}。",
+         f"审核：{'成绩已转录' if node['review'] == 'recorded' else '待审核'}。",
+@@ -140,7 +177,9 @@ def normative_markdown(reg):
+     counts = Counter(x['decision'] for x in reg.data['dispositions'])
+     target = reg.data['target_scope']
+     lines = ['# 规范登记状态', '',
+-             '由 `evas/capabilities/data/` 生成。规范索引、目标范围、资格和历史成绩分别记录。', '',
++             '由 `evas/capabilities/data/` 生成。规范索引、目标范围、资格和历史成绩分别记录。',
++             '当前逐要求四后端事实见 [support.md](support.md) 与 [support-facts.json](support-facts.json)。',
++             '',
+              f"语言配置：`{profile['id']}`。基础为 LRM {profile['base']}，选入变化为 "
+              + ', '.join(profile['selected_changes']) + '。', '',
+              '未选入的变化继续采用基础版本；规范选入不表示后端已支持。Spectre 待跑。', '',
+@@ -161,23 +200,49 @@ def normative_markdown(reg):
+     return '\n'.join(lines)
+ 
+ 
+-def outputs(data):
++def support_pair(reg, historical=None):
++    from support_view import projection_texts
++    return projection_texts(reg, historical)
++
++
++def outputs(data, reg=None):
++    reg = load() if reg is None else reg
++    facts, support = support_pair(reg)
+     files = {
+         REGISTRY: json.dumps(data, ensure_ascii=False, indent=2) + "\n",
+         COMPARISON: comparison_markdown(data),
+         PAPER: paper_markdown(data),
+-        HERE / "generated" / "normative.md": normative_markdown(load()),
++        HERE / "generated" / "normative.md": normative_markdown(reg),
++        SUPPORT_FACTS: facts,
++        SUPPORT: support,
+     }
+     for node in data["nodes"]:
+-        files[HERE / node["id"] / "README.md"] = node_page(node)
++        files[HERE / node["id"] / "README.md"] = node_page(node, data)
+     return files
+ 
+ 
+-def main():
++def main(argv=None):
+     parser = argparse.ArgumentParser(description=__doc__)
+     parser.add_argument("--check", action="store_true")
+-    args = parser.parse_args()
+-    files = outputs(registry())
++    parser.add_argument("--support-preview", metavar="DIR",
++                        help="write the same requirement projection into DIR; does not replace --check")
++    args = parser.parse_args(argv)
++    if args.support_preview:
++        if args.check:
++            raise SystemExit("support preview does not replace --check")
++        from support_view import SupportViewError, write_preview
++        try:
++            written = write_preview(load(), args.support_preview)
++        except SupportViewError as error:
++            raise SystemExit(str(error))
++        print(f"wrote {len(written)} provisional support files")
++        return
++    from support_view import SupportViewError
++    try:
++        reg = load()
++        files = outputs(registry(reg), reg)
++    except SupportViewError as error:
++        raise SystemExit(str(error))
+     if args.check:
+         stale = [path.relative_to(ROOT).as_posix() for path, text in files.items()
+                  if not path.is_file() or path.read_text() != text]
+diff --git a/evas/capabilities/support_view.py b/evas/capabilities/support_view.py
+new file mode 100644
+index 00000000..4ff8b84b
+--- /dev/null
++++ b/evas/capabilities/support_view.py
+@@ -0,0 +1,1015 @@
++"""Project current requirement facts for the four project backends.
++
++The projection reads Registry.current and qualification_gaps. It does not score
++coverage, confer requirement support, or read historical comparison cells as
++current results. A missing toolchain version stays unknown.
++"""
++import argparse
++import json
++from collections import Counter
++from pathlib import Path
++
++from catalog import BACKENDS, NODES
++from registry import digest
++
++EXPECTED_BACKENDS = ('spectre', 'ngspice', 'gnucap', 'evas')
++HEADINGS = {
++    'spectre': 'Spectre',
++    'ngspice': 'ngspice + OpenVAF-R',
++    'gnucap': 'Gnucap + modelgen-verilog',
++    'evas': 'EVAS',
++}
++DISTINCT_STATES = ('not_run', 'missing_evidence', 'unsupported', 'known_nonconformance')
++PRESERVE_FIELDS = (
++    'status', 'review', 'gap', 'budget', 'allowed_behavior', 'conditions',
++    'observables', 'required_boundaries', 'source_locations', 'language_profile',
++    'coverage_sufficiency',
++)
++HISTORICAL_FIELDS = (
++    'id', 'title', 'chapter', 'label', 'status', 'review', 'evidence',
++    'results', 'depends_on', 'gap', 'requirement', 'requirements',
++)
++FORBIDDEN_CELLS = {'', '✓', '✗', '✔', '✘', 'x', 'X', '√', '-', '—'}
++LIMITS = (
++    '这是暂定事实投影，不是已采用的支持视图，也不授予科学资格。',
++    '覆盖充分性未定义时保持 pending；单个案例资格不解释成要求或能力通过。',
++    '工具链版本只来自已绑定记录上的显式 toolchain 列表；没有该列表时为 unknown。',
++    'catalog.BACKENDS 的四个键不接收协议别名；无法精确对应的后端身份单独列出。',
++    '历史成绩保持原身份，不进入当前要求分母。',
++)
++
++
++class SupportViewError(ValueError):
++    pass
++
++
++if tuple(BACKENDS) != EXPECTED_BACKENDS:
++    raise SupportViewError(
++        'catalog.BACKENDS is not the fixed project four; refusing to merge aliases')
++
++
++def dumps(document):
++    return json.dumps(document, ensure_ascii=False, indent=2) + '\n'
++
++
++def _columns():
++    return [(name, HEADINGS[name]) for name in BACKENDS]
++
++
++def _fact(obj, key):
++    if not isinstance(obj, dict) or key not in obj or obj[key] is None:
++        return {'state': 'unknown'}
++    value = obj[key]
++    if isinstance(value, str) and value in DISTINCT_STATES:
++        return {'state': value, 'value': value}
++    return {'state': 'recorded', 'value': value}
++
++
++def _toolchain(obj):
++    if not isinstance(obj, dict) or 'toolchain' not in obj or obj['toolchain'] is None:
++        return {'state': 'unknown', 'components': []}
++    raw = obj['toolchain']
++    if not isinstance(raw, list):
++        return {'state': 'recorded', 'components': [], 'unparsed': raw}
++    components = []
++    for item in raw:
++        if not isinstance(item, dict):
++            components.append({'name': 'unknown', 'role': 'unknown', 'version': 'unknown',
++                               'unparsed': item})
++            continue
++        version = item.get('version')
++        components.append({
++            'name': item.get('name') if isinstance(item.get('name'), str) and item.get('name') else 'unknown',
++            'role': item.get('role') if isinstance(item.get('role'), str) and item.get('role') else 'unknown',
++            'version': version if isinstance(version, str) and version else 'unknown',
++        })
++    return {'state': 'recorded', 'components': components}
++
++
++def _record_toolchain(qualification, executions):
++    found = []
++    for obj in [qualification, *executions]:
++        parsed = _toolchain(obj)
++        if parsed['state'] == 'unknown':
++            continue
++        found.append({'owner': obj['id'], 'version': obj['version'], **parsed})
++    if not found:
++        return {'state': 'unknown', 'components': []}
++    if len(found) == 1:
++        return found[0]
++    return {'state': 'records_listed', 'components': found}
++
++
++def _column_name(value):
++    if isinstance(value, str) and value in BACKENDS:
++        return value
++    return None
++
++
++def _objects(registry, kind):
++    rows = []
++    for name, version in sorted(registry.data['current'].items()):
++        obj = registry.objects[(name, version)]
++        if obj['kind'] == kind:
++            rows.append(obj)
++    return rows
++
++
++def _versions(registry, ids):
++    """Object versions reached for navigation. Absence of a bound field means this is not a content binding."""
++    rows = []
++    for obj in registry.objects.values():
++        if obj['id'] in ids:
++            rows.append({
++                'id': obj['id'],
++                'version': obj['version'],
++                'sha256': digest(obj),
++                'kind': obj['kind'],
++                'selected': registry.data['current'].get(obj['id']) == obj['version'],
++            })
++    return sorted(rows, key=lambda item: (item['id'], str(item['version'])))
++
++
++def _reachable_ids(registry, obj, seen=None):
++    seen = set() if seen is None else seen
++    key = (obj['id'], obj['version'])
++    if key in seen:
++        return set()
++    seen.add(key)
++    found = {obj['id']}
++    for ref in obj.get('dependencies') or []:
++        if not isinstance(ref, dict):
++            continue
++        target = registry.objects.get((ref.get('id'), ref.get('version')))
++        if target is not None:
++            found |= _reachable_ids(registry, target, seen)
++    return found
++
++
++_FACT_KINDS = ('requirement', 'execution', 'analysis', 'review')
++
++
++def _lookup(registry, ref):
++    if not isinstance(ref, dict):
++        return None
++    return registry.objects.get((ref.get('id'), ref.get('version')))
++
++
++def _content_bound(registry, ref):
++    """Return the object only when id, version, and sha256 all match."""
++    target = _lookup(registry, ref)
++    if target is None or ref.get('sha256') != digest(target):
++        return None
++    return target
++
++
++def _kind_deps(registry, obj, kind):
++    found = []
++    for ref in obj.get('dependencies') or []:
++        target = _content_bound(registry, ref)
++        if target is not None and target.get('kind') == kind:
++            found.append(target)
++    return found
++
++
++def _unbound_fact_refs(registry, obj):
++    """Keep mismatched requirement, execution, analysis, and review citations.
++
++    The citation is the referenced triple. It does not copy the current object's
++    execution, numerical, or toolchain facts.
++    """
++    rows = []
++    seen = set()
++
++    def add(ref):
++        if not isinstance(ref, dict):
++            return
++        target = _lookup(registry, ref)
++        if target is None or target.get('kind') not in _FACT_KINDS:
++            return
++        if ref.get('sha256') == digest(target):
++            return
++        item = {
++            'id': ref.get('id'),
++            'version': ref.get('version'),
++            'sha256': ref.get('sha256'),
++            'kind': target.get('kind'),
++            'bound': False,
++        }
++        key = (item['kind'], item['id'], item['version'], item['sha256'])
++        if key in seen:
++            return
++        seen.add(key)
++        rows.append(item)
++
++    for ref in obj.get('requirements') or []:
++        add(ref)
++    for ref in obj.get('dependencies') or []:
++        add(ref)
++    return rows
++
++
++def _source_item(registry, ref, role):
++    if not isinstance(ref, dict):
++        return None
++    target = registry.objects.get((ref.get('id'), ref.get('version')))
++    if target is None or target.get('kind') != 'source':
++        return None
++    path = target.get('path')
++    origin = target.get('origin')
++    return {
++        'role': role,
++        'id': ref.get('id'),
++        'version': ref.get('version'),
++        'sha256': ref.get('sha256'),
++        'bound': ref.get('sha256') == digest(target),
++        'path': path if isinstance(path, str) and path else 'unknown',
++        'origin': origin if isinstance(origin, str) and origin else 'unknown',
++        'gap': target.get('gap') if 'gap' in target else None,
++    }
++
++
++def _evidence(registry, executions, review, gaps):
++    items = []
++    seen = set()
++    def add(ref, role):
++        item = _source_item(registry, ref, role)
++        if item is None:
++            return
++        key = (item['role'], item['id'], item['version'], item['sha256'])
++        if key in seen:
++            return
++        seen.add(key)
++        items.append(item)
++    for execution in executions:
++        add(execution.get('raw_report'), 'execution.raw_report')
++    if review is not None:
++        add(review.get('evidence'), 'review.evidence')
++    evidence_gaps = [gap for gap in gaps
++                     if 'evidence' in gap or 'source file missing' in gap]
++    if evidence_gaps:
++        return {'state': 'missing_evidence', 'items': items, 'gaps': evidence_gaps}
++    if items:
++        return {'state': 'recorded', 'items': items}
++    return {'state': 'unknown', 'items': []}
++
++
++def _one_or_listed(rows, selector):
++    if not rows:
++        return {'state': 'unknown'}
++    facts = [selector(row) for row in rows]
++    if len(facts) == 1:
++        return facts[0]
++    if all(fact['state'] == 'unknown' for fact in facts):
++        return {'state': 'unknown'}
++    return {'state': 'records_listed', 'values': facts}
++
++
++def _language(registry, requirement):
++    named = requirement.get('language_profile')
++    if not isinstance(named, str) or not named:
++        return {'requirement_field': 'unknown', 'resolved': 'unknown'}
++    profile = registry.data.get('language_profile')
++    if isinstance(profile, dict) and profile.get('id') == named:
++        version = profile.get('version')
++        base = profile.get('base')
++        return {
++            'requirement_field': named,
++            'resolved': {
++                'id': profile.get('id'),
++                'version': version if version is not None else 'unknown',
++                'base': base if isinstance(base, str) and base else 'unknown',
++                'selected_changes': list(profile.get('selected_changes') or []),
++            },
++        }
++    return {'requirement_field': named, 'resolved': 'unknown'}
++
++
++def _referenced(registry, requirement):
++    rows = []
++    for ref in requirement.get('dependencies') or []:
++        if not isinstance(ref, dict):
++            rows.append({'id': 'unknown', 'version': 'unknown', 'sha256': 'unknown',
++                         'kind': 'unknown', 'bound': False})
++            continue
++        target = registry.objects.get((ref.get('id'), ref.get('version')))
++        path = target.get('path') if target is not None else None
++        origin = target.get('origin') if target is not None else None
++        rows.append({
++            'id': ref.get('id'),
++            'version': ref.get('version'),
++            'sha256': ref.get('sha256'),
++            'kind': target.get('kind') if target is not None else 'unknown',
++            'bound': target is not None and ref.get('sha256') == digest(target),
++            'path': path if isinstance(path, str) and path else 'unknown',
++            'origin': origin if isinstance(origin, str) and origin else 'unknown',
++            'gap': target.get('gap') if target is not None and 'gap' in target else None,
++            'status': target.get('status') if target is not None else 'unknown',
++        })
++    return rows
++
++
++def _source_fields(requirement):
++    return {key: requirement[key] for key in PRESERVE_FIELDS if key in requirement}
++
++
++def _qualification_record(registry, qualification):
++    gaps = registry.qualification_gaps(qualification['id'], historical=False)
++    historical_gaps = registry.qualification_gaps(qualification['id'], historical=True)
++    executions = _kind_deps(registry, qualification, 'execution')
++    analyses = _kind_deps(registry, qualification, 'analysis')
++    reviews = _kind_deps(registry, qualification, 'review')
++    review = reviews[0] if len(reviews) == 1 else None
++    scope = qualification.get('scope')
++    backend = qualification.get('backend') if 'backend' in qualification else 'unknown'
++    record = {
++        'qualification': {
++            'id': qualification['id'],
++            'version': qualification['version'],
++            'sha256': digest(qualification),
++            'scope': scope if isinstance(scope, str) and scope else 'unknown',
++            'backend': backend,
++            'status': qualification.get('status'),
++            'review': qualification.get('review'),
++            'gap': qualification.get('gap') if 'gap' in qualification else None,
++            'current_qualified': registry.qualified(qualification['id'], historical=False),
++            'gaps': gaps,
++            'historical_query': {
++                'qualified': registry.qualified(qualification['id'], historical=True),
++                'gaps': historical_gaps,
++                'counts_as_current_support': False,
++            },
++            'confers_requirement_support': False,
++        },
++        'executions': [{
++            'id': execution['id'],
++            'version': execution['version'],
++            'sha256': digest(execution),
++            'backend': execution.get('backend') if 'backend' in execution else 'unknown',
++            'execution': _fact(execution, 'outcome'),
++            'completeness': _fact(execution, 'complete'),
++            'numerical': _fact(execution, 'numerical'),
++        } for execution in executions],
++        'analyses': [{
++            'id': analysis['id'],
++            'version': analysis['version'],
++            'sha256': digest(analysis),
++            'outcome': _fact(analysis, 'outcome'),
++            'numerical': _fact(analysis, 'numerical'),
++        } for analysis in analyses],
++        'toolchain': _record_toolchain(qualification, executions),
++        'execution': _one_or_listed(executions, lambda execution: _fact(execution, 'outcome')),
++        'completeness': _one_or_listed(executions, lambda execution: _fact(execution, 'complete')),
++        'numerical': _one_or_listed([*executions, *analyses], lambda obj: _fact(obj, 'numerical')),
++        'evidence': _evidence(registry, executions, review, gaps),
++        'locatable_versions': _versions(registry, _reachable_ids(registry, qualification)),
++        'column': _column_name(backend),
++    }
++    unbound_refs = _unbound_fact_refs(registry, qualification)
++    if unbound_refs:
++        record['unbound_references'] = unbound_refs
++    return record
++
++
++def _binds(registry, qualification, requirement):
++    """True only when requirements and dependencies pin the same (id, version, sha256)."""
++    if registry.data['current'].get(requirement['id']) != requirement['version']:
++        return False
++    pinned = digest(requirement)
++    dependencies = qualification.get('dependencies') or []
++    for ref in qualification.get('requirements') or []:
++        if not isinstance(ref, dict):
++            continue
++        if ref.get('id') != requirement['id'] or ref.get('version') != requirement['version']:
++            continue
++        if ref.get('sha256') != pinned or ref not in dependencies:
++            continue
++        return True
++    return False
++
++
++def _claim_ids(qualification):
++    found = []
++    for ref in qualification.get('requirements') or []:
++        if isinstance(ref, dict) and isinstance(ref.get('id'), str):
++            found.append(ref['id'])
++        elif isinstance(ref, str):
++            found.append(ref)
++    return found
++
++
++def _historical_ids(node):
++    found = []
++    single = node.get('requirement')
++    if isinstance(single, str) and single:
++        found.append(single)
++    elif isinstance(single, dict) and isinstance(single.get('id'), str):
++        found.append(single['id'])
++    for ref in node.get('requirements') or []:
++        if isinstance(ref, str) and ref:
++            found.append(ref)
++        elif isinstance(ref, dict) and isinstance(ref.get('id'), str):
++            found.append(ref['id'])
++    return found
++
++
++def _historical_node(node):
++    copied = {key: node[key] for key in HISTORICAL_FIELDS if key in node}
++    copied['in_current_denominator'] = False
++    copied['counts_as_current_support'] = False
++    return copied
++
++
++def _scope(requirement):
++    scope = requirement.get('scope')
++    return scope if isinstance(scope, str) and scope else 'unknown'
++
++
++def _status(requirement):
++    status = requirement.get('status')
++    return status if isinstance(status, str) and status else 'unknown'
++
++
++def _sorted_counts(values):
++    return {key: values[key] for key in sorted(values)}
++
++
++def document(registry, historical=None):
++    """Return the fact projection. historical nodes are citations unless they name a requirement."""
++    historical = historical or {
++        'identity': 'unknown', 'source': 'unknown', 'scope': 'unknown', 'nodes': [],
++    }
++    requirements = _objects(registry, 'requirement')
++    current_ids = {requirement['id'] for requirement in requirements}
++    qualifications = _objects(registry, 'qualification')
++    bound = {requirement['id']: [] for requirement in requirements}
++    unbound = []
++    partial = []
++    for qualification in qualifications:
++        record = _qualification_record(registry, qualification)
++        targets = [requirement for requirement in requirements
++                   if _binds(registry, qualification, requirement)]
++        if targets:
++            for requirement in targets:
++                bound[requirement['id']].append(record)
++            continue
++        claimed = _claim_ids(qualification)
++        if claimed:
++            partial.append({'id': qualification['id'], 'version': qualification['version'],
++                            'claimed_requirements': claimed})
++        unbound.append(record)
++
++    joined = []
++    unjoined = []
++    not_current = []
++    by_requirement = {requirement['id']: [] for requirement in requirements}
++    for node in historical.get('nodes') or []:
++        copied = _historical_node(node)
++        names = _historical_ids(node)
++        if not names:
++            unjoined.append(copied)
++            continue
++        if any(name not in current_ids for name in names):
++            not_current.append({'requirement_ids': names, 'node': copied})
++            continue
++        item = {'requirement_ids': names, 'node': copied, 'in_current_denominator': False}
++        joined.append(item)
++        for name in names:
++            by_requirement[name].append(copied)
++
++    projected = []
++    for requirement in requirements:
++        records = bound[requirement['id']]
++        columns = {}
++        for name, heading in _columns():
++            matched = [record for record in records if record['column'] == name]
++            cell = {
++                'backend': name,
++                'heading': heading,
++                'toolchain': {'state': 'unknown', 'components': []},
++                'execution': {'state': 'unknown'},
++                'completeness': {'state': 'unknown'},
++                'numerical': {'state': 'unknown'},
++                'qualification': {'state': 'unknown'},
++                'evidence': {'state': 'unknown'},
++                'records': matched,
++            }
++            if matched:
++                for key in ('execution', 'completeness', 'numerical', 'evidence'):
++                    if any(record[key]['state'] != 'unknown' for record in matched):
++                        cell[key] = {'state': 'records_listed'}
++                cell['qualification'] = {'state': 'records_listed'}
++                if any(record['toolchain']['state'] != 'unknown' for record in matched):
++                    cell['toolchain'] = {'state': 'records_listed'}
++            columns[name] = cell
++        scope = _scope(requirement)
++        projected.append({
++            'id': requirement['id'],
++            'version': requirement['version'],
++            'sha256': digest(requirement),
++            'language': _language(registry, requirement),
++            'scope': scope,
++            'source_fields': _source_fields(requirement),
++            'referenced_versions': _referenced(registry, requirement),
++            'readiness_gaps': registry.qualification_gaps(requirement['id']),
++            'readiness_note': 'readiness gaps are registry navigation, not a qualification verdict',
++            'requirement_support': 'not_conferred',
++            'coverage_sufficiency': 'pending',
++            'coverage_note': 'coverage sufficiency is not defined for this requirement',
++            'versions': _versions(registry, {requirement['id']}),
++            'backends': columns,
++            'unassigned_backend_records': [record for record in records if record['column'] is None],
++            'historical_references': by_requirement[requirement['id']],
++        })
++
++    exceptions = []
++    for record in unbound:
++        qualification = record['qualification']
++        exceptions.append({
++            'kind': 'unbound_qualification',
++            'id': qualification['id'],
++            'version': qualification['version'],
++            'reason': 'current qualification does not bind a current requirement',
++        })
++    for item in partial:
++        exceptions.append({
++            'kind': 'requirement_claim_not_bound',
++            'id': item['id'],
++            'version': item['version'],
++            'claimed_requirements': item['claimed_requirements'],
++            'reason': 'requirement claim is not a bound dependency of the current requirement',
++        })
++    for requirement in projected:
++        exceptions.append({
++            'kind': 'coverage_sufficiency_pending',
++            'id': requirement['id'],
++            'reason': requirement['coverage_note'],
++        })
++        for record in requirement['unassigned_backend_records']:
++            exceptions.append({
++                'kind': 'unassigned_backend',
++                'id': record['qualification']['id'],
++                'requirement': requirement['id'],
++                'backend': record['qualification']['backend'],
++                'reason': 'backend identity is not one of catalog.BACKENDS',
++            })
++        for name, cell in requirement['backends'].items():
++            if cell['toolchain']['state'] == 'unknown':
++                exceptions.append({
++                    'kind': 'toolchain_unknown',
++                    'requirement': requirement['id'],
++                    'backend': name,
++                    'reason': 'no explicit toolchain list on a bound record',
++                })
++    if unjoined:
++        exceptions.append({
++            'kind': 'historical_unjoined',
++            'count': len(unjoined),
++            'reason': 'historical nodes do not name a current requirement and are not joined',
++        })
++    for item in not_current:
++        exceptions.append({
++            'kind': 'historical_requirement_not_current',
++            'id': item['node'].get('id'),
++            'requirement_ids': item['requirement_ids'],
++            'reason': 'historical node names a requirement outside the current set',
++        })
++
++    inventory = registry.data.get('inventory')
++    source_index = len(inventory) if isinstance(inventory, list) else 'unknown'
++    historical_counts = Counter(_node_status(node) for node in (historical.get('nodes') or []))
++    cell_counts = Counter(cell['execution']['state']
++                          for requirement in projected
++                          for cell in requirement['backends'].values())
++    qualification_counts = Counter()
++    execution_counts = Counter()
++    for record in _all_records(projected, unbound):
++        qualification_counts['true' if record['qualification']['current_qualified'] else 'false'] += 1
++        execution_counts[record['execution']['state']] += 1
++    return {
++        'schema': 'provisional-support-facts-v1',
++        'provisional': True,
++        'adopted': False,
++        'denominators': {
++            'current_requirements': len(projected),
++            'source_index_items': source_index,
++            'source_index_is_requirement_coverage': False,
++            'historical_nodes': len(historical.get('nodes') or []),
++            'historical_nodes_joined_to_current_requirements': len(joined),
++            'current_requirement_support_conferred': 0,
++        },
++        'classifications': {
++            'requirement_status': _sorted_counts(Counter(_status(requirement)
++                                                         for requirement in requirements)),
++            'historical_node_status': _sorted_counts(historical_counts),
++            'backend_execution_cells': _sorted_counts(cell_counts),
++            'qualification_records_current_qualified': _sorted_counts(qualification_counts),
++            'record_execution_states': _sorted_counts(execution_counts),
++            'exception_counts': _sorted_counts(Counter(item['kind'] for item in exceptions)),
++        },
++        'exceptions': exceptions,
++        'requirements': projected,
++        'unbound_qualifications': unbound,
++        'historical': {
++            'identity': historical.get('identity') if historical.get('identity') else 'unknown',
++            'source': historical.get('source') if historical.get('source') else 'unknown',
++            'scope': historical.get('scope') if historical.get('scope') else 'unknown',
++            'joined': joined,
++            'unjoined': unjoined,
++            'not_current': not_current,
++        },
++        'limits': list(LIMITS),
++    }
++
++
++def _node_status(node):
++    status = node.get('status')
++    return status if isinstance(status, str) and status else 'unknown'
++
++
++def _all_records(requirements, unbound):
++    rows = list(unbound)
++    for requirement in requirements:
++        for cell in requirement['backends'].values():
++            rows.extend(cell['records'])
++        rows.extend(requirement['unassigned_backend_records'])
++    return rows
++
++
++def _show(fact):
++    state = fact.get('state')
++    if state in {'unknown', *DISTINCT_STATES}:
++        return state
++    if state == 'recorded':
++        return 'recorded:' + json.dumps(fact.get('value'), ensure_ascii=False, sort_keys=True)
++    return str(state)
++
++
++def _show_toolchain(fact):
++    if fact.get('state') == 'unknown':
++        return 'unknown'
++    if fact.get('state') == 'records_listed':
++        return 'records_listed'
++    components = fact.get('components') or []
++    if not components:
++        return _show(fact)
++    return ', '.join(f"{item.get('name', 'unknown')}@{item.get('version', 'unknown')}"
++                     for item in components)
++
++
++def markdown(document):
++    """Render document without collapsing distinct facts into one mark."""
++    denominators = document['denominators']
++    lines = [
++        '# 暂定：当前要求的四后端事实',
++        '',
++        'adopted: false',
++        'provisional: true',
++        '',
++        f"current_requirements: {denominators['current_requirements']}",
++        f"source_index_items: {denominators['source_index_items']}",
++        'source_index_is_requirement_coverage: false',
++        '规范源索引不是要求覆盖率。',
++        f"historical_nodes: {denominators['historical_nodes']}",
++        f"historical_nodes_joined_to_current_requirements: {denominators['historical_nodes_joined_to_current_requirements']}",
++        f"current_requirement_support_conferred: {denominators['current_requirement_support_conferred']}",
++        '',
++        '## 当前要求',
++        '',
++    ]
++    for requirement in document['requirements']:
++        language = requirement['language']
++        lines.append(f"### {requirement['id']}@{requirement['version']}")
++        lines.append('')
++        lines.append(f"sha256：`{requirement['sha256']}`")
++        lines.append(f"语言配置字段：{language['requirement_field']}")
++        resolved = language['resolved']
++        if isinstance(resolved, dict):
++            lines.append(f"语言配置：`{resolved['id']}` version {resolved['version']}，基础 {resolved['base']}，选入 "
++                         + ', '.join(str(item) for item in resolved['selected_changes']))
++        else:
++            lines.append('语言配置：unknown')
++        lines.append(f"范围：{requirement['scope']}")
++        lines.append(f"要求级支持：{requirement['requirement_support']}")
++        lines.append(f"覆盖充分性：{requirement['coverage_sufficiency']}")
++        lines.append(requirement['coverage_note'])
++        lines.append(requirement['readiness_note'])
++        for ref in requirement['referenced_versions']:
++            lines.append(
++                '引用：`{id}` version {version} sha256 {sha256} kind {kind} bound {bound} path {path} origin {origin}'.format(**ref)
++            )
++            if ref.get('gap'):
++                lines.append(f"引用未决：{ref['gap']}")
++        for key in ('gap', 'status', 'review', 'source_locations', 'required_boundaries', 'budget'):
++            if key in requirement['source_fields']:
++                lines.append(f"原文 {key}：{json.dumps(requirement['source_fields'][key], ensure_ascii=False, sort_keys=True)}")
++        for gap in requirement['readiness_gaps']:
++            lines.append(f"就绪缺口：{gap}")
++        lines.append('')
++        lines.append('| 后端 | 工具链 | 执行 | 完整性 | 数值 | 资格 | 证据 |')
++        lines.append('| --- | --- | --- | --- | --- | --- | --- |')
++        for name in BACKENDS:
++            cell = requirement['backends'][name]
++            lines.append('| ' + ' | '.join([
++                cell['heading'],
++                _show_toolchain(cell['toolchain']),
++                _show(cell['execution']),
++                _show(cell['completeness']),
++                _show(cell['numerical']),
++                _show(cell['qualification']),
++                _show(cell['evidence']),
++            ]) + ' |')
++        lines.append('')
++        for cell in requirement['backends'].values():
++            for record in cell['records']:
++                lines.extend(_record_lines(record))
++        for record in requirement['unassigned_backend_records']:
++            lines.append(f"未归属后端：{record['qualification']['backend']}")
++            lines.extend(_record_lines(record))
++        if requirement['historical_references']:
++            cited = ', '.join(f"`{item.get('id', 'unknown')}`" for item in requirement['historical_references'])
++            lines.append(f"历史引用身份：{cited}。不计入当前分母，原成绩只列在历史引用节。")
++        lines.append('')
++    lines.append('## 未绑定当前要求的资格')
++    lines.append('')
++    if not document['unbound_qualifications']:
++        lines.append('无。')
++        lines.append('')
++    for record in document['unbound_qualifications']:
++        lines.extend(_record_lines(record))
++        lines.append('')
++    lines.append('## 历史引用')
++    lines.append('')
++    historical = document['historical']
++    lines.append(f"identity: {historical['identity']}")
++    lines.append(f"source: {historical['source']}")
++    lines.append(f"scope: {historical['scope']}")
++    lines.append('这些节点保持原身份。它们的格子不是当前要求的执行、完整性、数值、资格或证据。')
++    lines.append('')
++    for collection in ('joined', 'unjoined', 'not_current'):
++        nodes = historical[collection]
++        if collection != 'unjoined':
++            nodes = [item['node'] for item in nodes]
++        for node in nodes:
++            lines.append(f"### 历史 {node.get('id', 'unknown')}")
++            lines.append('')
++            for key in ('title', 'status', 'review', 'evidence', 'gap'):
++                if key in node:
++                    lines.append(f"{key}：{json.dumps(node[key], ensure_ascii=False, sort_keys=True)}")
++            if 'results' in node:
++                lines.append('results：' + json.dumps(node['results'], ensure_ascii=False, sort_keys=True))
++            lines.append('in_current_denominator: false')
++            lines.append('counts_as_current_support: false')
++            lines.append('')
++    lines.append('## 例外')
++    lines.append('')
++    counts = document['classifications']['exception_counts']
++    if not counts:
++        lines.append('exception: none 0')
++    for kind, count in counts.items():
++        lines.append(f'exception: {kind} {count}')
++    for item in document['exceptions']:
++        if 'count' in item:
++            lines.append('exception-detail: ' + json.dumps(item, ensure_ascii=False, sort_keys=True))
++    lines.append('')
++    lines.append('## 分类')
++    lines.append('')
++    lines.append('classifications: ' + json.dumps(document['classifications'], ensure_ascii=False, sort_keys=True))
++    lines.append('')
++    lines.append('## 本切片不做的事')
++    lines.append('')
++    for limit in document['limits']:
++        lines.append(f'- {limit}')
++    lines.append('')
++    return '\n'.join(lines)
++
++
++def _record_lines(record):
++    qualification = record['qualification']
++    historical = qualification['historical_query']
++    lines = [
++        f"资格记录：{qualification['id']}@{qualification['version']} sha256 {qualification['sha256']}",
++        f"current_qualified: {str(qualification['current_qualified']).lower()}",
++        f"historical_qualified: {str(historical['qualified']).lower()}",
++        'counts_as_current_support: false',
++        'confers_requirement_support: false',
++        f"资格范围：{qualification['scope']}",
++        f"资格后端原文：{json.dumps(qualification['backend'], ensure_ascii=False, sort_keys=True)}",
++        f"执行：{_show(record['execution'])}",
++        f"完整性：{_show(record['completeness'])}",
++        f"数值：{_show(record['numerical'])}",
++        f"工具链：{_show_toolchain(record['toolchain'])}",
++        f"证据：{_show(record['evidence'])}",
++    ]
++    if qualification.get('gap'):
++        lines.append(f"资格未决说明：{qualification['gap']}")
++    for gap in qualification['gaps']:
++        lines.append(f"资格缺口：{gap}")
++    for ref in record.get('unbound_references') or []:
++        lines.append(
++            f"未绑定引用：kind {ref['kind']} `{ref['id']}` version {ref['version']} "
++            f"sha256 {ref['sha256']} bound false"
++        )
++    for item in record['evidence'].get('items') or []:
++        lines.append(
++            f"证据来源：role {item['role']} `{item['id']}` version {item['version']} sha256 {item['sha256']} path {item['path']} origin {item['origin']}"
++        )
++        if item.get('gap'):
++            lines.append(f"证据未决：{item['gap']}")
++    for version in record['locatable_versions']:
++        lines.append(
++            f"可定位版本：`{version['id']}` version {version['version']} sha256 {version['sha256']} selected {str(version['selected']).lower()}"
++        )
++    for execution in record['executions']:
++        lines.append(
++            f"执行记录：{execution['id']}@{execution['version']} 执行 {_show(execution['execution'])} "
++            f"完整性 {_show(execution['completeness'])} 数值 {_show(execution['numerical'])}"
++        )
++    for analysis in record['analyses']:
++        lines.append(f"分析结论：{analysis['id']}@{analysis['version']} {_show(analysis['outcome'])}")
++        lines.append(f"分析数值：{analysis['id']}@{analysis['version']} {_show(analysis['numerical'])}")
++    return lines
++
++
++def _table_cells(line):
++    if not line.startswith('|'):
++        return []
++    return [part.strip() for part in line.strip().strip('|').split('|')]
++
++
++def audit(document):
++    """Check denominators, classifications, and the ban on collapsed marks."""
++    errors = []
++    requirements = document['requirements']
++    denominators = document['denominators']
++    if document.get('provisional') is not True or document.get('adopted') is not False:
++        errors.append('projection is not marked provisional')
++    if denominators.get('current_requirements') != len(requirements):
++        errors.append('current requirement denominator')
++    if denominators.get('source_index_is_requirement_coverage') is not False:
++        errors.append('source index used as requirement coverage')
++    if denominators.get('current_requirement_support_conferred') != 0:
++        errors.append('requirement support was conferred')
++    if denominators.get('historical_nodes_joined_to_current_requirements') != len(document['historical']['joined']):
++        errors.append('joined historical denominator')
++    historical = document['historical']
++    retained = len(historical['joined']) + len(historical['unjoined']) + len(historical['not_current'])
++    if denominators.get('historical_nodes') != retained:
++        errors.append('historical nodes were dropped')
++    classifications = document['classifications']
++    if classifications['requirement_status'] != _sorted_counts(Counter(
++            requirement['source_fields'].get('status', 'unknown')
++            if isinstance(requirement['source_fields'].get('status'), str)
++            and requirement['source_fields'].get('status') else 'unknown'
++            for requirement in requirements)):
++        errors.append('requirement status classification')
++    cell_counts = Counter(cell['execution']['state']
++                          for requirement in requirements
++                          for cell in requirement['backends'].values())
++    if classifications['backend_execution_cells'] != _sorted_counts(cell_counts):
++        errors.append('backend cell classification')
++    if sum(classifications['exception_counts'].values()) != len(document['exceptions']):
++        errors.append('exception classification')
++    current_ids = {requirement['id'] for requirement in requirements}
++    for item in document['historical']['joined']:
++        if item.get('in_current_denominator') or item['node'].get('counts_as_current_support'):
++            errors.append('historical join entered current support')
++        if any(name not in current_ids for name in item['requirement_ids']):
++            errors.append('historical join outside current requirements')
++    for requirement in requirements:
++        if requirement['requirement_support'] != 'not_conferred':
++            errors.append('requirement support changed')
++        if requirement['coverage_sufficiency'] != 'pending':
++            errors.append('coverage sufficiency was scored')
++        if list(requirement['backends']) != list(BACKENDS):
++            errors.append('backend columns changed')
++        for name, cell in requirement['backends'].items():
++            for key in ('toolchain', 'execution', 'completeness', 'numerical', 'qualification', 'evidence'):
++                if cell[key].get('state') in FORBIDDEN_CELLS or cell[key].get('state') in {'passed', 'failed', 'qualified'}:
++                    errors.append(f'collapsed {name} {key}')
++            explicit_execution = any(record['execution']['state'] != 'unknown' for record in cell['records'])
++            expected_execution = 'records_listed' if explicit_execution else 'unknown'
++            if cell['execution']['state'] != expected_execution:
++                errors.append('records collapsed or invented')
++        for copied in requirement['historical_references']:
++            if copied.get('counts_as_current_support') or copied.get('in_current_denominator'):
++                errors.append('historical reference counted as current')
++    for record in _all_records(requirements, document['unbound_qualifications']):
++        if record['qualification']['confers_requirement_support'] is not False:
++            errors.append('case conferred requirement support')
++        if record['qualification']['historical_query']['counts_as_current_support'] is not False:
++            errors.append('historical query counted as current support')
++        if record['column'] not in {None, *BACKENDS}:
++            errors.append('alias entered a backend column')
++        for ref in record.get('unbound_references') or []:
++            if ref.get('bound') is not False or set(ref) != {'id', 'version', 'sha256', 'kind', 'bound'}:
++                errors.append('unbound reference claimed binding or borrowed target facts')
++        for version in record['locatable_versions']:
++            if 'bound' in version:
++                errors.append('locatable version claimed binding')
++    return errors
++
++
++def audit_markdown(document, text):
++    errors = []
++    denominators = document['denominators']
++    required = [
++        f"current_requirements: {denominators['current_requirements']}",
++        f"source_index_items: {denominators['source_index_items']}",
++        'source_index_is_requirement_coverage: false',
++        '规范源索引不是要求覆盖率。',
++        f"current_requirement_support_conferred: {denominators['current_requirement_support_conferred']}",
++        f"historical_nodes: {denominators['historical_nodes']}",
++        f"historical_nodes_joined_to_current_requirements: {denominators['historical_nodes_joined_to_current_requirements']}",
++    ]
++    for line in required:
++        if line not in text:
++            errors.append('markdown missing ' + line)
++    head, separator, _historical = text.partition('## 历史引用')
++    if not separator:
++        errors.append('markdown missing historical section')
++        head = text
++    headings = [line for line in head.splitlines() if line.startswith('### ')]
++    if len(headings) != len(document['requirements']):
++        errors.append('markdown requirement headings')
++    for requirement in document['requirements']:
++        if f"### {requirement['id']}@{requirement['version']}" not in head:
++            errors.append('markdown missing requirement ' + requirement['id'])
++        for gap in requirement['readiness_gaps']:
++            if gap not in head:
++                errors.append('markdown dropped readiness gap')
++        for ref in requirement['referenced_versions']:
++            if str(ref['sha256']) not in head:
++                errors.append('markdown dropped referenced sha')
++    for line in head.splitlines():
++        for cell in _table_cells(line):
++            if cell in FORBIDDEN_CELLS:
++                errors.append('markdown collapsed a current cell')
++    counts = document['classifications']['exception_counts']
++    for kind, count in counts.items():
++        if f'exception: {kind} {count}' not in text:
++            errors.append('markdown missing exception ' + kind)
++    if 'classifications: ' + json.dumps(document['classifications'], ensure_ascii=False, sort_keys=True) not in text:
++        errors.append('markdown classifications diverged')
++    return errors
++
++
++def load_historical_import(path=None):
++    if path is None:
++        path = Path(__import__('catalog').__file__).resolve().parent / 'data' / 'historical-comparison.json'
++    data = json.loads(Path(path).read_text())
++    nodes = data.get('nodes')
++    return {
++        'identity': data.get('identity') if data.get('identity') else 'unknown',
++        'source': data.get('source') if data.get('source') else 'unknown',
++        'scope': data.get('scope') if data.get('scope') else 'unknown',
++        'nodes': nodes if isinstance(nodes, list) else [],
++    }
++
++
++def projection_texts(registry, historical=None):
++    """Return the JSON and Markdown produced from one registry projection."""
++    if historical is None:
++        historical = load_historical_import()
++        imported = [node.get('id') for node in historical['nodes']]
++        if imported != [node.get('id') for node in NODES]:
++            raise SupportViewError('historical import nodes differ from catalog.NODES')
++    document_ = document(registry, historical=historical)
++    text = markdown(document_)
++    problems = audit(document_) + audit_markdown(document_, text)
++    if problems:
++        raise SupportViewError('support view audit failed:\n' + '\n'.join(problems))
++    return dumps(document_), text
++
++
++def write_preview(registry, directory, *, historical=None):
++    facts, text = projection_texts(registry, historical)
++    directory = Path(directory)
++    directory.mkdir(parents=True, exist_ok=True)
++    paths = [directory / 'support-facts.json', directory / 'support.md']
++    paths[0].write_text(facts)
++    paths[1].write_text(text)
++    return paths
++
++
++def main(argv=None):
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument('--data-dir')
++    parser.add_argument('--root')
++    parser.add_argument('--preview', required=True)
++    args = parser.parse_args(argv)
++    from registry import load
++    kwargs = {}
++    if args.data_dir is not None:
++        kwargs['data_dir'] = args.data_dir
++    if args.root is not None:
++        kwargs['root'] = args.root
++    try:
++        written = write_preview(load(**kwargs), args.preview)
++    except SupportViewError as error:
++        raise SystemExit(str(error))
++    print(f'wrote {len(written)} provisional support files')
++
++
++if __name__ == '__main__':
++    main()
+diff --git a/evas/capabilities/test_asset_catalog.py b/evas/capabilities/test_asset_catalog.py
+index 9d4b61f0..b28e5951 100644
+--- a/evas/capabilities/test_asset_catalog.py
++++ b/evas/capabilities/test_asset_catalog.py
+@@ -67,6 +67,33 @@ class ReconcileBehaviors(unittest.TestCase):
+         asset['content']={'algorithm':'sha256','value':'a'*64};self.part('assets',asset)
+         with self.assertRaises(RegistryError): self.reg()
+ 
++    def test_derived_support_paths_reject_self_hash_and_accept_external_manifest(self):
++        for path in ('evas/capabilities/generated/support-facts.json','evas/capabilities/generated/support.md'):
++            with self.subTest(path=path):
++                asset=copy.deepcopy(self.objects[2])
++                asset['current_path']=path
++                asset['role']={'status':'confirmed','value':'derived','reason':'exact generated support view'}
++                asset['content']={'algorithm':'sha256','value':'a'*64}
++                self.part('assets',asset)
++                method=copy.deepcopy(self.objects[3])
++                method['definition']=dict(method['definition'],path=path)
++                method['module']=reference(asset);method['dependencies']=[reference(asset)]
++                self.part('methods',method)
++                with self.assertRaises(RegistryError): self.reg()
++                asset['content']={'algorithm':'external-input-manifest','scope':'actual-execution-inputs','producer':'capabilities.observe-assets-v1'}
++                self.part('assets',asset)
++                method['module']=reference(asset);method['dependencies']=[reference(asset)]
++                self.part('methods',method)
++                row={'path':path,'sha256':'d'*64,'git_mode':'100644','actual_mode':420}
++                catalog=self.reg().catalog()
++                with self.assertRaises(ValueError): catalog.reconcile_assets([row])
++                self.assertTrue(catalog.reconcile_assets([row],external_manifest={path:row}))
++                current=catalog.current('asset')[0]
++                self.assertEqual(current['content']['algorithm'],'external-input-manifest')
++                self.assertNotIn('value',current['content'])
++                self.assertNotEqual(current.get('version'),row['sha256'])
++                self.assertFalse(self.reg().qualified(asset['id']))
++
+     def test_unknown_part_schema_and_second_current_rejected(self):
+         for update in ({'schema_version':2},{'current':{}},{'kind':'qualifications'}):
+             value={'schema_version':1,'kind':'assets','objects':[self.objects[2]]};value.update(update)
+diff --git a/evas/capabilities/test_support_view.py b/evas/capabilities/test_support_view.py
+new file mode 100644
+index 00000000..0f091c3b
+--- /dev/null
++++ b/evas/capabilities/test_support_view.py
+@@ -0,0 +1,525 @@
++"""Fixture checks for the provisional four-backend requirement projection.
++
++These controls do not add requirements to the real registry and do not confer
++scientific qualification.
++"""
++import copy
++import json
++import unittest
++from pathlib import Path
++
++import render
++import support_view
++from registry import Registry, digest
++from support_view import audit, audit_markdown, document, dumps, markdown, write_preview
++from test_registry import by_id, fixture
++
++
++def refresh(data):
++    """Rebind references, including receipts, after an in-memory fixture edit."""
++    from registry import reference
++    lookup = {(obj['id'], obj['version']): obj for obj in data['objects']}
++
++    def update(value):
++        if isinstance(value, dict):
++            if set(value) == {'id', 'version', 'sha256'}:
++                return reference(lookup[(value['id'], value['version'])])
++            return {key: update(item) for key, item in value.items()}
++        if isinstance(value, list):
++            return [update(item) for item in value]
++        return value
++
++    for _attempt in range(8):
++        for obj in data['objects']:
++            for field, value in list(obj.items()):
++                obj[field] = update(value)
++        moved = False
++        for obj in data['objects']:
++            if obj.get('kind') == 'source' and 'embedded' in obj:
++                sha = digest(obj['embedded'])
++                if obj.get('sha256') != sha:
++                    obj['sha256'] = sha
++                    moved = True
++        if not moved:
++            return data
++    raise AssertionError('fixture references did not stabilize')
++
++
++def retarget(data, backend):
++    data = copy.deepcopy(data)
++
++    def walk(value):
++        if isinstance(value, dict):
++            return {key: walk(item) for key, item in value.items()}
++        if isinstance(value, list):
++            return [walk(item) for item in value]
++        if value == 'fixture@1':
++            return backend
++        return value
++
++    data['objects'] = walk(data['objects'])
++    return refresh(data)
++
++
++def set_outcome(data, outcome, numerical=None):
++    execution = by_id(data, 'fixture-execution')
++    execution['outcome'] = outcome
++    if numerical is not None:
++        execution['numerical'] = numerical
++    raw = by_id(data, 'execution-raw')
++    raw['embedded']['outcome'] = outcome
++    return refresh(data)
++
++
++def add_inventory(data, name):
++    data['inventory'].append({'id': name, 'kind': 'clause'})
++    data['dispositions'].append({'source_id': name, 'decision': 'pending',
++                                 'reason': 'source index row without a requirement'})
++
++
++def bare_registry():
++    data = fixture()
++    spec = by_id(data, 'spec')
++    data['objects'].append({
++        'id': 'bare-requirement',
++        'version': '1',
++        'kind': 'requirement',
++        'status': 'pending',
++        'review': 'pending',
++        'scope': 'fixture bare scope',
++        'language_profile': 'fixture-profile',
++        'gap': 'no evidence recorded for this requirement',
++        'dependencies': [rebind_ref(spec)],
++    })
++    data['current']['bare-requirement'] = '1'
++    data['language_profile'] = {
++        'id': 'fixture-profile', 'version': '9', 'base': '2.4', 'selected_changes': ['7780'],
++    }
++    add_inventory(data, 'section:extra')
++    add_inventory(data, 'section:extra-2')
++    return Registry(data)
++
++
++def rebind_ref(obj):
++    from registry import reference
++    return reference(obj)
++
++
++def checked(registry, historical=None):
++    projected = document(registry, historical=historical)
++    text = markdown(projected)
++    problems = audit(projected) + audit_markdown(projected, text)
++    if problems:
++        raise AssertionError('\n'.join(problems))
++    return projected, text
++
++
++def requirement(projected, name):
++    return next(item for item in projected['requirements'] if item['id'] == name)
++
++
++def evas_records(projected, name='fixture-requirement'):
++    return requirement(projected, name)['backends']['evas']['records']
++
++
++class SupportViewFixtures(unittest.TestCase):
++    def test_requirement_without_evidence_has_unknown_backend_facts(self):
++        projected, text = checked(bare_registry())
++        self.assertEqual(projected['denominators']['current_requirements'], 2)
++        self.assertEqual(projected['denominators']['source_index_items'], 3)
++        self.assertFalse(projected['denominators']['source_index_is_requirement_coverage'])
++        self.assertIn('规范源索引不是要求覆盖率。', text)
++        bare = requirement(projected, 'bare-requirement')
++        self.assertEqual(bare['language']['resolved']['version'], '9')
++        self.assertEqual(bare['scope'], 'fixture bare scope')
++        self.assertEqual(bare['requirement_support'], 'not_conferred')
++        self.assertEqual(bare['coverage_sufficiency'], 'pending')
++        named = requirement(projected, 'fixture-requirement')
++        self.assertEqual(named['language']['requirement_field'], 'unknown')
++        self.assertEqual(named['language']['resolved'], 'unknown')
++        for cell in bare['backends'].values():
++            for key in ('toolchain', 'execution', 'completeness', 'numerical',
++                        'qualification', 'evidence'):
++                self.assertEqual(cell[key]['state'], 'unknown', key)
++            self.assertEqual(cell['records'], [])
++        self.assertIn('no evidence recorded for this requirement', text)
++        self.assertEqual(projected['denominators']['current_requirement_support_conferred'], 0)
++
++    def test_historical_pass_does_not_enter_current_denominator(self):
++        historical = {'identity': 'other-lineage', 'source': 'historical-fixture',
++                      'scope': 'different inputs and criteria', 'nodes': [
++                          {'id': 'old-pass', 'status': 'compared', 'evidence': 'old/table',
++                           'requirement': 'bare-requirement',
++                           'results': {'evas': '✓ Q3', 'spectre': '✓ Q3', 'ngspice': '✓ Q3',
++                                       'gnucap': '✓ Q3'}},
++                          {'id': 'old-unjoined', 'status': 'compared', 'evidence': 'old/other',
++                           'results': {'evas': '✓ Q3'}},
++                          {'id': 'old-absent', 'status': 'compared', 'requirement': 'not-a-current-requirement',
++                           'results': {'evas': '✓ Q3'}},
++                      ]}
++        projected, text = checked(bare_registry(), historical)
++        bare = requirement(projected, 'bare-requirement')
++        self.assertEqual(bare['backends']['evas']['execution']['state'], 'unknown')
++        self.assertEqual(bare['historical_references'][0]['results']['evas'], '✓ Q3')
++        self.assertFalse(bare['historical_references'][0]['counts_as_current_support'])
++        self.assertEqual(projected['denominators']['current_requirements'], 2)
++        self.assertEqual(projected['denominators']['historical_nodes'], 3)
++        self.assertEqual(projected['denominators']['historical_nodes_joined_to_current_requirements'], 1)
++        self.assertEqual(projected['denominators']['current_requirement_support_conferred'], 0)
++        head, _separator, tail = text.partition('## 历史引用')
++        self.assertNotIn('✓', head)
++        self.assertIn('✓ Q3', tail)
++        self.assertIn('old-unjoined', tail)
++        self.assertIn('not-a-current-requirement', json.dumps(projected['historical']['not_current']))
++
++    def test_execution_pass_with_pending_qualification_stays_split(self):
++        data = retarget(fixture(), 'evas')
++        for name in ('consumer-a', 'consumer-b'):
++            by_id(data, name)['status'] = 'pending'
++        projected, text = checked(Registry(data))
++        row = requirement(projected, 'fixture-requirement')
++        evas = row['backends']['evas']
++        self.assertEqual(evas['execution']['state'], 'records_listed')
++        self.assertEqual(evas['numerical']['state'], 'unknown')
++        self.assertEqual(evas['toolchain']['state'], 'unknown')
++        for name in ('spectre', 'ngspice', 'gnucap'):
++            self.assertEqual(row['backends'][name]['execution']['state'], 'unknown')
++        record = evas['records'][0]
++        self.assertEqual(record['execution']['value'], 'passed')
++        self.assertEqual(record['completeness']['value'], True)
++        self.assertEqual(record['numerical']['state'], 'unknown')
++        self.assertFalse(record['qualification']['current_qualified'])
++        self.assertTrue(any(gap.endswith(': pending') for gap in record['qualification']['gaps']))
++        self.assertEqual(record['analyses'][0]['outcome']['value'], 'accepted')
++        self.assertEqual(record['analyses'][0]['numerical']['state'], 'unknown')
++        self.assertEqual(row['requirement_support'], 'not_conferred')
++        self.assertEqual(row['coverage_sufficiency'], 'pending')
++        self.assertIn('recorded:"passed"', text)
++        self.assertIn('分析结论：', text)
++        self.assertIn('数值：unknown', text)
++        self.assertNotIn('✓', text.partition('## 历史引用')[0])
++
++    def test_revoked_dependency_changes_json_and_markdown(self):
++        data = retarget(fixture(), 'evas')
++        before, before_text = checked(Registry(data))
++        before_json = dumps(before)
++        old_sha = digest(by_id(data, 'checker'))
++        self.assertTrue(all(record['qualification']['current_qualified']
++                            for record in evas_records(before)))
++        by_id(data, 'checker')['status'] = 'revoked'
++        after, after_text = checked(Registry(data))
++        after_json = dumps(after)
++        self.assertNotEqual(before_json, after_json)
++        self.assertNotEqual(before_text, after_text)
++        ids = []
++        for record in evas_records(after):
++            ids.append(record['qualification']['id'])
++            self.assertFalse(record['qualification']['current_qualified'])
++            self.assertFalse(record['qualification']['historical_query']['qualified'])
++            self.assertTrue(any('revoked' in gap for gap in record['qualification']['gaps']))
++        self.assertEqual(ids, ['consumer-a', 'consumer-b'])
++        new_sha = digest(by_id(data, 'checker'))
++        self.assertNotEqual(old_sha, new_sha)
++        for text in (after_json, after_text):
++            self.assertIn('revoked', text)
++            self.assertIn('consumer-a', text)
++            self.assertIn('consumer-b', text)
++            self.assertIn(new_sha, text)
++            self.assertIn('not_conferred', text)
++        self.assertNotIn(old_sha, after_json)
++        self.assertEqual(after['denominators']['current_requirement_support_conferred'], 0)
++
++    def test_superseded_version_remains_locatable_without_current_support(self):
++        data = retarget(fixture(), 'evas')
++        original = by_id(data, 'checker')
++        original_sha = digest(original)
++        newer = copy.deepcopy(original)
++        newer['version'] = '2'
++        data['objects'].append(newer)
++        data['current']['checker'] = '2'
++        projected, text = checked(Registry(data))
++        record = evas_records(projected)[0]
++        self.assertFalse(record['qualification']['current_qualified'])
++        self.assertTrue(record['qualification']['historical_query']['qualified'])
++        self.assertFalse(record['qualification']['historical_query']['counts_as_current_support'])
++        versions = [item for item in record['locatable_versions'] if item['id'] == 'checker']
++        self.assertEqual({item['version'] for item in versions}, {'1', '2'})
++        retained = next(item for item in versions if item['version'] == '1')
++        self.assertEqual(retained['sha256'], original_sha)
++        self.assertFalse(retained['selected'])
++        self.assertIn(original_sha, text)
++        self.assertIn('historical_qualified: true', text)
++        self.assertIn('current_qualified: false', text)
++        self.assertIn('counts_as_current_support: false', text)
++        self.assertEqual(projected['denominators']['current_requirement_support_conferred'], 0)
++
++    def test_missing_toolchain_and_aliases_are_not_filled(self):
++        data = retarget(fixture(), 'ngspice')
++        requirement_ref = rebind_ref(by_id(data, 'fixture-requirement'))
++        for name, backend, toolchain in (
++            ('alias-openvaf', 'OpenVAF', [{'role': 'compiler', 'name': 'OpenVAF', 'version': '9.9.9'}]),
++            ('alias-heading', 'ngspice + OpenVAF-R', [{'role': 'simulator', 'name': 'ngspice', 'version': '41'}]),
++            ('alias-compiler', 'openvaf-r', [{'role': 'compiler', 'name': 'OpenVAF-R', 'version': '0.8.7'}]),
++        ):
++            data['objects'].append({
++                'id': name, 'version': '1', 'kind': 'qualification', 'status': 'active',
++                'review': 'approved', 'scope': 'alias probe', 'backend': backend,
++                'requirements': [requirement_ref], 'dependencies': [requirement_ref],
++                'toolchain': toolchain,
++            })
++            data['current'][name] = '1'
++        projected, _text = checked(Registry(data))
++        row = requirement(projected, 'fixture-requirement')
++        ngspice = row['backends']['ngspice']
++        self.assertEqual(ngspice['toolchain']['state'], 'unknown')
++        self.assertNotIn('9.9.9', json.dumps(ngspice))
++        self.assertNotIn('41', json.dumps(ngspice['toolchain']))
++        self.assertNotIn('0.8.7', json.dumps(ngspice))
++        for name in ('spectre', 'gnucap', 'evas'):
++            self.assertEqual(row['backends'][name]['toolchain']['state'], 'unknown')
++            self.assertEqual(row['backends'][name]['records'], [])
++        unassigned = {record['qualification']['backend'] for record in row['unassigned_backend_records']}
++        self.assertEqual(unassigned, {'OpenVAF', 'ngspice + OpenVAF-R', 'openvaf-r'})
++        self.assertTrue(all(record['qualification']['current_qualified'] for record in ngspice['records']))
++        self.assertEqual(row['requirement_support'], 'not_conferred')
++        self.assertEqual(row['coverage_sufficiency'], 'pending')
++
++    def test_distinct_states_are_not_collapsed(self):
++        data = set_outcome(retarget(fixture(), 'evas'), 'not_run', numerical='known_nonconformance')
++        projected, text = checked(Registry(data))
++        record = evas_records(projected)[0]
++        execution = record['executions'][0]
++        self.assertEqual(execution['execution']['state'], 'not_run')
++        self.assertEqual(execution['completeness']['state'], 'recorded')
++        self.assertEqual(execution['completeness']['value'], True)
++        self.assertEqual(execution['numerical']['state'], 'known_nonconformance')
++        self.assertEqual(record['analyses'][0]['numerical']['state'], 'unknown')
++        self.assertFalse(record['qualification']['current_qualified'])
++        for token in ('not_run', 'known_nonconformance', 'recorded:true', 'unknown'):
++            self.assertIn(token, text)
++        head = text.partition('## 历史引用')[0]
++        for line in head.splitlines():
++            if line.startswith('|') and not line.startswith('| ---') and not line.startswith('| 后端'):
++                cells = [part.strip() for part in line.strip().strip('|').split('|')]
++                self.assertTrue(all(cell not in {'', '✓', '✗', 'x', 'X'} for cell in cells))
++
++    def test_preview_writes_both_views_and_render_delegates(self):
++        registry = Registry(fixture())
++        import tempfile
++        with tempfile.TemporaryDirectory() as directory:
++            paths = write_preview(registry, directory, historical={
++                'identity': 'fixture-history', 'source': 'fixture', 'scope': 'fixture', 'nodes': [],
++            })
++            self.assertEqual([path.name for path in paths], ['support-facts.json', 'support.md'])
++            saved = json.loads(paths[0].read_text())
++            self.assertFalse(saved['adopted'])
++            self.assertIn('not_conferred', paths[1].read_text())
++            self.assertEqual(paths[0].read_text(), dumps(saved))
++        seen = {}
++        def fake_write(reg, directory, **kwargs):
++            seen['registry'] = reg
++            seen['directory'] = directory
++            return [Path(directory) / 'support-facts.json', Path(directory) / 'support.md']
++        original = (support_view.write_preview, render.load, render.outputs)
++        support_view.write_preview = fake_write
++        render.load = lambda: {'marker': 'loaded'}
++        render.outputs = lambda *_args, **_kwargs: (_ for _ in ()).throw(AssertionError('historical outputs built'))
++        try:
++            with self.assertRaises(SystemExit):
++                render.main(['--check', '--support-preview', 'unused'])
++            render.main(['--support-preview', 'preview-dir'])
++        finally:
++            support_view.write_preview, render.load, render.outputs = original
++        self.assertEqual(seen, {'registry': {'marker': 'loaded'}, 'directory': 'preview-dir'})
++
++    def test_requirement_content_mismatch_stays_off_the_current_requirement(self):
++        data = retarget(fixture(), 'evas')
++        _break_citation(data, 'consumer-a', 'fixture-requirement', ('requirements', 'dependencies'))
++        projected, text = checked(Registry(data))
++        evas = requirement(projected, 'fixture-requirement')['backends']['evas']
++        bound = _records_by_id(evas['records'])
++        self.assertIn('consumer-b', bound)
++        self.assertNotIn('consumer-a', bound)
++        self.assertEqual(bound['consumer-b']['execution']['value'], 'passed')
++        self.assertTrue(bound['consumer-b']['qualification']['current_qualified'])
++        self.assertEqual(evas['execution']['state'], 'records_listed')
++        consumer = _records_by_id(projected['unbound_qualifications'])['consumer-a']
++        self.assertFalse(consumer['qualification']['current_qualified'])
++        self.assertTrue(any('fixture-requirement' in gap for gap in consumer['qualification']['gaps']))
++        cited = [ref for ref in consumer['unbound_references'] if ref['id'] == 'fixture-requirement']
++        self.assertEqual(cited, [{
++            'id': 'fixture-requirement',
++            'version': '1',
++            'sha256': '0' * 64,
++            'kind': 'requirement',
++            'bound': False,
++        }])
++        self.assertEqual(consumer['execution']['value'], 'passed')
++        self.assertIn('未绑定引用：kind requirement `fixture-requirement`', text)
++        self.assertIn('bound false', text)
++
++    def test_execution_content_mismatch_does_not_borrow_current_observation(self):
++        data = retarget(fixture(), 'evas')
++        execution = by_id(data, 'fixture-execution')
++        execution['numerical'] = 'borrowed-numerical'
++        execution['toolchain'] = [{'role': 'simulator', 'name': 'EVAS', 'version': 'borrowed-toolchain'}]
++        data = refresh(data)
++        _break_citation(data, 'consumer-a', 'fixture-execution', ('dependencies',))
++        projected, text = checked(Registry(data))
++        evas = requirement(projected, 'fixture-requirement')['backends']['evas']
++        bound = _records_by_id(evas['records'])
++        self.assertEqual(set(bound), {'consumer-a', 'consumer-b'})
++        self.assertEqual(evas['execution']['state'], 'records_listed')
++        other = bound['consumer-b']
++        self.assertEqual(other['execution']['value'], 'passed')
++        self.assertEqual(other['executions'][0]['numerical']['value'], 'borrowed-numerical')
++        self.assertIn('borrowed-toolchain', json.dumps(other['toolchain']))
++        self.assertTrue(other['qualification']['current_qualified'])
++        consumer = bound['consumer-a']
++        self.assertFalse(consumer['qualification']['current_qualified'])
++        self.assertEqual(consumer['execution'], {'state': 'unknown'})
++        self.assertEqual(consumer['executions'], [])
++        self.assertEqual(consumer['numerical'], {'state': 'unknown'})
++        self.assertEqual(consumer['toolchain'], {'state': 'unknown', 'components': []})
++        self.assertEqual(consumer['analyses'][0]['outcome']['value'], 'accepted')
++        self.assertNotIn('borrowed-toolchain', json.dumps(consumer))
++        self.assertNotIn('borrowed-numerical', json.dumps(consumer))
++        self.assertTrue(any(gap.endswith('dependency content changed: fixture-execution')
++                            for gap in consumer['qualification']['gaps']))
++        self.assertEqual(consumer['unbound_references'], [{
++            'id': 'fixture-execution',
++            'version': '1',
++            'sha256': '0' * 64,
++            'kind': 'execution',
++            'bound': False,
++        }])
++        self.assertTrue(all('bound' not in item for item in consumer['locatable_versions']))
++        located = [item for item in consumer['locatable_versions'] if item['id'] == 'fixture-execution']
++        self.assertTrue(located)
++        self.assertNotEqual(located[0]['sha256'], '0' * 64)
++        self.assertIn('未绑定引用：kind execution `fixture-execution`', text)
++
++    def test_analysis_content_mismatch_does_not_borrow_outcome(self):
++        data = retarget(fixture(), 'evas')
++        by_id(data, 'fixture-analysis')['numerical'] = 'borrowed-analysis-numerical'
++        data = refresh(data)
++        _break_citation(data, 'consumer-a', 'fixture-analysis', ('dependencies',))
++        projected, _text = checked(Registry(data))
++        bound = _records_by_id(evas_records(projected))
++        consumer = bound['consumer-a']
++        other = bound['consumer-b']
++        self.assertEqual(consumer['analyses'], [])
++        self.assertEqual(consumer['execution']['value'], 'passed')
++        self.assertNotIn('borrowed-analysis-numerical', json.dumps(consumer))
++        self.assertEqual(consumer['unbound_references'], [{
++            'id': 'fixture-analysis',
++            'version': '1',
++            'sha256': '0' * 64,
++            'kind': 'analysis',
++            'bound': False,
++        }])
++        self.assertEqual(other['analyses'][0]['outcome']['value'], 'accepted')
++        self.assertEqual(other['analyses'][0]['numerical']['value'], 'borrowed-analysis-numerical')
++        self.assertFalse(consumer['qualification']['current_qualified'])
++        self.assertTrue(other['qualification']['current_qualified'])
++        self.assertEqual(requirement(projected, 'fixture-requirement')['backends']['evas']['execution']['state'],
++                         'records_listed')
++
++    def test_review_content_mismatch_does_not_borrow_evidence(self):
++        data = retarget(fixture(), 'evas')
++        _break_citation(data, 'consumer-a', 'fixture-review', ('dependencies',))
++        projected, _text = checked(Registry(data))
++        bound = _records_by_id(evas_records(projected))
++        consumer = bound['consumer-a']
++        other = bound['consumer-b']
++        consumer_ids = [item['id'] for item in consumer['evidence'].get('items') or []]
++        other_ids = [item['id'] for item in other['evidence'].get('items') or []]
++        self.assertNotIn('review-approval', consumer_ids)
++        self.assertIn('review-approval', other_ids)
++        self.assertIn('execution-raw', consumer_ids)
++        self.assertEqual(consumer['execution']['value'], 'passed')
++        self.assertEqual(consumer['unbound_references'], [{
++            'id': 'fixture-review',
++            'version': '1',
++            'sha256': '0' * 64,
++            'kind': 'review',
++            'bound': False,
++        }])
++        self.assertFalse(consumer['qualification']['current_qualified'])
++        self.assertTrue(other['qualification']['current_qualified'])
++        self.assertTrue(all(item['bound'] is True for item in consumer['evidence']['items']))
++
++
++    def test_one_registration_change_reaches_default_json_and_markdown(self):
++        data = retarget(fixture(), 'evas')
++        first = Registry(copy.deepcopy(data))
++        by_id(data, 'checker')['status'] = 'revoked'
++        second = Registry(data)
++        node = {
++            'id': 'sin',
++            'title': 'sin',
++            'chapter': '语言',
++            'status': 'waiting',
++            'review': 'pending',
++            'gap': 'historical gap text',
++            'evidence': 'evas/docs/COMPARISON.md#支持矩阵',
++            'depends_on': [],
++        }
++        view = {
++            'nodes': [node],
++            'historical_view': {
++                'identity': 'historical-comparison-import-f210ebd5',
++                'source': 'evas/docs/COMPARISON.md',
++                'scope': 'Historical transcription; not qualification for current main',
++                'role': 'historical-index',
++                'in_current_requirement_denominator': False,
++            },
++        }
++        original_load = render.load
++        original_normative = render.normative_markdown
++        try:
++            render.normative_markdown = lambda reg: 'normative\n'
++            render.load = lambda: first
++            before = render.outputs(view)
++            render.load = lambda: second
++            after = render.outputs(view)
++            pair = render.support_pair(second)
++        finally:
++            render.load = original_load
++            render.normative_markdown = original_normative
++
++        def pick(files, name):
++            return next(value for path, value in files.items() if path.name == name)
++
++        self.assertEqual(pick(after, 'support-facts.json'), pair[0])
++        self.assertEqual(pick(after, 'support.md'), pair[1])
++        self.assertNotEqual(pick(before, 'support-facts.json'), pick(after, 'support-facts.json'))
++        self.assertNotEqual(pick(before, 'support.md'), pick(after, 'support.md'))
++        for value in (pick(after, 'support-facts.json'), pick(after, 'support.md')):
++            self.assertIn('revoked', value)
++            self.assertIn('not_conferred', value)
++        comparison = pick(after, 'comparison.md')
++        self.assertIn('历史视图身份：`historical-comparison-import-f210ebd5`', comparison)
++        self.assertIn('原输入：`evas/docs/COMPARISON.md`', comparison)
++        self.assertIn('当前要求分母只计登记中的当前要求。', comparison)
++        self.assertIn('等待跑', comparison)
++        self.assertNotIn('current_requirements:', comparison)
++        page = next(value for path, value in after.items() if path.as_posix().endswith('sin/README.md'))
++        self.assertIn('historical-comparison-import-f210ebd5', page)
++        self.assertIn('historical gap text', page)
++        self.assertIn('evas/docs/COMPARISON.md#支持矩阵', page)
++        self.assertIn('当前要求分母只计登记中的当前要求。', page)
++
++def _break_citation(data, owner, ref_id, fields):
++    for field in fields:
++        for ref in by_id(data, owner).get(field) or []:
++            if isinstance(ref, dict) and ref.get('id') == ref_id:
++                ref['sha256'] = '0' * 64
++
++
++def _records_by_id(records):
++    return {record['qualification']['id']: record for record in records}
++
++
++if __name__ == '__main__':
++    unittest.main()
+diff --git a/evas/docs/COMPARISON-METHODOLOGY.md b/evas/docs/COMPARISON-METHODOLOGY.md
+index ac056918..03cd0699 100644
+--- a/evas/docs/COMPARISON-METHODOLOGY.md
++++ b/evas/docs/COMPARISON-METHODOLOGY.md
+@@ -767,6 +767,7 @@ EVAS 查询也须有明确来源、返回对应物理阶段，原电压、事件
+ ## 5. 怎样阅读结果与未完成范围
+ 
+ 完整结果只在[支持对比表](COMPARISON.md#支持矩阵)维护，本文不另建一份支持清单。
++该表保持历史转录身份。当前要求事实由登记生成，见 [support.md](../capabilities/generated/support.md)。
+ 
+ <a id="reference-and-boundaries"></a>
+ 
+diff --git a/evas/docs/COMPARISON.md b/evas/docs/COMPARISON.md
+index e88d6c4f..b30e55ce 100644
+--- a/evas/docs/COMPARISON.md
++++ b/evas/docs/COMPARISON.md
+@@ -2,6 +2,9 @@
+ 
+ 比较范围固定为每个行名所链接的模型与配置，四个后端使用相同用例和验收要求。
+ 结果来自不同版本，**不代表当前 main 的一次全量验收，也不覆盖所有合法写法**。
++当前逐要求的四后端事实由登记生成，见 [support.md](../capabilities/generated/support.md) 与 [support-facts.json](../capabilities/generated/support-facts.json)。
++本页保持历史转录身份 `historical-comparison-import-f210ebd5`。原输入是本页，原判据范围是历史转录。
++表中的原数字和链接仍按各行模型与配置检索。当前要求分母只计登记中的当前要求。
+ 前五节列固定 Q 用例；[第六节](#engineering-status)列工程请求的交付与缺口，两者分别验收。
+ 
+ <a id="table-design"></a>
+diff --git a/evas/docs/development/PROCESS.md b/evas/docs/development/PROCESS.md
+index 116f0a6b..892827bf 100644
+--- a/evas/docs/development/PROCESS.md
++++ b/evas/docs/development/PROCESS.md
+@@ -31,6 +31,54 @@
+ 文档和标签修改通常只需一致性检查；不要求全矩阵或远端仿真。
+ 先红后绿描述新增行为测试的实践，生成的矩阵不能证明这个时间顺序。
+ 
++## 当前支持视图
++
++行为变更仍走上面的五步。当前要求事实只从能力登记生成：
++
++```sh
++python3 -B evas/capabilities/render.py
++python3 -B evas/capabilities/render.py --check
++```
++
++`generated/support.md` 与 `generated/support-facts.json` 由这次生成同时写出。
++历史比较页保留原输入 `evas/docs/COMPARISON.md` 和身份 `historical-comparison-import-f210ebd5`。
++当前要求分母只计登记中的当前要求。
++
++规范变更、checker 变更、测试纠错、实现修复和纯迁移沿用
++`scripts/ci_selection.py` 与 `scripts/evas_check_policy.py` 已有选择。
++选择器没有单独的“纯迁移”豁免。未识别的 experiments 路径仍按现有规则进入完整检查。
++
++<a id="current-consumers"></a>
++
++## 已组合的 EVAS 执行入口
++
++Paper、comparison、precision 的 EVAS 执行在 `evas/validation/adapters/`。
++实验目录保留计划、预算和非 EVAS 后端。默认 `render.py` 不调用这些适配器。
++下面的命令是本批源码的入口。已发布检查点仍以上一已审版本为准。验证资格仍按资格协议单独判断。
++
++Paper 适配 `paper_evas_worker.py` 负责编译、瞬态和原始响应记录：
++
++```sh
++python3 -B experiments/backends/paper/runner.py worker <work> <kernel>
++python3 -B experiments/backends/paper/runner.py <inputs> <output> --backend <backend> --tool-profile <profile> --allocation <allocation>
++```
++
++Comparison 适配 `comparison_evas_worker.py` 执行 condition 与 requested_settings 合同。
++`freeze.py` 把该适配的源码哈希写入 worker 身份。runner 命令是：
++
++```sh
++python3 -B experiments/backends/comparison/runner.py <inputs> <output> --backend <backend> --allocation <id>
++```
++
++Precision 适配 `precision_evas_worker.py` 保留强制 strobe 与原始记录。
++研究计划和后端进程仍由 `precision_run.py` 持有。`--family` 接受 `sample_hold` 或 `first_order`：
++
++```sh
++python3 -B experiments/backends/support/precision_run.py worker <work> <kernel>
++python3 -B experiments/backends/support/precision_run.py freeze <output>
++python3 -B experiments/backends/support/precision_run.py run <inputs> <output> --backend <backend> --profile <profile> --family sample_hold
++```
++
+ ## 标签与机械检查
+ 
+ - 测试文件声明一个非空字符串列表 `GUARDS`。能力 ID 取自 [能力 ID 与证据索引](capability-evidence.md)，
+diff --git a/evas/validation/METHOD_QUALIFICATION.md b/evas/validation/METHOD_QUALIFICATION.md
+index e27f222a..1c974e39 100644
+--- a/evas/validation/METHOD_QUALIFICATION.md
++++ b/evas/validation/METHOD_QUALIFICATION.md
+@@ -2,6 +2,9 @@
+ 
+ 2026-09-28，`v2-draft-20260928`，**共同历史检查已实现并完成有限校准及旧波形重判；新条件已完成四后端两档基线，完整协议仍未取得资格**。本文件落实 [验证范围与契约](README.md) 的观察资格要求；新案例在 [NEXT_CASE_CARDS.md](NEXT_CASE_CARDS.md)。[v1](versions/v1/README.md) 的源码、分析器、结果与标签不变。
+ 
++本文件保持 `v2-draft-20260928` 的协议身份和下面的原文结论。当前要求资格见登记生成的 [support.md](../capabilities/generated/support.md)。
++
++
+ 当前实现及证据见[共同历史重判](../../experiments/archive/dvs2-history-validation/README.md)：17 项构造校准/适配检查通过，复核248份所读历史工件并重判24份波形；32条配置中另外8条保留原执行失败。两个条件性误差场景均为13份相容、11份不相容，正式资格仍为 I。重判不增加电路运行数，也不证明完整观察误差界已经建立。
+ 
+ ## 1. 本轮要交付什么
+diff --git a/evas/validation/PROTOCOL.md b/evas/validation/PROTOCOL.md
+index 6ce4a7b8..c83b2c4b 100644
+--- a/evas/validation/PROTOCOL.md
++++ b/evas/validation/PROTOCOL.md
+@@ -16,6 +16,9 @@ Table 4-14、A.8.2 或保留字表不能整表替换；共享容器中的未选
+ 引用的 IEEE 1364 转换定义尚未固定时，相关要求保持待补证；独立精度预算须另行审核。
+ 外部后端兼容结论仍须真实比较，Spectre 待跑。
+ 
++当前四端要求视图由 `evas/capabilities/render.py` 从登记生成，见 [support.md](../capabilities/generated/support.md)。
++四个当前要求在取得匹配证据和审核之前保持 pending。本页既有协议计数和冻结收据保持原身份。
++
+ ## 范围、编码与可比性
+ 
+ ### 纳入
+diff --git a/evas/validation/README.md b/evas/validation/README.md
+index 30b8bb15..55b0808e 100644
+--- a/evas/validation/README.md
++++ b/evas/validation/README.md
+@@ -30,6 +30,8 @@ EVAS全部资料见[统一入口](../README.md#evas-entry)；本目录维护独
+ 
+ 原31条件的当前输入与独立有限观察判据集中在[dvs2/](dvs2/README.md)。
+ 开发静态回归直接读取它们，后端适配器保留执行、文件读取与身份冻结职责。
++Paper、comparison、precision 的 EVAS worker 在 [adapters/](adapters/)。
++调用关系与现行命令见[已组合的 EVAS 执行入口](../docs/development/PROCESS.md#current-consumers)。
+ 
+ 近邻事件的非线性历史与 PWL 分段传播有[独立条件和冻结判据](ordered_event_history/README.md)，原始失败与严格计时诊断分别保留。
+ 
+diff --git a/experiments/README.md b/experiments/README.md
+index b154d7c9..4037909a 100644
+--- a/experiments/README.md
++++ b/experiments/README.md
+@@ -2,8 +2,10 @@
+ 
+ EVAS全部资料见[统一入口](../evas/README.md#evas-entry)；本目录维护执行、分析工具与结果证据。
+ 
+-四后端固定条件实测与后续分项证据见 [support](backends/support/README.md)；支持结论只维护在 [EVAS 总表](../evas/docs/COMPARISON.md)。
+-能力节点上的当前分类见 [能力目录](../evas/capabilities/README.md)。本目录继续保存执行工具和冻结收据，不按能力改名。
++四后端固定条件实测与后续分项证据见 [support](backends/support/README.md)。
++当前要求事实由登记生成，见 [support.md](../evas/capabilities/generated/support.md)。
++历史总表 [COMPARISON.md](../evas/docs/COMPARISON.md) 保留原成绩和链接。当前要求分母只计登记中的当前要求。
++能力节点上的历史分类见 [能力目录](../evas/capabilities/README.md)。本目录继续保存执行工具和冻结收据，不按能力改名。
+ 各份收据绑定自己的源码与后端版本，不能合称为当前 main 的一次完整重跑。
+ 
+ 这里提供 vaEVAS 的执行工具、精简结果、收据与历史材料入口。
+@@ -26,7 +28,8 @@ EVAS全部资料见[统一入口](../evas/README.md#evas-entry)；本目录维
+ 
+ | 想了解什么 | 阅读入口 |
+ | --- | --- |
+-| 当前支持什么、还有哪些限制？ | [四后端支持范围](../evas/docs/COMPARISON.md) |
++| 当前要求的四后端事实是什么？ | [登记生成视图](../evas/capabilities/generated/support.md) |
++| 历史四后端成绩在哪里？ | [历史总表](../evas/docs/COMPARISON.md) |
+ | 当前能力依据哪些执行证据？ | [分项证据索引](backends/support/README.md)；0.19.0 / IR23 的有限循环与数组见[专项验收](backends/support/event-runtime-control/README.md)，旧矩阵版本见[检查点说明](../evas/validation/README.md#latest-evas-checkpoint) |
+ | 正确答案与精度要求从哪里来？ | [独立验证集](../evas/validation/README.md)、[技术手册](../evas/docs/README.md) |
+ | 指定求解时刻是否与 Spectre 有限配对？ | [strobe 对照](backends/strobe/README.md)，保留缺失观测和有效设置差异 |
+diff --git a/scripts/capabilities/generate_catalog.py b/scripts/capabilities/generate_catalog.py
+index e1ed9ba7..690c6bd1 100644
+--- a/scripts/capabilities/generate_catalog.py
++++ b/scripts/capabilities/generate_catalog.py
+@@ -75,6 +75,39 @@ def select_finding_method(history,document,row,runtime_id,current,previous_objec
+    return method
+  raise ValueError('finding original subject identity unavailable; explicit unbound migration required: '+runtime_id)
+ 
++DERIVED_EXACT_PATHS={
++ 'evas/capabilities/registry.json',
++ 'evas/capabilities/generated/comparison.md',
++ 'evas/capabilities/generated/paper.md',
++ 'evas/capabilities/generated/normative.md',
++ 'evas/capabilities/generated/support-facts.json',
++ 'evas/capabilities/generated/support.md',
++ 'evas/docs/development/TRACEABILITY.md'}
++
++def generated_output_paths(legacy):
++ """Exact derived outputs plus historical node pages. Support views join this set; they are not a second registry."""
++ if not isinstance(legacy,dict) or not isinstance(legacy.get('nodes'),list):raise ValueError('historical comparison nodes required for derived node pages')
++ generated=set(DERIVED_EXACT_PATHS)
++ generated.update('evas/capabilities/'+n['id']+'/README.md' for n in legacy['nodes'])
++ return generated
++
++def external_asset_identity(path,generated,metadata_paths):
++ """External manifest for generated, catalog metadata, or governance paths. Ordinary sources stay hashed."""
++ if path in metadata_paths:role='catalog-meta'
++ elif path in generated:role='derived'
++ elif path in GOVERNANCE:role='governance'
++ else:return None
++ return role,{'algorithm':'external-input-manifest','scope':'actual-execution-inputs','producer':'capabilities.observe-assets-v1'}
++
++def retain_generated_object(merged,migrations,current,previous_current,obj):
++ """Keep every prior id/version and point current at the regenerated object."""
++ key=(obj['id'],obj['version'])
++ if key in merged and merged[key]!=obj:raise ValueError('conflicting reused object version')
++ merged[key]=obj
++ prior=previous_current.get(obj['id'])
++ if prior and prior['version']!=obj['version']:migrations.append({'id':obj['id'],'previous':ref(prior),'current':ref(obj),'reason':'version-bound regenerated content; previous object retained'})
++ current[obj['id']]=obj['version']
++
+ def entry_inputs(config):
+  result=[]
+  for item in config['discoveries']:
+@@ -189,9 +222,8 @@ def build(config,out):
+   policy['bridges'].append(record);bridge_by_path[path]=(proof,chosen)
+   include.append(path)
+  metadata_paths={'evas/capabilities/data/registry.json',*('evas/capabilities/data/'+name for name in PARTS)}
+- generated={'evas/capabilities/registry.json','evas/capabilities/generated/comparison.md','evas/capabilities/generated/paper.md','evas/capabilities/generated/normative.md','evas/docs/development/TRACEABILITY.md'}
+  legacy=json.loads((root/'evas/capabilities/data/historical-comparison.json').read_text())
+- generated.update('evas/capabilities/'+n['id']+'/README.md' for n in legacy['nodes'])
++ generated=generated_output_paths(legacy)
+  readiness={}
+  readiness_source=None
+  if config.get('readiness_file'):
+@@ -212,11 +244,12 @@ def build(config,out):
+   prior_path=path if path in prior_assets else moves.get('assets',{}).get(path,path)
+   previous_asset=prior_assets.get(prior_path)
+   if prior_path!=path and previous_asset is None:raise ValueError('asset move lacks previous identity')
+-  external=path in metadata_paths or path in generated or path in GOVERNANCE
+-  role='catalog-meta' if path in metadata_paths else 'derived' if path in generated else 'governance' if path in GOVERNANCE else 'cross-component-source-read' if bridge else 'conservative-rust-tree-identity-input' if owner and all(e['collector']=='binary-listing' for e in owner.values()) else 'actual-unittest-owner' if owner else None
++  identity=external_asset_identity(path,generated,metadata_paths)
++  external=identity is not None
++  role=identity[0] if external else 'cross-component-source-read' if bridge else 'conservative-rust-tree-identity-input' if owner and all(e['collector']=='binary-listing' for e in owner.values()) else 'actual-unittest-owner' if owner else None
+   a={'schema_version':1,'id':previous_asset['id'] if previous_asset else readiness.get(path,{}).get('id',sid('asset',path)),'version':'1' if external else row['sha256'],
+     'kind':'asset','status':'active','namespace':'EVAS-assets','current_path':path,
+-    'content':{'algorithm':'external-input-manifest','scope':'actual-execution-inputs','producer':'capabilities.observe-assets-v1'} if external else {'algorithm':'sha256','value':row['sha256']},
++    'content':identity[1] if external else {'algorithm':'sha256','value':row['sha256']},
+     'role':{'status':'confirmed' if role else 'pending','value':role,'reason':'exact Registry/producer/governance path' if external else 'exact source-bound external read; partial consumers only' if bridge else 'conservative native source-tree identity; not compiler read or runtime closure' if role=='conservative-rust-tree-identity-input' else 'actual TestLoader owner module; no semantic qualification' if owner else 'responsibility awaits source review; path does not infer semantics'},
+     'consumers':[ref(ep) for ep in sorted(owner.values(),key=lambda e:e['id'])],
+     'consumer_status':'partial' if owner else 'pending','location_history':[],
+@@ -321,13 +354,7 @@ def build(config,out):
+  oldobjects=base['objects'];merged={(o['id'],o['version']):o for o in [*previous_objects,*oldobjects]}
+  migrations=[]
+  for objects in values.values():
+-  for obj in objects:
+-   key=(obj['id'],obj['version'])
+-   if key in merged and merged[key]!=obj:raise ValueError('conflicting reused object version')
+-   merged[key]=obj
+-   prior=previous_current.get(obj['id'])
+-   if prior and prior['version']!=obj['version']:migrations.append({'id':obj['id'],'previous':ref(prior),'current':ref(obj),'reason':'version-bound regenerated content; previous object retained'})
+-   base['current'][obj['id']]=obj['version']
++  for obj in objects:retain_generated_object(merged,migrations,base['current'],previous_current,obj)
+  base['_catalog_metadata_paths']=sorted(metadata_paths)
+  actual=copy.deepcopy(base);actual['objects']=list(merged.values())
+  reg=api.Registry(actual,root=root,repositories={'vaevas':archive,**config.get('source_repositories',{})});catalog=reg.catalog()
+diff --git a/scripts/ci_selection.py b/scripts/ci_selection.py
+index 6c1a2bbb..764e6928 100644
+--- a/scripts/ci_selection.py
++++ b/scripts/ci_selection.py
+@@ -225,6 +225,10 @@ def classify(paths):
+         elif path.startswith('evas/'):
+             # Unfamiliar package/build inputs must not bypass installation.
+             selected.update(CHECKS[:-1])
++        elif path == 'scripts/capabilities/generate_catalog.py':
++            # scripts/tests catalog fixtures and evas/capabilities generation
++            # checks both run in maintenance. Inventory stays unconditional.
++            selected.add('maintenance')
+         else:
+             # Unknown scripts/experiments may introduce a shared dependency.
+             return flags(*CHECKS)
+diff --git a/scripts/tests/test_catalog_derived_outputs.py b/scripts/tests/test_catalog_derived_outputs.py
+new file mode 100644
+index 00000000..97d8986f
+--- /dev/null
++++ b/scripts/tests/test_catalog_derived_outputs.py
+@@ -0,0 +1,108 @@
++"""Real generator fixture for derived support views. No catalog rebuild and no simulator."""
++import ast
++import importlib.util
++import json
++from pathlib import Path
++import unittest
++
++ROOT = Path(__file__).resolve().parents[2]
++SUPPORT = (
++    'evas/capabilities/generated/support-facts.json',
++    'evas/capabilities/generated/support.md',
++)
++PRIOR = (
++    'evas/capabilities/registry.json',
++    'evas/capabilities/generated/comparison.md',
++    'evas/capabilities/generated/paper.md',
++    'evas/capabilities/generated/normative.md',
++    'evas/docs/development/TRACEABILITY.md',
++)
++EXTERNAL = {
++    'algorithm': 'external-input-manifest',
++    'scope': 'actual-execution-inputs',
++    'producer': 'capabilities.observe-assets-v1',
++}
++
++
++def load_generator():
++    path = ROOT / 'scripts/capabilities/generate_catalog.py'
++    spec = importlib.util.spec_from_file_location('catalog_derived_generator', path)
++    module = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(module)
++    return module
++
++
++class DerivedSupportOutputTests(unittest.TestCase):
++    @classmethod
++    def setUpClass(cls):
++        cls.generator = load_generator()
++        legacy_path = ROOT / 'evas/capabilities/data/historical-comparison.json'
++        cls.legacy = json.loads(legacy_path.read_text())
++        cls.paths = cls.generator.generated_output_paths(cls.legacy)
++        cls.metadata = {'evas/capabilities/data/registry.json',
++                        *('evas/capabilities/data/' + name for name in cls.generator.PARTS)}
++
++    def test_real_historical_nodes_keep_old_outputs_and_derive_both_support_views(self):
++        node_pages = {path for path in self.paths
++                      if path.startswith('evas/capabilities/') and path.endswith('/README.md')}
++        self.assertEqual(node_pages, {'evas/capabilities/' + node['id'] + '/README.md'
++                                      for node in self.legacy['nodes']})
++        self.assertGreater(len(node_pages), 0)
++        for path in (*SUPPORT, *PRIOR):
++            with self.subTest(path=path):
++                role, content = self.generator.external_asset_identity(path, self.paths, self.metadata)
++                self.assertEqual(role, 'derived')
++                self.assertEqual(content, EXTERNAL)
++                self.assertNotIn('value', content)
++        for path in SUPPORT:
++            self.assertNotIn(path, self.metadata)
++            self.assertNotIn(path, self.generator.GOVERNANCE)
++        governance = next(iter(self.generator.GOVERNANCE))
++        self.assertEqual(self.generator.external_asset_identity(
++            governance, self.paths, self.metadata)[0], 'governance')
++        self.assertEqual(self.generator.external_asset_identity(
++            'evas/capabilities/data/registry.json', self.paths, self.metadata)[0], 'catalog-meta')
++        self.assertIsNone(self.generator.external_asset_identity(
++            'evas/src/evas/compiler.py', self.paths, self.metadata))
++
++    def test_previous_support_asset_version_remains_beside_the_external_identity(self):
++        prior = {
++            'schema_version': 1, 'id': 'asset:support-facts', 'version': 'prior-sha',
++            'kind': 'asset', 'current_path': SUPPORT[0],
++            'content': {'algorithm': 'sha256', 'value': 'a' * 64},
++        }
++        current = {
++            **prior, 'version': 'external-version', 'content': dict(EXTERNAL),
++        }
++        merged = {(prior['id'], prior['version']): prior}
++        migrations = []
++        pointer = {}
++        self.generator.retain_generated_object(
++            merged, migrations, pointer, {prior['id']: prior}, current)
++        self.assertEqual(merged[(prior['id'], prior['version'])]['content']['algorithm'], 'sha256')
++        self.assertEqual(merged[(current['id'], current['version'])]['content'], EXTERNAL)
++        self.assertEqual(pointer[prior['id']], current['version'])
++        self.assertEqual(migrations, [{
++            'id': prior['id'],
++            'previous': self.generator.ref(prior),
++            'current': self.generator.ref(current),
++            'reason': 'version-bound regenerated content; previous object retained',
++        }])
++        conflict = {**current, 'kind': 'asset-changed'}
++        with self.assertRaisesRegex(ValueError, 'conflicting reused object version'):
++            self.generator.retain_generated_object(merged, [], {}, {prior['id']: prior}, conflict)
++
++    def test_historical_selection_loops_remain_in_the_generator(self):
++        tree = ast.parse((ROOT / 'scripts/capabilities/generate_catalog.py').read_text())
++        build = next(node for node in tree.body
++                     if isinstance(node, ast.FunctionDef) and node.name == 'build')
++        loops = [node for node in ast.walk(build) if isinstance(node, ast.For)
++                 and isinstance(node.target, ast.Tuple)]
++        targets = [[item.id for item in node.target.elts if isinstance(item, ast.Name)]
++                   for node in loops]
++        self.assertIn(['index', 'row'], targets)
++        self.assertIn(['group', 'protocol', 'key', 'scope_pointer'], targets)
++
++
++if __name__ == '__main__':
++    unittest.main()
+diff --git a/scripts/tests/test_ci_selection.py b/scripts/tests/test_ci_selection.py
+index 5eaa83b1..44106b44 100644
+--- a/scripts/tests/test_ci_selection.py
++++ b/scripts/tests/test_ci_selection.py
+@@ -17,6 +17,22 @@ spec.loader.exec_module(ci)
+ 
+ 
+ class RoutingTests(unittest.TestCase):
++    def test_catalog_generator_selects_maintenance_without_exempting_neighbors(self):
++        exact = 'scripts/capabilities/generate_catalog.py'
++        self.assertEqual(ci.classify([exact]), ci.flags('maintenance'))
++        for path in ('scripts/capabilities/discover_methods.py',
++                     'scripts/capabilities/observe_assets.py',
++                     'scripts/capabilities/collect_ci_inventory.py',
++                     'scripts/capabilities/new_helper.py',
++                     'experiments/new_backend/test.py',
++                     'scripts/new_tool.py'):
++            with self.subTest(path=path):
++                self.assertEqual(ci.classify([path]), ci.flags(*ci.CHECKS))
++        before = "MAINTENANCE_FILES = {'scripts/traceability.py'}\n"
++        after = ("MAINTENANCE_FILES = {'scripts/traceability.py', "
++                 "'scripts/capabilities/generate_catalog.py'}\n")
++        self.assertFalse(ci.maintenance_registration_only(before, after))
++
+     def test_comparison_worker_migration_routes_actual_consumers(self):
+         for path in ('experiments/backends/comparison/runner.py',
+                      'experiments/backends/comparison/freeze.py',
+@@ -435,6 +451,16 @@ class GateTests(unittest.TestCase):
+                 child: result for child in ci.CHILD_RESULTS.get(job, ())}}
+         return needs
+ 
++    def test_maintenance_still_requires_inventory_and_static_checks(self):
++        needs = self.results('maintenance')
++        self.assertEqual(ci.gate_errors(needs), [])
++        self.assertIn('catalog-inventory', ci.ALWAYS_REQUIRED_JOBS)
++        for job in ('catalog-inventory', 'static-checks'):
++            with self.subTest(job=job):
++                skipped = self.results('maintenance')
++                skipped[job]['result'] = 'skipped'
++                self.assertTrue(any(job in error for error in ci.gate_errors(skipped)))
++
+     def test_intentional_skips_are_allowed_but_selected_skips_are_not(self):
+         self.assertEqual(ci.gate_errors(self.results()), [])
+         for flag in ci.CHECKS:
