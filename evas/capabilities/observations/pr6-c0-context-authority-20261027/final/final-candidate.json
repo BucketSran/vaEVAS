@@ -1,0 +1,35 @@
+{
+  "base": "4d6ebc71efea35822a28f2861f2b0a2a6db17e59",
+  "commit": "6e3801a2dc54771b831ba68ed0ae752287149a7d",
+  "tree": "3c46f1ffdff19e8213942ac9af24c3b6195e7ae0",
+  "paths": [
+    "evas/capabilities/data/asset-index.json",
+    "evas/capabilities/data/registry.json"
+  ],
+  "files": {
+    "evas/capabilities/data/asset-index.json": "27280ba66bef8a40369f322d8f460e9efd7fad78575243a5c47079be81399ac2",
+    "evas/capabilities/data/registry.json": "87cf516ff009e5bbb1ec2eefc402185de586edbd7d93187b0d4e2120932a319c"
+  },
+  "old20_preserved": true,
+  "scientific_qualification": false,
+  "time_utc": "2026-10-27T22:22:24.508380+00:00",
+  "capture": "c6e267f92b06d342e4fb66c9ba895c4065f85b81",
+  "complete_paths": [
+    "evas/capabilities/data/asset-index.json",
+    "evas/capabilities/data/registry.json",
+    "evas/validation/baselines/regression-v1.review.json",
+    "scripts/context-registration-bundle.json"
+  ],
+  "derive": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/context-registration-20261027/derive-acceptance.json",
+  "large_unchanged_blobs": [
+    {
+      "path": "evas/validation/baselines/regression-v1.json",
+      "bytes": 89943276,
+      "changed_vs_main": false
+    }
+  ],
+  "precheck": "runs on the frozen head in parallel with CI",
+  "review": "pending: incremental priority Astra",
+  "CI": "pending",
+  "published": false
+}
