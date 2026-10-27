@@ -668,6 +668,56 @@
     {
       "actual_receipt": {
         "id": "source:0bc61362170923381d15c43a",
+        "sha256": "b3812f24acc5f9e66d5c8f182b44aabda0f39089b285964b1abd9860f0eacbbb",
+        "version": "46d7740cad3aff3d96149bc5c2b56334b3c2f4d98d3f1df61501a6f96802c5c3"
+      },
+      "ci_entrypoint_ids": [
+        "b8fade87b4925a4b221b05d54bf9000e49b6ead3d54840980913c537ae4d5b8f"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s experiments/backends/comparison -p 'test_*.py' -v",
+      "dependencies": [
+        {
+          "id": "source:0bc61362170923381d15c43a",
+          "sha256": "b3812f24acc5f9e66d5c8f182b44aabda0f39089b285964b1abd9860f0eacbbb",
+          "version": "46d7740cad3aff3d96149bc5c2b56334b3c2f4d98d3f1df61501a6f96802c5c3"
+        }
+      ],
+      "id": "entry:27e8c8fc50ec185e713aef5e",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test_*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "b8fade87b4925a4b221b05d54bf9000e49b6ead3d54840980913c537ae4d5b8f",
+        "environment_overrides": {},
+        "job": "provenance-paper",
+        "job_if": "needs.selection.outputs.provenance == 'true'",
+        "line": 228,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test_*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "experiments/backends/comparison",
+        "step": "Paper contracts, observable criteria and table provenance",
+        "step_if": null,
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "16048e6fa3a914bdda5d1723a1c810c873def1b9571d01f5e0b9ba36dbe8c0e4",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "experiments/backends/comparison",
+      "status": "active",
+      "version": "3771efef2a24f9b6534053d4ad90f701e4d422740075330c5b15b7309daf7478",
+      "workflow_sha256": "75da6ea8a3f0e7baa90b99388833ae2d757da66754b1d1dea3a8113d1fd1fa3b"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:0bc61362170923381d15c43a",
         "sha256": "10e18fadfc730aac96560977512003f4714b7abd5a8f2a9fbc8eea7c7c302995",
         "version": "4514d71479466de6674aa34c4cdc5368efe0280363f81d08be193ea945fe64f7"
       },

@@ -74380,6 +74380,67 @@
       "version": "23777f0c9809dfe5321f37b5ec00d4a40248e986d8b3100267f84a9a7028c7d9"
     },
     {
+      "consumer_status": "partial",
+      "consumers": [
+        {
+          "id": "entry:27e8c8fc50ec185e713aef5e",
+          "sha256": "b1db726ad79f7e7ff7cc58216f0d4674afbb03907b2b8696aba43a4a0aa8a1ae",
+          "version": "3771efef2a24f9b6534053d4ad90f701e4d422740075330c5b15b7309daf7478"
+        }
+      ],
+      "content": {
+        "algorithm": "sha256",
+        "value": "9f66c52415f5179fe94e9720d345a96ed6e62cf276944ac46dd0b321b7d1de72"
+      },
+      "current_path": "experiments/backends/comparison/test_refresh.py",
+      "dependencies": [
+        {
+          "id": "source:903b469ebcf7979517d53442",
+          "sha256": "4090691f5c0d84825ebad591aea44c0d0323b44610c49097144cb111700b8a2a",
+          "version": "47afed60557c28c962869ffae083146b602cd4b6333e631490c091f7401ed16c"
+        }
+      ],
+      "id": "asset:3acd55359d4499c08f698a3b",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "prior_readiness": {
+        "confirmed_fact_count": 0,
+        "current_blob_matches_prior": true,
+        "git_blob": "d7edbfe46a72b72b3bd7889ae4ea773172432f48",
+        "row_canonical_sha256": "708ca4fdce6f8d24e4c4127383ae95e7dbfa828c77017a3db2b9fe48390b90f7",
+        "row_pointer": "/items/1017",
+        "source": {
+          "id": "source:903b469ebcf7979517d53442",
+          "sha256": "4090691f5c0d84825ebad591aea44c0d0323b44610c49097144cb111700b8a2a",
+          "version": "47afed60557c28c962869ffae083146b602cd4b6333e631490c091f7401ed16c"
+        },
+        "source_revision": "380e7a4e12e428b9776417d9d8a7792848aed6e7",
+        "status": "prior limited facts only; underlying evidence availability and current semantic/consumer closure remain unverified"
+      },
+      "qualification_status": "not-granted",
+      "role": {
+        "facts": [
+          {
+            "entrypoint": {
+              "id": "entry:27e8c8fc50ec185e713aef5e",
+              "sha256": "b1db726ad79f7e7ff7cc58216f0d4674afbb03907b2b8696aba43a4a0aa8a1ae",
+              "version": "3771efef2a24f9b6534053d4ad90f701e4d422740075330c5b15b7309daf7478"
+            },
+            "proof": "actual-discovery-owner-module"
+          }
+        ],
+        "reason": "actual TestLoader owner module; no semantic qualification",
+        "status": "confirmed",
+        "value": "actual-unittest-owner"
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "3831e7e5f99327db18f05c3ecdaaa5dde54d12930ab8abe46a84ac8515739e8d"
+    },
+    {
       "consumer_status": "pending",
       "consumers": [],
       "content": {
@@ -80241,6 +80302,47 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "9cb198375aed42ee76f94776c8b31de4466485b6628ca55e2316afaa6bdc11be"
+    },
+    {
+      "consumer_status": "partial",
+      "consumers": [
+        {
+          "id": "entry:27e8c8fc50ec185e713aef5e",
+          "sha256": "b1db726ad79f7e7ff7cc58216f0d4674afbb03907b2b8696aba43a4a0aa8a1ae",
+          "version": "3771efef2a24f9b6534053d4ad90f701e4d422740075330c5b15b7309daf7478"
+        }
+      ],
+      "content": {
+        "algorithm": "sha256",
+        "value": "653fefd7133825d6f805c8ab86c55f4a0dda630f8fa1e3535117cc37df1c7d76"
+      },
+      "current_path": "experiments/backends/comparison/test_worker_adapter.py",
+      "dependencies": [],
+      "id": "asset:3f0d0d5c01857fcf84803e0a",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "qualification_status": "not-granted",
+      "role": {
+        "facts": [
+          {
+            "entrypoint": {
+              "id": "entry:27e8c8fc50ec185e713aef5e",
+              "sha256": "b1db726ad79f7e7ff7cc58216f0d4674afbb03907b2b8696aba43a4a0aa8a1ae",
+              "version": "3771efef2a24f9b6534053d4ad90f701e4d422740075330c5b15b7309daf7478"
+            },
+            "proof": "actual-discovery-owner-module"
+          }
+        ],
+        "reason": "actual TestLoader owner module; no semantic qualification",
+        "status": "confirmed",
+        "value": "actual-unittest-owner"
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "0c70cc14d3b5c54e4a798b52de8ac0f35eca3760e7c8879705b6627075278567"
     },
     {
       "consumer_status": "partial",
@@ -170018,6 +170120,51 @@
       "consumers": [],
       "content": {
         "algorithm": "sha256",
+        "value": "6e80d747a7f6ab4ebff8fb58dbc22e67d162defd21e696427ca1a2dfa8f116cb"
+      },
+      "current_path": "experiments/backends/comparison/ingest.py",
+      "dependencies": [
+        {
+          "id": "source:903b469ebcf7979517d53442",
+          "sha256": "4090691f5c0d84825ebad591aea44c0d0323b44610c49097144cb111700b8a2a",
+          "version": "47afed60557c28c962869ffae083146b602cd4b6333e631490c091f7401ed16c"
+        }
+      ],
+      "id": "asset:8376ac34e56027351f0e5679",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "prior_readiness": {
+        "confirmed_fact_count": 0,
+        "current_blob_matches_prior": false,
+        "git_blob": "254944ee29ca9b80b199fcb491d4f1cfdb665246",
+        "row_canonical_sha256": "2a9eae9c37e293f308633c7d033a18366d697333085007ece828250f9ecae986",
+        "row_pointer": "/items/1001",
+        "source": {
+          "id": "source:903b469ebcf7979517d53442",
+          "sha256": "4090691f5c0d84825ebad591aea44c0d0323b44610c49097144cb111700b8a2a",
+          "version": "47afed60557c28c962869ffae083146b602cd4b6333e631490c091f7401ed16c"
+        },
+        "source_revision": "380e7a4e12e428b9776417d9d8a7792848aed6e7",
+        "status": "prior limited facts only; underlying evidence availability and current semantic/consumer closure remain unverified"
+      },
+      "qualification_status": "not-granted",
+      "role": {
+        "reason": "responsibility awaits source review; path does not infer semantics",
+        "status": "pending",
+        "value": null
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "a483a79059a1ea46e62520347e8a57d131455b4bd7c893b36104cf3e1493e63a"
+    },
+    {
+      "consumer_status": "pending",
+      "consumers": [],
+      "content": {
+        "algorithm": "sha256",
         "value": "322f599a12761e61d91818a1deaee7ed216b73678197e3f3218a517148467457"
       },
       "current_path": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-hysteresis/wrong-sign/dut.va",
@@ -197994,6 +198141,67 @@
       "version": "064ebb2a95adc32ba4c9448ae2cbef5569b67f671de837b5e36ec820e02ef875"
     },
     {
+      "consumer_status": "partial",
+      "consumers": [
+        {
+          "id": "entry:27e8c8fc50ec185e713aef5e",
+          "sha256": "b1db726ad79f7e7ff7cc58216f0d4674afbb03907b2b8696aba43a4a0aa8a1ae",
+          "version": "3771efef2a24f9b6534053d4ad90f701e4d422740075330c5b15b7309daf7478"
+        }
+      ],
+      "content": {
+        "algorithm": "sha256",
+        "value": "ce064549e74d8d67df433235cdea73c452e3e0a266c4c86a05c3110308a719db"
+      },
+      "current_path": "experiments/backends/comparison/test_records.py",
+      "dependencies": [
+        {
+          "id": "source:903b469ebcf7979517d53442",
+          "sha256": "4090691f5c0d84825ebad591aea44c0d0323b44610c49097144cb111700b8a2a",
+          "version": "47afed60557c28c962869ffae083146b602cd4b6333e631490c091f7401ed16c"
+        }
+      ],
+      "id": "asset:9b09c5ab190c440519baf388",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "prior_readiness": {
+        "confirmed_fact_count": 0,
+        "current_blob_matches_prior": true,
+        "git_blob": "6aa4ac0d1963c72a8806f1603c4275cabbfb20a8",
+        "row_canonical_sha256": "e0eb342ad6202ad5f7cb7b3aa2f11f518da7d589fc33e3caaddbfe95b5b2ef29",
+        "row_pointer": "/items/1016",
+        "source": {
+          "id": "source:903b469ebcf7979517d53442",
+          "sha256": "4090691f5c0d84825ebad591aea44c0d0323b44610c49097144cb111700b8a2a",
+          "version": "47afed60557c28c962869ffae083146b602cd4b6333e631490c091f7401ed16c"
+        },
+        "source_revision": "380e7a4e12e428b9776417d9d8a7792848aed6e7",
+        "status": "prior limited facts only; underlying evidence availability and current semantic/consumer closure remain unverified"
+      },
+      "qualification_status": "not-granted",
+      "role": {
+        "facts": [
+          {
+            "entrypoint": {
+              "id": "entry:27e8c8fc50ec185e713aef5e",
+              "sha256": "b1db726ad79f7e7ff7cc58216f0d4674afbb03907b2b8696aba43a4a0aa8a1ae",
+              "version": "3771efef2a24f9b6534053d4ad90f701e4d422740075330c5b15b7309daf7478"
+            },
+            "proof": "actual-discovery-owner-module"
+          }
+        ],
+        "reason": "actual TestLoader owner module; no semantic qualification",
+        "status": "confirmed",
+        "value": "actual-unittest-owner"
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "529cdf7739b5353e696843205b3789f3438ea033b7389fb6f353a13dcd552d62"
+    },
+    {
       "consumer_status": "pending",
       "consumers": [],
       "content": {
@@ -218811,6 +219019,67 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "989431df2c5914ef8031b399c255a6871e47137e2d4b53d0400063b5665ce715"
+    },
+    {
+      "consumer_status": "partial",
+      "consumers": [
+        {
+          "id": "entry:27e8c8fc50ec185e713aef5e",
+          "sha256": "b1db726ad79f7e7ff7cc58216f0d4674afbb03907b2b8696aba43a4a0aa8a1ae",
+          "version": "3771efef2a24f9b6534053d4ad90f701e4d422740075330c5b15b7309daf7478"
+        }
+      ],
+      "content": {
+        "algorithm": "sha256",
+        "value": "7a7b6b00e1451dbc67522da1e72cc6366af4797f24190ccf8bfd2345239049c7"
+      },
+      "current_path": "experiments/backends/comparison/test_glm_controls.py",
+      "dependencies": [
+        {
+          "id": "source:903b469ebcf7979517d53442",
+          "sha256": "4090691f5c0d84825ebad591aea44c0d0323b44610c49097144cb111700b8a2a",
+          "version": "47afed60557c28c962869ffae083146b602cd4b6333e631490c091f7401ed16c"
+        }
+      ],
+      "id": "asset:ad700afe34784bc178416a44",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "prior_readiness": {
+        "confirmed_fact_count": 0,
+        "current_blob_matches_prior": true,
+        "git_blob": "9c09dfbd679994ca5cc4d70ec1c24982ce262971",
+        "row_canonical_sha256": "8c257cd85806216c820eff51a29d7b6421335f1b44712e92713a25509cb62e9e",
+        "row_pointer": "/items/1015",
+        "source": {
+          "id": "source:903b469ebcf7979517d53442",
+          "sha256": "4090691f5c0d84825ebad591aea44c0d0323b44610c49097144cb111700b8a2a",
+          "version": "47afed60557c28c962869ffae083146b602cd4b6333e631490c091f7401ed16c"
+        },
+        "source_revision": "380e7a4e12e428b9776417d9d8a7792848aed6e7",
+        "status": "prior limited facts only; underlying evidence availability and current semantic/consumer closure remain unverified"
+      },
+      "qualification_status": "not-granted",
+      "role": {
+        "facts": [
+          {
+            "entrypoint": {
+              "id": "entry:27e8c8fc50ec185e713aef5e",
+              "sha256": "b1db726ad79f7e7ff7cc58216f0d4674afbb03907b2b8696aba43a4a0aa8a1ae",
+              "version": "3771efef2a24f9b6534053d4ad90f701e4d422740075330c5b15b7309daf7478"
+            },
+            "proof": "actual-discovery-owner-module"
+          }
+        ],
+        "reason": "actual TestLoader owner module; no semantic qualification",
+        "status": "confirmed",
+        "value": "actual-unittest-owner"
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "c5e7fda5522871d0532fea976e767f055e1bc8c62817359a0066ea5695384408"
     },
     {
       "consumer_status": "pending",
@@ -265445,6 +265714,67 @@
       "consumer_status": "partial",
       "consumers": [
         {
+          "id": "entry:27e8c8fc50ec185e713aef5e",
+          "sha256": "b1db726ad79f7e7ff7cc58216f0d4674afbb03907b2b8696aba43a4a0aa8a1ae",
+          "version": "3771efef2a24f9b6534053d4ad90f701e4d422740075330c5b15b7309daf7478"
+        }
+      ],
+      "content": {
+        "algorithm": "sha256",
+        "value": "fd2a624dbd50dc768d7ee44d638444eaa64ea6ca44b472f751a47a27d57976dc"
+      },
+      "current_path": "experiments/backends/comparison/test_runner.py",
+      "dependencies": [
+        {
+          "id": "source:903b469ebcf7979517d53442",
+          "sha256": "4090691f5c0d84825ebad591aea44c0d0323b44610c49097144cb111700b8a2a",
+          "version": "47afed60557c28c962869ffae083146b602cd4b6333e631490c091f7401ed16c"
+        }
+      ],
+      "id": "asset:d30f296a9e524bc375bf812c",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "prior_readiness": {
+        "confirmed_fact_count": 0,
+        "current_blob_matches_prior": true,
+        "git_blob": "8f195ea23ec55a775cba2ed4cc01a6616a6de323",
+        "row_canonical_sha256": "944faf362388222e903c622ce3c6baad6732afa32a02fd8063b6700c213c69e1",
+        "row_pointer": "/items/1019",
+        "source": {
+          "id": "source:903b469ebcf7979517d53442",
+          "sha256": "4090691f5c0d84825ebad591aea44c0d0323b44610c49097144cb111700b8a2a",
+          "version": "47afed60557c28c962869ffae083146b602cd4b6333e631490c091f7401ed16c"
+        },
+        "source_revision": "380e7a4e12e428b9776417d9d8a7792848aed6e7",
+        "status": "prior limited facts only; underlying evidence availability and current semantic/consumer closure remain unverified"
+      },
+      "qualification_status": "not-granted",
+      "role": {
+        "facts": [
+          {
+            "entrypoint": {
+              "id": "entry:27e8c8fc50ec185e713aef5e",
+              "sha256": "b1db726ad79f7e7ff7cc58216f0d4674afbb03907b2b8696aba43a4a0aa8a1ae",
+              "version": "3771efef2a24f9b6534053d4ad90f701e4d422740075330c5b15b7309daf7478"
+            },
+            "proof": "actual-discovery-owner-module"
+          }
+        ],
+        "reason": "actual TestLoader owner module; no semantic qualification",
+        "status": "confirmed",
+        "value": "actual-unittest-owner"
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "f2b1c3f9d9757a5883af2449c9685e6289f3dd58d0d07264a420dca32cfaa2c1"
+    },
+    {
+      "consumer_status": "partial",
+      "consumers": [
+        {
           "id": "entry:cf4e908c4bb144433bdf05c4",
           "sha256": "e0bc1caa81dbb9ab68d7074acd763d0dc09c3c393277a749ee848b47d9d63f9e",
           "version": "4ec1f8e20fb740d5c92a2a2eac36cfe4fa07764e3d9ae8ea8b92b9b890ec376d"
@@ -309621,6 +309951,51 @@
       "consumers": [],
       "content": {
         "algorithm": "sha256",
+        "value": "2a75f9d8d898b920820b0a239a09c5c32267839e7cdfd9fd5dec2dac76f26f91"
+      },
+      "current_path": "experiments/backends/comparison/runner.py",
+      "dependencies": [
+        {
+          "id": "source:903b469ebcf7979517d53442",
+          "sha256": "4090691f5c0d84825ebad591aea44c0d0323b44610c49097144cb111700b8a2a",
+          "version": "47afed60557c28c962869ffae083146b602cd4b6333e631490c091f7401ed16c"
+        }
+      ],
+      "id": "asset:f44565d15126e22b64452dca",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "prior_readiness": {
+        "confirmed_fact_count": 0,
+        "current_blob_matches_prior": false,
+        "git_blob": "9010ccc75547a9518f5ca29d66e774981db9175c",
+        "row_canonical_sha256": "a7cd6fc11d549364336260e7ecb9ca7b3cef44de63afeb6dbb235041fa59d88f",
+        "row_pointer": "/items/1004",
+        "source": {
+          "id": "source:903b469ebcf7979517d53442",
+          "sha256": "4090691f5c0d84825ebad591aea44c0d0323b44610c49097144cb111700b8a2a",
+          "version": "47afed60557c28c962869ffae083146b602cd4b6333e631490c091f7401ed16c"
+        },
+        "source_revision": "380e7a4e12e428b9776417d9d8a7792848aed6e7",
+        "status": "prior limited facts only; underlying evidence availability and current semantic/consumer closure remain unverified"
+      },
+      "qualification_status": "not-granted",
+      "role": {
+        "reason": "responsibility awaits source review; path does not infer semantics",
+        "status": "pending",
+        "value": null
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "2cf9ade236fad0a90315fc6a435389e20c1403363306a76180c5498421c3ec6f"
+    },
+    {
+      "consumer_status": "pending",
+      "consumers": [],
+      "content": {
+        "algorithm": "sha256",
         "value": "ef3b402601b7e920eaa8734f20c7275709698976ea4570b27fec24b7198c341b"
       },
       "current_path": "experiments/backends/comparison/runner.py",
@@ -314296,6 +314671,67 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "6e3caad1a4e917836a17f82560bdcc977e973c167bb8e702fae7fd79413e4277"
+    },
+    {
+      "consumer_status": "partial",
+      "consumers": [
+        {
+          "id": "entry:27e8c8fc50ec185e713aef5e",
+          "sha256": "b1db726ad79f7e7ff7cc58216f0d4674afbb03907b2b8696aba43a4a0aa8a1ae",
+          "version": "3771efef2a24f9b6534053d4ad90f701e4d422740075330c5b15b7309daf7478"
+        }
+      ],
+      "content": {
+        "algorithm": "sha256",
+        "value": "625942af5d2c271ca607638d4d7ea5880138edef706d7955d5255aa975605ff7"
+      },
+      "current_path": "experiments/backends/comparison/test_review_controls.py",
+      "dependencies": [
+        {
+          "id": "source:903b469ebcf7979517d53442",
+          "sha256": "4090691f5c0d84825ebad591aea44c0d0323b44610c49097144cb111700b8a2a",
+          "version": "47afed60557c28c962869ffae083146b602cd4b6333e631490c091f7401ed16c"
+        }
+      ],
+      "id": "asset:f7a37222e0e8e61b848a4fce",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "prior_readiness": {
+        "confirmed_fact_count": 0,
+        "current_blob_matches_prior": true,
+        "git_blob": "cf653b288757d66eaea53af04417fff663275a20",
+        "row_canonical_sha256": "d4878977778430918ba41ba67bec8049eb9994d15c8b5184fb576ed4f018f836",
+        "row_pointer": "/items/1018",
+        "source": {
+          "id": "source:903b469ebcf7979517d53442",
+          "sha256": "4090691f5c0d84825ebad591aea44c0d0323b44610c49097144cb111700b8a2a",
+          "version": "47afed60557c28c962869ffae083146b602cd4b6333e631490c091f7401ed16c"
+        },
+        "source_revision": "380e7a4e12e428b9776417d9d8a7792848aed6e7",
+        "status": "prior limited facts only; underlying evidence availability and current semantic/consumer closure remain unverified"
+      },
+      "qualification_status": "not-granted",
+      "role": {
+        "facts": [
+          {
+            "entrypoint": {
+              "id": "entry:27e8c8fc50ec185e713aef5e",
+              "sha256": "b1db726ad79f7e7ff7cc58216f0d4674afbb03907b2b8696aba43a4a0aa8a1ae",
+              "version": "3771efef2a24f9b6534053d4ad90f701e4d422740075330c5b15b7309daf7478"
+            },
+            "proof": "actual-discovery-owner-module"
+          }
+        ],
+        "reason": "actual TestLoader owner module; no semantic qualification",
+        "status": "confirmed",
+        "value": "actual-unittest-owner"
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "72d4a3d930fa505f9a35858d539662dad4d12cc639906a327cb3359eaa9b7dde"
     },
     {
       "consumer_status": "partial",
@@ -320103,6 +320539,67 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "f6989c8fedfeb2e48880ec242d8f0130302ad57094158725d896b5adb74b538b"
+    },
+    {
+      "consumer_status": "partial",
+      "consumers": [
+        {
+          "id": "entry:27e8c8fc50ec185e713aef5e",
+          "sha256": "b1db726ad79f7e7ff7cc58216f0d4674afbb03907b2b8696aba43a4a0aa8a1ae",
+          "version": "3771efef2a24f9b6534053d4ad90f701e4d422740075330c5b15b7309daf7478"
+        }
+      ],
+      "content": {
+        "algorithm": "sha256",
+        "value": "1f2fc588ddc3541f78ceb50b03491e0bd50afbddd0e4f8d37d6326d4d69f4ab6"
+      },
+      "current_path": "experiments/backends/comparison/test_completion.py",
+      "dependencies": [
+        {
+          "id": "source:903b469ebcf7979517d53442",
+          "sha256": "4090691f5c0d84825ebad591aea44c0d0323b44610c49097144cb111700b8a2a",
+          "version": "47afed60557c28c962869ffae083146b602cd4b6333e631490c091f7401ed16c"
+        }
+      ],
+      "id": "asset:fccdda3e67b0c9c1cc7a44d6",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "prior_readiness": {
+        "confirmed_fact_count": 0,
+        "current_blob_matches_prior": true,
+        "git_blob": "e17b2987afa9682883c82dac324c4d403f5f8d20",
+        "row_canonical_sha256": "80c1a1b9d3b77bb6816135e8017a964847c908dd952c8f6036acf35c1fe118ae",
+        "row_pointer": "/items/1014",
+        "source": {
+          "id": "source:903b469ebcf7979517d53442",
+          "sha256": "4090691f5c0d84825ebad591aea44c0d0323b44610c49097144cb111700b8a2a",
+          "version": "47afed60557c28c962869ffae083146b602cd4b6333e631490c091f7401ed16c"
+        },
+        "source_revision": "380e7a4e12e428b9776417d9d8a7792848aed6e7",
+        "status": "prior limited facts only; underlying evidence availability and current semantic/consumer closure remain unverified"
+      },
+      "qualification_status": "not-granted",
+      "role": {
+        "facts": [
+          {
+            "entrypoint": {
+              "id": "entry:27e8c8fc50ec185e713aef5e",
+              "sha256": "b1db726ad79f7e7ff7cc58216f0d4674afbb03907b2b8696aba43a4a0aa8a1ae",
+              "version": "3771efef2a24f9b6534053d4ad90f701e4d422740075330c5b15b7309daf7478"
+            },
+            "proof": "actual-discovery-owner-module"
+          }
+        ],
+        "reason": "actual TestLoader owner module; no semantic qualification",
+        "status": "confirmed",
+        "value": "actual-unittest-owner"
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "27e5f945b87e63f5dc78b76d91ba4258f6c5ac328e005bb0b2f4ee8bd5eb2717"
     },
     {
       "consumer_status": "partial",
