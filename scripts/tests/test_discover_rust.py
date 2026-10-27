@@ -210,20 +210,66 @@ class RustListingTests(unittest.TestCase):
 
     def test_ci_uses_one_fixed_rust_toolchain(self):
         root=HELPER.parents[2]
-        text=(root/'.github/workflows/numerical-assurance.yml').read_text()
+        main=root/'.github/workflows/numerical-assurance.yml'
+        text=main.read_text()
         pins=re.findall(r"^  RUSTUP_TOOLCHAIN: '([^']*)'$",text,re.M)
         self.assertEqual(len(pins),1)
         self.assertRegex(pins[0],r'^[0-9]+\.[0-9]+\.[0-9]+$')
         self.assertRegex(text,r"(?m)^env:\n  RUSTUP_TOOLCHAIN: '")
-        for path in [root/'.github/workflows/numerical-assurance.yml',root/'.github/actions/rust-cache/action.yml',HELPER,
-                     root/'scripts/ci_evidence.py',root/'scripts/ci_lint.py',root/'evas/capabilities/rust_listing.py']:
+        # Every workflow, reusable workflow and composite action, not only the caller.
+        ci=sorted([*(root/'.github/workflows').glob('*.yml'),*(root/'.github/actions').glob('**/action.yml')])
+        self.assertIn(root/'.github/workflows/package-install.yml',ci)
+        self.assertIn(root/'.github/actions/rust-cache/action.yml',ci)
+        channel=(r'\+stable',r'(?:toolchain install|update|default|override set)\s+stable\b',
+                 r'(?m)^\s*(?:- )?toolchain:\s*[\'"]?stable\b',r'RUSTUP_TOOLCHAIN:\s*[\'"]?stable\b')
+        for path in [*ci,HELPER,root/'scripts/ci_evidence.py',root/'scripts/ci_lint.py']:
             with self.subTest(path=path.name):
-                source=path.read_text()
-                self.assertNotIn('+stable',source.replace("['rustc','+stable','-vV']",'').replace("['cargo','+stable','--version']",''))
-                self.assertNotRegex(source,r'rustup (?:toolchain install|update) stable')
-        installs=re.findall(r'rustup toolchain install (\S+)',text)
-        self.assertTrue(installs)
-        self.assertTrue(all(name=='"$RUSTUP_TOOLCHAIN"' or name.startswith('nightly') for name in installs),installs)
+                for pattern in channel:self.assertNotRegex(path.read_text(),pattern)
+        # The one source line that still names the pre-pin channel admits historical receipts only.
+        listing=(root/'evas/capabilities/rust_listing.py').read_text().splitlines()
+        self.assertEqual([line.split(' =')[0] for line in listing if '+stable' in line],['HISTORICAL_TOOLCHAIN_ARGV'])
+        # One authoritative literal: no other CI file repeats the version or assigns a version literal.
+        self.assertEqual({path.name:path.read_text().count(pins[0]) for path in ci if pins[0] in path.read_text()},{main.name:1})
+        for path in ci:
+            if path!=main:
+                with self.subTest(literal=path.name):
+                    self.assertNotRegex(path.read_text(),r'RUSTUP_TOOLCHAIN:\s*[\'"]?[0-9]')
+        # Allowed exception: fuzz-smoke installs and names nightly, which cargo-fuzz requires.
+        for path in ci:
+            installs=re.findall(r'rustup toolchain install (\S+)',path.read_text())
+            with self.subTest(installs=path.name):
+                self.assertTrue(all(name=='"$RUSTUP_TOOLCHAIN"' or (path==main and name=='nightly') for name in installs),installs)
+        self.assertEqual(re.findall(r'rustup toolchain install (\S+)',text).count('nightly'),1)
+        fuzz=re.search(r'^  fuzz-smoke:\n(.*?)(?=^  package:)',text,re.M|re.S).group(1)
+        self.assertIn('rustup toolchain install nightly',fuzz)
+        self.assertEqual(re.findall(r'\bcargo (?!\+nightly)\S+',fuzz),[])
+
+    def test_reusable_workflows_take_the_fixed_toolchain_from_their_caller(self):
+        root=HELPER.parents[2]
+        main=(root/'.github/workflows/numerical-assurance.yml').read_text()
+        # selection is the one job that reads the workflow-level env into an output.
+        selection=re.search(r'^  selection:\n(.*?)(?=^  fast-checks:)',main,re.M|re.S).group(1)
+        self.assertEqual(re.findall(r'^      rust_toolchain: (.*)$',selection,re.M),['${{ env.RUSTUP_TOOLCHAIN }}'])
+        parts=re.split(r'(?m)^  ([a-z-]+):\n',main[main.index('\njobs:\n'):])
+        jobs=dict(zip(parts[1::2],parts[2::2]))
+        reusable=[path for path in sorted((root/'.github/workflows').glob('*.yml')) if re.search(r'(?m)^  workflow_call:',path.read_text())]
+        self.assertIn('package-install.yml',[path.name for path in reusable])
+        for path in reusable:
+            text=path.read_text()
+            if not re.search(r'\b(?:rustup|cargo|rustc|maturin)\b|rust-cache|python -m build|pip wheel',text):continue
+            with self.subTest(workflow=path.name):
+                block=re.search(r'^  workflow_call:\n    inputs:\n(.*?)(?=^    outputs:|^[a-z])',text,re.M|re.S)
+                self.assertIsNotNone(block,'a Rust-using reusable workflow must declare the toolchain input')
+                self.assertEqual(re.findall(r'^      ([a-z_]+):\n',block.group(1),re.M),['rust_toolchain'])
+                self.assertNotIn('default:',block.group(1))
+                self.assertIn('        required: true\n',block.group(1))
+                self.assertEqual(re.findall(r'^ *RUSTUP_TOOLCHAIN: (.*)$',text,re.M),['${{ inputs.rust_toolchain }}'])
+                self.assertEqual(re.findall(r'rustup toolchain install (\S+)',text),['"$RUSTUP_TOOLCHAIN"'])
+                callers=[body for body in jobs.values() if '    uses: ./.github/workflows/'+path.name+'\n' in body]
+                self.assertTrue(callers,'a reusable Rust workflow needs a caller that passes the toolchain')
+                for body in callers:
+                    self.assertIn('    with:\n      rust_toolchain: ${{ needs.selection.outputs.rust_toolchain }}\n',body)
+                    self.assertRegex(body,r'(?m)^    needs: \[selection[,\]]')
 
     def test_real_workflow_listing_block_keeps_build_failure_and_raw_artifacts(self):
         workflow=HELPER.parents[2]/'.github/workflows/numerical-assurance.yml'

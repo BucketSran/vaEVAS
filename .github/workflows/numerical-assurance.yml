@@ -22,8 +22,11 @@ on:
 permissions:
   contents: read
 
-# One fixed Rust toolchain for every job. rustup applies it to plain cargo and rustc,
-# and to the scripts that record the toolchain; change it only for a deliberate upgrade.
+# One fixed Rust toolchain for every job that builds or records stable Rust. rustup applies it
+# to plain cargo and rustc, and to the scripts that record the toolchain; change it only for a
+# deliberate upgrade. A reusable workflow does not inherit this env: selection exports the value
+# as an output and package passes it to package-install.yml as an input, so no copy exists.
+# Exception: fuzz-smoke installs and names the nightly channel, which cargo-fuzz requires.
 env:
   RUSTUP_TOOLCHAIN: '1.99.1'
 
@@ -50,6 +53,7 @@ jobs:
       modules: ${{ steps.changes.outputs.modules }}
       base: ${{ steps.changes.outputs.base }}
       head: ${{ steps.changes.outputs.head }}
+      rust_toolchain: ${{ env.RUSTUP_TOOLCHAIN }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
@@ -711,6 +715,8 @@ jobs:
     needs: [selection, fast-checks]
     if: needs.selection.outputs.package == 'true'
     uses: ./.github/workflows/package-install.yml
+    with:
+      rust_toolchain: ${{ needs.selection.outputs.rust_toolchain }}
   benchmark:
     needs: [selection, fast-checks]
     if: needs.selection.outputs.benchmark == 'true'

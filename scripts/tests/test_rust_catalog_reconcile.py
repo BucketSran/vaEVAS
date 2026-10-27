@@ -170,15 +170,41 @@ class RustCatalogReconciliation(unittest.TestCase):
         changed['environment']['variables']=dict(changed['environment']['variables'],RUSTFLAGS='-Copt-level=3')
         with self.assertRaisesRegex(ValueError,'profile drift'):self.require(changed)
 
+    def legacy(self, **tools):
+        receipt=copy.deepcopy(self.receipt)
+        for name,argv in tools.items():receipt['toolchain'][name]['argv']=argv
+        return receipt
+
+    STABLE=dict(rustc=['rustc','+stable','-vV'],cargo=['cargo','+stable','--version'])
+
     def test_legacy_stable_receipt_still_reconciles_and_other_toolchain_requests_fail(self):
-        legacy=copy.deepcopy(self.receipt)
-        for name,argv in [('rustc',['rustc','+stable','-vV']),('cargo',['cargo','+stable','--version'])]:
-            legacy['toolchain'][name]['argv']=argv
-        self.register(legacy)
+        # An archived pre-pin receipt is read back from its bound immutable source; the new observation has no channel.
+        self.register(self.legacy(**self.STABLE))
         self.assertTrue(self.require()['reconciled'])
-        for argv in (['rustc','+nightly','-vV'],['rustc','+1.99.1','-vV'],['rustc','--version']):
+        for argv in (['rustc','+nightly','-vV'],['rustc','+1.99.1','-vV'],['rustc','--version'],['rustc','-vV','--verbose']):
             with self.subTest(argv=argv):
-                other=copy.deepcopy(self.receipt);other['toolchain']['rustc']['argv']=argv
-                with self.assertRaisesRegex(ValueError,'toolchain identity'):self.require(other)
+                with self.assertRaisesRegex(ValueError,'toolchain identity'):self.require(self.legacy(rustc=argv))
+
+    def test_current_observation_rejects_the_stable_channel_for_either_or_both_tools(self):
+        variants=dict(rustc=dict(rustc=self.STABLE['rustc']),cargo=dict(cargo=self.STABLE['cargo']),both=self.STABLE)
+        for registered in ('new','legacy'):
+            if registered=='legacy':self.register(self.legacy(**self.STABLE))
+            self.assertTrue(self.require()['reconciled'])
+            for name,tools in variants.items():
+                with self.subTest(registered=registered,variant=name):
+                    with self.assertRaisesRegex(ValueError,'toolchain identity'):self.require(self.legacy(**tools))
+
+    def test_historical_allowance_is_for_bound_receipts_only(self):
+        listing=module('listing_fixture',ROOT/'evas/capabilities/rust_listing.py')
+        stable=self.legacy(**self.STABLE)
+        self.assertTrue(listing.checked(self.receipt))
+        self.assertTrue(listing.checked(stable,historical=True))
+        for receipt in (stable,self.legacy(rustc=self.STABLE['rustc']),self.legacy(cargo=self.STABLE['cargo'])):
+            with self.assertRaisesRegex(ValueError,'toolchain identity'):listing.checked(receipt)
+        for argv in (['rustc','+nightly','-vV'],['rustc','+1.99.1','-vV'],['rustc','-vV','--verbose'],['rustc','--version']):
+            with self.assertRaisesRegex(ValueError,'toolchain identity'):listing.checked(self.legacy(rustc=argv),historical=True)
+        # A bound receipt carrying any other channel is refused as the expected side too.
+        self.register(self.legacy(rustc=['rustc','+nightly','-vV']))
+        with self.assertRaisesRegex(ValueError,'toolchain identity'):self.require()
 
 if __name__=='__main__':unittest.main()
