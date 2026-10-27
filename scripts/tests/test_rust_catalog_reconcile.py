@@ -1,4 +1,5 @@
 """Real Git/CLI plumbing fixtures; stub harnesses are not native Rust science."""
+import ast
 import copy
 import importlib.util
 import json
@@ -21,6 +22,7 @@ fixtures = module('rust_fixture', ROOT/'scripts/tests/test_discover_rust.py')
 sys.path.insert(0, str(ROOT/'evas/capabilities'))
 registry = module('registry_fixture', ROOT/'evas/capabilities/registry.py')
 assets = module('asset_fixture', ROOT/'evas/capabilities/test_asset_catalog.py')
+generator = module('rust_generator_fixture', ROOT/'scripts/capabilities/generate_catalog.py')
 
 class RustCatalogReconciliation(unittest.TestCase):
     def setUp(self):
@@ -206,5 +208,41 @@ class RustCatalogReconciliation(unittest.TestCase):
         # A bound receipt carrying any other channel is refused as the expected side too.
         self.register(self.legacy(rustc=['rustc','+nightly','-vV']))
         with self.assertRaisesRegex(ValueError,'toolchain identity'):self.require()
+
+    def test_generator_applies_the_strict_rules_to_every_new_registration(self):
+        # A new actual observation is checked on read, with or without a published source locator.
+        locator=dict(kind='git-object',repository='vaevas',revision='0'*40,path='evas/capabilities/observations/rust.json')
+        scratch=Path(self.fx.tmp.name)
+        def item(name,receipt,published):
+            path=scratch/(name+'.json');path.write_text(json.dumps(receipt))
+            value=dict(receipt_file=str(path),profile='fixture-linux')
+            if published:value['source_locator']=locator
+            return value
+        for published in (False,True):
+            path,raw,profile=generator.read_rust_listing(ROOT,item('good-'+str(published),self.receipt,published))
+            self.assertEqual((raw,profile),(self.receipt,'fixture-linux'))
+            for name,tools in dict(rustc=dict(rustc=self.STABLE['rustc']),cargo=dict(cargo=self.STABLE['cargo']),both=self.STABLE).items():
+                with self.subTest(published=published,stable=name):
+                    with self.assertRaisesRegex(ValueError,'toolchain identity'):
+                        generator.read_rust_listing(ROOT,item(name+str(published),self.legacy(**tools),published))
+            for argv in (['rustc','+nightly','-vV'],['rustc','--version']):
+                with self.subTest(published=published,argv=argv):
+                    with self.assertRaisesRegex(ValueError,'toolchain identity'):
+                        generator.read_rust_listing(ROOT,item('other'+str(published),self.legacy(rustc=argv),published))
+            broken=copy.deepcopy(self.receipt);del broken['toolchain']['cargo']
+            with self.assertRaisesRegex(ValueError,'incomplete or unknown actual Rust listing structure'):
+                generator.read_rust_listing(ROOT,item('broken'+str(published),broken,published))
+            with self.assertRaisesRegex(ValueError,'incomplete/unknown actual Rust listing'):
+                generator.read_rust_listing(ROOT,item('incomplete'+str(published),dict(self.receipt,complete=False),published))
+        # The read happens for every listing before the source is built; publication only picks reconciliation.
+        build=next(node for node in ast.parse((ROOT/'scripts/capabilities/generate_catalog.py').read_text()).body
+                   if isinstance(node,ast.FunctionDef) and node.name=='build')
+        loop=next(node for node in build.body if isinstance(node,ast.For) and isinstance(node.iter,ast.Call)
+                  and ast.unparse(node.iter)=="config.get('rust_listings', [])")
+        reader=loop.body[0]
+        self.assertIsInstance(reader,ast.Assign)
+        self.assertEqual(ast.unparse(reader.value),'read_rust_listing(root, item)')
+        self.assertNotIn('source_locator',ast.unparse(reader))
+        self.assertNotIn('published-archive',ast.unparse(reader))
 
 if __name__=='__main__':unittest.main()

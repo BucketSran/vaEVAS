@@ -16,6 +16,312 @@ import git_fixture
 HELPER = Path(__file__).resolve().parents[1] / 'capabilities/discover_rust.py'
 
 
+MAIN_WORKFLOW = '.github/workflows/numerical-assurance.yml'
+CACHE_ACTION = '.github/actions/rust-cache/action.yml'
+# Authoritative references: the single pinned literal is reached only through these.
+AUTHORITATIVE = frozenset(['$RUSTUP_TOOLCHAIN', '${RUSTUP_TOOLCHAIN}', '${{ inputs.rust_toolchain }}',
+                           '${{ needs.selection.outputs.rust_toolchain }}', '${{ env.RUSTUP_TOOLCHAIN }}'])
+CACHE_EXPANSION = '${CI_RUST_TOOLCHAIN:++"$CI_RUST_TOOLCHAIN"}'
+TOOLS = ('cargo', 'rustc', 'rustdoc', 'rustfmt', 'cargo-clippy', 'cargo-fmt', 'clippy-driver')
+RUSTUP_NO_SELECTION = frozenset(['component', 'target', 'show', 'which', 'self', 'set', 'doc', 'man', 'completions',
+                                 'check', 'update', '--version', '-V', 'help', '-h', '--help', 'toolchain-list'])
+PIN_LINE = re.compile(r"^  RUSTUP_TOOLCHAIN: '[0-9]+\.[0-9]+\.[0-9]+'$")
+
+
+def _plain(value):
+    return value.strip().strip('\'"').strip()
+
+
+def toolchain_selection_violations(texts, root_files=()):
+    """Every way CI can choose a Rust toolchain, checked against a whitelist.
+
+    texts maps a repo-relative workflow or composite-action path to its text. A selection is allowed only
+    as an authoritative reference (${RUSTUP_TOOLCHAIN}, the reusable input, the selection output, the
+    workflow env), as the one pinned literal under the top-level env, or as nightly in the fuzz-smoke job
+    through exactly `rustup toolchain install nightly`, `cargo +nightly` and `toolchain: nightly`.
+    Anything else that selects a toolchain, and anything this scanner cannot classify, is reported.
+    root_files lists repo files named like rust-toolchain, which also select a toolchain.
+    """
+    found = [f'{name}: toolchain file' for name in root_files]
+    for name, text in sorted(texts.items()):
+        lines = text.split('\n')
+        fuzz = set()
+        if name == MAIN_WORKFLOW:
+            start = next((i for i, line in enumerate(lines) if line == '  fuzz-smoke:'), None)
+            if start is not None:
+                end = next((i for i in range(start + 1, len(lines)) if re.match(r'  [A-Za-z0-9_-]+:\s*$', lines[i])), len(lines))
+                fuzz = set(range(start, end))
+
+        def report(index, reason):
+            found.append(f'{name}:{index + 1}: {reason}: {lines[index].strip()}')
+
+        def allowed(index, value, form):
+            value = _plain(value)
+            if value in AUTHORITATIVE or (value == '${{ inputs.toolchain }}' and name == CACHE_ACTION):
+                return True
+            return value == 'nightly' and index in fuzz and form in ('rustup-install', 'cargo-plus', 'with-toolchain')
+
+        for index, raw in enumerate(lines):
+            line = re.sub(r'\s+#.*$', '', raw)
+            if not line.strip() or line.lstrip().startswith('#') or re.match(r'\s*(?:-\s+)?(?:name|description):', line):
+                continue
+            approved_nightly = False
+            for match in re.finditer(r'(?<![\w./-])rustup\b(?![-\w])([^\n;&|]*)', line):
+                tokens = [_plain(token) for token in match.group(1).split()]
+                words = [token for token in tokens if not token.startswith('-')]
+                picked = []
+                for position, token in enumerate(tokens):
+                    if token.startswith('+'):
+                        picked.append((token[1:], 'rustup-plus'))
+                    elif token == '--toolchain' and position + 1 < len(tokens):
+                        picked.append((tokens[position + 1], 'rustup-flag'))
+                    elif token.startswith('--toolchain='):
+                        picked.append((token.split('=', 1)[1], 'rustup-flag'))
+                sub = words[0] if words else ''
+                rest = words[1:]
+                if sub in ('install', 'default', 'run', 'uninstall'):
+                    picked.append((rest[0] if rest else '', 'rustup-' + sub))
+                elif sub == 'override':
+                    if rest[:1] == ['set']:
+                        picked.append((rest[1] if len(rest) > 1 else '', 'rustup-override'))
+                    elif rest[:1] != ['unset']:
+                        report(index, 'unrecognised rustup override form')
+                elif sub == 'toolchain':
+                    if rest[:1] in (['list'],):
+                        pass
+                    elif rest[:1] == ['install']:
+                        picked.append((rest[1] if len(rest) > 1 else '', 'rustup-install'))
+                    else:
+                        picked.append((rest[1] if len(rest) > 1 else '', 'rustup-toolchain-' + (rest[0] if rest else '')))
+                elif sub and sub not in RUSTUP_NO_SELECTION:
+                    report(index, 'unrecognised rustup form')
+                for value, form in picked:
+                    if allowed(index, value, form):
+                        approved_nightly = approved_nightly or _plain(value) == 'nightly'
+                    else:
+                        report(index, f'rustup selects {value!r}')
+            for match in re.finditer(r'(?<![\w./$-])(' + '|'.join(TOOLS) + r')\b[ \t]+(\S+)', line):
+                token = _plain(match.group(2))
+                if token.startswith('+'):
+                    token = '+' + _plain(token[1:])
+                    if token[1:] in AUTHORITATIVE or (token[1:] == 'nightly' and index in fuzz and match.group(1) == 'cargo'):
+                        approved_nightly = approved_nightly or token[1:] == 'nightly'
+                    else:
+                        report(index, f'{match.group(1)} selects {token[1:]!r}')
+                elif '${' in token and '+' in token:
+                    if not (token == CACHE_EXPANSION and name == CACHE_ACTION):
+                        report(index, 'unrecognised toolchain expansion')
+            for match in re.finditer(r'^\s*(?:-\s+)?([A-Za-z_-]*(?:toolchain|channel|rust[-_]version)[A-Za-z_-]*|RUSTUP_TOOLCHAIN)\s*:\s*(.*)$', line, re.I):
+                key, value = match.group(1), _plain(match.group(2))
+                if value == '':
+                    indent = len(line) - len(line.lstrip())
+                    if key not in ('toolchain', 'rust_toolchain'):
+                        report(index, f'unrecognised {key} declaration')
+                    for later in lines[index + 1:]:
+                        if later.strip() and len(later) - len(later.lstrip()) <= indent:
+                            break
+                        default = re.match(r'\s*default:\s*(.*)$', later)
+                        if default and (key == 'rust_toolchain' or _plain(default.group(1)) != ''):
+                            report(index, f'{key} input has a default')
+                elif key == 'RUSTUP_TOOLCHAIN' and PIN_LINE.match(raw) and name == MAIN_WORKFLOW and index and lines[index - 1] == 'env:':
+                    pass
+                elif allowed(index, value, 'with-toolchain' if key == 'toolchain' else 'assign'):
+                    approved_nightly = approved_nightly or value == 'nightly'
+                else:
+                    report(index, f'{key} selects {value!r}')
+            for match in re.finditer(r'RUSTUP_TOOLCHAIN[ \t]*=[ \t]*([^\s"\';&|]*)', line):
+                if _plain(match.group(1)) not in AUTHORITATIVE:
+                    report(index, f'RUSTUP_TOOLCHAIN assigned {match.group(1)!r}')
+            uses = re.match(r'\s*(?:-\s+)?uses:\s*(\S+)', line)
+            if uses and uses.group(1) != './.github/actions/rust-cache' and re.search(r'(?i)rust|toolchain|cargo|maturin', uses.group(1)):
+                report(index, f'unrecognised toolchain action {uses.group(1)}')
+            if re.search(r'(?i)\b(nightly|stable|beta)\b', line) and not approved_nightly:
+                report(index, 'channel name outside an approved nightly use')
+    return found
+
+
+def toolchain_files(root):
+    """rust-toolchain and rust-toolchain.toml files in the repository, ignoring build output and Git data."""
+    found = []
+    for directory, names, files in os.walk(root):
+        names[:] = [name for name in names if name not in ('.git', 'target', 'node_modules', '__pycache__')]
+        found.extend(os.path.relpath(os.path.join(directory, name), root) for name in files
+                     if name in ('rust-toolchain', 'rust-toolchain.toml'))
+    return sorted(found)
+
+
+SELECTION_VALUES = ('nightly', 'stable', '1.99.0')
+# The only forms through which fuzz-smoke may name nightly (the same ones the real job uses).
+FUZZ_NIGHTLY_FORMS = ('rustup-toolchain-install', 'rustup-in-block-scalar', 'cargo-plus', 'cargo-plus-in-block-scalar',
+                       'with-toolchain-input')
+# Each form is (indent -> list of YAML lines for one workflow step). {v} is the injected toolchain.
+STEP_FORMS = {
+    'rustup-toolchain-install': lambda i, v: [f'{i}- run: rustup toolchain install {v} --profile minimal'],
+    'rustup-default': lambda i, v: [f'{i}- run: rustup default {v}'],
+    'rustup-override-set': lambda i, v: [f'{i}- run: rustup override set {v}'],
+    'rustup-run': lambda i, v: [f'{i}- run: rustup run {v} cargo test'],
+    'rustup-toolchain-link': lambda i, v: [f'{i}- run: rustup toolchain link custom {v}'],
+    'rustup-unrecognised': lambda i, v: [f'{i}- run: rustup frobnicate {v}'],
+    'rustup-in-compound-command': lambda i, v: [f'{i}- run: cd evas && rustup default {v} && cargo test'],
+    'rustup-in-block-scalar': lambda i, v: [f'{i}- run: |', f'{i}    set -e', f'{i}    rustup toolchain install {v}'],
+    'cargo-plus': lambda i, v: [f'{i}- run: cargo +{v} test --locked'],
+    'rustc-plus': lambda i, v: [f'{i}- run: rustc +{v} -vV'],
+    'cargo-clippy-plus': lambda i, v: [f'{i}- run: cargo-clippy +{v}'],
+    'cargo-plus-in-block-scalar': lambda i, v: [f'{i}- run: |', f'{i}    cargo +{v} build'],
+    'shell-env-assignment': lambda i, v: [f'{i}- run: RUSTUP_TOOLCHAIN={v} cargo test'],
+    'shell-export': lambda i, v: [f'{i}- run: export RUSTUP_TOOLCHAIN={v}'],
+    'github-env-file': lambda i, v: [f'{i}- run: echo "RUSTUP_TOOLCHAIN={v}" >> "$GITHUB_ENV"'],
+    'step-env': lambda i, v: [f'{i}- run: cargo test', f'{i}  env:', f'{i}    RUSTUP_TOOLCHAIN: {v}'],
+    'step-env-quoted': lambda i, v: [f'{i}- run: cargo test', f'{i}  env:', f'{i}    RUSTUP_TOOLCHAIN: "{v}"'],
+    'with-toolchain-input': lambda i, v: [f'{i}- uses: ./.github/actions/rust-cache', f'{i}  with:', f'{i}    toolchain: {v}',
+                                          f'{i}    lane: x'],
+    'dtolnay-action': lambda i, v: [f'{i}- uses: dtolnay/rust-toolchain@{v}'],
+    'dtolnay-action-with': lambda i, v: [f'{i}- uses: dtolnay/rust-toolchain@master', f'{i}  with:', f'{i}    toolchain: {v}'],
+    'actions-rs': lambda i, v: [f'{i}- uses: actions-rs/toolchain@v1', f'{i}  with:', f'{i}    toolchain: {v}'],
+}
+# Forms that can sit at other structural positions than a step.
+BLOCK_FORMS = {
+    'job-env': lambda i, v: [f'{i}env:', f'{i}  RUSTUP_TOOLCHAIN: {v}'],
+    'job-env-quoted': lambda i, v: [f'{i}env:', f"{i}  RUSTUP_TOOLCHAIN: '{v}'"],
+}
+
+
+def _insert_after(text, anchor_line, new_lines):
+    lines = text.split('\n')
+    index = lines.index(anchor_line)
+    return '\n'.join(lines[:index + 1] + new_lines + lines[index + 1:])
+
+
+def selection_variant_cases(texts):
+    """(form, location, value, new texts, new toolchain files, expect_reject) for every injected selection.
+
+    Each form is injected at each structural position of CI, once per toolchain value. Authoritative
+    references and the one nightly use cargo-fuzz needs are the positive controls.
+    """
+    main, package, cache = MAIN_WORKFLOW, '.github/workflows/package-install.yml', CACHE_ACTION
+    cases = []
+
+    def add(form, location, value, changed, files=(), expect_reject=True):
+        cases.append((form, location, value, changed, tuple(files), expect_reject))
+
+    step_places = {
+        'job-steps-rust-regression': (main, '  rust-regression:', '    steps:', '      '),
+        'job-steps-regression': (main, '  regression:', '    steps:', '      '),
+        'job-steps-selection': (main, '  selection:', '    steps:', '      '),
+        'job-steps-fuzz-smoke': (main, '  fuzz-smoke:', '    steps:', '      '),
+        'job-steps-ci-result': (main, '  ci-result:', '    steps:', '      '),
+        'reusable-workflow-steps': (package, '  install:', '    steps:', '      '),
+        'composite-action-steps': (cache, None, '  steps:', '    '),
+    }
+
+    def anchored(path, job, steps_anchor):
+        lines = texts[path].split('\n')
+        start = lines.index(job) if job else 0
+        return start + lines[start:].index(steps_anchor)
+
+    for value in SELECTION_VALUES:
+        for form, build in STEP_FORMS.items():
+            for location, (path, job, steps_anchor, indent) in step_places.items():
+                lines = texts[path].split('\n')
+                index = anchored(path, job, steps_anchor)
+                changed = '\n'.join(lines[:index + 1] + build(indent, value) + lines[index + 1:])
+                fuzz_nightly = (location == 'job-steps-fuzz-smoke' and value == 'nightly'
+                                and form in FUZZ_NIGHTLY_FORMS)
+                add(form, location, value, dict(texts, **{path: changed}), expect_reject=not fuzz_nightly)
+            # A brand-new workflow and a brand-new composite action.
+            add(form, 'new-workflow', value, dict(texts, **{'.github/workflows/new.yml': '\n'.join(
+                ['name: n', 'on: push', 'jobs:', '  x:', '    runs-on: ubuntu-latest', '    steps:', *build('      ', value)]) + '\n'}))
+            add(form, 'new-composite-action', value, dict(texts, **{'.github/actions/new/action.yml': '\n'.join(
+                ['name: n', 'description: d', 'runs:', '  using: composite', '  steps:', *build('    ', value)]) + '\n'}))
+        for form, build in BLOCK_FORMS.items():
+            for location, (path, job) in {'job-level-rust-regression': (main, '  rust-regression:'),
+                                          'job-level-fuzz-smoke': (main, '  fuzz-smoke:'),
+                                          'job-level-reusable-workflow': (package, '  install:')}.items():
+                if location == 'job-level-reusable-workflow':
+                    # that job already has an env block: replace the authoritative value
+                    changed = texts[path].replace('RUSTUP_TOOLCHAIN: ${{ inputs.rust_toolchain }}', f'RUSTUP_TOOLCHAIN: {value}', 1)
+                else:
+                    changed = _insert_after(texts[path], job, BLOCK_FORMS[form]('    ', value))
+                add(form, location, value, dict(texts, **{path: changed}))
+        # Top-level env: a second assignment, or the pin replaced.
+        add('workflow-env-second', 'workflow-level', value, dict(texts, **{main: _insert_after(
+            texts[main], "  RUSTUP_TOOLCHAIN: '1.99.1'", [f"  RUSTUP_TOOLCHAIN: '{value}'"])}))
+        if value != '1.99.0':
+            add('workflow-env-pin-replaced', 'workflow-level', value, dict(texts, **{main: texts[main].replace(
+                "RUSTUP_TOOLCHAIN: '1.99.1'", f"RUSTUP_TOOLCHAIN: '{value}'", 1)}))
+        else:
+            add('workflow-env-pin-replaced', 'workflow-level', value, dict(texts, **{main: texts[main].replace(
+                "RUSTUP_TOOLCHAIN: '1.99.1'", f"RUSTUP_TOOLCHAIN: '{value}'", 1)}), expect_reject=False)
+        add('reusable-input-default', 'reusable-workflow-input', value, dict(texts, **{package: texts[package].replace(
+            '        required: true\n', f'        required: true\n        default: {value}\n', 1)}))
+        add('reusable-caller-passes-literal', 'package-job-with', value, dict(texts, **{main: texts[main].replace(
+            'rust_toolchain: ${{ needs.selection.outputs.rust_toolchain }}', f'rust_toolchain: {value}', 1)}))
+        add('selection-output-literal', 'selection-job', value, dict(texts, **{main: texts[main].replace(
+            'rust_toolchain: ${{ env.RUSTUP_TOOLCHAIN }}', f'rust_toolchain: {value}', 1)}))
+        add('composite-input-default', 'composite-action-input', value, dict(texts, **{cache: texts[cache].replace(
+            "    default: ''\n  lane:", f"    default: {value}\n  lane:", 1)}))
+        add('composite-env-literal', 'composite-action-step', value, dict(texts, **{cache: texts[cache].replace(
+            'CI_RUST_TOOLCHAIN: ${{ inputs.toolchain }}', f'CI_RUST_TOOLCHAIN: {value}', 1)}))
+        for name in ('rust-toolchain', 'rust-toolchain.toml'):
+            add('toolchain-file', name, value, texts, files=[name])
+            add('toolchain-file', 'evas/rust_core/' + name, value, texts, files=['evas/rust_core/' + name])
+    # Positive controls: authoritative references anywhere, and fuzz-smoke's nightly.
+    for location, (path, job, steps_anchor, indent) in step_places.items():
+        for form, lines_for in {
+            'authoritative-install': lambda i: [f'{i}- run: rustup toolchain install "$RUSTUP_TOOLCHAIN" --profile minimal'],
+            'authoritative-input': lambda i: [f'{i}- uses: ./.github/actions/rust-cache', f'{i}  with:',
+                                              f'{i}    toolchain: ${{{{ env.RUSTUP_TOOLCHAIN }}}}', f'{i}    lane: x'],
+            'authoritative-cargo-plus': lambda i: [f'{i}- run: cargo +"$RUSTUP_TOOLCHAIN" test'],
+        }.items():
+            lines = texts[path].split('\n')
+            index = anchored(path, job, steps_anchor)
+            changed = '\n'.join(lines[:index + 1] + lines_for(indent) + lines[index + 1:])
+            add(form, location, 'authoritative', dict(texts, **{path: changed}), expect_reject=False)
+    fuzz_lines = texts[main].split('\n')
+    index = anchored(main, '  fuzz-smoke:', '    steps:')
+    for form, build in {'fuzz-cargo-plus-nightly': lambda i, v: [f'{i}- run: cargo +nightly --version'],
+                        'fuzz-install-nightly': lambda i, v: [f'{i}- run: rustup toolchain install nightly --profile minimal'],
+                        'fuzz-cache-toolchain-nightly': lambda i, v: [f'{i}- uses: ./.github/actions/rust-cache', f'{i}  with:',
+                                                                      f'{i}    toolchain: nightly', f'{i}    lane: fuzz']}.items():
+        changed = '\n'.join(fuzz_lines[:index + 1] + build('      ', 'nightly') + fuzz_lines[index + 1:])
+        add(form, 'job-steps-fuzz-smoke', 'nightly', dict(texts, **{main: changed}), expect_reject=False)
+    add('unchanged-current-ci', 'all', 'current', texts, expect_reject=False)
+    return cases
+
+
+def historical_checked_calls(root):
+    """Every call to checked() that sets or forwards `historical`, outside tests, as (path, function, values)."""
+    import ast
+
+    class Finder(ast.NodeVisitor):
+        def __init__(self):
+            self.stack, self.calls = ['<module>'], []
+
+        def visit_FunctionDef(self, node):
+            self.stack.append(node.name)
+            self.generic_visit(node)
+            self.stack.pop()
+
+        visit_AsyncFunctionDef = visit_FunctionDef
+
+        def visit_Call(self, node):
+            func = node.func
+            name = func.attr if isinstance(func, ast.Attribute) else getattr(func, 'id', '')
+            if name == 'checked' and any(keyword.arg in ('historical', None) for keyword in node.keywords):
+                self.calls.append((self.stack[-1], tuple(ast.unparse(keyword.value) for keyword in node.keywords)))
+            self.generic_visit(node)
+
+    calls = []
+    for base in ('scripts', 'evas'):
+        for path in sorted((root / base).rglob('*.py')):
+            if 'target' in path.parts or path.name.startswith('test_') or path.name == 'git_fixture.py':
+                continue
+            finder = Finder()
+            finder.visit(ast.parse(path.read_text()))
+            calls.extend((str(path.relative_to(root)), function, values) for function, values in finder.calls)
+    return sorted(calls)
+
+
 class RustListingTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
@@ -243,6 +549,41 @@ class RustListingTests(unittest.TestCase):
         fuzz=re.search(r'^  fuzz-smoke:\n(.*?)(?=^  package:)',text,re.M|re.S).group(1)
         self.assertIn('rustup toolchain install nightly',fuzz)
         self.assertEqual(re.findall(r'\bcargo (?!\+nightly)\S+',fuzz),[])
+        # Every toolchain selection anywhere in CI is an authoritative reference; see test_toolchain_selection_is_a_whitelist.
+
+    def test_toolchain_selection_is_a_whitelist(self):
+        root=HELPER.parents[2]
+        paths=sorted([*(root/'.github/workflows').glob('*.yml'),*(root/'.github/actions').glob('**/action.yml')])
+        texts={str(path.relative_to(root)):path.read_text() for path in paths}
+        self.assertIn(CACHE_ACTION,texts)
+        self.assertIn('.github/workflows/package-install.yml',texts)
+        self.assertEqual(toolchain_selection_violations(texts,toolchain_files(root)),[])
+        counts={}
+        for form,location,value,changed,files,expect_reject in selection_variant_cases(texts):
+            found=toolchain_selection_violations(changed,files)
+            counts.setdefault(expect_reject,[0,0]);counts[expect_reject][0]+=1
+            counts[expect_reject][1]+=bool(found)==expect_reject
+            if bool(found)!=expect_reject:self.fail(f'{form} at {location} with {value}: expected reject={expect_reject}, got {found}')
+        self.assertGreater(counts[True][0],500)
+        self.assertGreater(counts[False][0],10)
+        self.assertEqual({key:value[0]==value[1] for key,value in counts.items()},{True:True,False:True})
+
+    def test_historical_toolchain_allowance_has_one_call_site(self):
+        root=HELPER.parents[2]
+        # Only reconcile reads a bound historical receipt; actual, generated and traced receipts use the strict default.
+        self.assertEqual(historical_checked_calls(root),[('evas/capabilities/rust_listing.py','reconcile',('True',))])
+        source=(root/'evas/capabilities/rust_listing.py').read_text()
+        self.assertEqual(re.findall(r'checked\((\w+),historical=True\)',source),['expected_receipt'])
+        self.assertEqual(re.findall(r'actual=checked\(receipt\)',source),['actual=checked(receipt)'])
+        # The scanner sees a second call however it is spelled.
+        with tempfile.TemporaryDirectory() as tmp:
+            fixture=Path(tmp)
+            (fixture/'scripts').mkdir();(fixture/'evas').mkdir()
+            (fixture/'scripts/new.py').write_text('import rl\ndef read(receipt):\n    return rl.checked(receipt, historical=True)\n')
+            (fixture/'evas/more.py').write_text('def read(receipt, **options):\n    return checked(receipt, **options)\n'
+                                                'def other(receipt, flag):\n    return checked(receipt, historical=flag)\n')
+            self.assertEqual(historical_checked_calls(fixture),[('evas/more.py','other',('flag',)),('evas/more.py','read',('options',)),
+                                                               ('scripts/new.py','read',('True',))])
 
     def test_reusable_workflows_take_the_fixed_toolchain_from_their_caller(self):
         root=HELPER.parents[2]

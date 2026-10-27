@@ -6,6 +6,7 @@ current results. A missing toolchain version stays unknown.
 """
 import argparse
 import json
+import re
 from collections import Counter
 from pathlib import Path
 
@@ -900,12 +901,18 @@ def _table_cells(line):
     return [part.strip() for part in line.strip().strip('|').split('|')]
 
 
+_STATUS_LINE_PREFIX = re.compile(r'^(?:[ \t]*(?:>|[-*+](?=[ \t])))*[ \t]*')
+
+
 def _header_status_fields(text):
     """view_status, adopted, and provisional values in the preamble, in order."""
     found = {key: [] for key in ('view_status', 'adopted', 'provisional')}
     for line in text.splitlines():
         if line.startswith('## '):
             break
+        # A key with leading whitespace or a quote or list marker still renders as visible
+        # paragraph text, so it counts as a second status field, not as ignorable noise.
+        line = _STATUS_LINE_PREFIX.sub('', line)
         for key in found:
             prefix = key + ':'
             if line.startswith(prefix):
@@ -958,6 +965,18 @@ def _audit_qualification_records(section_lines, records):
     if len(section_tools) != len(accounted):
         errors.append('markdown extra toolchain line')
     return errors
+
+
+def _audit_section_layout(head_lines):
+    """The current part of the view has exactly these two ## sections, once each and in order."""
+    sections = [line for line in head_lines if line.startswith('## ')]
+    if sections != ['## 当前要求', '## 未绑定当前要求的资格']:
+        return ['markdown top-level sections diverged']
+    current, unbound = head_lines.index(sections[0]), head_lines.index(sections[1])
+    if any(line.startswith('### ') and not current < index < unbound
+           for index, line in enumerate(head_lines)):
+        return ['markdown requirement outside current section']
+    return []
 
 
 def audit(document):
@@ -1037,7 +1056,94 @@ def audit(document):
     return errors
 
 
+_BLOCK_START = ('资格记录：', '未归属后端：')
+_BLOCK_STOP = ('资格记录：', '未归属后端：', '历史引用身份：')
+
+
+def _record_blocks(lines, index):
+    """Record blocks starting at lines[index], the blank lines they consume, and the index after them.
+
+    A block runs to the next record or stop line or blank line. Blank lines that follow a block belong
+    to the run, so moving a block takes its separator along; only their count is compared.
+    """
+    blocks, blanks = [], 0
+    while index < len(lines) and lines[index].startswith(_BLOCK_START):
+        end = index + 1
+        if lines[index].startswith('未归属后端：') and end < len(lines) and lines[end].startswith('资格记录：'):
+            end += 1
+        while end < len(lines) and lines[end] != '' and not lines[end].startswith(_BLOCK_STOP):
+            end += 1
+        blocks.append(lines[index:end])
+        index = end
+        while index < len(lines) and lines[index] == '':
+            blanks += 1
+            index += 1
+    return blocks, blanks, index
+
+
+def _with_sorted_record_runs(section):
+    """One requirement section with each run of record blocks in a stable order."""
+    result, index = [], 0
+    while index < len(section):
+        blocks, blanks, after = _record_blocks(section, index)
+        if blocks:
+            for block in sorted(blocks):
+                result.extend(block)
+            result.extend([''] * blanks)
+            index = after
+        else:
+            result.append(section[index])
+            index += 1
+    return result
+
+
+def _canonical_lines(text):
+    """Lines of text in the one order the audit treats as equivalent.
+
+    Exactly two reorderings are allowed: the ### requirement sections under ## 当前要求, and the
+    qualification record blocks inside one requirement section. Everything else stays where it is.
+    Lines split on \n only, so other control characters remain part of the compared text.
+    """
+    lines = text.split('\n')
+    try:
+        start = lines.index('## 当前要求')
+    except ValueError:
+        return lines
+    end = next((index for index in range(start + 1, len(lines)) if lines[index].startswith('## ')), len(lines))
+    region = lines[start + 1:end]
+    heads = [index for index, line in enumerate(region) if line.startswith('### ')]
+    sections = [region[head:(heads[position + 1] if position + 1 < len(heads) else len(region))]
+                for position, head in enumerate(heads)]
+    sections = sorted(_with_sorted_record_runs(section) for section in sections)
+    flat = [line for section in sections for line in section]
+    return lines[:start + 1] + region[:heads[0] if heads else len(region)] + flat + lines[end:]
+
+
+def _first_difference(expected, actual):
+    for index in range(max(len(expected), len(actual))):
+        want = expected[index] if index < len(expected) else None
+        have = actual[index] if index < len(actual) else None
+        if want != have:
+            def show(value):
+                return '<end of text>' if value is None else repr(value if len(value) <= 160 else value[:160] + '...')
+            return (f'markdown differs from the generated view at line {index + 1} '
+                    f'(after allowed reordering): expected {show(want)}, actual {show(have)}')
+    return None
+
+
 def audit_markdown(document, text):
+    """Accept text only if it is the generated view, up to the two allowed reorderings.
+
+    markdown(document) is the one authority; the checks below only give specific messages.
+    """
+    errors = _audit_markdown_parts(document, text)
+    difference = _first_difference(_canonical_lines(markdown(document)), _canonical_lines(text))
+    if difference:
+        errors.append(difference)
+    return errors
+
+
+def _audit_markdown_parts(document, text):
     errors = []
     denominators = document['denominators']
     required = [
@@ -1097,7 +1203,9 @@ def audit_markdown(document, text):
         for cell in _table_cells(line):
             if cell in FORBIDDEN_CELLS:
                 errors.append('markdown collapsed a current cell')
+    errors.extend(_audit_section_layout(head.splitlines()))
     requirement_blocks = _heading_blocks(head, '### ')
+    expected_records = 0
     for requirement in document['requirements']:
         heading = f"### {requirement['id']}@{requirement['version']}"
         section = _take_heading(requirement_blocks, heading)
@@ -1108,6 +1216,7 @@ def audit_markdown(document, text):
         for cell in requirement['backends'].values():
             owned.extend(cell['records'])
         owned.extend(requirement['unassigned_backend_records'])
+        expected_records += len(owned)
         # Records match inside this requirement. Another requirement's block does not count.
         errors.extend(_audit_qualification_records(section, owned))
     if requirement_blocks:
@@ -1117,6 +1226,15 @@ def audit_markdown(document, text):
         errors.append('markdown unbound qualifications diverged')
     else:
         errors.extend(_audit_qualification_records(unbound, document['unbound_qualifications']))
+    # Each section above accounts for its own lines exactly. Counting the whole text then rejects
+    # any record or toolchain line that no section owns: a second unbound section, text before the
+    # first requirement, another ## section, or the historical and later sections.
+    expected_records += len(document['unbound_qualifications'])
+    lines = text.splitlines()
+    if sum(line.startswith('资格记录：') for line in lines) > expected_records:
+        errors.append('markdown extra qualification record')
+    if sum(line.startswith('工具链：') for line in lines) > expected_records:
+        errors.append('markdown extra toolchain line')
     counts = document['classifications']['exception_counts']
     for kind, count in counts.items():
         if f'exception: {kind} {count}' not in text:

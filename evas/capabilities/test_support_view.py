@@ -12,7 +12,7 @@ from pathlib import Path
 import render
 import support_view
 from registry import Registry, digest
-from support_view import audit, audit_markdown, document, dumps, markdown, write_preview
+from support_view import CONTRACT_FIELDS, audit, audit_markdown, document, dumps, markdown, write_preview
 from test_registry import by_id, fixture
 
 
@@ -115,12 +115,126 @@ def checked(registry, historical=None):
     return projected, text
 
 
+def independent_registry():
+    """Two requirements with distinct contract text and records on the second one."""
+    data = retarget(copy.deepcopy(bare_registry().data), 'ngspice')
+    for index, name in enumerate(('bare-requirement', 'fixture-requirement')):
+        by_id(data, name).update(
+            allowed_behavior=f'independent behavior {index}',
+            conditions=[f'independent condition {index}'],
+            observables=[f'independent observable {index}'],
+        )
+    by_id(data, 'fixture-execution')['toolchain'] = [
+        {'role': 'simulator', 'name': 'ngspice', 'version': 'sim-12345'}]
+    for name in ('consumer-a', 'consumer-b'):
+        by_id(data, name)['toolchain'] = [
+            {'role': 'compiler', 'name': 'OpenVAF-R', 'version': 'cc-67890'}]
+    return Registry(refresh(data))
+
+
 def requirement(projected, name):
     return next(item for item in projected['requirements'] if item['id'] == name)
 
 
 def evas_records(projected, name='fixture-requirement'):
     return requirement(projected, name)['backends']['evas']['records']
+
+
+MARKDOWN_VARIANT_KINDS = (
+    'status-view_status', 'status-adopted', 'status-provisional', 'qualification-record', 'toolchain',
+    'contract-field', 'reference', 'delete-line', 'indent-line', 'heading-level', 'reorder-allowed')
+
+
+def _first_difference_for(facts, text):
+    return next(error for error in audit_markdown(facts, text) if error.startswith('markdown differs'))
+
+
+def markdown_variant_cases(facts, text, *, full=True):
+    """(kind, name, changed text, must be rejected) for every class of edit to a generated view.
+
+    Fact lines of each kind (the three status keys, qualification record, toolchain, contract field and
+    reference lines) are inserted at every structural position, indented 0-3 spaces, as the same value and
+    as a contradictory value. Any generated line deleted, indented or re-levelled must be rejected; the two
+    allowed reorderings must be accepted. full=False trims the position and indent grid for a large text.
+    """
+    lines = text.split('\n')
+    first = lambda prefix: next(line for line in lines if line.startswith(prefix))
+    status = {key: first(key + ':') for key in ('view_status', 'adopted', 'provisional')}
+    flip = {'current-default': 'preview', 'preview': 'current-default', 'true': 'false', 'false': 'true'}
+    sample = {
+        'status-view_status': (status['view_status'], 'view_status: ' + flip[facts['view_status']]),
+        'status-adopted': (status['adopted'], 'adopted: ' + flip[status['adopted'].split(': ')[1]]),
+        'status-provisional': (status['provisional'], 'provisional: ' + flip[status['provisional'].split(': ')[1]]),
+        'qualification-record': (first('资格记录：'), first('资格记录：') + ' contradictory'),
+        'toolchain': (first('工具链：'), '工具链：consumer-a@1: OpenVAF-R/compiler@wrong-version'),
+        'reference': (first('引用：'), first('引用：') + ' contradictory'),
+    }
+    for key in CONTRACT_FIELDS:
+        sample.setdefault('contract-field', []).append((first('原文 ' + key + '：'), first('原文 ' + key + '：') + ' contradictory'))
+    where = {}
+    at = lines.index
+    current, unbound, historical = at('## 当前要求'), at('## 未绑定当前要求的资格'), at('## 历史引用')
+    exceptions, classes, limits = at('## 例外'), at('## 分类'), at('## 本视图不做的事')
+    heads = [i for i, line in enumerate(lines) if line.startswith('### ') and current < i < unbound]
+    where.update({'header-1': 1, 'header-2': 2, 'header-5': 5, 'header-6': 6,
+                  'current-preamble': current + 1, 'before-first-requirement': heads[0]})
+    for number, head in enumerate(heads):
+        end = heads[number + 1] if number + 1 < len(heads) else unbound
+        where.update({f'requirement-{number}-after-heading': head + 1, f'requirement-{number}-middle': (head + end) // 2,
+                      f'requirement-{number}-last-line': end - 1, f'requirement-{number}-end': end})
+    where.update({'unbound-after-heading': unbound + 1, 'unbound-end': historical - 1, 'before-historical': historical,
+                  'historical-after-heading': historical + 1, 'historical-middle': (historical + exceptions) // 2,
+                  'historical-end': exceptions, 'exceptions-section': exceptions + 1, 'classification-section': classes + 1,
+                  'limits-section': limits + 1, 'end-of-text-before-last': len(lines) - 1, 'end-of-text': len(lines)})
+    indents = ('', ' ', '  ', '   ') if full else ('', '   ')
+    positions = list(where.items()) if full else [
+        item for item in where.items() if item[0] in (
+            'header-2', 'current-preamble', 'requirement-0-after-heading', 'requirement-1-end', 'unbound-end',
+            'historical-middle', 'limits-section', 'end-of-text')]
+    cases = []
+
+    def add(kind, name, changed_lines, expect_reject=True):
+        cases.append((kind, name, '\n'.join(changed_lines), expect_reject))
+
+    for kind, value in sample.items():
+        for entry in (value if isinstance(value, list) else [value]):
+            same, contradictory = entry
+            for label, line in (('same', same), ('contradictory', contradictory)):
+                for indent in indents:
+                    for place, index in positions:
+                        add(kind, f'{label}/indent{len(indent)}/{place}', lines[:index] + [indent + line] + lines[index:])
+                    for heading in ('## 未绑定当前要求的资格', '## 当前要求', '## 补充资格', '### extra@1'):
+                        block = [heading, '', indent + line, '']
+                        add(kind, f'{label}/indent{len(indent)}/extra-section {heading}',
+                            lines[:historical] + block + lines[historical:])
+                        add(kind, f'{label}/indent{len(indent)}/extra-section-at-end {heading}', lines + block)
+    for index, line in enumerate(lines):
+        add('delete-line', f'line {index + 1}', lines[:index] + lines[index + 1:])
+        if line and (full or index % 5 == 0):
+            for pad in ((' ', '  ', '   ') if full else (' ', '   ')):
+                add('indent-line', f'line {index + 1}/{len(pad)}', lines[:index] + [pad + line] + lines[index + 1:])
+        if line.startswith('#'):
+            add('heading-level', f'line {index + 1}', lines[:index] + ['#' + line] + lines[index + 1:])
+            if line.startswith('###'):
+                add('heading-level', f'line {index + 1}/demote', lines[:index] + [line[1:]] + lines[index + 1:])
+    if full:
+        add('delete-line', 'trailing newline', lines[:-1])
+        add('indent-line', 'trailing blank', lines + [''])
+    # The two reorderings the audit allows.
+    sections = [(heads[n], heads[n + 1] if n + 1 < len(heads) else unbound) for n in range(len(heads))]
+    if len(sections) >= 2:
+        order = [lines[a:b] for a, b in sections]
+        add('reorder-allowed', 'requirement-order', lines[:heads[0]] + [x for part in reversed(order) for x in part] + lines[unbound:], False)
+    for number, (a, b) in enumerate(sections):
+        part = lines[a:b]
+        starts = [i for i, line in enumerate(part) if line.startswith('资格记录：')]
+        if len(starts) >= 2:
+            ends = starts[1:] + [len(part) - 1 if part[-1] == '' else len(part)]
+            blocks = [part[x:y] for x, y in zip(starts, ends)]
+            tail = part[ends[-1]:]
+            rebuilt = part[:starts[0]] + [x for block in reversed(blocks) for x in block] + tail
+            add('reorder-allowed', f'record-order requirement {number}', lines[:a] + rebuilt + lines[b:], False)
+    return cases
 
 
 class SupportViewFixtures(unittest.TestCase):
@@ -614,19 +728,7 @@ class SupportViewFixtures(unittest.TestCase):
             self.assertIn('markdown view status diverged', audit_markdown(projected, dropped))
 
     def test_records_stay_with_their_requirement_and_header_status_is_unique(self):
-        data = retarget(copy.deepcopy(bare_registry().data), 'ngspice')
-        for index, name in enumerate(('bare-requirement', 'fixture-requirement')):
-            by_id(data, name).update(
-                allowed_behavior=f'independent behavior {index}',
-                conditions=[f'independent condition {index}'],
-                observables=[f'independent observable {index}'],
-            )
-        by_id(data, 'fixture-execution')['toolchain'] = [
-            {'role': 'simulator', 'name': 'ngspice', 'version': 'sim-12345'}]
-        for name in ('consumer-a', 'consumer-b'):
-            by_id(data, name)['toolchain'] = [
-                {'role': 'compiler', 'name': 'OpenVAF-R', 'version': 'cc-67890'}]
-        registry = Registry(refresh(data))
+        registry = independent_registry()
         projected = document(registry)
         text = markdown(projected)
         self.assertEqual(audit(projected) + audit_markdown(projected, text), [])
@@ -683,6 +785,52 @@ class SupportViewFixtures(unittest.TestCase):
             changed = rendered.replace('\n\n', '\nview_status: ' + wrong + '\n', 1)
             self.assertNotEqual(changed, rendered, status)
             self.assertIn('markdown view status diverged', audit_markdown(facts, changed))
+
+
+    def test_markdown_is_accepted_only_as_the_generated_view_up_to_two_reorderings(self):
+        registry = independent_registry()
+        generated = Path(__file__).resolve().parent / 'generated'
+        real = json.loads((generated / 'support-facts.json').read_text())
+        subjects = [
+            ('fixture-current-default', document(registry), True),
+            ('fixture-preview', document(registry, status='preview'), True),
+            ('real-current-default', real, False),
+        ]
+        total = {}
+        for label, facts, full in subjects:
+            text = markdown(facts)
+            if label == 'real-current-default':
+                self.assertEqual(text, (generated / 'support.md').read_text())
+            self.assertEqual(audit(facts) + audit_markdown(facts, text), [], label)
+            for kind, name, changed, expect_reject in markdown_variant_cases(facts, text, full=full):
+                if changed == text:
+                    self.fail(f'{label} {kind} {name}: variant equals the generated text')
+                errors = audit_markdown(facts, changed)
+                counts = total.setdefault(kind, [0, 0])
+                counts[0] += 1
+                counts[1] += bool(errors) == expect_reject
+                if bool(errors) != expect_reject:
+                    self.fail(f'{label} {kind} {name}: expected reject={expect_reject}, got {errors}')
+                if expect_reject:
+                    self.assertTrue(any(error.startswith('markdown differs from the generated view at line')
+                                        for error in errors), (label, kind, name, errors))
+        # Every class was generated and every variant behaved as required.
+        self.assertTrue(all(done == count for count, done in total.values()), total)
+        for kind in MARKDOWN_VARIANT_KINDS:
+            self.assertGreater(total[kind][0], 0, kind)
+
+    def test_difference_report_names_the_first_changed_line(self):
+        projected = document(independent_registry())
+        text = markdown(projected)
+        lines = text.split('\n')
+        index = next(i for i, line in enumerate(lines) if line.startswith('工具链：'))
+        changed = lines[:index] + ['  ' + lines[index]] + lines[index + 1:]
+        [error] = [e for e in audit_markdown(projected, '\n'.join(changed)) if e.startswith('markdown differs')]
+        self.assertIn(f'line {index + 1} ', error)
+        self.assertIn(repr(lines[index]), error)
+        self.assertIn(repr('  ' + lines[index]), error)
+        self.assertIn('<end of text>', _first_difference_for(projected, text + '\nextra'))
+        self.assertIn('actual <end of text>', _first_difference_for(projected, text[:-1]))
 
 
 def _drop_line_under_heading(text, heading, line):

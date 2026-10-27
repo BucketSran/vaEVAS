@@ -25,6 +25,16 @@ def write(path,value):path.parent.mkdir(parents=True,exist_ok=True);path.write_t
 def owned(module,path):
  spec=importlib.util.spec_from_file_location(module,path);value=importlib.util.module_from_spec(spec);spec.loader.exec_module(value);return value
 
+def read_rust_listing(root,item):
+ """Read one registered actual Rust listing. A new registration meets the strict current rules whether or not
+ its source is published yet; the historical +stable allowance exists only for a receipt read back from a bound source."""
+ path=Path(item['receipt_file']);raw=json.loads(path.read_text());profile=item['profile']
+ if not isinstance(profile,str) or not profile or raw.get('schema_version')!=1 or not raw.get('complete') or raw.get('errors') or raw.get('observation_kind')!='rust-test-binary-listing':raise ValueError('incomplete/unknown actual Rust listing')
+ listing=owned('catalog_generation_rust_listing',root/'evas/capabilities/rust_listing.py')
+ try:listing.checked(raw)
+ except (KeyError,TypeError,IndexError,AttributeError) as error:raise ValueError('incomplete or unknown actual Rust listing structure: '+str(error)) from error
+ return path,raw,profile
+
 def source(logical,path,locator=None):
  rawsha=file_sha(path)
  return versioned({'schema_version':1,'id':sid('source',logical),'version':rawsha,'kind':'source','status':'active',
@@ -193,8 +203,7 @@ def build(config,out):
     'native_skip_wrapper':row.get('native_skip_wrapper'),'execution_status':'not-executed-by-discovery'})
  rust_records=[]
  for item in config.get('rust_listings',[]):
-  path=Path(item['receipt_file']);raw=json.loads(path.read_text());profile=item['profile']
-  if not isinstance(profile,str) or not profile or raw.get('schema_version')!=1 or not raw.get('complete') or raw.get('errors') or raw.get('observation_kind')!='rust-test-binary-listing':raise ValueError('incomplete/unknown actual Rust listing')
+  path,raw,profile=read_rust_listing(root,item)
   logical='actual-rust-listing:'+profile
   src=source(logical,path,item.get('source_locator'));sources.append(src)
   actual_files={r['path']:r for r in raw['source']['files']}
