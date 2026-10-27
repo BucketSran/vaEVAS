@@ -1,0 +1,397 @@
+{
+  "actual_assets": 49566,
+  "git_blob_count": 49566,
+  "reused_old_proven_oids": 49558,
+  "content_read_assets": [
+    "evas/capabilities/asset_catalog.py",
+    "evas/capabilities/data/asset-index.json",
+    "evas/capabilities/data/catalog-sources.json",
+    "evas/capabilities/data/entrypoint-index.json",
+    "evas/capabilities/data/method-index.json",
+    "evas/capabilities/data/registry.json",
+    "evas/capabilities/test_asset_catalog.py",
+    "evas/docs/development/TRACEABILITY.md"
+  ],
+  "reuse_source": "OLD ci-40423354681 assets-before oid/sha256/mode, accepted because its only identity finding was the missing checkout object",
+  "source_commit": "38397d1143d98eca21a5c2b506e5722971925fbe",
+  "source_tree": "2a44d2998fafbfc1a6efa2b918c4af60de1e5135",
+  "fixed_tree": "2a44d2998fafbfc1a6efa2b918c4af60de1e5135",
+  "dirty_paths": [],
+  "summary_scientific_execution": false,
+  "execution_input_count": 49556,
+  "execution_input_list_sha256": "6d92c1787820f8c4243f3f8419402ee6c303751e24c7f56242ce5f07994b34fb",
+  "prepared_assets_binding": {
+    "matched": 49560,
+    "source_snapshot_deltas": [
+      {
+        "path": "evas/capabilities/data/asset-index.json",
+        "prepared_sha256": "30c85af6d085bc1bae0bb03a50f469467e58d4f02449a7165ec470581106a989",
+        "inventory_sha256": "4e7b89b1075064fca6cb891d9115817cc3511428db401c55079465b289a8be34",
+        "prepared_oid": "57ddc22a684e89a885f32d352a9babd884d128d2",
+        "inventory_oid": "11b828c84a0a7a256d69443a9337eae824d74b37"
+      },
+      {
+        "path": "evas/capabilities/data/catalog-sources.json",
+        "prepared_sha256": "b60633ac8e97841bb6c2c01e94ea95fb020016ed10aa255f42724fbf8dfb45a1",
+        "inventory_sha256": "4cf58da9ad646744bd5c87c9ccb01ae961e86f6c4d0742b1faf726709e02b6b7",
+        "prepared_oid": "07632e3e73d52dfabb1a2ceefe538d241a38eab5",
+        "inventory_oid": "1567f01c1525b85cb28ab5d18a5bfd38950e1c94"
+      },
+      {
+        "path": "evas/capabilities/data/entrypoint-index.json",
+        "prepared_sha256": "ff3b5ac7fa9270c076fcf1aeb5f49ff943994e69d9dd6758a1b6b08507abe240",
+        "inventory_sha256": "c7a614cb0df69eef85474f68eec6de27048a20d0a96d9c86d3750d7adade02c0",
+        "prepared_oid": "8dccc5fec75df834de0f440d517c998ad3b62fd5",
+        "inventory_oid": "1569ab058aa6d42552282d5f8f77ffcba3f51cfd"
+      },
+      {
+        "path": "evas/capabilities/data/method-index.json",
+        "prepared_sha256": "667ff0eab381b8b0fc2adf2d65dc56dc096f378edd81978be3036db2f6d61252",
+        "inventory_sha256": "7a3a0d67d7db9a7a2412df5854ae81c569f8f039a71634e40454219787782a4c",
+        "prepared_oid": "5b7e0db830668ce7aac78c9774a94ccfe204511c",
+        "inventory_oid": "03fa9fa8faeb674af43395de1cf1d108e0318e8b"
+      },
+      {
+        "path": "evas/capabilities/data/registry.json",
+        "prepared_sha256": "af6638ba686e7e43138b5e6c5b92646f3600cc54c5e22826af76534ef8af21fa",
+        "inventory_sha256": "d2da5d86fa2c98525ad0e2fb0c85f5c795174731a8a6075a808514c4b23849bf",
+        "prepared_oid": "38e4820d6ffe44d8c51b6818aaec6056fc621032",
+        "inventory_oid": "dbc4e74c470a8217ab69286a0036288cc46f9c9c"
+      },
+      {
+        "path": "evas/docs/development/TRACEABILITY.md",
+        "prepared_sha256": "3245d712a8048dfeee1836f528d8c9d45d794a1dc38065923a034ee98c262b97",
+        "inventory_sha256": "6d9360be819e82d88d9bf1c6e80d822758f711ae7fbe7cfd308b209a5cd37bd6",
+        "prepared_oid": "1d76f5da4d7510d3ca352cc2b99deda410edea5e",
+        "inventory_oid": "9c7fa78f782e955795677c5e9a04c2ab8c68c8eb"
+      }
+    ],
+    "unexpected": [],
+    "only_inventory": [],
+    "only_prepared_assets": []
+  },
+  "final_candidate_binding": [
+    {
+      "path": "evas/capabilities/data/asset-index.json",
+      "recorded_sha256": "4e7b89b1075064fca6cb891d9115817cc3511428db401c55079465b289a8be34",
+      "inventory_sha256": "4e7b89b1075064fca6cb891d9115817cc3511428db401c55079465b289a8be34",
+      "git_sha256": "4e7b89b1075064fca6cb891d9115817cc3511428db401c55079465b289a8be34",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/catalog-sources.json",
+      "recorded_sha256": "4cf58da9ad646744bd5c87c9ccb01ae961e86f6c4d0742b1faf726709e02b6b7",
+      "inventory_sha256": "4cf58da9ad646744bd5c87c9ccb01ae961e86f6c4d0742b1faf726709e02b6b7",
+      "git_sha256": "4cf58da9ad646744bd5c87c9ccb01ae961e86f6c4d0742b1faf726709e02b6b7",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/entrypoint-index.json",
+      "recorded_sha256": "c7a614cb0df69eef85474f68eec6de27048a20d0a96d9c86d3750d7adade02c0",
+      "inventory_sha256": "c7a614cb0df69eef85474f68eec6de27048a20d0a96d9c86d3750d7adade02c0",
+      "git_sha256": "c7a614cb0df69eef85474f68eec6de27048a20d0a96d9c86d3750d7adade02c0",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/method-index.json",
+      "recorded_sha256": "7a3a0d67d7db9a7a2412df5854ae81c569f8f039a71634e40454219787782a4c",
+      "inventory_sha256": "7a3a0d67d7db9a7a2412df5854ae81c569f8f039a71634e40454219787782a4c",
+      "git_sha256": "7a3a0d67d7db9a7a2412df5854ae81c569f8f039a71634e40454219787782a4c",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/registry.json",
+      "recorded_sha256": "d2da5d86fa2c98525ad0e2fb0c85f5c795174731a8a6075a808514c4b23849bf",
+      "inventory_sha256": "d2da5d86fa2c98525ad0e2fb0c85f5c795174731a8a6075a808514c4b23849bf",
+      "git_sha256": "d2da5d86fa2c98525ad0e2fb0c85f5c795174731a8a6075a808514c4b23849bf",
+      "match": true
+    },
+    {
+      "path": "evas/docs/development/TRACEABILITY.md",
+      "recorded_sha256": "6d9360be819e82d88d9bf1c6e80d822758f711ae7fbe7cfd308b209a5cd37bd6",
+      "inventory_sha256": "6d9360be819e82d88d9bf1c6e80d822758f711ae7fbe7cfd308b209a5cd37bd6",
+      "git_sha256": "6d9360be819e82d88d9bf1c6e80d822758f711ae7fbe7cfd308b209a5cd37bd6",
+      "match": true
+    }
+  ],
+  "capture_binding": [
+    {
+      "path": "evas/capabilities/asset_catalog.py",
+      "recorded_sha256": "e21f17b18da84644ad02643312336b985e5f79c8e038828bcc56f5b1694e6aa9",
+      "inventory_sha256": "e21f17b18da84644ad02643312336b985e5f79c8e038828bcc56f5b1694e6aa9",
+      "git_sha256": "e21f17b18da84644ad02643312336b985e5f79c8e038828bcc56f5b1694e6aa9",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/test_asset_catalog.py",
+      "recorded_sha256": "faa74ee4ad826dcbff092216ac55689bfd96e3c425ca95fcff790456001daf71",
+      "inventory_sha256": "faa74ee4ad826dcbff092216ac55689bfd96e3c425ca95fcff790456001daf71",
+      "git_sha256": "faa74ee4ad826dcbff092216ac55689bfd96e3c425ca95fcff790456001daf71",
+      "match": true
+    }
+  ],
+  "increment_scope_binding": [
+    {
+      "path": "evas/capabilities/asset_catalog.py",
+      "recorded_sha256": "e21f17b18da84644ad02643312336b985e5f79c8e038828bcc56f5b1694e6aa9",
+      "inventory_sha256": "e21f17b18da84644ad02643312336b985e5f79c8e038828bcc56f5b1694e6aa9",
+      "git_sha256": "e21f17b18da84644ad02643312336b985e5f79c8e038828bcc56f5b1694e6aa9",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/asset-index.json",
+      "recorded_sha256": "4e7b89b1075064fca6cb891d9115817cc3511428db401c55079465b289a8be34",
+      "inventory_sha256": "4e7b89b1075064fca6cb891d9115817cc3511428db401c55079465b289a8be34",
+      "git_sha256": "4e7b89b1075064fca6cb891d9115817cc3511428db401c55079465b289a8be34",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/catalog-sources.json",
+      "recorded_sha256": "4cf58da9ad646744bd5c87c9ccb01ae961e86f6c4d0742b1faf726709e02b6b7",
+      "inventory_sha256": "4cf58da9ad646744bd5c87c9ccb01ae961e86f6c4d0742b1faf726709e02b6b7",
+      "git_sha256": "4cf58da9ad646744bd5c87c9ccb01ae961e86f6c4d0742b1faf726709e02b6b7",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/entrypoint-index.json",
+      "recorded_sha256": "c7a614cb0df69eef85474f68eec6de27048a20d0a96d9c86d3750d7adade02c0",
+      "inventory_sha256": "c7a614cb0df69eef85474f68eec6de27048a20d0a96d9c86d3750d7adade02c0",
+      "git_sha256": "c7a614cb0df69eef85474f68eec6de27048a20d0a96d9c86d3750d7adade02c0",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/method-index.json",
+      "recorded_sha256": "7a3a0d67d7db9a7a2412df5854ae81c569f8f039a71634e40454219787782a4c",
+      "inventory_sha256": "7a3a0d67d7db9a7a2412df5854ae81c569f8f039a71634e40454219787782a4c",
+      "git_sha256": "7a3a0d67d7db9a7a2412df5854ae81c569f8f039a71634e40454219787782a4c",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/registry.json",
+      "recorded_sha256": "d2da5d86fa2c98525ad0e2fb0c85f5c795174731a8a6075a808514c4b23849bf",
+      "inventory_sha256": "d2da5d86fa2c98525ad0e2fb0c85f5c795174731a8a6075a808514c4b23849bf",
+      "git_sha256": "d2da5d86fa2c98525ad0e2fb0c85f5c795174731a8a6075a808514c4b23849bf",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/test_asset_catalog.py",
+      "recorded_sha256": "faa74ee4ad826dcbff092216ac55689bfd96e3c425ca95fcff790456001daf71",
+      "inventory_sha256": "faa74ee4ad826dcbff092216ac55689bfd96e3c425ca95fcff790456001daf71",
+      "git_sha256": "faa74ee4ad826dcbff092216ac55689bfd96e3c425ca95fcff790456001daf71",
+      "match": true
+    },
+    {
+      "path": "evas/docs/development/TRACEABILITY.md",
+      "recorded_sha256": "6d9360be819e82d88d9bf1c6e80d822758f711ae7fbe7cfd308b209a5cd37bd6",
+      "inventory_sha256": "6d9360be819e82d88d9bf1c6e80d822758f711ae7fbe7cfd308b209a5cd37bd6",
+      "git_sha256": "6d9360be819e82d88d9bf1c6e80d822758f711ae7fbe7cfd308b209a5cd37bd6",
+      "match": true
+    }
+  ],
+  "precheck_binding": [
+    {
+      "path": ".github/workflows/numerical-assurance.yml",
+      "recorded_sha256": "76c7387d4c8a3390edc2ba440f169c14794301867d1f277d3488b654cf585682",
+      "inventory_sha256": "76c7387d4c8a3390edc2ba440f169c14794301867d1f277d3488b654cf585682",
+      "git_sha256": "76c7387d4c8a3390edc2ba440f169c14794301867d1f277d3488b654cf585682",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/asset_catalog.py",
+      "recorded_sha256": "e21f17b18da84644ad02643312336b985e5f79c8e038828bcc56f5b1694e6aa9",
+      "inventory_sha256": "e21f17b18da84644ad02643312336b985e5f79c8e038828bcc56f5b1694e6aa9",
+      "git_sha256": "e21f17b18da84644ad02643312336b985e5f79c8e038828bcc56f5b1694e6aa9",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/asset-index.json",
+      "recorded_sha256": "4e7b89b1075064fca6cb891d9115817cc3511428db401c55079465b289a8be34",
+      "inventory_sha256": "4e7b89b1075064fca6cb891d9115817cc3511428db401c55079465b289a8be34",
+      "git_sha256": "4e7b89b1075064fca6cb891d9115817cc3511428db401c55079465b289a8be34",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/catalog-sources.json",
+      "recorded_sha256": "4cf58da9ad646744bd5c87c9ccb01ae961e86f6c4d0742b1faf726709e02b6b7",
+      "inventory_sha256": "4cf58da9ad646744bd5c87c9ccb01ae961e86f6c4d0742b1faf726709e02b6b7",
+      "git_sha256": "4cf58da9ad646744bd5c87c9ccb01ae961e86f6c4d0742b1faf726709e02b6b7",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/entrypoint-index.json",
+      "recorded_sha256": "c7a614cb0df69eef85474f68eec6de27048a20d0a96d9c86d3750d7adade02c0",
+      "inventory_sha256": "c7a614cb0df69eef85474f68eec6de27048a20d0a96d9c86d3750d7adade02c0",
+      "git_sha256": "c7a614cb0df69eef85474f68eec6de27048a20d0a96d9c86d3750d7adade02c0",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/historical-index.json",
+      "recorded_sha256": "26de4c0053dc4430133b08f71594c164d56137076d29615f543c0e39a8a458d2",
+      "inventory_sha256": "26de4c0053dc4430133b08f71594c164d56137076d29615f543c0e39a8a458d2",
+      "git_sha256": "26de4c0053dc4430133b08f71594c164d56137076d29615f543c0e39a8a458d2",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/method-index.json",
+      "recorded_sha256": "7a3a0d67d7db9a7a2412df5854ae81c569f8f039a71634e40454219787782a4c",
+      "inventory_sha256": "7a3a0d67d7db9a7a2412df5854ae81c569f8f039a71634e40454219787782a4c",
+      "git_sha256": "7a3a0d67d7db9a7a2412df5854ae81c569f8f039a71634e40454219787782a4c",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/registry.json",
+      "recorded_sha256": "d2da5d86fa2c98525ad0e2fb0c85f5c795174731a8a6075a808514c4b23849bf",
+      "inventory_sha256": "d2da5d86fa2c98525ad0e2fb0c85f5c795174731a8a6075a808514c4b23849bf",
+      "git_sha256": "d2da5d86fa2c98525ad0e2fb0c85f5c795174731a8a6075a808514c4b23849bf",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/generated/normative.md",
+      "recorded_sha256": "4498743a49be807a336a4991b5b30c0ef5c670b14d3c541089a11d62ee330f43",
+      "inventory_sha256": "4498743a49be807a336a4991b5b30c0ef5c670b14d3c541089a11d62ee330f43",
+      "git_sha256": "4498743a49be807a336a4991b5b30c0ef5c670b14d3c541089a11d62ee330f43",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/test_asset_catalog.py",
+      "recorded_sha256": "faa74ee4ad826dcbff092216ac55689bfd96e3c425ca95fcff790456001daf71",
+      "inventory_sha256": "faa74ee4ad826dcbff092216ac55689bfd96e3c425ca95fcff790456001daf71",
+      "git_sha256": "faa74ee4ad826dcbff092216ac55689bfd96e3c425ca95fcff790456001daf71",
+      "match": true
+    },
+    {
+      "path": "evas/docs/development/TRACEABILITY.md",
+      "recorded_sha256": "6d9360be819e82d88d9bf1c6e80d822758f711ae7fbe7cfd308b209a5cd37bd6",
+      "inventory_sha256": "6d9360be819e82d88d9bf1c6e80d822758f711ae7fbe7cfd308b209a5cd37bd6",
+      "git_sha256": "6d9360be819e82d88d9bf1c6e80d822758f711ae7fbe7cfd308b209a5cd37bd6",
+      "match": true
+    },
+    {
+      "path": "evas/tests/test_bound_step.py",
+      "recorded_sha256": "8bae51b61822f4a365766887e8793b9b024553fcc644289ce21092cdfbff7744",
+      "inventory_sha256": "8bae51b61822f4a365766887e8793b9b024553fcc644289ce21092cdfbff7744",
+      "git_sha256": "8bae51b61822f4a365766887e8793b9b024553fcc644289ce21092cdfbff7744",
+      "match": true
+    },
+    {
+      "path": "evas/tests/test_deferred_rdist.py",
+      "recorded_sha256": "41ed77da87c25c4ac48d1ea3514702417febddc3f7df95aeceb7d50baaa7631b",
+      "inventory_sha256": "41ed77da87c25c4ac48d1ea3514702417febddc3f7df95aeceb7d50baaa7631b",
+      "git_sha256": "41ed77da87c25c4ac48d1ea3514702417febddc3f7df95aeceb7d50baaa7631b",
+      "match": true
+    },
+    {
+      "path": "evas/tests/test_source_math.py",
+      "recorded_sha256": "ef2f50533a53b1fd9f588fc14c6bb6dc56c30da92fa5a33c5bbe7851c345ad54",
+      "inventory_sha256": "ef2f50533a53b1fd9f588fc14c6bb6dc56c30da92fa5a33c5bbe7851c345ad54",
+      "git_sha256": "ef2f50533a53b1fd9f588fc14c6bb6dc56c30da92fa5a33c5bbe7851c345ad54",
+      "match": true
+    },
+    {
+      "path": "evas/validation/checker_calibration/README.md",
+      "recorded_sha256": "6a1d923f65be68306da57516af04d61e230f8bb4a09c6ad8436812bd741bde13",
+      "inventory_sha256": "6a1d923f65be68306da57516af04d61e230f8bb4a09c6ad8436812bd741bde13",
+      "git_sha256": "6a1d923f65be68306da57516af04d61e230f8bb4a09c6ad8436812bd741bde13",
+      "match": true
+    },
+    {
+      "path": "evas/validation/checker_calibration/fixtures/provenance.json",
+      "recorded_sha256": "28b14e021b3ab5c563d3d5a4c7cbb5c379e260100fc606cab5d57743a05303c3",
+      "inventory_sha256": "28b14e021b3ab5c563d3d5a4c7cbb5c379e260100fc606cab5d57743a05303c3",
+      "git_sha256": "28b14e021b3ab5c563d3d5a4c7cbb5c379e260100fc606cab5d57743a05303c3",
+      "match": true
+    },
+    {
+      "path": "evas/validation/checker_calibration/fixtures/source_math.json",
+      "recorded_sha256": "3c0a697b66055fc4c9124198ad15c55e896a87af70add85bd9f760c3cb34aad2",
+      "inventory_sha256": "3c0a697b66055fc4c9124198ad15c55e896a87af70add85bd9f760c3cb34aad2",
+      "git_sha256": "3c0a697b66055fc4c9124198ad15c55e896a87af70add85bd9f760c3cb34aad2",
+      "match": true
+    },
+    {
+      "path": "evas/validation/checker_calibration/fixtures/test_bound_caps_actual_nonlinear_integration_segments--identity--0.diagnostics.json",
+      "recorded_sha256": "5cf94f240a17c45ea3a5d219e089471a86c458626c90e32c45b141ef42fb9a74",
+      "inventory_sha256": "5cf94f240a17c45ea3a5d219e089471a86c458626c90e32c45b141ef42fb9a74",
+      "git_sha256": "5cf94f240a17c45ea3a5d219e089471a86c458626c90e32c45b141ef42fb9a74",
+      "match": true
+    },
+    {
+      "path": "evas/validation/checker_calibration/fixtures/test_bound_caps_actual_nonlinear_integration_segments--identity--0.original-response.json",
+      "recorded_sha256": "2bf0767fe7a6241813b047b662c2506447439ca83e8e1d89dac227b68e3211b5",
+      "inventory_sha256": "2bf0767fe7a6241813b047b662c2506447439ca83e8e1d89dac227b68e3211b5",
+      "git_sha256": "2bf0767fe7a6241813b047b662c2506447439ca83e8e1d89dac227b68e3211b5",
+      "match": true
+    },
+    {
+      "path": "evas/validation/checker_calibration/fixtures/test_bound_caps_actual_nonlinear_integration_segments--identity--0.request.json",
+      "recorded_sha256": "d320c50b4d1a1889edda8bcc6fba79b80ce0a974e3dd299024ea29612abe9be2",
+      "inventory_sha256": "d320c50b4d1a1889edda8bcc6fba79b80ce0a974e3dd299024ea29612abe9be2",
+      "git_sha256": "d320c50b4d1a1889edda8bcc6fba79b80ce0a974e3dd299024ea29612abe9be2",
+      "match": true
+    },
+    {
+      "path": "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.diagnostics.json",
+      "recorded_sha256": "a44dc5e299aa05830b9352d840bc252870f5fcb10b8f658b10fa72176bb76314",
+      "inventory_sha256": "a44dc5e299aa05830b9352d840bc252870f5fcb10b8f658b10fa72176bb76314",
+      "git_sha256": "a44dc5e299aa05830b9352d840bc252870f5fcb10b8f658b10fa72176bb76314",
+      "match": true
+    },
+    {
+      "path": "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.original-response.json",
+      "recorded_sha256": "3616d402a8653ab2333e9ece3b9c204ce71eed0701b3b8336e7c4db866a8f510",
+      "inventory_sha256": "3616d402a8653ab2333e9ece3b9c204ce71eed0701b3b8336e7c4db866a8f510",
+      "git_sha256": "3616d402a8653ab2333e9ece3b9c204ce71eed0701b3b8336e7c4db866a8f510",
+      "match": true
+    },
+    {
+      "path": "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.request.json",
+      "recorded_sha256": "c67d8e1b2ad4dd15db2fbe64937d86bf5fc078b1e66a01839979d5a619092efc",
+      "inventory_sha256": "c67d8e1b2ad4dd15db2fbe64937d86bf5fc078b1e66a01839979d5a619092efc",
+      "git_sha256": "c67d8e1b2ad4dd15db2fbe64937d86bf5fc078b1e66a01839979d5a619092efc",
+      "match": true
+    },
+    {
+      "path": "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.original-response.json",
+      "recorded_sha256": "830d7dc4a8585b6cc71c36985ef6f7ce1228a710fee2f30ff87d116581c8ded6",
+      "inventory_sha256": "830d7dc4a8585b6cc71c36985ef6f7ce1228a710fee2f30ff87d116581c8ded6",
+      "git_sha256": "830d7dc4a8585b6cc71c36985ef6f7ce1228a710fee2f30ff87d116581c8ded6",
+      "match": true
+    },
+    {
+      "path": "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.request.json",
+      "recorded_sha256": "77cd33129b13e93b6cde1c86b9936865ca2b51762857af4f25bd06b550fa5a90",
+      "inventory_sha256": "77cd33129b13e93b6cde1c86b9936865ca2b51762857af4f25bd06b550fa5a90",
+      "git_sha256": "77cd33129b13e93b6cde1c86b9936865ca2b51762857af4f25bd06b550fa5a90",
+      "match": true
+    },
+    {
+      "path": "evas/validation/checker_calibration/fixtures/validator_predicates.json",
+      "recorded_sha256": "1e4e74c05dddaa010a49f3545bdd413f7f2ae68dcad635198c021eef1a928ecc",
+      "inventory_sha256": "1e4e74c05dddaa010a49f3545bdd413f7f2ae68dcad635198c021eef1a928ecc",
+      "git_sha256": "1e4e74c05dddaa010a49f3545bdd413f7f2ae68dcad635198c021eef1a928ecc",
+      "match": true
+    },
+    {
+      "path": "evas/validation/checker_calibration/test_detector_controls.py",
+      "recorded_sha256": "2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661",
+      "inventory_sha256": "2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661",
+      "git_sha256": "2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661",
+      "match": true
+    },
+    {
+      "path": "scripts/tests/test_catalog_history_selection.py",
+      "recorded_sha256": "56a20eb84fc607089a7d8176fc15646872fbc8b0708ea62bb9ec839d8abbf44d",
+      "inventory_sha256": "56a20eb84fc607089a7d8176fc15646872fbc8b0708ea62bb9ec839d8abbf44d",
+      "git_sha256": "56a20eb84fc607089a7d8176fc15646872fbc8b0708ea62bb9ec839d8abbf44d",
+      "match": true
+    },
+    {
+      "path": "scripts/tests/test_ci_inventory.py",
+      "recorded_sha256": "7a201a97a28de706e6b5d8f73639eee1d4b44479f018f2d0d91defc14fc5fe43",
+      "inventory_sha256": "7a201a97a28de706e6b5d8f73639eee1d4b44479f018f2d0d91defc14fc5fe43",
+      "git_sha256": "7a201a97a28de706e6b5d8f73639eee1d4b44479f018f2d0d91defc14fc5fe43",
+      "match": true
+    }
+  ],
+  "precheck_not_rerun": true
+}

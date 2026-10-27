@@ -1,0 +1,53 @@
+{
+  "accepted_at_utc": "2026-10-27T01:20:03.599278+00:00",
+  "head": "f974042a0af0b487568be935647caa322c3114fd",
+  "tree": "2a44d2998fafbfc1a6efa2b918c4af60de1e5135",
+  "review": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/night-coordination/pr263-catalog-index-astra-r4-20261027/review-report.json",
+  "review_sha256": "a0b6e7db618602ca1f0aab7b575e62eb225022718c6d7b5726c9f4fc0a233be2",
+  "runtime": {
+    "parentThreadId": "thread:delegated-task:command%3Amcp%3A77237e4d-3f1a-49ed-b46c-0984553f1454%3Adelegate-task%3Aevas-pr263-f974042a-catalog-index-astra-r4-20261027",
+    "inheritedProviderInstanceId": "codex",
+    "inheritedModel": "gpt-6-astra",
+    "inheritedOptions": [
+      {
+        "id": "reasoningEffort",
+        "value": "max"
+      },
+      {
+        "id": "serviceTier",
+        "value": "default"
+      }
+    ],
+    "runtimeMode": "full-access",
+    "interactionMode": "default"
+  },
+  "increment_paths": 8,
+  "complete_PR_paths": 29,
+  "Standards_findings": [],
+  "Spec_findings": [],
+  "prior_P2_closed": [
+    {
+      "id": "PR4-MAINT-01",
+      "severity": "P2",
+      "status": "closed_in_identity_matched_source",
+      "file": "scripts/tests/test_ci_inventory.py",
+      "line": 89,
+      "basis": "复用R2对完整29 literal表、7 maintenance/22 validation和单独primary入口的审核。35份复用源码逐项SHA匹配，workflow及本测试相对增量base不变。",
+      "source_sha256": "7a201a97a28de706e6b5d8f73639eee1d4b44479f018f2d0d91defc14fc5fe43",
+      "CI_final_acceptance_conferred": false
+    },
+    {
+      "id": "PR4-MAINT-02",
+      "severity": "P2",
+      "status": "closed_in_identity_matched_source",
+      "file": "scripts/tests/test_catalog_history_selection.py",
+      "line": 44,
+      "basis": "复用R2按(id,version)保存历史method和owner的修正审核；本增量未改该源码，当前候选匹配的4项历史选择测试通过，旧对象保存另已独立核对。",
+      "source_sha256": "56a20eb84fc607089a7d8176fc15646872fbc8b0708ea62bb9ec839d8abbf44d",
+      "production_selector_or_reader_relaxed": false
+    }
+  ],
+  "prior_scope_reuse": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/c1-rebind-20261027/review-reuse-acceptance.json",
+  "CI_raw_acceptance": false,
+  "semantic_qualification": false
+}

@@ -1,0 +1,685 @@
+{
+  "run": 40429826545,
+  "attempt": 1,
+  "run_conclusion": "success",
+  "run_status": "completed",
+  "run_html": "https://github.com/BucketSran/vaEVAS/actions/runs/40429826545",
+  "run_started_at": "2026-10-27T00:59:18Z",
+  "run_updated_at": "2026-10-27T01:08:15Z",
+  "candidate": "f974042a0af0b487568be935647caa322c3114fd",
+  "tree": "2a44d2998fafbfc1a6efa2b918c4af60de1e5135",
+  "parents": [
+    "d771a896615093474917a5d664380a7e61daae74"
+  ],
+  "previous_candidate": "2a0e173a2164f6f7a0b544e344e4463226ad26c1",
+  "source_capture": "d771a896615093474917a5d664380a7e61daae74",
+  "trusted_base": "cfe0ac45f75677fbd1e4dbf6243740b16d1caab0",
+  "e1_run": 40384473617,
+  "e1_candidate": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+  "e1_raw_sha256_expected": "8f1ff97fe6c24dbb339fcac4f7b64c6c3ef98915b005b0711bd963c95ed74770",
+  "c0_used_as_criteria": false,
+  "changed_vs_2a": [
+    "M\tevas/capabilities/asset_catalog.py",
+    "M\tevas/capabilities/data/asset-index.json",
+    "M\tevas/capabilities/data/catalog-sources.json",
+    "M\tevas/capabilities/data/entrypoint-index.json",
+    "M\tevas/capabilities/data/method-index.json",
+    "M\tevas/capabilities/data/registry.json",
+    "M\tevas/capabilities/test_asset_catalog.py",
+    "M\tevas/docs/development/TRACEABILITY.md"
+  ],
+  "pr_field_source": "headRefOid/baseRefOid on saved flat gh pr view JSON",
+  "pr_head_sha": "f974042a0af0b487568be935647caa322c3114fd",
+  "pr_base_sha": "cfe0ac45f75677fbd1e4dbf6243740b16d1caab0",
+  "pr_nested_head_object_present": false,
+  "pr_state": "OPEN",
+  "pr_mergeable": "MERGEABLE",
+  "pr_merge_state": "CLEAN",
+  "pr_url": "https://github.com/BucketSran/vaEVAS/pull/263",
+  "run_head_sha": "f974042a0af0b487568be935647caa322c3114fd",
+  "run_pull_head_sha": "f974042a0af0b487568be935647caa322c3114fd",
+  "run_pull_base_sha": "cfe0ac45f75677fbd1e4dbf6243740b16d1caab0",
+  "actual_checkout": "38397d1143d98eca21a5c2b506e5722971925fbe",
+  "inventory_tree": "2a44d2998fafbfc1a6efa2b918c4af60de1e5135",
+  "inventory_relationship": "head-context-only",
+  "local_worktree_HEAD_not_used": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+  "job_count": 21,
+  "job_results": {
+    "selection": "success",
+    "fast-checks": "success",
+    "catalog-inventory": "success",
+    "fuzz-smoke (run, 24)": "success",
+    "properties-and-ngspice": "success",
+    "fuzz-smoke (parse_request, 65536)": "success",
+    "static-checks": "success",
+    "provenance-support": "success",
+    "rust-regression": "success",
+    "regression (0)": "success",
+    "provenance-paper": "success",
+    "package / install (macos-14, arm64, 3.12)": "success",
+    "regression (2)": "success",
+    "benchmark / identity": "success",
+    "benchmark / first-batch": "success",
+    "regression (3)": "success",
+    "package / install (ubuntu-24.04, x86_64, 3.10)": "success",
+    "regression (1)": "success",
+    "regression-coverage": "success",
+    "regression-admission": "success",
+    "ci-result": "success"
+  },
+  "job_conclusion_counts": {
+    "success": 21
+  },
+  "host_job_success_is_scientific_qualification": false,
+  "static_log_present": true,
+  "static_log_sha256": "201e8cee256ff4e5acd440d7ae25824a8a1bd8c4a8c6b8c64620a3df3d789baa",
+  "static_log_contains_operation_canceled": false,
+  "whole_CI_scientific_acceptance": false,
+  "candidate_accepted_for_merge_by_worker": false,
+  "semantic_qualification_granted_by_worker": false,
+  "archives": [
+    {
+      "name": "python-regression-admission",
+      "id": 12702415016,
+      "bytes": 1471,
+      "sha256": "711f942b32aa87f1252e5165436a101297393a284bccbba1d4fdff96e3f38bd3"
+    },
+    {
+      "name": "python-regression-timings",
+      "id": 12702295109,
+      "bytes": 3365198,
+      "sha256": "ad9b4de1322dfed145823234f6c90a37f236ee82362d405234f41ac827738e77"
+    },
+    {
+      "name": "rust-test-listing",
+      "id": 12701995311,
+      "bytes": 78085,
+      "sha256": "074f88efa0e3670c689ba8d9aaf370284fd51bf611534086b868dbd3f44a692e"
+    },
+    {
+      "name": "python-regression-shard-3",
+      "id": 12701990288,
+      "bytes": 27095391,
+      "sha256": "637fea4601ed8072b4581840a6b832e7e55ceecbd52efa7e0837c7d881505b6c"
+    },
+    {
+      "name": "python-regression-shard-2",
+      "id": 12701517900,
+      "bytes": 24368171,
+      "sha256": "2fe8e8a40bea4935e23766a81c8ecf8e136f49980a19be68bfb835a95a6fe607"
+    },
+    {
+      "name": "git-fixture-isolation",
+      "id": 12701403334,
+      "bytes": 112924,
+      "sha256": "ef65855aa44d01f80b454c5ede9ab73390d03a7ebe6130e615d00a965a2709a2"
+    },
+    {
+      "name": "fast-feedback",
+      "id": 12701232606,
+      "bytes": 6852,
+      "sha256": "cf68bd7b715996084085025b4ef13a753f2aa16e8b945a37dbc1fe9336664025"
+    },
+    {
+      "name": "catalog-inventory",
+      "id": 12701209110,
+      "bytes": 7648136,
+      "sha256": "6f4b12f1ac56a7082cc1317c4bd63c8a4eddba80ccfc0ce49a6eedb18285501a"
+    },
+    {
+      "name": "python-regression-shard-1",
+      "id": 12701134908,
+      "bytes": 24603928,
+      "sha256": "aed95d5cea2f4e7670f00c1f9241959172c4a1c4f3a13adca4fb1cc7bfb3720c"
+    },
+    {
+      "name": "ngspice-comparison",
+      "id": 12701029954,
+      "bytes": 136726,
+      "sha256": "d2f5c7aa093d957c524c2a5e0fda3015f76616ee414687ca22a455fc172f7aae"
+    },
+    {
+      "name": "package-macos-14-arm64-py3.12",
+      "id": 12700954549,
+      "bytes": 5694128,
+      "sha256": "9a48c6fd5609b3d881eda5ca20e7ffb7b8e21c45ef2d7fe877a351cb4b2e1bdc"
+    },
+    {
+      "name": "python-regression-shard-0",
+      "id": 12700869796,
+      "bytes": 24501864,
+      "sha256": "1124f01e258a0f498b5695dc06be71b7fd206e7c23635280ec3abfa958682b45"
+    },
+    {
+      "name": "package-ubuntu-24.04-x86_64-py3.10",
+      "id": 12700864566,
+      "bytes": 6197949,
+      "sha256": "87db8088ad73d62487252d257482b18e7555cd97ddb73f1de4df38f5e47b756e"
+    }
+  ],
+  "actual_assets": 49566,
+  "git_blob_count": 49566,
+  "unchanged_assets_reused_from_old_proven_oids": 49558,
+  "content_read_assets": [
+    "evas/capabilities/asset_catalog.py",
+    "evas/capabilities/data/asset-index.json",
+    "evas/capabilities/data/catalog-sources.json",
+    "evas/capabilities/data/entrypoint-index.json",
+    "evas/capabilities/data/method-index.json",
+    "evas/capabilities/data/registry.json",
+    "evas/capabilities/test_asset_catalog.py",
+    "evas/docs/development/TRACEABILITY.md"
+  ],
+  "content_read_asset_count": 8,
+  "old_reuse_blocked": false,
+  "old_identity_finding_checks": [
+    "candidate_checkout_baseline"
+  ],
+  "asset_delta_vs_e1": {
+    "added_vs_e1": [
+      "scripts/context-registration-bundle.json"
+    ],
+    "missing_vs_e1": [],
+    "oid_changed_vs_e1": [
+      ".github/workflows/numerical-assurance.yml",
+      "evas/capabilities/asset_catalog.py",
+      "evas/capabilities/data/asset-index.json",
+      "evas/capabilities/data/catalog-sources.json",
+      "evas/capabilities/data/entrypoint-index.json",
+      "evas/capabilities/data/historical-index.json",
+      "evas/capabilities/data/method-index.json",
+      "evas/capabilities/data/registry.json",
+      "evas/capabilities/test_asset_catalog.py",
+      "evas/docs/development/TRACEABILITY.md",
+      "evas/validation/baselines/regression-v1.json",
+      "evas/validation/baselines/regression-v1.review.json",
+      "scripts/materialize_registration_bundle.py",
+      "scripts/tests/test_catalog_history_selection.py",
+      "scripts/tests/test_ci_inventory.py",
+      "scripts/tests/test_registration_bundle.py"
+    ]
+  },
+  "asset_delta_vs_2a": {
+    "added_vs_2a": [],
+    "missing_vs_2a": [],
+    "oid_changed_vs_2a": [
+      "evas/capabilities/asset_catalog.py",
+      "evas/capabilities/data/asset-index.json",
+      "evas/capabilities/data/catalog-sources.json",
+      "evas/capabilities/data/entrypoint-index.json",
+      "evas/capabilities/data/method-index.json",
+      "evas/capabilities/data/registry.json",
+      "evas/capabilities/test_asset_catalog.py",
+      "evas/docs/development/TRACEABILITY.md"
+    ]
+  },
+  "execution_input_count": 49556,
+  "execution_input_list_sha256": "6d92c1787820f8c4243f3f8419402ee6c303751e24c7f56242ce5f07994b34fb",
+  "execution_input_unbound_paths": [],
+  "prepared_assets_source_commit": "d771a896615093474917a5d664380a7e61daae74",
+  "prepared_assets_source_tree": "746d0c5750e4b5a727c3e30b46fb7ff21a754e5b",
+  "prepared_assets_binding_counts": {
+    "matched": 49560,
+    "source_snapshot_deltas": 6,
+    "unexpected": 0
+  },
+  "prepared_assets_source_snapshot_delta_paths": [
+    "evas/capabilities/data/asset-index.json",
+    "evas/capabilities/data/catalog-sources.json",
+    "evas/capabilities/data/entrypoint-index.json",
+    "evas/capabilities/data/method-index.json",
+    "evas/capabilities/data/registry.json",
+    "evas/docs/development/TRACEABILITY.md"
+  ],
+  "shards": [
+    {
+      "index": 0,
+      "methods": 818,
+      "conditions": 1480,
+      "collection": {
+        "valid": true,
+        "raw_exit": 1,
+        "cacheable": false,
+        "raw_successful": false,
+        "report_sha256": "c22c7a98ba90bc0998a8c8e5d747c47a66a0c25d375e5bbe3800abcf0cf55a2d",
+        "identity_key": "dfb4ce8746fef8eadf046b765528ebf3de30883aec3326ba981e6cb704c4d92e"
+      },
+      "input_fingerprint": "dfb4ce8746fef8eadf046b765528ebf3de30883aec3326ba981e6cb704c4d92e",
+      "fingerprint_matches_inventory": true,
+      "comparison_subject_matches": true,
+      "input_count": 49556,
+      "kernel_file_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+      "kernel_identity_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+      "kernel_report_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+      "kernel_selectors": {
+        "EVAS_BRANCH_KERNEL": null,
+        "EVAS_CAUSAL_KERNEL": null,
+        "EVAS_CERTIFICATE_KERNEL": null,
+        "EVAS_COMPACT_SOURCE_KERNEL": null,
+        "EVAS_DAE_EVENT_KERNEL": null,
+        "EVAS_DC_FACTOR_KERNEL": null,
+        "EVAS_DC_TARGET_KERNEL": null,
+        "EVAS_DEADLINE_KERNEL": null,
+        "EVAS_EVENT_BODY_ALIAS_KERNEL": null,
+        "EVAS_HELD_PROOF_KERNEL": null,
+        "EVAS_HELD_TIME_KERNEL": null,
+        "EVAS_INITIAL_OBSERVER_KERNEL": null,
+        "EVAS_INITIAL_SEED_KERNEL": null,
+        "EVAS_KERNEL": null,
+        "EVAS_PASSIVE_HISTORY_KERNEL": null,
+        "EVAS_PASSIVE_KERNEL": null,
+        "EVAS_RATIONAL_PROBE_KERNEL": null,
+        "EVAS_SOURCE_SLEW_DC_KERNEL": null,
+        "EVAS_SOURCE_SLEW_KERNEL": null,
+        "EVAS_STATISTICS_KERNEL": null,
+        "EVAS_TEST_BASELINE_KERNEL": null,
+        "EVAS_TEST_KERNEL": null,
+        "FORCING_POINT_KERNEL": null,
+        "FORCING_SHAPE_KERNEL": null
+      },
+      "kernel_selectors_all_null": true,
+      "non_null_kernel_selectors": [],
+      "build_parameters": {
+        "CARGO_PROFILE_DEV_OPT_LEVEL": "1",
+        "CARGO_PROFILE_DEV_DEBUG_ASSERTIONS": "true",
+        "CARGO_PROFILE_DEV_OVERFLOW_CHECKS": "true"
+      },
+      "python": "3.12.15 (main, Oct  1 2026, 02:35:59) [GCC 13.3.0]",
+      "jsonl_stop_exact": true,
+      "jsonl_start_exact": true,
+      "bound_report": true,
+      "setup_skipped_test_ids": []
+    },
+    {
+      "index": 1,
+      "methods": 831,
+      "conditions": 3072,
+      "collection": {
+        "valid": true,
+        "raw_exit": 1,
+        "cacheable": false,
+        "raw_successful": false,
+        "report_sha256": "46d25ce18dabfcc384a8c60afd65fca982fd718911f67c22e656c26e8460355f",
+        "identity_key": "7d7d26046e9052d5d697f2ebf5ef6509e76b8a23ac02709f239608c1c703ca33"
+      },
+      "input_fingerprint": "7d7d26046e9052d5d697f2ebf5ef6509e76b8a23ac02709f239608c1c703ca33",
+      "fingerprint_matches_inventory": true,
+      "comparison_subject_matches": true,
+      "input_count": 49556,
+      "kernel_file_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+      "kernel_identity_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+      "kernel_report_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+      "kernel_selectors": {
+        "EVAS_BRANCH_KERNEL": null,
+        "EVAS_CAUSAL_KERNEL": null,
+        "EVAS_CERTIFICATE_KERNEL": null,
+        "EVAS_COMPACT_SOURCE_KERNEL": null,
+        "EVAS_DAE_EVENT_KERNEL": null,
+        "EVAS_DC_FACTOR_KERNEL": null,
+        "EVAS_DC_TARGET_KERNEL": null,
+        "EVAS_DEADLINE_KERNEL": null,
+        "EVAS_EVENT_BODY_ALIAS_KERNEL": null,
+        "EVAS_HELD_PROOF_KERNEL": null,
+        "EVAS_HELD_TIME_KERNEL": null,
+        "EVAS_INITIAL_OBSERVER_KERNEL": null,
+        "EVAS_INITIAL_SEED_KERNEL": null,
+        "EVAS_KERNEL": null,
+        "EVAS_PASSIVE_HISTORY_KERNEL": null,
+        "EVAS_PASSIVE_KERNEL": null,
+        "EVAS_RATIONAL_PROBE_KERNEL": null,
+        "EVAS_SOURCE_SLEW_DC_KERNEL": null,
+        "EVAS_SOURCE_SLEW_KERNEL": null,
+        "EVAS_STATISTICS_KERNEL": null,
+        "EVAS_TEST_BASELINE_KERNEL": null,
+        "EVAS_TEST_KERNEL": null,
+        "FORCING_POINT_KERNEL": null,
+        "FORCING_SHAPE_KERNEL": null
+      },
+      "kernel_selectors_all_null": true,
+      "non_null_kernel_selectors": [],
+      "build_parameters": {
+        "CARGO_PROFILE_DEV_OPT_LEVEL": "1",
+        "CARGO_PROFILE_DEV_DEBUG_ASSERTIONS": "true",
+        "CARGO_PROFILE_DEV_OVERFLOW_CHECKS": "true"
+      },
+      "python": "3.12.15 (main, Oct  1 2026, 02:35:59) [GCC 13.3.0]",
+      "jsonl_stop_exact": true,
+      "jsonl_start_exact": true,
+      "bound_report": true,
+      "setup_skipped_test_ids": []
+    },
+    {
+      "index": 2,
+      "methods": 823,
+      "conditions": 1526,
+      "collection": {
+        "valid": true,
+        "raw_exit": 1,
+        "cacheable": false,
+        "raw_successful": false,
+        "report_sha256": "da2939a85402c31ea98b6a23c90657be288e8ff38ea3845da9780284170fc165",
+        "identity_key": "1e50d1960324c98e2928ae3faf193d43055a00b8e4a8641b86271772cb90c6c7"
+      },
+      "input_fingerprint": "1e50d1960324c98e2928ae3faf193d43055a00b8e4a8641b86271772cb90c6c7",
+      "fingerprint_matches_inventory": true,
+      "comparison_subject_matches": true,
+      "input_count": 49556,
+      "kernel_file_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+      "kernel_identity_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+      "kernel_report_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+      "kernel_selectors": {
+        "EVAS_BRANCH_KERNEL": null,
+        "EVAS_CAUSAL_KERNEL": null,
+        "EVAS_CERTIFICATE_KERNEL": null,
+        "EVAS_COMPACT_SOURCE_KERNEL": null,
+        "EVAS_DAE_EVENT_KERNEL": null,
+        "EVAS_DC_FACTOR_KERNEL": null,
+        "EVAS_DC_TARGET_KERNEL": null,
+        "EVAS_DEADLINE_KERNEL": null,
+        "EVAS_EVENT_BODY_ALIAS_KERNEL": null,
+        "EVAS_HELD_PROOF_KERNEL": null,
+        "EVAS_HELD_TIME_KERNEL": null,
+        "EVAS_INITIAL_OBSERVER_KERNEL": null,
+        "EVAS_INITIAL_SEED_KERNEL": null,
+        "EVAS_KERNEL": null,
+        "EVAS_PASSIVE_HISTORY_KERNEL": null,
+        "EVAS_PASSIVE_KERNEL": null,
+        "EVAS_RATIONAL_PROBE_KERNEL": null,
+        "EVAS_SOURCE_SLEW_DC_KERNEL": null,
+        "EVAS_SOURCE_SLEW_KERNEL": null,
+        "EVAS_STATISTICS_KERNEL": null,
+        "EVAS_TEST_BASELINE_KERNEL": null,
+        "EVAS_TEST_KERNEL": null,
+        "FORCING_POINT_KERNEL": null,
+        "FORCING_SHAPE_KERNEL": null
+      },
+      "kernel_selectors_all_null": true,
+      "non_null_kernel_selectors": [],
+      "build_parameters": {
+        "CARGO_PROFILE_DEV_OPT_LEVEL": "1",
+        "CARGO_PROFILE_DEV_DEBUG_ASSERTIONS": "true",
+        "CARGO_PROFILE_DEV_OVERFLOW_CHECKS": "true"
+      },
+      "python": "3.12.15 (main, Oct  1 2026, 02:35:59) [GCC 13.3.0]",
+      "jsonl_stop_exact": true,
+      "jsonl_start_exact": true,
+      "bound_report": true,
+      "setup_skipped_test_ids": []
+    },
+    {
+      "index": 3,
+      "methods": 785,
+      "conditions": 1659,
+      "collection": {
+        "valid": true,
+        "raw_exit": 1,
+        "cacheable": false,
+        "raw_successful": false,
+        "report_sha256": "28ce0b9c3c203bbe9c9158707a3d2fd0d6dd4b3d188e6dedf46ec99ceb77b224",
+        "identity_key": "028416390528c94ef470d1763866178af95e36980e55697d3c3d71b8c2f9cf37"
+      },
+      "input_fingerprint": "028416390528c94ef470d1763866178af95e36980e55697d3c3d71b8c2f9cf37",
+      "fingerprint_matches_inventory": true,
+      "comparison_subject_matches": true,
+      "input_count": 49556,
+      "kernel_file_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+      "kernel_identity_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+      "kernel_report_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+      "kernel_selectors": {
+        "EVAS_BRANCH_KERNEL": null,
+        "EVAS_CAUSAL_KERNEL": null,
+        "EVAS_CERTIFICATE_KERNEL": null,
+        "EVAS_COMPACT_SOURCE_KERNEL": null,
+        "EVAS_DAE_EVENT_KERNEL": null,
+        "EVAS_DC_FACTOR_KERNEL": null,
+        "EVAS_DC_TARGET_KERNEL": null,
+        "EVAS_DEADLINE_KERNEL": null,
+        "EVAS_EVENT_BODY_ALIAS_KERNEL": null,
+        "EVAS_HELD_PROOF_KERNEL": null,
+        "EVAS_HELD_TIME_KERNEL": null,
+        "EVAS_INITIAL_OBSERVER_KERNEL": null,
+        "EVAS_INITIAL_SEED_KERNEL": null,
+        "EVAS_KERNEL": null,
+        "EVAS_PASSIVE_HISTORY_KERNEL": null,
+        "EVAS_PASSIVE_KERNEL": null,
+        "EVAS_RATIONAL_PROBE_KERNEL": null,
+        "EVAS_SOURCE_SLEW_DC_KERNEL": null,
+        "EVAS_SOURCE_SLEW_KERNEL": null,
+        "EVAS_STATISTICS_KERNEL": null,
+        "EVAS_TEST_BASELINE_KERNEL": null,
+        "EVAS_TEST_KERNEL": null,
+        "FORCING_POINT_KERNEL": null,
+        "FORCING_SHAPE_KERNEL": null
+      },
+      "kernel_selectors_all_null": true,
+      "non_null_kernel_selectors": [],
+      "build_parameters": {
+        "CARGO_PROFILE_DEV_OPT_LEVEL": "1",
+        "CARGO_PROFILE_DEV_DEBUG_ASSERTIONS": "true",
+        "CARGO_PROFILE_DEV_OVERFLOW_CHECKS": "true"
+      },
+      "python": "3.12.15 (main, Oct  1 2026, 02:35:59) [GCC 13.3.0]",
+      "jsonl_stop_exact": true,
+      "jsonl_start_exact": true,
+      "bound_report": true,
+      "setup_skipped_test_ids": []
+    }
+  ],
+  "shard_method_sum": 3257,
+  "shard_condition_sum": 7737,
+  "shard_ids_disjoint": true,
+  "kernel_selector_names": [
+    "EVAS_BRANCH_KERNEL",
+    "EVAS_CAUSAL_KERNEL",
+    "EVAS_CERTIFICATE_KERNEL",
+    "EVAS_COMPACT_SOURCE_KERNEL",
+    "EVAS_DAE_EVENT_KERNEL",
+    "EVAS_DC_FACTOR_KERNEL",
+    "EVAS_DC_TARGET_KERNEL",
+    "EVAS_DEADLINE_KERNEL",
+    "EVAS_EVENT_BODY_ALIAS_KERNEL",
+    "EVAS_HELD_PROOF_KERNEL",
+    "EVAS_HELD_TIME_KERNEL",
+    "EVAS_INITIAL_OBSERVER_KERNEL",
+    "EVAS_INITIAL_SEED_KERNEL",
+    "EVAS_KERNEL",
+    "EVAS_PASSIVE_HISTORY_KERNEL",
+    "EVAS_PASSIVE_KERNEL",
+    "EVAS_RATIONAL_PROBE_KERNEL",
+    "EVAS_SOURCE_SLEW_DC_KERNEL",
+    "EVAS_SOURCE_SLEW_KERNEL",
+    "EVAS_STATISTICS_KERNEL",
+    "EVAS_TEST_BASELINE_KERNEL",
+    "EVAS_TEST_KERNEL",
+    "FORCING_POINT_KERNEL",
+    "FORCING_SHAPE_KERNEL"
+  ],
+  "kernel_sha256_unique": [
+    "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe"
+  ],
+  "e1_kernel_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+  "kernel_unchanged_vs_e1": true,
+  "dut_files_sha256": "5e9bf28ad121569a6975811f0b5ea9e60423e676e6dfcf88048948bfd19ba056",
+  "e1_dut_files_sha256": "5e9bf28ad121569a6975811f0b5ea9e60423e676e6dfcf88048948bfd19ba056",
+  "dut_files_equal_e1": true,
+  "dut_unchanged_vs_e1": true,
+  "environment_keys_changed_vs_e1": [],
+  "environment_variables_changed_vs_e1": [],
+  "merged_exact": true,
+  "report_valid": true,
+  "raw_sha256": "9097c8dce35461961b76782234c75e67d11f2c33a4f90d3abd98cc947ec9d981",
+  "e1_raw_sha256": "8f1ff97fe6c24dbb339fcac4f7b64c6c3ef98915b005b0711bd963c95ed74770",
+  "methods": 3257,
+  "e1_methods": 3257,
+  "conditions": 7737,
+  "e1_conditions": 7737,
+  "unique_condition_ids": 7737,
+  "duplicate_condition_id_count": 0,
+  "condition_ids_added_vs_e1": [],
+  "condition_ids_missing_vs_e1": [],
+  "methods_added_vs_e1": [],
+  "methods_missing_vs_e1": [],
+  "method_outcomes": {
+    "passed": 2617,
+    "error": 214,
+    "failed": 423,
+    "expected_failure": 3
+  },
+  "e1_method_outcomes": {
+    "passed": 2617,
+    "error": 214,
+    "failed": 423,
+    "expected_failure": 3
+  },
+  "nonpass_method_count": 637,
+  "expected_failure_method_count": 3,
+  "nonpass_ids_equal_e1": true,
+  "expected_failure_ids_equal_e1": true,
+  "unittest_condition_counters": {
+    "failures": 597,
+    "errors": 296,
+    "skipped": 0,
+    "expected_failures": 3,
+    "unexpected_successes": 0
+  },
+  "e1_unittest_condition_counters": {
+    "failures": 597,
+    "errors": 296,
+    "skipped": 0,
+    "expected_failures": 3,
+    "unexpected_successes": 0
+  },
+  "raw_successful": false,
+  "method_outcome_changes": [],
+  "condition_delta_methods": [],
+  "criteria_changed_paths_vs_e1": [],
+  "metadata_changed_keys_vs_e1": [],
+  "setup_skipped_test_ids": [],
+  "gate_blobs": {
+    "candidate_sha256": "df028ac10ddecb10f870ce889342826b56789d83322394e62e10e5cbb9c0d654",
+    "trusted_sha256": "df028ac10ddecb10f870ce889342826b56789d83322394e62e10e5cbb9c0d654",
+    "e1_sha256": "df028ac10ddecb10f870ce889342826b56789d83322394e62e10e5cbb9c0d654",
+    "candidate_equals_trusted": true,
+    "candidate_equals_e1": true
+  },
+  "admission": {
+    "valid": true,
+    "raw_successful": false,
+    "merge_allowed": true,
+    "semantic_qualification": false,
+    "differences": [],
+    "trusted_commit": "cfe0ac45f75677fbd1e4dbf6243740b16d1caab0",
+    "trusted_source": "event.pull_request.base.sha",
+    "candidate_is_authority": false,
+    "candidate_baseline_commit": "38397d1143d98eca21a5c2b506e5722971925fbe",
+    "shell_event_trusted_commit": "cfe0ac45f75677fbd1e4dbf6243740b16d1caab0",
+    "shell_execution_cwd": "isolated-temporary-directory",
+    "bundle_requested": false,
+    "bundle_materialized": false,
+    "trusted_comparison_matches_artifact": true
+  },
+  "bindings_match": {
+    "final_candidate": true,
+    "capture": true,
+    "increment_scope": true,
+    "precheck": true
+  },
+  "identity_findings": [
+    {
+      "check": "candidate_checkout_object",
+      "detail": {
+        "commit": "38397d1143d98eca21a5c2b506e5722971925fbe",
+        "locally_present": false,
+        "fetched": false,
+        "verified": false,
+        "inventory_source_tree": "2a44d2998fafbfc1a6efa2b918c4af60de1e5135",
+        "inventory_tree_matches_fixed_head_tree": true,
+        "inventory_relationship": "head-context-only",
+        "inventory_content_binding": "actual-checkout-bytes-not-commit-identity",
+        "fixed_head": "f974042a0af0b487568be935647caa322c3114fd",
+        "fixed_tree": "2a44d2998fafbfc1a6efa2b918c4af60de1e5135",
+        "fixed_head_parents": [
+          "d771a896615093474917a5d664380a7e61daae74"
+        ],
+        "trusted_is_ancestor_of_head": true,
+        "unverified_expectation_if_github_pull_merge": {
+          "parents": [
+            "cfe0ac45f75677fbd1e4dbf6243740b16d1caab0",
+            "f974042a0af0b487568be935647caa322c3114fd"
+          ],
+          "tree": "2a44d2998fafbfc1a6efa2b918c4af60de1e5135",
+          "basis": "run-final referenced_workflows ref refs/pull/263/merge uses this SHA; GitHub pull merge commits conventionally have parents [base, head]; trusted main is an ancestor of the head, and the inventory claims this checkout's tree equals the head tree. The commit object was not local, so none of those parent or tree links were read from the object."
+        }
+      }
+    },
+    {
+      "check": "referenced_workflow_object",
+      "detail": {
+        "sha": "38397d1143d98eca21a5c2b506e5722971925fbe",
+        "path": "BucketSran/vaEVAS/.github/workflows/package-install.yml@38397d1143d98eca21a5c2b506e5722971925fbe",
+        "ref": "refs/pull/263/merge",
+        "locally_present": false,
+        "fetched": false
+      }
+    },
+    {
+      "check": "referenced_workflow_object",
+      "detail": {
+        "sha": "38397d1143d98eca21a5c2b506e5722971925fbe",
+        "path": "BucketSran/vaEVAS/.github/workflows/benchmark-evidence.yml@38397d1143d98eca21a5c2b506e5722971925fbe",
+        "ref": "refs/pull/263/merge",
+        "locally_present": false,
+        "fetched": false
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "check": "candidate_checkout_object",
+      "detail": {
+        "commit": "38397d1143d98eca21a5c2b506e5722971925fbe",
+        "locally_present": false,
+        "fetched": false,
+        "verified": false,
+        "inventory_source_tree": "2a44d2998fafbfc1a6efa2b918c4af60de1e5135",
+        "inventory_tree_matches_fixed_head_tree": true,
+        "inventory_relationship": "head-context-only",
+        "inventory_content_binding": "actual-checkout-bytes-not-commit-identity",
+        "fixed_head": "f974042a0af0b487568be935647caa322c3114fd",
+        "fixed_tree": "2a44d2998fafbfc1a6efa2b918c4af60de1e5135",
+        "fixed_head_parents": [
+          "d771a896615093474917a5d664380a7e61daae74"
+        ],
+        "trusted_is_ancestor_of_head": true,
+        "unverified_expectation_if_github_pull_merge": {
+          "parents": [
+            "cfe0ac45f75677fbd1e4dbf6243740b16d1caab0",
+            "f974042a0af0b487568be935647caa322c3114fd"
+          ],
+          "tree": "2a44d2998fafbfc1a6efa2b918c4af60de1e5135",
+          "basis": "run-final referenced_workflows ref refs/pull/263/merge uses this SHA; GitHub pull merge commits conventionally have parents [base, head]; trusted main is an ancestor of the head, and the inventory claims this checkout's tree equals the head tree. The commit object was not local, so none of those parent or tree links were read from the object."
+        }
+      }
+    },
+    {
+      "check": "referenced_workflow_object",
+      "detail": {
+        "sha": "38397d1143d98eca21a5c2b506e5722971925fbe",
+        "path": "BucketSran/vaEVAS/.github/workflows/package-install.yml@38397d1143d98eca21a5c2b506e5722971925fbe",
+        "ref": "refs/pull/263/merge",
+        "locally_present": false,
+        "fetched": false
+      }
+    },
+    {
+      "check": "referenced_workflow_object",
+      "detail": {
+        "sha": "38397d1143d98eca21a5c2b506e5722971925fbe",
+        "path": "BucketSran/vaEVAS/.github/workflows/benchmark-evidence.yml@38397d1143d98eca21a5c2b506e5722971925fbe",
+        "ref": "refs/pull/263/merge",
+        "locally_present": false,
+        "fetched": false
+      }
+    }
+  ]
+}

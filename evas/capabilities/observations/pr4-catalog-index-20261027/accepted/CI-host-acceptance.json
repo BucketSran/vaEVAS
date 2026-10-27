@@ -1,0 +1,62 @@
+{
+  "accepted_at_utc": "2026-10-27T01:20:03.599278+00:00",
+  "run": 40429826545,
+  "head": "f974042a0af0b487568be935647caa322c3114fd",
+  "tree": "2a44d2998fafbfc1a6efa2b918c4af60de1e5135",
+  "attempt": 1,
+  "jobs": {
+    "selection": "success",
+    "fast-checks": "success",
+    "catalog-inventory": "success",
+    "fuzz-smoke (run, 24)": "success",
+    "properties-and-ngspice": "success",
+    "fuzz-smoke (parse_request, 65536)": "success",
+    "static-checks": "success",
+    "provenance-support": "success",
+    "rust-regression": "success",
+    "regression (0)": "success",
+    "provenance-paper": "success",
+    "package / install (macos-14, arm64, 3.12)": "success",
+    "regression (2)": "success",
+    "benchmark / identity": "success",
+    "benchmark / first-batch": "success",
+    "regression (3)": "success",
+    "package / install (ubuntu-24.04, x86_64, 3.10)": "success",
+    "regression (1)": "success",
+    "regression-coverage": "success",
+    "regression-admission": "success",
+    "ci-result": "success"
+  },
+  "successful_jobs": 21,
+  "static_job": {
+    "id": 121945299799,
+    "started_at": "2026-10-27T01:01:37Z",
+    "completed_at": "2026-10-27T01:07:58Z",
+    "conclusion": "success"
+  },
+  "static_test_totals": [
+    558,
+    77,
+    9,
+    16,
+    100,
+    20,
+    19,
+    5,
+    35,
+    4,
+    36,
+    26,
+    5
+  ],
+  "scripts_results": {
+    "collected": 558,
+    "passed": 524,
+    "external_harness_skipped": 34
+  },
+  "capability_tests": 77,
+  "static_raw_sha256": "201e8cee256ff4e5acd440d7ae25824a8a1bd8c4a8c6b8c64620a3df3d789baa",
+  "raw_artifact_intake": "pending separate fixed-run worker",
+  "whole_candidate_accepted": false,
+  "semantic_qualification": false
+}

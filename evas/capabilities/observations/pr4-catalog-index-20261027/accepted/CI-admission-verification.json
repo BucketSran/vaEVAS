@@ -1,0 +1,102 @@
+{
+  "artifact_top_level": {
+    "valid": true,
+    "raw_successful": false,
+    "merge_allowed": true,
+    "semantic_qualification": false,
+    "differences": [],
+    "error": null
+  },
+  "trusted_comparison_matches_artifact": true,
+  "raw_successful_equals_report": true,
+  "semantic_separate_from_raw": {
+    "artifact_semantic_qualification": false,
+    "recomputed_semantic_qualification": false,
+    "raw_successful": false,
+    "worker_grants_semantic_qualification": false
+  },
+  "trust": {
+    "trusted_commit": "cfe0ac45f75677fbd1e4dbf6243740b16d1caab0",
+    "matches_fixed_base": true,
+    "source": "event.pull_request.base.sha",
+    "code_sha256": "df028ac10ddecb10f870ce889342826b56789d83322394e62e10e5cbb9c0d654",
+    "code_sha256_matches_trusted_blob": true,
+    "baseline_sha256": "be742ae2ae69579fdd4bc7dd8d110e05a71803f387f9d0831b58a6bed97ceff7",
+    "baseline_sha256_matches_trusted_blob": true,
+    "candidate_baseline": {
+      "evaluated": true,
+      "is_authority": false,
+      "path": "evas/validation/baselines/regression-v1.json",
+      "commit": "38397d1143d98eca21a5c2b506e5722971925fbe",
+      "sha256": "be742ae2ae69579fdd4bc7dd8d110e05a71803f387f9d0831b58a6bed97ceff7",
+      "loaded": true
+    },
+    "candidate_is_authority": false,
+    "candidate_baseline_sha256_at_fixed_head": "be742ae2ae69579fdd4bc7dd8d110e05a71803f387f9d0831b58a6bed97ceff7",
+    "fixed_head_baseline_equals_trusted": true,
+    "trusted_context_count": 3,
+    "fixed_head_context_count": 3
+  },
+  "shell": {
+    "bootstrap_commit": "72f1c2e4c22d8a2f743da8ec23101d022a3096d5",
+    "pins_from_head_workflow": {
+      "BOOTSTRAP_COMMIT": "72f1c2e4c22d8a2f743da8ec23101d022a3096d5",
+      "BOOTSTRAP_SHA256": "30cb19e469db4ea26b00ca4959e68c4aa1196be15a9051452ff491210619aa63",
+      "BOOTSTRAP_PATH": "scripts/run_trusted_regression_gate.py"
+    },
+    "loader_sha256": "30cb19e469db4ea26b00ca4959e68c4aa1196be15a9051452ff491210619aa63",
+    "loader_matches_pin": true,
+    "event_trusted_commit": "cfe0ac45f75677fbd1e4dbf6243740b16d1caab0",
+    "event_trust_source": "event.pull_request.base.sha",
+    "execution_cwd": "isolated-temporary-directory",
+    "bootstrap_exit": 0,
+    "reexecuted": false
+  },
+  "bundle": {
+    "requested": false,
+    "materialized": false,
+    "error": null,
+    "inventory_present": false,
+    "no_bundle_context_counts_equal": true
+  },
+  "checkout": {
+    "commit": "38397d1143d98eca21a5c2b506e5722971925fbe",
+    "locally_present": false,
+    "fetched": false,
+    "verified": false,
+    "inventory_source_tree": "2a44d2998fafbfc1a6efa2b918c4af60de1e5135",
+    "inventory_tree_matches_fixed_head_tree": true,
+    "inventory_relationship": "head-context-only",
+    "inventory_content_binding": "actual-checkout-bytes-not-commit-identity",
+    "fixed_head": "f974042a0af0b487568be935647caa322c3114fd",
+    "fixed_tree": "2a44d2998fafbfc1a6efa2b918c4af60de1e5135",
+    "fixed_head_parents": [
+      "d771a896615093474917a5d664380a7e61daae74"
+    ],
+    "trusted_is_ancestor_of_head": true,
+    "unverified_expectation_if_github_pull_merge": {
+      "parents": [
+        "cfe0ac45f75677fbd1e4dbf6243740b16d1caab0",
+        "f974042a0af0b487568be935647caa322c3114fd"
+      ],
+      "tree": "2a44d2998fafbfc1a6efa2b918c4af60de1e5135",
+      "basis": "run-final referenced_workflows ref refs/pull/263/merge uses this SHA; GitHub pull merge commits conventionally have parents [base, head]; trusted main is an ancestor of the head, and the inventory claims this checkout's tree equals the head tree. The commit object was not local, so none of those parent or tree links were read from the object."
+    }
+  },
+  "referenced_workflow_objects": [
+    {
+      "sha": "38397d1143d98eca21a5c2b506e5722971925fbe",
+      "path": "BucketSran/vaEVAS/.github/workflows/package-install.yml@38397d1143d98eca21a5c2b506e5722971925fbe",
+      "ref": "refs/pull/263/merge",
+      "locally_present": false,
+      "fetched": false
+    },
+    {
+      "sha": "38397d1143d98eca21a5c2b506e5722971925fbe",
+      "path": "BucketSran/vaEVAS/.github/workflows/benchmark-evidence.yml@38397d1143d98eca21a5c2b506e5722971925fbe",
+      "ref": "refs/pull/263/merge",
+      "locally_present": false,
+      "fetched": false
+    }
+  ]
+}

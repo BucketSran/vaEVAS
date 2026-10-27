@@ -1,0 +1,421 @@
+{
+  "schema_version": 1,
+  "review_status": "completed_fixed_increment_no_actionable_findings",
+  "reviewed_at_utc": "2026-10-27T01:15:08.331237+00:00",
+  "reviewer": {
+    "provider": "codex",
+    "model": "gpt-6-astra",
+    "options": [
+      {
+        "id": "reasoningEffort",
+        "value": "max"
+      },
+      {
+        "id": "serviceTier",
+        "value": "default"
+      }
+    ],
+    "interaction_mode": "default",
+    "runtime_mode": "full-access",
+    "identity_evidence": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr263-catalog-index-astra-r4-20261027/runtime.json",
+    "method": "fresh-context independent Standards + Spec combined review",
+    "implementation_author": false,
+    "delegated_children": 0
+  },
+  "scope": {
+    "PR_URL": "https://github.com/BucketSran/vaEVAS/pull/263",
+    "PR_linked_to_review_thread": true,
+    "PR_watched": false,
+    "base": "2a0e173a2164f6f7a0b544e344e4463226ad26c1",
+    "head": "f974042a0af0b487568be935647caa322c3114fd",
+    "tree": "2a44d2998fafbfc1a6efa2b918c4af60de1e5135",
+    "trusted_main": "cfe0ac45f75677fbd1e4dbf6243740b16d1caab0",
+    "comparison": "固定两个端点，不使用当前工作区字节或自动 merge-base。",
+    "increment_path_count": 8,
+    "increment_files": [
+      {
+        "path": "evas/capabilities/asset_catalog.py",
+        "sha256": "e21f17b18da84644ad02643312336b985e5f79c8e038828bcc56f5b1694e6aa9",
+        "bytes": 16599
+      },
+      {
+        "path": "evas/capabilities/data/asset-index.json",
+        "sha256": "4e7b89b1075064fca6cb891d9115817cc3511428db401c55079465b289a8be34",
+        "bytes": 12472156
+      },
+      {
+        "path": "evas/capabilities/data/catalog-sources.json",
+        "sha256": "4cf58da9ad646744bd5c87c9ccb01ae961e86f6c4d0742b1faf726709e02b6b7",
+        "bytes": 1148572
+      },
+      {
+        "path": "evas/capabilities/data/entrypoint-index.json",
+        "sha256": "c7a614cb0df69eef85474f68eec6de27048a20d0a96d9c86d3750d7adade02c0",
+        "bytes": 307530
+      },
+      {
+        "path": "evas/capabilities/data/method-index.json",
+        "sha256": "7a3a0d67d7db9a7a2412df5854ae81c569f8f039a71634e40454219787782a4c",
+        "bytes": 63150280
+      },
+      {
+        "path": "evas/capabilities/data/registry.json",
+        "sha256": "d2da5d86fa2c98525ad0e2fb0c85f5c795174731a8a6075a808514c4b23849bf",
+        "bytes": 1345147
+      },
+      {
+        "path": "evas/capabilities/test_asset_catalog.py",
+        "sha256": "faa74ee4ad826dcbff092216ac55689bfd96e3c425ca95fcff790456001daf71",
+        "bytes": 29133
+      },
+      {
+        "path": "evas/docs/development/TRACEABILITY.md",
+        "sha256": "6d9360be819e82d88d9bf1c6e80d822758f711ae7fbe7cfd308b209a5cd37bd6",
+        "bytes": 86157
+      }
+    ],
+    "complete_PR_path_count": 29,
+    "complete_PR_paths": [
+      ".github/workflows/numerical-assurance.yml",
+      "evas/capabilities/asset_catalog.py",
+      "evas/capabilities/data/asset-index.json",
+      "evas/capabilities/data/catalog-sources.json",
+      "evas/capabilities/data/entrypoint-index.json",
+      "evas/capabilities/data/historical-index.json",
+      "evas/capabilities/data/method-index.json",
+      "evas/capabilities/data/registry.json",
+      "evas/capabilities/generated/normative.md",
+      "evas/capabilities/test_asset_catalog.py",
+      "evas/docs/development/TRACEABILITY.md",
+      "evas/tests/test_bound_step.py",
+      "evas/tests/test_deferred_rdist.py",
+      "evas/tests/test_source_math.py",
+      "evas/validation/checker_calibration/README.md",
+      "evas/validation/checker_calibration/fixtures/provenance.json",
+      "evas/validation/checker_calibration/fixtures/source_math.json",
+      "evas/validation/checker_calibration/fixtures/test_bound_caps_actual_nonlinear_integration_segments--identity--0.diagnostics.json",
+      "evas/validation/checker_calibration/fixtures/test_bound_caps_actual_nonlinear_integration_segments--identity--0.original-response.json",
+      "evas/validation/checker_calibration/fixtures/test_bound_caps_actual_nonlinear_integration_segments--identity--0.request.json",
+      "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.diagnostics.json",
+      "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.original-response.json",
+      "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.request.json",
+      "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.original-response.json",
+      "evas/validation/checker_calibration/fixtures/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.request.json",
+      "evas/validation/checker_calibration/fixtures/validator_predicates.json",
+      "evas/validation/checker_calibration/test_detector_controls.py",
+      "scripts/tests/test_catalog_history_selection.py",
+      "scripts/tests/test_ci_inventory.py"
+    ],
+    "candidate_snapshot": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/catalog-index-recovery-20261027/source",
+    "snapshot_verified_tracked_blobs": 49566,
+    "real_worktree": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night",
+    "real_worktree_HEAD": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+    "real_worktree_used_as_candidate": false,
+    "write_root": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr263-catalog-index-astra-r4-20261027",
+    "resolved_write_root": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/night-coordination/pr263-catalog-index-astra-r4-20261027",
+    "source_patch": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr6/catalog-validation-scan-grok-20261027/source.patch",
+    "source_patch_sha256": "905c4ebfc45dcc5ba8a558c1be7388fb4619c9da502088912c5501b1efdc6573",
+    "excluded": [
+      "未变化科学合同的重新审计",
+      "科学回归、DUT/backend/SSH/Spectre 执行",
+      "PR5/PR6 其他功能及26项组合快照",
+      "CI 终态验收、发布及合入决定"
+    ]
+  },
+  "Standards": {
+    "findings": [],
+    "conclusion": "固定8路径增量未发现可操作的标准、维护兼容性或证据保存缺陷。",
+    "assessments": [
+      {
+        "area": "归属及范围",
+        "result": "实现仅改 Catalog.validate 和所属行为测试；另外6路径为派生登记及 TRACEABILITY。固定 workflow、30分钟上限、检查集合、collector、可信 baseline/pointer、科学源码均不在本次差异内。",
+        "evidence": [
+          "increment-name-status.txt",
+          "full-pr-name-status.txt",
+          "snapshot-verification.json"
+        ]
+      },
+      {
+        "area": "历史对象与生成绑定",
+        "result": "独立逐对象核对47,636个旧版本，零缺失、零改写。新增85个版本为77 method、6 asset、1 entrypoint、1 source；新增current ID仅10个维护测试。322个新增对象引用的版本/摘要全部匹配；新source的固定Git blob等于原始发现收据。",
+        "evidence": [
+          "catalog-object-audit.json",
+          "generated-binding-audit.json"
+        ]
+      },
+      {
+        "area": "生成视图与身份",
+        "result": "increment-scope的8文件、precheck的29文件、final-candidate的6个最终派生文件均与固定head字节一致。generator输出13份data JSON与快照一致。TRACEABILITY仅将maintenance 625改635、pending方法4642改4652。",
+        "evidence": [
+          "evidence-bindings.json",
+          "generated-binding-audit.json",
+          "traceability-delta.json"
+        ]
+      },
+      {
+        "area": "决策轨迹",
+        "result": "现有30分钟超时原件支持提前纳入两源码维护修正，未放宽上限或检查。只采用main-plan.delivery_checkpoint和本批对应决策行；历史PR6准备/发布字段不作为当前验收。完整主控对话不可见，仅审查可取的轨迹及其证据。",
+        "evidence": [
+          "trail-audit.json",
+          "prior-ci-audit.json"
+        ]
+      }
+    ]
+  },
+  "Spec": {
+    "findings": [],
+    "conclusion": "索引化保持当前已加载 Registry 的校验语义，未发现新增资格、语言域、阈值或科学条件。",
+    "assessments": [
+      {
+        "area": "索引语义及顺序",
+        "locations": [
+          "evas/capabilities/asset_catalog.py:42",
+          "evas/capabilities/asset_catalog.py:137",
+          "evas/capabilities/registry.py:35",
+          "evas/capabilities/registry.py:82",
+          "evas/capabilities/registry.py:327"
+        ],
+        "result": "外层objects.values遍历未改；首次进入asset/method分支时依原values顺序把所有kind按id放入列表，没有排序或跨kind过滤。内层恰为旧循环的同id子序列；当前选择、版本比较、history迭代、bound调用和拒绝文本保持。Registry在调用Catalog前已构建(id,version)键并完成链接检查，加载路径不会把缺失/不可哈希id留到新索引。"
+      },
+      {
+        "area": "每次调用及消费者",
+        "locations": [
+          "evas/capabilities/asset_catalog.py:36",
+          "evas/capabilities/asset_catalog.py:153",
+          "evas/capabilities/asset_catalog.py:243",
+          "scripts/capabilities/generate_catalog.py:321",
+          "evas/capabilities/render.py:164"
+        ],
+        "result": "versions_by_id只存在于validate局部变量，没有跨调用缓存。bound摘要、current顺序、重复runtime/path检查、scope校验及read_history对原始行和方法/owner的核验未改。generator仍保留全部旧版本并拒绝同键冲突。"
+      },
+      {
+        "area": "行为证据",
+        "result": "复用身份匹配的旧/新各25项原样测试，含10个新边界方法；原始非verbose日志只报告总数，执行脚本及固定测试源码证明先对旧实现运行。未把未来PR6的26项组合当作本轮分母。另在隔离scratch中运行3个明确场景，两实现共6次均符合独立预期，覆盖首错顺序、RegistryError包装、同一Catalog的current切换及恢复。",
+        "evidence": [
+          "evidence-bindings.json",
+          "order-probe-receipt.json",
+          "order-probe.stdout"
+        ]
+      },
+      {
+        "area": "发现入口与科学资格",
+        "result": "30份发现收据逐份核对哈希、入口ID、完整标记、collector身份及方法模块SHA。29份复用，新能力入口77项。635 maintenance / 760 validation / 3257 python-regression 方法；4652方法全部semantic_status=pending，资格对象或checker变化为0。历史3260记录及规范视图相对base不变。",
+        "evidence": [
+          "discovery-audit.json",
+          "catalog-object-audit.json",
+          "increment-name-status.txt"
+        ]
+      }
+    ]
+  },
+  "prior_P2_closure": [
+    {
+      "id": "PR4-MAINT-01",
+      "severity": "P2",
+      "status": "closed_in_identity_matched_source",
+      "file": "scripts/tests/test_ci_inventory.py",
+      "line": 89,
+      "basis": "复用R2对完整29 literal表、7 maintenance/22 validation和单独primary入口的审核。35份复用源码逐项SHA匹配，workflow及本测试相对增量base不变。",
+      "source_sha256": "7a201a97a28de706e6b5d8f73639eee1d4b44479f018f2d0d91defc14fc5fe43",
+      "CI_final_acceptance_conferred": false
+    },
+    {
+      "id": "PR4-MAINT-02",
+      "severity": "P2",
+      "status": "closed_in_identity_matched_source",
+      "file": "scripts/tests/test_catalog_history_selection.py",
+      "line": 44,
+      "basis": "复用R2按(id,version)保存历史method和owner的修正审核；本增量未改该源码，当前候选匹配的4项历史选择测试通过，旧对象保存另已独立核对。",
+      "source_sha256": "56a20eb84fc607089a7d8176fc15646872fbc8b0708ea62bb9ec839d8abbf44d",
+      "production_selector_or_reader_relaxed": false
+    }
+  ],
+  "reused_review": {
+    "acceptance": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/c1-rebind-20261027/review-reuse-acceptance.json",
+    "source_files_verified": 35,
+    "prior_reports_verified": 3,
+    "hash_mismatches": [],
+    "limits": "仅复用原R1/R2/R3已覆盖、身份匹配的范围及E1条件映射接受；本轮不重新授予科学资格。R3的30分钟维护上限未变；旧静态超时不是已验收的全CI。"
+  },
+  "verification": {
+    "newly_executed": [
+      "固定Git端点、8路径差异和相对trustedmain完整29路径核对",
+      "D/source全部49,566个tracked blob对固定Git tree核验，结束再核SHA",
+      "固定增量git diff --check，返回0",
+      "旧47,636版本保存、85新增对象及322引用、30发现收据、35源码/3旧审核哈希核对",
+      "3个最小合成行为场景在base/head分别运行，全部通过，无科学执行",
+      "真实HEAD/index/config及20旧候选前后哈希守卫"
+    ],
+    "reused_matching_checks": [
+      {
+        "check": "Grok原样行为测试",
+        "counts": {
+          "original": 25,
+          "indexed": 25,
+          "new_boundary_methods_in_both": 10
+        },
+        "evidence": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr6/catalog-validation-scan-grok-20261027/primary-verification.json",
+        "raw_logs_rehashed": true
+      },
+      {
+        "check": "最终候选完整ci_lint --plan",
+        "result": "passed",
+        "includes": [
+          "diagnostic_inventory --check",
+          "traceability --check --catalog-data evas/capabilities/data",
+          "verify_validation_version",
+          "Rustfmt",
+          "Clippy"
+        ],
+        "evidence": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/catalog-index-recovery-20261027/maintenance-fast-checks.txt"
+      },
+      {
+        "check": "能力派生视图",
+        "files": 82,
+        "result": "passed",
+        "evidence": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/catalog-index-recovery-20261027/capability-views.txt"
+      },
+      {
+        "check": "能力行为测试",
+        "tests": 77,
+        "passed": 77,
+        "skipped": 0,
+        "evidence": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/catalog-index-recovery-20261027/capability-tests.txt"
+      },
+      {
+        "check": "历史选择测试",
+        "tests": 4,
+        "passed": 4,
+        "skipped": 0,
+        "evidence": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/catalog-index-recovery-20261027/affected-catalog-tests.txt"
+      },
+      {
+        "check": "新增两源码Ruff",
+        "result": "passed",
+        "evidence": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/catalog-index-recovery-20261027/new-catalog-lint.json"
+      }
+    ],
+    "no_denominator_addition": "复用检查互有覆盖，不相加成总测试数；26项未来PR6组合明确排除。",
+    "workspace_boundary": "未新建真实worktree。按用户限定的真实Git只读命令检查W状态；未运行会跨真实worktree扫描的check_workspaces，读取并复用D/workspaces-preflight记录。",
+    "fixture_isolation": "仅R/scratch.git。写fixture前已通过显式Git查询验证toplevel、common-dir、git-dir均在R。测试只接收明确列出的HOME/TMPDIR/PATH/Python设置，不继承真实GIT或凭据环境。",
+    "guards": {
+      "checked_at_utc": "2026-10-27T01:11:18.848212+00:00",
+      "diff_check": {
+        "returncode": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "metadata_before": {
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/.git/config": "2365548f0cb7f5b21311860afc37dc5a8f41d775b667f50ec8a678eb22a3d7aa",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/.git/worktrees/ir33-regression-night/config.worktree": null,
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/.git/worktrees/ir33-regression-night/index": "a2e18b66fd9b3e29093343793d45781c11a717c05c35103d4e9b1da8eec87d71",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/.git/worktrees/ir33-regression-night/HEAD": "7df1ed888661a06e2864554456347bce3e241724593a3016d5ef421082014a63",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/.git/config.worktree": null
+      },
+      "metadata_after": {
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/.git/config": "2365548f0cb7f5b21311860afc37dc5a8f41d775b667f50ec8a678eb22a3d7aa",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/.git/worktrees/ir33-regression-night/config.worktree": null,
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/.git/worktrees/ir33-regression-night/index": "a2e18b66fd9b3e29093343793d45781c11a717c05c35103d4e9b1da8eec87d71",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/.git/worktrees/ir33-regression-night/HEAD": "7df1ed888661a06e2864554456347bce3e241724593a3016d5ef421082014a63",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/.git/config.worktree": null
+      },
+      "metadata_unchanged": true,
+      "old20_count": 20,
+      "old20_unchanged": true,
+      "old20_changed": [],
+      "snapshot_tracked_count": 49566,
+      "snapshot_changed": [],
+      "real_HEAD": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+      "status_paths_unchanged": true,
+      "final_metadata_and_old20_rechecked_at_utc": "2026-10-27T01:16:34.450559+00:00",
+      "final_metadata_and_old20_unchanged": true
+    },
+    "summary_check": {
+      "passed": true,
+      "limit": 300,
+      "findings": 0,
+      "summaries": [
+        {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr263-catalog-index-astra-r4-20261027/summary.txt",
+          "characters": 160
+        }
+      ],
+      "errors": []
+    }
+  },
+  "CI_and_limits": {
+    "reviewed_prior_CI": {
+      "run": 40423354681,
+      "candidate": "2a0e173a2164f6f7a0b544e344e4463226ad26c1",
+      "jobs": {
+        "success": 19,
+        "cancelled": 1,
+        "failure": 1
+      },
+      "static_failure": "主机注释确认30m0s超时",
+      "scripts": {
+        "total": 558,
+        "passed": 524,
+        "skipped_external_harness": 34
+      },
+      "capability_tests": "组未完成，取消前未见断言失败记录",
+      "raw_qualification": "仍由主控/Grok单独核验，不用job成功替代",
+      "evidence": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr263-catalog-index-astra-r4-20261027/prior-ci-audit.json"
+    },
+    "current_head_CI": "pending controller final acceptance; not polled or watched by reviewer",
+    "publication_receipt": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/catalog-index-recovery-20261027/publication.json",
+    "publication_receipt_candidate": "f974042a0af0b487568be935647caa322c3114fd",
+    "CI_terminal_accepted": false,
+    "merge_decision": "out of scope",
+    "scientific_execution_count": 0,
+    "scientific_qualification_conferred": false,
+    "formal_performance_verdict": "未建立正式性能结论。复用记录只说明固定输入的一次带CountingMap原/新运行和扫描次数变化；未追加性能专项。0.851123是耗时差额占比，不是profiler归因。"
+  },
+  "timing": {
+    "first_available_time_utc": "2026-10-27T00:57:20+00:00",
+    "first_report_time_utc": "2026-10-27T01:15:08.331237+00:00",
+    "observed_first_pass_wall_seconds": 1068.331,
+    "clock_basis": "首个clock.curr_time和本地UTC完成时刻；不是计费、CPU或单调时钟统计。",
+    "review_correction_rounds": 0,
+    "implementation_rework_seconds": null,
+    "implementation_rework_note": "本审核不实现或修正候选；既有实现用时不重新推算。",
+    "unobserved_before_first_clock_seconds": null,
+    "delivery_completed_at_utc": "2026-10-27T01:16:34.450559+00:00",
+    "observed_total_wall_seconds": 1154.451
+  },
+  "reviewer_tooling_notes": [
+    "初始R.resolve等于字面路径的守卫因runs指向/Volumes而中止，随后以授权R的解析根作包含检查。",
+    "初次status排除了untracked，只见18条；改为all后完整守卫18修改加2未跟踪文件。未删除或遗漏旧候选。",
+    "旧CI日志有3条独立ok行及1条描述行，最终按完整结果行核对524+34，未使用只匹配测试名的缩小分母。上述均为审核工具前提修正，不是候选断言失败；单独修正耗时未记录。"
+  ],
+  "artifacts": {
+    "runtime.json": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr263-catalog-index-astra-r4-20261027/runtime.json",
+    "snapshot-verification.json": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr263-catalog-index-astra-r4-20261027/snapshot-verification.json",
+    "snapshot-file-hashes.json": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr263-catalog-index-astra-r4-20261027/snapshot-file-hashes.json",
+    "increment.patch": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr263-catalog-index-astra-r4-20261027/increment.patch",
+    "source.patch": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr263-catalog-index-astra-r4-20261027/source.patch",
+    "evidence-bindings.json": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr263-catalog-index-astra-r4-20261027/evidence-bindings.json",
+    "catalog-object-audit.json": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr263-catalog-index-astra-r4-20261027/catalog-object-audit.json",
+    "generated-binding-audit.json": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr263-catalog-index-astra-r4-20261027/generated-binding-audit.json",
+    "discovery-audit.json": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr263-catalog-index-astra-r4-20261027/discovery-audit.json",
+    "prior-ci-audit.json": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr263-catalog-index-astra-r4-20261027/prior-ci-audit.json",
+    "trail-audit.json": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr263-catalog-index-astra-r4-20261027/trail-audit.json",
+    "order_probe.py": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr263-catalog-index-astra-r4-20261027/order_probe.py",
+    "order-probe.stdout": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr263-catalog-index-astra-r4-20261027/order-probe.stdout",
+    "order-probe-receipt.json": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr263-catalog-index-astra-r4-20261027/order-probe-receipt.json",
+    "end-guards.json": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr263-catalog-index-astra-r4-20261027/end-guards.json",
+    "summary.txt": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr263-catalog-index-astra-r4-20261027/summary.txt",
+    "summary-check.json": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr263-catalog-index-astra-r4-20261027/summary-check.json",
+    "hashes": {
+      "summary.txt": "32cd3a5c1c7595a9479405b784a579d61a3205483ec843e08400003f370b14f0",
+      "evidence-bindings.json": "e90ddc08ed0702d47ccbdfe341722b9e653224ff3542cf49b0ee855e07bcc7be",
+      "catalog-object-audit.json": "a4dc47147b23dec8f9e9953c71ce03ab725bb41ae432c595825d94cfff4614c8",
+      "generated-binding-audit.json": "1373f7cb221b6f08fe658281b2b9b40fa4bd47b27ffae62e7eaae5defe1ae5be",
+      "discovery-audit.json": "3c36fb9a8b6064e3bcb4df23d490d80a824977d6f17bd680e02fdaea922aa717",
+      "prior-ci-audit.json": "bbf538c1e17cab6f643facbd7229ffd2e2d8284ea71ca988a52b20b091dffe54",
+      "order-probe.stdout": "20f0a8b00abc9ef66b90bd64e74b84b8f3723358e7a06df01a0b1bdecd0f48e7",
+      "order-probe-receipt.json": "259066f4322855254b099ed51fd46ba8674ba3b3604fcf2f828ecf54b099ae5c",
+      "end-guards.json": "edefbc229db99afd9c2ba56b5ef2cac72a2193aba9e947c21ae2362bdb6c721f"
+    }
+  }
+}

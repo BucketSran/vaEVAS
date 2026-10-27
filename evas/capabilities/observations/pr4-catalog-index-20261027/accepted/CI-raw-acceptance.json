@@ -1,0 +1,149 @@
+{
+  "accepted_at_utc": "2026-10-27T01:34:52.239598+00:00",
+  "candidate": "f974042a0af0b487568be935647caa322c3114fd",
+  "tree": "2a44d2998fafbfc1a6efa2b918c4af60de1e5135",
+  "run": 40429826545,
+  "attempt": 1,
+  "worker_task": "node:delegated-task:command%3Amcp%3A77237e4d-3f1a-49ed-b46c-0984553f1454%3Adelegate-task%3Aevas-pr263-f974042a-raw-intake-grok-r1-20261027",
+  "worker_receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/catalog-index-recovery-20261027/ci-40429826545/raw-intake-grok/verification-r1/receipt.json",
+  "archives": [
+    {
+      "name": "python-regression-admission",
+      "id": 12702415016,
+      "sha256": "711f942b32aa87f1252e5165436a101297393a284bccbba1d4fdff96e3f38bd3",
+      "files": 3
+    },
+    {
+      "name": "python-regression-timings",
+      "id": 12702295109,
+      "sha256": "ad9b4de1322dfed145823234f6c90a37f236ee82362d405234f41ac827738e77",
+      "files": 2
+    },
+    {
+      "name": "rust-test-listing",
+      "id": 12701995311,
+      "sha256": "074f88efa0e3670c689ba8d9aaf370284fd51bf611534086b868dbd3f44a692e",
+      "files": 29
+    },
+    {
+      "name": "python-regression-shard-3",
+      "id": 12701990288,
+      "sha256": "637fea4601ed8072b4581840a6b832e7e55ceecbd52efa7e0837c7d881505b6c",
+      "files": 9
+    },
+    {
+      "name": "python-regression-shard-2",
+      "id": 12701517900,
+      "sha256": "2fe8e8a40bea4935e23766a81c8ecf8e136f49980a19be68bfb835a95a6fe607",
+      "files": 9
+    },
+    {
+      "name": "git-fixture-isolation",
+      "id": 12701403334,
+      "sha256": "ef65855aa44d01f80b454c5ede9ab73390d03a7ebe6130e615d00a965a2709a2",
+      "files": 180
+    },
+    {
+      "name": "fast-feedback",
+      "id": 12701232606,
+      "sha256": "cf68bd7b715996084085025b4ef13a753f2aa16e8b945a37dbc1fe9336664025",
+      "files": 2
+    },
+    {
+      "name": "catalog-inventory",
+      "id": 12701209110,
+      "sha256": "6f4b12f1ac56a7082cc1317c4bd63c8a4eddba80ccfc0ce49a6eedb18285501a",
+      "files": 39
+    },
+    {
+      "name": "python-regression-shard-1",
+      "id": 12701134908,
+      "sha256": "aed95d5cea2f4e7670f00c1f9241959172c4a1c4f3a13adca4fb1cc7bfb3720c",
+      "files": 9
+    },
+    {
+      "name": "ngspice-comparison",
+      "id": 12701029954,
+      "sha256": "d2f5c7aa093d957c524c2a5e0fda3015f76616ee414687ca22a455fc172f7aae",
+      "files": 79
+    },
+    {
+      "name": "package-macos-14-arm64-py3.12",
+      "id": 12700954549,
+      "sha256": "9a48c6fd5609b3d881eda5ca20e7ffb7b8e21c45ef2d7fe877a351cb4b2e1bdc",
+      "files": 48
+    },
+    {
+      "name": "python-regression-shard-0",
+      "id": 12700869796,
+      "sha256": "1124f01e258a0f498b5695dc06be71b7fd206e7c23635280ec3abfa958682b45",
+      "files": 9
+    },
+    {
+      "name": "package-ubuntu-24.04-x86_64-py3.10",
+      "id": 12700864566,
+      "sha256": "87db8088ad73d62487252d257482b18e7555cd97ddb73f1de4df38f5e47b756e",
+      "files": 48
+    }
+  ],
+  "primary_semantic_comparison": {
+    "methods": 3257,
+    "conditions": 7737,
+    "method_outcomes": {
+      "passed": 2617,
+      "error": 214,
+      "failed": 423,
+      "expected_failure": 3
+    },
+    "new_missing_changed": 0,
+    "counterpart": "acceptedE1 CI40384473617"
+  },
+  "synthetic_merge_object": {
+    "commit": "38397d1143d98eca21a5c2b506e5722971925fbe",
+    "tree": "2a44d2998fafbfc1a6efa2b918c4af60de1e5135",
+    "parents": [
+      "cfe0ac45f75677fbd1e4dbf6243740b16d1caab0",
+      "f974042a0af0b487568be935647caa322c3114fd"
+    ],
+    "fetch_argv": [
+      "/usr/bin/git",
+      "--git-dir=/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/.git/worktrees/ir33-regression-night",
+      "--work-tree=/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night",
+      "fetch",
+      "--no-tags",
+      "--no-write-fetch-head",
+      "--no-auto-maintenance",
+      "https://github.com/BucketSran/vaEVAS.git",
+      "38397d1143d98eca21a5c2b506e5722971925fbe"
+    ],
+    "returncode": 0,
+    "baseline_sha256": "be742ae2ae69579fdd4bc7dd8d110e05a71803f387f9d0831b58a6bed97ceff7",
+    "contexts": 3,
+    "same_bytes_as_trusted_main": true
+  },
+  "PR_metadata_binding": {
+    "headRefOid": "f974042a0af0b487568be935647caa322c3114fd",
+    "baseRefOid": "cfe0ac45f75677fbd1e4dbf6243740b16d1caab0",
+    "worker_fields_match": true
+  },
+  "referenced_workflow_bindings": [
+    {
+      "path": ".github/workflows/package-install.yml",
+      "sha256": "cdbeb49ac0676fc6c8a9f372753a96833fb4f60d9cdd3bbbb75d80ddcf1bd357",
+      "commit": "38397d1143d98eca21a5c2b506e5722971925fbe"
+    },
+    {
+      "path": ".github/workflows/benchmark-evidence.yml",
+      "sha256": "327cdecad711de592e9b62ac858a6e7eb48fa5ea1fdeeada5d3bf551726ff827",
+      "commit": "38397d1143d98eca21a5c2b506e5722971925fbe"
+    }
+  ],
+  "before_after_guard_equal": true,
+  "old_missing_object_gap_closed": true,
+  "raw_evidence_accepted_for_fixed_candidate": true,
+  "whole_CI_accepted": true,
+  "new_f974_candidate_accepted": true,
+  "batch4_complete": false,
+  "scientific_execution": false,
+  "semantic_qualification": false
+}

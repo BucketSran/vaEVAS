@@ -1,0 +1,3 @@
+# Fixed PR263 acceptance
+
+Candidate f974042a0af0b487568be935647caa322c3114fd (tree 2a44d2998fafbfc1a6efa2b918c4af60de1e5135) passed all 21 jobs of CI40429826545. Fresh independent Astra Standards/Spec accepted its maintenance increment; matching earlier detector and governance reviews remain bound. All thirteen raw archives were retained and verified. 3257 methods and 7737 conditions retain 637 non-passing methods and three expected failures. The actual trusted context permits integration; raw success and scientific qualification remain false. This acceptance does not assert that all simulator defects are fixed. The merged-tree receipt is recorded separately.
