@@ -57,7 +57,8 @@ MAINTENANCE_FILES = {
 }
 PACKAGE_FILES = {'scripts/check_installed_evas.py',
                  'scripts/tests/test_installed_evas_package.py'}
-PROVENANCE_PREFIXES = ('evas/validation/paper/', 'evas/validation/support/',
+PROVENANCE_PREFIXES = ('experiments/backends/comparison/',
+                       'evas/validation/adapters/', 'evas/validation/paper/', 'evas/validation/support/',
                        'experiments/backends/paper/', 'experiments/backends/support/')
 CALIBRATION_PREFIXES = (
     'experiments/backends/evidence/', 'experiments/backends/dvs2-spectre-validation/',

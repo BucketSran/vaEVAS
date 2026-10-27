@@ -54,6 +54,7 @@ WORKFLOW_LITERALS = (
     ('validation', 'provenance-paper', 'Paper contracts, observable criteria and table provenance', 'evas/validation/paper', 'test_precision_v2.py'),
     ('validation', 'provenance-paper', 'Paper contracts, observable criteria and table provenance', 'evas/validation/paper', 'test_primitives.py'),
     ('validation', 'provenance-paper', 'Paper contracts, observable criteria and table provenance', 'experiments/backends/paper', 'test_*.py'),
+    ('validation', 'provenance-paper', 'Paper contracts, observable criteria and table provenance', 'experiments/backends/comparison', 'test_*.py'),
     ('validation', 'provenance-paper', 'Paper contracts, observable criteria and table provenance', 'evas/validation/support', 'test_*.py'),
     ('validation', 'provenance-support', 'Backend support checker tests', 'experiments/backends/support', 'test_*.py'),
     ('validation', 'properties-and-ngspice', None, 'evas/validation/differential', 'test*.py'),
@@ -84,12 +85,12 @@ def literal_identity(entry):
 class ParserTests(unittest.TestCase):
     def test_current_workflow_literals_and_separate_primary(self):
         value = inventory.parse_workflow((ROOT / inventory.WORKFLOW).read_bytes())
-        self.assertEqual(len(WORKFLOW_LITERALS), 29)
+        self.assertEqual(len(WORKFLOW_LITERALS), 30)
         self.assertEqual([literal_identity(entry) for entry in value['entries']], list(WORKFLOW_LITERALS))
         self.assertEqual([inventory.namespace(entry['start']) for entry in value['entries']],
                          [entry[0] for entry in WORKFLOW_LITERALS])
         self.assertEqual(sum(entry[0] == 'maintenance' for entry in WORKFLOW_LITERALS), 7)
-        self.assertEqual(sum(entry[0] == 'validation' for entry in WORKFLOW_LITERALS), 22)
+        self.assertEqual(sum(entry[0] == 'validation' for entry in WORKFLOW_LITERALS), 23)
         self.assertFalse(any(entry[0] in ('calibration', 'python-regression') for entry in WORKFLOW_LITERALS))
         paper = [entry for entry in value['entries'] if entry['start'] == 'evas/validation/paper']
         self.assertEqual([entry['pattern'] for entry in paper], [
@@ -116,6 +117,26 @@ class ParserTests(unittest.TestCase):
         scripts = [entry for entry in value['script_entries'] if entry['kind'] == 'direct-math-script']
         self.assertEqual([entry['source'] for entry in scripts], list(DIRECT_MATH_SCRIPTS))
         self.assertTrue(all(entry['method_denominator'] is None and not entry['executed'] for entry in scripts))
+
+    def test_missing_or_duplicate_comparison_literal_is_rejected(self):
+        raw = (ROOT / inventory.WORKFLOW).read_bytes()
+        needle = b"          python3 -B -m unittest discover -s experiments/backends/comparison -p 'test_*.py' -v\n"
+        self.assertEqual(raw.count(needle), 1)
+        expected = list(WORKFLOW_LITERALS)
+        comparison = (
+            'validation', 'provenance-paper', 'Paper contracts, observable criteria and table provenance',
+            'experiments/backends/comparison', 'test_*.py')
+        self.assertEqual(expected[25][3:], ('experiments/backends/paper', 'test_*.py'))
+        self.assertEqual(expected[26], comparison)
+        self.assertEqual(expected[27][3:], ('evas/validation/support', 'test_*.py'))
+        self.assertEqual(sum(row == comparison for row in expected), 1)
+        missing_ids = [literal_identity(entry) for entry in inventory.parse_workflow(raw.replace(needle, b'', 1))['entries']]
+        duplicate_ids = [literal_identity(entry) for entry in inventory.parse_workflow(raw.replace(needle, needle + needle, 1))['entries']]
+        self.assertEqual(missing_ids, expected[:26] + expected[27:])
+        self.assertNotEqual(missing_ids, expected)
+        self.assertEqual(duplicate_ids, expected[:27] + [comparison] + expected[27:])
+        self.assertNotEqual(duplicate_ids, expected)
+        self.assertNotIn('evas/tests', [row[3] for row in expected])
 
     def test_inline_pipe_and_folded_origins_retained(self):
         raw = b'''jobs:

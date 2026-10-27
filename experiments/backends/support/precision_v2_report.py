@@ -166,6 +166,7 @@ def report(base,step_evidence=None):
                 [Path(__file__),ROOT/'evas/validation/paper/precision_v2.py',ROOT/'evas/validation/paper/precision_reference.py',
                  ROOT/'experiments/backends/support/precision_report.py',ROOT/'experiments/backends/paper/observations.py',
                  ROOT/'experiments/backends/support/precision_run.py',ROOT/'experiments/backends/paper/runner.py',
+                 ROOT/'evas/validation/adapters/paper_evas_worker.py',
                  ROOT/'experiments/backends/paper/settings_readback.py',
                  ROOT/'experiments/backends/evidence/legacy_waveforms.py']},
             'claim':'finite development-informed conditions, not held-out paper suite; original v1 scores unchanged'}

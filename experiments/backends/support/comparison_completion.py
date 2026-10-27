@@ -141,9 +141,10 @@ def freeze(output):
                   ROOT/'experiments/backends/paper/inputs.py',
                   ROOT/'experiments/backends/paper/observations.py',
                   ROOT/'experiments/backends/paper/runner.py',
+                  ROOT/'evas/validation/adapters/paper_evas_worker.py',
                   ROOT/'experiments/backends/paper/process.py',
                   ROOT/'experiments/backends/paper/settings_readback.py',
-                  ROOT/'experiments/backends/support/precision_run.py',*READER_DEPENDENCIES]
+                  ROOT/'experiments/backends/support/precision_run.py',*execution.worker_source_files(),*READER_DEPENDENCIES]
     save(output/'SOURCE_IDENTITY.json',{str(p.relative_to(ROOT)):sha(p) for p in dependencies})
     save(output/'MANIFEST.json',{str(p.relative_to(output)):sha(p)
                                 for p in sorted(output.rglob('*')) if p.is_file()})

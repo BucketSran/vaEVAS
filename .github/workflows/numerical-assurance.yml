@@ -225,6 +225,7 @@ jobs:
           python3 -B -m unittest discover -s evas/validation/paper -p 'test_precision_v2.py' -v
           python3 -B -m unittest discover -s evas/validation/paper -p 'test_primitives.py' -v
           python3 -B -m unittest discover -s experiments/backends/paper -p 'test_*.py' -v
+          python3 -B -m unittest discover -s experiments/backends/comparison -p 'test_*.py' -v
           python3 -B -m unittest discover -s evas/validation/support -p 'test_*.py' -v
   provenance-support:
     needs: [selection, fast-checks]

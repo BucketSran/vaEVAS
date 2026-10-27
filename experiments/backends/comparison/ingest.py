@@ -7,7 +7,7 @@ import shutil
 from pathlib import Path
 
 from records import ROOT, BACKENDS, STATUS, identity, load, sha, validate, voltage_metrics
-from freeze import SELECTED, save
+from freeze import SELECTED, save, worker_dependencies
 from runner import verify
 
 
@@ -18,13 +18,25 @@ def verify_output(output):
             raise ValueError('execution artifact drift: ' + rel)
 
 
-def runner_sources(hashes):
+def runner_sources(hashes, workers=None):
     refs = []
-    for digest in sorted(set(hashes)):
+    required = set()
+    def archived(digest):
         paths = list((ROOT / 'experiments/backends/comparison/evidence/sources').glob('*-' + digest + '.py.txt'))
         if len(paths) != 1 or sha(paths[0]) != digest:
             raise ValueError('actual runner source is not retrievable: ' + digest)
-        refs.append({'path': str(paths[0].relative_to(ROOT)), 'sha256': digest, 'kind': 'actual runner source'})
+        return paths[0]
+    for digest in sorted(set(hashes)):
+        path = archived(digest)
+        required.update(worker_dependencies(path.read_text()))
+        refs.append({'path': str(path.relative_to(ROOT)), 'sha256': digest, 'kind': 'actual runner source'})
+    workers = {} if workers is None else workers
+    if set(workers) != required:
+        raise ValueError('comparison worker source closure mismatch')
+    for name, digest in sorted(workers.items()):
+        path = archived(digest)
+        refs.append({'path': str(path.relative_to(ROOT)), 'sha256': digest,
+                     'original_path': name, 'kind': 'actual EVAS worker source'})
     return refs
 
 
@@ -83,7 +95,7 @@ def ingest(snapshot, inputs, executions, compact, blocked=()):
                 'source_sha256': result['source_sha256'], 'checker_identity': load(inputs / 'provenance.json')['checker_identity'],
                 'initial_runner_sha256': started['runner_sha256'],
                 'analysis_runner_sha256': result.get('runner_sha256', started['runner_sha256']),
-                'runner_sources': runner_sources([started['runner_sha256'], result.get('runner_sha256', started['runner_sha256'])]),
+                'runner_sources': runner_sources([started['runner_sha256'], result.get('runner_sha256', started['runner_sha256'])], started.get('worker_sources')),
                 'continuation': load(output / 'CONTINUATION.json') if (output / 'CONTINUATION.json').is_file() else None,
                 'allocation': started['allocation'],
                 'requested_settings': load(output / 'runs' / condition / 'base' / 'requested_settings.json'),
@@ -128,7 +140,7 @@ def ingest(snapshot, inputs, executions, compact, blocked=()):
             raise ValueError('failed preflight/log identity mismatch')
         receipt = {'backend': backend, 'input_manifest_sha256': started['input_manifest_sha256'],
                    'allocation': started['allocation'], 'tool': started['tool'], 'probe': probe,
-                   'runner_sources': runner_sources([started['runner_sha256']]),
+                   'runner_sources': runner_sources([started['runner_sha256']], started.get('worker_sources')),
                    'failure_log': log.read_text(), 'case_compilation_launches': 0, 'case_simulation_launches': 0,
                    'reason': 'Existing pinned container layer is missing; no backend case was launched. No restore or retry.'}
         path = compact / (backend + '-preflight.json')
