@@ -78,7 +78,7 @@ class ContinuationIngestControls(unittest.TestCase):
         import derive
         from records import sha, load
         with tempfile.TemporaryDirectory() as temp, ExitStack() as stack:
-            root = Path(temp)
+            root = Path(temp).resolve()
             stack.enter_context(patch.object(runner.subprocess, 'Popen', side_effect=AssertionError('external process forbidden')))
             stack.enter_context(patch.object(runner.subprocess, 'run', side_effect=AssertionError('external process forbidden')))
             stack.enter_context(patch.object(runner.subprocess, 'check_output', side_effect=AssertionError('external process forbidden')))
