@@ -1,0 +1,86 @@
+{
+  "prepared_at_utc": "2026-10-27T15:10:33.735813+00:00",
+  "parent": "6bfa35ea22cee6e2bbc1819164571364fd6938da",
+  "parent_tree": "1e0d4dca75756b1130714b949faf1c8e1ce42f67",
+  "fix_script": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r2/apply_r2.py",
+  "fix_script_sha256": "96930450fa8f4b0e0217c5c3bda265faa7b7666d9094a45f95a7b1f2c43d6c4f",
+  "test_sha256": "47322dcd7232ad7e0012cc17f8fbc3ed7b566adf5f8e13f4c41ac1269b09a7af",
+  "fix_sources": [
+    ".github/workflows/package-install.yml",
+    "scripts/tests/test_ci_pins.py",
+    "scripts/capabilities/collect_ci_inventory.py",
+    "scripts/tests/test_ci_inventory.py"
+  ],
+  "files": {
+    ".github/workflows/package-install.yml": {
+      "before": "d09f17ec5313406456eb8bbfe8be194fef6c3869d5c8a2a451b31ff589875c70",
+      "after": "7973a5763e7391b862cc2bac0b31254c9896690eb340b557d025374be3168131"
+    },
+    "scripts/tests/test_ci_pins.py": {
+      "before": "de70f901b0753cb068c908f1da5823acccebe1a72125812521c135f5fa1cc645",
+      "after": "47322dcd7232ad7e0012cc17f8fbc3ed7b566adf5f8e13f4c41ac1269b09a7af"
+    },
+    "scripts/capabilities/collect_ci_inventory.py": {
+      "before": "7031390d9ac27029d571805e4cecea5e417a71f06639ef01980b6c37b564fc45",
+      "after": "8da66383ae222db84d763121ead226a7d6d9207b71ce57be88a816477343806a"
+    },
+    "scripts/tests/test_ci_inventory.py": {
+      "before": "3e2b78fa28a06ef4689e15abd4b6253783e1e39308b238e5e75e152dddff4bf6",
+      "after": "5e62f1f814313ec91e45b2f73ce715b6f5b718bd26c7f327657f5f5c60df01a8"
+    }
+  },
+  "pre_render_checks": [
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "evas/capabilities/render.py"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r2/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r2/pre-render.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-27T15:08:22.217214+00:00",
+      "finished_at_utc": "2026-10-27T15:09:25.717536+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "scripts/traceability.py",
+        "--catalog-data",
+        "evas/capabilities/data"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r2/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r2/pre-traceability.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-27T15:09:25.720128+00:00",
+      "finished_at_utc": "2026-10-27T15:09:58.245319+00:00"
+    }
+  ],
+  "paths": [
+    ".github/workflows/package-install.yml",
+    "scripts/capabilities/collect_ci_inventory.py",
+    "scripts/tests/test_ci_inventory.py",
+    "scripts/tests/test_ci_pins.py"
+  ],
+  "criteria_collector_language_unchanged": true,
+  "review": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/night-coordination/ci-version-pins-astra-r1-20261027/review-report.json",
+  "before": {
+    "head": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+    "index_sha256": "a2e18b66fd9b3e29093343793d45781c11a717c05c35103d4e9b1da8eec87d71",
+    "shared_config_sha256": "de2b08ef3ba66e96be8b70c87346ff4a96f905e1272934ddd86c218dba501ea8",
+    "shared_config_status": "equal-accepted-reference",
+    "old_candidates": 20
+  },
+  "after": {
+    "head": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+    "index_sha256": "a2e18b66fd9b3e29093343793d45781c11a717c05c35103d4e9b1da8eec87d71",
+    "shared_config_sha256": "de2b08ef3ba66e96be8b70c87346ff4a96f905e1272934ddd86c218dba501ea8",
+    "shared_config_status": "equal-accepted-reference",
+    "old_candidates": 20
+  },
+  "published": false,
+  "scientific_execution": false,
+  "semantic_qualification": false,
+  "executed_by": "tclaude/claude-opus-5-5"
+}

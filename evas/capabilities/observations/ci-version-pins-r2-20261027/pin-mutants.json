@@ -1,0 +1,93 @@
+{
+ "source": "../source",
+ "results": {
+  "original": {
+   "returncode": 0,
+   "tail": "OK"
+  },
+  "benchmark python double-quoted minor": {
+   "returncode": 1,
+   "tail": "FAILED (failures=1)"
+  },
+  "package matrix double-quoted minor": {
+   "returncode": 1,
+   "tail": "FAILED (failures=1)"
+  },
+  "double-quoted major": {
+   "returncode": 1,
+   "tail": "FAILED (failures=1)"
+  },
+  "bare minor": {
+   "returncode": 1,
+   "tail": "FAILED (failures=1)"
+  },
+  "python-version-file": {
+   "returncode": 1,
+   "tail": "FAILED (failures=1)"
+  },
+  "setup-python without version": {
+   "returncode": 1,
+   "tail": "FAILED (failures=1)"
+  },
+  "matrix runner macos-latest": {
+   "returncode": 1,
+   "tail": "FAILED (failures=1)"
+  },
+  "runs-on ubuntu-latest": {
+   "returncode": 1,
+   "tail": "FAILED (failures=1)"
+  },
+  "runs-on other matrix key": {
+   "returncode": 1,
+   "tail": "FAILED (failures=1)"
+  },
+  "ngspice floating with pinned comment": {
+   "returncode": 1,
+   "tail": "FAILED (failures=1)"
+  },
+  "ngspice floating with comment line": {
+   "returncode": 1,
+   "tail": "FAILED (failures=1)"
+  },
+  "build floating with pinned comment": {
+   "returncode": 1,
+   "tail": "FAILED (failures=1)"
+  },
+  "nightly floating": {
+   "returncode": 1,
+   "tail": "FAILED (failures=1)"
+  },
+  "package rustup stable": {
+   "returncode": 1,
+   "tail": "FAILED (failures=1)"
+  },
+  "package env floating": {
+   "returncode": 1,
+   "tail": "FAILED (failures=1)"
+  },
+  "pinned value with trailing comment (valid)": {
+   "returncode": 0,
+   "tail": "OK"
+  }
+ },
+ "summary": {
+  "original": "PASS",
+  "benchmark python double-quoted minor": "REJECT",
+  "package matrix double-quoted minor": "REJECT",
+  "double-quoted major": "REJECT",
+  "bare minor": "REJECT",
+  "python-version-file": "REJECT",
+  "setup-python without version": "REJECT",
+  "matrix runner macos-latest": "REJECT",
+  "runs-on ubuntu-latest": "REJECT",
+  "runs-on other matrix key": "REJECT",
+  "ngspice floating with pinned comment": "REJECT",
+  "ngspice floating with comment line": "REJECT",
+  "build floating with pinned comment": "REJECT",
+  "nightly floating": "REJECT",
+  "package rustup stable": "REJECT",
+  "package env floating": "REJECT",
+  "pinned value with trailing comment (valid)": "PASS"
+ },
+ "as_expected": true
+}
