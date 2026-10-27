@@ -1,0 +1,92 @@
+[
+  {
+    "fixture": "source_math.json",
+    "sha256": "3c0a697b66055fc4c9124198ad15c55e896a87af70add85bd9f760c3cb34aad2",
+    "bytes": 35422,
+    "original": "test-scheme-audit/passing-oracles/source-math-calibration-raw.json",
+    "original_bytes": 92773,
+    "original_sha256": "df37480f11c3ea73786790931a0f1cb7bfc1e40ae2e41f6cc45abab570501054",
+    "extraction": "Parse JSON; select controls array unchanged; sort keys and compact JSON with trailing LF. All14 controls preserve7 correct/7 wrong records and independent_answer."
+  },
+  {
+    "fixture": "test_bound_caps_actual_nonlinear_integration_segments--identity--0.request.json",
+    "sha256": "d320c50b4d1a1889edda8bcc6fba79b80ce0a974e3dd299024ea29612abe9be2",
+    "bytes": 1443,
+    "original": "test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--identity--0.request.json",
+    "original_bytes": 3029,
+    "original_sha256": "a1a1f1cb70986036d3df960c27d0009e78681af622a9261005df918151df20b8",
+    "extraction": "Parse entire original JSON unchanged; sort keys and compact JSON with trailing LF. No scientific values or diagnostic records removed."
+  },
+  {
+    "fixture": "test_bound_caps_actual_nonlinear_integration_segments--identity--0.original-response.json",
+    "sha256": "2bf0767fe7a6241813b047b662c2506447439ca83e8e1d89dac227b68e3211b5",
+    "bytes": 777,
+    "original": "test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--identity--0.original-response.json",
+    "original_bytes": 1443,
+    "original_sha256": "c20ae003b5b5dc1699cdfd443fe38fcc49941c1a3ab1a896d8e6a07eb0acd018",
+    "extraction": "Parse entire original JSON unchanged; sort keys and compact JSON with trailing LF. No scientific values or diagnostic records removed."
+  },
+  {
+    "fixture": "test_bound_caps_actual_nonlinear_integration_segments--identity--0.diagnostics.json",
+    "sha256": "5cf94f240a17c45ea3a5d219e089471a86c458626c90e32c45b141ef42fb9a74",
+    "bytes": 21579,
+    "original": "test-scheme-audit/passing-raw/test_bound_caps_actual_nonlinear_integration_segments--identity--0.diagnostics.json",
+    "original_bytes": 21578,
+    "original_sha256": "41962db96770dac82f8f8f29f6872630d41cd1848a47020987d916831de99d2d",
+    "extraction": "Parse entire original JSON unchanged; sort keys and compact JSON with trailing LF. No scientific values or diagnostic records removed."
+  },
+  {
+    "fixture": "test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.request.json",
+    "sha256": "c67d8e1b2ad4dd15db2fbe64937d86bf5fc078b1e66a01839979d5a619092efc",
+    "bytes": 3949,
+    "original": "test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.request.json",
+    "original_bytes": 9904,
+    "original_sha256": "64f1a1a50d75f2af0094da9b201c496e19d5541ac2196ed6c9fb2f7224d8f618",
+    "extraction": "Parse entire original JSON unchanged; sort keys and compact JSON with trailing LF. No scientific values or diagnostic records removed."
+  },
+  {
+    "fixture": "test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.original-response.json",
+    "sha256": "3616d402a8653ab2333e9ece3b9c204ce71eed0701b3b8336e7c4db866a8f510",
+    "bytes": 2467,
+    "original": "test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.original-response.json",
+    "original_bytes": 4350,
+    "original_sha256": "3c0e0e000fc529f0f5ae804398fa25f04890ca7603b0ced42e117e935cf03404",
+    "extraction": "Parse entire original JSON unchanged; sort keys and compact JSON with trailing LF. No scientific values or diagnostic records removed."
+  },
+  {
+    "fixture": "test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.diagnostics.json",
+    "sha256": "a44dc5e299aa05830b9352d840bc252870f5fcb10b8f658b10fa72176bb76314",
+    "bytes": 19019,
+    "original": "test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--0.diagnostics.json",
+    "original_bytes": 19018,
+    "original_sha256": "a819c9b451681a232fa33d83d3ca3675facc09bd8ef8c1e02b4627fd7fd3ebf4",
+    "extraction": "Parse entire original JSON unchanged; sort keys and compact JSON with trailing LF. No scientific values or diagnostic records removed."
+  },
+  {
+    "fixture": "test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.request.json",
+    "sha256": "77cd33129b13e93b6cde1c86b9936865ca2b51762857af4f25bd06b550fa5a90",
+    "bytes": 4169,
+    "original": "test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.request.json",
+    "original_bytes": 10402,
+    "original_sha256": "ff4cef8bbf8e2e5ea83dc548f7e15651edaf101960c60e99c2b18a674cf08f8b",
+    "extraction": "Parse entire original JSON unchanged; sort keys and compact JSON with trailing LF. No scientific values or diagnostic records removed."
+  },
+  {
+    "fixture": "test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.original-response.json",
+    "sha256": "830d7dc4a8585b6cc71c36985ef6f7ce1228a710fee2f30ff87d116581c8ded6",
+    "bytes": 10852,
+    "original": "test-scheme-audit/passing-raw/test_sampled_clock_activation_preserves_physics_and_caps_inner_segments--identity--1.original-response.json",
+    "original_bytes": 23188,
+    "original_sha256": "8d5d34bbeea8e8ad938b3917263a8dac5268a4b78574f0ea00930776674ae561",
+    "extraction": "Parse entire original JSON unchanged; sort keys and compact JSON with trailing LF. No scientific values or diagnostic records removed."
+  },
+  {
+    "fixture": "validator_predicates.json",
+    "sha256": "1e4e74c05dddaa010a49f3545bdd413f7f2ae68dcad635198c021eef1a928ecc",
+    "bytes": 504,
+    "original": "git:842bde7101164330fa03e7aee58b45d1789cbed1:evas/src/evas/program_real_validation.py",
+    "original_sha256": "b7f8ad313aa842c21a09124b9a9527b3efaa8ceea2b52c5d3aafac38ab146cc7",
+    "original_bytes": 32550,
+    "extraction": "Parse original validator AST; locate UnsupportedSystemCall branch; preserve parseable ast.unparse source of exactly the two original If statements; compare after parsing on the executing interpreter selected by value.op or owner is None. No predicate edit."
+  }
+]

@@ -41,6 +41,7 @@ class Catalog:
 
     def validate(self):
         seen = set()
+        versions_by_id = None
         for obj in self.registry.objects.values():
             kind = obj['kind']
             if kind not in set.union(*KINDS.values()):
@@ -134,9 +135,18 @@ class Catalog:
                 # This validates declarations only. read_history additionally validates
                 # actual immutable raw row IDs/verdict/hashes before a consumer uses them.
             if kind in ('asset', 'method'):
+                # One ordered id index for this call, discarded when validate returns.
+                if versions_by_id is None:
+                    versions_by_id = {}
+                    for old in self.registry.objects.values():
+                        same = versions_by_id.get(old['id'])
+                        if same is None:
+                            same = []
+                            versions_by_id[old['id']] = same
+                        same.append(old)
                 field, history, prior = ('current_path', 'location_history', 'prior_asset') if kind == 'asset' else ('runtime_id', 'runtime_history', 'prior_method')
-                for old in self.registry.objects.values():
-                    if old['id'] == obj['id'] and old['version'] != obj['version'] and old.get(field) != obj.get(field):
+                for old in versions_by_id[obj['id']]:
+                    if old['version'] != obj['version'] and old.get(field) != obj.get(field):
                         # Only selected current versions must retain the prior identity.
                         if self.registry.data['current'].get(obj['id']) == obj['version'] and not any(self.bound(h[prior]) == old for h in obj.get(history, []) if prior in h):
                             raise ValueError('rename/move lost known historical identity')

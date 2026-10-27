@@ -218,6 +218,12 @@ jobs:
           python3 -B evas/validation/paper/check_design.py
           python3 -B -m unittest discover -s evas/validation/paper -p 'test_criteria.py' -v
           python3 -B -m unittest discover -s evas/validation/paper -p 'test_*root*.py' -v
+          python3 -B -m unittest discover -s evas/validation/checker_calibration -v
+          python3 -B -m unittest discover -s evas/validation/paper -p 'test_coefficient_first_order.py' -v
+          python3 -B -m unittest discover -s evas/validation/paper -p 'test_precision.py' -v
+          python3 -B -m unittest discover -s evas/validation/paper -p 'test_precision_binding.py' -v
+          python3 -B -m unittest discover -s evas/validation/paper -p 'test_precision_v2.py' -v
+          python3 -B -m unittest discover -s evas/validation/paper -p 'test_primitives.py' -v
           python3 -B -m unittest discover -s experiments/backends/paper -p 'test_*.py' -v
           python3 -B -m unittest discover -s evas/validation/support -p 'test_*.py' -v
   provenance-support:
