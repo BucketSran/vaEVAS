@@ -1,0 +1,491 @@
+diff --git a/.github/workflows/numerical-assurance.yml b/.github/workflows/numerical-assurance.yml
+index b9e5e635..96a30fed 100644
+--- a/.github/workflows/numerical-assurance.yml
++++ b/.github/workflows/numerical-assurance.yml
+@@ -22,8 +22,11 @@ on:
+ permissions:
+   contents: read
+ 
+-# One fixed Rust toolchain for every job. rustup applies it to plain cargo and rustc,
+-# and to the scripts that record the toolchain; change it only for a deliberate upgrade.
++# One fixed Rust toolchain for every job that builds or records stable Rust. rustup applies it
++# to plain cargo and rustc, and to the scripts that record the toolchain; change it only for a
++# deliberate upgrade. A reusable workflow does not inherit this env: selection exports the value
++# as an output and package passes it to package-install.yml as an input, so no copy exists.
++# Exception: fuzz-smoke installs and names the nightly channel, which cargo-fuzz requires.
+ env:
+   RUSTUP_TOOLCHAIN: '1.99.1'
+ 
+@@ -50,6 +53,7 @@ jobs:
+       modules: ${{ steps.changes.outputs.modules }}
+       base: ${{ steps.changes.outputs.base }}
+       head: ${{ steps.changes.outputs.head }}
++      rust_toolchain: ${{ env.RUSTUP_TOOLCHAIN }}
+     steps:
+       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+         with:
+@@ -711,6 +715,8 @@ jobs:
+     needs: [selection, fast-checks]
+     if: needs.selection.outputs.package == 'true'
+     uses: ./.github/workflows/package-install.yml
++    with:
++      rust_toolchain: ${{ needs.selection.outputs.rust_toolchain }}
+   benchmark:
+     needs: [selection, fast-checks]
+     if: needs.selection.outputs.benchmark == 'true'
+diff --git a/.github/workflows/package-install.yml b/.github/workflows/package-install.yml
+index 907b8ee5..a913a6b1 100644
+--- a/.github/workflows/package-install.yml
++++ b/.github/workflows/package-install.yml
+@@ -2,6 +2,11 @@ name: Installed EVAS package
+ 
+ on:
+   workflow_call:
++    inputs:
++      rust_toolchain:
++        description: Rust toolchain installed and used for the sdist and wheel builds; passed by the caller
++        type: string
++        required: true
+     outputs:
+       install_result:
+         value: ${{ jobs.install.outputs.result }}
+@@ -11,6 +16,8 @@ permissions:
+ 
+ jobs:
+   install:
++    env:
++      RUSTUP_TOOLCHAIN: ${{ inputs.rust_toolchain }}
+     outputs:
+       result: ${{ steps.verified.outputs.result }}
+     strategy:
+@@ -32,7 +39,7 @@ jobs:
+           python-version: ${{ matrix.python }}
+           cache: pip
+           cache-dependency-path: evas/pyproject.toml
+-      - run: rustup toolchain install stable --profile minimal
++      - run: rustup toolchain install "$RUSTUP_TOOLCHAIN" --profile minimal
+       - uses: ./.github/actions/rust-cache
+         with:
+           # Cache downloads only. The sdist must build its own fresh executable.
+diff --git a/evas/capabilities/rust_listing.py b/evas/capabilities/rust_listing.py
+index 509c0fe8..5178e3c5 100644
+--- a/evas/capabilities/rust_listing.py
++++ b/evas/capabilities/rust_listing.py
+@@ -28,7 +28,13 @@ def target(binary):
+         raise ValueError('unknown Rust target identity')
+     return canonical(value)
+ 
+-def checked(receipt):
++# CI now fixes RUSTUP_TOOLCHAIN, so a current observation names neither channel nor version on the command line.
++TOOLCHAIN_ARGV = {'rustc': ['rustc', '-vV'], 'cargo': ['cargo', '--version']}
++# Receipts observed before that fix named the stable channel. Only a receipt read back from a bound
++# immutable source may still use it; a current observation or a new registration may not.
++HISTORICAL_TOOLCHAIN_ARGV = {'rustc': ['rustc', '+stable', '-vV'], 'cargo': ['cargo', '+stable', '--version']}
++
++def checked(receipt, *, historical=False):
+     if (type(receipt.get('schema_version')) is not int or receipt.get('schema_version') != 1 or receipt.get('observation_kind') != 'rust-test-binary-listing'
+             or receipt.get('complete') is not True or receipt.get('errors') != []
+             or receipt.get('listing_only') is not True
+@@ -45,10 +51,10 @@ def checked(receipt):
+     sha(receipt['observer']['sha256'])
+     if receipt['build']['exit'] != 0:raise ValueError('failed Rust build')
+     sha(receipt['build']['sha256'])
+-    # Receipts observed before CI fixed RUSTUP_TOOLCHAIN named the stable channel on the command line.
+-    for name, argvs in [('rustc',(['rustc','-vV'],['rustc','+stable','-vV'])), ('cargo',(['cargo','--version'],['cargo','+stable','--version']))]:
++    for name, argv in TOOLCHAIN_ARGV.items():
+         tool = receipt['toolchain'][name]
+-        if tool['argv'] not in argvs or tool['returncode'] != 0 or not tool['stdout'].strip():
++        allowed = [argv, HISTORICAL_TOOLCHAIN_ARGV[name]] if historical else [argv]
++        if tool['argv'] not in allowed or tool['returncode'] != 0 or not tool['stdout'].strip():
+             raise ValueError('missing actual Rust toolchain identity')
+         if hashlib.sha256(tool['stdout'].encode()).hexdigest() != tool['stdout_sha256']:
+             raise ValueError('Rust tool identity output hash mismatch')
+@@ -143,7 +149,7 @@ def reconcile(catalog, receipt, profile):
+             if source.get('status') != 'active' or source.get('availability') != 'published-archive' or source.get('locator',{}).get('kind') != 'git-object':
+                 raise ValueError('Rust require needs a published immutable original receipt')
+             expected_receipt=json.loads(catalog.registry.read_source(source))
+-            expected=checked(expected_receipt)
++            expected=checked(expected_receipt,historical=True)
+             if set(expected) != set(actual):raise ValueError('original receipt owned-target set differs')
+             expected_identity,actual_identity=profile_identity(expected_receipt),profile_identity(receipt)
+             if expected_identity != actual_identity:
+diff --git a/evas/capabilities/support_view.py b/evas/capabilities/support_view.py
+index 8bc63ffd..e985ad97 100644
+--- a/evas/capabilities/support_view.py
++++ b/evas/capabilities/support_view.py
+@@ -675,15 +675,6 @@ def _toolchain_source(source):
+     return (f"{owner}@{source.get('version', 'unknown')}: " if owner else '') + ', '.join(parts)
+ 
+ 
+-def _toolchain_fragments(fact):
+-    """Rendered owner@version and components for each source in one toolchain fact."""
+-    if fact.get('state') == 'unknown':
+-        return []
+-    if fact.get('state') == 'records_listed':
+-        return [_toolchain_source(source) for source in (fact.get('components') or [])]
+-    return [_toolchain_source(fact)]
+-
+-
+ def _heading_blocks(text, prefix):
+     """Blocks that start at prefix and stop before the next peer or section."""
+     lines = text.splitlines()
+@@ -706,17 +697,6 @@ def _take_heading(blocks, heading):
+     return []
+ 
+ 
+-def _markdown_records(document):
+-    """Qualification records in the same order markdown() emits them."""
+-    rows = []
+-    for requirement in document['requirements']:
+-        for cell in requirement['backends'].values():
+-            rows.extend(cell['records'])
+-        rows.extend(requirement['unassigned_backend_records'])
+-    rows.extend(document['unbound_qualifications'])
+-    return rows
+-
+-
+ def _show_toolchain(fact):
+     state = fact.get('state')
+     if state == 'unknown':
+@@ -920,6 +900,66 @@ def _table_cells(line):
+     return [part.strip() for part in line.strip().strip('|').split('|')]
+ 
+ 
++def _header_status_fields(text):
++    """view_status, adopted, and provisional values in the preamble, in order."""
++    found = {key: [] for key in ('view_status', 'adopted', 'provisional')}
++    for line in text.splitlines():
++        if line.startswith('## '):
++            break
++        for key in found:
++            prefix = key + ':'
++            if line.startswith(prefix):
++                rest = line[len(prefix):]
++                found[key].append(rest[1:] if rest.startswith(' ') else rest)
++                break
++    return found
++
++
++def _lines_after_heading(lines, heading):
++    """Lines after one section heading and before the next ## heading."""
++    try:
++        start = lines.index(heading)
++    except ValueError:
++        return None
++    end = len(lines)
++    for cursor in range(start + 1, len(lines)):
++        if lines[cursor].startswith('## '):
++            end = cursor
++            break
++    return lines[start + 1:end]
++
++
++def _audit_qualification_records(section_lines, records):
++    """Match this section's qualification records and reject extras or conflicting toolchain lines."""
++    errors = []
++    blocks = _heading_blocks('\n'.join(section_lines), '资格记录：')
++    accounted = []
++    for record in records:
++        qualification = record['qualification']
++        heading = (
++            f"资格记录：{qualification['id']}@{qualification['version']} "
++            f"sha256 {qualification['sha256']}"
++        )
++        block = _take_heading(blocks, heading)
++        if not block:
++            errors.append('markdown qualification record missing')
++            continue
++        expected = f"工具链：{_show_toolchain(record['toolchain'])}"
++        tool_lines = [line for line in block if line.startswith('工具链：')]
++        accounted.extend(tool_lines)
++        if tool_lines != [expected]:
++            if expected not in tool_lines:
++                errors.append('markdown dropped toolchain component')
++            if len(tool_lines) > (1 if expected in tool_lines else 0):
++                errors.append('markdown extra toolchain line')
++    if blocks:
++        errors.append('markdown extra qualification record')
++    section_tools = [line for line in section_lines if line.startswith('工具链：')]
++    if len(section_tools) != len(accounted):
++        errors.append('markdown extra toolchain line')
++    return errors
++
++
+ def audit(document):
+     """Check denominators, classifications, and the ban on collapsed marks."""
+     errors = []
+@@ -1026,8 +1066,16 @@ def audit_markdown(document, text):
+         and document.get('adopted') is (status == 'current-default')
+         and document.get('provisional') is (status == 'preview')
+     )
+-    if (not legal_status or expected['title'] not in top or expected['note'] not in top
+-            or view_line not in top or adopted_line not in top or provisional_line not in top):
++    # The preamble must contain each status key once, with this document's value.
++    header_fields = _header_status_fields(text)
++    expected_header = {
++        'view_status': [view_line.split(': ', 1)[1]],
++        'adopted': [adopted_line.split(': ', 1)[1]],
++        'provisional': [provisional_line.split(': ', 1)[1]],
++    }
++    if (not legal_status or header_fields != expected_header or expected['title'] not in top
++            or expected['note'] not in top or view_line not in top or adopted_line not in top
++            or provisional_line not in top):
+         errors.append('markdown view status diverged')
+     head, separator, _historical = text.partition('## 历史引用')
+     if not separator:
+@@ -1056,19 +1104,19 @@ def audit_markdown(document, text):
+         for key in CONTRACT_FIELDS:
+             if _contract_line(key, requirement['source_fields']) not in section:
+                 errors.append('markdown dropped requirement contract field ' + key)
+-    record_blocks = _heading_blocks(head, '资格记录：')
+-    for record in _markdown_records(document):
+-        qualification = record['qualification']
+-        heading = f"资格记录：{qualification['id']}@{qualification['version']} sha256 {qualification['sha256']}"
+-        block = _take_heading(record_blocks, heading)
+-        fragments = _toolchain_fragments(record['toolchain'])
+-        if not fragments:
+-            continue
+-        # The canonical toolchain line lists every source's owner@version and
+-        # components. The same component on another record does not count.
+-        expected = f"工具链：{_show_toolchain(record['toolchain'])}"
+-        if expected not in block:
+-            errors.append('markdown dropped toolchain component')
++        owned = []
++        for cell in requirement['backends'].values():
++            owned.extend(cell['records'])
++        owned.extend(requirement['unassigned_backend_records'])
++        # Records match inside this requirement. Another requirement's block does not count.
++        errors.extend(_audit_qualification_records(section, owned))
++    if requirement_blocks:
++        errors.append('markdown requirement headings')
++    unbound = _lines_after_heading(head.splitlines(), '## 未绑定当前要求的资格')
++    if unbound is None:
++        errors.append('markdown unbound qualifications diverged')
++    else:
++        errors.extend(_audit_qualification_records(unbound, document['unbound_qualifications']))
+     counts = document['classifications']['exception_counts']
+     for kind, count in counts.items():
+         if f'exception: {kind} {count}' not in text:
+diff --git a/evas/capabilities/test_support_view.py b/evas/capabilities/test_support_view.py
+index 05c2c542..98b5d171 100644
+--- a/evas/capabilities/test_support_view.py
++++ b/evas/capabilities/test_support_view.py
+@@ -5,6 +5,7 @@ scientific qualification.
+ """
+ import copy
+ import json
++import re
+ import unittest
+ from pathlib import Path
+ 
+@@ -612,6 +613,77 @@ class SupportViewFixtures(unittest.TestCase):
+             dropped = text.replace(old + '\n', '', 1)
+             self.assertIn('markdown view status diverged', audit_markdown(projected, dropped))
+ 
++    def test_records_stay_with_their_requirement_and_header_status_is_unique(self):
++        data = retarget(copy.deepcopy(bare_registry().data), 'ngspice')
++        for index, name in enumerate(('bare-requirement', 'fixture-requirement')):
++            by_id(data, name).update(
++                allowed_behavior=f'independent behavior {index}',
++                conditions=[f'independent condition {index}'],
++                observables=[f'independent observable {index}'],
++            )
++        by_id(data, 'fixture-execution')['toolchain'] = [
++            {'role': 'simulator', 'name': 'ngspice', 'version': 'sim-12345'}]
++        for name in ('consumer-a', 'consumer-b'):
++            by_id(data, name)['toolchain'] = [
++                {'role': 'compiler', 'name': 'OpenVAF-R', 'version': 'cc-67890'}]
++        registry = Registry(refresh(data))
++        projected = document(registry)
++        text = markdown(projected)
++        self.assertEqual(audit(projected) + audit_markdown(projected, text), [])
++
++        pre, body = text.split('## 当前要求\n\n', 1)
++        body, post = body.split('## 未绑定当前要求的资格', 1)
++        sections = [item for item in re.split(r'(?=^### )', body, flags=re.M) if item.strip()]
++        self.assertEqual(len(sections), 2)
++        first, second = sections
++        self.assertIn('bare-requirement', first.splitlines()[0])
++        record_start = second.index('资格记录：')
++        record_block = second[record_start:]
++        chunks = [item for item in re.split(r'(?=^资格记录：)', record_block, flags=re.M) if item.strip()]
++        self.assertEqual(len(chunks), 2)
++        line = next(item for item in text.splitlines() if item.startswith('工具链：'))
++        current = '## 当前要求\n\n'
++        unbound = '## 未绑定当前要求的资格'
++        variants = (
++            ('requirement-order-only', pre + current + ''.join(reversed(sections)) + unbound + post, False),
++            ('record-order-only', text.replace(record_block, ''.join(reversed(chunks)), 1), False),
++            ('move-all-records-to-wrong-requirement',
++             pre + current + first + record_block + second[:record_start] + unbound + post, True),
++            ('duplicate-all-records', pre + current + first + second + record_block + unbound + post, True),
++            ('move-records-to-unbound-section',
++             pre + current + first + second[:record_start] + unbound + '\n\n' + record_block + post, True),
++            ('duplicate-toolchain-line', text.replace(line, line + '\n' + line, 1), True),
++            ('contradictory-toolchain-line',
++             text.replace(line, line + '\n工具链：consumer-a@1: OpenVAF-R/compiler@wrong-version', 1), True),
++            ('wrong-toolchain-line-only',
++             text.replace(line, '工具链：consumer-a@1: OpenVAF-R/compiler@wrong-version', 1), True),
++            ('duplicate-requirement-section', pre + current + first + first + second + unbound + post, True),
++        )
++        for name, changed, expect_reject in variants:
++            self.assertNotEqual(changed, text, name)
++            errors = audit_markdown(projected, changed)
++            if expect_reject:
++                self.assertTrue(errors, name)
++            else:
++                self.assertEqual(errors, [], name)
++        self.assertIn('markdown extra qualification record', audit_markdown(
++            projected, variants[2][1]))
++        self.assertIn('markdown qualification record missing', audit_markdown(
++            projected, variants[2][1]))
++        self.assertIn('markdown extra toolchain line', audit_markdown(projected, variants[5][1]))
++        self.assertIn('markdown extra toolchain line', audit_markdown(projected, variants[6][1]))
++        self.assertIn('markdown dropped toolchain component', audit_markdown(projected, variants[7][1]))
++        self.assertIn('markdown requirement headings', audit_markdown(projected, variants[8][1]))
++
++        for status in ('current-default', 'preview'):
++            facts = document(registry, status=status)
++            rendered = markdown(facts)
++            self.assertEqual(audit(facts) + audit_markdown(facts, rendered), [])
++            wrong = 'preview' if status == 'current-default' else 'current-default'
++            changed = rendered.replace('\n\n', '\nview_status: ' + wrong + '\n', 1)
++            self.assertNotEqual(changed, rendered, status)
++            self.assertIn('markdown view status diverged', audit_markdown(facts, changed))
++
+ 
+ def _drop_line_under_heading(text, heading, line):
+     newline = '\n' if text.endswith('\n') else ''
+diff --git a/scripts/tests/test_discover_rust.py b/scripts/tests/test_discover_rust.py
+index 30c900b8..7be24d98 100644
+--- a/scripts/tests/test_discover_rust.py
++++ b/scripts/tests/test_discover_rust.py
+@@ -210,20 +210,66 @@ class RustListingTests(unittest.TestCase):
+ 
+     def test_ci_uses_one_fixed_rust_toolchain(self):
+         root=HELPER.parents[2]
+-        text=(root/'.github/workflows/numerical-assurance.yml').read_text()
++        main=root/'.github/workflows/numerical-assurance.yml'
++        text=main.read_text()
+         pins=re.findall(r"^  RUSTUP_TOOLCHAIN: '([^']*)'$",text,re.M)
+         self.assertEqual(len(pins),1)
+         self.assertRegex(pins[0],r'^[0-9]+\.[0-9]+\.[0-9]+$')
+         self.assertRegex(text,r"(?m)^env:\n  RUSTUP_TOOLCHAIN: '")
+-        for path in [root/'.github/workflows/numerical-assurance.yml',root/'.github/actions/rust-cache/action.yml',HELPER,
+-                     root/'scripts/ci_evidence.py',root/'scripts/ci_lint.py',root/'evas/capabilities/rust_listing.py']:
++        # Every workflow, reusable workflow and composite action, not only the caller.
++        ci=sorted([*(root/'.github/workflows').glob('*.yml'),*(root/'.github/actions').glob('**/action.yml')])
++        self.assertIn(root/'.github/workflows/package-install.yml',ci)
++        self.assertIn(root/'.github/actions/rust-cache/action.yml',ci)
++        channel=(r'\+stable',r'(?:toolchain install|update|default|override set)\s+stable\b',
++                 r'(?m)^\s*(?:- )?toolchain:\s*[\'"]?stable\b',r'RUSTUP_TOOLCHAIN:\s*[\'"]?stable\b')
++        for path in [*ci,HELPER,root/'scripts/ci_evidence.py',root/'scripts/ci_lint.py']:
+             with self.subTest(path=path.name):
+-                source=path.read_text()
+-                self.assertNotIn('+stable',source.replace("['rustc','+stable','-vV']",'').replace("['cargo','+stable','--version']",''))
+-                self.assertNotRegex(source,r'rustup (?:toolchain install|update) stable')
+-        installs=re.findall(r'rustup toolchain install (\S+)',text)
+-        self.assertTrue(installs)
+-        self.assertTrue(all(name=='"$RUSTUP_TOOLCHAIN"' or name.startswith('nightly') for name in installs),installs)
++                for pattern in channel:self.assertNotRegex(path.read_text(),pattern)
++        # The one source line that still names the pre-pin channel admits historical receipts only.
++        listing=(root/'evas/capabilities/rust_listing.py').read_text().splitlines()
++        self.assertEqual([line.split(' =')[0] for line in listing if '+stable' in line],['HISTORICAL_TOOLCHAIN_ARGV'])
++        # One authoritative literal: no other CI file repeats the version or assigns a version literal.
++        self.assertEqual({path.name:path.read_text().count(pins[0]) for path in ci if pins[0] in path.read_text()},{main.name:1})
++        for path in ci:
++            if path!=main:
++                with self.subTest(literal=path.name):
++                    self.assertNotRegex(path.read_text(),r'RUSTUP_TOOLCHAIN:\s*[\'"]?[0-9]')
++        # Allowed exception: fuzz-smoke installs and names nightly, which cargo-fuzz requires.
++        for path in ci:
++            installs=re.findall(r'rustup toolchain install (\S+)',path.read_text())
++            with self.subTest(installs=path.name):
++                self.assertTrue(all(name=='"$RUSTUP_TOOLCHAIN"' or (path==main and name=='nightly') for name in installs),installs)
++        self.assertEqual(re.findall(r'rustup toolchain install (\S+)',text).count('nightly'),1)
++        fuzz=re.search(r'^  fuzz-smoke:\n(.*?)(?=^  package:)',text,re.M|re.S).group(1)
++        self.assertIn('rustup toolchain install nightly',fuzz)
++        self.assertEqual(re.findall(r'\bcargo (?!\+nightly)\S+',fuzz),[])
++
++    def test_reusable_workflows_take_the_fixed_toolchain_from_their_caller(self):
++        root=HELPER.parents[2]
++        main=(root/'.github/workflows/numerical-assurance.yml').read_text()
++        # selection is the one job that reads the workflow-level env into an output.
++        selection=re.search(r'^  selection:\n(.*?)(?=^  fast-checks:)',main,re.M|re.S).group(1)
++        self.assertEqual(re.findall(r'^      rust_toolchain: (.*)$',selection,re.M),['${{ env.RUSTUP_TOOLCHAIN }}'])
++        parts=re.split(r'(?m)^  ([a-z-]+):\n',main[main.index('\njobs:\n'):])
++        jobs=dict(zip(parts[1::2],parts[2::2]))
++        reusable=[path for path in sorted((root/'.github/workflows').glob('*.yml')) if re.search(r'(?m)^  workflow_call:',path.read_text())]
++        self.assertIn('package-install.yml',[path.name for path in reusable])
++        for path in reusable:
++            text=path.read_text()
++            if not re.search(r'\b(?:rustup|cargo|rustc|maturin)\b|rust-cache|python -m build|pip wheel',text):continue
++            with self.subTest(workflow=path.name):
++                block=re.search(r'^  workflow_call:\n    inputs:\n(.*?)(?=^    outputs:|^[a-z])',text,re.M|re.S)
++                self.assertIsNotNone(block,'a Rust-using reusable workflow must declare the toolchain input')
++                self.assertEqual(re.findall(r'^      ([a-z_]+):\n',block.group(1),re.M),['rust_toolchain'])
++                self.assertNotIn('default:',block.group(1))
++                self.assertIn('        required: true\n',block.group(1))
++                self.assertEqual(re.findall(r'^ *RUSTUP_TOOLCHAIN: (.*)$',text,re.M),['${{ inputs.rust_toolchain }}'])
++                self.assertEqual(re.findall(r'rustup toolchain install (\S+)',text),['"$RUSTUP_TOOLCHAIN"'])
++                callers=[body for body in jobs.values() if '    uses: ./.github/workflows/'+path.name+'\n' in body]
++                self.assertTrue(callers,'a reusable Rust workflow needs a caller that passes the toolchain')
++                for body in callers:
++                    self.assertIn('    with:\n      rust_toolchain: ${{ needs.selection.outputs.rust_toolchain }}\n',body)
++                    self.assertRegex(body,r'(?m)^    needs: \[selection[,\]]')
+ 
+     def test_real_workflow_listing_block_keeps_build_failure_and_raw_artifacts(self):
+         workflow=HELPER.parents[2]/'.github/workflows/numerical-assurance.yml'
+diff --git a/scripts/tests/test_rust_catalog_reconcile.py b/scripts/tests/test_rust_catalog_reconcile.py
+index 04caf34b..aa27f0f4 100644
+--- a/scripts/tests/test_rust_catalog_reconcile.py
++++ b/scripts/tests/test_rust_catalog_reconcile.py
+@@ -170,15 +170,41 @@ class RustCatalogReconciliation(unittest.TestCase):
+         changed['environment']['variables']=dict(changed['environment']['variables'],RUSTFLAGS='-Copt-level=3')
+         with self.assertRaisesRegex(ValueError,'profile drift'):self.require(changed)
+ 
++    def legacy(self, **tools):
++        receipt=copy.deepcopy(self.receipt)
++        for name,argv in tools.items():receipt['toolchain'][name]['argv']=argv
++        return receipt
++
++    STABLE=dict(rustc=['rustc','+stable','-vV'],cargo=['cargo','+stable','--version'])
++
+     def test_legacy_stable_receipt_still_reconciles_and_other_toolchain_requests_fail(self):
+-        legacy=copy.deepcopy(self.receipt)
+-        for name,argv in [('rustc',['rustc','+stable','-vV']),('cargo',['cargo','+stable','--version'])]:
+-            legacy['toolchain'][name]['argv']=argv
+-        self.register(legacy)
++        # An archived pre-pin receipt is read back from its bound immutable source; the new observation has no channel.
++        self.register(self.legacy(**self.STABLE))
+         self.assertTrue(self.require()['reconciled'])
+-        for argv in (['rustc','+nightly','-vV'],['rustc','+1.99.1','-vV'],['rustc','--version']):
++        for argv in (['rustc','+nightly','-vV'],['rustc','+1.99.1','-vV'],['rustc','--version'],['rustc','-vV','--verbose']):
+             with self.subTest(argv=argv):
+-                other=copy.deepcopy(self.receipt);other['toolchain']['rustc']['argv']=argv
+-                with self.assertRaisesRegex(ValueError,'toolchain identity'):self.require(other)
++                with self.assertRaisesRegex(ValueError,'toolchain identity'):self.require(self.legacy(rustc=argv))
++
++    def test_current_observation_rejects_the_stable_channel_for_either_or_both_tools(self):
++        variants=dict(rustc=dict(rustc=self.STABLE['rustc']),cargo=dict(cargo=self.STABLE['cargo']),both=self.STABLE)
++        for registered in ('new','legacy'):
++            if registered=='legacy':self.register(self.legacy(**self.STABLE))
++            self.assertTrue(self.require()['reconciled'])
++            for name,tools in variants.items():
++                with self.subTest(registered=registered,variant=name):
++                    with self.assertRaisesRegex(ValueError,'toolchain identity'):self.require(self.legacy(**tools))
++
++    def test_historical_allowance_is_for_bound_receipts_only(self):
++        listing=module('listing_fixture',ROOT/'evas/capabilities/rust_listing.py')
++        stable=self.legacy(**self.STABLE)
++        self.assertTrue(listing.checked(self.receipt))
++        self.assertTrue(listing.checked(stable,historical=True))
++        for receipt in (stable,self.legacy(rustc=self.STABLE['rustc']),self.legacy(cargo=self.STABLE['cargo'])):
++            with self.assertRaisesRegex(ValueError,'toolchain identity'):listing.checked(receipt)
++        for argv in (['rustc','+nightly','-vV'],['rustc','+1.99.1','-vV'],['rustc','-vV','--verbose'],['rustc','--version']):
++            with self.assertRaisesRegex(ValueError,'toolchain identity'):listing.checked(self.legacy(rustc=argv),historical=True)
++        # A bound receipt carrying any other channel is refused as the expected side too.
++        self.register(self.legacy(rustc=['rustc','+nightly','-vV']))
++        with self.assertRaisesRegex(ValueError,'toolchain identity'):self.require()
+ 
+ if __name__=='__main__':unittest.main()

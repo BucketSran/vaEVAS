@@ -1,0 +1,52 @@
+{
+  "parent": "5455ae7b006488902476bba045e9e2971102d8f5",
+  "patches": [
+    {
+      "kind": "audit",
+      "worker": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/support-audit-r4-grok-20261027",
+      "patch": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/support-audit-r4-grok-20261027/source.patch",
+      "patch_sha256": "7b969cb3d462fb7d2665f0239b01af5ea5bd4f2593cd397e7a644d34568f0b5f",
+      "message": "Match Markdown support records within their requirement and reject duplicates or contradictions",
+      "paths": [
+        "evas/capabilities/support_view.py",
+        "evas/capabilities/test_support_view.py"
+      ],
+      "before": {
+        "evas/capabilities/support_view.py": "e50584ab40b4b18efbb2b434ee9093abb19331cc074271bb46740652314822e9",
+        "evas/capabilities/test_support_view.py": "937e2e6519aa79c2f6ea69aa2c995180c8c79f76fc6c453c6c0e44d0dc8da414"
+      },
+      "after": {
+        "evas/capabilities/support_view.py": "d78620fc40ba6c5d23be3e81b16f25cc916324d3acd9951768b4c91680168468",
+        "evas/capabilities/test_support_view.py": "24f85f632ceff228861466bb7082eaa28bdfb6af6757b3b8b8e258bad3b135e0"
+      }
+    },
+    {
+      "kind": "rust",
+      "worker": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rust-pin-followup-sonnet-20261027",
+      "patch": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rust-pin-followup-sonnet-20261027/source.patch",
+      "patch_sha256": "2020ad3363cfb530f17b1d6846b3ffda4b3add2ab5b4ebf0e788f0e3c0d43ed5",
+      "message": "Pass the fixed Rust toolchain to the package workflow and keep +stable for historical receipts only",
+      "paths": [
+        ".github/workflows/numerical-assurance.yml",
+        ".github/workflows/package-install.yml",
+        "evas/capabilities/rust_listing.py",
+        "scripts/tests/test_discover_rust.py",
+        "scripts/tests/test_rust_catalog_reconcile.py"
+      ],
+      "before": {
+        ".github/workflows/numerical-assurance.yml": "c1289f9d76dfeabf105ed9558224bcdaa91038c947b6f7b1d69509ecd42adc74",
+        ".github/workflows/package-install.yml": "cdbeb49ac0676fc6c8a9f372753a96833fb4f60d9cdd3bbbb75d80ddcf1bd357",
+        "evas/capabilities/rust_listing.py": "c1c9bf5103ff6de928cad864266369067f7996b8b6a16b19091f634236f1af3b",
+        "scripts/tests/test_discover_rust.py": "7ab0828aee6e2eedffb94462bdb0fcaf3ed4be817c28b68bade93bb2fa38670b",
+        "scripts/tests/test_rust_catalog_reconcile.py": "33b0f6596980f90219cca0fc44ace42f8739b3dd594a4eb7fa87768a4dce3d60"
+      },
+      "after": {
+        ".github/workflows/numerical-assurance.yml": "fa6d43b7b339d932a950b0cf099d646236dd5266d17252597f6d5b22b7cb0f14",
+        ".github/workflows/package-install.yml": "e8499da1bf39b69604c4328a8f3a6dbc54bf21d5b452e6bb6ef36608f12c7f0e",
+        "evas/capabilities/rust_listing.py": "e12147fd2e8af46f2ec4300c05f39305864b14d81f8ea037727efd12fdb74069",
+        "scripts/tests/test_discover_rust.py": "c0b3e78ab356060a356fc659f3c5ff6e14d51fde66a07f3ec17540f180ae0e25",
+        "scripts/tests/test_rust_catalog_reconcile.py": "4601591ae74de54ce51a38bd6db9e611f1d5071b2837cb12adb28cebc987cc64"
+      }
+    }
+  ]
+}

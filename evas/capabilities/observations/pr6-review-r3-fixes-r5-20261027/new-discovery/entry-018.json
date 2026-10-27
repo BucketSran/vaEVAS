@@ -1,0 +1,705 @@
+{
+  "entry": {
+    "workflow": ".github/workflows/numerical-assurance.yml",
+    "line": 229,
+    "job": "provenance-paper",
+    "step": "Paper contracts, observable criteria and table provenance",
+    "job_if": "needs.selection.outputs.provenance == 'true'",
+    "step_if": null,
+    "command": "python3 -B -m unittest discover -s evas/validation/paper -p 'test_*root*.py' -v",
+    "environment_overrides": {},
+    "declared_python_versions": [
+      "3.12"
+    ],
+    "start": "evas/validation/paper",
+    "pattern": "test_*root*.py",
+    "namespace": "validation",
+    "collector": "unittest",
+    "mode": "declared-ci-literal",
+    "purpose": "role-not-semantic-qualification",
+    "entry_id": "9c54e52cb547ee58e8a2e4ad8f73a20e79bba78b1c92ad988c556a8bbeba0a7d"
+  },
+  "receipt": {
+    "collector": {
+      "definition_profile": "actual-code-or-registered-native-skip-v1",
+      "native_skip_authority": {
+        "factory_span_sha256": "a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad",
+        "profile": "registered-native-unittest-skip-v1",
+        "runtime_file_sha256": "45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987",
+        "runtime_source": "unittest/case.py",
+        "wrapper_span_sha256": "96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda"
+      },
+      "path": "scripts/capabilities/discover_methods.py",
+      "sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "source_relationship": "owned-source-root"
+    },
+    "complete": true,
+    "discovered_instances": 34,
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONPATH": null,
+      "bytecode_disabled": true,
+      "cache_tag": "cpython-312",
+      "environment_scope": "python-runtime-and-import-path-only",
+      "executable": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+      "implementation": "cpython",
+      "platform": "darwin",
+      "python_version": "3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]",
+      "sys_path_before_selected_imports": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r5-20261027/source",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python312.zip",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/lib/python3.12/site-packages"
+      ]
+    },
+    "error_count": 0,
+    "errors": [],
+    "loader_error_count": 0,
+    "methods": [
+      {
+        "definition": {
+          "line": 72,
+          "name": "test_actual_delayed_sample_is_used_in_q_and_future_integral",
+          "path": "evas/validation/paper/test_precision_composition_root_v3.py",
+          "sha256": "1badd309124db5c4d320b01d8963159b22dc9a0bac59a06bfed723b600a411fc"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_composition_root_v3.py",
+        "module_sha256": "3afa32b042bfccea9745da6f0659a58b7b98e4f1bd5ebf37fa6a08469601b9bf",
+        "runtime_id": "test_precision_composition_root_v3.RootCompositionCalibration.test_actual_delayed_sample_is_used_in_q_and_future_integral",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 121,
+          "name": "test_box_crossing_both_window_edges_is_insufficient_never_clipped",
+          "path": "evas/validation/paper/test_precision_composition_root_v3.py",
+          "sha256": "234535ac78ede53e65071480e599343b5327cae431efd858f7f79f1537cc3542"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_composition_root_v3.py",
+        "module_sha256": "3afa32b042bfccea9745da6f0659a58b7b98e4f1bd5ebf37fa6a08469601b9bf",
+        "runtime_id": "test_precision_composition_root_v3.RootCompositionCalibration.test_box_crossing_both_window_edges_is_insufficient_never_clipped",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 150,
+          "name": "test_canonical_source_card_and_budgets_are_required",
+          "path": "evas/validation/paper/test_precision_composition_root_v3.py",
+          "sha256": "7fff94ddbe2ba87b561fdd20ffe47dbd477fb95f9f00b78bb4212311841c8474"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_composition_root_v3.py",
+        "module_sha256": "3afa32b042bfccea9745da6f0659a58b7b98e4f1bd5ebf37fa6a08469601b9bf",
+        "runtime_id": "test_precision_composition_root_v3.RootCompositionCalibration.test_canonical_source_card_and_budgets_are_required",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 59,
+          "name": "test_exact_root_box_preserves_original_and_full_history",
+          "path": "evas/validation/paper/test_precision_composition_root_v3.py",
+          "sha256": "d54c921fd494d79c3e5b5ce2d2c858a92882e81cc563ed6e61a65d8e19f717b1"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_composition_root_v3.py",
+        "module_sha256": "3afa32b042bfccea9745da6f0659a58b7b98e4f1bd5ebf37fa6a08469601b9bf",
+        "runtime_id": "test_precision_composition_root_v3.RootCompositionCalibration.test_exact_root_box_preserves_original_and_full_history",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 171,
+          "name": "test_historical_checker_bytes_and_input_objects_are_unchanged",
+          "path": "evas/validation/paper/test_precision_composition_root_v3.py",
+          "sha256": "d89f79047f790d4f9b7f0cb72f16f8c1ef84d21627166557d888d99651a9c4ac"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_composition_root_v3.py",
+        "module_sha256": "3afa32b042bfccea9745da6f0659a58b7b98e4f1bd5ebf37fa6a08469601b9bf",
+        "runtime_id": "test_precision_composition_root_v3.RootCompositionCalibration.test_historical_checker_bytes_and_input_objects_are_unchanged",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 96,
+          "name": "test_ideal_root_output_cannot_replace_actual_delayed_sample",
+          "path": "evas/validation/paper/test_precision_composition_root_v3.py",
+          "sha256": "811e62c73dcb3808c1979366a16d6415a99441a661541f300f5d411a4705054a"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_composition_root_v3.py",
+        "module_sha256": "3afa32b042bfccea9745da6f0659a58b7b98e4f1bd5ebf37fa6a08469601b9bf",
+        "runtime_id": "test_precision_composition_root_v3.RootCompositionCalibration.test_ideal_root_output_cannot_replace_actual_delayed_sample",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 108,
+          "name": "test_observation_gap_and_input_failures_are_preserved",
+          "path": "evas/validation/paper/test_precision_composition_root_v3.py",
+          "sha256": "0e76278b0b70f02f6c11cad7684f11dcdb77c6aafbca5063d9e51b5ebdfe7a50"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_composition_root_v3.py",
+        "module_sha256": "3afa32b042bfccea9745da6f0659a58b7b98e4f1bd5ebf37fa6a08469601b9bf",
+        "runtime_id": "test_precision_composition_root_v3.RootCompositionCalibration.test_observation_gap_and_input_failures_are_preserved",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 88,
+          "name": "test_one_ulp_early_is_only_a_finite_resolution_pass",
+          "path": "evas/validation/paper/test_precision_composition_root_v3.py",
+          "sha256": "068de70c71d9f96dd92eef7a42cf5aa55a934ac60e7f5406d929557b95e0e515"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_composition_root_v3.py",
+        "module_sha256": "3afa32b042bfccea9745da6f0659a58b7b98e4f1bd5ebf37fa6a08469601b9bf",
+        "runtime_id": "test_precision_composition_root_v3.RootCompositionCalibration.test_one_ulp_early_is_only_a_finite_resolution_pass",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 81,
+          "name": "test_real_early_and_late_are_behavior_errors",
+          "path": "evas/validation/paper/test_precision_composition_root_v3.py",
+          "sha256": "c3038bc88337bd47e5da54e72f6803ce7cb34519852d580eaf9607390216149b"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_composition_root_v3.py",
+        "module_sha256": "3afa32b042bfccea9745da6f0659a58b7b98e4f1bd5ebf37fa6a08469601b9bf",
+        "runtime_id": "test_precision_composition_root_v3.RootCompositionCalibration.test_real_early_and_late_are_behavior_errors",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 157,
+          "name": "test_spectre_read_only_trace_and_source_identity",
+          "path": "evas/validation/paper/test_precision_composition_root_v3.py",
+          "sha256": "fa3cb6afdb5928bec10f64d2eeb8894b0a45f8a058a50ef82d6d0d31eacccf84"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_composition_root_v3.py",
+        "module_sha256": "3afa32b042bfccea9745da6f0659a58b7b98e4f1bd5ebf37fa6a08469601b9bf",
+        "runtime_id": "test_precision_composition_root_v3.RootCompositionCalibration.test_spectre_read_only_trace_and_source_identity",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 129,
+          "name": "test_wide_legal_box_retains_uncertainty_budget_failure",
+          "path": "evas/validation/paper/test_precision_composition_root_v3.py",
+          "sha256": "4f8241e4a9d651486706b9dbcaa0c7f84c66cb94e157a86074c1d41d1c02f9ee"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_composition_root_v3.py",
+        "module_sha256": "3afa32b042bfccea9745da6f0659a58b7b98e4f1bd5ebf37fa6a08469601b9bf",
+        "runtime_id": "test_precision_composition_root_v3.RootCompositionCalibration.test_wide_legal_box_retains_uncertainty_budget_failure",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 143,
+          "name": "test_wrong_count_and_unreviewed_producer_cannot_pass",
+          "path": "evas/validation/paper/test_precision_composition_root_v3.py",
+          "sha256": "7922650d17e48ce16e0b5833aaa854c8b89e7e904e5b7c8ad0a91ace50c31b7d"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_composition_root_v3.py",
+        "module_sha256": "3afa32b042bfccea9745da6f0659a58b7b98e4f1bd5ebf37fa6a08469601b9bf",
+        "runtime_id": "test_precision_composition_root_v3.RootCompositionCalibration.test_wrong_count_and_unreviewed_producer_cannot_pass",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 138,
+          "name": "test_wrong_output_remains_numerical_error",
+          "path": "evas/validation/paper/test_precision_composition_root_v3.py",
+          "sha256": "1c026047417457004b4268fe880768ac013d78b2d7a3eb65368a54cb29dcae3c"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_composition_root_v3.py",
+        "module_sha256": "3afa32b042bfccea9745da6f0659a58b7b98e4f1bd5ebf37fa6a08469601b9bf",
+        "runtime_id": "test_precision_composition_root_v3.RootCompositionCalibration.test_wrong_output_remains_numerical_error",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 103,
+          "name": "test_committed_callback_protocol_keeps_complete_boxes_and_method",
+          "path": "evas/validation/paper/test_precision_root_v3.py",
+          "sha256": "b95216f4ce44c25b79d88b7490973384de8bafef02036cd5bdf08f2b60bc9e6c"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_root_v3.py",
+        "module_sha256": "82119d1fa80664a3beda52f318f63740de8345746509b2850df57aa7a2dbd72a",
+        "runtime_id": "test_precision_root_v3.RootWindowCalibration.test_committed_callback_protocol_keeps_complete_boxes_and_method",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 127,
+          "name": "test_counts_reject_missing_duplicate_reversed_and_noninteger",
+          "path": "evas/validation/paper/test_precision_root_v3.py",
+          "sha256": "7df6faa1558c12c9cbb77f0cb58281656b5b4e039e33cd14feff9d5cf5124721"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_root_v3.py",
+        "module_sha256": "82119d1fa80664a3beda52f318f63740de8345746509b2850df57aa7a2dbd72a",
+        "runtime_id": "test_precision_root_v3.RootWindowCalibration.test_counts_reject_missing_duplicate_reversed_and_noninteger",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 151,
+          "name": "test_early_and_late_callbacks_are_rejected",
+          "path": "evas/validation/paper/test_precision_root_v3.py",
+          "sha256": "f9fce7ad1b9f3495cb7175fcaa65f528a6db5803a9a1af093f4375274291f0f2"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_root_v3.py",
+        "module_sha256": "82119d1fa80664a3beda52f318f63740de8345746509b2850df57aa7a2dbd72a",
+        "runtime_id": "test_precision_root_v3.RootWindowCalibration.test_early_and_late_callbacks_are_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 80,
+          "name": "test_eight_independently_derived_roots_and_valid_rows",
+          "path": "evas/validation/paper/test_precision_root_v3.py",
+          "sha256": "3db1cce10fa3538a85496d00ebdb3c6f7ed4415134b022a6669a66989a88e400"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_root_v3.py",
+        "module_sha256": "82119d1fa80664a3beda52f318f63740de8345746509b2850df57aa7a2dbd72a",
+        "runtime_id": "test_precision_root_v3.RootWindowCalibration.test_eight_independently_derived_roots_and_valid_rows",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 90,
+          "name": "test_exact_root_box_preserved_and_strict_boundary_unresolved",
+          "path": "evas/validation/paper/test_precision_root_v3.py",
+          "sha256": "943e23751e72a6f1e2ab546ca8d2b417dbffcab9cb2d9d5a0c8d8f363f6f3b2f"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_root_v3.py",
+        "module_sha256": "82119d1fa80664a3beda52f318f63740de8345746509b2850df57aa7a2dbd72a",
+        "runtime_id": "test_precision_root_v3.RootWindowCalibration.test_exact_root_box_preserved_and_strict_boundary_unresolved",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 156,
+          "name": "test_full_native_bracket_remains_unqualified_without_proof",
+          "path": "evas/validation/paper/test_precision_root_v3.py",
+          "sha256": "34043d0f36b6ac2c745dd792ddad318800067680e2858890d9f10d89db3a5063"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_root_v3.py",
+        "module_sha256": "82119d1fa80664a3beda52f318f63740de8345746509b2850df57aa7a2dbd72a",
+        "runtime_id": "test_precision_root_v3.RootWindowCalibration.test_full_native_bracket_remains_unqualified_without_proof",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 176,
+          "name": "test_inputs_and_voltage_tiers_keep_original_budgets",
+          "path": "evas/validation/paper/test_precision_root_v3.py",
+          "sha256": "e3e86f8ed80931cc683cf78b9f5aa1a43dbdeedebf374c213a879f2465766412"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_root_v3.py",
+        "module_sha256": "82119d1fa80664a3beda52f318f63740de8345746509b2850df57aa7a2dbd72a",
+        "runtime_id": "test_precision_root_v3.RootWindowCalibration.test_inputs_and_voltage_tiers_keep_original_budgets",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 202,
+          "name": "test_missing_nonfinite_and_unordered_observations_stay_insufficient",
+          "path": "evas/validation/paper/test_precision_root_v3.py",
+          "sha256": "0dc30f9da3994c609d3608ff751684ba20079a05fe00e0fc6ac60453cf7d23ff"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_root_v3.py",
+        "module_sha256": "82119d1fa80664a3beda52f318f63740de8345746509b2850df57aa7a2dbd72a",
+        "runtime_id": "test_precision_root_v3.RootWindowCalibration.test_missing_nonfinite_and_unordered_observations_stay_insufficient",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 187,
+          "name": "test_model_source_and_budget_substitution_refused",
+          "path": "evas/validation/paper/test_precision_root_v3.py",
+          "sha256": "5e2205e49eef825180d2c0033ee3bd10235df47b59a4dd41032ca2e7ae41da79"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_root_v3.py",
+        "module_sha256": "82119d1fa80664a3beda52f318f63740de8345746509b2850df57aa7a2dbd72a",
+        "runtime_id": "test_precision_root_v3.RootWindowCalibration.test_model_source_and_budget_substitution_refused",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 163,
+          "name": "test_wide_bracket_and_missing_boundaries_are_not_passes",
+          "path": "evas/validation/paper/test_precision_root_v3.py",
+          "sha256": "f4f170d90e5929688c79200b2e31b5fccbdf99059d9fc6d489e80009defc7381"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_root_v3.py",
+        "module_sha256": "82119d1fa80664a3beda52f318f63740de8345746509b2850df57aa7a2dbd72a",
+        "runtime_id": "test_precision_root_v3.RootWindowCalibration.test_wide_bracket_and_missing_boundaries_are_not_passes",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 142,
+          "name": "test_wrong_sample_and_every_holding_stage_drift",
+          "path": "evas/validation/paper/test_precision_root_v3.py",
+          "sha256": "d743be4be677ee0fb9e57db93b0fb673970fd250539deb3b3922d8b92e0ef0a0"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_root_v3.py",
+        "module_sha256": "82119d1fa80664a3beda52f318f63740de8345746509b2850df57aa7a2dbd72a",
+        "runtime_id": "test_precision_root_v3.RootWindowCalibration.test_wrong_sample_and_every_holding_stage_drift",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 18,
+          "name": "test_all_affine_roots_use_actual_endpoints",
+          "path": "evas/validation/paper/test_root_windows.py",
+          "sha256": "54953ece164b4b2270f0ad9d423a125a27420ecee6ba5e4914c0ce893feaa316"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_root_windows.py",
+        "module_sha256": "d6f45949eb0e8966580d90a0960719d48e4e4ca9e48fbacb15979ee4eef36835",
+        "runtime_id": "test_root_windows.RootWindowCalibration.test_all_affine_roots_use_actual_endpoints",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 36,
+          "name": "test_correct_root_box_passes_resolution_but_not_strict_side",
+          "path": "evas/validation/paper/test_root_windows.py",
+          "sha256": "1de0d30ba6829ae0beb1572876035dda5ff08687a1c2b18b29c6e844a46713e1"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_root_windows.py",
+        "module_sha256": "d6f45949eb0e8966580d90a0960719d48e4e4ca9e48fbacb15979ee4eef36835",
+        "runtime_id": "test_root_windows.RootWindowCalibration.test_correct_root_box_passes_resolution_but_not_strict_side",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 79,
+          "name": "test_float_addition_pass_does_not_prove_exact_sum_coverage",
+          "path": "evas/validation/paper/test_root_windows.py",
+          "sha256": "cc4c2883a0ac923ab9f10546e92411651f20ef84d30d34bd587e090eae364410"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_root_windows.py",
+        "module_sha256": "d6f45949eb0e8966580d90a0960719d48e4e4ca9e48fbacb15979ee4eef36835",
+        "runtime_id": "test_root_windows.RootWindowCalibration.test_float_addition_pass_does_not_prove_exact_sum_coverage",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 90,
+          "name": "test_invalid_contract_and_nonfinite_boxes_are_rejected",
+          "path": "evas/validation/paper/test_root_windows.py",
+          "sha256": "6fad9bc196394c5833a89f937c771db07774ef3bf643c1c0e1567260b5f89de8"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_root_windows.py",
+        "module_sha256": "d6f45949eb0e8966580d90a0960719d48e4e4ca9e48fbacb15979ee4eef36835",
+        "runtime_id": "test_root_windows.RootWindowCalibration.test_invalid_contract_and_nonfinite_boxes_are_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 29,
+          "name": "test_nonlinear_root_contains_sqrt2_by_exact_squares",
+          "path": "evas/validation/paper/test_root_windows.py",
+          "sha256": "ac6a2e2a5f989ae84272a2982cea63af9c88ff8ddef33651996a6c1235cde6d2"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_root_windows.py",
+        "module_sha256": "d6f45949eb0e8966580d90a0960719d48e4e4ca9e48fbacb15979ee4eef36835",
+        "runtime_id": "test_root_windows.RootWindowCalibration.test_nonlinear_root_contains_sqrt2_by_exact_squares",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 42,
+          "name": "test_outside_both_ends_is_rejected_without_clipping",
+          "path": "evas/validation/paper/test_root_windows.py",
+          "sha256": "fbc8e0ce37c962d0c79b596800caa3477168bc2dd86069c026150a81193abaf5"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_root_windows.py",
+        "module_sha256": "d6f45949eb0e8966580d90a0960719d48e4e4ca9e48fbacb15979ee4eef36835",
+        "runtime_id": "test_root_windows.RootWindowCalibration.test_outside_both_ends_is_rejected_without_clipping",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 50,
+          "name": "test_overlap_does_not_qualify_a_broad_callback",
+          "path": "evas/validation/paper/test_root_windows.py",
+          "sha256": "aec4cf60de758f278fda9028f388f0b266c8817c1750d510ccf401a14e1199ff"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_root_windows.py",
+        "module_sha256": "d6f45949eb0e8966580d90a0960719d48e4e4ca9e48fbacb15979ee4eef36835",
+        "runtime_id": "test_root_windows.RootWindowCalibration.test_overlap_does_not_qualify_a_broad_callback",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 60,
+          "name": "test_reference_metadata_change_does_not_change_model_or_inputs",
+          "path": "evas/validation/paper/test_root_windows.py",
+          "sha256": "afb4a7b716896eb0435788eb70658f1fbc7834006a5746a1d841b4404ade24c6"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_root_windows.py",
+        "module_sha256": "d6f45949eb0e8966580d90a0960719d48e4e4ca9e48fbacb15979ee4eef36835",
+        "runtime_id": "test_root_windows.RootWindowCalibration.test_reference_metadata_change_does_not_change_model_or_inputs",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 69,
+          "name": "test_reference_metadata_covers_same_high_under_both_additions",
+          "path": "evas/validation/paper/test_root_windows.py",
+          "sha256": "b99d93585f6470957e7a59651f70bf724e92ff8ded042c07ad7f8002423e3e59"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_root_windows.py",
+        "module_sha256": "d6f45949eb0e8966580d90a0960719d48e4e4ca9e48fbacb15979ee4eef36835",
+        "runtime_id": "test_root_windows.RootWindowCalibration.test_reference_metadata_covers_same_high_under_both_additions",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 55,
+          "name": "test_zero_resolution_does_not_claim_exact_no_early",
+          "path": "evas/validation/paper/test_root_windows.py",
+          "sha256": "3a6682ebd5c36f3f1178c0bb78a4d87c0e80e1be25610fa250ca711477aba568"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_root_windows.py",
+        "module_sha256": "d6f45949eb0e8966580d90a0960719d48e4e4ca9e48fbacb15979ee4eef36835",
+        "runtime_id": "test_root_windows.RootWindowCalibration.test_zero_resolution_does_not_claim_exact_no_early",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      }
+    ],
+    "namespace": "validation",
+    "schema_version": 1,
+    "skipped_declarations": 0,
+    "unresolved_instances": [],
+    "transport": {
+      "argv": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-c",
+        "import os,runpy,sys; sys.path[0]=os.getcwd(); tool=sys.argv[1]; sys.argv=sys.argv[1:]; runpy.run_path(tool,run_name=\"__main__\")",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r5-20261027/source/scripts/capabilities/discover_methods.py",
+        "--worker",
+        "--root",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r5-20261027/source",
+        "--start",
+        "evas/validation/paper",
+        "--pattern",
+        "test_*root*.py",
+        "--namespace",
+        "validation"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r5-20261027/source",
+      "returncode": 0,
+      "stdout": "{\"collector\": {\"definition_profile\": \"actual-code-or-registered-native-skip-v1\", \"native_skip_authority\": {\"factory_span_sha256\": \"a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad\", \"profile\": \"registered-native-unittest-skip-v1\", \"runtime_file_sha256\": \"45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987\", \"runtime_source\": \"unittest/case.py\", \"wrapper_span_sha256\": \"96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda\"}, \"path\": \"scripts/capabilities/discover_methods.py\", \"sha256\": \"aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17\", \"source_relationship\": \"owned-source-root\"}, \"complete\": true, \"discovered_instances\": 34, \"environment\": {\"PYTHONDONTWRITEBYTECODE\": \"1\", \"PYTHONPATH\": null, \"bytecode_disabled\": true, \"cache_tag\": \"cpython-312\", \"environment_scope\": \"python-runtime-and-import-path-only\", \"executable\": \"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python\", \"implementation\": \"cpython\", \"platform\": \"darwin\", \"python_version\": \"3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"sys_path_before_selected_imports\": [\"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r5-20261027/source\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python312.zip\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload\", \"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/lib/python3.12/site-packages\"]}, \"error_count\": 0, \"errors\": [], \"loader_error_count\": 0, \"methods\": [{\"definition\": {\"line\": 72, \"name\": \"test_actual_delayed_sample_is_used_in_q_and_future_integral\", \"path\": \"evas/validation/paper/test_precision_composition_root_v3.py\", \"sha256\": \"1badd309124db5c4d320b01d8963159b22dc9a0bac59a06bfed723b600a411fc\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_composition_root_v3.py\", \"module_sha256\": \"3afa32b042bfccea9745da6f0659a58b7b98e4f1bd5ebf37fa6a08469601b9bf\", \"runtime_id\": \"test_precision_composition_root_v3.RootCompositionCalibration.test_actual_delayed_sample_is_used_in_q_and_future_integral\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 121, \"name\": \"test_box_crossing_both_window_edges_is_insufficient_never_clipped\", \"path\": \"evas/validation/paper/test_precision_composition_root_v3.py\", \"sha256\": \"234535ac78ede53e65071480e599343b5327cae431efd858f7f79f1537cc3542\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_composition_root_v3.py\", \"module_sha256\": \"3afa32b042bfccea9745da6f0659a58b7b98e4f1bd5ebf37fa6a08469601b9bf\", \"runtime_id\": \"test_precision_composition_root_v3.RootCompositionCalibration.test_box_crossing_both_window_edges_is_insufficient_never_clipped\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 150, \"name\": \"test_canonical_source_card_and_budgets_are_required\", \"path\": \"evas/validation/paper/test_precision_composition_root_v3.py\", \"sha256\": \"7fff94ddbe2ba87b561fdd20ffe47dbd477fb95f9f00b78bb4212311841c8474\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_composition_root_v3.py\", \"module_sha256\": \"3afa32b042bfccea9745da6f0659a58b7b98e4f1bd5ebf37fa6a08469601b9bf\", \"runtime_id\": \"test_precision_composition_root_v3.RootCompositionCalibration.test_canonical_source_card_and_budgets_are_required\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 59, \"name\": \"test_exact_root_box_preserves_original_and_full_history\", \"path\": \"evas/validation/paper/test_precision_composition_root_v3.py\", \"sha256\": \"d54c921fd494d79c3e5b5ce2d2c858a92882e81cc563ed6e61a65d8e19f717b1\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_composition_root_v3.py\", \"module_sha256\": \"3afa32b042bfccea9745da6f0659a58b7b98e4f1bd5ebf37fa6a08469601b9bf\", \"runtime_id\": \"test_precision_composition_root_v3.RootCompositionCalibration.test_exact_root_box_preserves_original_and_full_history\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 171, \"name\": \"test_historical_checker_bytes_and_input_objects_are_unchanged\", \"path\": \"evas/validation/paper/test_precision_composition_root_v3.py\", \"sha256\": \"d89f79047f790d4f9b7f0cb72f16f8c1ef84d21627166557d888d99651a9c4ac\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_composition_root_v3.py\", \"module_sha256\": \"3afa32b042bfccea9745da6f0659a58b7b98e4f1bd5ebf37fa6a08469601b9bf\", \"runtime_id\": \"test_precision_composition_root_v3.RootCompositionCalibration.test_historical_checker_bytes_and_input_objects_are_unchanged\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 96, \"name\": \"test_ideal_root_output_cannot_replace_actual_delayed_sample\", \"path\": \"evas/validation/paper/test_precision_composition_root_v3.py\", \"sha256\": \"811e62c73dcb3808c1979366a16d6415a99441a661541f300f5d411a4705054a\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_composition_root_v3.py\", \"module_sha256\": \"3afa32b042bfccea9745da6f0659a58b7b98e4f1bd5ebf37fa6a08469601b9bf\", \"runtime_id\": \"test_precision_composition_root_v3.RootCompositionCalibration.test_ideal_root_output_cannot_replace_actual_delayed_sample\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 108, \"name\": \"test_observation_gap_and_input_failures_are_preserved\", \"path\": \"evas/validation/paper/test_precision_composition_root_v3.py\", \"sha256\": \"0e76278b0b70f02f6c11cad7684f11dcdb77c6aafbca5063d9e51b5ebdfe7a50\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_composition_root_v3.py\", \"module_sha256\": \"3afa32b042bfccea9745da6f0659a58b7b98e4f1bd5ebf37fa6a08469601b9bf\", \"runtime_id\": \"test_precision_composition_root_v3.RootCompositionCalibration.test_observation_gap_and_input_failures_are_preserved\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 88, \"name\": \"test_one_ulp_early_is_only_a_finite_resolution_pass\", \"path\": \"evas/validation/paper/test_precision_composition_root_v3.py\", \"sha256\": \"068de70c71d9f96dd92eef7a42cf5aa55a934ac60e7f5406d929557b95e0e515\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_composition_root_v3.py\", \"module_sha256\": \"3afa32b042bfccea9745da6f0659a58b7b98e4f1bd5ebf37fa6a08469601b9bf\", \"runtime_id\": \"test_precision_composition_root_v3.RootCompositionCalibration.test_one_ulp_early_is_only_a_finite_resolution_pass\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 81, \"name\": \"test_real_early_and_late_are_behavior_errors\", \"path\": \"evas/validation/paper/test_precision_composition_root_v3.py\", \"sha256\": \"c3038bc88337bd47e5da54e72f6803ce7cb34519852d580eaf9607390216149b\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_composition_root_v3.py\", \"module_sha256\": \"3afa32b042bfccea9745da6f0659a58b7b98e4f1bd5ebf37fa6a08469601b9bf\", \"runtime_id\": \"test_precision_composition_root_v3.RootCompositionCalibration.test_real_early_and_late_are_behavior_errors\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 157, \"name\": \"test_spectre_read_only_trace_and_source_identity\", \"path\": \"evas/validation/paper/test_precision_composition_root_v3.py\", \"sha256\": \"fa3cb6afdb5928bec10f64d2eeb8894b0a45f8a058a50ef82d6d0d31eacccf84\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_composition_root_v3.py\", \"module_sha256\": \"3afa32b042bfccea9745da6f0659a58b7b98e4f1bd5ebf37fa6a08469601b9bf\", \"runtime_id\": \"test_precision_composition_root_v3.RootCompositionCalibration.test_spectre_read_only_trace_and_source_identity\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 129, \"name\": \"test_wide_legal_box_retains_uncertainty_budget_failure\", \"path\": \"evas/validation/paper/test_precision_composition_root_v3.py\", \"sha256\": \"4f8241e4a9d651486706b9dbcaa0c7f84c66cb94e157a86074c1d41d1c02f9ee\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_composition_root_v3.py\", \"module_sha256\": \"3afa32b042bfccea9745da6f0659a58b7b98e4f1bd5ebf37fa6a08469601b9bf\", \"runtime_id\": \"test_precision_composition_root_v3.RootCompositionCalibration.test_wide_legal_box_retains_uncertainty_budget_failure\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 143, \"name\": \"test_wrong_count_and_unreviewed_producer_cannot_pass\", \"path\": \"evas/validation/paper/test_precision_composition_root_v3.py\", \"sha256\": \"7922650d17e48ce16e0b5833aaa854c8b89e7e904e5b7c8ad0a91ace50c31b7d\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_composition_root_v3.py\", \"module_sha256\": \"3afa32b042bfccea9745da6f0659a58b7b98e4f1bd5ebf37fa6a08469601b9bf\", \"runtime_id\": \"test_precision_composition_root_v3.RootCompositionCalibration.test_wrong_count_and_unreviewed_producer_cannot_pass\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 138, \"name\": \"test_wrong_output_remains_numerical_error\", \"path\": \"evas/validation/paper/test_precision_composition_root_v3.py\", \"sha256\": \"1c026047417457004b4268fe880768ac013d78b2d7a3eb65368a54cb29dcae3c\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_composition_root_v3.py\", \"module_sha256\": \"3afa32b042bfccea9745da6f0659a58b7b98e4f1bd5ebf37fa6a08469601b9bf\", \"runtime_id\": \"test_precision_composition_root_v3.RootCompositionCalibration.test_wrong_output_remains_numerical_error\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 103, \"name\": \"test_committed_callback_protocol_keeps_complete_boxes_and_method\", \"path\": \"evas/validation/paper/test_precision_root_v3.py\", \"sha256\": \"b95216f4ce44c25b79d88b7490973384de8bafef02036cd5bdf08f2b60bc9e6c\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_root_v3.py\", \"module_sha256\": \"82119d1fa80664a3beda52f318f63740de8345746509b2850df57aa7a2dbd72a\", \"runtime_id\": \"test_precision_root_v3.RootWindowCalibration.test_committed_callback_protocol_keeps_complete_boxes_and_method\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 127, \"name\": \"test_counts_reject_missing_duplicate_reversed_and_noninteger\", \"path\": \"evas/validation/paper/test_precision_root_v3.py\", \"sha256\": \"7df6faa1558c12c9cbb77f0cb58281656b5b4e039e33cd14feff9d5cf5124721\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_root_v3.py\", \"module_sha256\": \"82119d1fa80664a3beda52f318f63740de8345746509b2850df57aa7a2dbd72a\", \"runtime_id\": \"test_precision_root_v3.RootWindowCalibration.test_counts_reject_missing_duplicate_reversed_and_noninteger\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 151, \"name\": \"test_early_and_late_callbacks_are_rejected\", \"path\": \"evas/validation/paper/test_precision_root_v3.py\", \"sha256\": \"f9fce7ad1b9f3495cb7175fcaa65f528a6db5803a9a1af093f4375274291f0f2\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_root_v3.py\", \"module_sha256\": \"82119d1fa80664a3beda52f318f63740de8345746509b2850df57aa7a2dbd72a\", \"runtime_id\": \"test_precision_root_v3.RootWindowCalibration.test_early_and_late_callbacks_are_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 80, \"name\": \"test_eight_independently_derived_roots_and_valid_rows\", \"path\": \"evas/validation/paper/test_precision_root_v3.py\", \"sha256\": \"3db1cce10fa3538a85496d00ebdb3c6f7ed4415134b022a6669a66989a88e400\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_root_v3.py\", \"module_sha256\": \"82119d1fa80664a3beda52f318f63740de8345746509b2850df57aa7a2dbd72a\", \"runtime_id\": \"test_precision_root_v3.RootWindowCalibration.test_eight_independently_derived_roots_and_valid_rows\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 90, \"name\": \"test_exact_root_box_preserved_and_strict_boundary_unresolved\", \"path\": \"evas/validation/paper/test_precision_root_v3.py\", \"sha256\": \"943e23751e72a6f1e2ab546ca8d2b417dbffcab9cb2d9d5a0c8d8f363f6f3b2f\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_root_v3.py\", \"module_sha256\": \"82119d1fa80664a3beda52f318f63740de8345746509b2850df57aa7a2dbd72a\", \"runtime_id\": \"test_precision_root_v3.RootWindowCalibration.test_exact_root_box_preserved_and_strict_boundary_unresolved\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 156, \"name\": \"test_full_native_bracket_remains_unqualified_without_proof\", \"path\": \"evas/validation/paper/test_precision_root_v3.py\", \"sha256\": \"34043d0f36b6ac2c745dd792ddad318800067680e2858890d9f10d89db3a5063\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_root_v3.py\", \"module_sha256\": \"82119d1fa80664a3beda52f318f63740de8345746509b2850df57aa7a2dbd72a\", \"runtime_id\": \"test_precision_root_v3.RootWindowCalibration.test_full_native_bracket_remains_unqualified_without_proof\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 176, \"name\": \"test_inputs_and_voltage_tiers_keep_original_budgets\", \"path\": \"evas/validation/paper/test_precision_root_v3.py\", \"sha256\": \"e3e86f8ed80931cc683cf78b9f5aa1a43dbdeedebf374c213a879f2465766412\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_root_v3.py\", \"module_sha256\": \"82119d1fa80664a3beda52f318f63740de8345746509b2850df57aa7a2dbd72a\", \"runtime_id\": \"test_precision_root_v3.RootWindowCalibration.test_inputs_and_voltage_tiers_keep_original_budgets\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 202, \"name\": \"test_missing_nonfinite_and_unordered_observations_stay_insufficient\", \"path\": \"evas/validation/paper/test_precision_root_v3.py\", \"sha256\": \"0dc30f9da3994c609d3608ff751684ba20079a05fe00e0fc6ac60453cf7d23ff\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_root_v3.py\", \"module_sha256\": \"82119d1fa80664a3beda52f318f63740de8345746509b2850df57aa7a2dbd72a\", \"runtime_id\": \"test_precision_root_v3.RootWindowCalibration.test_missing_nonfinite_and_unordered_observations_stay_insufficient\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 187, \"name\": \"test_model_source_and_budget_substitution_refused\", \"path\": \"evas/validation/paper/test_precision_root_v3.py\", \"sha256\": \"5e2205e49eef825180d2c0033ee3bd10235df47b59a4dd41032ca2e7ae41da79\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_root_v3.py\", \"module_sha256\": \"82119d1fa80664a3beda52f318f63740de8345746509b2850df57aa7a2dbd72a\", \"runtime_id\": \"test_precision_root_v3.RootWindowCalibration.test_model_source_and_budget_substitution_refused\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 163, \"name\": \"test_wide_bracket_and_missing_boundaries_are_not_passes\", \"path\": \"evas/validation/paper/test_precision_root_v3.py\", \"sha256\": \"f4f170d90e5929688c79200b2e31b5fccbdf99059d9fc6d489e80009defc7381\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_root_v3.py\", \"module_sha256\": \"82119d1fa80664a3beda52f318f63740de8345746509b2850df57aa7a2dbd72a\", \"runtime_id\": \"test_precision_root_v3.RootWindowCalibration.test_wide_bracket_and_missing_boundaries_are_not_passes\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 142, \"name\": \"test_wrong_sample_and_every_holding_stage_drift\", \"path\": \"evas/validation/paper/test_precision_root_v3.py\", \"sha256\": \"d743be4be677ee0fb9e57db93b0fb673970fd250539deb3b3922d8b92e0ef0a0\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_root_v3.py\", \"module_sha256\": \"82119d1fa80664a3beda52f318f63740de8345746509b2850df57aa7a2dbd72a\", \"runtime_id\": \"test_precision_root_v3.RootWindowCalibration.test_wrong_sample_and_every_holding_stage_drift\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 18, \"name\": \"test_all_affine_roots_use_actual_endpoints\", \"path\": \"evas/validation/paper/test_root_windows.py\", \"sha256\": \"54953ece164b4b2270f0ad9d423a125a27420ecee6ba5e4914c0ce893feaa316\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_root_windows.py\", \"module_sha256\": \"d6f45949eb0e8966580d90a0960719d48e4e4ca9e48fbacb15979ee4eef36835\", \"runtime_id\": \"test_root_windows.RootWindowCalibration.test_all_affine_roots_use_actual_endpoints\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 36, \"name\": \"test_correct_root_box_passes_resolution_but_not_strict_side\", \"path\": \"evas/validation/paper/test_root_windows.py\", \"sha256\": \"1de0d30ba6829ae0beb1572876035dda5ff08687a1c2b18b29c6e844a46713e1\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_root_windows.py\", \"module_sha256\": \"d6f45949eb0e8966580d90a0960719d48e4e4ca9e48fbacb15979ee4eef36835\", \"runtime_id\": \"test_root_windows.RootWindowCalibration.test_correct_root_box_passes_resolution_but_not_strict_side\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 79, \"name\": \"test_float_addition_pass_does_not_prove_exact_sum_coverage\", \"path\": \"evas/validation/paper/test_root_windows.py\", \"sha256\": \"cc4c2883a0ac923ab9f10546e92411651f20ef84d30d34bd587e090eae364410\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_root_windows.py\", \"module_sha256\": \"d6f45949eb0e8966580d90a0960719d48e4e4ca9e48fbacb15979ee4eef36835\", \"runtime_id\": \"test_root_windows.RootWindowCalibration.test_float_addition_pass_does_not_prove_exact_sum_coverage\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 90, \"name\": \"test_invalid_contract_and_nonfinite_boxes_are_rejected\", \"path\": \"evas/validation/paper/test_root_windows.py\", \"sha256\": \"6fad9bc196394c5833a89f937c771db07774ef3bf643c1c0e1567260b5f89de8\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_root_windows.py\", \"module_sha256\": \"d6f45949eb0e8966580d90a0960719d48e4e4ca9e48fbacb15979ee4eef36835\", \"runtime_id\": \"test_root_windows.RootWindowCalibration.test_invalid_contract_and_nonfinite_boxes_are_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 29, \"name\": \"test_nonlinear_root_contains_sqrt2_by_exact_squares\", \"path\": \"evas/validation/paper/test_root_windows.py\", \"sha256\": \"ac6a2e2a5f989ae84272a2982cea63af9c88ff8ddef33651996a6c1235cde6d2\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_root_windows.py\", \"module_sha256\": \"d6f45949eb0e8966580d90a0960719d48e4e4ca9e48fbacb15979ee4eef36835\", \"runtime_id\": \"test_root_windows.RootWindowCalibration.test_nonlinear_root_contains_sqrt2_by_exact_squares\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 42, \"name\": \"test_outside_both_ends_is_rejected_without_clipping\", \"path\": \"evas/validation/paper/test_root_windows.py\", \"sha256\": \"fbc8e0ce37c962d0c79b596800caa3477168bc2dd86069c026150a81193abaf5\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_root_windows.py\", \"module_sha256\": \"d6f45949eb0e8966580d90a0960719d48e4e4ca9e48fbacb15979ee4eef36835\", \"runtime_id\": \"test_root_windows.RootWindowCalibration.test_outside_both_ends_is_rejected_without_clipping\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 50, \"name\": \"test_overlap_does_not_qualify_a_broad_callback\", \"path\": \"evas/validation/paper/test_root_windows.py\", \"sha256\": \"aec4cf60de758f278fda9028f388f0b266c8817c1750d510ccf401a14e1199ff\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_root_windows.py\", \"module_sha256\": \"d6f45949eb0e8966580d90a0960719d48e4e4ca9e48fbacb15979ee4eef36835\", \"runtime_id\": \"test_root_windows.RootWindowCalibration.test_overlap_does_not_qualify_a_broad_callback\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 60, \"name\": \"test_reference_metadata_change_does_not_change_model_or_inputs\", \"path\": \"evas/validation/paper/test_root_windows.py\", \"sha256\": \"afb4a7b716896eb0435788eb70658f1fbc7834006a5746a1d841b4404ade24c6\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_root_windows.py\", \"module_sha256\": \"d6f45949eb0e8966580d90a0960719d48e4e4ca9e48fbacb15979ee4eef36835\", \"runtime_id\": \"test_root_windows.RootWindowCalibration.test_reference_metadata_change_does_not_change_model_or_inputs\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 69, \"name\": \"test_reference_metadata_covers_same_high_under_both_additions\", \"path\": \"evas/validation/paper/test_root_windows.py\", \"sha256\": \"b99d93585f6470957e7a59651f70bf724e92ff8ded042c07ad7f8002423e3e59\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_root_windows.py\", \"module_sha256\": \"d6f45949eb0e8966580d90a0960719d48e4e4ca9e48fbacb15979ee4eef36835\", \"runtime_id\": \"test_root_windows.RootWindowCalibration.test_reference_metadata_covers_same_high_under_both_additions\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 55, \"name\": \"test_zero_resolution_does_not_claim_exact_no_early\", \"path\": \"evas/validation/paper/test_root_windows.py\", \"sha256\": \"3a6682ebd5c36f3f1178c0bb78a4d87c0e80e1be25610fa250ca711477aba568\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_root_windows.py\", \"module_sha256\": \"d6f45949eb0e8966580d90a0960719d48e4e4ca9e48fbacb15979ee4eef36835\", \"runtime_id\": \"test_root_windows.RootWindowCalibration.test_zero_resolution_does_not_claim_exact_no_early\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}], \"namespace\": \"validation\", \"schema_version\": 1, \"skipped_declarations\": 0, \"unresolved_instances\": []}\n",
+      "stderr": "",
+      "environment_overrides": {},
+      "actual_resolved_overrides": {},
+      "collection_profile": "inventory-child runtime; not original phase execution/skip results",
+      "original_python_equivalence": "major-minor-declared-only",
+      "sys_path_contract": "repository-cwd first, then literal phase PYTHONPATH; TestLoader adds start directory"
+    }
+  }
+}

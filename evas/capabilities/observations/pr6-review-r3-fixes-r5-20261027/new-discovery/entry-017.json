@@ -1,0 +1,615 @@
+{
+  "entry": {
+    "workflow": ".github/workflows/numerical-assurance.yml",
+    "line": 228,
+    "job": "provenance-paper",
+    "step": "Paper contracts, observable criteria and table provenance",
+    "job_if": "needs.selection.outputs.provenance == 'true'",
+    "step_if": null,
+    "command": "python3 -B -m unittest discover -s evas/validation/paper -p 'test_criteria.py' -v",
+    "environment_overrides": {},
+    "declared_python_versions": [
+      "3.12"
+    ],
+    "start": "evas/validation/paper",
+    "pattern": "test_criteria.py",
+    "namespace": "validation",
+    "collector": "unittest",
+    "mode": "declared-ci-literal",
+    "purpose": "role-not-semantic-qualification",
+    "entry_id": "58e79f388022a831ff2a30c902e23542e3e95b3499e03d23b5b83d51e7a0a962"
+  },
+  "receipt": {
+    "collector": {
+      "definition_profile": "actual-code-or-registered-native-skip-v1",
+      "native_skip_authority": {
+        "factory_span_sha256": "a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad",
+        "profile": "registered-native-unittest-skip-v1",
+        "runtime_file_sha256": "45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987",
+        "runtime_source": "unittest/case.py",
+        "wrapper_span_sha256": "96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda"
+      },
+      "path": "scripts/capabilities/discover_methods.py",
+      "sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "source_relationship": "owned-source-root"
+    },
+    "complete": true,
+    "discovered_instances": 29,
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONPATH": null,
+      "bytecode_disabled": true,
+      "cache_tag": "cpython-312",
+      "environment_scope": "python-runtime-and-import-path-only",
+      "executable": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+      "implementation": "cpython",
+      "platform": "darwin",
+      "python_version": "3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]",
+      "sys_path_before_selected_imports": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r5-20261027/source",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python312.zip",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/lib/python3.12/site-packages"
+      ]
+    },
+    "error_count": 0,
+    "errors": [],
+    "loader_error_count": 0,
+    "methods": [
+      {
+        "definition": {
+          "line": 331,
+          "name": "test_all_saved_values_reject_bool",
+          "path": "evas/validation/paper/test_criteria.py",
+          "sha256": "a0c6e8ea0f2fc44fbf2b04e0dcf8c6cb1ac77e1409ac83e6d00c18e3f2089690"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_criteria.py",
+        "module_sha256": "476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b",
+        "runtime_id": "test_criteria.Calibration.test_all_saved_values_reject_bool",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 279,
+          "name": "test_boundary_cohort_missing_cannot_use_nearest_grid",
+          "path": "evas/validation/paper/test_criteria.py",
+          "sha256": "50107cee123f7935b6e043a8e9bfbaa8c00526e6a9570da193047d8aea30b77b"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_criteria.py",
+        "module_sha256": "476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b",
+        "runtime_id": "test_criteria.Calibration.test_boundary_cohort_missing_cannot_use_nearest_grid",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 289,
+          "name": "test_boundary_serialization_requires_bound_and_provenance",
+          "path": "evas/validation/paper/test_criteria.py",
+          "sha256": "01af177e468c8161cd65a185326af9f75eaed2871333c679362fe128142eb677"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_criteria.py",
+        "module_sha256": "476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b",
+        "runtime_id": "test_criteria.Calibration.test_boundary_serialization_requires_bound_and_provenance",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 215,
+          "name": "test_budget_overlap_is_undecided",
+          "path": "evas/validation/paper/test_criteria.py",
+          "sha256": "33799ae832ed799b9f7c779e058779a5c399e6ffe4f2d2aba530a260b21db796"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_criteria.py",
+        "module_sha256": "476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b",
+        "runtime_id": "test_criteria.Calibration.test_budget_overlap_is_undecided",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 164,
+          "name": "test_counter_uncertainty_overlap_is_undecided",
+          "path": "evas/validation/paper/test_criteria.py",
+          "sha256": "64664a0478a3543046ed2985fa42585ebb3de90715313547ab920c29b617e3ff"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_criteria.py",
+        "module_sha256": "476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b",
+        "runtime_id": "test_criteria.Calibration.test_counter_uncertainty_overlap_is_undecided",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 303,
+          "name": "test_cross_limits_derive_from_source_stimulus",
+          "path": "evas/validation/paper/test_criteria.py",
+          "sha256": "06f976ef2a9303a7e33c9e8ac81c12371dd79db157c94a7c6b5569c0fecfebbb"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_criteria.py",
+        "module_sha256": "476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b",
+        "runtime_id": "test_criteria.Calibration.test_cross_limits_derive_from_source_stimulus",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 149,
+          "name": "test_distinct_native_times_survive_unit_conversion_collision",
+          "path": "evas/validation/paper/test_criteria.py",
+          "sha256": "e3e02f26d4de58b8d5f634dcbd000ba199e7cfa69bf65d5e140c6548fdc396b7"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_criteria.py",
+        "module_sha256": "476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b",
+        "runtime_id": "test_criteria.Calibration.test_distinct_native_times_survive_unit_conversion_collision",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 110,
+          "name": "test_distinct_voltage_and_history_faults",
+          "path": "evas/validation/paper/test_criteria.py",
+          "sha256": "85806bceecbb0dc43daeb9329da5dd2ebec5d35af35a3a0109832b685bbd31b5"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_criteria.py",
+        "module_sha256": "476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b",
+        "runtime_id": "test_criteria.Calibration.test_distinct_voltage_and_history_faults",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 124,
+          "name": "test_duplicate_count",
+          "path": "evas/validation/paper/test_criteria.py",
+          "sha256": "1c2af498f44e8eac80a2cb46d17e3b61b23da2a660f1c1aaecebab372d4829a1"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_criteria.py",
+        "module_sha256": "476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b",
+        "runtime_id": "test_criteria.Calibration.test_duplicate_count",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 223,
+          "name": "test_exact_boundary_diagnostic_is_retained",
+          "path": "evas/validation/paper/test_criteria.py",
+          "sha256": "c63ff818597a605f91a6ddd6a595577a646c10b392092c770492e13f2949cf00"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_criteria.py",
+        "module_sha256": "476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b",
+        "runtime_id": "test_criteria.Calibration.test_exact_boundary_diagnostic_is_retained",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 169,
+          "name": "test_execution_states_are_separate",
+          "path": "evas/validation/paper/test_criteria.py",
+          "sha256": "818401184073de8d5cfd8d831b2882342d62db2e7c7be3d6494cba670aed92e1"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_criteria.py",
+        "module_sha256": "476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b",
+        "runtime_id": "test_criteria.Calibration.test_execution_states_are_separate",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 349,
+          "name": "test_freeze_refuses_dependency_replacement",
+          "path": "evas/validation/paper/test_criteria.py",
+          "sha256": "b77cb794ea87f8f312ad61e5b9340a6e0afb7faf54ac1610b84db039d889fbd0"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_criteria.py",
+        "module_sha256": "476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b",
+        "runtime_id": "test_criteria.Calibration.test_freeze_refuses_dependency_replacement",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 323,
+          "name": "test_history_pass_is_compatible_existence_not_actual_time_bound",
+          "path": "evas/validation/paper/test_criteria.py",
+          "sha256": "7ee1eee10be0b964cd5ab5a801ed8daee511912d729f0e593048b6079eb609e3"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_criteria.py",
+        "module_sha256": "476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b",
+        "runtime_id": "test_criteria.Calibration.test_history_pass_is_compatible_existence_not_actual_time_bound",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 174,
+          "name": "test_incoherent_history_not_envelope_pass",
+          "path": "evas/validation/paper/test_criteria.py",
+          "sha256": "c3ea6c21b9f8347c4e1249987d5f4808649a37764364e4bb5666543801f69363"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_criteria.py",
+        "module_sha256": "476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b",
+        "runtime_id": "test_criteria.Calibration.test_incoherent_history_not_envelope_pass",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 315,
+          "name": "test_independent_si_instance_shifts",
+          "path": "evas/validation/paper/test_criteria.py",
+          "sha256": "8c0c4a863e5e4fe3cc0bacab5f549bcc18bf355d07f335abc32b87be10076772"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_criteria.py",
+        "module_sha256": "476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b",
+        "runtime_id": "test_criteria.Calibration.test_independent_si_instance_shifts",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 270,
+          "name": "test_invalid_saved_input_is_observation_not_dut_failure",
+          "path": "evas/validation/paper/test_criteria.py",
+          "sha256": "ef7673896b8ba9ac3102994c6402534b12cbef81a45aaedd10caaad9206720ec"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_criteria.py",
+        "module_sha256": "476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b",
+        "runtime_id": "test_criteria.Calibration.test_invalid_saved_input_is_observation_not_dut_failure",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 102,
+          "name": "test_legal_all_conditions",
+          "path": "evas/validation/paper/test_criteria.py",
+          "sha256": "0658675298f37a46b563972d26b51b15ed1e89d707487231715dfff53597b699"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_criteria.py",
+        "module_sha256": "476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b",
+        "runtime_id": "test_criteria.Calibration.test_legal_all_conditions",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 106,
+          "name": "test_legal_common_event_shifts",
+          "path": "evas/validation/paper/test_criteria.py",
+          "sha256": "ff38f0a701df2ab88b0d0d422be21faed346621e7495ce3945de77d824c1754b"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_criteria.py",
+        "module_sha256": "476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b",
+        "runtime_id": "test_criteria.Calibration.test_legal_common_event_shifts",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 336,
+          "name": "test_legal_small_wrap_displacements",
+          "path": "evas/validation/paper/test_criteria.py",
+          "sha256": "05a38c35ffe717a36c6968c078048ed4b2de1d55a77dfd50c65b5f96c1d0883f"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_criteria.py",
+        "module_sha256": "476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b",
+        "runtime_id": "test_criteria.Calibration.test_legal_small_wrap_displacements",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 141,
+          "name": "test_malformed_records_are_undecided",
+          "path": "evas/validation/paper/test_criteria.py",
+          "sha256": "b3b8ac267b2e83a5e981d503e912e77aa35620ff891e1c292779a6feacb672dd"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_criteria.py",
+        "module_sha256": "476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b",
+        "runtime_id": "test_criteria.Calibration.test_malformed_records_are_undecided",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 130,
+          "name": "test_missing_units_columns_and_unqualified_counter",
+          "path": "evas/validation/paper/test_criteria.py",
+          "sha256": "a02d2052be1a0f84a6fa292032a118ba7e2cb49e0f92a7f8e8f588c8102fd981"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_criteria.py",
+        "module_sha256": "476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b",
+        "runtime_id": "test_criteria.Calibration.test_missing_units_columns_and_unqualified_counter",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 181,
+          "name": "test_named_engineering_fault_controls",
+          "path": "evas/validation/paper/test_criteria.py",
+          "sha256": "271964c14c01fec57776732a26dbc63568901d2cd978630ae05335d58c5583bd"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_criteria.py",
+        "module_sha256": "476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b",
+        "runtime_id": "test_criteria.Calibration.test_named_engineering_fault_controls",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 220,
+          "name": "test_no_evidence_boolean_does_not_qualify",
+          "path": "evas/validation/paper/test_criteria.py",
+          "sha256": "0421fd98d6bb0c3fe435fb1331f2390eff916be5a258d18f4b40dbe3738df12c"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_criteria.py",
+        "module_sha256": "476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b",
+        "runtime_id": "test_criteria.Calibration.test_no_evidence_boolean_does_not_qualify",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 116,
+          "name": "test_nominal_event_rows_preserve_shared_history",
+          "path": "evas/validation/paper/test_criteria.py",
+          "sha256": "77dd25cc2e431eed7cae255535b094ec32cbe180245a8fcf1643e3d33338feb1"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_criteria.py",
+        "module_sha256": "476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b",
+        "runtime_id": "test_criteria.Calibration.test_nominal_event_rows_preserve_shared_history",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 252,
+          "name": "test_observation_envelope_bridge",
+          "path": "evas/validation/paper/test_criteria.py",
+          "sha256": "41b87f23bfb8ea0f5abf0d9adc7038f76cafaae64e84be445723a270babe375b"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_criteria.py",
+        "module_sha256": "476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b",
+        "runtime_id": "test_criteria.Calibration.test_observation_envelope_bridge",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 137,
+          "name": "test_observation_uncertainty_and_sparse_records",
+          "path": "evas/validation/paper/test_criteria.py",
+          "sha256": "d3dfd44557e08de7acc2babe5d2a3b2ce90f265ab3a8503e8701aaaa927697e5"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_criteria.py",
+        "module_sha256": "476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b",
+        "runtime_id": "test_criteria.Calibration.test_observation_uncertainty_and_sparse_records",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 262,
+          "name": "test_row_paired_error_bounds_do_not_hide_failure",
+          "path": "evas/validation/paper/test_criteria.py",
+          "sha256": "3f700df76ef6b954846828e09154915f49c615dccdde2c252c514d10db5ec8a2"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_criteria.py",
+        "module_sha256": "476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b",
+        "runtime_id": "test_criteria.Calibration.test_row_paired_error_bounds_do_not_hide_failure",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 230,
+          "name": "test_short_pulse_observation_limit_is_explicit",
+          "path": "evas/validation/paper/test_criteria.py",
+          "sha256": "b1ff82c8af9a177cb310e71623f8672e3c520ff2c5925f75cfe45c13706d1b60"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_criteria.py",
+        "module_sha256": "476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b",
+        "runtime_id": "test_criteria.Calibration.test_short_pulse_observation_limit_is_explicit",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 245,
+          "name": "test_two_backends_same_wrong_answer_fail_independently",
+          "path": "evas/validation/paper/test_criteria.py",
+          "sha256": "aaa117cb4f328be7c9d3b5189bf204abcfb8bf57ddb634aec46801e2db4b4536"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_criteria.py",
+        "module_sha256": "476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b",
+        "runtime_id": "test_criteria.Calibration.test_two_backends_same_wrong_answer_fail_independently",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      }
+    ],
+    "namespace": "validation",
+    "schema_version": 1,
+    "skipped_declarations": 0,
+    "unresolved_instances": [],
+    "transport": {
+      "argv": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-c",
+        "import os,runpy,sys; sys.path[0]=os.getcwd(); tool=sys.argv[1]; sys.argv=sys.argv[1:]; runpy.run_path(tool,run_name=\"__main__\")",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r5-20261027/source/scripts/capabilities/discover_methods.py",
+        "--worker",
+        "--root",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r5-20261027/source",
+        "--start",
+        "evas/validation/paper",
+        "--pattern",
+        "test_criteria.py",
+        "--namespace",
+        "validation"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r5-20261027/source",
+      "returncode": 0,
+      "stdout": "{\"collector\": {\"definition_profile\": \"actual-code-or-registered-native-skip-v1\", \"native_skip_authority\": {\"factory_span_sha256\": \"a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad\", \"profile\": \"registered-native-unittest-skip-v1\", \"runtime_file_sha256\": \"45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987\", \"runtime_source\": \"unittest/case.py\", \"wrapper_span_sha256\": \"96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda\"}, \"path\": \"scripts/capabilities/discover_methods.py\", \"sha256\": \"aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17\", \"source_relationship\": \"owned-source-root\"}, \"complete\": true, \"discovered_instances\": 29, \"environment\": {\"PYTHONDONTWRITEBYTECODE\": \"1\", \"PYTHONPATH\": null, \"bytecode_disabled\": true, \"cache_tag\": \"cpython-312\", \"environment_scope\": \"python-runtime-and-import-path-only\", \"executable\": \"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python\", \"implementation\": \"cpython\", \"platform\": \"darwin\", \"python_version\": \"3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"sys_path_before_selected_imports\": [\"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r5-20261027/source\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python312.zip\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload\", \"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/lib/python3.12/site-packages\"]}, \"error_count\": 0, \"errors\": [], \"loader_error_count\": 0, \"methods\": [{\"definition\": {\"line\": 331, \"name\": \"test_all_saved_values_reject_bool\", \"path\": \"evas/validation/paper/test_criteria.py\", \"sha256\": \"a0c6e8ea0f2fc44fbf2b04e0dcf8c6cb1ac77e1409ac83e6d00c18e3f2089690\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_criteria.py\", \"module_sha256\": \"476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b\", \"runtime_id\": \"test_criteria.Calibration.test_all_saved_values_reject_bool\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 279, \"name\": \"test_boundary_cohort_missing_cannot_use_nearest_grid\", \"path\": \"evas/validation/paper/test_criteria.py\", \"sha256\": \"50107cee123f7935b6e043a8e9bfbaa8c00526e6a9570da193047d8aea30b77b\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_criteria.py\", \"module_sha256\": \"476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b\", \"runtime_id\": \"test_criteria.Calibration.test_boundary_cohort_missing_cannot_use_nearest_grid\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 289, \"name\": \"test_boundary_serialization_requires_bound_and_provenance\", \"path\": \"evas/validation/paper/test_criteria.py\", \"sha256\": \"01af177e468c8161cd65a185326af9f75eaed2871333c679362fe128142eb677\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_criteria.py\", \"module_sha256\": \"476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b\", \"runtime_id\": \"test_criteria.Calibration.test_boundary_serialization_requires_bound_and_provenance\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 215, \"name\": \"test_budget_overlap_is_undecided\", \"path\": \"evas/validation/paper/test_criteria.py\", \"sha256\": \"33799ae832ed799b9f7c779e058779a5c399e6ffe4f2d2aba530a260b21db796\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_criteria.py\", \"module_sha256\": \"476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b\", \"runtime_id\": \"test_criteria.Calibration.test_budget_overlap_is_undecided\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 164, \"name\": \"test_counter_uncertainty_overlap_is_undecided\", \"path\": \"evas/validation/paper/test_criteria.py\", \"sha256\": \"64664a0478a3543046ed2985fa42585ebb3de90715313547ab920c29b617e3ff\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_criteria.py\", \"module_sha256\": \"476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b\", \"runtime_id\": \"test_criteria.Calibration.test_counter_uncertainty_overlap_is_undecided\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 303, \"name\": \"test_cross_limits_derive_from_source_stimulus\", \"path\": \"evas/validation/paper/test_criteria.py\", \"sha256\": \"06f976ef2a9303a7e33c9e8ac81c12371dd79db157c94a7c6b5569c0fecfebbb\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_criteria.py\", \"module_sha256\": \"476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b\", \"runtime_id\": \"test_criteria.Calibration.test_cross_limits_derive_from_source_stimulus\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 149, \"name\": \"test_distinct_native_times_survive_unit_conversion_collision\", \"path\": \"evas/validation/paper/test_criteria.py\", \"sha256\": \"e3e02f26d4de58b8d5f634dcbd000ba199e7cfa69bf65d5e140c6548fdc396b7\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_criteria.py\", \"module_sha256\": \"476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b\", \"runtime_id\": \"test_criteria.Calibration.test_distinct_native_times_survive_unit_conversion_collision\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 110, \"name\": \"test_distinct_voltage_and_history_faults\", \"path\": \"evas/validation/paper/test_criteria.py\", \"sha256\": \"85806bceecbb0dc43daeb9329da5dd2ebec5d35af35a3a0109832b685bbd31b5\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_criteria.py\", \"module_sha256\": \"476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b\", \"runtime_id\": \"test_criteria.Calibration.test_distinct_voltage_and_history_faults\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 124, \"name\": \"test_duplicate_count\", \"path\": \"evas/validation/paper/test_criteria.py\", \"sha256\": \"1c2af498f44e8eac80a2cb46d17e3b61b23da2a660f1c1aaecebab372d4829a1\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_criteria.py\", \"module_sha256\": \"476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b\", \"runtime_id\": \"test_criteria.Calibration.test_duplicate_count\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 223, \"name\": \"test_exact_boundary_diagnostic_is_retained\", \"path\": \"evas/validation/paper/test_criteria.py\", \"sha256\": \"c63ff818597a605f91a6ddd6a595577a646c10b392092c770492e13f2949cf00\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_criteria.py\", \"module_sha256\": \"476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b\", \"runtime_id\": \"test_criteria.Calibration.test_exact_boundary_diagnostic_is_retained\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 169, \"name\": \"test_execution_states_are_separate\", \"path\": \"evas/validation/paper/test_criteria.py\", \"sha256\": \"818401184073de8d5cfd8d831b2882342d62db2e7c7be3d6494cba670aed92e1\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_criteria.py\", \"module_sha256\": \"476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b\", \"runtime_id\": \"test_criteria.Calibration.test_execution_states_are_separate\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 349, \"name\": \"test_freeze_refuses_dependency_replacement\", \"path\": \"evas/validation/paper/test_criteria.py\", \"sha256\": \"b77cb794ea87f8f312ad61e5b9340a6e0afb7faf54ac1610b84db039d889fbd0\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_criteria.py\", \"module_sha256\": \"476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b\", \"runtime_id\": \"test_criteria.Calibration.test_freeze_refuses_dependency_replacement\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 323, \"name\": \"test_history_pass_is_compatible_existence_not_actual_time_bound\", \"path\": \"evas/validation/paper/test_criteria.py\", \"sha256\": \"7ee1eee10be0b964cd5ab5a801ed8daee511912d729f0e593048b6079eb609e3\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_criteria.py\", \"module_sha256\": \"476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b\", \"runtime_id\": \"test_criteria.Calibration.test_history_pass_is_compatible_existence_not_actual_time_bound\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 174, \"name\": \"test_incoherent_history_not_envelope_pass\", \"path\": \"evas/validation/paper/test_criteria.py\", \"sha256\": \"c3ea6c21b9f8347c4e1249987d5f4808649a37764364e4bb5666543801f69363\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_criteria.py\", \"module_sha256\": \"476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b\", \"runtime_id\": \"test_criteria.Calibration.test_incoherent_history_not_envelope_pass\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 315, \"name\": \"test_independent_si_instance_shifts\", \"path\": \"evas/validation/paper/test_criteria.py\", \"sha256\": \"8c0c4a863e5e4fe3cc0bacab5f549bcc18bf355d07f335abc32b87be10076772\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_criteria.py\", \"module_sha256\": \"476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b\", \"runtime_id\": \"test_criteria.Calibration.test_independent_si_instance_shifts\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 270, \"name\": \"test_invalid_saved_input_is_observation_not_dut_failure\", \"path\": \"evas/validation/paper/test_criteria.py\", \"sha256\": \"ef7673896b8ba9ac3102994c6402534b12cbef81a45aaedd10caaad9206720ec\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_criteria.py\", \"module_sha256\": \"476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b\", \"runtime_id\": \"test_criteria.Calibration.test_invalid_saved_input_is_observation_not_dut_failure\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 102, \"name\": \"test_legal_all_conditions\", \"path\": \"evas/validation/paper/test_criteria.py\", \"sha256\": \"0658675298f37a46b563972d26b51b15ed1e89d707487231715dfff53597b699\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_criteria.py\", \"module_sha256\": \"476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b\", \"runtime_id\": \"test_criteria.Calibration.test_legal_all_conditions\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 106, \"name\": \"test_legal_common_event_shifts\", \"path\": \"evas/validation/paper/test_criteria.py\", \"sha256\": \"ff38f0a701df2ab88b0d0d422be21faed346621e7495ce3945de77d824c1754b\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_criteria.py\", \"module_sha256\": \"476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b\", \"runtime_id\": \"test_criteria.Calibration.test_legal_common_event_shifts\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 336, \"name\": \"test_legal_small_wrap_displacements\", \"path\": \"evas/validation/paper/test_criteria.py\", \"sha256\": \"05a38c35ffe717a36c6968c078048ed4b2de1d55a77dfd50c65b5f96c1d0883f\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_criteria.py\", \"module_sha256\": \"476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b\", \"runtime_id\": \"test_criteria.Calibration.test_legal_small_wrap_displacements\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 141, \"name\": \"test_malformed_records_are_undecided\", \"path\": \"evas/validation/paper/test_criteria.py\", \"sha256\": \"b3b8ac267b2e83a5e981d503e912e77aa35620ff891e1c292779a6feacb672dd\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_criteria.py\", \"module_sha256\": \"476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b\", \"runtime_id\": \"test_criteria.Calibration.test_malformed_records_are_undecided\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 130, \"name\": \"test_missing_units_columns_and_unqualified_counter\", \"path\": \"evas/validation/paper/test_criteria.py\", \"sha256\": \"a02d2052be1a0f84a6fa292032a118ba7e2cb49e0f92a7f8e8f588c8102fd981\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_criteria.py\", \"module_sha256\": \"476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b\", \"runtime_id\": \"test_criteria.Calibration.test_missing_units_columns_and_unqualified_counter\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 181, \"name\": \"test_named_engineering_fault_controls\", \"path\": \"evas/validation/paper/test_criteria.py\", \"sha256\": \"271964c14c01fec57776732a26dbc63568901d2cd978630ae05335d58c5583bd\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_criteria.py\", \"module_sha256\": \"476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b\", \"runtime_id\": \"test_criteria.Calibration.test_named_engineering_fault_controls\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 220, \"name\": \"test_no_evidence_boolean_does_not_qualify\", \"path\": \"evas/validation/paper/test_criteria.py\", \"sha256\": \"0421fd98d6bb0c3fe435fb1331f2390eff916be5a258d18f4b40dbe3738df12c\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_criteria.py\", \"module_sha256\": \"476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b\", \"runtime_id\": \"test_criteria.Calibration.test_no_evidence_boolean_does_not_qualify\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 116, \"name\": \"test_nominal_event_rows_preserve_shared_history\", \"path\": \"evas/validation/paper/test_criteria.py\", \"sha256\": \"77dd25cc2e431eed7cae255535b094ec32cbe180245a8fcf1643e3d33338feb1\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_criteria.py\", \"module_sha256\": \"476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b\", \"runtime_id\": \"test_criteria.Calibration.test_nominal_event_rows_preserve_shared_history\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 252, \"name\": \"test_observation_envelope_bridge\", \"path\": \"evas/validation/paper/test_criteria.py\", \"sha256\": \"41b87f23bfb8ea0f5abf0d9adc7038f76cafaae64e84be445723a270babe375b\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_criteria.py\", \"module_sha256\": \"476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b\", \"runtime_id\": \"test_criteria.Calibration.test_observation_envelope_bridge\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 137, \"name\": \"test_observation_uncertainty_and_sparse_records\", \"path\": \"evas/validation/paper/test_criteria.py\", \"sha256\": \"d3dfd44557e08de7acc2babe5d2a3b2ce90f265ab3a8503e8701aaaa927697e5\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_criteria.py\", \"module_sha256\": \"476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b\", \"runtime_id\": \"test_criteria.Calibration.test_observation_uncertainty_and_sparse_records\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 262, \"name\": \"test_row_paired_error_bounds_do_not_hide_failure\", \"path\": \"evas/validation/paper/test_criteria.py\", \"sha256\": \"3f700df76ef6b954846828e09154915f49c615dccdde2c252c514d10db5ec8a2\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_criteria.py\", \"module_sha256\": \"476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b\", \"runtime_id\": \"test_criteria.Calibration.test_row_paired_error_bounds_do_not_hide_failure\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 230, \"name\": \"test_short_pulse_observation_limit_is_explicit\", \"path\": \"evas/validation/paper/test_criteria.py\", \"sha256\": \"b1ff82c8af9a177cb310e71623f8672e3c520ff2c5925f75cfe45c13706d1b60\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_criteria.py\", \"module_sha256\": \"476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b\", \"runtime_id\": \"test_criteria.Calibration.test_short_pulse_observation_limit_is_explicit\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 245, \"name\": \"test_two_backends_same_wrong_answer_fail_independently\", \"path\": \"evas/validation/paper/test_criteria.py\", \"sha256\": \"aaa117cb4f328be7c9d3b5189bf204abcfb8bf57ddb634aec46801e2db4b4536\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_criteria.py\", \"module_sha256\": \"476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b\", \"runtime_id\": \"test_criteria.Calibration.test_two_backends_same_wrong_answer_fail_independently\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}], \"namespace\": \"validation\", \"schema_version\": 1, \"skipped_declarations\": 0, \"unresolved_instances\": []}\n",
+      "stderr": "",
+      "environment_overrides": {},
+      "actual_resolved_overrides": {},
+      "collection_profile": "inventory-child runtime; not original phase execution/skip results",
+      "original_python_equivalence": "major-minor-declared-only",
+      "sys_path_contract": "repository-cwd first, then literal phase PYTHONPATH; TestLoader adds start directory"
+    }
+  }
+}

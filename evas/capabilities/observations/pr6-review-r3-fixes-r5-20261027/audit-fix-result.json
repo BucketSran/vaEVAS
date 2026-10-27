@@ -1,0 +1,650 @@
+{
+  "task": "PR6 bounded markdown-audit fix for R3-01 and R3-02",
+  "base_commit": "5455ae7b006488902476bba045e9e2971102d8f5",
+  "base_tree": "c9622d94210ce88732cdae34a66ae1c3cf463bcd",
+  "pr": "https://github.com/BucketSran/vaEVAS/pull/269",
+  "model": "grok-4.7",
+  "options_requested_by_brief": {
+    "reasoning_effort": "high",
+    "fastMode": false
+  },
+  "options_observed_from_tools": "unknown",
+  "started_at_utc": "2026-10-27T15:54:44Z",
+  "finished_at_utc": "2026-10-27T16:16:19Z",
+  "export_blob_check": {
+    "evidence": "executed",
+    "entry_count": 49577,
+    "missing": 0,
+    "mismatches": 0,
+    "extra": 0,
+    "receipt": "scratch/export-receipt.json"
+  },
+  "files": [
+    {
+      "path": "evas/capabilities/support_view.py",
+      "sha256_before": "e50584ab40b4b18efbb2b434ee9093abb19331cc074271bb46740652314822e9",
+      "bytes_before": 50421,
+      "sha256_after": "d78620fc40ba6c5d23be3e81b16f25cc916324d3acd9951768b4c91680168468",
+      "bytes_after": 52348
+    },
+    {
+      "path": "evas/capabilities/test_support_view.py",
+      "sha256_before": "937e2e6519aa79c2f6ea69aa2c995180c8c79f76fc6c453c6c0e44d0dc8da414",
+      "bytes_before": 33868,
+      "sha256_after": "24f85f632ceff228861466bb7082eaa28bdfb6af6757b3b8b8e258bad3b135e0",
+      "bytes_after": 38336
+    }
+  ],
+  "source_patch": {
+    "path": "source.patch",
+    "bytes": 12302,
+    "sha256": "7b969cb3d462fb7d2665f0239b01af5ea5bd4f2593cd397e7a644d34568f0b5f",
+    "stat": "evas/capabilities/support_view.py      | 118 +++++++++++++++++++++++----------\n evas/capabilities/test_support_view.py |  72 ++++++++++++++++++++\n 2 files changed, 155 insertions(+), 35 deletions(-)",
+    "reverse_apply_matches_commit": true,
+    "evidence": "executed"
+  },
+  "generated_output_unchanged": true,
+  "generated_output_evidence": [
+    {
+      "path": "evas/capabilities/generated/support.md",
+      "sha256": "37452c71b2c62e87b5cbcc2088d6f207f7645357af2710b313c14c84bbc20ce2",
+      "disk_equals_commit": true,
+      "evidence": "executed"
+    },
+    {
+      "path": "evas/capabilities/generated/support-facts.json",
+      "sha256": "e658a3fdfe65f8eefa0afe7a696b2841c70a20e1a58bec72b7f7f11fb0ebf770",
+      "disk_equals_commit": true,
+      "evidence": "executed"
+    },
+    {
+      "check": "python -B evas/capabilities/render.py --check",
+      "returncode": 0,
+      "stdout": "checked 84 capability files",
+      "evidence": "executed"
+    },
+    {
+      "check": "git diff --stat against 5455ae7b",
+      "text": "evas/capabilities/support_view.py      | 118 +++++++++++++++++++++++----------\n evas/capabilities/test_support_view.py |  72 ++++++++++++++++++++\n 2 files changed, 155 insertions(+), 35 deletions(-)",
+      "evidence": "executed"
+    }
+  ],
+  "variant_text_sha256_changed": [],
+  "variants": [
+    {
+      "name": "requirement-order-only",
+      "expected_reject": false,
+      "text_sha256": "8ddff1365d1877ddb2b4716236420514bceaac650ba8e8723b0cc4cb9548d1a5",
+      "text_sha256_same_before_and_after": true,
+      "before": {
+        "actual_reject": false,
+        "errors": []
+      },
+      "after": {
+        "actual_reject": false,
+        "errors": []
+      },
+      "fixed": false
+    },
+    {
+      "name": "move-all-records-to-wrong-requirement",
+      "expected_reject": true,
+      "text_sha256": "4744037ab8218e69d4d70a8a1c74acfb35d81f9828cb24111f45e4b234648a0d",
+      "text_sha256_same_before_and_after": true,
+      "before": {
+        "actual_reject": false,
+        "errors": []
+      },
+      "after": {
+        "actual_reject": true,
+        "errors": [
+          "markdown extra qualification record",
+          "markdown extra toolchain line",
+          "markdown qualification record missing",
+          "markdown qualification record missing"
+        ]
+      },
+      "fixed": true
+    },
+    {
+      "name": "duplicate-all-records",
+      "expected_reject": true,
+      "text_sha256": "948f0a9d4f43085eb2933787dc3fd92312bfa5008b6ba66c9c8a9e3236c8d745",
+      "text_sha256_same_before_and_after": true,
+      "before": {
+        "actual_reject": false,
+        "errors": []
+      },
+      "after": {
+        "actual_reject": true,
+        "errors": [
+          "markdown extra qualification record",
+          "markdown extra toolchain line"
+        ]
+      },
+      "fixed": true
+    },
+    {
+      "name": "move-records-to-unbound-section",
+      "expected_reject": true,
+      "text_sha256": "3892d1fed26dc1a1159286c878c8110c7252ac5fbcc6ed111a2cb687d93fda95",
+      "text_sha256_same_before_and_after": true,
+      "before": {
+        "actual_reject": false,
+        "errors": []
+      },
+      "after": {
+        "actual_reject": true,
+        "errors": [
+          "markdown qualification record missing",
+          "markdown qualification record missing",
+          "markdown extra qualification record",
+          "markdown extra toolchain line"
+        ]
+      },
+      "fixed": true
+    },
+    {
+      "name": "record-order-only",
+      "expected_reject": false,
+      "text_sha256": "a6812ce00d7682aebc4bc7af6e53125b6da4e17e3702b5ca36444a9ce2bbda97",
+      "text_sha256_same_before_and_after": true,
+      "before": {
+        "actual_reject": false,
+        "errors": []
+      },
+      "after": {
+        "actual_reject": false,
+        "errors": []
+      },
+      "fixed": false
+    },
+    {
+      "name": "duplicate-toolchain-line",
+      "expected_reject": true,
+      "text_sha256": "be662e8e59e65a93c8d0a63efe755edce38afc3195ce902453f511a498df508b",
+      "text_sha256_same_before_and_after": true,
+      "before": {
+        "actual_reject": false,
+        "errors": []
+      },
+      "after": {
+        "actual_reject": true,
+        "errors": [
+          "markdown extra toolchain line"
+        ]
+      },
+      "fixed": true
+    },
+    {
+      "name": "contradictory-toolchain-line",
+      "expected_reject": true,
+      "text_sha256": "08804c75e1e9219dd75add82810d624d9ca7fb4813e52295925e073db7c57413",
+      "text_sha256_same_before_and_after": true,
+      "before": {
+        "actual_reject": false,
+        "errors": []
+      },
+      "after": {
+        "actual_reject": true,
+        "errors": [
+          "markdown extra toolchain line"
+        ]
+      },
+      "fixed": true
+    },
+    {
+      "name": "wrong-toolchain-line-only",
+      "expected_reject": true,
+      "text_sha256": "b96b510b53477705765c5d826fba73d32f129340d95b191673460b3375132dca",
+      "text_sha256_same_before_and_after": true,
+      "before": {
+        "actual_reject": true,
+        "errors": [
+          "markdown dropped toolchain component"
+        ]
+      },
+      "after": {
+        "actual_reject": true,
+        "errors": [
+          "markdown dropped toolchain component",
+          "markdown extra toolchain line"
+        ]
+      },
+      "fixed": false
+    },
+    {
+      "name": "swap-distinct-contract-allowed_behavior",
+      "expected_reject": true,
+      "text_sha256": "65cd0fb7ff837b9fc110a45e160f4305a7d8e0419b414b297925adad78dce48f",
+      "text_sha256_same_before_and_after": true,
+      "before": {
+        "actual_reject": true,
+        "errors": [
+          "markdown dropped requirement contract field allowed_behavior",
+          "markdown dropped requirement contract field allowed_behavior"
+        ]
+      },
+      "after": {
+        "actual_reject": true,
+        "errors": [
+          "markdown dropped requirement contract field allowed_behavior",
+          "markdown dropped requirement contract field allowed_behavior"
+        ]
+      },
+      "fixed": false
+    },
+    {
+      "name": "swap-distinct-contract-conditions",
+      "expected_reject": true,
+      "text_sha256": "88f7335d7cb35c3e3f559bf4cd02065b5b5e7b8b66514b8823cabf7c098d3be7",
+      "text_sha256_same_before_and_after": true,
+      "before": {
+        "actual_reject": true,
+        "errors": [
+          "markdown dropped requirement contract field conditions",
+          "markdown dropped requirement contract field conditions"
+        ]
+      },
+      "after": {
+        "actual_reject": true,
+        "errors": [
+          "markdown dropped requirement contract field conditions",
+          "markdown dropped requirement contract field conditions"
+        ]
+      },
+      "fixed": false
+    },
+    {
+      "name": "swap-distinct-contract-observables",
+      "expected_reject": true,
+      "text_sha256": "17e25c29996500a3687199e14edafa1d50c08ddf200fc375ed9c243d892a9c1f",
+      "text_sha256_same_before_and_after": true,
+      "before": {
+        "actual_reject": true,
+        "errors": [
+          "markdown dropped requirement contract field observables",
+          "markdown dropped requirement contract field observables"
+        ]
+      },
+      "after": {
+        "actual_reject": true,
+        "errors": [
+          "markdown dropped requirement contract field observables",
+          "markdown dropped requirement contract field observables"
+        ]
+      },
+      "fixed": false
+    },
+    {
+      "name": "duplicate-requirement-section",
+      "expected_reject": true,
+      "text_sha256": "bf1eab6d27134f7b9688249e496e7ccd9879ba6dccfc54a3d684389e96d32ee9",
+      "text_sha256_same_before_and_after": true,
+      "before": {
+        "actual_reject": true,
+        "errors": [
+          "markdown requirement headings"
+        ]
+      },
+      "after": {
+        "actual_reject": true,
+        "errors": [
+          "markdown requirement headings",
+          "markdown requirement headings"
+        ]
+      },
+      "fixed": false
+    },
+    {
+      "name": "current-default-change-view_status",
+      "expected_reject": true,
+      "text_sha256": "9705240b1ea31c923cde4d9aaf976f6b6061cdd1465fb2c0e2ce510569cb0006",
+      "text_sha256_same_before_and_after": true,
+      "before": {
+        "actual_reject": true,
+        "errors": [
+          "markdown view status diverged"
+        ]
+      },
+      "after": {
+        "actual_reject": true,
+        "errors": [
+          "markdown view status diverged"
+        ]
+      },
+      "fixed": false
+    },
+    {
+      "name": "current-default-drop-view_status",
+      "expected_reject": true,
+      "text_sha256": "3137e8abd381f86549bc6944c4869489cbee39f9af39f19a0084d12c5e620750",
+      "text_sha256_same_before_and_after": true,
+      "before": {
+        "actual_reject": true,
+        "errors": [
+          "markdown view status diverged"
+        ]
+      },
+      "after": {
+        "actual_reject": true,
+        "errors": [
+          "markdown view status diverged"
+        ]
+      },
+      "fixed": false
+    },
+    {
+      "name": "current-default-change-adopted",
+      "expected_reject": true,
+      "text_sha256": "65d41406b8c9bc16b4ef805dabfe337cc7610c4537dedc80372fc8eab735f032",
+      "text_sha256_same_before_and_after": true,
+      "before": {
+        "actual_reject": true,
+        "errors": [
+          "markdown view status diverged"
+        ]
+      },
+      "after": {
+        "actual_reject": true,
+        "errors": [
+          "markdown view status diverged"
+        ]
+      },
+      "fixed": false
+    },
+    {
+      "name": "current-default-drop-adopted",
+      "expected_reject": true,
+      "text_sha256": "cb8f341abcbd27f023f099fcff569673a0690b02cb15683ac55ff4a658808980",
+      "text_sha256_same_before_and_after": true,
+      "before": {
+        "actual_reject": true,
+        "errors": [
+          "markdown view status diverged"
+        ]
+      },
+      "after": {
+        "actual_reject": true,
+        "errors": [
+          "markdown view status diverged"
+        ]
+      },
+      "fixed": false
+    },
+    {
+      "name": "current-default-change-provisional",
+      "expected_reject": true,
+      "text_sha256": "aab02e90863e8c07d2ab395a10939f660d5d9b08c1d16bd10fb1d4b90344b161",
+      "text_sha256_same_before_and_after": true,
+      "before": {
+        "actual_reject": true,
+        "errors": [
+          "markdown view status diverged"
+        ]
+      },
+      "after": {
+        "actual_reject": true,
+        "errors": [
+          "markdown view status diverged"
+        ]
+      },
+      "fixed": false
+    },
+    {
+      "name": "current-default-drop-provisional",
+      "expected_reject": true,
+      "text_sha256": "7ef26e56f30d9635491241ffaf755537a35ba051f45dc340dd57ece325115fd4",
+      "text_sha256_same_before_and_after": true,
+      "before": {
+        "actual_reject": true,
+        "errors": [
+          "markdown view status diverged"
+        ]
+      },
+      "after": {
+        "actual_reject": true,
+        "errors": [
+          "markdown view status diverged"
+        ]
+      },
+      "fixed": false
+    },
+    {
+      "name": "current-default-contradictory-duplicate-view-status",
+      "expected_reject": true,
+      "text_sha256": "bbd0c7f54ea3fc307bf6a024cac5d6ba3c0e4e980ff0c9d99374be073fe6ddc4",
+      "text_sha256_same_before_and_after": true,
+      "before": {
+        "actual_reject": false,
+        "errors": []
+      },
+      "after": {
+        "actual_reject": true,
+        "errors": [
+          "markdown view status diverged"
+        ]
+      },
+      "fixed": true
+    },
+    {
+      "name": "preview-change-view_status",
+      "expected_reject": true,
+      "text_sha256": "18f6348fd9eac99eebe77e052b02cfd410227084b801ab85c2553a4265aa3fbe",
+      "text_sha256_same_before_and_after": true,
+      "before": {
+        "actual_reject": true,
+        "errors": [
+          "markdown view status diverged"
+        ]
+      },
+      "after": {
+        "actual_reject": true,
+        "errors": [
+          "markdown view status diverged"
+        ]
+      },
+      "fixed": false
+    },
+    {
+      "name": "preview-drop-view_status",
+      "expected_reject": true,
+      "text_sha256": "b253af4fa8daa347641a04d6132cbdc27181011335cc698bfe639aa6e9f1aff0",
+      "text_sha256_same_before_and_after": true,
+      "before": {
+        "actual_reject": true,
+        "errors": [
+          "markdown view status diverged"
+        ]
+      },
+      "after": {
+        "actual_reject": true,
+        "errors": [
+          "markdown view status diverged"
+        ]
+      },
+      "fixed": false
+    },
+    {
+      "name": "preview-change-adopted",
+      "expected_reject": true,
+      "text_sha256": "6bd82fd8aff8ba8161720b1111d3475ef71cae9086deb7aae8a881b71208b1f0",
+      "text_sha256_same_before_and_after": true,
+      "before": {
+        "actual_reject": true,
+        "errors": [
+          "markdown view status diverged"
+        ]
+      },
+      "after": {
+        "actual_reject": true,
+        "errors": [
+          "markdown view status diverged"
+        ]
+      },
+      "fixed": false
+    },
+    {
+      "name": "preview-drop-adopted",
+      "expected_reject": true,
+      "text_sha256": "51a92918fa7cd1a3f555d186519442b496f7cefc408e246f72b943b2912a57d2",
+      "text_sha256_same_before_and_after": true,
+      "before": {
+        "actual_reject": true,
+        "errors": [
+          "markdown view status diverged"
+        ]
+      },
+      "after": {
+        "actual_reject": true,
+        "errors": [
+          "markdown view status diverged"
+        ]
+      },
+      "fixed": false
+    },
+    {
+      "name": "preview-change-provisional",
+      "expected_reject": true,
+      "text_sha256": "858665e540d656d46d2248341c960a0a0823e49319fe6e0f0e0ed2237449cea6",
+      "text_sha256_same_before_and_after": true,
+      "before": {
+        "actual_reject": true,
+        "errors": [
+          "markdown view status diverged"
+        ]
+      },
+      "after": {
+        "actual_reject": true,
+        "errors": [
+          "markdown view status diverged"
+        ]
+      },
+      "fixed": false
+    },
+    {
+      "name": "preview-drop-provisional",
+      "expected_reject": true,
+      "text_sha256": "d6f800a4d3065dffd02ea8fc14ea15f086261d2a59e9fa708ded2b734c3f27ff",
+      "text_sha256_same_before_and_after": true,
+      "before": {
+        "actual_reject": true,
+        "errors": [
+          "markdown view status diverged"
+        ]
+      },
+      "after": {
+        "actual_reject": true,
+        "errors": [
+          "markdown view status diverged"
+        ]
+      },
+      "fixed": false
+    },
+    {
+      "name": "preview-contradictory-duplicate-view-status",
+      "expected_reject": true,
+      "text_sha256": "a0d4155ca44f9b3f6b65206c48e893a2a461ab394ad61501b00db9a858e0765d",
+      "text_sha256_same_before_and_after": true,
+      "before": {
+        "actual_reject": false,
+        "errors": []
+      },
+      "after": {
+        "actual_reject": true,
+        "errors": [
+          "markdown view status diverged"
+        ]
+      },
+      "fixed": true
+    }
+  ],
+  "old_false_acceptances": {
+    "before_rejected": 16,
+    "before_total": 16,
+    "after_rejected": 16,
+    "after_total": 16,
+    "names": [
+      "ngspice-drop-consumer-a-toolchain",
+      "ngspice-drop-owner-version",
+      "gnucap-drop-consumer-a-toolchain",
+      "gnucap-drop-owner-version",
+      "requirement__itor-drop-allowed_behavior",
+      "requirement__itor-drop-conditions",
+      "requirement__itor-drop-observables",
+      "requirement__rtoi-drop-allowed_behavior",
+      "requirement__rtoi-drop-conditions",
+      "requirement__rtoi-drop-observables",
+      "requirement_expm1-drop-conditions",
+      "requirement_ln1p-drop-conditions",
+      "markdown-change-view_status",
+      "markdown-drop-view_status",
+      "markdown-change-provisional",
+      "markdown-drop-provisional"
+    ],
+    "all_rejected_before": true,
+    "all_rejected_after": true,
+    "evidence": "executed"
+  },
+  "controls": {
+    "before": {
+      "mismatches": [
+        "move-all-records-to-wrong-requirement",
+        "duplicate-all-records",
+        "move-records-to-unbound-section",
+        "duplicate-toolchain-line",
+        "contradictory-toolchain-line",
+        "current-default-contradictory-duplicate-view-status",
+        "preview-contradictory-duplicate-view-status"
+      ],
+      "stdout": "logs/markdown-controls-before.stdout",
+      "json": "logs/markdown-controls-before.json"
+    },
+    "after": {
+      "mismatches": [],
+      "stdout": "logs/markdown-controls-after.stdout",
+      "json": "logs/markdown-controls-after.json"
+    },
+    "evidence": "executed"
+  },
+  "unittest": {
+    "command": "python -B -m unittest discover -s evas/capabilities -p 'test_*.py' -v",
+    "python": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+    "returncode": 0,
+    "summary": "Ran 98 tests in 214.122s OK",
+    "stdout": "logs/unittest-discover.stdout",
+    "stderr": "logs/unittest-discover.stderr",
+    "evidence": "executed"
+  },
+  "render_check": {
+    "command": "python -B evas/capabilities/render.py --check",
+    "returncode": 0,
+    "stdout": "checked 84 capability files",
+    "stderr": "logs/render-check.stderr",
+    "evidence": "executed"
+  },
+  "retries": [
+    {
+      "name": "unittest-focused-first",
+      "result": "failed",
+      "cause": "expected header values were strings; the parser returns one-element lists, so canonical markdown was reported as markdown view status diverged",
+      "disposition": "corrected the expected values to one-element lists and reran"
+    }
+  ],
+  "preview_dirs_left_in_export": [],
+  "guards": {
+    "before_head": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+    "after_head": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+    "before_index_sha256": "a2e18b66fd9b3e29093343793d45781c11a717c05c35103d4e9b1da8eec87d71",
+    "after_index_sha256": "a2e18b66fd9b3e29093343793d45781c11a717c05c35103d4e9b1da8eec87d71",
+    "index_unchanged": true,
+    "before_config_sha256": "de2b08ef3ba66e96be8b70c87346ff4a96f905e1272934ddd86c218dba501ea8",
+    "after_config_sha256": "de2b08ef3ba66e96be8b70c87346ff4a96f905e1272934ddd86c218dba501ea8",
+    "config_unchanged": true,
+    "config_matches_accepted_baseline": true,
+    "before_tests_match": true,
+    "after_tests_match": true,
+    "test_count": 20,
+    "evidence": "executed"
+  }
+}

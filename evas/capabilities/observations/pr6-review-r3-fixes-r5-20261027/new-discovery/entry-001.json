@@ -1,0 +1,316 @@
+{
+  "entry": {
+    "workflow": ".github/workflows/numerical-assurance.yml",
+    "line": 70,
+    "job": "selection",
+    "step": "Check CI routing and changed-line whitespace",
+    "job_if": null,
+    "step_if": null,
+    "command": "python3 -B -m unittest discover -s scripts/tests -p test_evas_check_policy.py -v",
+    "environment_overrides": {
+      "CI_BASE": "${{ steps.changes.outputs.base }}",
+      "CI_HEAD": "${{ steps.changes.outputs.head }}"
+    },
+    "declared_python_versions": [],
+    "start": "scripts/tests",
+    "pattern": "test_evas_check_policy.py",
+    "namespace": "maintenance",
+    "collector": "unittest",
+    "mode": "declared-ci-literal",
+    "purpose": "role-not-semantic-qualification",
+    "entry_id": "9649345d15180cd52d5a6331753cd58e69268c8657a46135eebd79a577f2172e"
+  },
+  "receipt": {
+    "collector": {
+      "definition_profile": "actual-code-or-registered-native-skip-v1",
+      "native_skip_authority": {
+        "factory_span_sha256": "a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad",
+        "profile": "registered-native-unittest-skip-v1",
+        "runtime_file_sha256": "45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987",
+        "runtime_source": "unittest/case.py",
+        "wrapper_span_sha256": "96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda"
+      },
+      "path": "scripts/capabilities/discover_methods.py",
+      "sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "source_relationship": "owned-source-root"
+    },
+    "complete": true,
+    "discovered_instances": 12,
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONPATH": null,
+      "bytecode_disabled": true,
+      "cache_tag": "cpython-312",
+      "environment_scope": "python-runtime-and-import-path-only",
+      "executable": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+      "implementation": "cpython",
+      "platform": "darwin",
+      "python_version": "3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]",
+      "sys_path_before_selected_imports": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r5-20261027/source",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python312.zip",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/lib/python3.12/site-packages"
+      ]
+    },
+    "error_count": 0,
+    "errors": [],
+    "loader_error_count": 0,
+    "methods": [
+      {
+        "definition": {
+          "line": 204,
+          "name": "test_acceptance_closes_only_successful_local_checks",
+          "path": "scripts/tests/test_evas_check_policy.py",
+          "sha256": "023f8bc6695ed34592afaf2a60d6b133fd6f91a632bc1a845dbfe369784b8947"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_evas_check_policy.py",
+        "module_sha256": "72e31b32215213c6a5b37bc81a0a00df7e0e759e140fed1a6b184d3f1f0f9903",
+        "runtime_id": "test_evas_check_policy.PolicyCommands.test_acceptance_closes_only_successful_local_checks",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 140,
+          "name": "test_ci_obligations_do_not_expand_known_local_checks",
+          "path": "scripts/tests/test_evas_check_policy.py",
+          "sha256": "f4009cb0a2f010d505143da286da1b17b564f7d80d6feb6686a2ebd68c7a035c"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_evas_check_policy.py",
+        "module_sha256": "72e31b32215213c6a5b37bc81a0a00df7e0e759e140fed1a6b184d3f1f0f9903",
+        "runtime_id": "test_evas_check_policy.PolicyCommands.test_ci_obligations_do_not_expand_known_local_checks",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 261,
+          "name": "test_document_sync_preserves_manual_text_and_detects_drift",
+          "path": "scripts/tests/test_evas_check_policy.py",
+          "sha256": "458b5584a0a940656bdf9de4135540509cf6da7ea01de5de48f2e7a9b4f11ca0"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_evas_check_policy.py",
+        "module_sha256": "72e31b32215213c6a5b37bc81a0a00df7e0e759e140fed1a6b184d3f1f0f9903",
+        "runtime_id": "test_evas_check_policy.PolicyCommands.test_document_sync_preserves_manual_text_and_detects_drift",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 17,
+          "name": "test_initial_output_changes_select_legacy_observer_consumers",
+          "path": "scripts/tests/test_evas_check_policy.py",
+          "sha256": "437a30d06b487c91095252739b9bb49e5ad3478c24472f27b7bf41656913c664"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_evas_check_policy.py",
+        "module_sha256": "72e31b32215213c6a5b37bc81a0a00df7e0e759e140fed1a6b184d3f1f0f9903",
+        "runtime_id": "test_evas_check_policy.PolicyCommands.test_initial_output_changes_select_legacy_observer_consumers",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 286,
+          "name": "test_invalid_document_markers_never_write",
+          "path": "scripts/tests/test_evas_check_policy.py",
+          "sha256": "bc552557202cf610b9eebf72f3bc4402662556bdd668a5c80896fd035375c889"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_evas_check_policy.py",
+        "module_sha256": "72e31b32215213c6a5b37bc81a0a00df7e0e759e140fed1a6b184d3f1f0f9903",
+        "runtime_id": "test_evas_check_policy.PolicyCommands.test_invalid_document_markers_never_write",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 236,
+          "name": "test_invalid_protocol_and_execution_facts_fail_closed",
+          "path": "scripts/tests/test_evas_check_policy.py",
+          "sha256": "06030e552434e58032a0baf5a91011309540d7e0916d4bc48c6265b577915843"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_evas_check_policy.py",
+        "module_sha256": "72e31b32215213c6a5b37bc81a0a00df7e0e759e140fed1a6b184d3f1f0f9903",
+        "runtime_id": "test_evas_check_policy.PolicyCommands.test_invalid_protocol_and_execution_facts_fail_closed",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 169,
+          "name": "test_missing_and_deleted_required_modules_remain_blocked",
+          "path": "scripts/tests/test_evas_check_policy.py",
+          "sha256": "08d7ed0cd892e6fd4f19e13ba92bac5955896d00f9df6fac5380581c6466628d"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_evas_check_policy.py",
+        "module_sha256": "72e31b32215213c6a5b37bc81a0a00df7e0e759e140fed1a6b184d3f1f0f9903",
+        "runtime_id": "test_evas_check_policy.PolicyCommands.test_missing_and_deleted_required_modules_remain_blocked",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 48,
+          "name": "test_new_proof_paths_keep_accounting_obligation_after_local_pass",
+          "path": "scripts/tests/test_evas_check_policy.py",
+          "sha256": "7fb671393fbab962527bfe77827d8d2a07e899c039fb790c34eb703affd62d46"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_evas_check_policy.py",
+        "module_sha256": "72e31b32215213c6a5b37bc81a0a00df7e0e759e140fed1a6b184d3f1f0f9903",
+        "runtime_id": "test_evas_check_policy.PolicyCommands.test_new_proof_paths_keep_accounting_obligation_after_local_pass",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 34,
+          "name": "test_nonlinear_evidence_changes_select_public_observation_consumers",
+          "path": "scripts/tests/test_evas_check_policy.py",
+          "sha256": "aef49c5fa9877140aa8bdd8ffbe03172547e42fe086cbb29728c3f8fe2642ff2"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_evas_check_policy.py",
+        "module_sha256": "72e31b32215213c6a5b37bc81a0a00df7e0e759e140fed1a6b184d3f1f0f9903",
+        "runtime_id": "test_evas_check_policy.PolicyCommands.test_nonlinear_evidence_changes_select_public_observation_consumers",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 64,
+          "name": "test_representation_and_budget_require_early_evidence_without_new_protocol",
+          "path": "scripts/tests/test_evas_check_policy.py",
+          "sha256": "29531e16dd4c2ce93fd09336b9437a6d3d7c34a186dfa0f04719968960f1bebe"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_evas_check_policy.py",
+        "module_sha256": "72e31b32215213c6a5b37bc81a0a00df7e0e759e140fed1a6b184d3f1f0f9903",
+        "runtime_id": "test_evas_check_policy.PolicyCommands.test_representation_and_budget_require_early_evidence_without_new_protocol",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 125,
+          "name": "test_shared_and_mixed_build_changes_keep_full_coverage",
+          "path": "scripts/tests/test_evas_check_policy.py",
+          "sha256": "a12fa37589b5fa6b00ac5508fb1c3f65a31d5c19effb66598cd55b6d95a80bc1"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_evas_check_policy.py",
+        "module_sha256": "72e31b32215213c6a5b37bc81a0a00df7e0e759e140fed1a6b184d3f1f0f9903",
+        "runtime_id": "test_evas_check_policy.PolicyCommands.test_shared_and_mixed_build_changes_keep_full_coverage",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 93,
+          "name": "test_sparse_plan_preserves_stage_coverage_and_external_obligations",
+          "path": "scripts/tests/test_evas_check_policy.py",
+          "sha256": "1f32fd6c769cc349d7986d6186016849d6a0a4628faf15a6b767a8821db93203"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_evas_check_policy.py",
+        "module_sha256": "72e31b32215213c6a5b37bc81a0a00df7e0e759e140fed1a6b184d3f1f0f9903",
+        "runtime_id": "test_evas_check_policy.PolicyCommands.test_sparse_plan_preserves_stage_coverage_and_external_obligations",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      }
+    ],
+    "namespace": "maintenance",
+    "schema_version": 1,
+    "skipped_declarations": 0,
+    "unresolved_instances": [],
+    "transport": {
+      "argv": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-c",
+        "import os,runpy,sys; sys.path[0]=os.getcwd(); tool=sys.argv[1]; sys.argv=sys.argv[1:]; runpy.run_path(tool,run_name=\"__main__\")",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r5-20261027/source/scripts/capabilities/discover_methods.py",
+        "--worker",
+        "--root",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r5-20261027/source",
+        "--start",
+        "scripts/tests",
+        "--pattern",
+        "test_evas_check_policy.py",
+        "--namespace",
+        "maintenance"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r5-20261027/source",
+      "returncode": 0,
+      "stdout": "{\"collector\": {\"definition_profile\": \"actual-code-or-registered-native-skip-v1\", \"native_skip_authority\": {\"factory_span_sha256\": \"a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad\", \"profile\": \"registered-native-unittest-skip-v1\", \"runtime_file_sha256\": \"45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987\", \"runtime_source\": \"unittest/case.py\", \"wrapper_span_sha256\": \"96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda\"}, \"path\": \"scripts/capabilities/discover_methods.py\", \"sha256\": \"aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17\", \"source_relationship\": \"owned-source-root\"}, \"complete\": true, \"discovered_instances\": 12, \"environment\": {\"PYTHONDONTWRITEBYTECODE\": \"1\", \"PYTHONPATH\": null, \"bytecode_disabled\": true, \"cache_tag\": \"cpython-312\", \"environment_scope\": \"python-runtime-and-import-path-only\", \"executable\": \"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python\", \"implementation\": \"cpython\", \"platform\": \"darwin\", \"python_version\": \"3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"sys_path_before_selected_imports\": [\"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r5-20261027/source\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python312.zip\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload\", \"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/lib/python3.12/site-packages\"]}, \"error_count\": 0, \"errors\": [], \"loader_error_count\": 0, \"methods\": [{\"definition\": {\"line\": 204, \"name\": \"test_acceptance_closes_only_successful_local_checks\", \"path\": \"scripts/tests/test_evas_check_policy.py\", \"sha256\": \"023f8bc6695ed34592afaf2a60d6b133fd6f91a632bc1a845dbfe369784b8947\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_evas_check_policy.py\", \"module_sha256\": \"72e31b32215213c6a5b37bc81a0a00df7e0e759e140fed1a6b184d3f1f0f9903\", \"runtime_id\": \"test_evas_check_policy.PolicyCommands.test_acceptance_closes_only_successful_local_checks\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 140, \"name\": \"test_ci_obligations_do_not_expand_known_local_checks\", \"path\": \"scripts/tests/test_evas_check_policy.py\", \"sha256\": \"f4009cb0a2f010d505143da286da1b17b564f7d80d6feb6686a2ebd68c7a035c\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_evas_check_policy.py\", \"module_sha256\": \"72e31b32215213c6a5b37bc81a0a00df7e0e759e140fed1a6b184d3f1f0f9903\", \"runtime_id\": \"test_evas_check_policy.PolicyCommands.test_ci_obligations_do_not_expand_known_local_checks\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 261, \"name\": \"test_document_sync_preserves_manual_text_and_detects_drift\", \"path\": \"scripts/tests/test_evas_check_policy.py\", \"sha256\": \"458b5584a0a940656bdf9de4135540509cf6da7ea01de5de48f2e7a9b4f11ca0\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_evas_check_policy.py\", \"module_sha256\": \"72e31b32215213c6a5b37bc81a0a00df7e0e759e140fed1a6b184d3f1f0f9903\", \"runtime_id\": \"test_evas_check_policy.PolicyCommands.test_document_sync_preserves_manual_text_and_detects_drift\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 17, \"name\": \"test_initial_output_changes_select_legacy_observer_consumers\", \"path\": \"scripts/tests/test_evas_check_policy.py\", \"sha256\": \"437a30d06b487c91095252739b9bb49e5ad3478c24472f27b7bf41656913c664\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_evas_check_policy.py\", \"module_sha256\": \"72e31b32215213c6a5b37bc81a0a00df7e0e759e140fed1a6b184d3f1f0f9903\", \"runtime_id\": \"test_evas_check_policy.PolicyCommands.test_initial_output_changes_select_legacy_observer_consumers\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 286, \"name\": \"test_invalid_document_markers_never_write\", \"path\": \"scripts/tests/test_evas_check_policy.py\", \"sha256\": \"bc552557202cf610b9eebf72f3bc4402662556bdd668a5c80896fd035375c889\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_evas_check_policy.py\", \"module_sha256\": \"72e31b32215213c6a5b37bc81a0a00df7e0e759e140fed1a6b184d3f1f0f9903\", \"runtime_id\": \"test_evas_check_policy.PolicyCommands.test_invalid_document_markers_never_write\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 236, \"name\": \"test_invalid_protocol_and_execution_facts_fail_closed\", \"path\": \"scripts/tests/test_evas_check_policy.py\", \"sha256\": \"06030e552434e58032a0baf5a91011309540d7e0916d4bc48c6265b577915843\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_evas_check_policy.py\", \"module_sha256\": \"72e31b32215213c6a5b37bc81a0a00df7e0e759e140fed1a6b184d3f1f0f9903\", \"runtime_id\": \"test_evas_check_policy.PolicyCommands.test_invalid_protocol_and_execution_facts_fail_closed\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 169, \"name\": \"test_missing_and_deleted_required_modules_remain_blocked\", \"path\": \"scripts/tests/test_evas_check_policy.py\", \"sha256\": \"08d7ed0cd892e6fd4f19e13ba92bac5955896d00f9df6fac5380581c6466628d\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_evas_check_policy.py\", \"module_sha256\": \"72e31b32215213c6a5b37bc81a0a00df7e0e759e140fed1a6b184d3f1f0f9903\", \"runtime_id\": \"test_evas_check_policy.PolicyCommands.test_missing_and_deleted_required_modules_remain_blocked\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 48, \"name\": \"test_new_proof_paths_keep_accounting_obligation_after_local_pass\", \"path\": \"scripts/tests/test_evas_check_policy.py\", \"sha256\": \"7fb671393fbab962527bfe77827d8d2a07e899c039fb790c34eb703affd62d46\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_evas_check_policy.py\", \"module_sha256\": \"72e31b32215213c6a5b37bc81a0a00df7e0e759e140fed1a6b184d3f1f0f9903\", \"runtime_id\": \"test_evas_check_policy.PolicyCommands.test_new_proof_paths_keep_accounting_obligation_after_local_pass\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 34, \"name\": \"test_nonlinear_evidence_changes_select_public_observation_consumers\", \"path\": \"scripts/tests/test_evas_check_policy.py\", \"sha256\": \"aef49c5fa9877140aa8bdd8ffbe03172547e42fe086cbb29728c3f8fe2642ff2\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_evas_check_policy.py\", \"module_sha256\": \"72e31b32215213c6a5b37bc81a0a00df7e0e759e140fed1a6b184d3f1f0f9903\", \"runtime_id\": \"test_evas_check_policy.PolicyCommands.test_nonlinear_evidence_changes_select_public_observation_consumers\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 64, \"name\": \"test_representation_and_budget_require_early_evidence_without_new_protocol\", \"path\": \"scripts/tests/test_evas_check_policy.py\", \"sha256\": \"29531e16dd4c2ce93fd09336b9437a6d3d7c34a186dfa0f04719968960f1bebe\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_evas_check_policy.py\", \"module_sha256\": \"72e31b32215213c6a5b37bc81a0a00df7e0e759e140fed1a6b184d3f1f0f9903\", \"runtime_id\": \"test_evas_check_policy.PolicyCommands.test_representation_and_budget_require_early_evidence_without_new_protocol\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 125, \"name\": \"test_shared_and_mixed_build_changes_keep_full_coverage\", \"path\": \"scripts/tests/test_evas_check_policy.py\", \"sha256\": \"a12fa37589b5fa6b00ac5508fb1c3f65a31d5c19effb66598cd55b6d95a80bc1\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_evas_check_policy.py\", \"module_sha256\": \"72e31b32215213c6a5b37bc81a0a00df7e0e759e140fed1a6b184d3f1f0f9903\", \"runtime_id\": \"test_evas_check_policy.PolicyCommands.test_shared_and_mixed_build_changes_keep_full_coverage\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 93, \"name\": \"test_sparse_plan_preserves_stage_coverage_and_external_obligations\", \"path\": \"scripts/tests/test_evas_check_policy.py\", \"sha256\": \"1f32fd6c769cc349d7986d6186016849d6a0a4628faf15a6b767a8821db93203\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_evas_check_policy.py\", \"module_sha256\": \"72e31b32215213c6a5b37bc81a0a00df7e0e759e140fed1a6b184d3f1f0f9903\", \"runtime_id\": \"test_evas_check_policy.PolicyCommands.test_sparse_plan_preserves_stage_coverage_and_external_obligations\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}], \"namespace\": \"maintenance\", \"schema_version\": 1, \"skipped_declarations\": 0, \"unresolved_instances\": []}\n",
+      "stderr": "",
+      "environment_overrides": {
+        "CI_BASE": "${{ steps.changes.outputs.base }}",
+        "CI_HEAD": "${{ steps.changes.outputs.head }}"
+      },
+      "actual_resolved_overrides": {
+        "CI_BASE": "02dee32b2c9b25f166cbd77f8a895953e004f288",
+        "CI_HEAD": "01709ecaacb3c2bbad223e00cbdd59ce9ce89eb1"
+      },
+      "collection_profile": "inventory-child runtime; not original phase execution/skip results",
+      "original_python_equivalence": "unpinned-runner-python3-unproven",
+      "sys_path_contract": "repository-cwd first, then literal phase PYTHONPATH; TestLoader adds start directory"
+    }
+  }
+}

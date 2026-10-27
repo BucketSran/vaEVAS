@@ -1,0 +1,3 @@
+# PR6 review-r3 fixes on 5455ae7b
+
+Two source commits: the Markdown support audit now matches qualification records within their own requirement and rejects duplicate, extra or contradictory records and header fields (R3-01, R3-02); the Rust listing check keeps the old +stable argv for historical receipts only, and the package workflow receives the one fixed Rust toolchain from the main workflow (R3-03, R3-04). The catalog is regenerated from the 5455ae7b catalog plus the 808 c76cb65f object versions that the rebuild had dropped (R3-05). Criteria, collector and language profile are unchanged by this round. Scientific qualification is false.

@@ -1,0 +1,391 @@
+{
+ "task": "PR6 R3-03/R3-04 Rust pin follow-up",
+ "model": {
+  "requested": "claude-sonnet-5-5 (tclaude), effort=high per brief",
+  "actual": "claude-sonnet-5-5 per system prompt; effort/options not exposed to the worker: unknown"
+ },
+ "started_at_utc": "2026-10-27T15:54:32Z",
+ "finished_at_utc": "2026-10-27T16:30:04Z (patch/test finalisation; report written after)",
+ "base_head": "5455ae7b006488902476bba045e9e2971102d8f5",
+ "base_tree": "c9622d94210ce88732cdae34a66ae1c3cf463bcd",
+ "export_verification": {
+  "method": "git archive + per-blob sha1 comparison against ls-tree (executed)",
+  "blobs_checked": 49577,
+  "mismatches": 0,
+  "tree_of_scratch_commit": "c9622d94210ce88732cdae34a66ae1c3cf463bcd"
+ },
+ "source_patch": {
+  "path": "source.patch",
+  "sha256": "2020ad3363cfb530f17b1d6846b3ffda4b3add2ab5b4ebf0e788f0e3c0d43ed5",
+  "applies_cleanly_to_base": "git apply --check on export-base: ok (executed)",
+  "files": 5
+ },
+ "modified_files": [
+  {
+   "path": ".github/workflows/numerical-assurance.yml",
+   "sha256_before": "c1289f9d76dfeabf105ed9558224bcdaa91038c947b6f7b1d69509ecd42adc74",
+   "sha256_after": "fa6d43b7b339d932a950b0cf099d646236dd5266d17252597f6d5b22b7cb0f14"
+  },
+  {
+   "path": ".github/workflows/package-install.yml",
+   "sha256_before": "cdbeb49ac0676fc6c8a9f372753a96833fb4f60d9cdd3bbbb75d80ddcf1bd357",
+   "sha256_after": "e8499da1bf39b69604c4328a8f3a6dbc54bf21d5b452e6bb6ef36608f12c7f0e"
+  },
+  {
+   "path": "evas/capabilities/rust_listing.py",
+   "sha256_before": "c1c9bf5103ff6de928cad864266369067f7996b8b6a16b19091f634236f1af3b",
+   "sha256_after": "e12147fd2e8af46f2ec4300c05f39305864b14d81f8ea037727efd12fdb74069"
+  },
+  {
+   "path": "scripts/tests/test_discover_rust.py",
+   "sha256_before": "7ab0828aee6e2eedffb94462bdb0fcaf3ed4be817c28b68bade93bb2fa38670b",
+   "sha256_after": "c0b3e78ab356060a356fc659f3c5ff6e14d51fde66a07f3ec17540f180ae0e25"
+  },
+  {
+   "path": "scripts/tests/test_rust_catalog_reconcile.py",
+   "sha256_before": "33b0f6596980f90219cca0fc44ace42f8739b3dd594a4eb7fa87768a4dce3d60",
+   "sha256_after": "4601591ae74de54ce51a38bd6db9e611f1d5071b2837cb12adb28cebc987cc64"
+  }
+ ],
+ "r3_03": {
+  "change": "rust_listing.checked(receipt, *, historical=False): current observation accepts only TOOLCHAIN_ARGV; reconcile reads the bound expected receipt with historical=True (HISTORICAL_TOOLCHAIN_ARGV adds +stable).",
+  "controls_before": {
+   "new-rustc-stable": "accepted",
+   "new-cargo-stable": "accepted",
+   "new-both-stable": "accepted",
+   "new-rustc-nightly": "rejected",
+   "new-cargo-nightly": "rejected",
+   "new-rustc-version-pin": "rejected",
+   "new-cargo-version-pin": "rejected",
+   "new-rustc-extra-arg": "rejected"
+  },
+  "controls_after": {
+   "new-rustc-stable": "rejected",
+   "new-cargo-stable": "rejected",
+   "new-both-stable": "rejected",
+   "new-rustc-nightly": "rejected",
+   "new-cargo-nightly": "rejected",
+   "new-rustc-version-pin": "rejected",
+   "new-cargo-version-pin": "rejected",
+   "new-rustc-extra-arg": "rejected"
+  },
+  "real_catalog_receipt": {
+   "ci_run": "40520607138",
+   "sha256": "7a969f8e1564bbab96e9e0522e895cbb359ba4486ea2410854c90a9c4e00e8f5",
+   "argv": {
+    "rustc": [
+     "rustc",
+     "-vV"
+    ],
+    "cargo": [
+     "cargo",
+     "--version"
+    ]
+   },
+   "tests": 904,
+   "reconciled_before": true,
+   "reconciled_after": true,
+   "binaries": 5,
+   "evidence": "rust-controls.{before,after}.json (executed, reviewer script copied and repointed)"
+  },
+  "historical_receipt": {
+   "sha256": "f37f2f25473f3b0a445e5a8aeaa85818953e4b4f42925b745b5761907c04f75c",
+   "argv": {
+    "rustc": [
+     "rustc",
+     "+stable",
+     "-vV"
+    ],
+    "cargo": [
+     "cargo",
+     "+stable",
+     "--version"
+    ]
+   },
+   "historical_ok": true,
+   "strict_rejects": true,
+   "strict_error": "missing actual Rust toolchain identity"
+  },
+  "limitation": "legacy +stable is accepted for any expected receipt bound by a published immutable catalog source; the module is reloaded from file on each reconcile so it carries no allowlist of historical sha256. New registrations are covered because generate_catalog reconciles the new raw receipt as the strict actual side (static reading, not executed with a +stable registration)."
+ },
+ "r3_04": {
+  "change": "selection.outputs.rust_toolchain = env.RUSTUP_TOOLCHAIN; package job passes with.rust_toolchain = needs.selection.outputs.rust_toolchain; package-install.yml declares required string input (no default), job env RUSTUP_TOOLCHAIN = inputs.rust_toolchain, installs \"$RUSTUP_TOOLCHAIN\"; rust-cache inherits it.",
+  "expression_context_basis": "jobs.<id>.with cannot read env (allowed: github, needs, strategy, matrix, inputs, vars); jobs.<id>.outputs can read env; jobs.<id>.env in a called workflow can read inputs. Source: official GitHub Actions contexts availability table as cited in the brief; the reviewer copy github-reusable-workflows-reference.html contains the \"env of caller not propagated\" and allowed-keyword statements but not the context table; no network access, so the table was not re-fetched (static, from brief).",
+  "yaml_parse": "/usr/bin/python3 PyYAML safe_load of both workflows, structure printed in logs/yaml-parse.txt (executed). actionlint not installed; not run.",
+  "negative_controls": {
+   "listing_reverted": "test_rust_catalog_reconcile fails (rc=1, 6 failures + 1 error)",
+   "package_install_reverted": "test_discover_rust fails (3 failures)",
+   "caller_wiring_reverted": "test_discover_rust fails (1 failure)",
+   "literal_env_273_style": "fails (2)",
+   "input_with_default": "fails (2)",
+   "install_stable_only": "fails (3)",
+   "no_job_env": "fails (1)"
+  }
+ },
+ "tests": {
+  "before": {
+   "test_discover_rust": {
+    "ran": 11,
+    "ok": true
+   },
+   "test_rust_catalog_reconcile": {
+    "ran": 7,
+    "ok": true
+   },
+   "test_ci_selection": {
+    "ran": 38,
+    "ok": true
+   },
+   "test_ci_inventory": {
+    "ran": 21,
+    "ok": true
+   },
+   "test_fast_feedback": {
+    "ran": 14,
+    "ok": true
+   }
+  },
+  "after": {
+   "test_discover_rust": {
+    "ran": 12,
+    "ok": true
+   },
+   "test_rust_catalog_reconcile": {
+    "ran": 9,
+    "ok": true
+   },
+   "test_ci_selection": {
+    "ran": 38,
+    "ok": true
+   },
+   "test_ci_inventory": {
+    "ran": 21,
+    "ok": true
+   },
+   "test_fast_feedback": {
+    "ran": 14,
+    "ok": true
+   }
+  },
+  "capabilities_before": {
+   "ran": 97,
+   "ok": true
+  },
+  "capabilities_after": {
+   "ran": 97,
+   "ok": true
+  }
+ },
+ "ci_lint": {
+  "command": "scripts/ci_lint.py --plan lint-plan.json (maintenance=true, regression=false: no cargo fmt/clippy)",
+  "base_rc": 0,
+  "after_rc": 0,
+  "note": "ruff E9,F63,F7,F82 on changed python, diagnostic_inventory --check, traceability --check, verify_validation_version all pass on base and patched export; cargo fmt/clippy skipped (compiler)."
+ },
+ "affected_catalog_entries": {
+  "assets": [
+   "asset:226a8103064a5a75dfe2eba0 (numerical-assurance.yml)",
+   "asset:47280fc1c2ba1bd55707ddbd (package-install.yml)",
+   "asset:e5ccece8c5e915c32cb3b232 (rust_listing.py)",
+   "asset:c32e0f068c2b34ed45b31619 (test_discover_rust.py)",
+   "asset:0cbac8bb5b50da366989d7ea (test_rust_catalog_reconcile.py)"
+  ],
+  "methods": "11 current methods in test_discover_rust.py gain 1 new test method (12 total); 7 in test_rust_catalog_reconcile.py become 9 (test_legacy_stable_receipt... kept, +2 new)",
+  "entrypoints": "31 current entrypoints whose objects reference numerical-assurance.yml (static reading of catalog JSON); package-install.yml has no current entrypoint",
+  "detail_files": [
+   "affected-catalog-entries.txt",
+   "affected-catalog-entries.current.txt"
+  ],
+  "regenerated": false
+ },
+ "untouched": [
+  "regression jobs",
+  "criteria",
+  "collector files",
+  "language-profile"
+ ],
+ "guard": {
+  "before": {
+   "head": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+   "index_sha256": "a2e18b66fd9b3e29093343793d45781c11a717c05c35103d4e9b1da8eec87d71",
+   "config_sha256": "de2b08ef3ba66e96be8b70c87346ff4a96f905e1272934ddd86c218dba501ea8",
+   "config_expected": "de2b08ef3ba66e96be8b70c87346ff4a96f905e1272934ddd86c218dba501ea8",
+   "candidates": {
+    "evas/tests/raw_solution_contract.py": {
+     "expected": "ffd5243e3b590f81e6e671e5761316b40c60558da2e2c81a001a118a57cf12dc",
+     "actual": "ffd5243e3b590f81e6e671e5761316b40c60558da2e2c81a001a118a57cf12dc"
+    },
+    "evas/tests/test_analog_conditions.py": {
+     "expected": "230c3fd16cfe84b0d0198619fd1d9d4efd3b593295ebdd1109549b2933712adf",
+     "actual": "230c3fd16cfe84b0d0198619fd1d9d4efd3b593295ebdd1109549b2933712adf"
+    },
+    "evas/tests/test_audited_response_contracts.py": {
+     "expected": "bb4ae9ff097e14f25ff61184734370819a260946f40a16a9e5c45fd38efb723f",
+     "actual": "bb4ae9ff097e14f25ff61184734370819a260946f40a16a9e5c45fd38efb723f"
+    },
+    "evas/tests/test_constant_initial_power.py": {
+     "expected": "359c4a4048c7eaa9d4da73eaeba4dcb80a228d2deb8fbaa31afd5c8731921369",
+     "actual": "359c4a4048c7eaa9d4da73eaeba4dcb80a228d2deb8fbaa31afd5c8731921369"
+    },
+    "evas/tests/test_diagnostics.py": {
+     "expected": "c97ed2e4897eeb14515a9c45214e62b371fefa8c931492de5d3fc40b3ebc0acf",
+     "actual": "c97ed2e4897eeb14515a9c45214e62b371fefa8c931492de5d3fc40b3ebc0acf"
+    },
+    "evas/tests/test_idt.py": {
+     "expected": "579fd1729188885cb86f34ff7c696ebb0032d3f5aaa10c8ce8bc8f7fd4f902f9",
+     "actual": "579fd1729188885cb86f34ff7c696ebb0032d3f5aaa10c8ce8bc8f7fd4f902f9"
+    },
+    "evas/tests/test_independent_driver_condition.py": {
+     "expected": "1e449bb7b8eacf7abf6680857340084acc24b1df90626725b8f41fe929e20205",
+     "actual": "1e449bb7b8eacf7abf6680857340084acc24b1df90626725b8f41fe929e20205"
+    },
+    "evas/tests/test_initial_ordinary_alias.py": {
+     "expected": "c26b69a060538157c275676b0d8ac7dc61054099669f5cf64ccc182205588d6d",
+     "actual": "c26b69a060538157c275676b0d8ac7dc61054099669f5cf64ccc182205588d6d"
+    },
+    "evas/tests/test_native_integer_events.py": {
+     "expected": "0b8b4eeeae223c3893c160550469572081ed1b2fc417b328e5596cf205258df7",
+     "actual": "0b8b4eeeae223c3893c160550469572081ed1b2fc417b328e5596cf205258df7"
+    },
+    "evas/tests/test_ordinary_event_prefix.py": {
+     "expected": "c67342dcb28194029ad296c5bad7749267e9d608369631899adb986fc7ec1464",
+     "actual": "c67342dcb28194029ad296c5bad7749267e9d608369631899adb986fc7ec1464"
+    },
+    "evas/tests/test_ordinary_integer_event_prefix.py": {
+     "expected": "aa2a090c32b614f14da6cf045e054d61392df2e320a4bb4df9bb00265600dddb",
+     "actual": "aa2a090c32b614f14da6cf045e054d61392df2e320a4bb4df9bb00265600dddb"
+    },
+    "evas/tests/test_passive_events.py": {
+     "expected": "3781d23a61398427f2bb7b4a0cf3b363babbae43c1c62adfc1874e6acc9402ae",
+     "actual": "3781d23a61398427f2bb7b4a0cf3b363babbae43c1c62adfc1874e6acc9402ae"
+    },
+    "evas/tests/test_r01_event_arrays.py": {
+     "expected": "81a135bb3a0b8267fb862421fc20f5a88b68b8cb24506a242fc152b72594f3fc",
+     "actual": "81a135bb3a0b8267fb862421fc20f5a88b68b8cb24506a242fc152b72594f3fc"
+    },
+    "evas/tests/test_r01_event_conditions.py": {
+     "expected": "0d855cbc4c98e25e9272c5ac10a1624ef14ecfd65168ef122a68b79d868ba96c",
+     "actual": "0d855cbc4c98e25e9272c5ac10a1624ef14ecfd65168ef122a68b79d868ba96c"
+    },
+    "evas/tests/test_rational_predicate_closure.py": {
+     "expected": "ec07237b7602c528d2c808c250d73f9480e7e15b2a6d059cd9314381ecf7f1e0",
+     "actual": "ec07237b7602c528d2c808c250d73f9480e7e15b2a6d059cd9314381ecf7f1e0"
+    },
+    "evas/tests/test_refinement.py": {
+     "expected": "d18e105fe7b31dc575754d7f3bfd67779659025245b0e6eb00252ebbd6677e8a",
+     "actual": "d18e105fe7b31dc575754d7f3bfd67779659025245b0e6eb00252ebbd6677e8a"
+    },
+    "evas/tests/test_root_recovery.py": {
+     "expected": "393bdb5070bd0f9c09919f6943d120556021c8bf54a4ba7c521a87c28327e9c5",
+     "actual": "393bdb5070bd0f9c09919f6943d120556021c8bf54a4ba7c521a87c28327e9c5"
+    },
+    "evas/tests/test_source_floor_event.py": {
+     "expected": "becd95ca2c6cd51f58a722a41994065c0f5b04f4e0e8384bc9f4b16245058639",
+     "actual": "becd95ca2c6cd51f58a722a41994065c0f5b04f4e0e8384bc9f4b16245058639"
+    },
+    "evas/tests/test_source_math.py": {
+     "expected": "12b27fe5cf5d977bd1b295bdbf95c5c27a19495f6086b4a5c4b7449258f3ac22",
+     "actual": "12b27fe5cf5d977bd1b295bdbf95c5c27a19495f6086b4a5c4b7449258f3ac22"
+    },
+    "evas/tests/test_source_polynomial_guards.py": {
+     "expected": "542ac3a7c73a3bc20f3f7e6a2aea88ff4a5b45ccee47ee04f59d1586bf75ac83",
+     "actual": "542ac3a7c73a3bc20f3f7e6a2aea88ff4a5b45ccee47ee04f59d1586bf75ac83"
+    }
+   },
+   "n_candidates": 20,
+   "all_match": true
+  },
+  "after": {
+   "head": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+   "index_sha256": "a2e18b66fd9b3e29093343793d45781c11a717c05c35103d4e9b1da8eec87d71",
+   "config_sha256": "de2b08ef3ba66e96be8b70c87346ff4a96f905e1272934ddd86c218dba501ea8",
+   "config_expected": "de2b08ef3ba66e96be8b70c87346ff4a96f905e1272934ddd86c218dba501ea8",
+   "candidates": {
+    "evas/tests/raw_solution_contract.py": {
+     "expected": "ffd5243e3b590f81e6e671e5761316b40c60558da2e2c81a001a118a57cf12dc",
+     "actual": "ffd5243e3b590f81e6e671e5761316b40c60558da2e2c81a001a118a57cf12dc"
+    },
+    "evas/tests/test_analog_conditions.py": {
+     "expected": "230c3fd16cfe84b0d0198619fd1d9d4efd3b593295ebdd1109549b2933712adf",
+     "actual": "230c3fd16cfe84b0d0198619fd1d9d4efd3b593295ebdd1109549b2933712adf"
+    },
+    "evas/tests/test_audited_response_contracts.py": {
+     "expected": "bb4ae9ff097e14f25ff61184734370819a260946f40a16a9e5c45fd38efb723f",
+     "actual": "bb4ae9ff097e14f25ff61184734370819a260946f40a16a9e5c45fd38efb723f"
+    },
+    "evas/tests/test_constant_initial_power.py": {
+     "expected": "359c4a4048c7eaa9d4da73eaeba4dcb80a228d2deb8fbaa31afd5c8731921369",
+     "actual": "359c4a4048c7eaa9d4da73eaeba4dcb80a228d2deb8fbaa31afd5c8731921369"
+    },
+    "evas/tests/test_diagnostics.py": {
+     "expected": "c97ed2e4897eeb14515a9c45214e62b371fefa8c931492de5d3fc40b3ebc0acf",
+     "actual": "c97ed2e4897eeb14515a9c45214e62b371fefa8c931492de5d3fc40b3ebc0acf"
+    },
+    "evas/tests/test_idt.py": {
+     "expected": "579fd1729188885cb86f34ff7c696ebb0032d3f5aaa10c8ce8bc8f7fd4f902f9",
+     "actual": "579fd1729188885cb86f34ff7c696ebb0032d3f5aaa10c8ce8bc8f7fd4f902f9"
+    },
+    "evas/tests/test_independent_driver_condition.py": {
+     "expected": "1e449bb7b8eacf7abf6680857340084acc24b1df90626725b8f41fe929e20205",
+     "actual": "1e449bb7b8eacf7abf6680857340084acc24b1df90626725b8f41fe929e20205"
+    },
+    "evas/tests/test_initial_ordinary_alias.py": {
+     "expected": "c26b69a060538157c275676b0d8ac7dc61054099669f5cf64ccc182205588d6d",
+     "actual": "c26b69a060538157c275676b0d8ac7dc61054099669f5cf64ccc182205588d6d"
+    },
+    "evas/tests/test_native_integer_events.py": {
+     "expected": "0b8b4eeeae223c3893c160550469572081ed1b2fc417b328e5596cf205258df7",
+     "actual": "0b8b4eeeae223c3893c160550469572081ed1b2fc417b328e5596cf205258df7"
+    },
+    "evas/tests/test_ordinary_event_prefix.py": {
+     "expected": "c67342dcb28194029ad296c5bad7749267e9d608369631899adb986fc7ec1464",
+     "actual": "c67342dcb28194029ad296c5bad7749267e9d608369631899adb986fc7ec1464"
+    },
+    "evas/tests/test_ordinary_integer_event_prefix.py": {
+     "expected": "aa2a090c32b614f14da6cf045e054d61392df2e320a4bb4df9bb00265600dddb",
+     "actual": "aa2a090c32b614f14da6cf045e054d61392df2e320a4bb4df9bb00265600dddb"
+    },
+    "evas/tests/test_passive_events.py": {
+     "expected": "3781d23a61398427f2bb7b4a0cf3b363babbae43c1c62adfc1874e6acc9402ae",
+     "actual": "3781d23a61398427f2bb7b4a0cf3b363babbae43c1c62adfc1874e6acc9402ae"
+    },
+    "evas/tests/test_r01_event_arrays.py": {
+     "expected": "81a135bb3a0b8267fb862421fc20f5a88b68b8cb24506a242fc152b72594f3fc",
+     "actual": "81a135bb3a0b8267fb862421fc20f5a88b68b8cb24506a242fc152b72594f3fc"
+    },
+    "evas/tests/test_r01_event_conditions.py": {
+     "expected": "0d855cbc4c98e25e9272c5ac10a1624ef14ecfd65168ef122a68b79d868ba96c",
+     "actual": "0d855cbc4c98e25e9272c5ac10a1624ef14ecfd65168ef122a68b79d868ba96c"
+    },
+    "evas/tests/test_rational_predicate_closure.py": {
+     "expected": "ec07237b7602c528d2c808c250d73f9480e7e15b2a6d059cd9314381ecf7f1e0",
+     "actual": "ec07237b7602c528d2c808c250d73f9480e7e15b2a6d059cd9314381ecf7f1e0"
+    },
+    "evas/tests/test_refinement.py": {
+     "expected": "d18e105fe7b31dc575754d7f3bfd67779659025245b0e6eb00252ebbd6677e8a",
+     "actual": "d18e105fe7b31dc575754d7f3bfd67779659025245b0e6eb00252ebbd6677e8a"
+    },
+    "evas/tests/test_root_recovery.py": {
+     "expected": "393bdb5070bd0f9c09919f6943d120556021c8bf54a4ba7c521a87c28327e9c5",
+     "actual": "393bdb5070bd0f9c09919f6943d120556021c8bf54a4ba7c521a87c28327e9c5"
+    },
+    "evas/tests/test_source_floor_event.py": {
+     "expected": "becd95ca2c6cd51f58a722a41994065c0f5b04f4e0e8384bc9f4b16245058639",
+     "actual": "becd95ca2c6cd51f58a722a41994065c0f5b04f4e0e8384bc9f4b16245058639"
+    },
+    "evas/tests/test_source_math.py": {
+     "expected": "12b27fe5cf5d977bd1b295bdbf95c5c27a19495f6086b4a5c4b7449258f3ac22",
+     "actual": "12b27fe5cf5d977bd1b295bdbf95c5c27a19495f6086b4a5c4b7449258f3ac22"
+    },
+    "evas/tests/test_source_polynomial_guards.py": {
+     "expected": "542ac3a7c73a3bc20f3f7e6a2aea88ff4a5b45ccee47ee04f59d1586bf75ac83",
+     "actual": "542ac3a7c73a3bc20f3f7e6a2aea88ff4a5b45ccee47ee04f59d1586bf75ac83"
+    }
+   },
+   "n_candidates": 20,
+   "all_match": true
+  },
+  "unchanged": true
+ },
+ "residual": "GitHub-side behaviour of with/inputs/env not exercised on a real runner; first CI run after integration is the proof."
+}

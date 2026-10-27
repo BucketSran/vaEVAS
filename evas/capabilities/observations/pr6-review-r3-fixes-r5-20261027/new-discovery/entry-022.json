@@ -1,0 +1,183 @@
+{
+  "entry": {
+    "workflow": ".github/workflows/numerical-assurance.yml",
+    "line": 233,
+    "job": "provenance-paper",
+    "step": "Paper contracts, observable criteria and table provenance",
+    "job_if": "needs.selection.outputs.provenance == 'true'",
+    "step_if": null,
+    "command": "python3 -B -m unittest discover -s evas/validation/paper -p 'test_precision_binding.py' -v",
+    "environment_overrides": {},
+    "declared_python_versions": [
+      "3.12"
+    ],
+    "start": "evas/validation/paper",
+    "pattern": "test_precision_binding.py",
+    "namespace": "validation",
+    "collector": "unittest",
+    "mode": "declared-ci-literal",
+    "purpose": "role-not-semantic-qualification",
+    "entry_id": "0de9c9f78fe66fec2847947aca247fbf133fe7f3db67eb19d07b3f78cf39d19e"
+  },
+  "receipt": {
+    "collector": {
+      "definition_profile": "actual-code-or-registered-native-skip-v1",
+      "native_skip_authority": {
+        "factory_span_sha256": "a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad",
+        "profile": "registered-native-unittest-skip-v1",
+        "runtime_file_sha256": "45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987",
+        "runtime_source": "unittest/case.py",
+        "wrapper_span_sha256": "96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda"
+      },
+      "path": "scripts/capabilities/discover_methods.py",
+      "sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "source_relationship": "owned-source-root"
+    },
+    "complete": true,
+    "discovered_instances": 5,
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONPATH": null,
+      "bytecode_disabled": true,
+      "cache_tag": "cpython-312",
+      "environment_scope": "python-runtime-and-import-path-only",
+      "executable": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+      "implementation": "cpython",
+      "platform": "darwin",
+      "python_version": "3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]",
+      "sys_path_before_selected_imports": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r5-20261027/source",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python312.zip",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/lib/python3.12/site-packages"
+      ]
+    },
+    "error_count": 0,
+    "errors": [],
+    "loader_error_count": 0,
+    "methods": [
+      {
+        "definition": {
+          "line": 44,
+          "name": "test_changed_recipe_rejected_before_write",
+          "path": "evas/validation/paper/test_precision_binding.py",
+          "sha256": "eb22989164fca19def63ba8334ffcef8ff176f0fe9d997ae869af9f73f7329c2"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_binding.py",
+        "module_sha256": "36be1c53d70f9592d3d6a266df0498f49a7ee27bc2dc1c0465561617a3453460",
+        "runtime_id": "test_precision_binding.BindingCalibration.test_changed_recipe_rejected_before_write",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 31,
+          "name": "test_dependency_drift_invalidates_registry",
+          "path": "evas/validation/paper/test_precision_binding.py",
+          "sha256": "e2409e2a3ffa718c8b5a0447dfe96b13e746c927be93f78b5c8fbd0df3a8a77b"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_binding.py",
+        "module_sha256": "36be1c53d70f9592d3d6a266df0498f49a7ee27bc2dc1c0465561617a3453460",
+        "runtime_id": "test_precision_binding.BindingCalibration.test_dependency_drift_invalidates_registry",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 21,
+          "name": "test_no_silent_looser_target_or_unknown_case",
+          "path": "evas/validation/paper/test_precision_binding.py",
+          "sha256": "a4f0e675e3f284a0f9b3c43f819b810f39bee7dc83a223be984fd3f439266fed"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_binding.py",
+        "module_sha256": "36be1c53d70f9592d3d6a266df0498f49a7ee27bc2dc1c0465561617a3453460",
+        "runtime_id": "test_precision_binding.BindingCalibration.test_no_silent_looser_target_or_unknown_case",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 27,
+          "name": "test_tool_mismatch_invalidates_reuse",
+          "path": "evas/validation/paper/test_precision_binding.py",
+          "sha256": "e2ea2f69318da23d66e3445d93d0174f3962256e4e26bc3075365d16b45153ce"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_binding.py",
+        "module_sha256": "36be1c53d70f9592d3d6a266df0498f49a7ee27bc2dc1c0465561617a3453460",
+        "runtime_id": "test_precision_binding.BindingCalibration.test_tool_mismatch_invalidates_reuse",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 37,
+          "name": "test_unqualified_prepare_does_not_write",
+          "path": "evas/validation/paper/test_precision_binding.py",
+          "sha256": "e6e86c8965070279758868b43a306ba742df8d2269c870a0d241029b1d047d32"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_binding.py",
+        "module_sha256": "36be1c53d70f9592d3d6a266df0498f49a7ee27bc2dc1c0465561617a3453460",
+        "runtime_id": "test_precision_binding.BindingCalibration.test_unqualified_prepare_does_not_write",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      }
+    ],
+    "namespace": "validation",
+    "schema_version": 1,
+    "skipped_declarations": 0,
+    "unresolved_instances": [],
+    "transport": {
+      "argv": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-c",
+        "import os,runpy,sys; sys.path[0]=os.getcwd(); tool=sys.argv[1]; sys.argv=sys.argv[1:]; runpy.run_path(tool,run_name=\"__main__\")",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r5-20261027/source/scripts/capabilities/discover_methods.py",
+        "--worker",
+        "--root",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r5-20261027/source",
+        "--start",
+        "evas/validation/paper",
+        "--pattern",
+        "test_precision_binding.py",
+        "--namespace",
+        "validation"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r5-20261027/source",
+      "returncode": 0,
+      "stdout": "{\"collector\": {\"definition_profile\": \"actual-code-or-registered-native-skip-v1\", \"native_skip_authority\": {\"factory_span_sha256\": \"a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad\", \"profile\": \"registered-native-unittest-skip-v1\", \"runtime_file_sha256\": \"45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987\", \"runtime_source\": \"unittest/case.py\", \"wrapper_span_sha256\": \"96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda\"}, \"path\": \"scripts/capabilities/discover_methods.py\", \"sha256\": \"aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17\", \"source_relationship\": \"owned-source-root\"}, \"complete\": true, \"discovered_instances\": 5, \"environment\": {\"PYTHONDONTWRITEBYTECODE\": \"1\", \"PYTHONPATH\": null, \"bytecode_disabled\": true, \"cache_tag\": \"cpython-312\", \"environment_scope\": \"python-runtime-and-import-path-only\", \"executable\": \"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python\", \"implementation\": \"cpython\", \"platform\": \"darwin\", \"python_version\": \"3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"sys_path_before_selected_imports\": [\"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r5-20261027/source\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python312.zip\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload\", \"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/lib/python3.12/site-packages\"]}, \"error_count\": 0, \"errors\": [], \"loader_error_count\": 0, \"methods\": [{\"definition\": {\"line\": 44, \"name\": \"test_changed_recipe_rejected_before_write\", \"path\": \"evas/validation/paper/test_precision_binding.py\", \"sha256\": \"eb22989164fca19def63ba8334ffcef8ff176f0fe9d997ae869af9f73f7329c2\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_binding.py\", \"module_sha256\": \"36be1c53d70f9592d3d6a266df0498f49a7ee27bc2dc1c0465561617a3453460\", \"runtime_id\": \"test_precision_binding.BindingCalibration.test_changed_recipe_rejected_before_write\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 31, \"name\": \"test_dependency_drift_invalidates_registry\", \"path\": \"evas/validation/paper/test_precision_binding.py\", \"sha256\": \"e2409e2a3ffa718c8b5a0447dfe96b13e746c927be93f78b5c8fbd0df3a8a77b\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_binding.py\", \"module_sha256\": \"36be1c53d70f9592d3d6a266df0498f49a7ee27bc2dc1c0465561617a3453460\", \"runtime_id\": \"test_precision_binding.BindingCalibration.test_dependency_drift_invalidates_registry\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 21, \"name\": \"test_no_silent_looser_target_or_unknown_case\", \"path\": \"evas/validation/paper/test_precision_binding.py\", \"sha256\": \"a4f0e675e3f284a0f9b3c43f819b810f39bee7dc83a223be984fd3f439266fed\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_binding.py\", \"module_sha256\": \"36be1c53d70f9592d3d6a266df0498f49a7ee27bc2dc1c0465561617a3453460\", \"runtime_id\": \"test_precision_binding.BindingCalibration.test_no_silent_looser_target_or_unknown_case\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 27, \"name\": \"test_tool_mismatch_invalidates_reuse\", \"path\": \"evas/validation/paper/test_precision_binding.py\", \"sha256\": \"e2ea2f69318da23d66e3445d93d0174f3962256e4e26bc3075365d16b45153ce\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_binding.py\", \"module_sha256\": \"36be1c53d70f9592d3d6a266df0498f49a7ee27bc2dc1c0465561617a3453460\", \"runtime_id\": \"test_precision_binding.BindingCalibration.test_tool_mismatch_invalidates_reuse\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 37, \"name\": \"test_unqualified_prepare_does_not_write\", \"path\": \"evas/validation/paper/test_precision_binding.py\", \"sha256\": \"e6e86c8965070279758868b43a306ba742df8d2269c870a0d241029b1d047d32\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_binding.py\", \"module_sha256\": \"36be1c53d70f9592d3d6a266df0498f49a7ee27bc2dc1c0465561617a3453460\", \"runtime_id\": \"test_precision_binding.BindingCalibration.test_unqualified_prepare_does_not_write\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}], \"namespace\": \"validation\", \"schema_version\": 1, \"skipped_declarations\": 0, \"unresolved_instances\": []}\n",
+      "stderr": "",
+      "environment_overrides": {},
+      "actual_resolved_overrides": {},
+      "collection_profile": "inventory-child runtime; not original phase execution/skip results",
+      "original_python_equivalence": "major-minor-declared-only",
+      "sys_path_contract": "repository-cwd first, then literal phase PYTHONPATH; TestLoader adds start directory"
+    }
+  }
+}
