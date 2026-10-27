@@ -211,3 +211,220 @@ class SeparateRustAndHistoricalSource(unittest.TestCase):
             reg=load(root,root=root);c=reg.catalog()
             self.assertEqual(c.read_history(history),original['rows'][0]);self.assertFalse(reg.qualified(history['id']))
             with self.assertRaises(ValueError):c.read_history(dict(history,scope_sha256='c'*64))
+
+class CurrentIdentityIndex(unittest.TestCase):
+    """Rename boundaries already enforced by Catalog.validate.
+
+    Outcomes are the existing error text and current selection. These cases
+    also pass on the unindexed scan; they lock that observable result.
+    """
+
+    def setUp(self):
+        self.directory = tempfile.TemporaryDirectory()
+        self.addCleanup(self.directory.cleanup)
+        self.root = Path(self.directory.name)
+        self.objects = make_data(self.root)
+
+    def reg(self):
+        return load(self.root, root=self.root)
+
+    def set_current(self, updates):
+        data = json.loads((self.root / 'registry.json').read_text())
+        data['current'].update(updates)
+        write(self.root, 'registry.json', data)
+
+    def test_asset_rename_without_prior_identity_keeps_rejection_text(self):
+        old = self.objects[2]
+        new = copy.deepcopy(old)
+        new['version'] = '2'
+        new['current_path'] = 'evas/tests/test_moved.py'
+        write(self.root, 'assets.json', {'schema_version': 1, 'kind': 'assets', 'objects': [old, new]})
+        self.set_current({old['id']: '2'})
+        with self.assertRaises(RegistryError) as caught:
+            self.reg()
+        self.assertEqual(str(caught.exception), 'rename/move lost known historical identity')
+
+    def test_asset_rename_with_prior_identity_keeps_current_version(self):
+        old = self.objects[2]
+        new = copy.deepcopy(old)
+        new['version'] = '2'
+        new['current_path'] = 'evas/tests/test_moved.py'
+        new['location_history'] = [{'prior_asset': reference(old), 'reason': 'reviewed move'}]
+        write(self.root, 'assets.json', {'schema_version': 1, 'kind': 'assets', 'objects': [old, new]})
+        self.set_current({old['id']: '2'})
+        reg = self.reg()
+        current = reg.catalog().current('asset')
+        self.assertEqual([(item['id'], item['version'], item['current_path']) for item in current],
+                         [(old['id'], '2', 'evas/tests/test_moved.py')])
+        self.assertEqual(reg.objects[(old['id'], '1')]['location_history'], [])
+
+    def test_method_rename_without_and_with_prior_identity(self):
+        old = self.objects[3]
+        new = copy.deepcopy(old)
+        new['version'] = '2'
+        new['runtime_id'] = 'test_demo.Case.test_moved'
+        write(self.root, 'methods.json', {'schema_version': 1, 'kind': 'methods', 'objects': [old, new]})
+        self.set_current({old['id']: '2'})
+        with self.assertRaises(RegistryError) as caught:
+            self.reg()
+        self.assertEqual(str(caught.exception), 'rename/move lost known historical identity')
+        new['runtime_history'] = [{'prior_method': reference(old), 'reason': 'reviewed rename'}]
+        write(self.root, 'methods.json', {'schema_version': 1, 'kind': 'methods', 'objects': [old, new]})
+        reg = self.reg()
+        current = reg.catalog().current('method')
+        self.assertEqual([(item['id'], item['version'], item['runtime_id']) for item in current],
+                         [(old['id'], '2', 'test_demo.Case.test_moved')])
+        self.assertEqual(reg.objects[(old['id'], '1')]['runtime_history'], [])
+
+    def test_multiple_old_asset_versions_keep_every_distinct_path(self):
+        old = self.objects[2]
+        middle = copy.deepcopy(old)
+        middle['version'] = '2'
+        middle['current_path'] = 'evas/tests/test_middle.py'
+        current = copy.deepcopy(old)
+        current['version'] = '3'
+        current['current_path'] = 'evas/tests/test_current.py'
+        current['location_history'] = [{'prior_asset': reference(middle), 'reason': 'covers only the middle path'}]
+        write(self.root, 'assets.json', {'schema_version': 1, 'kind': 'assets', 'objects': [middle, old, current]})
+        self.set_current({old['id']: '3'})
+        with self.assertRaises(RegistryError) as caught:
+            self.reg()
+        self.assertEqual(str(caught.exception), 'rename/move lost known historical identity')
+        current['location_history'] = [
+            {'prior_asset': reference(middle), 'reason': 'middle path'},
+            {'prior_asset': reference(old), 'reason': 'first path'}]
+        write(self.root, 'assets.json', {'schema_version': 1, 'kind': 'assets', 'objects': [middle, old, current]})
+        self.assertEqual(self.reg().catalog().current('asset')[0]['version'], '3')
+
+    def test_multiple_old_method_versions_keep_every_distinct_runtime(self):
+        old = self.objects[3]
+        middle = copy.deepcopy(old)
+        middle['version'] = '2'
+        middle['runtime_id'] = 'test_demo.Case.test_middle'
+        current = copy.deepcopy(old)
+        current['version'] = '3'
+        current['runtime_id'] = 'test_demo.Case.test_current'
+        current['runtime_history'] = [{'prior_method': reference(middle), 'reason': 'covers only the middle id'}]
+        write(self.root, 'methods.json', {'schema_version': 1, 'kind': 'methods', 'objects': [middle, old, current]})
+        self.set_current({old['id']: '3'})
+        with self.assertRaises(RegistryError) as caught:
+            self.reg()
+        self.assertEqual(str(caught.exception), 'rename/move lost known historical identity')
+        current['runtime_history'] = [
+            {'prior_method': reference(middle), 'reason': 'middle id'},
+            {'prior_method': reference(old), 'reason': 'first id'}]
+        write(self.root, 'methods.json', {'schema_version': 1, 'kind': 'methods', 'objects': [middle, old, current]})
+        self.assertEqual(self.reg().catalog().current('method')[0]['runtime_id'], 'test_demo.Case.test_current')
+
+    def test_unrelated_id_version_does_not_force_history(self):
+        asset = self.objects[2]
+        previous = copy.deepcopy(asset)
+        previous['id'] = 'asset:unrelated'
+        previous['version'] = '0'
+        previous['current_path'] = 'evas/tests/test_other_old.py'
+        other = copy.deepcopy(previous)
+        other['version'] = '1'
+        other['current_path'] = 'evas/tests/test_other.py'
+        other['location_history'] = [{'prior_asset': reference(previous), 'reason': 'unrelated move'}]
+        write(self.root, 'assets.json', {'schema_version': 1, 'kind': 'assets', 'objects': [asset, previous, other]})
+        self.set_current({other['id']: '1'})
+        paths = sorted(item['current_path'] for item in self.reg().catalog().current('asset'))
+        self.assertEqual(paths, ['evas/tests/test_demo.py', 'evas/tests/test_other.py'])
+
+    def test_history_on_noncurrent_asset_does_not_satisfy_current(self):
+        prior = copy.deepcopy(self.objects[2])
+        current = copy.deepcopy(self.objects[2])
+        current['version'] = '2'
+        current['current_path'] = 'evas/tests/test_moved.py'
+        prior['location_history'] = [{'prior_asset': reference(current), 'reason': 'recorded only on the old version'}]
+        method = copy.deepcopy(self.objects[3])
+        method['module'] = reference(prior)
+        method['dependencies'] = [reference(prior)]
+        write(self.root, 'assets.json', {'schema_version': 1, 'kind': 'assets', 'objects': [prior, current]})
+        write(self.root, 'methods.json', {'schema_version': 1, 'kind': 'methods', 'objects': [method]})
+        self.set_current({prior['id']: '2'})
+        with self.assertRaises(RegistryError) as caught:
+            self.reg()
+        self.assertEqual(str(caught.exception), 'rename/move lost known historical identity')
+
+    def test_mismatched_history_digest_keeps_reference_rejection(self):
+        old = self.objects[2]
+        new = copy.deepcopy(old)
+        new['version'] = '2'
+        new['current_path'] = 'evas/tests/test_moved.py'
+        stale = reference(old)
+        stale['sha256'] = 'c' * 64
+        new['location_history'] = [{'prior_asset': stale, 'reason': 'digest does not match the retained object'}]
+        write(self.root, 'assets.json', {'schema_version': 1, 'kind': 'assets', 'objects': [old, new]})
+        self.set_current({old['id']: '2'})
+        with self.assertRaises(RegistryError) as caught:
+            self.reg()
+        self.assertEqual(str(caught.exception), 'missing, changed or wrong-kind catalogue reference')
+
+    def test_same_catalog_revalidates_after_input_changes(self):
+        old = self.objects[2]
+        new = copy.deepcopy(old)
+        new['version'] = '2'
+        new['current_path'] = 'evas/tests/test_moved.py'
+        new['location_history'] = [{'prior_asset': reference(old), 'reason': 'reviewed move'}]
+        write(self.root, 'assets.json', {'schema_version': 1, 'kind': 'assets', 'objects': [old, new]})
+        self.set_current({old['id']: '2'})
+        reg = self.reg()
+        catalog = reg.catalog()
+        self.assertIsNone(catalog.validate())
+        added = copy.deepcopy(old)
+        added['version'] = '0'
+        added['current_path'] = 'evas/tests/test_earlier.py'
+        reg.objects[(added['id'], added['version'])] = added
+        with self.assertRaises(ValueError) as caught:
+            catalog.validate()
+        self.assertEqual(str(caught.exception), 'rename/move lost known historical identity')
+        del reg.objects[(added['id'], added['version'])]
+        self.assertIsNone(catalog.validate())
+        same = copy.deepcopy(reg.objects[(old['id'], '2')])
+        same['version'] = '9'
+        same['location_history'] = []
+        reg.objects[(same['id'], same['version'])] = same
+        self.assertIsNone(catalog.validate())
+        same['current_path'] = 'evas/tests/test_mutated.py'
+        with self.assertRaises(ValueError) as caught:
+            catalog.validate()
+        self.assertEqual(str(caught.exception), 'rename/move lost known historical identity')
+        same['current_path'] = 'evas/tests/test_moved.py'
+        self.assertIsNone(catalog.validate())
+
+    def test_duplicate_and_unknown_identity_rejections_stay_after_the_scan(self):
+        asset = copy.deepcopy(self.objects[2])
+        other = copy.deepcopy(asset)
+        other['id'] = 'asset:duplicate-path'
+        write(self.root, 'assets.json', {'schema_version': 1, 'kind': 'assets', 'objects': [asset, other]})
+        self.set_current({other['id']: '1'})
+        with self.assertRaises(RegistryError) as caught:
+            self.reg()
+        self.assertEqual(str(caught.exception), 'duplicate current asset path')
+        write(self.root, 'assets.json', {'schema_version': 1, 'kind': 'assets', 'objects': [self.objects[2]]})
+        self.set_current({other['id']: None})
+        data = json.loads((self.root / 'registry.json').read_text())
+        del data['current'][other['id']]
+        write(self.root, 'registry.json', data)
+        method = copy.deepcopy(self.objects[3])
+        duplicate = copy.deepcopy(method)
+        duplicate['id'] = 'method:duplicate-runtime'
+        write(self.root, 'methods.json', {'schema_version': 1, 'kind': 'methods', 'objects': [method, duplicate]})
+        self.set_current({duplicate['id']: '1'})
+        with self.assertRaises(RegistryError) as caught:
+            self.reg()
+        self.assertEqual(str(caught.exception), 'duplicate current runtime identity')
+        changed = copy.deepcopy(self.objects[2])
+        changed['content'] = {'algorithm': 'md5', 'value': 'a' * 64}
+        rebound = copy.deepcopy(self.objects[3])
+        rebound['module'] = reference(changed)
+        rebound['dependencies'] = [reference(changed)]
+        write(self.root, 'assets.json', {'schema_version': 1, 'kind': 'assets', 'objects': [changed]})
+        write(self.root, 'methods.json', {'schema_version': 1, 'kind': 'methods', 'objects': [rebound]})
+        data = json.loads((self.root / 'registry.json').read_text())
+        del data['current'][duplicate['id']]
+        write(self.root, 'registry.json', data)
+        with self.assertRaises(RegistryError) as caught:
+            self.reg()
+        self.assertEqual(str(caught.exception), 'unknown content identity')
