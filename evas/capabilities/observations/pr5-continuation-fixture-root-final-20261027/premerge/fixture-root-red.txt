@@ -1,0 +1,254 @@
+COMMAND ['/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python', '-B', '-m', 'unittest', 'discover', '-s', 'experiments/backends/comparison', '-p', 'test_worker_adapter.py', '-v']
+test_legacy_continuation_without_worker_contract_to_actual_ingest (test_worker_adapter.ContinuationIngestControls.test_legacy_continuation_without_worker_contract_to_actual_ingest) ... v1-main missing_waveform unresolved
+v2-main missing_waveform unresolved
+v3-main missing_waveform unresolved
+v4-c0 missing_waveform unresolved
+v5-main missing_waveform unresolved
+v6-standard missing_waveform unresolved
+v7-linear-main missing_waveform unresolved
+c1-main missing_waveform unresolved
+ERROR
+test_legacy_execution_to_actual_ingest (test_worker_adapter.ContinuationIngestControls.test_legacy_execution_to_actual_ingest) ... v1-main missing_waveform unresolved
+v2-main missing_waveform unresolved
+v3-main missing_waveform unresolved
+v4-c0 missing_waveform unresolved
+v5-main missing_waveform unresolved
+v6-standard missing_waveform unresolved
+v7-linear-main missing_waveform unresolved
+c1-main missing_waveform unresolved
+ERROR
+test_new_execution_to_actual_ingest (test_worker_adapter.ContinuationIngestControls.test_new_execution_to_actual_ingest) ... v1-main missing_waveform unresolved
+v2-main missing_waveform unresolved
+v3-main missing_waveform unresolved
+v4-c0 missing_waveform unresolved
+v5-main missing_waveform unresolved
+v6-standard missing_waveform unresolved
+v7-linear-main missing_waveform unresolved
+c1-main missing_waveform unresolved
+ERROR
+test_resume_rejects_missing_analysis_workers (test_worker_adapter.ContinuationIngestControls.test_resume_rejects_missing_analysis_workers) ... v1-main missing_waveform unresolved
+v2-main missing_waveform unresolved
+v3-main missing_waveform unresolved
+v4-c0 missing_waveform unresolved
+v5-main missing_waveform unresolved
+v6-standard missing_waveform unresolved
+v7-linear-main missing_waveform unresolved
+c1-main missing_waveform unresolved
+FAIL
+test_resume_rejects_missing_continuation (test_worker_adapter.ContinuationIngestControls.test_resume_rejects_missing_continuation) ... v1-main missing_waveform unresolved
+v2-main missing_waveform unresolved
+v3-main missing_waveform unresolved
+v4-c0 missing_waveform unresolved
+v5-main missing_waveform unresolved
+v6-standard missing_waveform unresolved
+v7-linear-main missing_waveform unresolved
+c1-main missing_waveform unresolved
+FAIL
+test_resume_rejects_unknown_analysis_contract (test_worker_adapter.ContinuationIngestControls.test_resume_rejects_unknown_analysis_contract) ... v1-main missing_waveform unresolved
+v2-main missing_waveform unresolved
+v3-main missing_waveform unresolved
+v4-c0 missing_waveform unresolved
+v5-main missing_waveform unresolved
+v6-standard missing_waveform unresolved
+v7-linear-main missing_waveform unresolved
+c1-main missing_waveform unresolved
+FAIL
+test_resume_rejects_unknown_extra_dependency (test_worker_adapter.ContinuationIngestControls.test_resume_rejects_unknown_extra_dependency) ... v1-main missing_waveform unresolved
+v2-main missing_waveform unresolved
+v3-main missing_waveform unresolved
+v4-c0 missing_waveform unresolved
+v5-main missing_waveform unresolved
+v6-standard missing_waveform unresolved
+v7-linear-main missing_waveform unresolved
+c1-main missing_waveform unresolved
+FAIL
+test_resume_rejects_wrong_analysis_runner_digest (test_worker_adapter.ContinuationIngestControls.test_resume_rejects_wrong_analysis_runner_digest) ... v1-main missing_waveform unresolved
+v2-main missing_waveform unresolved
+v3-main missing_waveform unresolved
+v4-c0 missing_waveform unresolved
+v5-main missing_waveform unresolved
+v6-standard missing_waveform unresolved
+v7-linear-main missing_waveform unresolved
+c1-main missing_waveform unresolved
+FAIL
+test_resume_rejects_wrong_analysis_worker_digest (test_worker_adapter.ContinuationIngestControls.test_resume_rejects_wrong_analysis_worker_digest) ... v1-main missing_waveform unresolved
+v2-main missing_waveform unresolved
+v3-main missing_waveform unresolved
+v4-c0 missing_waveform unresolved
+v5-main missing_waveform unresolved
+v6-standard missing_waveform unresolved
+v7-linear-main missing_waveform unresolved
+c1-main missing_waveform unresolved
+FAIL
+test_resume_rejects_wrong_started_digest (test_worker_adapter.ContinuationIngestControls.test_resume_rejects_wrong_started_digest) ... v1-main missing_waveform unresolved
+v2-main missing_waveform unresolved
+v3-main missing_waveform unresolved
+v4-c0 missing_waveform unresolved
+v5-main missing_waveform unresolved
+v6-standard missing_waveform unresolved
+v7-linear-main missing_waveform unresolved
+c1-main missing_waveform unresolved
+FAIL
+test_resume_to_actual_ingest_preserves_started_and_binds_analysis (test_worker_adapter.ContinuationIngestControls.test_resume_to_actual_ingest_preserves_started_and_binds_analysis) ... v1-main missing_waveform unresolved
+v2-main missing_waveform unresolved
+v3-main missing_waveform unresolved
+v4-c0 missing_waveform unresolved
+v5-main missing_waveform unresolved
+v6-standard missing_waveform unresolved
+v7-linear-main missing_waveform unresolved
+c1-main missing_waveform unresolved
+ERROR
+test_archive_closure_old_new_and_missing_or_changed (test_worker_adapter.WorkerAdapterControls.test_archive_closure_old_new_and_missing_or_changed) ... ok
+test_contract_uses_audited_source_not_file_presence (test_worker_adapter.WorkerAdapterControls.test_contract_uses_audited_source_not_file_presence) ... ok
+test_legacy_worker_dispatches_original_root (test_worker_adapter.WorkerAdapterControls.test_legacy_worker_dispatches_original_root) ... ok
+test_runtime_identity_binds_adapter_and_rejects_missing (test_worker_adapter.WorkerAdapterControls.test_runtime_identity_binds_adapter_and_rejects_missing) ... ok
+
+======================================================================
+ERROR: test_legacy_continuation_without_worker_contract_to_actual_ingest (test_worker_adapter.ContinuationIngestControls.test_legacy_continuation_without_worker_contract_to_actual_ingest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/candidate-integration/source/experiments/backends/comparison/test_worker_adapter.py", line 202, in test_legacy_continuation_without_worker_contract_to_actual_ingest
+    self.exercise('legacy-continuation')
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/candidate-integration/source/experiments/backends/comparison/test_worker_adapter.py", line 184, in exercise
+    data = ingest.ingest(snapshot, inputs, [output], root / 'compact')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/candidate-integration/source/experiments/backends/comparison/ingest.py", line 76, in ingest
+    raise ValueError('retrievable compact evidence belongs inside owning repository')
+ValueError: retrievable compact evidence belongs inside owning repository
+
+======================================================================
+ERROR: test_legacy_execution_to_actual_ingest (test_worker_adapter.ContinuationIngestControls.test_legacy_execution_to_actual_ingest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/candidate-integration/source/experiments/backends/comparison/test_worker_adapter.py", line 199, in test_legacy_execution_to_actual_ingest
+    self.exercise('legacy')
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/candidate-integration/source/experiments/backends/comparison/test_worker_adapter.py", line 184, in exercise
+    data = ingest.ingest(snapshot, inputs, [output], root / 'compact')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/candidate-integration/source/experiments/backends/comparison/ingest.py", line 76, in ingest
+    raise ValueError('retrievable compact evidence belongs inside owning repository')
+ValueError: retrievable compact evidence belongs inside owning repository
+
+======================================================================
+ERROR: test_new_execution_to_actual_ingest (test_worker_adapter.ContinuationIngestControls.test_new_execution_to_actual_ingest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/candidate-integration/source/experiments/backends/comparison/test_worker_adapter.py", line 196, in test_new_execution_to_actual_ingest
+    self.exercise('new')
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/candidate-integration/source/experiments/backends/comparison/test_worker_adapter.py", line 184, in exercise
+    data = ingest.ingest(snapshot, inputs, [output], root / 'compact')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/candidate-integration/source/experiments/backends/comparison/ingest.py", line 76, in ingest
+    raise ValueError('retrievable compact evidence belongs inside owning repository')
+ValueError: retrievable compact evidence belongs inside owning repository
+
+======================================================================
+ERROR: test_resume_to_actual_ingest_preserves_started_and_binds_analysis (test_worker_adapter.ContinuationIngestControls.test_resume_to_actual_ingest_preserves_started_and_binds_analysis)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/candidate-integration/source/experiments/backends/comparison/test_worker_adapter.py", line 193, in test_resume_to_actual_ingest_preserves_started_and_binds_analysis
+    self.exercise()
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/candidate-integration/source/experiments/backends/comparison/test_worker_adapter.py", line 184, in exercise
+    data = ingest.ingest(snapshot, inputs, [output], root / 'compact')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/candidate-integration/source/experiments/backends/comparison/ingest.py", line 76, in ingest
+    raise ValueError('retrievable compact evidence belongs inside owning repository')
+ValueError: retrievable compact evidence belongs inside owning repository
+
+======================================================================
+FAIL: test_resume_rejects_missing_analysis_workers (test_worker_adapter.ContinuationIngestControls.test_resume_rejects_missing_analysis_workers)
+----------------------------------------------------------------------
+ValueError: retrievable compact evidence belongs inside owning repository
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/candidate-integration/source/experiments/backends/comparison/test_worker_adapter.py", line 205, in test_resume_rejects_missing_analysis_workers
+    with self.assertRaisesRegex(ValueError, 'closure mismatch'):self.exercise(fault='missing-workers')
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "closure mismatch" does not match "retrievable compact evidence belongs inside owning repository"
+
+======================================================================
+FAIL: test_resume_rejects_missing_continuation (test_worker_adapter.ContinuationIngestControls.test_resume_rejects_missing_continuation)
+----------------------------------------------------------------------
+ValueError: retrievable compact evidence belongs inside owning repository
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/candidate-integration/source/experiments/backends/comparison/test_worker_adapter.py", line 220, in test_resume_rejects_missing_continuation
+    with self.assertRaisesRegex(ValueError, 'continuation.*identity'):self.exercise(fault='missing-continuation')
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "continuation.*identity" does not match "retrievable compact evidence belongs inside owning repository"
+
+======================================================================
+FAIL: test_resume_rejects_unknown_analysis_contract (test_worker_adapter.ContinuationIngestControls.test_resume_rejects_unknown_analysis_contract)
+----------------------------------------------------------------------
+ValueError: retrievable compact evidence belongs inside owning repository
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/candidate-integration/source/experiments/backends/comparison/test_worker_adapter.py", line 223, in test_resume_rejects_unknown_analysis_contract
+    with self.assertRaisesRegex(ValueError, 'unknown comparison worker dependency'):self.exercise(fault='unknown-contract')
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "unknown comparison worker dependency" does not match "retrievable compact evidence belongs inside owning repository"
+
+======================================================================
+FAIL: test_resume_rejects_unknown_extra_dependency (test_worker_adapter.ContinuationIngestControls.test_resume_rejects_unknown_extra_dependency)
+----------------------------------------------------------------------
+ValueError: retrievable compact evidence belongs inside owning repository
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/candidate-integration/source/experiments/backends/comparison/test_worker_adapter.py", line 211, in test_resume_rejects_unknown_extra_dependency
+    with self.assertRaisesRegex(ValueError, 'closure mismatch'):self.exercise(fault='extra-worker')
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "closure mismatch" does not match "retrievable compact evidence belongs inside owning repository"
+
+======================================================================
+FAIL: test_resume_rejects_wrong_analysis_runner_digest (test_worker_adapter.ContinuationIngestControls.test_resume_rejects_wrong_analysis_runner_digest)
+----------------------------------------------------------------------
+ValueError: retrievable compact evidence belongs inside owning repository
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/candidate-integration/source/experiments/backends/comparison/test_worker_adapter.py", line 217, in test_resume_rejects_wrong_analysis_runner_digest
+    with self.assertRaisesRegex(ValueError, 'continuation.*identity'):self.exercise(fault='wrong-runner')
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "continuation.*identity" does not match "retrievable compact evidence belongs inside owning repository"
+
+======================================================================
+FAIL: test_resume_rejects_wrong_analysis_worker_digest (test_worker_adapter.ContinuationIngestControls.test_resume_rejects_wrong_analysis_worker_digest)
+----------------------------------------------------------------------
+ValueError: retrievable compact evidence belongs inside owning repository
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/candidate-integration/source/experiments/backends/comparison/test_worker_adapter.py", line 208, in test_resume_rejects_wrong_analysis_worker_digest
+    with self.assertRaisesRegex(ValueError, 'not retrievable'):self.exercise(fault='wrong-adapter')
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "not retrievable" does not match "retrievable compact evidence belongs inside owning repository"
+
+======================================================================
+FAIL: test_resume_rejects_wrong_started_digest (test_worker_adapter.ContinuationIngestControls.test_resume_rejects_wrong_started_digest)
+----------------------------------------------------------------------
+ValueError: retrievable compact evidence belongs inside owning repository
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/candidate-integration/source/experiments/backends/comparison/test_worker_adapter.py", line 214, in test_resume_rejects_wrong_started_digest
+    with self.assertRaisesRegex(ValueError, 'continuation.*identity'):self.exercise(fault='wrong-started')
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "continuation.*identity" does not match "retrievable compact evidence belongs inside owning repository"
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.420s
+
+FAILED (failures=7, errors=4)
+
+returncode=1

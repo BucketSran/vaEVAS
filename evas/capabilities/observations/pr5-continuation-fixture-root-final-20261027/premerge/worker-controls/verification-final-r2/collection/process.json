@@ -1,0 +1,14 @@
+{
+  "argv": [
+    "/opt/homebrew/opt/python@3.12/bin/python3.12",
+    "-B",
+    "-c",
+    "import unittest,json\nsuite=unittest.defaultTestLoader.loadTestsFromName('test_worker_adapter')\ndef ids(s):\n for t in s:\n  if isinstance(t,unittest.TestSuite):yield from ids(t)\n  else:yield t.id()\nprint(json.dumps(sorted(ids(suite)),indent=2))\n"
+  ],
+  "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation/source/experiments/backends/comparison",
+  "returncode": 0,
+  "started": "2026-10-27T04:39:28.170957+00:00",
+  "finished": "2026-10-27T04:39:28.287941+00:00",
+  "stdout_sha256": "b9aad0327100e87ba1f028fb18a8058384df423c2cd0082b583c72a63a18c5e7",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

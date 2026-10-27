@@ -1,0 +1,64 @@
+{
+  "time_utc": "2026-10-27T04:32:38.056541+00:00",
+  "source_inputs": {
+    "old_runner_sha256": "ef3b402601b7e920eaa8734f20c7275709698976ea4570b27fec24b7198c341b",
+    "new_runner_sha256": "3080a990d11118ffbded2e8e9e639f319aa5d36abf4bb47d3adeb3585a258e9b",
+    "new_adapter_sha256": "6677599736df6bd6f5367bb23878f227a5b3322c5a74c9aba6d29e9ab35523de",
+    "new_ingest_sha256": "fa27acd7d4b0bf29d093729a9e8431bcbf3c83cbc9c5a5930b4a54ba3ff4732a"
+  },
+  "method": "Execute exact AST-extracted dependency and archive functions; real base/head runner texts archived only under R; no Git, imports of EVAS, backend calls or test bodies",
+  "cases": [
+    {
+      "case": "old-ingest: historical execution plus new analysis runner",
+      "status": "returned",
+      "refs": [
+        {
+          "path": "experiments/backends/comparison/evidence/sources/new-runner-3080a990d11118ffbded2e8e9e639f319aa5d36abf4bb47d3adeb3585a258e9b.py.txt",
+          "sha256": "3080a990d11118ffbded2e8e9e639f319aa5d36abf4bb47d3adeb3585a258e9b",
+          "kind": "actual runner source"
+        },
+        {
+          "path": "experiments/backends/comparison/evidence/sources/old-runner-ef3b402601b7e920eaa8734f20c7275709698976ea4570b27fec24b7198c341b.py.txt",
+          "sha256": "ef3b402601b7e920eaa8734f20c7275709698976ea4570b27fec24b7198c341b",
+          "kind": "actual runner source"
+        }
+      ]
+    },
+    {
+      "case": "new-ingest: historical execution only",
+      "status": "returned",
+      "refs": [
+        {
+          "path": "experiments/backends/comparison/evidence/sources/old-runner-ef3b402601b7e920eaa8734f20c7275709698976ea4570b27fec24b7198c341b.py.txt",
+          "sha256": "ef3b402601b7e920eaa8734f20c7275709698976ea4570b27fec24b7198c341b",
+          "kind": "actual runner source"
+        }
+      ]
+    },
+    {
+      "case": "new-ingest: new execution and its bound adapter",
+      "status": "returned",
+      "refs": [
+        {
+          "path": "experiments/backends/comparison/evidence/sources/new-runner-3080a990d11118ffbded2e8e9e639f319aa5d36abf4bb47d3adeb3585a258e9b.py.txt",
+          "sha256": "3080a990d11118ffbded2e8e9e639f319aa5d36abf4bb47d3adeb3585a258e9b",
+          "kind": "actual runner source"
+        },
+        {
+          "path": "experiments/backends/comparison/evidence/sources/current-worker-6677599736df6bd6f5367bb23878f227a5b3322c5a74c9aba6d29e9ab35523de.py.txt",
+          "sha256": "6677599736df6bd6f5367bb23878f227a5b3322c5a74c9aba6d29e9ab35523de",
+          "original_path": "evas/validation/adapters/comparison_evas_worker.py",
+          "kind": "actual EVAS worker source"
+        }
+      ]
+    },
+    {
+      "case": "new-ingest: historical STARTED lacks worker_sources; new continuation analyzer",
+      "status": "raised",
+      "type": "ValueError",
+      "error": "comparison worker source closure mismatch"
+    }
+  ],
+  "finding_reproduced": true,
+  "execution_note": "Actual resume CLI not launched; run() data flow read statically preserves old STARTED and emits new runner_sha256 in results"
+}

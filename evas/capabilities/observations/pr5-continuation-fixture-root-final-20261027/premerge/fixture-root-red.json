@@ -1,0 +1,12 @@
+{
+  "at_utc": "2026-10-27T04:59:32.705889+00:00",
+  "kind": "worker test fixture portability gap found by primary precheck",
+  "source_capture": "54effb075a42b6a2de55520e8bc335e6cfe0885a",
+  "failing_receipt": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/candidate-integration/integrated-continuation-tests.txt",
+  "observed": "4 ERROR and7 FAIL in new continuation methods; original4 controls pass. All new controls stop at compact.resolve().is_relative_to(ROOT) before intended provenance assertion.",
+  "worker_environment": "worker forced TMPDIR under its real scratch root; default macOS temp path has a symlink alias",
+  "correction": "Resolve the synthetic temporary root before patching ingest.ROOT; keep production boundary unchanged.",
+  "changed_scope": "test_worker_adapter.py fixture only",
+  "whole_precheck_accepted": false,
+  "scientific_execution": false
+}

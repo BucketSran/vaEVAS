@@ -1,0 +1,66 @@
+{
+  "at_utc": "2026-10-27T04:46:17.026410+00:00",
+  "run": 40449877055,
+  "attempt": 1,
+  "head": "a7e82dcd514aa3b4fd75a2d9eb9c16319a8d19aa",
+  "host": {
+    "success": 19,
+    "failure": 2
+  },
+  "report_sha256": "217c87965b9d476600b32c08f90140525d6e5c84b07181fcbbd81ee05c34829e",
+  "report_valid": true,
+  "methods": 3257,
+  "conditions": 7737,
+  "method_outcomes": {
+    "passed": 2617,
+    "error": 214,
+    "failed": 423,
+    "expected_failure": 3
+  },
+  "differences_vs_E1": [],
+  "admission": {
+    "valid": true,
+    "raw_successful": false,
+    "merge_allowed": false,
+    "differences": [
+      "expected exactly one matching trusted baseline context"
+    ],
+    "semantic_qualification": false,
+    "trusted_comparison": {
+      "valid": true,
+      "raw_successful": false,
+      "merge_allowed": false,
+      "differences": [
+        "expected exactly one matching trusted baseline context"
+      ],
+      "semantic_qualification": false
+    },
+    "transition": {
+      "proposal_evaluated": false,
+      "refresh_required": null,
+      "accepted": false,
+      "differences": []
+    },
+    "trust": {
+      "trusted_commit": "e10e1af5796f0cc7af3b6b5f5d26c420c0c03325",
+      "code_path": "scripts/regression_gate.py",
+      "baseline_path": "evas/validation/baselines/regression-v1.json",
+      "code_sha256": "df028ac10ddecb10f870ce889342826b56789d83322394e62e10e5cbb9c0d654",
+      "transition_code_sha256": "df028ac10ddecb10f870ce889342826b56789d83322394e62e10e5cbb9c0d654",
+      "baseline_sha256": "be742ae2ae69579fdd4bc7dd8d110e05a71803f387f9d0831b58a6bed97ceff7",
+      "candidate_baseline": {
+        "evaluated": false,
+        "is_authority": false,
+        "path": "evas/validation/baselines/regression-v1.json"
+      },
+      "source": "event.pull_request.base.sha",
+      "default_branch": "main"
+    }
+  },
+  "retained_archives": 13,
+  "archive_receipt": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/consumer-integration-20261027/format-finalization-20261027/ci-40449877055/downloads.json",
+  "new_context_accepted": false,
+  "whole_CI_accepted": false,
+  "scientific_qualification": false,
+  "limit": "Initial terminal/raw structure intake only; full execution-input and checkout-object closure is not claimed. This old candidate will not be relabeled as the continuation fix."
+}

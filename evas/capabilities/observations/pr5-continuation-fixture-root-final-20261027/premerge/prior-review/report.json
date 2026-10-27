@@ -1,0 +1,1021 @@
+{
+  "schema_version": 1,
+  "review_kind": "fresh-context independent Astra review; Standards and Spec together",
+  "status": "completed_with_findings",
+  "conclusion": "完成固定 29 文件审核，Standards 无独立发现，Spec 有 1 项已复现的 P2 历史兼容缺陷。修正范围应限于 comparison 接续来源绑定及相应控制。",
+  "fixed_scope": {
+    "base": "e10e1af5796f0cc7af3b6b5f5d26c420c0c03325",
+    "base_tree": "2a44d2998fafbfc1a6efa2b918c4af60de1e5135",
+    "head": "a7e82dcd514aa3b4fd75a2d9eb9c16319a8d19aa",
+    "tree": "441e60a6c9a2e5ded30ade11bc2df0a414d3bd90",
+    "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/consumer-integration-20261027/format-finalization-20261027/source",
+    "source_capture": "cb5ba2e8fdd5f5959cac4f53988d44e01e30bd1f",
+    "source_private_HEAD_not_used_as_review_head": true,
+    "path_count": 29,
+    "source_and_ci_paths": 22,
+    "catalog_json_paths": 6,
+    "traceability_paths": 1,
+    "all_head_blobs_equal_source": true,
+    "excluded": "真实 W 的 18 tracked + 2 untracked 旧科学候选；不审作本批改动。"
+  },
+  "runtime": {
+    "parentThreadId": "thread:delegated-task:command%3Amcp%3Ac496b4f9-4d9c-427b-ba74-2f337ae03ae8%3Adelegate-task%3Aevas-pr5-a7e82dcd-astra-r1-20261027",
+    "inheritedProviderInstanceId": "codex",
+    "inheritedModel": "gpt-6-astra",
+    "inheritedOptions": [
+      {
+        "id": "reasoningEffort",
+        "value": "max"
+      },
+      {
+        "id": "serviceTier",
+        "value": "default"
+      }
+    ],
+    "runtimeMode": "full-access",
+    "interactionMode": "default",
+    "recorded_at_utc": "2026-10-27T04:17:20.415Z",
+    "task": "Independent PR5 Standards and Spec fixed-candidate review",
+    "delegation": false
+  },
+  "time": {
+    "first_recorded_utc": "2026-10-27T04:17:20.415Z",
+    "guard_before_utc": "2026-10-27T04:17:22.444482+00:00",
+    "guard_after_utc": "2026-10-27T04:28:04.777581+00:00",
+    "report_written_utc": "2026-10-27T04:30:47.705450+00:00",
+    "queue_time": null,
+    "actual_model_execution_duration": null,
+    "time_note": "记录可见 UTC；队列和模型内部执行耗时未知，不推算。"
+  },
+  "standards_findings": [],
+  "spec_findings": [
+    {
+      "id": "PR5-ASTRA-R1-01",
+      "severity": "P2",
+      "axis": "Spec",
+      "status": "open",
+      "confidence": "high",
+      "title": "分开旧执行与新分析的 comparison worker 依赖，保留历史接续入库",
+      "location": {
+        "path": "experiments/backends/comparison/ingest.py",
+        "start_line": 29,
+        "end_line": 35
+      },
+      "related_locations": [
+        {
+          "path": "experiments/backends/comparison/ingest.py",
+          "line": 98
+        },
+        {
+          "path": "experiments/backends/comparison/runner.py",
+          "line": 191
+        },
+        {
+          "path": "experiments/backends/comparison/runner.py",
+          "line": 283
+        }
+      ],
+      "body": "runner_sources 将 initial runner 和 analysis runner 所需 adapter 合并，然后仅与原 STARTED.worker_sources 比较。使用迁移后的 runner --resume-finished-spectre 接续迁移前已经完成仿真的批次时，STARTED 保持原字节且没有 worker_sources；CONTINUATION/result 记录新 runner。ingest 的实际调用于是传入 [旧 runner SHA, 新 runner SHA] 和 None，在所有来源文件均可检索且哈希正确时仍抛出 comparison worker source closure mismatch。新分析代码的 EVAS adapter 被要求出现在旧执行收据里，破坏了原有接续后入库路径。",
+      "trigger": "迁移前 STARTED 无 worker_sources；迁移后 runner 对已有 Spectre simulate.json/log 做允许的接续分析，result.runner_sha256 与 started.runner_sha256 不同。",
+      "impact": "合法旧批次的接续分析无法由当前 ingest 入库；不能通过给旧 STARTED 追加依赖来修复，否则会改写历史执行身份。旧执行仅按原 runner 入库及新执行自洽闭包不受本复现影响。",
+      "requirement": "validation-restructure-plan.md PR5 保持兼容入口和历史可读；原执行、原分析可检索，不能按当前代码为历史执行追加依赖。",
+      "reproduction": {
+        "script": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-consumer-migration-astra-r1-20261027/comparison-history-control.py",
+        "result": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-consumer-migration-astra-r1-20261027/comparison-history-control.json",
+        "stdout": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-consumer-migration-astra-r1-20261027/comparison-history-control.stdout",
+        "stderr": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-consumer-migration-astra-r1-20261027/comparison-history-control.stderr",
+        "source": "base/head 原文 runner 和当前 adapter 固定字节，全部复制到 R/scratch/comparison-history-r1；执行实际函数的 AST 定义。",
+        "controls": [
+          "旧 ingest 对 [旧 runner, 新 runner] 正常返回两个来源引用。",
+          "新 ingest 对旧 runner 单独调用正常。",
+          "新 ingest 对新 runner 和匹配 adapter 清单正常。",
+          "新 ingest 对旧执行加新分析、workers=None，稳定抛出 closure mismatch。"
+        ],
+        "returncode": 0,
+        "test_bodies_executed": false,
+        "real_resume_cli_executed": false
+      },
+      "evidence_classification": {
+        "observed": "实际闭包函数的条件触发及异常已由有界合成控制复现。",
+        "static_dataflow": "run 的 resume 分支保留旧 STARTED，并把当前 runner SHA 写入 continuation/results；ingest:98 仅从旧 STARTED 取 worker_sources。",
+        "not_claimed": "没有实际调用 Spectre、后端或完整 CLI，也不声称已知某一未提供的历史批次当前受损。"
+      },
+      "suggested_correction": "按原执行 runner 的合同校验原 worker 身份；若新分析确有额外来源，单独绑定新分析/CONTINUATION 身份。增加旧 STARTED 加新分析 runner 的合成接续入库控制，保持旧收据原字节。无需改变阈值、合法域或科学资格。"
+    }
+  ],
+  "coverage": [
+    {
+      "path": ".github/workflows/numerical-assurance.yml",
+      "sha256": "75da6ea8a3f0e7baa90b99388833ae2d757da66754b1d1dea3a8113d1fd1fa3b",
+      "reviewed": true,
+      "method": "complete diff plus affected consumers",
+      "assessment": "唯一 comparison discover 接入 provenance-paper；30 分钟 static 上限及 PR4 Git fixture 隔离保持。"
+    },
+    {
+      "path": "evas/capabilities/data/asset-index.json",
+      "sha256": "82db3e003e19cf76b8f4cc1f2bac69ccbb89e5b9f2f0b52a5d11e6ce09477494",
+      "reviewed": true,
+      "method": "structured whole-file audit",
+      "assessment": "逐对象比较完整 base/head JSON，检查旧版本保留、精确引用、当前选择和来源内容；详见 catalog-audit.json。"
+    },
+    {
+      "path": "evas/capabilities/data/catalog-sources.json",
+      "sha256": "dbf90df450f046e8d4bdc75a59f6a645ab8e37a3ccffb57b922c58ddec31fcf7",
+      "reviewed": true,
+      "method": "structured whole-file audit",
+      "assessment": "逐对象比较完整 base/head JSON，检查旧版本保留、精确引用、当前选择和来源内容；详见 catalog-audit.json。"
+    },
+    {
+      "path": "evas/capabilities/data/entrypoint-index.json",
+      "sha256": "4980addb5a140f24ca14b472650bd7ad743d23b2e56db8bc4be66a55e26bb8e3",
+      "reviewed": true,
+      "method": "structured whole-file audit",
+      "assessment": "逐对象比较完整 base/head JSON，检查旧版本保留、精确引用、当前选择和来源内容；详见 catalog-audit.json。"
+    },
+    {
+      "path": "evas/capabilities/data/historical-index.json",
+      "sha256": "b37c874c621d6ee462deeec078c7c62d9192329bf6d82ef389a8cb831f43acc7",
+      "reviewed": true,
+      "method": "structured whole-file audit",
+      "assessment": "逐对象比较完整 base/head JSON，检查旧版本保留、精确引用、当前选择和来源内容；详见 catalog-audit.json。"
+    },
+    {
+      "path": "evas/capabilities/data/method-index.json",
+      "sha256": "407dbe87890a07e7f699c09572a3b94db97bf3fb285dfd0b2825ef74e62f69db",
+      "reviewed": true,
+      "method": "structured whole-file audit",
+      "assessment": "逐对象比较完整 base/head JSON，检查旧版本保留、精确引用、当前选择和来源内容；详见 catalog-audit.json。"
+    },
+    {
+      "path": "evas/capabilities/data/registry.json",
+      "sha256": "298b46471c88b77d03dfa3ae025b5af9218a2d4d4b33c39dd4d6383c966ea61f",
+      "reviewed": true,
+      "method": "structured whole-file audit",
+      "assessment": "逐对象比较完整 base/head JSON，检查旧版本保留、精确引用、当前选择和来源内容；详见 catalog-audit.json。"
+    },
+    {
+      "path": "evas/docs/development/TRACEABILITY.md",
+      "sha256": "20cba98c0db3df46002c8b507e5b8d4639f5810f704461a92807ad0d2d3202c5",
+      "reviewed": true,
+      "method": "complete diff plus affected consumers",
+      "assessment": "完整 10 行变化与当前 catalog/历史分母核对；新增能力资格为零。"
+    },
+    {
+      "path": "evas/validation/adapters/comparison_evas_worker.py",
+      "sha256": "6677599736df6bd6f5367bb23878f227a5b3322c5a74c9aba6d29e9ab35523de",
+      "reviewed": true,
+      "method": "complete diff plus affected consumers",
+      "assessment": "完整函数与 base worker 对照；仅把 ROOT 变成显式 root 参数，原条件、时间网格、错误与产物合同保持。"
+    },
+    {
+      "path": "evas/validation/adapters/paper_evas_worker.py",
+      "sha256": "78a1651e7628fb63e143f665e5dcbec1d7e1d9589faf5c74ad89e4b73122a05c",
+      "reviewed": true,
+      "method": "complete diff plus affected consumers",
+      "assessment": "worker、raw response、effective record 和序列化 helper 对照；原浮点值、重复时刻、事件/观察信息与部分文件写入次序保持。"
+    },
+    {
+      "path": "evas/validation/adapters/precision_evas_worker.py",
+      "sha256": "c751e75d4e68d4b07f649eb608ac9119cf10d3c9a49f28acb53ca00fceea828b",
+      "reviewed": true,
+      "method": "complete diff plus affected consumers",
+      "assessment": "完整 worker AST 相同；strobetimes、origins、三类异常和 raw 先于 strobe 检查的写入次序保持。"
+    },
+    {
+      "path": "experiments/backends/comparison/freeze.py",
+      "sha256": "4526b0b0477b56f49cb288ae29accf4ff721cf924e799e282aac9ae0f575d911",
+      "reviewed": true,
+      "method": "complete diff plus affected consumers",
+      "assessment": "runtime 身份加入当前 runner AST 声明的 adapter；旧 runner 不按文件存在性追加依赖。"
+    },
+    {
+      "path": "experiments/backends/comparison/ingest.py",
+      "sha256": "fa27acd7d4b0bf29d093729a9e8431bcbf3c83cbc9c5a5930b4a54ba3ff4732a",
+      "reviewed": true,
+      "method": "complete diff plus affected consumers",
+      "assessment": "检查实际归档来源闭包、调用参数及历史消费链；发现 PR5-ASTRA-R1-01。"
+    },
+    {
+      "path": "experiments/backends/comparison/runner.py",
+      "sha256": "3080a990d11118ffbded2e8e9e639f319aa5d36abf4bb47d3adeb3585a258e9b",
+      "reviewed": true,
+      "method": "complete diff plus affected consumers",
+      "assessment": "旧 import/worker CLI 调用新 adapter；外层预算、执行/失败分类保持；追踪 resume 对 STARTED/CONTINUATION/results 的来源绑定。"
+    },
+    {
+      "path": "experiments/backends/comparison/test_worker_adapter.py",
+      "sha256": "1e09e247e52f5e68cf17a5e349e485d2acb3d69c6584f0fdd23b7f591ecff9b8",
+      "reviewed": true,
+      "method": "complete diff plus affected consumers",
+      "assessment": "四项现有合成控制覆盖旧/新单一闭包及缺失/漂移，未覆盖旧执行加新分析的接续。"
+    },
+    {
+      "path": "experiments/backends/paper/actual_observation.py",
+      "sha256": "3ed118d6b1ef162adc9f876984e78be14adba05dcd6a87c5c9852b63ce4b5df3",
+      "reviewed": true,
+      "method": "complete diff plus affected consumers",
+      "assessment": "生产依赖由被审 runner AST 判定；旧源无需 adapter，新源缺项/改项及未知路径仍拒绝。"
+    },
+    {
+      "path": "experiments/backends/paper/inputs.py",
+      "sha256": "a8d766bb6cf1216a99fb175c6569a96891e9317440569249cc03d990d9bf92d1",
+      "reviewed": true,
+      "method": "complete diff plus affected consumers",
+      "assessment": "新 freeze 保存 adapter 字节和 ADAPTER_IDENTITY；原冻结输入不改写。"
+    },
+    {
+      "path": "experiments/backends/paper/runner.py",
+      "sha256": "6fdb86566d2ff03a9808b062c582f865cda7547082418af7341a24addc26afb1",
+      "reviewed": true,
+      "method": "complete diff plus affected consumers",
+      "assessment": "公开函数及 worker CLI 保留并延迟载入 adapter；实际 stage 调用链与资源限制核对。"
+    },
+    {
+      "path": "experiments/backends/paper/test_evas_worker_adapter.py",
+      "sha256": "9691d8493462c538cd491414f59106c92fc40f4b8ea496aa512941787e2904bc",
+      "reviewed": true,
+      "method": "complete diff plus affected consumers",
+      "assessment": "审查五个响应/失败/闭包控制，结合已保存的旧新 CLI 合成对照复用，不把 wrapper 自比当成科学证明。"
+    },
+    {
+      "path": "experiments/backends/paper/test_producer_dependencies.py",
+      "sha256": "ad970a1e9914dc8d9f35009996dcd3003afc5534043d2429d8cae7a5b92aec8a",
+      "reviewed": true,
+      "method": "complete diff plus affected consumers",
+      "assessment": "审查新历史/迁移 AST 合同控制；未以历史 fixture 注入 adapter 隐藏缺项。"
+    },
+    {
+      "path": "experiments/backends/support/comparison_completion.py",
+      "sha256": "a96627bce2f77820bb01d63e1b0dedb8c4d509a288a6df7c46783281fb342c9f",
+      "reviewed": true,
+      "method": "complete diff plus affected consumers",
+      "assessment": "freeze 身份含 paper 与 precision worker_source_files；run 经 precision.execute_one 的真实 CLI 调度。"
+    },
+    {
+      "path": "experiments/backends/support/legacy_chain_run.py",
+      "sha256": "0b23953786c82fada907601c1e98577f496b4a2eb10486118eaa3814646e8262",
+      "reviewed": true,
+      "method": "complete diff plus affected consumers",
+      "assessment": "新执行 source_identity 绑定两个 adapter；build_identity 对原 producer_repo 验证，旧执行来源与当前分析分开。"
+    },
+    {
+      "path": "experiments/backends/support/precision_run.py",
+      "sha256": "16850212a0b3bd067459e3710f16eee29bacfdbf0b72794266871cd812d14e96",
+      "reviewed": true,
+      "method": "complete diff plus affected consumers",
+      "assessment": "旧 worker/CLI 兼容；新 freeze/source_files 绑定两个 adapter；verify 使用冻结清单，既有分析入口保持。"
+    },
+    {
+      "path": "experiments/backends/support/precision_v2_report.py",
+      "sha256": "0b07bf65db05f16ca54c1107fee0ebeea39eb38327fbb45986d6061aadbd9838",
+      "reviewed": true,
+      "method": "complete diff plus affected consumers",
+      "assessment": "新增 paper helper 是当前分析身份；没有改写历史收据或原 v1 成绩。"
+    },
+    {
+      "path": "experiments/backends/support/probes.py",
+      "sha256": "992f0e05b4da1e58c2b1dda810bbbf58c4f4f5e054684a9efced474a22ef56b4",
+      "reviewed": true,
+      "method": "complete diff plus affected consumers",
+      "assessment": "paper worker 的实际调用者，新 ADAPTER_IDENTITY 含 paper adapter；进程预算和后端路径不变。"
+    },
+    {
+      "path": "experiments/backends/support/test_precision_worker_adapter.py",
+      "sha256": "c8966716e0734220b70c3fd1f45bb08cf58ead8315b6872b753e061165ce2ed6",
+      "reviewed": true,
+      "method": "complete diff plus affected consumers",
+      "assessment": "审查五项边界控制及合成 EVAS 替身；重复/相邻 binary64、strobe/solutions 区分及失败部分产物覆盖。"
+    },
+    {
+      "path": "scripts/ci_selection.py",
+      "sha256": "26d18c67bc54cea796a2120d8ebba60f550f0b5d78d2e4278f89070ffe905f93",
+      "reviewed": true,
+      "method": "complete diff plus affected consumers",
+      "assessment": "comparison/adapters 前缀保留校准与来源检查；未知路径保守全选；完整 29 路径全选，科学 CI 结果不预接受。"
+    },
+    {
+      "path": "scripts/tests/test_ci_inventory.py",
+      "sha256": "c297e26c71e1ddce4875b909049d267b7afd67f0d9a6f67a79fc952b999ed7b6",
+      "reviewed": true,
+      "method": "complete diff plus affected consumers",
+      "assessment": "手写预期 30=7+23，comparison 唯一且 primary 单独；缺失/重复入口控制。"
+    },
+    {
+      "path": "scripts/tests/test_ci_selection.py",
+      "sha256": "85dad32d09660a1e082436ac957d15bb4b483c209260fdd38a729299d44928f4",
+      "reviewed": true,
+      "method": "complete diff plus affected consumers",
+      "assessment": "新增四个迁移路径控制，复用同身份 36 项结果。"
+    }
+  ],
+  "standards_assessment": [
+    "EVAS 专用执行进入 validation/adapters；研究配置和进程/资源管理保留在 experiments。新共享 adapter 不导出 TestCase，也未反向导入研究执行器。",
+    "未改 DUT、compiler/kernel、数值判据、预算或可信基线；PR4 fixture 隔离和 static 超时上限保持。",
+    "旧对象版本及历史来源可检索且引用真实绑定；当前资产角色/消费者仍 pending 或 partial 的部分不包装成已经完成语义资格。",
+    "完整 ci_lint 原始日志包括 diagnostic_inventory、traceability --catalog-data、verify_validation_version、Rustfmt/Clippy。额外 Ruff 是补充检查。"
+  ],
+  "spec_assessment": [
+    "三套 worker 的请求、序列化、timeout、原 token/时刻和值、事件/观察信息、错误类别及部分产物写入顺序与 base 对照保持。",
+    "paper 历史生产闭包由被审 runner AST 选择；旧执行无需新 adapter。precision 新冻结清单绑定两个 adapter，旧分析可用冻结身份解释和重放。",
+    "comparison 当前执行绑定新 adapter，但跨迁移接续时混合执行/分析来源闭包仍有 PR5-ASTRA-R1-01。",
+    "实际 workflow 30 literals 与独立 primary 对应 31 份收集收据，无条目内重复、零收集或导入错误；comparison 唯一新增入口。"
+  ],
+  "evidence_reuse": {
+    "same_candidate_precheck": [
+      {
+        "command": [
+          "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+          "-B",
+          "scripts/traceability.py",
+          "--catalog-data",
+          "evas/capabilities/data"
+        ],
+        "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/consumer-integration-20261027/format-finalization-20261027/traceability-generate.txt",
+        "sha256": "c1ba51b056e87645e7f684c7bd35561d1c602dc1d1c14a6209728564e8138b49",
+        "returncode": 0,
+        "new_execution_this_review": false
+      },
+      {
+        "command": [
+          "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+          "-B",
+          "evas/capabilities/render.py"
+        ],
+        "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/consumer-integration-20261027/format-finalization-20261027/capability-render.txt",
+        "sha256": "5d49463c687420109b3f23db3b6a8333fd3165646e642fa3cd19a893a7ed3eac",
+        "returncode": 0,
+        "new_execution_this_review": false
+      },
+      {
+        "command": [
+          "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+          "-B",
+          "scripts/ci_lint.py",
+          "--plan",
+          "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/consumer-integration-20261027/format-finalization-20261027/maintenance-plan.json"
+        ],
+        "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/consumer-integration-20261027/format-finalization-20261027/maintenance-fast-checks.txt",
+        "sha256": "55839c1c7b58b36aa9dcf8743af0866541e6488b557eab02e296cc5c3a6a854c",
+        "returncode": 0,
+        "new_execution_this_review": false
+      },
+      {
+        "command": [
+          "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+          "-m",
+          "ruff",
+          "check",
+          "--isolated",
+          "--select",
+          "E9,F63,F7,F82",
+          "--",
+          "evas/validation/adapters/comparison_evas_worker.py",
+          "evas/validation/adapters/paper_evas_worker.py",
+          "evas/validation/adapters/precision_evas_worker.py",
+          "experiments/backends/comparison/freeze.py",
+          "experiments/backends/comparison/ingest.py",
+          "experiments/backends/comparison/runner.py",
+          "experiments/backends/comparison/test_worker_adapter.py",
+          "experiments/backends/paper/actual_observation.py",
+          "experiments/backends/paper/inputs.py",
+          "experiments/backends/paper/runner.py",
+          "experiments/backends/paper/test_evas_worker_adapter.py",
+          "experiments/backends/paper/test_producer_dependencies.py",
+          "experiments/backends/support/comparison_completion.py",
+          "experiments/backends/support/legacy_chain_run.py",
+          "experiments/backends/support/precision_run.py",
+          "experiments/backends/support/precision_v2_report.py",
+          "experiments/backends/support/probes.py",
+          "experiments/backends/support/test_precision_worker_adapter.py"
+        ],
+        "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/consumer-integration-20261027/format-finalization-20261027/migration-python-lint.txt",
+        "sha256": "042b424789817006f345c3995617ea6fb65650f7579f58b61a6e3ef45c1fcc02",
+        "returncode": 0,
+        "new_execution_this_review": false
+      },
+      {
+        "command": [
+          "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+          "-B",
+          "evas/capabilities/render.py",
+          "--check"
+        ],
+        "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/consumer-integration-20261027/format-finalization-20261027/capability-views.txt",
+        "sha256": "8c96d0561cd61ba605422ee5c3fa5e05954795dd55256634b74dc549fba7d74d",
+        "returncode": 0,
+        "new_execution_this_review": false
+      },
+      {
+        "command": [
+          "/usr/bin/git",
+          "--git-dir=/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/consumer-integration-20261027/format-finalization-20261027/source/.git",
+          "--work-tree=/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/consumer-integration-20261027/format-finalization-20261027/source",
+          "diff",
+          "--check",
+          "e10e1af5796f0cc7af3b6b5f5d26c420c0c03325"
+        ],
+        "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/consumer-integration-20261027/format-finalization-20261027/diff-check.txt",
+        "sha256": "46f0605fefe8e804e75b6621d1c33e7752cc4af850b8441418af6a0f509e558f",
+        "returncode": 0,
+        "new_execution_this_review": false
+      }
+    ],
+    "original_source_tests_reused": [
+      {
+        "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/consumer-integration-20261027/ci-inventory-tests.txt",
+        "sha256": "acc1ce3f6650cf0e46785754183b12e755553ea0bc86cd80949aecc215dd5cce",
+        "tests": 21,
+        "returncode": 0,
+        "new_execution": false,
+        "basis": "Same owning test and production code; only one trailing LF in comparison adapter changes. AST including positions identical. New catalog validity and all generated bytes are separately checked in this candidate.",
+        "hash_verified": true,
+        "test_summary_verified": true
+      },
+      {
+        "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/consumer-integration-20261027/ci-selection-tests.txt",
+        "sha256": "347b635516abbfc9c76fb4c60333205a27c27d9a96893d767714ad037ec66565",
+        "tests": 36,
+        "returncode": 0,
+        "new_execution": false,
+        "basis": "Same owning test and production code; only one trailing LF in comparison adapter changes. AST including positions identical. New catalog validity and all generated bytes are separately checked in this candidate.",
+        "hash_verified": true,
+        "test_summary_verified": true
+      },
+      {
+        "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/consumer-integration-20261027/capability-tests.txt",
+        "sha256": "8ff86ec479192cfdd8469f554b227f21c3d0fb4965c0939efa64eac792e72c9d",
+        "tests": 77,
+        "returncode": 0,
+        "new_execution": false,
+        "basis": "Same owning test and production code; only one trailing LF in comparison adapter changes. AST including positions identical. New catalog validity and all generated bytes are separately checked in this candidate.",
+        "hash_verified": true,
+        "test_summary_verified": true
+      }
+    ],
+    "discovery": {
+      "selection": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/consumer-integration-20261027/format-finalization-20261027/discovery-selection.json",
+      "receipts_checked": 31,
+      "new_collections_this_review": 0,
+      "test_bodies_executed": false,
+      "entries": [
+        {
+          "entry_id": "8728e565f4468c702b40aba87fcffd8b90398dd6078040c590b2a72ba63b4cc8",
+          "start": "scripts/tests",
+          "pattern": "test_ci_selection.py",
+          "instances": 36,
+          "namespace": "maintenance",
+          "zero_or_error": false,
+          "raw_sha256": "03f6bf0bb253c8269a0f8f3c7f8210c3bab9b968891be3f79899575c9461ae23",
+          "reused": true
+        },
+        {
+          "entry_id": "dc743147439e4d27f4838becc5e46dee3923e866fdeea0100d9d7479af10108e",
+          "start": "scripts/tests",
+          "pattern": "test_evas_check_policy.py",
+          "instances": 12,
+          "namespace": "maintenance",
+          "zero_or_error": false,
+          "raw_sha256": "4bfde9f9259e3fc5282381a6fc91961da04e6f682c0b5e9d3d8984c330609dde",
+          "reused": true
+        },
+        {
+          "entry_id": "8d48624992909fcbef141935e46aea903f6db22057a4a96a055e148bf193e2da",
+          "start": "scripts/tests",
+          "pattern": "test_fast_feedback.py",
+          "instances": 14,
+          "namespace": "maintenance",
+          "zero_or_error": false,
+          "raw_sha256": "a70f6cbf50ba57dad07d5be80e46bd2ffb9ea150ee4c2f8ddc74fc6125f0d52c",
+          "reused": true
+        },
+        {
+          "entry_id": "3cf39003351ddf1d15048a7571870fbc1472d6c396a033051e2edd622423c133",
+          "start": "scripts/tests",
+          "pattern": "test_independent_ci.py",
+          "instances": 7,
+          "namespace": "maintenance",
+          "zero_or_error": false,
+          "raw_sha256": "911df3710be0a5c1cb3ea2c4c4228ff16ce8b3262151d1f0e2a6da185b0e7150",
+          "reused": true
+        },
+        {
+          "entry_id": "a1d1e85dc7ec2626dbf63f201cfc1e51882c04eaed16db13f11d549e3eb08773",
+          "start": "scripts/tests",
+          "pattern": "test_regression_runner.py",
+          "instances": 25,
+          "namespace": "maintenance",
+          "zero_or_error": false,
+          "raw_sha256": "ffbcbe435c3526f73bed26dffc2cc8b40871192a1374d24d0e45113f96929103",
+          "reused": true
+        },
+        {
+          "entry_id": "37df9f5b0bc1225aebf2d0eb637bf712c9adb760bbbe2cbf77848f20687a6eea",
+          "start": "scripts/tests",
+          "pattern": "test*.py",
+          "instances": 560,
+          "namespace": "maintenance",
+          "zero_or_error": false,
+          "raw_sha256": "a2df3a7db44d715c2da19400691c0f78ae8a678c74fa171613cb35514482040a",
+          "reused": true
+        },
+        {
+          "entry_id": "7ca3014facd481757071df99f0ad67f44e04b45c671019efa8cd05a184dc88da",
+          "start": "evas/capabilities",
+          "pattern": "test_*.py",
+          "instances": 77,
+          "namespace": "maintenance",
+          "zero_or_error": false,
+          "raw_sha256": "3a9a756224c6000662e62c9b77f00d9e81a69f6a05c826215d11f7c59e0114ea",
+          "reused": true
+        },
+        {
+          "entry_id": "c8fe7f60827a7b398bb2dcdd637f86e5208ca87a53217fc17ade28c6bc590c41",
+          "start": "experiments/backends/evidence",
+          "pattern": "test*.py",
+          "instances": 16,
+          "namespace": "validation",
+          "zero_or_error": false,
+          "raw_sha256": "140f35e3597028e3b3ba454f5420afeef5bcf9c8abefa3661c416b45d52adec0",
+          "reused": true
+        },
+        {
+          "entry_id": "e2652c98fd2f6b58886dd9851140ba6a292ecb7ca96c543e81d3ff056ede84ad",
+          "start": "experiments/backends/dvs2-spectre-validation",
+          "pattern": "test_*.py",
+          "instances": 100,
+          "namespace": "validation",
+          "zero_or_error": false,
+          "raw_sha256": "b6dfe8045c9ea1567345b04936ae7a16e4aa3a8d10d0e7f726880c70565b66f3",
+          "reused": true
+        },
+        {
+          "entry_id": "a2fe460934e016fb5f673d7b90cddf74003147554773bcf0efe44c9d372077d7",
+          "start": "experiments/backends/spectre-alignment",
+          "pattern": "test_*.py",
+          "instances": 20,
+          "namespace": "validation",
+          "zero_or_error": false,
+          "raw_sha256": "7f847bc23c785f3f4db1f1ca45cc6dccbaf1c27dc33a9021a1127984be269397",
+          "reused": true
+        },
+        {
+          "entry_id": "62077e5d119f4265d3bbc0eb8bcbdb49b12cb38f0330fafa163849d7c2e63761",
+          "start": "evas/validation/event_alignment",
+          "pattern": "test_checker.py",
+          "instances": 19,
+          "namespace": "validation",
+          "zero_or_error": false,
+          "raw_sha256": "5dd3635841985b55558cb2f35d32a8b4b8017bb96fcf02fc99d87bcaeb9214fd",
+          "reused": true
+        },
+        {
+          "entry_id": "06e05b8d3eb47520a7bc82dcaf1c43ec36d35790ddf7622d63a407c2b57b0845",
+          "start": "evas/validation/strobe",
+          "pattern": "test_*.py",
+          "instances": 5,
+          "namespace": "validation",
+          "zero_or_error": false,
+          "raw_sha256": "d13be593c3a315c1c07daa3fd1450b946efcd4881807ac03e48ce750820c60d9",
+          "reused": true
+        },
+        {
+          "entry_id": "1534295b585fa2307a53717e62260291fc18d5a34aeb17eb238843786849d72a",
+          "start": "experiments/backends/event-alignment",
+          "pattern": "test_*.py",
+          "instances": 35,
+          "namespace": "validation",
+          "zero_or_error": false,
+          "raw_sha256": "51bec477902abca33389ba6433d0edbfdd35b80f7f36b74bb6d1393427460e20",
+          "reused": true
+        },
+        {
+          "entry_id": "2202954d7464aba0a6fb0ed044485194444bedf78da6e36a1cf829caf17053e6",
+          "start": "evas/validation/sample_edge_filter",
+          "pattern": "test_*.py",
+          "instances": 4,
+          "namespace": "validation",
+          "zero_or_error": false,
+          "raw_sha256": "cc20a07ab1a40357ed42e5f3c2ae233aa72080343834791eb93918a6bf893ce9",
+          "reused": true
+        },
+        {
+          "entry_id": "73380be092d455455dab35b694f310758219a02f04f2420a06336707aad7a4a5",
+          "start": "experiments/backends/sample-edge-filter",
+          "pattern": "test_*.py",
+          "instances": 36,
+          "namespace": "validation",
+          "zero_or_error": false,
+          "raw_sha256": "69ce1266f2a501c06c8ea4a0996310563174a577b877a384da382d06b14fe604",
+          "reused": true
+        },
+        {
+          "entry_id": "642810224ed854fd1224a521b99c3e63f9c9c99c6b4c454caecc1eb0e50ab7b3",
+          "start": "experiments/backends/implicit-event-restart",
+          "pattern": "test_check.py",
+          "instances": 26,
+          "namespace": "validation",
+          "zero_or_error": false,
+          "raw_sha256": "428f30bec56090d41da46da7c7a066e83b47aa8c02a0e3c8a72e2688f422dd43",
+          "reused": true
+        },
+        {
+          "entry_id": "b53e44d8f64db52ccd1eb111995977a11afeeeaa4e2f2aa9c13686fc543f6bf5",
+          "start": "experiments/performance",
+          "pattern": "test_*.py",
+          "instances": 5,
+          "namespace": "validation",
+          "zero_or_error": false,
+          "raw_sha256": "79adaf533f060a38a841b63a338ff1ad94b3b34f6c72f5e709bcd50372a91016",
+          "reused": true
+        },
+        {
+          "entry_id": "34ada95d81015eab0e76ef208481ce9d0417747f0fc2becca6cf8067396f1f0b",
+          "start": "evas/validation/paper",
+          "pattern": "test_criteria.py",
+          "instances": 29,
+          "namespace": "validation",
+          "zero_or_error": false,
+          "raw_sha256": "14eb2da605c72e59da55715e86445ef81ae257d669ab1d24b936044a5e6df140",
+          "reused": true
+        },
+        {
+          "entry_id": "d1900aef9163b8fc56f330a4bc7c82bee0fea32a45f8a80d7ebc88490565e371",
+          "start": "evas/validation/paper",
+          "pattern": "test_*root*.py",
+          "instances": 34,
+          "namespace": "validation",
+          "zero_or_error": false,
+          "raw_sha256": "477ea995f0a8efd8fdc7cfea408410a2faa013cdf4373b4274ad708325da5cec",
+          "reused": true
+        },
+        {
+          "entry_id": "a3b8e3338559d7b655de88ff3c35497b2264e5b9341c7bf039ccb6b82554277d",
+          "start": "evas/validation/checker_calibration",
+          "pattern": "test*.py",
+          "instances": 22,
+          "namespace": "validation",
+          "zero_or_error": false,
+          "raw_sha256": "e5fc17d6f3a3085a9cd07191b4d1b77eeef13c9de32b3a50006f0e551024991e",
+          "reused": true
+        },
+        {
+          "entry_id": "95c96890ea36e3018c2416574ddb148eaf0a9e7531f5dbb35acf7030275b0058",
+          "start": "evas/validation/paper",
+          "pattern": "test_coefficient_first_order.py",
+          "instances": 3,
+          "namespace": "validation",
+          "zero_or_error": false,
+          "raw_sha256": "a935e5102d9ad2762fbfa12bb6c9df7403cc1ac9db5cd614116ca940f7b561db",
+          "reused": true
+        },
+        {
+          "entry_id": "8139adc6525d6bfea91de654ffbc763b5e2ca9521d944703cf821121613d481e",
+          "start": "evas/validation/paper",
+          "pattern": "test_precision.py",
+          "instances": 12,
+          "namespace": "validation",
+          "zero_or_error": false,
+          "raw_sha256": "0b44506847f2578bb49498661c8cb1dbf3abc5c8c01b97bfa509503a3254a335",
+          "reused": true
+        },
+        {
+          "entry_id": "ad0309b9692193fa47a3688833dece5a17b5729f4b8696a490c0311511b9f468",
+          "start": "evas/validation/paper",
+          "pattern": "test_precision_binding.py",
+          "instances": 5,
+          "namespace": "validation",
+          "zero_or_error": false,
+          "raw_sha256": "80a87f3a7fba7c0568ed055109690fdde9ed93c7dcb012c323fd743800b40279",
+          "reused": true
+        },
+        {
+          "entry_id": "806ae90b5ec2581bf135aad4533c6b5f9ae50580c4b4e9cd46d05133ac2d0bb7",
+          "start": "evas/validation/paper",
+          "pattern": "test_precision_v2.py",
+          "instances": 16,
+          "namespace": "validation",
+          "zero_or_error": false,
+          "raw_sha256": "72c8d7440487e681b77752f820d910d243a4cbcd657699958ab350a9965731fb",
+          "reused": true
+        },
+        {
+          "entry_id": "0861b956200f28c19ddbbaf03c2f028ebe91d1189f5668bed48d90ef836a20ce",
+          "start": "evas/validation/paper",
+          "pattern": "test_primitives.py",
+          "instances": 11,
+          "namespace": "validation",
+          "zero_or_error": false,
+          "raw_sha256": "19ef9282c90960bb27764e02d0aa1fdbf1a82623a0584f4482281bf0a29daf52",
+          "reused": true
+        },
+        {
+          "entry_id": "39ad30688fb094b54aebd08b4b02f26353528a2d98c817d469eaa1b51f3cc7a1",
+          "start": "experiments/backends/paper",
+          "pattern": "test_*.py",
+          "instances": 135,
+          "namespace": "validation",
+          "zero_or_error": false,
+          "raw_sha256": "ef47a18c68e0eda40fe7f736baf4e7649f39a0ce24c4f21f918df7791743cdbe",
+          "reused": true
+        },
+        {
+          "entry_id": "b8fade87b4925a4b221b05d54bf9000e49b6ead3d54840980913c537ae4d5b8f",
+          "start": "experiments/backends/comparison",
+          "pattern": "test_*.py",
+          "instances": 67,
+          "namespace": "validation",
+          "zero_or_error": false,
+          "raw_sha256": "09c24029283c653b319a6f4428e65e7d151553d4b54ed4769ca0289eff32d083",
+          "reused": true
+        },
+        {
+          "entry_id": "b84b2c873d78dc517a49d1f1587f320de6f74d29f52540220d946af30c503a76",
+          "start": "evas/validation/support",
+          "pattern": "test_*.py",
+          "instances": 3,
+          "namespace": "validation",
+          "zero_or_error": false,
+          "raw_sha256": "7f6df22e8328bac2cf6bfb90d0e571f1c8470d1131d9bac7e000672e2c5677e3",
+          "reused": true
+        },
+        {
+          "entry_id": "77d0064c11bc07eddec6c12fc49a1aab78d573dcf4327f49b5e5ffbf17b0d883",
+          "start": "experiments/backends/support",
+          "pattern": "test_*.py",
+          "instances": 226,
+          "namespace": "validation",
+          "zero_or_error": false,
+          "raw_sha256": "9c87982d1dc33a4f6e6cd481604915eafb0c52844052417b0e5a723062e92ca3",
+          "reused": true
+        },
+        {
+          "entry_id": "b96759ec8353f6bf5b7f786429d4f16f936134f641c469a915ed5ea20ace30fb",
+          "start": "evas/validation/differential",
+          "pattern": "test*.py",
+          "instances": 9,
+          "namespace": "validation",
+          "zero_or_error": false,
+          "raw_sha256": "402e35f0b101884f6a87bc211dc18395a6e971798c1d08e072f068ad9b358700",
+          "reused": true
+        },
+        {
+          "entry_id": "024e8f5198944e2728f9e7d7500716f806636bee77637f54ab8f54c23594eea5",
+          "start": "evas/tests",
+          "pattern": "test*.py",
+          "instances": 3257,
+          "namespace": "python-regression",
+          "zero_or_error": false,
+          "raw_sha256": "561ef82cda3e12a128006a5e029ebb90812ccc59b78a400b18bae36ae4a14360",
+          "reused": true
+        }
+      ],
+      "unique_methods": 4732,
+      "namespace_unique_methods": {
+        "maintenance": 637,
+        "validation": 838,
+        "python-regression": 3257
+      },
+      "total_entry_instances": 4826,
+      "multi_entry_methods": 94,
+      "unintended_within_entry_duplicates": 0,
+      "workflow_receipt_keys_match": true,
+      "comparison_entry_count": 1,
+      "note": "Existing selection-focused maintenance methods also appear in the full scripts/tests discover; ownership identities are counted once, existing multi-entry occurrences remain explicit."
+    },
+    "original_collection_split": {
+      "entries": 31,
+      "reused": 23,
+      "new_collections": 8,
+      "test_bodies_executed": false
+    },
+    "format_finalization_collection_split": {
+      "entries": 31,
+      "reused": 31,
+      "new_collections": 0,
+      "test_bodies_executed": false
+    },
+    "comparison": {
+      "counts": {
+        "discovered": 67,
+        "passed": 67,
+        "reused_passed": 53,
+        "new_executed": 14,
+        "new_passed": 14,
+        "new_failed": 0,
+        "new_incomplete": 0,
+        "remaining": 0,
+        "outside_67_reused_not_counted": "unit-ci-selection"
+      },
+      "source_comparison_python_equal": true,
+      "method_ids_equal_current_collection": true,
+      "new_execution_this_review": false,
+      "partial_groups_retained": {
+        "partial_lines_with_result": 41,
+        "partial_started_without_result": true,
+        "partial_stderr_sha256": "24df86a0c8c01805cc069b5056cc6680a96da64fedcb72bff4c41199cec0856d",
+        "ninety_second_child_output": "not saved"
+      }
+    },
+    "precision_history": {
+      "original_receipt_sha256": "23ea554f2db596e8e9b137025057db281f895f8916b7cd87949cc924f3770a4e",
+      "repository_original_and_prior_replay_bytes_equal": true,
+      "frozen_dependency_count": 137,
+      "frozen_dependency_hash_failures": [],
+      "original_result_count": 176,
+      "prior_replay": {
+        "status": "reproduced-original-bytes",
+        "process": {
+          "id": "frozen-analyzer-replay",
+          "class": "新重分析",
+          "argv": [
+            "/opt/homebrew/bin/python3.12",
+            "-B",
+            "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/precision-history-grok-20261027/frozen-source/experiments/backends/support/precision_binding_report.py",
+            "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/precision-history-grok-20261027/original-data/v2-original",
+            "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/precision-history-grok-20261027/original-data/binding-supplement",
+            "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/precision-history-grok-20261027/reanalysis-02",
+            "--step-evidence",
+            "/Volumes/vaEVAS-runs/precision-binding-20261011/step-evidence.json"
+          ],
+          "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/precision-history-grok-20261027",
+          "returncode": 0,
+          "started_at_utc": "2026-10-26T19:31:44.034262+00:00",
+          "finished_at_utc": "2026-10-26T19:35:41.400585+00:00",
+          "stdout_sha256": "b932a1078c7c3b0aed46103f0341bd6988ba542366625b8a1b994dcaeba7c78f",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "python": {
+            "executable": "/opt/homebrew/bin/python3.12",
+            "stdout": "3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]\nmacOS-26.3.2-arm64-arm-64bit",
+            "returncode": 0
+          },
+          "analyzes": "original v2 run and binding supplement only",
+          "historical_receipt_rewritten": false
+        },
+        "comparison": {
+          "class": "新重分析",
+          "receipt_sha256": "23ea554f2db596e8e9b137025057db281f895f8916b7cd87949cc924f3770a4e",
+          "original_receipt_sha256": "23ea554f2db596e8e9b137025057db281f895f8916b7cd87949cc924f3770a4e",
+          "byte_match": true,
+          "analysis_dependencies_match": true,
+          "semantic": {
+            "original_results": 176,
+            "replay_results": 176,
+            "differences": [],
+            "difference_count": 0
+          },
+          "registry_sha256": "b33428539aa53f55549678c00b1a1870c21e30581b3541668dc2e99e8a068a1d",
+          "original_registry_sha256": "b33428539aa53f55549678c00b1a1870c21e30581b3541668dc2e99e8a068a1d",
+          "registry_byte_match": true
+        }
+      },
+      "archive_checks_reused": {
+        "raw_bytes": 83055162,
+        "all_match": true,
+        "class": "本次只读核验"
+      },
+      "contract_attachments_reused": {
+        "count": 70,
+        "matched": 70,
+        "bad": []
+      },
+      "new_reanalysis_this_review": false
+    },
+    "other_preparation": {
+      "paper": "复用已核 25 检查行，其中 23 单元；原 16 项单独保留，不重复相加。结合当前 AST 和闭包源审查。",
+      "precision": "复用已核 31 单元、22 CLI 对照、75 检查行；不是三套可相加的科学通过数。",
+      "source_binding": "匹配准备记录哈希已核；当前三套 worker 与 base 的 AST 等价已独立核对。"
+    },
+    "warning": "21/36/77 是 d1379dca 原执行复用，不是 EOF 修正后重跑。82 视图、完整 ci_lint 和额外 18 Python Ruff 的修正后日志已查，但本审核没有重新执行。"
+  },
+  "new_review_operations": [
+    {
+      "operation": "fixed endpoint and 29 blob hash audit",
+      "evidence": "identity.json",
+      "kind": "read-only metadata"
+    },
+    {
+      "operation": "eight worker/helper AST comparisons and exact EOF correction",
+      "evidence": "migration-ast-audit.json",
+      "kind": "static comparison"
+    },
+    {
+      "operation": "all old catalog versions/references/current asset hashes/source retrieval",
+      "evidence": "catalog-audit.json",
+      "kind": "read-only metadata"
+    },
+    {
+      "operation": "retained logs, 31 collection receipts and exact workflow/owner identities",
+      "evidence": "evidence-audit.json",
+      "kind": "read-only metadata; no collection or test body"
+    },
+    {
+      "operation": "four bounded comparison source-closure controls",
+      "evidence": "comparison-history-control.json",
+      "kind": "synthetic, one expected rejection demonstrating finding"
+    },
+    {
+      "operation": "before/after real workspace and candidate guards",
+      "evidence": "guard-comparison.json",
+      "kind": "read-only hashes"
+    }
+  ],
+  "catalog_summary": {
+    "old_versions_retained": 47721,
+    "old_versions_changed_or_missing": [],
+    "reference_count": 197794,
+    "reference_failures": [],
+    "current_assets": 4222,
+    "current_methods": 4732,
+    "current_entrypoints": 36,
+    "current_history": 3260,
+    "current_catalog_sources": 39,
+    "method_namespaces": {
+      "maintenance": 637,
+      "validation": 838,
+      "python-regression": 3257
+    },
+    "all_current_asset_hashes_match": true,
+    "39_source_contents_retrieved_and_match": true,
+    "qualified_scope_pointers_unchanged": true,
+    "note": "current_kind_counts 的 source=51 还含原规范来源；本轮 catalog-sources 当前来源是 39，分母不混。"
+  },
+  "known_failures_and_partials_preserved": [
+    {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/consumer-integration-20261027/diff-check.txt",
+      "fact": "原 precheck 因 comparison adapter EOF 多一 LF 返回 2；原文件和日志保留。修正只删一字节，含位置 AST 相同。"
+    },
+    {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/comparison-remaining-grok-20261027/verification.json",
+      "fact": "90/300 秒验证环境超时和 partial 按原身份保留；90 秒子输出本来未保存，未知不补造。67 方法的最终状态由 53 复用和 14 新执行组成，不称单次整组完成。"
+    },
+    {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/precision-history-grok-20261027/REPORT.md",
+      "fact": "冻结分析导入、隔离、符号链接和不完整展开目录的失败保留；成功分析用密封包普通文件副本，历史原收据仍权威。"
+    },
+    {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/consumer-integration-20261027/discovery-r1-error.json",
+      "fact": "主控先前把 226 错绑到 evas/validation/support；实际该入口 3，experiments/backends/support 为 226。未重执行 8 份首次收据。"
+    },
+    {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-consumer-migration-astra-r1-20261027/read-error-initial-base-extract.json",
+      "fact": "本审核提取 base 时误读新文件，Git 只读返回 128；已按 base 文件清单续读，不是候选测试失败。"
+    },
+    {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-consumer-migration-astra-r1-20261027/evidence-audit-r1.failure.json",
+      "fact": "本审核首次纯元数据审计遗漏 parser 的独立 primary_entry，断言失败；原脚本和失败记录保留，r2 使用实际 primary_entry 后通过。"
+    }
+  ],
+  "unresolved": [
+    {
+      "kind": "finding",
+      "id": "PR5-ASTRA-R1-01",
+      "state": "open",
+      "owner": "coordinator / implementation owner"
+    },
+    {
+      "kind": "CI",
+      "state": "not observed by this reviewer",
+      "detail": "完整 29 路径 selector 为全选。CI、实际新 context、精确 bundle、baseline 追加及激活均由主控按原授权验收。本轮未取得新 CI raw，不预接受。"
+    }
+  ],
+  "scientific_boundary": {
+    "qualification_granted": false,
+    "merge_permission_granted": false,
+    "scientific_regression_executed": false,
+    "real_compiler_kernel_DUT_backend_SSH_Spectre_Harbor_calls": false,
+    "historical_reanalysis_executed_this_review": false,
+    "new_threshold_domain_or_expected_answer": false,
+    "scope_note": "本审核为迁移、身份和执行兼容审核。旧 176 行重放及其他历史成绩只支持原身份，不认证新上下文或整体科学合同。"
+  },
+  "guard": {
+    "before": "guard-before.json",
+    "after": "guard-after.json",
+    "comparison": "guard-comparison.json",
+    "all_match": true,
+    "real_HEAD": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+    "real_candidate_paths": 20,
+    "all_29_candidate_source_files_unchanged": true,
+    "only_write_root": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-consumer-migration-astra-r1-20261027",
+    "git_rule": "每次真实 Git 调用清除继承 GIT_*，/usr/bin/git --no-lazy-fetch --no-optional-locks 配显式 git-dir/work-tree；未创建 Git fixture、worktree、主会话或定时任务。",
+    "workspace_checker": "未另跑 check_workspaces 的跨工作树 Git transport，服从本轮唯一显式 Git 定位限制；主控 14 树/0 错误记录按给定事实保留，不称本审核重跑。"
+  },
+  "publication": {
+    "PR_URL": null,
+    "linked_or_monitored_PR": false,
+    "reason": "审查固定候选，无 PR URL 输入；按 brief 不等待、不 watch/poll。",
+    "published_or_merged_by_reviewer": false
+  },
+  "delivery_checks": {
+    "summary_check": {
+      "command": "python3.12 -B scripts/development_records.py check-review R/summary.txt --findings 1",
+      "returncode": 0,
+      "stdout": "summary-check.stdout",
+      "stdout_sha256": "655533127476395b3222a03deb6cbd0f3f377cdb0d72490f3ab1080cf3cf2560",
+      "stderr": "summary-check.stderr",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "json_parse": true,
+    "all_29_paths_present": true,
+    "finding_count": 1
+  }
+}

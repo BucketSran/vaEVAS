@@ -1,0 +1,22 @@
+test_resume_to_actual_ingest_preserves_started_and_binds_analysis (test_worker_adapter.ContinuationIngestControls.test_resume_to_actual_ingest_preserves_started_and_binds_analysis) ... ERROR
+
+======================================================================
+ERROR: test_resume_to_actual_ingest_preserves_started_and_binds_analysis (test_worker_adapter.ContinuationIngestControls.test_resume_to_actual_ingest_preserves_started_and_binds_analysis)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation/source/experiments/backends/comparison/test_worker_adapter.py", line 185, in test_resume_to_actual_ingest_preserves_started_and_binds_analysis
+    self.exercise()
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation/source/experiments/backends/comparison/test_worker_adapter.py", line 176, in exercise
+    data = ingest.ingest(snapshot, inputs, [output], root / 'compact')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation/source/experiments/backends/comparison/ingest.py", line 98, in ingest
+    'runner_sources': runner_sources([started['runner_sha256'], result.get('runner_sha256', started['runner_sha256'])], started.get('worker_sources')),
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation/source/experiments/backends/comparison/ingest.py", line 35, in runner_sources
+    raise ValueError('comparison worker source closure mismatch')
+ValueError: comparison worker source closure mismatch
+
+----------------------------------------------------------------------
+Ran 1 test in 0.067s
+
+FAILED (errors=1)

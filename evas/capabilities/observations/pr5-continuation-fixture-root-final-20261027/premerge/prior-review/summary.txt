@@ -1,0 +1,3 @@
+固定 a7e82dcd 的 29 文件已完成独立 Standards／Spec 审核。Standards 无发现；Spec 有 1 项 P2：PR5-ASTRA-R1-01，comparison 用新 runner 接续旧 Spectre 结果后，ingest 错把新分析 adapter 要求加到旧 STARTED，导致合法接续无法入库。有界合成控制已复现。
+三套 worker、CI 发现和登记来源已核；旧检查按原身份复用，未重跑科学回归。真实 HEAD/index/config/20 旧候选及 S 的 29 文件前后守卫一致。CI、新 context 和科学资格未预接受，不授合入许可。
+完整发现、覆盖与证据见 review-report.json；复现见 comparison-history-control.json。

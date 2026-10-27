@@ -1,0 +1,25 @@
+{
+  "command": [
+    "/opt/homebrew/bin/python3.12",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "experiments/backends/comparison",
+    "-p",
+    "test_worker_adapter.py",
+    "-v"
+  ],
+  "receipt": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/integrated-continuation-tests.txt",
+  "source_capture": "d9495c77f7d8a574e24d0977c1c49b6339ddfa2a",
+  "returncode": 0,
+  "started_at_utc": "2026-10-27T05:02:57.871593+00:00",
+  "finished_at_utc": "2026-10-27T05:02:58.608833+00:00",
+  "files": {
+    "experiments/backends/comparison/ingest.py": "6e80d747a7f6ab4ebff8fb58dbc22e67d162defd21e696427ca1a2dfa8f116cb",
+    "experiments/backends/comparison/runner.py": "2a75f9d8d898b920820b0a239a09c5c32267839e7cdfd9fd5dec2dac76f26f91",
+    "experiments/backends/comparison/test_worker_adapter.py": "653fefd7133825d6f805c8ab86c55f4a0dda630f8fa1e3535117cc37df1c7d76"
+  },
+  "new_execution": true
+}

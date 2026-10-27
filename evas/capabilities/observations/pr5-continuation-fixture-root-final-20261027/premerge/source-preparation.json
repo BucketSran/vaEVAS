@@ -1,0 +1,127 @@
+{
+  "base": "e10e1af5796f0cc7af3b6b5f5d26c420c0c03325",
+  "base_tree": "2a44d2998fafbfc1a6efa2b918c4af60de1e5135",
+  "source_capture": "d9495c77f7d8a574e24d0977c1c49b6339ddfa2a",
+  "source_paths": [
+    ".github/workflows/numerical-assurance.yml",
+    "evas/validation/adapters/comparison_evas_worker.py",
+    "evas/validation/adapters/paper_evas_worker.py",
+    "evas/validation/adapters/precision_evas_worker.py",
+    "experiments/backends/comparison/freeze.py",
+    "experiments/backends/comparison/ingest.py",
+    "experiments/backends/comparison/runner.py",
+    "experiments/backends/comparison/test_worker_adapter.py",
+    "experiments/backends/paper/actual_observation.py",
+    "experiments/backends/paper/inputs.py",
+    "experiments/backends/paper/runner.py",
+    "experiments/backends/paper/test_evas_worker_adapter.py",
+    "experiments/backends/paper/test_producer_dependencies.py",
+    "experiments/backends/support/comparison_completion.py",
+    "experiments/backends/support/legacy_chain_run.py",
+    "experiments/backends/support/precision_run.py",
+    "experiments/backends/support/precision_v2_report.py",
+    "experiments/backends/support/probes.py",
+    "experiments/backends/support/test_precision_worker_adapter.py",
+    "scripts/ci_selection.py",
+    "scripts/tests/test_ci_selection.py",
+    "scripts/tests/test_ci_inventory.py"
+  ],
+  "retained_patch_hashes": {
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/composed-consumers-grok-20261027/source.patch": "b2396c2e1041186cf1c87fa15b0d97eba290985f5d4671ee262da820caa56ac2",
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/ci-inventory-completion-grok-20261027/source.patch": "ae8c42e477fa73ae91bbc2baa98702ffa2a9ee438c34f10c7e9ec683cb84e14b",
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation/source.patch": "858005452e3ba1094ec49c17c17e0e04d4d1b2eddd8c68a45953c6400778eea4"
+  },
+  "preparation_byte_differences": [
+    {
+      "path": ".github/workflows/numerical-assurance.yml",
+      "old_sha256": "c60ab83d880ec92b336ee3f35099cf39271e3b4a79ad30c196b911290f0dd39a",
+      "new_sha256": "75da6ea8a3f0e7baa90b99388833ae2d757da66754b1d1dea3a8113d1fd1fa3b",
+      "reason": "Retain adopted PR4 static job 30-minute timeout; migration hunk is identical."
+    },
+    {
+      "kind": "one-byte EOF whitespace correction",
+      "owner": "retained comparison preparation; primary complete diff check detected it",
+      "original_capture": "d1379dca93e09b4bee8cf0774ef728d739130393",
+      "corrected_capture": "cb5ba2e8fdd5f5959cac4f53988d44e01e30bd1f",
+      "path": "evas/validation/adapters/comparison_evas_worker.py",
+      "old_sha256": "47d6f64c48658da8cce406e45bdb0fb93ab173f94d22bf64a2bcab199aeb1606",
+      "new_sha256": "6677599736df6bd6f5367bb23878f227a5b3322c5a74c9aba6d29e9ab35523de",
+      "deleted_bytes": 1,
+      "AST_including_locations_identical": true,
+      "old_failure_log": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/consumer-integration-20261027/diff-check.txt",
+      "old_failure_log_sha256": "d4ef4034f8286f244828318c8d735d6b1626ea175752006c95903d6f5812493b",
+      "original_source_and_all_receipts_retained": true,
+      "scientific_execution": false
+    },
+    {
+      "path": "experiments/backends/comparison/test_worker_adapter.py",
+      "old_sha256": "06ad618186e6a8d50da2e6a80ddff07dd6e6e807629689a24e204eb124119e78",
+      "new_sha256": "653fefd7133825d6f805c8ab86c55f4a0dda630f8fa1e3535117cc37df1c7d76",
+      "old_red": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/candidate-integration/fixture-root-red.json",
+      "scope": "canonicalize synthetic temporary root only; production code unchanged"
+    }
+  ],
+  "matching_preparation_records": {
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/composed-consumers-grok-20261027/primary-verification.json": "64b762cfb6ab15ad217a803237e2375975a42e2fd9986aa560674180003d16ed",
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/ci-inventory-completion-grok-20261027/primary-verification.json": "84026ef0250383a6e25a0ee8e777b53f9021eb91d38de62764abeec1609d1fac",
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-remaining-grok-20261027/verification.json": "421c17554bcd34c0e6b2645d8f5fc856e82c1b59b351671c4897f38af28d6a12",
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/precision-history-grok-20261027/history-verification.json": "5c5fdb366148641bee5fa329f4f757a7535ce0283908a9b4878d8c9435da96a6",
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation/receipt.json": "aee00acd2a77e2014e56ed1f1383892496add5591a6d3013638a94bdb2f70cc7",
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/worker-intake.json": "1915def99bfd57648238a0fb32e5ee22760c73d00b2739ceb6bd038b1daa7fd2"
+  },
+  "criteria_files": 3610,
+  "criteria_id": "145a6118739af5c1419269c4d46faae6cd666d766843d41dd38150d8da77d21b",
+  "criteria_changed_paths": [
+    "evas/validation/adapters/comparison_evas_worker.py",
+    "evas/validation/adapters/paper_evas_worker.py",
+    "evas/validation/adapters/precision_evas_worker.py",
+    "experiments/backends/comparison/freeze.py",
+    "experiments/backends/comparison/ingest.py",
+    "experiments/backends/comparison/runner.py",
+    "experiments/backends/comparison/test_worker_adapter.py",
+    "experiments/backends/paper/actual_observation.py",
+    "experiments/backends/paper/inputs.py",
+    "experiments/backends/paper/runner.py",
+    "experiments/backends/paper/test_evas_worker_adapter.py",
+    "experiments/backends/paper/test_producer_dependencies.py",
+    "experiments/backends/support/comparison_completion.py",
+    "experiments/backends/support/legacy_chain_run.py",
+    "experiments/backends/support/precision_run.py",
+    "experiments/backends/support/precision_v2_report.py",
+    "experiments/backends/support/probes.py",
+    "experiments/backends/support/test_precision_worker_adapter.py"
+  ],
+  "DUT_files": 327,
+  "DUT_id": "5e9bf28ad121569a6975811f0b5ea9e60423e676e6dfcf88048948bfd19ba056",
+  "DUT_exact_E1": true,
+  "scientific_test_owners_unchanged": true,
+  "new_context_expected_if_full_regression_selected": true,
+  "new_context_not_preaccepted": true,
+  "scientific_execution": false,
+  "scientific_qualification": false,
+  "format_correction": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/consumer-integration-20261027/format-finalization-20261027/format-correction.json",
+  "continuation_fix": {
+    "finding": "PR5-ASTRA-R1-01",
+    "original_candidate": "a7e82dcd514aa3b4fd75a2d9eb9c16319a8d19aa",
+    "fixed_capture": "d9495c77f7d8a574e24d0977c1c49b6339ddfa2a",
+    "worker_patch": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation/source.patch",
+    "patch_sha256": "858005452e3ba1094ec49c17c17e0e04d4d1b2eddd8c68a45953c6400778eea4",
+    "worker_receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation/receipt.json",
+    "primary_intake": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/worker-intake.json",
+    "paths": [
+      "experiments/backends/comparison/ingest.py",
+      "experiments/backends/comparison/runner.py",
+      "experiments/backends/comparison/test_worker_adapter.py"
+    ],
+    "old_START_initial_bytes_preserved": true,
+    "new_analysis_sources_bound_to_CONTINUATION": true,
+    "scientific_execution": false,
+    "fixture_root_correction": {
+      "path": "experiments/backends/comparison/test_worker_adapter.py",
+      "old_sha256": "06ad618186e6a8d50da2e6a80ddff07dd6e6e807629689a24e204eb124119e78",
+      "new_sha256": "653fefd7133825d6f805c8ab86c55f4a0dda630f8fa1e3535117cc37df1c7d76",
+      "old_red": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/candidate-integration/fixture-root-red.json",
+      "scope": "canonicalize synthetic temporary root only; production code unchanged"
+    }
+  }
+}
