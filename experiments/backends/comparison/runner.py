@@ -190,7 +190,8 @@ def run(args):
          'runner_sha256': sha(Path(__file__)), 'worker_sources': worker_sources(), 'allocation': args.allocation}
     if args.resume_finished_spectre:
         save(output / 'CONTINUATION.json', {'old_started_sha256': sha(output / 'STARTED.json'),
-             'runner_sha256': sha(Path(__file__)), 'reason': 'Explicit module-path repair; completed simulations are analyzed without replay.'})
+             'runner_sha256': started['runner_sha256'], 'worker_sources': started['worker_sources'],
+             'reason': 'Explicit module-path repair; completed simulations are analyzed without replay.'})
     else:
         save(output / 'STARTED.json', started)
 

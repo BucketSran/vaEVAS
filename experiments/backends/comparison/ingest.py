@@ -40,6 +40,30 @@ def runner_sources(hashes, workers=None):
     return refs
 
 
+def execution_sources(started, result, continuation, started_sha256):
+    """Bind each runner's closure to the record written by that invocation.
+
+    Legacy executions need only their frozen STARTED contract. A distinct
+    analysis invocation must supply a continuation bound to those exact bytes;
+    missing worker_sources is valid only for a runner with no worker dependency.
+    """
+    initial = started['runner_sha256']
+    analysis = result.get('runner_sha256', initial)
+    refs = runner_sources([initial], started.get('worker_sources'))
+    if continuation is None:
+        if analysis != initial:
+            raise ValueError('continuation source identity missing')
+        return refs
+    if (continuation.get('old_started_sha256') != started_sha256
+            or continuation.get('runner_sha256') != analysis):
+        raise ValueError('continuation source identity mismatch')
+    analysis_refs = runner_sources([analysis], continuation.get('worker_sources'))
+    for ref in analysis_refs:
+        if ref not in refs:
+            refs.append(ref)
+    return refs
+
+
 def ingest(snapshot, inputs, executions, compact, blocked=()):
     compact = compact.resolve()
     data = copy.deepcopy(load(snapshot))
@@ -62,6 +86,7 @@ def ingest(snapshot, inputs, executions, compact, blocked=()):
         started_sha256 = sha(output / 'STARTED.json')
         run_id = output.name + '-' + started_sha256
         results = load(output / 'EXECUTION.json')
+        continuation = load(output / 'CONTINUATION.json') if (output / 'CONTINUATION.json').is_file() else None
         backend = started['backend']
         if backend not in BACKENDS or len(results) != 8 or {r['condition'] for r in results} != set(SELECTED):
             raise ValueError('incomplete or unexpected backend execution')
@@ -95,8 +120,8 @@ def ingest(snapshot, inputs, executions, compact, blocked=()):
                 'source_sha256': result['source_sha256'], 'checker_identity': load(inputs / 'provenance.json')['checker_identity'],
                 'initial_runner_sha256': started['runner_sha256'],
                 'analysis_runner_sha256': result.get('runner_sha256', started['runner_sha256']),
-                'runner_sources': runner_sources([started['runner_sha256'], result.get('runner_sha256', started['runner_sha256'])], started.get('worker_sources')),
-                'continuation': load(output / 'CONTINUATION.json') if (output / 'CONTINUATION.json').is_file() else None,
+                'runner_sources': execution_sources(started, result, continuation, started_sha256),
+                'continuation': continuation,
                 'allocation': started['allocation'],
                 'requested_settings': load(output / 'runs' / condition / 'base' / 'requested_settings.json'),
                 'effective_settings': effective,
