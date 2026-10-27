@@ -1,0 +1,397 @@
+{
+  "rows": [
+    {
+      "class": "normative-registration",
+      "paths": [
+        "evas/capabilities/data/language-profile.json"
+      ],
+      "selector_flags": [
+        "maintenance"
+      ],
+      "per_path": {
+        "evas/capabilities/data/language-profile.json": [
+          "maintenance"
+        ]
+      },
+      "local_checks": [],
+      "pending": [
+        "unmapped-changes",
+        "original-request",
+        "ci:maintenance"
+      ],
+      "regression_flag": false,
+      "collection_not_inferred_from_regression_flag": true
+    },
+    {
+      "class": "normative-protocol",
+      "paths": [
+        "evas/validation/PROTOCOL.md"
+      ],
+      "selector_flags": [
+        "calibration"
+      ],
+      "per_path": {
+        "evas/validation/PROTOCOL.md": [
+          "calibration"
+        ]
+      },
+      "local_checks": [],
+      "pending": [
+        "documentation-review",
+        "original-request",
+        "ci:calibration"
+      ],
+      "regression_flag": false,
+      "collection_not_inferred_from_regression_flag": true
+    },
+    {
+      "class": "checker",
+      "paths": [
+        "experiments/backends/support/checker.py",
+        "evas/validation/paper/criteria.py"
+      ],
+      "selector_flags": [
+        "calibration",
+        "provenance"
+      ],
+      "per_path": {
+        "experiments/backends/support/checker.py": [
+          "calibration",
+          "provenance"
+        ],
+        "evas/validation/paper/criteria.py": [
+          "calibration",
+          "provenance"
+        ]
+      },
+      "local_checks": [],
+      "pending": [
+        "checker-calibration",
+        "unmapped-changes",
+        "original-request",
+        "ci:calibration",
+        "ci:provenance"
+      ],
+      "regression_flag": false,
+      "collection_not_inferred_from_regression_flag": true
+    },
+    {
+      "class": "test-correction",
+      "paths": [
+        "evas/tests/test_source_math.py"
+      ],
+      "selector_flags": [
+        "maintenance",
+        "provenance",
+        "regression"
+      ],
+      "per_path": {
+        "evas/tests/test_source_math.py": [
+          "maintenance",
+          "provenance",
+          "regression"
+        ]
+      },
+      "local_checks": [
+        "python:test_source_math.py",
+        "python:test_affine.py"
+      ],
+      "pending": [
+        "local:python:test_source_math.py",
+        "local:python:test_affine.py",
+        "original-request",
+        "ci:maintenance",
+        "ci:provenance",
+        "ci:regression"
+      ],
+      "regression_flag": true,
+      "collection_not_inferred_from_regression_flag": true
+    },
+    {
+      "class": "implementation-fix",
+      "paths": [
+        "evas/src/evas/compiler.py",
+        "evas/rust_core/src/schedule.rs"
+      ],
+      "selector_flags": [
+        "maintenance",
+        "calibration",
+        "provenance",
+        "regression",
+        "differential",
+        "fuzz",
+        "package"
+      ],
+      "per_path": {
+        "evas/src/evas/compiler.py": [
+          "maintenance",
+          "calibration",
+          "provenance",
+          "regression",
+          "differential",
+          "fuzz",
+          "package"
+        ],
+        "evas/rust_core/src/schedule.rs": [
+          "maintenance",
+          "provenance",
+          "regression",
+          "differential",
+          "fuzz",
+          "package"
+        ]
+      },
+      "local_checks": [
+        "python-regression"
+      ],
+      "pending": [
+        "rust-tests",
+        "local:python-regression",
+        "original-request",
+        "affected-consumers",
+        "spectre-alignment",
+        "ci:maintenance",
+        "ci:calibration",
+        "ci:provenance",
+        "ci:regression",
+        "ci:differential",
+        "ci:fuzz",
+        "ci:package"
+      ],
+      "regression_flag": true,
+      "collection_not_inferred_from_regression_flag": true
+    },
+    {
+      "class": "pure-migration-known",
+      "paths": [
+        "evas/validation/adapters/paper_evas_worker.py",
+        "evas/validation/adapters/comparison_evas_worker.py",
+        "evas/validation/adapters/precision_evas_worker.py",
+        "experiments/backends/paper/runner.py",
+        "experiments/backends/paper/test_evas_worker_adapter.py",
+        "experiments/backends/comparison/runner.py",
+        "experiments/backends/comparison/freeze.py",
+        "experiments/backends/comparison/test_worker_adapter.py",
+        "experiments/backends/support/precision_run.py",
+        "experiments/backends/support/test_precision_worker_adapter.py"
+      ],
+      "selector_flags": [
+        "calibration",
+        "provenance"
+      ],
+      "per_path": {
+        "evas/validation/adapters/paper_evas_worker.py": [
+          "calibration",
+          "provenance"
+        ],
+        "evas/validation/adapters/comparison_evas_worker.py": [
+          "calibration",
+          "provenance"
+        ],
+        "evas/validation/adapters/precision_evas_worker.py": [
+          "calibration",
+          "provenance"
+        ],
+        "experiments/backends/paper/runner.py": [
+          "calibration",
+          "provenance"
+        ],
+        "experiments/backends/paper/test_evas_worker_adapter.py": [
+          "calibration",
+          "provenance"
+        ],
+        "experiments/backends/comparison/runner.py": [
+          "calibration",
+          "provenance"
+        ],
+        "experiments/backends/comparison/freeze.py": [
+          "calibration",
+          "provenance"
+        ],
+        "experiments/backends/comparison/test_worker_adapter.py": [
+          "calibration",
+          "provenance"
+        ],
+        "experiments/backends/support/precision_run.py": [
+          "calibration",
+          "provenance"
+        ],
+        "experiments/backends/support/test_precision_worker_adapter.py": [
+          "calibration",
+          "provenance"
+        ]
+      },
+      "local_checks": [],
+      "pending": [
+        "checker-calibration",
+        "unmapped-changes",
+        "original-request",
+        "ci:calibration",
+        "ci:provenance"
+      ],
+      "regression_flag": false,
+      "collection_not_inferred_from_regression_flag": true
+    },
+    {
+      "class": "pure-migration-unrecognized",
+      "paths": [
+        "experiments/new_backend/test.py"
+      ],
+      "selector_flags": [
+        "maintenance",
+        "calibration",
+        "provenance",
+        "regression",
+        "differential",
+        "fuzz",
+        "package",
+        "benchmark"
+      ],
+      "per_path": {
+        "experiments/new_backend/test.py": [
+          "maintenance",
+          "calibration",
+          "provenance",
+          "regression",
+          "differential",
+          "fuzz",
+          "package",
+          "benchmark"
+        ]
+      },
+      "local_checks": [
+        "python-regression"
+      ],
+      "pending": [
+        "checker-calibration",
+        "unmapped-changes",
+        "local:python-regression",
+        "original-request",
+        "ci:maintenance",
+        "ci:calibration",
+        "ci:provenance",
+        "ci:regression",
+        "ci:differential",
+        "ci:fuzz",
+        "ci:package",
+        "ci:benchmark"
+      ],
+      "regression_flag": true,
+      "collection_not_inferred_from_regression_flag": true
+    },
+    {
+      "class": "catalog-generator",
+      "paths": [
+        "scripts/capabilities/generate_catalog.py"
+      ],
+      "selector_flags": [
+        "maintenance"
+      ],
+      "per_path": {
+        "scripts/capabilities/generate_catalog.py": [
+          "maintenance"
+        ]
+      },
+      "local_checks": [],
+      "pending": [
+        "unmapped-changes",
+        "original-request",
+        "ci:maintenance"
+      ],
+      "regression_flag": false,
+      "collection_not_inferred_from_regression_flag": true
+    },
+    {
+      "class": "selector-file",
+      "paths": [
+        "scripts/ci_selection.py"
+      ],
+      "selector_flags": [
+        "maintenance",
+        "calibration",
+        "provenance",
+        "regression",
+        "differential",
+        "fuzz",
+        "package",
+        "benchmark"
+      ],
+      "per_path": {
+        "scripts/ci_selection.py": [
+          "maintenance",
+          "calibration",
+          "provenance",
+          "regression",
+          "differential",
+          "fuzz",
+          "package",
+          "benchmark"
+        ]
+      },
+      "local_checks": [
+        "ci-routing"
+      ],
+      "pending": [
+        "local:ci-routing",
+        "original-request",
+        "ci:maintenance",
+        "ci:calibration",
+        "ci:provenance",
+        "ci:regression",
+        "ci:differential",
+        "ci:fuzz",
+        "ci:package",
+        "ci:benchmark"
+      ],
+      "regression_flag": true,
+      "collection_not_inferred_from_regression_flag": true
+    }
+  ],
+  "errors": [],
+  "unconditional_jobs": {
+    "selection": "no selector if; discovers listed CI tests on every selected run",
+    "catalog-inventory": [
+      "if: always() && needs.selection.result == 'success' && needs.fast-checks.result == 'success'",
+      "if: always()"
+    ],
+    "always_required": [
+      "catalog-inventory"
+    ]
+  },
+  "flag_gated_jobs": {
+    "static-checks": [
+      "if: needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+      "if: needs.selection.outputs.maintenance == 'true'",
+      "if: always() && needs.selection.outputs.maintenance == 'true'",
+      "if: needs.selection.outputs.calibration == 'true'"
+    ],
+    "provenance-paper": [
+      "if: needs.selection.outputs.provenance == 'true'"
+    ],
+    "provenance-support": [
+      "if: needs.selection.outputs.provenance == 'true'"
+    ]
+  },
+  "settled": [
+    {
+      "class": "normative",
+      "fact": "Registration JSON selects maintenance. PROTOCOL.md selects calibration. Two established paths; no single class name is required."
+    },
+    {
+      "class": "implementation-fix",
+      "fact": "compiler.py and schedule.rs keep differential, fuzz, and package. This drill does not drop them."
+    },
+    {
+      "class": "pure-migration-known",
+      "fact": "PR5 adapter and consumer paths select calibration and provenance. regression is false. Collection still runs through provenance-paper, provenance-support, and unconditional catalog-inventory."
+    },
+    {
+      "class": "pure-migration-unrecognized",
+      "fact": "An unrecognized experiments path still selects every CI check. No pure-migration exemption was added."
+    },
+    {
+      "class": "catalog-generator",
+      "fact": "scripts/capabilities/generate_catalog.py selects maintenance. Neighbor capability scripts and unknown experiments still select every check. Changing scripts/ci_selection.py still selects every check under the current CI_FILES rule."
+    }
+  ]
+}

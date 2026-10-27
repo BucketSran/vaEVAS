@@ -1,0 +1,233 @@
+{
+  "generated_at_utc": "2026-10-27T09:00:30.246447+00:00",
+  "author": "tclaude/claude-opus-5-5 main controller",
+  "purpose": "Item-by-item mapping of DR-04 and DR-06 to batch-5 evidence and independent reviews; requested by the coordinator; to be verified by the PR6 fresh Astra review. Batch 5 is not reopened.",
+  "plan": {
+    "path": "evas/docs/development/validation-restructure-plan.md",
+    "lines": "172-196 (PR5) and 238 (final criteria)",
+    "commit": "ac1b6e8d8de743b8da3f862c0f50bdf0a1a1ca14"
+  },
+  "source_of_DR_definitions": {
+    "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/draft-review/review.json",
+    "sha256": "1247c603e62e735f8ca0c20a94257b92125a28b468ebe55e6cbfd2b590227765"
+  },
+  "items": {
+    "DR-04": {
+      "definition": {
+        "priority": "P2",
+        "classification": "confirmed_omission",
+        "blocking_for": "each asset migration batch",
+        "title": "迁移批次未要求同步核对真实CI收集",
+        "trigger": "第三批搬目录，第四批才同步CI入口；旧目录空置可发现零测试并返回成功。",
+        "impact": "资产存在、数值不变，但CI不再执行原检测器。",
+        "correction": "每批同步命令、路由和兼容层；以实际CI入口核对方法集合，检查漏收、重复和零测试；改名保留旧新身份映射。"
+      },
+      "plan_requirements": [
+        "每次迁移同时修改实际消费者、命令、CI 路径选择与测试发现入口，不推迟到 PR6",
+        "必要兼容入口必须能运行",
+        "按真实 CI 命令对照测试身份集合，验证无漏收、重复及零测试假通过",
+        "改名保留旧新身份映射（DR-04 correction）"
+      ],
+      "requirements": [
+        {
+          "requirement": "Commands, routing and compatibility entries change in the same batch",
+          "evidence": [
+            {
+              "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/ci-inventory-completion-grok-20261027/primary-verification.json",
+              "sha256": "84026ef0250383a6e25a0ee8e777b53f9021eb91d38de62764abeec1609d1fac",
+              "note": "literal CI table 29->30 (maintenance 7, validation 23) synchronized with the comparison entry"
+            },
+            {
+              "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/discovery-selection.json",
+              "sha256": "ec8df9a5eff80bdd90fc85cebf800411efe34cceb1c2e5366d7b6072f8bfb962",
+              "note": "31 entries at 983b: 30 reused, comparison newly collected"
+            },
+            {
+              "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/precheck-acceptance.json",
+              "sha256": "7ad34beca0d88b32482f39af258f86b5cb6209f1f3b547bab78739159b0a8f69",
+              "note": "complete ci_lint plan plus selector/inventory tests on 983b"
+            }
+          ],
+          "reviews": [
+            {
+              "review": "R1 (fresh Astra, a7e8 full 29 paths)",
+              "report": {
+                "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-consumer-migration-astra-r1-20261027/review-report.json",
+                "sha256": "f93638e38000cffa7c370e4a5cfe7ea5edf5f860082ead66894bf07cef1a1ee7"
+              },
+              "covered": "coverage rows for numerical-assurance.yml and scripts/ci_selection.py; Standards accepted"
+            },
+            {
+              "review": "R3 (fresh Astra, 983b increment)",
+              "report": {
+                "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-continuation-fix-astra-r3-20261027/review-report.json",
+                "sha256": "8a824b9b4c72050670fbfd4b065dfe877daf4147a603a73f6c0cda8292543d6d"
+              },
+              "covered": "comparison discover entry retained; 1 new collection"
+            }
+          ],
+          "status": "evidenced"
+        },
+        {
+          "requirement": "Actual CI entries are compared with method sets (no missing, duplicate or zero-test pass)",
+          "evidence": [
+            {
+              "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/dr-mapping-20261027/dr04-collection-check.json",
+              "sha256": "9beaf92b2a4adbb143732e6f431cceb09a7cde880305ae210865f81b497dcff7",
+              "note": "NEW in PR6 preparation: e10 CI40429826545 vs ac1b6e8d CI40473087175 actual catalog-inventory receipts"
+            },
+            {
+              "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/context-registration-20261027/pr266-rebind-20261027/ci-40473087175/raw-verification.json",
+              "sha256": "98ab9d52a102a48cbdebb26c01642f9b35074c6650f59f784f39952526d206ff",
+              "note": "activation CI catalog-inventory summary success/reconciled/construction_complete, mode require-catalog"
+            }
+          ],
+          "facts": {
+            "entries": "30 -> 31; 4 entry IDs re-identified only by workflow line shift (same start/pattern/command); 1 new comparison entry",
+            "methods": {
+              "maintenance": {
+                "before": 635,
+                "after": 637,
+                "removed": 0,
+                "added": 2
+              },
+              "python-regression": {
+                "before": 3257,
+                "after": 3257,
+                "removed": 0,
+                "added": 0
+              },
+              "validation": {
+                "before": 760,
+                "after": 849,
+                "removed": 0,
+                "added": 89
+              }
+            },
+            "zero_collection_entries": [],
+            "within_entry_duplicates": [],
+            "modules_collected_before_but_not_after": [],
+            "batch5_new_test_files_collected": true
+          },
+          "reviews": [
+            {
+              "review": "R1",
+              "covered": "spec_assessment: actual workflow 30 literals plus primary correspond to 31 collection receipts; no within-entry duplicates, zero collection or import errors; comparison is the only new entry"
+            },
+            {
+              "review": "R3",
+              "covered": "78 comparison identities, exactly 11 new, no loss or within-entry duplicate"
+            }
+          ],
+          "status": "evidenced; the before/after actual-CI comparison is new main-controller evidence pending independent verification in PR6"
+        },
+        {
+          "requirement": "Renames keep old/new identity mapping",
+          "evidence": [
+            {
+              "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/dr-mapping-20261027/dr04-collection-check.json",
+              "sha256": "9beaf92b2a4adbb143732e6f431cceb09a7cde880305ae210865f81b497dcff7",
+              "note": "no runtime method ID removed in maintenance, validation or primary namespaces; no rename occurred"
+            }
+          ],
+          "reviews": [
+            {
+              "review": "r4 (fresh Astra exact context)",
+              "report": {
+                "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-exact-context-astra-r4-20261027/review-report.json",
+                "sha256": "132c33c409feaf95805481397dc71d0d1c441d3ba11fd8697e51eab12e94d022"
+              },
+              "covered": "7737 primary obligations preserved; 18 criteria paths assessed"
+            }
+          ],
+          "status": "not applicable in batch 5 (no rename); evidence pending independent verification in PR6"
+        }
+      ],
+      "gaps": [
+        "No review report names DR-04 or states its closure explicitly.",
+        "dr04-collection-check.json (actual CI before/after comparison) is new and not yet independently reviewed.",
+        "Out of DR-04 batch scope but recorded: 110 tracked test*.py modules are collected by no CI entry; none was collected before batch 5, 15 are under evas/validation or experiments/backends. No claim is made about whether they should run in CI."
+      ],
+      "closure_proposal": "Close DR-04 for batch 5 if the PR6 independent review accepts the mapping and the actual-CI comparison; the pre-existing uncollected modules stay a separate visible item."
+    },
+    "DR-06": {
+      "definition": {
+        "priority": "P3",
+        "classification": "nonblocking_suggestion",
+        "title": "增加历史证据读取迁移试点",
+        "trigger": "已有分析器同时校验固定源码路径和哈希，文件迁移或兼容入口改变身份。",
+        "impact": "普通导入兼容不能证明历史收据仍可读取和解释。",
+        "correction": "选一份历史收据验证读取、校验和解释；新分析建立新身份，不改旧冻结清单。"
+      },
+      "plan_requirements": [
+        "历史迁移试点至少覆盖一份收据，重点验证 precision_report.py 这样的固定路径及哈希检查",
+        "原执行、原分析仍可检索和解释",
+        "必要时从冻结源码运行旧分析器，或创建新身份的重分析记录",
+        "不能改旧清单绕过漂移检查"
+      ],
+      "requirements": [
+        {
+          "requirement": "One historical receipt is read, verified and interpreted",
+          "evidence": [
+            {
+              "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/precision-history-grok-20261027/history-verification.json",
+              "sha256": "5c5fdb366148641bee5fa329f4f757a7535ce0283908a9b4878d8c9435da96a6",
+              "note": "receipt 20261011-precision-binding analysis-02 sha 23ea554f; 137 pinned source dependencies all match (precision_report.py a2951035 and precision_v2_report.py f5d00afc among execution-snapshot pins); 14 archives/input manifests; 70 contract attachments"
+            },
+            {
+              "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/precision-history-grok-20261027/primary-verification.json",
+              "sha256": "29caf50c97c83c2e1239609413d73bed53d305bd4ec1fa6985c5427ec8e36477",
+              "note": "primary verification of the worker result"
+            }
+          ],
+          "reviews": [
+            {
+              "review": "R1",
+              "covered": "evidence_reuse.precision_history: 137 frozen dependencies without hash failure, 176 original results, historical_receipt_rewritten=false; spec_assessment: old analysis interpretable and replayable by frozen identity"
+            }
+          ],
+          "status": "evidenced"
+        },
+        {
+          "requirement": "Old analyzer runs from frozen source or a new-identity reanalysis is created; old manifests are not rewritten",
+          "evidence": [
+            {
+              "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/precision-history-grok-20261027/history-verification.json",
+              "sha256": "5c5fdb366148641bee5fa329f4f757a7535ce0283908a9b4878d8c9435da96a6",
+              "note": "frozen precision_binding_report.py replay reproduced original receipt and registry bytes (176/176); recorded as new reanalysis; originals_modified=false; history_scores_replaced=false"
+            }
+          ],
+          "reviews": [
+            {
+              "review": "R1",
+              "covered": "comparison class new reanalysis, byte_match=true, analysis_dependencies_match=true"
+            }
+          ],
+          "status": "evidenced"
+        },
+        {
+          "requirement": "Fixed-path and hash guard such as precision_report.py remains effective after migration",
+          "evidence": [
+            {
+              "kind": "static source reading",
+              "facts": "precision_report.py unchanged e10->ac1b6e8d; its report() verifies the frozen input MANIFEST and five fixed analysis dependencies (lines 190-199); one of them, experiments/backends/paper/inputs.py, changed in batch 5, so current-source reanalysis raises analysis dependency drift by design; precision_v2_report.py keeps the same frozen input/execution drift guards (lines 161, 184)."
+            }
+          ],
+          "reviews": [
+            {
+              "review": "R1",
+              "covered": "precision freeze/source_files binds the two adapters; verify uses the frozen manifest"
+            }
+          ],
+          "status": "evidenced statically; no executed v1-analyzer drift control"
+        }
+      ],
+      "gaps": [
+        "No review report names DR-06 or precision_report.py explicitly.",
+        "The executed pilot uses the precision-binding (v2 family) analyzer; precision_report.py is covered as a pinned, verified dependency and by static reading of its guard, not by executing its own report() on a v1 receipt."
+      ],
+      "closure_proposal": "DR-06 (P3, nonblocking) correction is met by the precision-binding pilot. Close it if the PR6 independent review accepts this; add an executed v1 drift control only if the reviewer judges the static guard evidence insufficient."
+    }
+  },
+  "scientific_qualification": false
+}
