@@ -1,0 +1,295 @@
+{
+  "run": 40467108985,
+  "candidate": "796f841656fffeb08b2ce1430131783f82f706b2",
+  "tree": "b531c9d1f2fbdf6f4ea9c5d3aafb6c0fa55e741e",
+  "base": "a776088ea81c728d4fae5879c00377be01f47fe4",
+  "actual_checkout": "3ab0ae60bd5e62aab129ceb868807131a4d4b842",
+  "jobs": 18,
+  "jobs_not_success": [
+    "benchmark",
+    "fuzz-smoke",
+    "package",
+    "properties-and-ngspice"
+  ],
+  "run_conclusion": "success",
+  "artifact_archive_hashes_verified": [
+    {
+      "name": "rust-test-listing",
+      "files": 29,
+      "sha256": "d715689b4795c392ba7a0e2bd6f854a25c3ba5ced77da667d0cfcaf41f3fe00f"
+    },
+    {
+      "name": "python-regression-shard-1",
+      "files": 9,
+      "sha256": "fcbff7d99b2521b367ccb85c7439fc5f2eb1884cad2f6923a55db838e69437b3"
+    },
+    {
+      "name": "python-regression-admission",
+      "files": 3,
+      "sha256": "b90b20e0b61105c91f1d7f4f851724d8376ee5a4f69595d7a849ef5b30f0b0fb"
+    },
+    {
+      "name": "git-fixture-isolation",
+      "files": 180,
+      "sha256": "8464c5b17013bc9e61e595e5547a489953c750d9763efd4181d4e19dafc1dd68"
+    },
+    {
+      "name": "catalog-inventory",
+      "files": 39,
+      "sha256": "902e44dfc88ebf015907df5918fe9667668433ec71be442675484598d3c39032"
+    },
+    {
+      "name": "python-regression-shard-2",
+      "files": 9,
+      "sha256": "5cecb30d412b3194134ac90e41fd5846ddc164edd4cdafcf6e6729efd5d02b0a"
+    },
+    {
+      "name": "source-kernel",
+      "files": 1,
+      "sha256": "8a4717aa4234db534d6ac6633343706e6330611b02b460acf6b21867408aafc7"
+    },
+    {
+      "name": "fast-feedback",
+      "files": 2,
+      "sha256": "7bc5810cc51c009aeb725d82adad10cbf610677162b6d0cf8af155858cda7172"
+    },
+    {
+      "name": "python-regression-timings",
+      "files": 2,
+      "sha256": "f05de7125c65150af221d058320e6384ddb59b3e65168f0bb2127a30dcc40ea0"
+    },
+    {
+      "name": "python-regression-shard-3",
+      "files": 9,
+      "sha256": "bc1569d5d34dcf6b2b00720696fb3e1ffef4b2d9bcca6387e843b24772228fa9"
+    },
+    {
+      "name": "python-regression-shard-0",
+      "files": 9,
+      "sha256": "0ad0334d7d49f3bbbf29e0cde53fb8bf6ecf66246ba748012bee9956c3543230"
+    }
+  ],
+  "actual_assets": 49566,
+  "unchanged_assets_reused": 49565,
+  "changed_assets_verified": [
+    "evas/validation/baselines/regression-v1.json"
+  ],
+  "full_input_count": 49556,
+  "shards": [
+    {
+      "index": 0,
+      "methods": 818,
+      "raw_exit": 1,
+      "cacheable": false,
+      "input_fingerprint": "3f02ace643d4849c5a7d4a961171998130e41c7d1eac5f1a53f29ab9f6837695",
+      "kernel_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+      "jsonl_exact": true,
+      "retained_stdout_bytes": 0,
+      "retained_stderr_bytes": 401523
+    },
+    {
+      "index": 1,
+      "methods": 831,
+      "raw_exit": 1,
+      "cacheable": false,
+      "input_fingerprint": "4c67ed614ab4aec9e32e79e79fa3bc088cc834bfdaf5e6316386ab5d90a2c644",
+      "kernel_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+      "jsonl_exact": true,
+      "retained_stdout_bytes": 170,
+      "retained_stderr_bytes": 403110
+    },
+    {
+      "index": 2,
+      "methods": 823,
+      "raw_exit": 1,
+      "cacheable": false,
+      "input_fingerprint": "654136ad0829833d91dd6bbf989c5ac1d7718cc040d6ec9e280bcf5d0b813832",
+      "kernel_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+      "jsonl_exact": true,
+      "retained_stdout_bytes": 10391,
+      "retained_stderr_bytes": 431739
+    },
+    {
+      "index": 3,
+      "methods": 785,
+      "raw_exit": 1,
+      "cacheable": false,
+      "input_fingerprint": "e3fd08c34fcb236bc9f9e6547dd1946d84b660a272345c5786c744d9f4323c05",
+      "kernel_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+      "jsonl_exact": true,
+      "retained_stdout_bytes": 921,
+      "retained_stderr_bytes": 430964
+    }
+  ],
+  "merged_exact": true,
+  "raw_sha256": "a0c133c3d4929b1c8356b7b358f1f1f0d256be0a9089670e2b3c236f89570650",
+  "methods": 3257,
+  "conditions": 7737,
+  "method_outcomes": {
+    "passed": 2617,
+    "error": 214,
+    "failed": 423,
+    "expected_failure": 3
+  },
+  "unittest_condition_counters": {
+    "failures": 597,
+    "errors": 296,
+    "skipped": 0,
+    "expected_failures": 3
+  },
+  "raw_successful": false,
+  "method_ids_preserved": true,
+  "method_outcome_changes": [],
+  "condition_delta_methods": [],
+  "criteria_changed_paths": [],
+  "metadata_changed_keys": [],
+  "criteria_id": "f54a2eac6238fa60cd4bc71b5aa74a6717077ad2cc9a8c8b25b4c2ca2880c625",
+  "D0_and_kernel_unchanged": true,
+  "candidate_baseline_sha256": "f765004c11b99673b95ddd87daabdc0c75fc6e4e3ef5b6cb2e9f31de96ae702b",
+  "admission": {
+    "valid": true,
+    "raw_successful": false,
+    "merge_allowed": true,
+    "differences": [],
+    "semantic_qualification": false
+  },
+  "admission_top_level": {
+    "valid": true,
+    "raw_successful": false,
+    "merge_allowed": true,
+    "differences": [],
+    "semantic_qualification": false
+  },
+  "admission_transition": {
+    "accepted": true,
+    "registration": true
+  },
+  "bundle_source": {
+    "schema_version": 1,
+    "requested": true,
+    "materialized": true,
+    "trusted_commit": "a776088ea81c728d4fae5879c00377be01f47fe4",
+    "pointer_path": "scripts/context-registration-bundle.json",
+    "helper_path": "scripts/materialize_registration_bundle.py",
+    "pointer_sha256": "cf1880ec72709eeb8e125b71cd11b2d177018925482152cbd38e83c65dc1a639",
+    "helper_sha256": "b3e821f65ef738d8611c0b021066a4b4b4bbd1632bbbcc48336d7e750d6ea305",
+    "inventory": {
+      "commit": "76098580bd78057bb27974b1e38f4dae9e4b4563",
+      "files": [
+        {
+          "blob": "f5ebc7b3fd36ad7031c13af9932084429d212b42",
+          "materialized_byte_count": 41458076,
+          "materialized_sha256": "531016babc8a288fd130f3af99364dbcaf20f25c225201d1f35e73e6b0a6c995",
+          "mode": "100644",
+          "name": "report.json",
+          "path": "evas/capabilities/observations/pr5-context-40454789703-20261027/bundle/report.json",
+          "stored_byte_count": 41458076,
+          "stored_sha256": "531016babc8a288fd130f3af99364dbcaf20f25c225201d1f35e73e6b0a6c995"
+        },
+        {
+          "blob": "4fdeaf07de07053a948e878acd59eb1be1ccd43b",
+          "materialized_byte_count": 620,
+          "materialized_sha256": "a0abe35c10fa5e97f1b80c29e83e99db1099826a118a2d29dbf4f43a811fa38b",
+          "mode": "100644",
+          "name": "composition_recipe",
+          "path": "evas/capabilities/observations/pr5-context-40454789703-20261027/bundle/composition_recipe",
+          "stored_byte_count": 620,
+          "stored_sha256": "a0abe35c10fa5e97f1b80c29e83e99db1099826a118a2d29dbf4f43a811fa38b"
+        },
+        {
+          "blob": "fdbd3e7554fa2e73aa58ab8757729331ce2dc8df",
+          "materialized_byte_count": 12758265,
+          "materialized_sha256": "908fc15264c92586d8014a7b94f71b7176440b92ce2836d9fd9f59c21435d607",
+          "mode": "100644",
+          "name": "snapshot_manifest",
+          "path": "evas/capabilities/observations/pr5-context-40454789703-20261027/bundle/snapshot_manifest",
+          "stored_byte_count": 12758265,
+          "stored_sha256": "908fc15264c92586d8014a7b94f71b7176440b92ce2836d9fd9f59c21435d607"
+        },
+        {
+          "blob": "2b2a8f78e9be5b8ae62dd913a41443c6d10441a7",
+          "materialized_byte_count": 2016,
+          "materialized_sha256": "4dc1e7f47527f37cac8a22de9785960e4d8fbc5cba053e79b0dc9b27a9eaea46",
+          "mode": "100644",
+          "name": "dut_build",
+          "path": "evas/capabilities/observations/pr5-context-40454789703-20261027/bundle/dut_build",
+          "stored_byte_count": 2016,
+          "stored_sha256": "4dc1e7f47527f37cac8a22de9785960e4d8fbc5cba053e79b0dc9b27a9eaea46"
+        },
+        {
+          "blob": "598705daff6af958d06973b652a8dbe17b574139",
+          "encoding": "gzip",
+          "materialized_byte_count": 105862328,
+          "materialized_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+          "mode": "100644",
+          "name": "kernel_binary",
+          "path": "evas/capabilities/observations/pr5-context-40454789703-20261027/bundle/kernel_binary",
+          "stored_byte_count": 22916941,
+          "stored_sha256": "6b6c592c12de213e6df8b91d84fd325bf6b228ad512f0e3107157489812d0065"
+        },
+        {
+          "blob": "b035cedf3c315b9a871e8c01a6294652e8d46fee",
+          "materialized_byte_count": 356,
+          "materialized_sha256": "225b9b80d905436696a410e2a312cf1a4d415fe2b4771427f38ae4d93b602179",
+          "mode": "100644",
+          "name": "collector_manifest",
+          "path": "evas/capabilities/observations/pr5-context-40454789703-20261027/bundle/collector_manifest",
+          "stored_byte_count": 356,
+          "stored_sha256": "225b9b80d905436696a410e2a312cf1a4d415fe2b4771427f38ae4d93b602179"
+        },
+        {
+          "blob": "0e044a7647d796a2a6a01622b7b947702f420104",
+          "materialized_byte_count": 1394,
+          "materialized_sha256": "5cc042c0a33607906f8eee3cc6f4f45657b13bf13ed0b02133275ba9ec8d6e43",
+          "mode": "100644",
+          "name": "artifact_manifest",
+          "path": "evas/capabilities/observations/pr5-context-40454789703-20261027/bundle/artifact_manifest",
+          "stored_byte_count": 1394,
+          "stored_sha256": "5cc042c0a33607906f8eee3cc6f4f45657b13bf13ed0b02133275ba9ec8d6e43"
+        },
+        {
+          "blob": "ed0ddc381fd43d29036a3c76352e2394a5dd35cb",
+          "materialized_byte_count": 11482,
+          "materialized_sha256": "231f69ab48e18e4b01251a1f46b4e4bfea54b86539695b66be2648c3501c47de",
+          "mode": "100644",
+          "name": "stdout",
+          "path": "evas/capabilities/observations/pr5-context-40454789703-20261027/bundle/stdout",
+          "stored_byte_count": 11482,
+          "stored_sha256": "231f69ab48e18e4b01251a1f46b4e4bfea54b86539695b66be2648c3501c47de"
+        },
+        {
+          "blob": "5143516f2dae0524c30f8eee4193e170003a4e50",
+          "materialized_byte_count": 1667281,
+          "materialized_sha256": "7ba285e31505468a43c81bcc5cd2aef0bda8025ba19ddaacd5463f2bf9b23843",
+          "mode": "100644",
+          "name": "stderr",
+          "path": "evas/capabilities/observations/pr5-context-40454789703-20261027/bundle/stderr",
+          "stored_byte_count": 1667281,
+          "stored_sha256": "7ba285e31505468a43c81bcc5cd2aef0bda8025ba19ddaacd5463f2bf9b23843"
+        },
+        {
+          "blob": "a7fe8a8ac35bfdb6cb8ea8cdf5ea3e9e42228741",
+          "materialized_byte_count": 44736807,
+          "materialized_sha256": "42fa7bb25445a1c0784144a7b43af79b6c982dc7a3269e446492f9d947785aca",
+          "mode": "100644",
+          "name": "shard_reports",
+          "path": "evas/capabilities/observations/pr5-context-40454789703-20261027/bundle/shard_reports",
+          "stored_byte_count": 44736807,
+          "stored_sha256": "42fa7bb25445a1c0784144a7b43af79b6c982dc7a3269e446492f9d947785aca"
+        }
+      ],
+      "kind": "registration-bundle-materialization",
+      "materialized": true,
+      "output": "/tmp/regression-bootstrap-4e3cr15m/registration-bundle",
+      "prefix": "evas/capabilities/observations/pr5-context-40454789703-20261027/bundle",
+      "schema_version": 2,
+      "tree": "b9d4219d463f9fc8e86c92ec12b0706a2c8d93de"
+    }
+  },
+  "bootstrap_source_sha256": "b91a64aef32f50fb8868fbcc9606d43c70b8425a19a9b15f9cfbcb6fb7e4182c",
+  "old_reference": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/context-registration-20261027/ci-40463491460/artifacts/python-regression-timings/python-regression.json",
+  "old_reference_sha256": "516b132dbd7f7ea0ab5f82c041020e2c9d2d543ce1507f5d9d424f93a0ac3445",
+  "semantic_qualification": false,
+  "acceptance": "Exact C0 comparison against the trusted base baseline; registration transition verified separately; not a new E1 or qualification",
+  "whole_CI_accepted": false
+}

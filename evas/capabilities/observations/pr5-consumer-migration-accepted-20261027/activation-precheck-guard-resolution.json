@@ -1,0 +1,27 @@
+{
+  "resolved_at_utc": "2026-10-27T08:19:08.405804+00:00",
+  "precheck_acceptance": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/context-registration-20261027/pr266-rebind-20261027/precheck-acceptance.json",
+  "precheck_acceptance_sha256": "7cce1cad184140696571df3a99746e82c9832f894d605ce7ce4c27d91dbd0ec1",
+  "guard_failure": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/context-registration-20261027/pr266-rebind-20261027/precheck-guard-failure.json",
+  "guard_failure_sha256": "644ef8676083e95228bf0160c363bdb23de70dc827b28f146fddd3889266a244",
+  "coordinator_decision": {
+    "receipt": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/local/notes/t3-orchestration-20261026/shared-git-config-20261027/accepted-20261027T075910Z.json",
+    "receipt_sha256": "9f0aca3e69eb8fc042665294308a883723b2ee45720c09c990c0abb86f70e94f",
+    "accepted_reference": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/local/notes/t3-orchestration-20261026/shared-git-config-20261027/config.accepted-20261027T075910Z",
+    "accepted_sha256": "de2b08ef3ba66e96be8b70c87346ff4a96f905e1272934ddd86c218dba501ea8"
+  },
+  "current_shared_config": {
+    "sha256": "de2b08ef3ba66e96be8b70c87346ff4a96f905e1272934ddd86c218dba501ea8",
+    "status": "equal-accepted-reference"
+  },
+  "guard_now": "real HEAD, empty index diff, user identity, private export git dirs, 20 old candidates and shared config (accepted reference) pass",
+  "precheck_rerun": false,
+  "reason": "Precheck commands ran in the private export; its git reads the export repository, not the shared config. The only failed assertion was the shared-config SHA, now accepted by its owner. Precheck file hashes are re-verified unchanged.",
+  "guard_code_change": {
+    "before": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/context-registration-20261027/pr266-rebind-20261027/prepare_rebind.before-config-baseline.py",
+    "before_sha256": "9ea2df86adc83f9edb22194d8fbc19e05cdf4010b7971c1271ba08d190929a50",
+    "after_sha256": "9b90fbbac177829cc28f18a8cbf0649caaf49b5803a481bf8dfed0a583aa39bc",
+    "scope": "config_guard/guard/preserved/invariant/resolve_guard and freeze precondition only"
+  },
+  "scientific_qualification": false
+}

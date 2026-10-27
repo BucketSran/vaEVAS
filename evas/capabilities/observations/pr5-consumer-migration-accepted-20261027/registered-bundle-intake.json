@@ -1,0 +1,168 @@
+{
+  "at_utc": "2026-10-27T06:07:29.014223+00:00",
+  "candidate": "983b1ef6a4804c29483279ca34a7a92fce56a858",
+  "worker_task": "node:delegated-task:command%3Amcp%3A474fd0ec-3723-4fb5-9af6-d18001f8bfcc%3Adelegate-task%3Aevas-pr5-983b-context-bundle-sonnet-r1-20261027",
+  "worker_receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/context-registration-20261027/bundle-preparation-sonnet/run-r3/receipt.json",
+  "worker_outputs_verified": [
+    {
+      "path": "bundle/artifact_manifest",
+      "bytes": 1394,
+      "sha256": "5cc042c0a33607906f8eee3cc6f4f45657b13bf13ed0b02133275ba9ec8d6e43"
+    },
+    {
+      "path": "bundle/collector_manifest",
+      "bytes": 356,
+      "sha256": "225b9b80d905436696a410e2a312cf1a4d415fe2b4771427f38ae4d93b602179"
+    },
+    {
+      "path": "bundle/composition_recipe",
+      "bytes": 620,
+      "sha256": "a0abe35c10fa5e97f1b80c29e83e99db1099826a118a2d29dbf4f43a811fa38b"
+    },
+    {
+      "path": "bundle/dut_build",
+      "bytes": 1860,
+      "sha256": "ae1774af226e22ebf62cd590f1c3243d43f9d06089a902307718aae9fed49f2d"
+    },
+    {
+      "path": "bundle/kernel_binary",
+      "bytes": 105862328,
+      "sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe"
+    },
+    {
+      "path": "bundle/report.json",
+      "bytes": 41458076,
+      "sha256": "531016babc8a288fd130f3af99364dbcaf20f25c225201d1f35e73e6b0a6c995"
+    },
+    {
+      "path": "bundle/shard_reports",
+      "bytes": 44736807,
+      "sha256": "42fa7bb25445a1c0784144a7b43af79b6c982dc7a3269e446492f9d947785aca"
+    },
+    {
+      "path": "bundle/snapshot_manifest",
+      "bytes": 12758265,
+      "sha256": "908fc15264c92586d8014a7b94f71b7176440b92ce2836d9fd9f59c21435d607"
+    },
+    {
+      "path": "bundle/stderr",
+      "bytes": 1667281,
+      "sha256": "7ba285e31505468a43c81bcc5cd2aef0bda8025ba19ddaacd5463f2bf9b23843"
+    },
+    {
+      "path": "bundle/stdout",
+      "bytes": 11482,
+      "sha256": "231f69ab48e18e4b01251a1f46b4e4bfea54b86539695b66be2648c3501c47de"
+    },
+    {
+      "path": "obligation-map-draft.json",
+      "bytes": 6717320,
+      "sha256": "9e894cd05b70aa4a3d4d7b2d049de3cf25e69c9703bca7e8f50af1aa147ecf80"
+    },
+    {
+      "path": "obligation-map-proof.json",
+      "bytes": 137842,
+      "sha256": "e625aa95cca4fa9045787f1e2a7694e9bad57406dc58a31d659ecc78d42d8219"
+    },
+    {
+      "path": "bundle-byte-binding.json",
+      "bytes": 4011,
+      "sha256": "0ea5fb1243d0f9936a495e42536b4b11ebf38ae391b38263a3a4a2ca494c464a"
+    },
+    {
+      "path": "stream-boundaries.json",
+      "bytes": 3367,
+      "sha256": "0e2157a4bb3a207eff5a6eb71c0e56a6bc7089a676965166f334d3575d922b33"
+    },
+    {
+      "path": "guard-before.json",
+      "bytes": 3055,
+      "sha256": "1cb9159b7854adf70debbc1e56c3008fd5db2676731f1a437f0dec30ab69a704"
+    },
+    {
+      "path": "guard-after.json",
+      "bytes": 3055,
+      "sha256": "1cb9159b7854adf70debbc1e56c3008fd5db2676731f1a437f0dec30ab69a704"
+    }
+  ],
+  "worker40_checks_reused": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/context-registration-20261027/bundle-preparation-sonnet/verify-r2/verification.json",
+  "primary_merge_closure": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/ci-40454789703/primary-raw-acceptance.json",
+  "provenance": {
+    "schema_version": 1,
+    "snapshot_revision": "983b1ef6a4804c29483279ca34a7a92fce56a858",
+    "snapshot_reference": "https://github.com/BucketSran/vaEVAS/tree/983b1ef6a4804c29483279ca34a7a92fce56a858; actual CI merge 33ed0fa1a516627d7d418fcf563a47a0d9e272b0 parents/tree verified in primary-raw-acceptance.json",
+    "raw_reference": "https://github.com/BucketSran/vaEVAS/actions/runs/40454789703 attempt 1; original zipped artifact index and members retained in raw-intake-sol",
+    "recipe_sha256": "a0abe35c10fa5e97f1b80c29e83e99db1099826a118a2d29dbf4f43a811fa38b",
+    "artifact_manifest_sha256": "5cc042c0a33607906f8eee3cc6f4f45657b13bf13ed0b02133275ba9ec8d6e43"
+  },
+  "files": [
+    {
+      "name": "artifact_manifest",
+      "bytes": 1394,
+      "sha256": "5cc042c0a33607906f8eee3cc6f4f45657b13bf13ed0b02133275ba9ec8d6e43"
+    },
+    {
+      "name": "collector_manifest",
+      "bytes": 356,
+      "sha256": "225b9b80d905436696a410e2a312cf1a4d415fe2b4771427f38ae4d93b602179"
+    },
+    {
+      "name": "composition_recipe",
+      "bytes": 620,
+      "sha256": "a0abe35c10fa5e97f1b80c29e83e99db1099826a118a2d29dbf4f43a811fa38b"
+    },
+    {
+      "name": "dut_build",
+      "bytes": 2016,
+      "sha256": "4dc1e7f47527f37cac8a22de9785960e4d8fbc5cba053e79b0dc9b27a9eaea46"
+    },
+    {
+      "name": "kernel_binary",
+      "bytes": 105862328,
+      "sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe"
+    },
+    {
+      "name": "report.json",
+      "bytes": 41458076,
+      "sha256": "531016babc8a288fd130f3af99364dbcaf20f25c225201d1f35e73e6b0a6c995"
+    },
+    {
+      "name": "shard_reports",
+      "bytes": 44736807,
+      "sha256": "42fa7bb25445a1c0784144a7b43af79b6c982dc7a3269e446492f9d947785aca"
+    },
+    {
+      "name": "snapshot_manifest",
+      "bytes": 12758265,
+      "sha256": "908fc15264c92586d8014a7b94f71b7176440b92ce2836d9fd9f59c21435d607"
+    },
+    {
+      "name": "stderr",
+      "bytes": 1667281,
+      "sha256": "7ba285e31505468a43c81bcc5cd2aef0bda8025ba19ddaacd5463f2bf9b23843"
+    },
+    {
+      "name": "stdout",
+      "bytes": 11482,
+      "sha256": "231f69ab48e18e4b01251a1f46b4e4bfea54b86539695b66be2648c3501c47de"
+    }
+  ],
+  "metadata_correction": {
+    "file": "dut_build",
+    "old_sha256": "ae1774af226e22ebf62cd590f1c3243d43f9d06089a902307718aae9fed49f2d",
+    "new_sha256": "4dc1e7f47527f37cac8a22de9785960e4d8fbc5cba053e79b0dc9b27a9eaea46",
+    "scope": "updated factual source-closure reference only; recipe, DUT, kernel, report, artifacts and all scientific inputs unchanged"
+  },
+  "primary_new_checks": [
+    "production evidence on corrected metadata and exact bytes",
+    "mapped_obligations for all7737",
+    "C0 accepted and new report rejected on unchanged baseline"
+  ],
+  "worker_failures_preserved": {
+    "outputs": true,
+    "older_script_versions": false,
+    "limitation": "Worker edited scripts in place; original failing script bytes were not retained and are unknown."
+  },
+  "effective_authority": false,
+  "scientific_qualification": false
+}

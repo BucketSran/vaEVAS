@@ -1,0 +1,877 @@
+{
+  "schema_version": 1,
+  "review_kind": "fresh-context independent Astra exact-context review r4; Standards and Spec; read-only; no delegation",
+  "review_status": "accepted_exact_content_pending_required_CI_and_sequenced_adoption",
+  "conclusion": "固定C0四路径无可操作Standards/Spec发现。接受本报告绑定的entry、authority、review record、bundle pointer及独立baseline-append精确字节。判断来自本轮独立核对，不以拟采用approved字段为依据。CI40463491460未验，由主控验收。",
+  "standards_findings": [],
+  "spec_findings": [],
+  "findings_count": 0,
+  "minimum_fixes_required": [],
+  "brief": {
+    "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/context-registration-20261027/review-r4-brief.txt",
+    "sha256": "4fa550329e7b4856241988fab13e1f5e75dc94164a46191b0861b2c4692b30f4",
+    "fully_read": true
+  },
+  "runtime": {
+    "model": "gpt-6-astra",
+    "provider": "codex",
+    "options": [
+      {
+        "id": "reasoningEffort",
+        "value": "max"
+      },
+      {
+        "id": "serviceTier",
+        "value": "default"
+      }
+    ],
+    "parentThreadId": "thread:delegated-task:command%3Amcp%3A560a6eb9-75ba-49ac-99ec-18d7c7a347e7%3Adelegate-task%3Aevas-pr5-c0-76d2152e-astra-r4-20261027",
+    "source": "T3 orchestrator_capabilities"
+  },
+  "time": {
+    "first_guard_utc": "2026-10-27T06:53:46.583248+00:00",
+    "last_guard_utc": "2026-10-27T07:07:09.581863+00:00",
+    "report_created_at_utc": "2026-10-27T07:16:04.541560+00:00",
+    "queue_seconds": null,
+    "provider_reported_execution_seconds": null,
+    "known_intervals": "exact-checks/derived-checks有本地核对时间；未填造不可得的模型耗时或排队时间。",
+    "final_guard_utc": "2026-10-27T07:17:13.069256+00:00",
+    "completed_at_utc": "2026-10-27T07:17:13.175148+00:00"
+  },
+  "fixed_scope": {
+    "base": "e10e1af5796f0cc7af3b6b5f5d26c420c0c03325",
+    "base_tree": "2a44d2998fafbfc1a6efa2b918c4af60de1e5135",
+    "head": "76d2152e478fee4c2108c4d33280df211da7b8a3",
+    "tree": "0d5efdc9ef84c23f881b980b95333b5208f54352",
+    "source_capture": "4fc9adf029702b60cfac8dcd1ad307c3705d5454",
+    "source_capture_tree": "577af404786cf564b200fdd827f674841dd113f6",
+    "pr": "https://github.com/BucketSran/vaEVAS/pull/267",
+    "comparison": "explicit base..head, not automatic workspace HEAD",
+    "files": {
+      "evas/capabilities/data/asset-index.json": {
+        "sha256": "fa4b6326f4bad43e6e70f2b2cd01909ba9e16902d198b643aea13eb569297e12",
+        "bytes": 12473039,
+        "blob": "f5a111a317ddfb8ae82d207d635f947c1d929d66"
+      },
+      "evas/capabilities/data/registry.json": {
+        "sha256": "87120f9d38f18ebf55b8a4a0295b40d621fff3512661d035da08273d9ca703bc",
+        "bytes": 1345147,
+        "blob": "5a8eaafca0950d5d43a971aa0ecc95581c77ef62"
+      },
+      "evas/validation/baselines/regression-v1.review.json": {
+        "sha256": "10a264c44a5b3e709196770c68b1c1d197c2356be753c5af2194f2d7fcdc2f8d",
+        "bytes": 17151758,
+        "blob": "20de68733a1b84bc7b851cccf21a4e3c0883887f"
+      },
+      "scripts/context-registration-bundle.json": {
+        "sha256": "cf1880ec72709eeb8e125b71cd11b2d177018925482152cbd38e83c65dc1a639",
+        "bytes": 339,
+        "blob": "9645e31bdfce2e81ef5a5247c6e4666e01cdf602"
+      }
+    },
+    "export": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/context-registration-20261027/source-c0",
+    "export_private_HEAD_is_source_capture": true,
+    "consumer": {
+      "pr": "https://github.com/BucketSran/vaEVAS/pull/266",
+      "head": "983b1ef6a4804c29483279ca34a7a92fce56a858",
+      "tree": "7a99e40b4a58e00c138e4c721f3deaab1bdb2ba6",
+      "source_review_reused": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-continuation-fix-astra-r3-20261027/review-report.json",
+      "source_re_reviewed": false,
+      "this_round": "仅为context保留义务检查18条criteria差异及其消费者，不重开R3源码审核。"
+    },
+    "real_checkout_HEAD": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+    "old_scientific_candidates_excluded": 20,
+    "only_writable_directory": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-exact-context-astra-r4-20261027"
+  },
+  "instructions_read": [
+    "实际checkout AGENTS.md",
+    ".agents/skills/vaevas-review-pr/SKILL.md",
+    "外层README#t3-multimodel-workflow当前规则",
+    "CONTRIBUTING.md授权/审核/精简交付规则",
+    "docs/contributing/workspaces.md相关范围",
+    "scripts/README.md context登记/紧凑输出/摘要检查规则",
+    ".agents/skills/evas-validate/SKILL.md证据重用/重验证/报告边界",
+    "unslop/SKILL.md"
+  ],
+  "axis_assessment": {
+    "Standards": {
+      "accepted": true,
+      "basis": [
+        "四路径范围正确，baseline事务与PR266实现未混入C0。",
+        "维护收据及最终字节身份一致；旧对象保留，发现复用未冒称新执行。",
+        "真实HEAD/index/config及20候选未变。共享refs仅新增T3 checkpoint，原汇总不相同已明确保留。",
+        "拟采用review reference解析到本报告；JSON字段不被当作审核身份认证。"
+      ]
+    },
+    "Spec": {
+      "accepted": true,
+      "basis": [
+        "authority逐项绑定现行baseline、旧context、新entry、真实raw/subject及9角色。",
+        "C0 baseline整文件、旧authorization及baseline追加内旧context原字节和顺序保留。",
+        "18条criteria依赖/语义检查支持7737条preserved，不只依赖signature计数。",
+        "旧pointer不再承担已登记PR4的普通比较，新的pointer仅由可信base在普通C0允许后供独立追加使用。"
+      ]
+    }
+  },
+  "exact_governance_decision": {
+    "decisions": {
+      "entry": {
+        "accepted": true,
+        "decision": "accept_exact_content_for_sequenced_adoption",
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/context-registration-20261027/governance-draft/entry.json",
+        "file_sha256": "479b9dfa572c49e6d70f341bcb36a78c5de79d5afbb6f165ab3561cd4be8f3c5",
+        "bytes": 20424616,
+        "canonical_sha256": "b8a67680cd5b0cc907b94c015fb6a66a2484e499b40f2008d690672cd80b706c"
+      },
+      "authority": {
+        "accepted": true,
+        "decision": "accept_exact_content_for_sequenced_adoption",
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/context-registration-20261027/governance-draft/authority.json",
+        "file_sha256": "c2b7f993296ed2248a06b1b13de9d77a9c4d8eb7da6b8edcb92239f0c8a4cd01",
+        "bytes": 9239477,
+        "canonical_sha256": "1403a614ddcc3f8a97e5b8664b2410e9d59fb681f5cee08de3963c430984f5a2",
+        "id": "pr5-consumer-migration-CI40454789703",
+        "fixed_file": "evas/validation/baselines/regression-v1.review.json",
+        "line": 85479,
+        "json_pointer": "/context_registration_authorizations/1"
+      },
+      "review_record": {
+        "accepted": true,
+        "decision": "accept_exact_content_for_sequenced_adoption",
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/context-registration-20261027/governance-draft/review.json",
+        "file_sha256": "10a264c44a5b3e709196770c68b1c1d197c2356be753c5af2194f2d7fcdc2f8d",
+        "bytes": 17151758,
+        "canonical_sha256": "e27fffaf1a536d41706613637259c6779a507b53af0b771224d1905e53de6eab"
+      },
+      "bundle_pointer": {
+        "accepted": true,
+        "decision": "accept_exact_content_for_sequenced_adoption",
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/context-registration-20261027/governance-draft/bundle-pointer.json",
+        "file_sha256": "cf1880ec72709eeb8e125b71cd11b2d177018925482152cbd38e83c65dc1a639",
+        "bytes": 339,
+        "canonical_sha256": "13646d2f1904a609100066d75f6f5cf9888a5389e4cb9b7bc8528ce67947fe88",
+        "fixed_file": "scripts/context-registration-bundle.json",
+        "line": 1
+      },
+      "baseline_append": {
+        "accepted": true,
+        "decision": "accept_exact_content_for_sequenced_adoption",
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/context-registration-20261027/governance-draft/baseline-append.json",
+        "file_sha256": "f765004c11b99673b95ddd87daabdc0c75fc6e4e3ef5b6cb2e9f31de96ae702b",
+        "bytes": 89943276,
+        "canonical_sha256": "bcc18beb8a0b89454f686f73016d0b777f609072542f73c528f3b85c4ba29dd4",
+        "allowed_changed_paths": [
+          "evas/validation/baselines/regression-v1.json"
+        ]
+      },
+      "mapping": {
+        "accepted": true,
+        "rows": 7737,
+        "classification": "preserved",
+        "canonical_sha256": "eca8feef99bd61316bcb80631f9473c6fa42443b36ea8cca464a3e5721f95b1c",
+        "attribution": null,
+        "review_reference": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-exact-context-astra-r4-20261027/review-report.json; PROPOSED exact decision, effective only after fresh independent acceptance of these bytes and C0 authority merge; raw source proof: https://raw.githubusercontent.com/BucketSran/vaEVAS/76098580bd78057bb27974b1e38f4dae9e4b4563/evas/capabilities/observations/pr5-context-40454789703-20261027/proof/primary-raw-acceptance.json"
+      }
+    },
+    "acceptance_basis": "本轮固定Git字节、JSON/hash、生产投影、完整条件及源码依赖核对；身份匹配的来源证明、R3源码审核和维护收据限定复用。",
+    "approved_field_treated_as_proposed_state": true,
+    "review_reference_resolves_to_this_report": true,
+    "effective_authority_at_review": false,
+    "effective_only_after": [
+      "本轮对上述精确内容接受",
+      "固定C0必要CI满足，由主控验收",
+      "主控将C0合入事件选择的可信主线"
+    ],
+    "required_sequence": [
+      "先验收PR267固定head的本轮独审与必要CI，再合入C0。",
+      "之后单独提交并验收只改evas/validation/baselines/regression-v1.json的精确baseline-append事务。可信base必须已含C0授权。",
+      "baseline追加合入后再激活PR266必要CI、合入并核对实际合入树。"
+    ],
+    "baseline_append_authorized_to_bypass_C0": false,
+    "reuse_rule": "后续baseline PR可按此处file SHA256、canonical SHA256、现行baseline和authority身份复用内容接受；仍须保持baseline单路径事务和必要CI。变更身份不自动继承此结论。",
+    "scientific_qualification": false
+  },
+  "focus_assessment": [
+    {
+      "item": 1,
+      "decision": "accept",
+      "authority_id": "pr5-consumer-migration-CI40454789703",
+      "old_baseline_canonical_sha256": "a61e1c4d88a1e523e5663294db0c277681fb1b2790caccf343941715c7bb3599",
+      "previous_context_sha256": "ca0e3040859510877d705771eac3ebcfbc88fe0d482a3de677b7919c1fdfcdfb",
+      "new_entry_canonical_sha256": "b8a67680cd5b0cc907b94c015fb6a66a2484e499b40f2008d690672cd80b706c",
+      "current_dut": {
+        "manifest_sha256": "5e9bf28ad121569a6975811f0b5ea9e60423e676e6dfcf88048948bfd19ba056",
+        "kernel_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe"
+      },
+      "e1_raw_sha256": "531016babc8a288fd130f3af99364dbcaf20f25c225201d1f35e73e6b0a6c995",
+      "e1_canonical_report_sha256": "f10d451fcb41964398dbe29f80bd17b613fb280391f77368b38f7dc7835d8093",
+      "e1_execution_subject_canonical_sha256": "672183574f0371b93f361f64ffcc78a466f797a67052af46c5fcec759aa7465f",
+      "evidence": "exact-checks.json。旧第1项授权比较literal JSON item bytes；现行baseline比较整文件；追加中旧3项context比较literal item bytes及顺序。"
+    },
+    {
+      "item": 2,
+      "decision": "accept_proposed_bytes_by_this_review",
+      "reason": "拟采用approved值只作被审输入。本轮在完成核对之后才接受，未因字段预先写approved而判通过。"
+    },
+    {
+      "item": 3,
+      "decision": "accept_preserved_mapping",
+      "criteria_path_count": 18,
+      "reason": "详见criteria_obligation_assessment。考虑真实间接依赖、worker正文等价、来源闭包变化及未改数值判据。"
+    },
+    {
+      "item": 4,
+      "decision": "accept_pointer_replacement",
+      "old_archive": "ae1cd723c5b24bd17af866805d7e6ac742cd8b86",
+      "new_archive": "76098580bd78057bb27974b1e38f4dae9e4b4563",
+      "reason": "base第3个context canonical SHA256=f161e106f9ad26365a2c701ee1074f85b78326276f71b8e922cc717d9f8c0742，与旧PR4授权new_entry完全相同，已在baseline。普通比较不读取bundle；旧archive仍由原授权locator保留。loader只在普通C0比较允许且恰追加一项时触发路径物化，pointer/helper均来自同一可信base。",
+      "source_locations": [
+        {
+          "file": "scripts/run_trusted_regression_gate.py",
+          "lines": [
+            128,
+            161,
+            183,
+            189
+          ]
+        },
+        {
+          "file": ".github/workflows/numerical-assurance.yml",
+          "lines": [
+            489,
+            510,
+            514,
+            519,
+            542
+          ]
+        }
+      ]
+    },
+    {
+      "item": 5,
+      "decision": "accept_dut_revision_842b",
+      "reason": "逐项核对842bde7101164330fa03e7aee58b45d1789cbed1、e10和983b的327个DUT文件，规范化manifest均为5e9bf28ad121569a6975811f0b5ea9e60423e676e6dfcf88048948bfd19ba056。dut_revision标识相同DUT源码，不冒充CI checkout。修正dut_build仅变build_reference，明确实际merge33ed0fa1a516627d7d418fcf563a47a0d9e272b0，其parents/tree已从对象重核。kernel精确字节为b9574603…，本轮未执行。"
+    },
+    {
+      "item": 6,
+      "decision": "accept_generated_registration",
+      "old_versions_retained": 47721,
+      "new_versions": 1,
+      "new_current_object": "scripts/context-registration-bundle.json",
+      "new_qualification": false,
+      "discovery_entries_reused": 30,
+      "new_collections": 0,
+      "reason": "每个object-part保留旧(id,version)内容；生成catalog与固定head字节相同。30原收据、归档blob、collector和owner module哈希对应，workflow在C0未变。新指针版本仍semantic_status=pending、qualification_status=not-granted。"
+    },
+    {
+      "item": 7,
+      "decision": "accept_freeze_attribution_only",
+      "reason": "wrapper只包装make_commit追加Co-Authored-By。其prepare脚本与1d8fb1e…构造归档及freeze收据哈希相同；commit对象SHA256=bcf7894b10a6da34393bbae6a31e5eac82a77b48e7175514d4db98da7ad823c5匹配，parent/tree和两条派生路径来自归档步骤，完整C0仅四路径。"
+    },
+    {
+      "item": 8,
+      "decision": "accept_exact_baseline_bytes_for_separate_transaction",
+      "reason": "五类精确字节及映射单列接受；保留C0、baseline单路径追加、PR266激活/合入顺序。"
+    }
+  ],
+  "criteria_obligation_assessment": {
+    "conclusion": "18路径中存在实际间接依赖；核对后未见旧义务被改变、删除或弱化，全部preserved成立。只覆盖固定context，不授予科学资格。",
+    "paths": [
+      {
+        "path": "evas/validation/adapters/comparison_evas_worker.py",
+        "old_sha256": null,
+        "new_sha256": "6677599736df6bd6f5367bb23878f227a5b3322c5a74c9aba6d29e9ab35523de",
+        "changed_definitions": [
+          {
+            "name": "load",
+            "old_line": null,
+            "new_line": 11
+          },
+          {
+            "name": "save",
+            "old_line": null,
+            "new_line": 15
+          },
+          {
+            "name": "worker",
+            "old_line": null,
+            "new_line": 21
+          }
+        ],
+        "accepted_for_preserved_mapping": true,
+        "assessment": "从comparison runner迁移worker。ROOT通过显式root参数传入；去文档字符串并归一化该名称后正文AST相同，输入、网格、tolerance、瞬态调用、输出与异常合同保留。"
+      },
+      {
+        "path": "evas/validation/adapters/paper_evas_worker.py",
+        "old_sha256": null,
+        "new_sha256": "78a1651e7628fb63e143f665e5dcbec1d7e1d9589faf5c74ad89e4b73122a05c",
+        "changed_definitions": [
+          {
+            "name": "evas_effective_record",
+            "old_line": null,
+            "new_line": 34
+          },
+          {
+            "name": "load",
+            "old_line": null,
+            "new_line": 17
+          },
+          {
+            "name": "save",
+            "old_line": null,
+            "new_line": 21
+          },
+          {
+            "name": "save_raw_response",
+            "old_line": null,
+            "new_line": 27
+          },
+          {
+            "name": "worker",
+            "old_line": null,
+            "new_line": 53
+          }
+        ],
+        "accepted_for_preserved_mapping": true,
+        "assessment": "迁移worker、raw-response序列化和effective record。两处局部名称归一化后，三处正文AST均相同，actual controls/sample origin解释未变。"
+      },
+      {
+        "path": "evas/validation/adapters/precision_evas_worker.py",
+        "old_sha256": null,
+        "new_sha256": "c751e75d4e68d4b07f649eb608ac9119cf10d3c9a49f28acb53ca00fceea828b",
+        "changed_definitions": [
+          {
+            "name": "worker",
+            "old_line": null,
+            "new_line": 16
+          }
+        ],
+        "accepted_for_preserved_mapping": true,
+        "assessment": "worker正文AST相同。strobetimes、strobe_evidence、times一致性检查和错误分类保留，共享记录函数指向相同内容的paper adapter。"
+      },
+      {
+        "path": "experiments/backends/comparison/freeze.py",
+        "old_sha256": "0ad46e9a0cb36fc2cb4848f1abec852fd6df12fca7aad8ecfc3386246c7dfce6",
+        "new_sha256": "4526b0b0477b56f49cb288ae29accf4ff721cf924e799e282aac9ae0f575d911",
+        "changed_definitions": [
+          {
+            "name": "runtime_identity",
+            "old_line": 24,
+            "new_line": 49
+          },
+          {
+            "name": "worker_dependencies",
+            "old_line": null,
+            "new_line": 28
+          },
+          {
+            "name": "worker_sources",
+            "old_line": null,
+            "new_line": 44
+          }
+        ],
+        "accepted_for_preserved_mapping": true,
+        "assessment": "runtime_identity增加worker来源闭包，依赖从审计源码解析；checker_identity、选定条件与数值合同未变。"
+      },
+      {
+        "path": "experiments/backends/comparison/ingest.py",
+        "old_sha256": "caaa4da6a541395ab224f97951fd32263c14f5203cfe2b9e225a90d9358cd724",
+        "new_sha256": "6e80d747a7f6ab4ebff8fb58dbc22e67d162defd21e696427ca1a2dfa8f116cb",
+        "changed_definitions": [
+          {
+            "name": "execution_sources",
+            "old_line": null,
+            "new_line": 43
+          },
+          {
+            "name": "ingest",
+            "old_line": 31,
+            "new_line": 67
+          },
+          {
+            "name": "runner_sources",
+            "old_line": 21,
+            "new_line": 21
+          }
+        ],
+        "accepted_for_preserved_mapping": true,
+        "assessment": "初始执行和接续分析分别绑定来源。固定983b该实现及原PR5-ASTRA-R1-01由R3接受；本轮只确认它不修改旧3257方法的数值预期，voltage_metrics等科学比较函数不变。"
+      },
+      {
+        "path": "experiments/backends/comparison/runner.py",
+        "old_sha256": "ef3b402601b7e920eaa8734f20c7275709698976ea4570b27fec24b7198c341b",
+        "new_sha256": "2a75f9d8d898b920820b0a239a09c5c32267839e7cdfd9fd5dec2dac76f26f91",
+        "changed_definitions": [
+          {
+            "name": "run",
+            "old_line": 147,
+            "new_line": 114
+          },
+          {
+            "name": "worker",
+            "old_line": 60,
+            "new_line": 62
+          }
+        ],
+        "accepted_for_preserved_mapping": true,
+        "assessment": "worker委托到固定adapter；run补worker_sources和CONTINUATION来源。旧worker与新adapter正文AST相同，分析公式和设置未变。"
+      },
+      {
+        "path": "experiments/backends/comparison/test_worker_adapter.py",
+        "old_sha256": null,
+        "new_sha256": "653fefd7133825d6f805c8ab86c55f4a0dda630f8fa1e3535117cc37df1c7d76",
+        "changed_definitions": [
+          {
+            "name": "ContinuationIngestControls",
+            "old_line": null,
+            "new_line": 68
+          },
+          {
+            "name": "WorkerAdapterControls",
+            "old_line": null,
+            "new_line": 12
+          }
+        ],
+        "accepted_for_preserved_mapping": true,
+        "assessment": "实验/adapter测试位于experiments，不在本report的evas/tests发现根内；旧3257方法及顺序完全保留。这些独立测试由R3源码范围和原收据覆盖，不计为本轮新增7737条件义务或科学资格。"
+      },
+      {
+        "path": "experiments/backends/paper/actual_observation.py",
+        "old_sha256": "59659621d8a023dcf0f338e4b824c5451030e26237b705998713652ce6d2fa9a",
+        "new_sha256": "3ed118d6b1ef162adc9f876984e78be14adba05dcd6a87c5c9852b63ce4b5df3",
+        "changed_definitions": [
+          {
+            "name": "worker_dependencies",
+            "old_line": 76,
+            "new_line": 77
+          }
+        ],
+        "accepted_for_preserved_mapping": true,
+        "assessment": "worker_dependencies增加真实adapter并从runner AST识别。数值输入界、生产依赖推导和比较函数未变，既有来源义务未被移除。"
+      },
+      {
+        "path": "experiments/backends/paper/inputs.py",
+        "old_sha256": "259961105f6848f05300437611df2d76ba221e6d757ed18be8b242277a55e68f",
+        "new_sha256": "a8d766bb6cf1216a99fb175c6569a96891e9317440569249cc03d990d9bf92d1",
+        "changed_definitions": [
+          {
+            "name": "freeze",
+            "old_line": 138,
+            "new_line": 138
+          }
+        ],
+        "accepted_for_preserved_mapping": true,
+        "assessment": "只在freeze的source_paths追加paper adapter。被test_precision_breadth_composition动态加载并调用的decks函数及卡片/设置生成未变。"
+      },
+      {
+        "path": "experiments/backends/paper/runner.py",
+        "old_sha256": "d98907554aa01e7eb6425b1ea7be741fe98714bdba09c0d14fadf3d102c068ba",
+        "new_sha256": "6fdb86566d2ff03a9808b062c582f865cda7547082418af7341a24addc26afb1",
+        "changed_definitions": [
+          {
+            "name": "evas_effective_record",
+            "old_line": 283,
+            "new_line": 295
+          },
+          {
+            "name": "evas_worker_adapter",
+            "old_line": null,
+            "new_line": 276
+          },
+          {
+            "name": "save_raw_response",
+            "old_line": 276,
+            "new_line": 290
+          },
+          {
+            "name": "worker",
+            "old_line": 302,
+            "new_line": 300
+          }
+        ],
+        "accepted_for_preserved_mapping": true,
+        "assessment": "worker/序列化/effective函数改为委托；三处正文AST与新adapter等价，其余进程控制和设置读回函数未变。"
+      },
+      {
+        "path": "experiments/backends/paper/test_evas_worker_adapter.py",
+        "old_sha256": null,
+        "new_sha256": "9691d8493462c538cd491414f59106c92fc40f4b8ea496aa512941787e2904bc",
+        "changed_definitions": [
+          {
+            "name": "PaperEvasWorkerAdapter",
+            "old_line": null,
+            "new_line": 18
+          }
+        ],
+        "accepted_for_preserved_mapping": true,
+        "assessment": "实验/adapter测试位于experiments，不在本report的evas/tests发现根内；旧3257方法及顺序完全保留。这些独立测试由R3源码范围和原收据覆盖，不计为本轮新增7737条件义务或科学资格。"
+      },
+      {
+        "path": "experiments/backends/paper/test_producer_dependencies.py",
+        "old_sha256": "0c4ac1c7ca1cdb350a4065c9f9d191eb064af5e12c55dc0e5e68a95d300e2006",
+        "new_sha256": "ad970a1e9914dc8d9f35009996dcd3003afc5534043d2429d8cae7a5b92aec8a",
+        "changed_definitions": [
+          {
+            "name": "ProducerDependencyContracts",
+            "old_line": 40,
+            "new_line": 40
+          }
+        ],
+        "accepted_for_preserved_mapping": true,
+        "assessment": "实验/adapter测试位于experiments，不在本report的evas/tests发现根内；旧3257方法及顺序完全保留。这些独立测试由R3源码范围和原收据覆盖，不计为本轮新增7737条件义务或科学资格。"
+      },
+      {
+        "path": "experiments/backends/support/comparison_completion.py",
+        "old_sha256": "d1f9a88fe729a2e25e5f11ac43b052339fdf9858b34c83bcfa38b6457b061ec2",
+        "new_sha256": "a96627bce2f77820bb01d63e1b0dedb8c4d509a288a6df7c46783281fb342c9f",
+        "changed_definitions": [
+          {
+            "name": "freeze",
+            "old_line": 67,
+            "new_line": 67
+          }
+        ],
+        "accepted_for_preserved_mapping": true,
+        "assessment": "freeze只追加adapter依赖；模型、时点、checker、预算及条件选择未变。"
+      },
+      {
+        "path": "experiments/backends/support/legacy_chain_run.py",
+        "old_sha256": "0dcffab11aeb8f47f9fd6013935ba4631b81cec7343b8aec96b1c34a3e1c578a",
+        "new_sha256": "0b23953786c82fada907601c1e98577f496b4a2eb10486118eaa3814646e8262",
+        "changed_definitions": [
+          {
+            "name": "source_identity",
+            "old_line": 66,
+            "new_line": 66
+          }
+        ],
+        "accepted_for_preserved_mapping": true,
+        "assessment": "source_identity追加两个worker来源。旧测试和transition_integral_run会实际读取此路径；新增哈希不改变卡片、解析解、阈值、波形比较或断言。"
+      },
+      {
+        "path": "experiments/backends/support/precision_run.py",
+        "old_sha256": "ccda8f36efdf4d413fd77dc7ef0de8abff0fd6df1152ed6cd71b12cceefef3e4",
+        "new_sha256": "16850212a0b3bd067459e3710f16eee29bacfdbf0b72794266871cd812d14e96",
+        "changed_definitions": [
+          {
+            "name": "source_files",
+            "old_line": 46,
+            "new_line": 45
+          },
+          {
+            "name": "worker",
+            "old_line": 101,
+            "new_line": 107
+          },
+          {
+            "name": "worker_source_files",
+            "old_line": null,
+            "new_line": 101
+          }
+        ],
+        "accepted_for_preserved_mapping": true,
+        "assessment": "source_files补adapter，worker委托且正文AST等价。test_precision_breadth_runner的setUp替换source_files，执行场景已有mock；观察/预算/来源漂移断言不变。"
+      },
+      {
+        "path": "experiments/backends/support/precision_v2_report.py",
+        "old_sha256": "467f84759d22f80f301c281ec7944263824930d575fb66fc3c6f64bccfdceaa9",
+        "new_sha256": "0b07bf65db05f16ca54c1107fee0ebeea39eb38327fbb45986d6061aadbd9838",
+        "changed_definitions": [
+          {
+            "name": "report",
+            "old_line": 157,
+            "new_line": 157
+          }
+        ],
+        "accepted_for_preserved_mapping": true,
+        "assessment": "report只在checker/source身份清单加paper adapter；评分计算、Q预算及旧v1保留逻辑未变。"
+      },
+      {
+        "path": "experiments/backends/support/probes.py",
+        "old_sha256": "1ced8f5b497fee35e2dc474286eadbcdb4bf48e411306816b5f6de8520db5024",
+        "new_sha256": "992f0e05b4da1e58c2b1dda810bbbf58c4f4f5e054684a9efced474a22ef56b4",
+        "changed_definitions": [
+          {
+            "name": "freeze",
+            "old_line": 21,
+            "new_line": 21
+          }
+        ],
+        "accepted_for_preserved_mapping": true,
+        "assessment": "freeze只增加ADAPTER_IDENTITY来源项；输入、deck、阈值和报告判断未变。"
+      },
+      {
+        "path": "experiments/backends/support/test_precision_worker_adapter.py",
+        "old_sha256": null,
+        "new_sha256": "c8966716e0734220b70c3fd1f45bb08cf58ead8315b6872b753e061165ce2ed6",
+        "changed_definitions": [
+          {
+            "name": "PrecisionWorkerAdapter",
+            "old_line": null,
+            "new_line": 80
+          },
+          {
+            "name": "fixture",
+            "old_line": null,
+            "new_line": 69
+          },
+          {
+            "name": "synthetic_evas",
+            "old_line": null,
+            "new_line": 16
+          }
+        ],
+        "accepted_for_preserved_mapping": true,
+        "assessment": "实验/adapter测试位于experiments，不在本report的evas/tests发现根内；旧3257方法及顺序完全保留。这些独立测试由R3源码范围和原收据覆盖，不计为本轮新增7737条件义务或科学资格。"
+      }
+    ],
+    "independent_support": [
+      "3257个方法ID、顺序、outcome及7737个条件ID、outcome、retention signature逐项相同。",
+      "332个条件来源模块的base/983b Git字节相同；18条差异均与criteria manifest哈希对应。",
+      "3个worker和paper两处记录函数共5处正文AST相同，只去docstring并作列明局部名称归一化。",
+      "剩余变化函数只涉及来源依赖、接续收据和实验测试；数学参考、checker公式、合法域、阈值和采样合同未变。"
+    ],
+    "consumer_cases": [
+      {
+        "file": "evas/tests/test_precision_breadth_composition.py",
+        "line": 62,
+        "analysis": "动态加载paper/inputs.py，实际调用的decks未变；该路径变化仅在freeze的来源清单。本轮没有运行其中compiler。"
+      },
+      {
+        "file": "evas/tests/test_precision_breadth_runner.py",
+        "line": 31,
+        "analysis": "setUp替换source_files；run场景已有后端mock，profile、预算、观察和source drift义务未变。"
+      },
+      {
+        "file": "evas/tests/test_legacy_chain_precision.py",
+        "line": 250,
+        "analysis": "source/build/kernel错配测试构造小来源集并替换production_dependencies；source_identity增加adapter不会删除原拒绝条件。"
+      },
+      {
+        "file": "evas/tests/test_transition_integral_precision.py",
+        "line": 51,
+        "analysis": "经transition_integral_run使用legacy/precision来源依赖；面积、时间盒、观察计划和坏PSF断言未变，测试中的后端执行已有mock。"
+      }
+    ],
+    "opaque_passes": 58,
+    "opaque_pass_limit": "这些条件仍仅为观察，不因映射接受而成为完整科学证据。",
+    "evidence": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-exact-context-astra-r4-20261027/criteria-static-checks.json"
+  },
+  "observed_counts": {
+    "methods": {
+      "passed": 2617,
+      "error": 214,
+      "failed": 423,
+      "expected_failure": 3
+    },
+    "conditions": {
+      "passed": 6841,
+      "error": 296,
+      "failed": 597,
+      "expected_failure": 3
+    },
+    "methods_total": 3257,
+    "conditions_total": 7737,
+    "fixtures": 0,
+    "setup_skips": 0,
+    "opaque_passes": 58
+  },
+  "counts_interpretation": {
+    "historical_nonpassing_methods": 637,
+    "calculation": "423 failed + 214 error；3 expected_failure另列。",
+    "raw_successful": false,
+    "merge_allowed_is_scientific_pass": false,
+    "scientific_qualification": false
+  },
+  "verification": {
+    "new_operations": [
+      {
+        "script": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-exact-context-astra-r4-20261027/audit_exact.py",
+          "file_sha256": "5e2539e91c9ebadfaec069cb9f85ce23971e5b648b1a639559ea0893f1c09e1e",
+          "bytes": 14903
+        },
+        "result": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-exact-context-astra-r4-20261027/exact-checks.json",
+          "file_sha256": "43e33201bf196988c355b8d7d48faaf088c9f21b8825d597c5dd836efa6556c4",
+          "bytes": 13739,
+          "canonical_sha256": "6e5989ef906be3e2814217745d298f9ea005b0070146d22f3d0ad1236eeb56c1"
+        },
+        "records": 43,
+        "passed": 43,
+        "type": "对象/字节/JSON核对；其中一条只验证并复用原3项负控结果，不冒称重跑。"
+      },
+      {
+        "script": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-exact-context-astra-r4-20261027/audit_derived.py",
+          "file_sha256": "2132bbdca2f05b7f979c0417e7daf8da726e8ff509df0787f37e7e6b974cf245",
+          "bytes": 8416
+        },
+        "result": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-exact-context-astra-r4-20261027/derived-checks.json",
+          "file_sha256": "6a52fe9671b179f7ad48c2dc445e68e2b13f90f0376a4f0caeccb91095cd6270",
+          "bytes": 23493,
+          "canonical_sha256": "26bd155eae27e608d66ac1f0bf47176d47e1d361d88a1b9e965feececf0d9c6d"
+        },
+        "records": 27,
+        "passed": 27,
+        "type": "登记和发现证据核对；原五条precheck只读结果、未重跑。"
+      },
+      {
+        "script": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-exact-context-astra-r4-20261027/audit_criteria.py",
+          "file_sha256": "a7073b18e1196dd3f7786fd72bc8aca52999b4afccb91910a14b113704f8fd3e",
+          "bytes": 4547
+        },
+        "result": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-exact-context-astra-r4-20261027/criteria-static-checks.json",
+          "file_sha256": "cf2798aaed207c917e7c9e392f672fcdc2c199a2204e49f6863a900f5832a603",
+          "bytes": 79644,
+          "canonical_sha256": "d9038144e82c515ec5c4036c44a088b6ac32af7f62da610cdbcf2e0e8f2b20e0"
+        },
+        "criteria_paths": 18,
+        "module_byte_pairs": 332,
+        "body_ast_equivalences": 5,
+        "type": "静态解析，没有执行候选测试或DUT。"
+      },
+      {
+        "result": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-exact-context-astra-r4-20261027/validator-replay.json",
+          "file_sha256": "2ffa32694b4c282b90ae15d9219cf58a32565827ac4c3bbda693a38b892b5852",
+          "bytes": 1253,
+          "canonical_sha256": "dd47b0b9edcaa30f345b2590dc1804975815c552622f94d493dbd6ffee3cce6c"
+        },
+        "type": "用固定base生产validator的R/trusted副本处理精确JSON/bytes，与原validation.json逐字段相同。"
+      }
+    ],
+    "reused": [
+      {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/context-registration-20261027/c0-candidate/precheck-acceptance.json",
+        "scope": "5项rc0、完整ci_lint维护子命令、82能力视图、traceability/生成和diff-check；最终4路径SHA匹配。"
+      },
+      {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/context-registration-20261027/governance-draft/negative-controls.json",
+        "scope": "HEAD-only授权、改raw、改旧context的3个预期拒绝；相同生产源码和精确输入。"
+      },
+      {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/context-registration-20261027/bundle-preparation-sonnet/verify-r2/verification.json",
+        "scope": "40条结果行均ok；dut_build修正后的精确字节另由本轮validator处理。"
+      },
+      {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/ci-40454789703/primary-raw-acceptance.json",
+        "scope": "13zip/467成员及49572资产/49562输入的既有来源接收；本轮另核对raw、十角色归档、实际merge和使用的源码，未重复全量zip复验。"
+      },
+      {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-continuation-fix-astra-r3-20261027/review-report.json",
+        "scope": "固定983b源码和PR5-ASTRA-R1-01闭合；不作为本次exact context的替代批准。"
+      }
+    ],
+    "not_executed": [
+      "完整科学回归",
+      "实际compiler/kernel/DUT/backend",
+      "SSH/Spectre/Harbor",
+      "新discovery或test body",
+      "PR watch/poll",
+      "新Git fixture/worktree",
+      "子代理委派"
+    ],
+    "fixture_created": false,
+    "source_tree_writes": false,
+    "git_environment": "实际Git对象读取使用guard.git，每次清除继承GIT_*，显式--no-lazy-fetch/--git-dir/--work-tree及GIT_OPTIONAL_LOCKS=0。项目只读workspace检查清除继承GIT_*后按原实现运行。"
+  },
+  "known_failures_and_limits": [
+    "CI40454789703有19个成功job，但admission和aggregate失败；raw_successful=false，新criteria被旧baseline拒绝。没有写成整轮CI通过。",
+    "worker run-r1/run-r2/verify-r1失败输出保留，但旧失败脚本字节未保留，无法精确重放旧错误实现。当前脚本与有效结果绑定已核对。",
+    "本轮探索性打印曾遇到JSON布尔/容器类型及猜测文件名错误，后按实际结构修正；最终核心核对结果见独立结果文件。这些命令不计入通过测试。",
+    "首轮报告组装发现refs汇总不同后按断言停止，没有生成虚假的全守卫相同结论；之后只读核对确认差异仅为T3 checkpoint新增，证据保留在shared-ref-change.json。",
+    "公开状态复用publication.json和push.stdout；本轮核对本地归档Git对象，未重新下载公开全量证据。"
+  ],
+  "publication_and_CI": {
+    "PR": "https://github.com/BucketSran/vaEVAS/pull/267",
+    "head": "76d2152e478fee4c2108c4d33280df211da7b8a3",
+    "published": "既有publication/push收据显示已发布；本轮无发布或PR编辑。",
+    "merged": false,
+    "bundle_archive": "76098580bd78057bb27974b1e38f4dae9e4b4563",
+    "construction_archive": "1d8fb1e20607577d44cbcb0875d669f0b2291067",
+    "C0_CI": {
+      "run": 40463491460,
+      "verified_by_this_reviewer": false,
+      "status": "未验，主控负责；未watch/poll或等待。"
+    },
+    "thread_PR_link": {
+      "linked": true,
+      "verified_in_list_thread_pull_requests": true,
+      "watching": false
+    },
+    "consumer_state": "R3源码审核接受983b；PR266激活CI、合入及实际合入树仍由主控后续验收。"
+  },
+  "remaining_items": [
+    {
+      "type": "required_delivery_gate",
+      "item": "主控验收PR267固定head的CI40463491460。"
+    },
+    {
+      "type": "sequenced_adoption",
+      "item": "C0合入后，独立baseline单路径PR及PR266激活CI/合入树核对按顺序执行。"
+    }
+  ],
+  "guard": {
+    "equal": false,
+    "head_same": true,
+    "control_files_same": true,
+    "all_20_candidate_files_same": true,
+    "refs_same": false,
+    "before": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-exact-context-astra-r4-20261027/guard-before.json",
+    "after": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-exact-context-astra-r4-20261027/guard-after.json",
+    "required_HEAD_index_config_20_candidates_preserved": true,
+    "shared_refs_change_explained_by_added_T3_checkpoint_refs": true,
+    "non_checkpoint_refs_unchanged": true,
+    "shared_ref_evidence": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-exact-context-astra-r4-20261027/shared-ref-change.json",
+    "final_verification": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-exact-context-astra-r4-20261027/guard-final-comparison.json",
+    "final_required_guard_passed": true
+  },
+  "guard_interpretation": "真实HEAD、index、shared config、packed-refs、工作区状态及20候选字节均相同。完整refs汇总不同：原守卫区间新增3个refs/t3/orchestration-v2/checkpoints引用，后续检查又见1个新增；去除新增行可精确重建原before/after摘要，非checkpoint refs未变。未发出真实Git写命令，具体写入进程未由本地metadata认证。固定base/head对象未受影响。 最终交付前再次核对同一组HEAD/index/config/20候选，仍相同；截至final守卫的新增checkpoint详情见guard-final-comparison.json。",
+  "workspace_checks": {
+    "before": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-exact-context-astra-r4-20261027/workspaces-before.json",
+    "after": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-exact-context-astra-r4-20261027/workspaces-after.json",
+    "before_errors": 0,
+    "after_errors": 0
+  },
+  "scientific_qualification": false,
+  "semantic_qualification": false,
+  "artifacts": {
+    "report": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-exact-context-astra-r4-20261027/review-report.json",
+    "summary": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-exact-context-astra-r4-20261027/summary.txt"
+  },
+  "delivery_checks": {
+    "structured_report": {
+      "passed": true,
+      "checks": {
+        "brief_sha256": true,
+        "fixed_base": true,
+        "fixed_head": true,
+        "Standards_findings_empty": true,
+        "Spec_findings_empty": true,
+        "exact_acceptance_explicit": true,
+        "scientific_qualification_false": true,
+        "CI_unverified_explicit": true,
+        "required_guard_passed": true,
+        "refs_difference_preserved": true,
+        "summary_within_limit": true,
+        "mapping_count": true,
+        "methods_count": true
+      }
+    },
+    "summary": {
+      "passed": true,
+      "tool": "python3 -B scripts/development_records.py check-review summary.txt --findings 0",
+      "returncode": 0,
+      "visible_non_whitespace_characters": 280,
+      "limit": 300
+    },
+    "final_core_guard": {
+      "passed": true,
+      "evidence": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-exact-context-astra-r4-20261027/guard-final-comparison.json"
+    }
+  }
+}

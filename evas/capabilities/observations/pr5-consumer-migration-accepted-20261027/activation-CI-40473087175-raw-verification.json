@@ -1,0 +1,216 @@
+{
+  "run": 40473087175,
+  "candidate": "b7c913ffc93d145302b73014d470a44d7d91a223",
+  "tree": "1b83f28af63dbaddc60fea500309f19962e7f947",
+  "base": "8a091f4db5fca23b38fef7fef674f675799161cb",
+  "actual_checkout": "a89ab85c590594cf93f82d0e2dd0ab921027bb64",
+  "jobs": 21,
+  "jobs_not_success": [],
+  "run_conclusion": "success",
+  "artifact_archive_hashes_verified": [
+    {
+      "name": "rust-test-listing",
+      "files": 29,
+      "sha256": "b7729d1761f787827df61c81db6fa105c7d5a433ab07f902af2fd6af23000d00"
+    },
+    {
+      "name": "package-macos-14-arm64-py3.12",
+      "files": 48,
+      "sha256": "fc19821d85a446e09fcb644175720f9e2699caf54885db57b15badd417ec4eb1"
+    },
+    {
+      "name": "git-fixture-isolation",
+      "files": 180,
+      "sha256": "438b6f2fcd11f74bc6e8d90232fff2217e16fa22b92b9d34adf1213a7ff1d362"
+    },
+    {
+      "name": "python-regression-shard-2",
+      "files": 9,
+      "sha256": "6809acc8a4838246421547b5d0113d4ca29be996b312117699f4cd605f2b4162"
+    },
+    {
+      "name": "python-regression-timings",
+      "files": 2,
+      "sha256": "c954999aeb6e15f0be53cd08ab2e01e60434a64718ddf7fef5fe99598459f0cc"
+    },
+    {
+      "name": "python-regression-shard-3",
+      "files": 9,
+      "sha256": "a1707473833f8d60df88c619fd2acccad0a701c8e4f7e2681aa445b7639b6c5a"
+    },
+    {
+      "name": "python-regression-admission",
+      "files": 3,
+      "sha256": "74121c6f2659f05fe99ba26e4c18ae135f7d5b3d73fcf5b9f92b04aa66c6abba"
+    },
+    {
+      "name": "catalog-inventory",
+      "files": 40,
+      "sha256": "0fe784fba8cbff94b067cc16de3a7ae61f0409e039059ca1ae3a581a0abf6a51"
+    },
+    {
+      "name": "ngspice-comparison",
+      "files": 79,
+      "sha256": "32db9f85f9a7bd5fd7816324bdaea2288689f5f4b60d2ba2cebbf8aa4345c211"
+    },
+    {
+      "name": "python-regression-shard-1",
+      "files": 9,
+      "sha256": "1d3056b90ccd81f0ac0dcba9f7af59cbcca6a0d749ca96df6854cd90cf16df05"
+    },
+    {
+      "name": "package-ubuntu-24.04-x86_64-py3.10",
+      "files": 48,
+      "sha256": "701a305567555d6ca40413ae93a2b75253d74c8aefb36dd162cac3dc71805131"
+    },
+    {
+      "name": "python-regression-shard-0",
+      "files": 9,
+      "sha256": "cf48fb29d2521754539e378809946c3f0dc9ea9d1f57b7bc08510cc9777840d1"
+    },
+    {
+      "name": "fast-feedback",
+      "files": 2,
+      "sha256": "7a3759ed6ff8273a90fd55b9f27164798b5f5a346303398df19b490765c3572a"
+    }
+  ],
+  "actual_assets": 49572,
+  "unchanged_assets_reused": 49543,
+  "changed_assets_verified": [
+    ".github/workflows/numerical-assurance.yml",
+    "evas/capabilities/data/asset-index.json",
+    "evas/capabilities/data/catalog-sources.json",
+    "evas/capabilities/data/entrypoint-index.json",
+    "evas/capabilities/data/historical-index.json",
+    "evas/capabilities/data/method-index.json",
+    "evas/capabilities/data/registry.json",
+    "evas/docs/development/TRACEABILITY.md",
+    "evas/validation/adapters/comparison_evas_worker.py",
+    "evas/validation/adapters/paper_evas_worker.py",
+    "evas/validation/adapters/precision_evas_worker.py",
+    "experiments/backends/comparison/freeze.py",
+    "experiments/backends/comparison/ingest.py",
+    "experiments/backends/comparison/runner.py",
+    "experiments/backends/comparison/test_worker_adapter.py",
+    "experiments/backends/paper/actual_observation.py",
+    "experiments/backends/paper/inputs.py",
+    "experiments/backends/paper/runner.py",
+    "experiments/backends/paper/test_evas_worker_adapter.py",
+    "experiments/backends/paper/test_producer_dependencies.py",
+    "experiments/backends/support/comparison_completion.py",
+    "experiments/backends/support/legacy_chain_run.py",
+    "experiments/backends/support/precision_run.py",
+    "experiments/backends/support/precision_v2_report.py",
+    "experiments/backends/support/probes.py",
+    "experiments/backends/support/test_precision_worker_adapter.py",
+    "scripts/ci_selection.py",
+    "scripts/tests/test_ci_inventory.py",
+    "scripts/tests/test_ci_selection.py"
+  ],
+  "full_input_count": 49562,
+  "shards": [
+    {
+      "index": 0,
+      "methods": 818,
+      "raw_exit": 1,
+      "cacheable": false,
+      "input_fingerprint": "ba0e30e35b361f1d3c918aa5fb9c130c07417483455c8437315093ff839c407a",
+      "kernel_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+      "jsonl_exact": true,
+      "retained_stdout_bytes": 0,
+      "retained_stderr_bytes": 401523
+    },
+    {
+      "index": 1,
+      "methods": 831,
+      "raw_exit": 1,
+      "cacheable": false,
+      "input_fingerprint": "d69b519fd1a1c0557bbf0dd5c7be754d34744bf4772a5195be8d98f5de6e67bd",
+      "kernel_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+      "jsonl_exact": true,
+      "retained_stdout_bytes": 170,
+      "retained_stderr_bytes": 403111
+    },
+    {
+      "index": 2,
+      "methods": 823,
+      "raw_exit": 1,
+      "cacheable": false,
+      "input_fingerprint": "4c48868efe9b4d1ba702006e269c402ce9cd36b5303c5945c507856707881705",
+      "kernel_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+      "jsonl_exact": true,
+      "retained_stdout_bytes": 10391,
+      "retained_stderr_bytes": 431702
+    },
+    {
+      "index": 3,
+      "methods": 785,
+      "raw_exit": 1,
+      "cacheable": false,
+      "input_fingerprint": "1eed10326ade3e578a0bce174916a0e173b49d066bf18c331fa08ce52593e328",
+      "kernel_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+      "jsonl_exact": true,
+      "retained_stdout_bytes": 921,
+      "retained_stderr_bytes": 430950
+    }
+  ],
+  "merged_exact": true,
+  "raw_sha256": "a931c99833d6fd373aaf69d4610541edc0a166c8387f859a94dc30068876ec20",
+  "methods": 3257,
+  "conditions": 7737,
+  "method_outcomes": {
+    "passed": 2617,
+    "error": 214,
+    "failed": 423,
+    "expected_failure": 3
+  },
+  "unittest_condition_counters": {
+    "failures": 597,
+    "errors": 296,
+    "skipped": 0,
+    "expected_failures": 3
+  },
+  "raw_successful": false,
+  "method_ids_preserved": true,
+  "method_outcome_changes": [],
+  "condition_delta_methods": [],
+  "criteria_changed_paths": [],
+  "metadata_changed_keys": [],
+  "criteria_id": "145a6118739af5c1419269c4d46faae6cd666d766843d41dd38150d8da77d21b",
+  "D0_and_kernel_unchanged": true,
+  "baseline_unchanged_in_candidate": true,
+  "admission": {
+    "valid": true,
+    "raw_successful": false,
+    "merge_allowed": true,
+    "differences": [],
+    "semantic_qualification": false
+  },
+  "admission_top_level": {
+    "valid": true,
+    "raw_successful": false,
+    "merge_allowed": true,
+    "differences": [],
+    "semantic_qualification": false
+  },
+  "admission_transition": {
+    "proposal_evaluated": false,
+    "refresh_required": false,
+    "accepted": true,
+    "differences": [],
+    "new_passed_observations": [],
+    "reused_trusted_baseline": true
+  },
+  "bundle_source": {
+    "schema_version": 1,
+    "requested": false,
+    "materialized": false,
+    "trusted_commit": "8a091f4db5fca23b38fef7fef674f675799161cb"
+  },
+  "bootstrap_source_sha256": "272666ad45894e08cd4298bc0dca21a9e02a49a733605587576e3eb58f7b9e10",
+  "old_reference": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/context-registration-20261027/bundle-bound/report.json",
+  "old_reference_sha256": "531016babc8a288fd130f3af99364dbcaf20f25c225201d1f35e73e6b0a6c995",
+  "semantic_qualification": false,
+  "acceptance": "Activation: registered criteria context compared with the trusted merged baseline; not a new E1 or qualification",
+  "whole_CI_accepted": false
+}

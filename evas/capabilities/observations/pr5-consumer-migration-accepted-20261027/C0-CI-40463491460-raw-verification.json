@@ -1,0 +1,191 @@
+{
+  "run": 40463491460,
+  "candidate": "76d2152e478fee4c2108c4d33280df211da7b8a3",
+  "tree": "0d5efdc9ef84c23f881b980b95333b5208f54352",
+  "base": "e10e1af5796f0cc7af3b6b5f5d26c420c0c03325",
+  "actual_checkout": "c96a4927ce368d86305328bf6f3b18fdfbb495b4",
+  "jobs": 21,
+  "jobs_not_success": [],
+  "run_conclusion": "success",
+  "artifact_archive_hashes_verified": [
+    {
+      "name": "git-fixture-isolation",
+      "files": 180,
+      "sha256": "706211c9f17ddeb59991ae0291a8a136076a2fd14eb02ae60e381d579d88c336"
+    },
+    {
+      "name": "python-regression-shard-0",
+      "files": 9,
+      "sha256": "e543dcd97cb913603c49f33afc1e4abd5d7500476433cbb0f619a868c3498b6e"
+    },
+    {
+      "name": "python-regression-timings",
+      "files": 2,
+      "sha256": "a95fc42414a1f4339bb2873a2aa83099e1f12493341077289c8fb1b3c446b58a"
+    },
+    {
+      "name": "package-ubuntu-24.04-x86_64-py3.10",
+      "files": 48,
+      "sha256": "2fc7c1ec35d69ad7a6b8a940ffc2ea50ddebdb105d6cc0939a8f628dc1f31380"
+    },
+    {
+      "name": "python-regression-shard-3",
+      "files": 9,
+      "sha256": "cca069f6e5958667c1c0c701e1eed2018ffcf881d6f5ee2bbf79a05b2e17db15"
+    },
+    {
+      "name": "catalog-inventory",
+      "files": 39,
+      "sha256": "3adbc35b2b2e88df82e6a85464e115292673fbcde074b33d0c399d2d15447a65"
+    },
+    {
+      "name": "ngspice-comparison",
+      "files": 79,
+      "sha256": "15957da504b819c453a7b014fefd3ea23c51e47580ae94f08a5b2873864a9686"
+    },
+    {
+      "name": "python-regression-admission",
+      "files": 3,
+      "sha256": "9798b6af77a3206eacdb85636f3ff575648c64c3fb5634c7014524ec24ba2769"
+    },
+    {
+      "name": "rust-test-listing",
+      "files": 29,
+      "sha256": "8a25c2b9c19e0d96902ca7e734918fe0fe24db981e4df1823fbf84a31ba281d7"
+    },
+    {
+      "name": "python-regression-shard-2",
+      "files": 9,
+      "sha256": "cd5881b1db05cb8f98d7f84f8b918ef6ce13224b3c4632a5b3ca490439dfb7d6"
+    },
+    {
+      "name": "package-macos-14-arm64-py3.12",
+      "files": 48,
+      "sha256": "1a2fefe1986bfd869050215fccde63bd69844ff3438ae91b6c0c50e7267f4d75"
+    },
+    {
+      "name": "python-regression-shard-1",
+      "files": 9,
+      "sha256": "907c6e9ad265ba9d11adae18354bd457a2836cf3a7266e1b94c024563ed36a04"
+    },
+    {
+      "name": "fast-feedback",
+      "files": 2,
+      "sha256": "1d684ec1c5f5bbbd4a718c6708682bb10a334539867f8d11c08130294d10980f"
+    }
+  ],
+  "actual_assets": 49566,
+  "unchanged_assets_reused": 49562,
+  "changed_assets_verified": [
+    "evas/capabilities/data/asset-index.json",
+    "evas/capabilities/data/registry.json",
+    "evas/validation/baselines/regression-v1.review.json",
+    "scripts/context-registration-bundle.json"
+  ],
+  "full_input_count": 49556,
+  "shards": [
+    {
+      "index": 0,
+      "methods": 818,
+      "raw_exit": 1,
+      "cacheable": false,
+      "input_fingerprint": "e3b6aa4fa015b9c46407c66d96056339a324cda95edb3052fcc65032d1525adc",
+      "kernel_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+      "jsonl_exact": true,
+      "retained_stdout_bytes": 0,
+      "retained_stderr_bytes": 401523
+    },
+    {
+      "index": 1,
+      "methods": 831,
+      "raw_exit": 1,
+      "cacheable": false,
+      "input_fingerprint": "06985f4323c9fa6499e2c2108a4b28799c180cef4e052461bfc5a6c8f65250cf",
+      "kernel_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+      "jsonl_exact": true,
+      "retained_stdout_bytes": 170,
+      "retained_stderr_bytes": 403110
+    },
+    {
+      "index": 2,
+      "methods": 823,
+      "raw_exit": 1,
+      "cacheable": false,
+      "input_fingerprint": "fc764e682168ab6aba7731829be74467c3159e892085dd1bcd6444ef7bbc2d24",
+      "kernel_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+      "jsonl_exact": true,
+      "retained_stdout_bytes": 10391,
+      "retained_stderr_bytes": 431739
+    },
+    {
+      "index": 3,
+      "methods": 785,
+      "raw_exit": 1,
+      "cacheable": false,
+      "input_fingerprint": "acc5498e47e3b88f2c68fa8ee18293c5ed7e8dcfab86e7331de937ea574faf65",
+      "kernel_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+      "jsonl_exact": true,
+      "retained_stdout_bytes": 921,
+      "retained_stderr_bytes": 430964
+    }
+  ],
+  "merged_exact": true,
+  "raw_sha256": "516b132dbd7f7ea0ab5f82c041020e2c9d2d543ce1507f5d9d424f93a0ac3445",
+  "methods": 3257,
+  "conditions": 7737,
+  "method_outcomes": {
+    "passed": 2617,
+    "error": 214,
+    "failed": 423,
+    "expected_failure": 3
+  },
+  "unittest_condition_counters": {
+    "failures": 597,
+    "errors": 296,
+    "skipped": 0,
+    "expected_failures": 3
+  },
+  "raw_successful": false,
+  "method_ids_preserved": true,
+  "method_outcome_changes": [],
+  "condition_delta_methods": [],
+  "criteria_changed_paths": [],
+  "metadata_changed_keys": [],
+  "criteria_id": "f54a2eac6238fa60cd4bc71b5aa74a6717077ad2cc9a8c8b25b4c2ca2880c625",
+  "D0_and_kernel_unchanged": true,
+  "baseline_unchanged_in_candidate": true,
+  "admission": {
+    "valid": true,
+    "raw_successful": false,
+    "merge_allowed": true,
+    "differences": [],
+    "semantic_qualification": false
+  },
+  "admission_top_level": {
+    "valid": true,
+    "raw_successful": false,
+    "merge_allowed": true,
+    "differences": [],
+    "semantic_qualification": false
+  },
+  "admission_transition": {
+    "proposal_evaluated": false,
+    "refresh_required": false,
+    "accepted": true,
+    "differences": [],
+    "new_passed_observations": [],
+    "reused_trusted_baseline": true
+  },
+  "bundle_source": {
+    "schema_version": 1,
+    "requested": false,
+    "materialized": false,
+    "trusted_commit": "e10e1af5796f0cc7af3b6b5f5d26c420c0c03325"
+  },
+  "bootstrap_source_sha256": "6683631f721cb2acdc53e7fbfbef1d0b5cd1b0f58bb5c9a5daf98c4a9d64e4e8",
+  "old_reference": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/post-review-integration-20261027/catalog-index-recovery-20261027/ci-40429826545/raw-intake-grok/artifacts/python-regression-timings/python-regression.json",
+  "old_reference_sha256": "9097c8dce35461961b76782234c75e67d11f2c33a4f90d3abd98cc947ec9d981",
+  "semantic_qualification": false,
+  "acceptance": "Exact C0 comparison with unchanged trusted criteria; not a new E1 or qualification",
+  "whole_CI_accepted": false
+}

@@ -1,0 +1,2229 @@
+{
+  "conclusion": "success",
+  "createdAt": "2026-10-27T08:22:50Z",
+  "databaseId": 40473087175,
+  "event": "pull_request",
+  "headBranch": "codex/trusted-context-registration",
+  "headSha": "b7c913ffc93d145302b73014d470a44d7d91a223",
+  "jobs": [
+    {
+      "completedAt": "2026-10-27T08:23:28Z",
+      "conclusion": "success",
+      "databaseId": 122084639479,
+      "name": "selection",
+      "startedAt": "2026-10-27T08:22:53Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-27T08:22:55Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-27T08:22:54Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:23:12Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 2,
+          "startedAt": "2026-10-27T08:22:55Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:23:13Z",
+          "conclusion": "success",
+          "name": "Run python3 -B scripts/ci_selection.py select --report runs/ci-plan.json",
+          "number": 3,
+          "startedAt": "2026-10-27T08:23:12Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:23:25Z",
+          "conclusion": "success",
+          "name": "Check CI routing and changed-line whitespace",
+          "number": 4,
+          "startedAt": "2026-10-27T08:23:13Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:23:25Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 8,
+          "startedAt": "2026-10-27T08:23:25Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:23:25Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 9,
+          "startedAt": "2026-10-27T08:23:25Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/BucketSran/vaEVAS/actions/runs/40473087175/job/122084639479"
+    },
+    {
+      "completedAt": "2026-10-27T08:25:51Z",
+      "conclusion": "success",
+      "databaseId": 122084872546,
+      "name": "fast-checks",
+      "startedAt": "2026-10-27T08:23:31Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-27T08:23:33Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-27T08:23:32Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:23:50Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 2,
+          "startedAt": "2026-10-27T08:23:33Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:23:50Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "number": 3,
+          "startedAt": "2026-10-27T08:23:50Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:23:53Z",
+          "conclusion": "success",
+          "name": "Run python -m pip install ruff==0.14.1",
+          "number": 4,
+          "startedAt": "2026-10-27T08:23:50Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:24:04Z",
+          "conclusion": "success",
+          "name": "Run rustup toolchain install stable --profile minimal --component clippy --component rustfmt",
+          "number": 5,
+          "startedAt": "2026-10-27T08:23:53Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:24:07Z",
+          "conclusion": "success",
+          "name": "Run ./.github/actions/rust-cache",
+          "number": 6,
+          "startedAt": "2026-10-27T08:24:04Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:24:58Z",
+          "conclusion": "success",
+          "name": "Select and check formatting, lint and generated metadata first",
+          "number": 7,
+          "startedAt": "2026-10-27T08:24:07Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:25:43Z",
+          "conclusion": "success",
+          "name": "Early integration counterexamples",
+          "number": 8,
+          "startedAt": "2026-10-27T08:24:58Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:25:43Z",
+          "conclusion": "skipped",
+          "name": "Focused draft regression",
+          "number": 9,
+          "startedAt": "2026-10-27T08:25:43Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:25:44Z",
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "number": 10,
+          "startedAt": "2026-10-27T08:25:43Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:25:48Z",
+          "conclusion": "success",
+          "name": "Post Run ./.github/actions/rust-cache",
+          "number": 18,
+          "startedAt": "2026-10-27T08:25:44Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:25:48Z",
+          "conclusion": "success",
+          "name": "Post Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "number": 19,
+          "startedAt": "2026-10-27T08:25:48Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:25:49Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 20,
+          "startedAt": "2026-10-27T08:25:48Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:25:49Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 21,
+          "startedAt": "2026-10-27T08:25:49Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/BucketSran/vaEVAS/actions/runs/40473087175/job/122084872546"
+    },
+    {
+      "completedAt": "2026-10-27T08:30:23Z",
+      "conclusion": "success",
+      "databaseId": 122085776217,
+      "name": "rust-regression",
+      "startedAt": "2026-10-27T08:25:54Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-27T08:25:56Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-27T08:25:55Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:14Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 2,
+          "startedAt": "2026-10-27T08:25:56Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:14Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "number": 3,
+          "startedAt": "2026-10-27T08:26:14Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:24Z",
+          "conclusion": "success",
+          "name": "Run rustup toolchain install stable --profile minimal --component clippy --component rustfmt",
+          "number": 4,
+          "startedAt": "2026-10-27T08:26:14Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:27Z",
+          "conclusion": "success",
+          "name": "Run ./.github/actions/rust-cache",
+          "number": 5,
+          "startedAt": "2026-10-27T08:26:24Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:27Z",
+          "conclusion": "skipped",
+          "name": "Verify the new release kernel for source-only delivery",
+          "number": 6,
+          "startedAt": "2026-10-27T08:26:27Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:27Z",
+          "conclusion": "skipped",
+          "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "number": 7,
+          "startedAt": "2026-10-27T08:26:27Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:29:44Z",
+          "conclusion": "success",
+          "name": "Full Rust regression, including interval properties",
+          "number": 8,
+          "startedAt": "2026-10-27T08:26:27Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:30:18Z",
+          "conclusion": "success",
+          "name": "Collect actual owned Rust binary listing",
+          "number": 9,
+          "startedAt": "2026-10-27T08:29:44Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:30:19Z",
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "number": 10,
+          "startedAt": "2026-10-27T08:30:18Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:30:20Z",
+          "conclusion": "success",
+          "name": "Post Run ./.github/actions/rust-cache",
+          "number": 18,
+          "startedAt": "2026-10-27T08:30:19Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:30:20Z",
+          "conclusion": "success",
+          "name": "Post Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "number": 19,
+          "startedAt": "2026-10-27T08:30:20Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:30:20Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 20,
+          "startedAt": "2026-10-27T08:30:20Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:30:20Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 21,
+          "startedAt": "2026-10-27T08:30:20Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/BucketSran/vaEVAS/actions/runs/40473087175/job/122085776217"
+    },
+    {
+      "completedAt": "2026-10-27T08:26:53Z",
+      "conclusion": "success",
+      "databaseId": 122085776249,
+      "name": "provenance-support",
+      "startedAt": "2026-10-27T08:25:54Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-27T08:25:56Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-27T08:25:55Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:12Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 2,
+          "startedAt": "2026-10-27T08:25:56Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:13Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "number": 3,
+          "startedAt": "2026-10-27T08:26:12Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:50Z",
+          "conclusion": "success",
+          "name": "Backend support checker tests",
+          "number": 4,
+          "startedAt": "2026-10-27T08:26:13Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:50Z",
+          "conclusion": "success",
+          "name": "Post Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "number": 7,
+          "startedAt": "2026-10-27T08:26:50Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:50Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 8,
+          "startedAt": "2026-10-27T08:26:50Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:50Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 9,
+          "startedAt": "2026-10-27T08:26:50Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/BucketSran/vaEVAS/actions/runs/40473087175/job/122085776249"
+    },
+    {
+      "completedAt": "2026-10-27T08:28:48Z",
+      "conclusion": "success",
+      "databaseId": 122085776324,
+      "name": "catalog-inventory",
+      "startedAt": "2026-10-27T08:25:53Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-27T08:25:55Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-27T08:25:54Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:12Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 2,
+          "startedAt": "2026-10-27T08:25:55Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:12Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "number": 3,
+          "startedAt": "2026-10-27T08:26:12Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:28:44Z",
+          "conclusion": "success",
+          "name": "Observe declared Python entries and tracked asset facts",
+          "number": 4,
+          "startedAt": "2026-10-27T08:26:12Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:28:46Z",
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "number": 5,
+          "startedAt": "2026-10-27T08:28:44Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:28:46Z",
+          "conclusion": "success",
+          "name": "Post Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "number": 9,
+          "startedAt": "2026-10-27T08:28:46Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:28:46Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 10,
+          "startedAt": "2026-10-27T08:28:46Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:28:46Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 11,
+          "startedAt": "2026-10-27T08:28:46Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/BucketSran/vaEVAS/actions/runs/40473087175/job/122085776324"
+    },
+    {
+      "completedAt": "2026-10-27T08:28:36Z",
+      "conclusion": "success",
+      "databaseId": 122085776330,
+      "name": "regression (0)",
+      "startedAt": "2026-10-27T08:25:53Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-27T08:25:55Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-27T08:25:54Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:12Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 2,
+          "startedAt": "2026-10-27T08:25:55Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:12Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "number": 3,
+          "startedAt": "2026-10-27T08:26:12Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:21Z",
+          "conclusion": "success",
+          "name": "Run rustup toolchain install stable --profile minimal --component clippy --component rustfmt",
+          "number": 4,
+          "startedAt": "2026-10-27T08:26:12Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:23Z",
+          "conclusion": "success",
+          "name": "Run ./.github/actions/rust-cache",
+          "number": 5,
+          "startedAt": "2026-10-27T08:26:21Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:27:12Z",
+          "conclusion": "success",
+          "name": "Build the kernel used by Python regressions",
+          "number": 6,
+          "startedAt": "2026-10-27T08:26:23Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:27:15Z",
+          "conclusion": "success",
+          "name": "Identify complete regression inputs and actual toolchain",
+          "number": 7,
+          "startedAt": "2026-10-27T08:27:12Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:27:15Z",
+          "conclusion": "success",
+          "name": "Run actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830",
+          "number": 8,
+          "startedAt": "2026-10-27T08:27:15Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:27:18Z",
+          "conclusion": "success",
+          "name": "Validate reusable successful evidence",
+          "number": 9,
+          "startedAt": "2026-10-27T08:27:15Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:28:30Z",
+          "conclusion": "success",
+          "name": "Collect complete Python regression observations",
+          "number": 10,
+          "startedAt": "2026-10-27T08:27:18Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:28:30Z",
+          "conclusion": "skipped",
+          "name": "Record only newly executed all-pass evidence",
+          "number": 11,
+          "startedAt": "2026-10-27T08:28:30Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:28:30Z",
+          "conclusion": "skipped",
+          "name": "Run actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830",
+          "number": 12,
+          "startedAt": "2026-10-27T08:28:30Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:28:33Z",
+          "conclusion": "success",
+          "name": "Retain test manifest, timings and reuse provenance",
+          "number": 13,
+          "startedAt": "2026-10-27T08:28:30Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:28:34Z",
+          "conclusion": "success",
+          "name": "Post Run ./.github/actions/rust-cache",
+          "number": 24,
+          "startedAt": "2026-10-27T08:28:33Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:28:34Z",
+          "conclusion": "success",
+          "name": "Post Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "number": 25,
+          "startedAt": "2026-10-27T08:28:34Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:28:34Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 26,
+          "startedAt": "2026-10-27T08:28:34Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:28:34Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 27,
+          "startedAt": "2026-10-27T08:28:34Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/BucketSran/vaEVAS/actions/runs/40473087175/job/122085776330"
+    },
+    {
+      "completedAt": "2026-10-27T08:35:21Z",
+      "conclusion": "success",
+      "databaseId": 122085776338,
+      "name": "provenance-paper",
+      "startedAt": "2026-10-27T08:25:54Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-27T08:25:55Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-27T08:25:54Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:12Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 2,
+          "startedAt": "2026-10-27T08:25:55Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:13Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "number": 3,
+          "startedAt": "2026-10-27T08:26:12Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:35:19Z",
+          "conclusion": "success",
+          "name": "Paper contracts, observable criteria and table provenance",
+          "number": 4,
+          "startedAt": "2026-10-27T08:26:13Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:35:19Z",
+          "conclusion": "success",
+          "name": "Post Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "number": 7,
+          "startedAt": "2026-10-27T08:35:19Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:35:19Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 8,
+          "startedAt": "2026-10-27T08:35:19Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:35:19Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 9,
+          "startedAt": "2026-10-27T08:35:19Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/BucketSran/vaEVAS/actions/runs/40473087175/job/122085776338"
+    },
+    {
+      "completedAt": "2026-10-27T08:26:54Z",
+      "conclusion": "success",
+      "databaseId": 122085776353,
+      "name": "properties-and-ngspice",
+      "startedAt": "2026-10-27T08:25:54Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-27T08:25:56Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-27T08:25:55Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:06Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 2,
+          "startedAt": "2026-10-27T08:25:56Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:06Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "number": 3,
+          "startedAt": "2026-10-27T08:26:06Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:15Z",
+          "conclusion": "success",
+          "name": "Run sudo apt-get update && sudo apt-get install -y ngspice",
+          "number": 4,
+          "startedAt": "2026-10-27T08:26:06Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:25Z",
+          "conclusion": "success",
+          "name": "Run rustup update stable --no-self-update",
+          "number": 5,
+          "startedAt": "2026-10-27T08:26:15Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:28Z",
+          "conclusion": "success",
+          "name": "Run ./.github/actions/rust-cache",
+          "number": 6,
+          "startedAt": "2026-10-27T08:26:25Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:44Z",
+          "conclusion": "success",
+          "name": "Run cargo +stable build --locked --manifest-path evas/rust_core/Cargo.toml",
+          "number": 7,
+          "startedAt": "2026-10-27T08:26:28Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:45Z",
+          "conclusion": "success",
+          "name": "Run python3 -B -m unittest discover -s evas/validation/differential -v",
+          "number": 8,
+          "startedAt": "2026-10-27T08:26:44Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:46Z",
+          "conclusion": "success",
+          "name": "Run python3 -B evas/validation/differential/ngspice_compare.py --kernel evas/rust_core/target/debug/evas-kernel --out runs/ngspice-ci",
+          "number": 9,
+          "startedAt": "2026-10-27T08:26:45Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:48Z",
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "number": 10,
+          "startedAt": "2026-10-27T08:26:46Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:52Z",
+          "conclusion": "success",
+          "name": "Post Run ./.github/actions/rust-cache",
+          "number": 18,
+          "startedAt": "2026-10-27T08:26:48Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:52Z",
+          "conclusion": "success",
+          "name": "Post Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "number": 19,
+          "startedAt": "2026-10-27T08:26:52Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:52Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 20,
+          "startedAt": "2026-10-27T08:26:52Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:52Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 21,
+          "startedAt": "2026-10-27T08:26:52Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/BucketSran/vaEVAS/actions/runs/40473087175/job/122085776353"
+    },
+    {
+      "completedAt": "2026-10-27T08:29:17Z",
+      "conclusion": "success",
+      "databaseId": 122085776379,
+      "name": "regression (1)",
+      "startedAt": "2026-10-27T08:25:54Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-27T08:25:55Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-27T08:25:54Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:12Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 2,
+          "startedAt": "2026-10-27T08:25:55Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:12Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "number": 3,
+          "startedAt": "2026-10-27T08:26:12Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:21Z",
+          "conclusion": "success",
+          "name": "Run rustup toolchain install stable --profile minimal --component clippy --component rustfmt",
+          "number": 4,
+          "startedAt": "2026-10-27T08:26:12Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:23Z",
+          "conclusion": "success",
+          "name": "Run ./.github/actions/rust-cache",
+          "number": 5,
+          "startedAt": "2026-10-27T08:26:21Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:27:13Z",
+          "conclusion": "success",
+          "name": "Build the kernel used by Python regressions",
+          "number": 6,
+          "startedAt": "2026-10-27T08:26:23Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:27:16Z",
+          "conclusion": "success",
+          "name": "Identify complete regression inputs and actual toolchain",
+          "number": 7,
+          "startedAt": "2026-10-27T08:27:13Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:27:16Z",
+          "conclusion": "success",
+          "name": "Run actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830",
+          "number": 8,
+          "startedAt": "2026-10-27T08:27:16Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:27:19Z",
+          "conclusion": "success",
+          "name": "Validate reusable successful evidence",
+          "number": 9,
+          "startedAt": "2026-10-27T08:27:16Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:29:11Z",
+          "conclusion": "success",
+          "name": "Collect complete Python regression observations",
+          "number": 10,
+          "startedAt": "2026-10-27T08:27:19Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:29:11Z",
+          "conclusion": "skipped",
+          "name": "Record only newly executed all-pass evidence",
+          "number": 11,
+          "startedAt": "2026-10-27T08:29:11Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:29:11Z",
+          "conclusion": "skipped",
+          "name": "Run actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830",
+          "number": 12,
+          "startedAt": "2026-10-27T08:29:11Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:29:15Z",
+          "conclusion": "success",
+          "name": "Retain test manifest, timings and reuse provenance",
+          "number": 13,
+          "startedAt": "2026-10-27T08:29:11Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:29:15Z",
+          "conclusion": "success",
+          "name": "Post Run ./.github/actions/rust-cache",
+          "number": 24,
+          "startedAt": "2026-10-27T08:29:15Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:29:16Z",
+          "conclusion": "success",
+          "name": "Post Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "number": 25,
+          "startedAt": "2026-10-27T08:29:15Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:29:16Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 26,
+          "startedAt": "2026-10-27T08:29:16Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:29:16Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 27,
+          "startedAt": "2026-10-27T08:29:16Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/BucketSran/vaEVAS/actions/runs/40473087175/job/122085776379"
+    },
+    {
+      "completedAt": "2026-10-27T08:31:38Z",
+      "conclusion": "success",
+      "databaseId": 122085776392,
+      "name": "static-checks",
+      "startedAt": "2026-10-27T08:25:54Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-27T08:25:55Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-27T08:25:54Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:11Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 2,
+          "startedAt": "2026-10-27T08:25:55Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:11Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "number": 3,
+          "startedAt": "2026-10-27T08:26:11Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:31:07Z",
+          "conclusion": "success",
+          "name": "Traceability and frozen validation identities",
+          "number": 4,
+          "startedAt": "2026-10-27T08:26:11Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:31:08Z",
+          "conclusion": "success",
+          "name": "Retain Git fixture incident controls",
+          "number": 5,
+          "startedAt": "2026-10-27T08:31:07Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:31:36Z",
+          "conclusion": "success",
+          "name": "Independent mathematics and checker calibration (no simulator)",
+          "number": 6,
+          "startedAt": "2026-10-27T08:31:08Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:31:36Z",
+          "conclusion": "success",
+          "name": "Post Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "number": 11,
+          "startedAt": "2026-10-27T08:31:36Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:31:36Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 12,
+          "startedAt": "2026-10-27T08:31:36Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:31:36Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 13,
+          "startedAt": "2026-10-27T08:31:36Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/BucketSran/vaEVAS/actions/runs/40473087175/job/122085776392"
+    },
+    {
+      "completedAt": "2026-10-27T08:29:04Z",
+      "conclusion": "success",
+      "databaseId": 122085776401,
+      "name": "regression (2)",
+      "startedAt": "2026-10-27T08:25:53Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-27T08:25:55Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-27T08:25:54Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:11Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 2,
+          "startedAt": "2026-10-27T08:25:55Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:11Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "number": 3,
+          "startedAt": "2026-10-27T08:26:11Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:19Z",
+          "conclusion": "success",
+          "name": "Run rustup toolchain install stable --profile minimal --component clippy --component rustfmt",
+          "number": 4,
+          "startedAt": "2026-10-27T08:26:11Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:21Z",
+          "conclusion": "success",
+          "name": "Run ./.github/actions/rust-cache",
+          "number": 5,
+          "startedAt": "2026-10-27T08:26:19Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:27:03Z",
+          "conclusion": "success",
+          "name": "Build the kernel used by Python regressions",
+          "number": 6,
+          "startedAt": "2026-10-27T08:26:21Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:27:05Z",
+          "conclusion": "success",
+          "name": "Identify complete regression inputs and actual toolchain",
+          "number": 7,
+          "startedAt": "2026-10-27T08:27:03Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:27:05Z",
+          "conclusion": "success",
+          "name": "Run actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830",
+          "number": 8,
+          "startedAt": "2026-10-27T08:27:05Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:27:07Z",
+          "conclusion": "success",
+          "name": "Validate reusable successful evidence",
+          "number": 9,
+          "startedAt": "2026-10-27T08:27:05Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:28:58Z",
+          "conclusion": "success",
+          "name": "Collect complete Python regression observations",
+          "number": 10,
+          "startedAt": "2026-10-27T08:27:07Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:28:58Z",
+          "conclusion": "skipped",
+          "name": "Record only newly executed all-pass evidence",
+          "number": 11,
+          "startedAt": "2026-10-27T08:28:58Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:28:58Z",
+          "conclusion": "skipped",
+          "name": "Run actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830",
+          "number": 12,
+          "startedAt": "2026-10-27T08:28:58Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:29:01Z",
+          "conclusion": "success",
+          "name": "Retain test manifest, timings and reuse provenance",
+          "number": 13,
+          "startedAt": "2026-10-27T08:28:58Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:29:01Z",
+          "conclusion": "success",
+          "name": "Post Run ./.github/actions/rust-cache",
+          "number": 24,
+          "startedAt": "2026-10-27T08:29:01Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:29:02Z",
+          "conclusion": "success",
+          "name": "Post Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "number": 25,
+          "startedAt": "2026-10-27T08:29:01Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:29:02Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 26,
+          "startedAt": "2026-10-27T08:29:02Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:29:02Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 27,
+          "startedAt": "2026-10-27T08:29:02Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/BucketSran/vaEVAS/actions/runs/40473087175/job/122085776401"
+    },
+    {
+      "completedAt": "2026-10-27T08:29:20Z",
+      "conclusion": "success",
+      "databaseId": 122085776408,
+      "name": "fuzz-smoke (run, 24)",
+      "startedAt": "2026-10-27T08:25:54Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-27T08:25:56Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-27T08:25:55Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:07Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 2,
+          "startedAt": "2026-10-27T08:25:56Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:15Z",
+          "conclusion": "success",
+          "name": "Run rustup toolchain install nightly --profile minimal",
+          "number": 3,
+          "startedAt": "2026-10-27T08:26:07Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:18Z",
+          "conclusion": "success",
+          "name": "Run ./.github/actions/rust-cache",
+          "number": 4,
+          "startedAt": "2026-10-27T08:26:15Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:19Z",
+          "conclusion": "success",
+          "name": "Run actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830",
+          "number": 5,
+          "startedAt": "2026-10-27T08:26:18Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:19Z",
+          "conclusion": "skipped",
+          "name": "Install cargo-fuzz when absent from cache",
+          "number": 6,
+          "startedAt": "2026-10-27T08:26:19Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:19Z",
+          "conclusion": "success",
+          "name": "Put cargo-fuzz on PATH",
+          "number": 7,
+          "startedAt": "2026-10-27T08:26:19Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:29:14Z",
+          "conclusion": "success",
+          "name": "Run mkdir -p \"fuzz/corpus/run\"",
+          "number": 8,
+          "startedAt": "2026-10-27T08:26:19Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:29:14Z",
+          "conclusion": "skipped",
+          "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "number": 9,
+          "startedAt": "2026-10-27T08:29:14Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:29:14Z",
+          "conclusion": "success",
+          "name": "Post Run actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830",
+          "number": 16,
+          "startedAt": "2026-10-27T08:29:14Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:29:18Z",
+          "conclusion": "success",
+          "name": "Post Run ./.github/actions/rust-cache",
+          "number": 17,
+          "startedAt": "2026-10-27T08:29:14Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:29:18Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 18,
+          "startedAt": "2026-10-27T08:29:18Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:29:18Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 19,
+          "startedAt": "2026-10-27T08:29:18Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/BucketSran/vaEVAS/actions/runs/40473087175/job/122085776408"
+    },
+    {
+      "completedAt": "2026-10-27T08:29:39Z",
+      "conclusion": "success",
+      "databaseId": 122085776424,
+      "name": "fuzz-smoke (parse_request, 65536)",
+      "startedAt": "2026-10-27T08:25:53Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-27T08:25:55Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-27T08:25:54Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:05Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 2,
+          "startedAt": "2026-10-27T08:25:55Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:13Z",
+          "conclusion": "success",
+          "name": "Run rustup toolchain install nightly --profile minimal",
+          "number": 3,
+          "startedAt": "2026-10-27T08:26:05Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:14Z",
+          "conclusion": "success",
+          "name": "Run ./.github/actions/rust-cache",
+          "number": 4,
+          "startedAt": "2026-10-27T08:26:13Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:15Z",
+          "conclusion": "success",
+          "name": "Run actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830",
+          "number": 5,
+          "startedAt": "2026-10-27T08:26:14Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:15Z",
+          "conclusion": "skipped",
+          "name": "Install cargo-fuzz when absent from cache",
+          "number": 6,
+          "startedAt": "2026-10-27T08:26:15Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:15Z",
+          "conclusion": "success",
+          "name": "Put cargo-fuzz on PATH",
+          "number": 7,
+          "startedAt": "2026-10-27T08:26:15Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:29:35Z",
+          "conclusion": "success",
+          "name": "Run mkdir -p \"fuzz/corpus/parse_request\"",
+          "number": 8,
+          "startedAt": "2026-10-27T08:26:15Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:29:35Z",
+          "conclusion": "skipped",
+          "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "number": 9,
+          "startedAt": "2026-10-27T08:29:35Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:29:36Z",
+          "conclusion": "success",
+          "name": "Post Run actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830",
+          "number": 16,
+          "startedAt": "2026-10-27T08:29:35Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:29:37Z",
+          "conclusion": "success",
+          "name": "Post Run ./.github/actions/rust-cache",
+          "number": 17,
+          "startedAt": "2026-10-27T08:29:36Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:29:37Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 18,
+          "startedAt": "2026-10-27T08:29:37Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:29:37Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 19,
+          "startedAt": "2026-10-27T08:29:37Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/BucketSran/vaEVAS/actions/runs/40473087175/job/122085776424"
+    },
+    {
+      "completedAt": "2026-10-27T08:28:47Z",
+      "conclusion": "success",
+      "databaseId": 122085776447,
+      "name": "regression (3)",
+      "startedAt": "2026-10-27T08:25:53Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-27T08:25:55Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-27T08:25:54Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:10Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 2,
+          "startedAt": "2026-10-27T08:25:55Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:10Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "number": 3,
+          "startedAt": "2026-10-27T08:26:10Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:17Z",
+          "conclusion": "success",
+          "name": "Run rustup toolchain install stable --profile minimal --component clippy --component rustfmt",
+          "number": 4,
+          "startedAt": "2026-10-27T08:26:10Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:20Z",
+          "conclusion": "success",
+          "name": "Run ./.github/actions/rust-cache",
+          "number": 5,
+          "startedAt": "2026-10-27T08:26:17Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:56Z",
+          "conclusion": "success",
+          "name": "Build the kernel used by Python regressions",
+          "number": 6,
+          "startedAt": "2026-10-27T08:26:20Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:57Z",
+          "conclusion": "success",
+          "name": "Identify complete regression inputs and actual toolchain",
+          "number": 7,
+          "startedAt": "2026-10-27T08:26:56Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:58Z",
+          "conclusion": "success",
+          "name": "Run actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830",
+          "number": 8,
+          "startedAt": "2026-10-27T08:26:57Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:59Z",
+          "conclusion": "success",
+          "name": "Validate reusable successful evidence",
+          "number": 9,
+          "startedAt": "2026-10-27T08:26:58Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:28:42Z",
+          "conclusion": "success",
+          "name": "Collect complete Python regression observations",
+          "number": 10,
+          "startedAt": "2026-10-27T08:26:59Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:28:42Z",
+          "conclusion": "skipped",
+          "name": "Record only newly executed all-pass evidence",
+          "number": 11,
+          "startedAt": "2026-10-27T08:28:42Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:28:42Z",
+          "conclusion": "skipped",
+          "name": "Run actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830",
+          "number": 12,
+          "startedAt": "2026-10-27T08:28:42Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:28:45Z",
+          "conclusion": "success",
+          "name": "Retain test manifest, timings and reuse provenance",
+          "number": 13,
+          "startedAt": "2026-10-27T08:28:42Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:28:45Z",
+          "conclusion": "success",
+          "name": "Post Run ./.github/actions/rust-cache",
+          "number": 24,
+          "startedAt": "2026-10-27T08:28:45Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:28:45Z",
+          "conclusion": "success",
+          "name": "Post Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "number": 25,
+          "startedAt": "2026-10-27T08:28:45Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:28:45Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 26,
+          "startedAt": "2026-10-27T08:28:45Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:28:45Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 27,
+          "startedAt": "2026-10-27T08:28:45Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/BucketSran/vaEVAS/actions/runs/40473087175/job/122085776447"
+    },
+    {
+      "completedAt": "2026-10-27T08:26:27Z",
+      "conclusion": "success",
+      "databaseId": 122085776521,
+      "name": "benchmark / first-batch",
+      "startedAt": "2026-10-27T08:25:54Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-27T08:25:55Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-27T08:25:55Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:06Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 2,
+          "startedAt": "2026-10-27T08:25:55Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:07Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "number": 3,
+          "startedAt": "2026-10-27T08:26:06Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:07Z",
+          "conclusion": "success",
+          "name": "Portable checker copies and task lineage",
+          "number": 4,
+          "startedAt": "2026-10-27T08:26:07Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:25Z",
+          "conclusion": "success",
+          "name": "Independent criteria and evidence boundary regressions",
+          "number": 5,
+          "startedAt": "2026-10-27T08:26:07Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:25Z",
+          "conclusion": "success",
+          "name": "Record completed checks",
+          "number": 6,
+          "startedAt": "2026-10-27T08:26:25Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:25Z",
+          "conclusion": "success",
+          "name": "Post Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "number": 11,
+          "startedAt": "2026-10-27T08:26:25Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:25Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 12,
+          "startedAt": "2026-10-27T08:26:25Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:25Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 13,
+          "startedAt": "2026-10-27T08:26:25Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/BucketSran/vaEVAS/actions/runs/40473087175/job/122085776521"
+    },
+    {
+      "completedAt": "2026-10-27T08:29:49Z",
+      "conclusion": "success",
+      "databaseId": 122085776552,
+      "name": "package / install (macos-14, arm64, 3.12)",
+      "startedAt": "2026-10-27T08:25:55Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-27T08:25:57Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-27T08:25:55Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:17Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 2,
+          "startedAt": "2026-10-27T08:25:57Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:21Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "number": 3,
+          "startedAt": "2026-10-27T08:26:17Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:32Z",
+          "conclusion": "success",
+          "name": "Run rustup toolchain install stable --profile minimal",
+          "number": 4,
+          "startedAt": "2026-10-27T08:26:21Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:35Z",
+          "conclusion": "success",
+          "name": "Run ./.github/actions/rust-cache",
+          "number": 5,
+          "startedAt": "2026-10-27T08:26:32Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:35Z",
+          "conclusion": "success",
+          "name": "Verify actual runner architecture",
+          "number": 6,
+          "startedAt": "2026-10-27T08:26:35Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:37Z",
+          "conclusion": "success",
+          "name": "Run python -m pip install build",
+          "number": 7,
+          "startedAt": "2026-10-27T08:26:35Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:28:16Z",
+          "conclusion": "success",
+          "name": "Build sdist, then build native wheel from that archive",
+          "number": 8,
+          "startedAt": "2026-10-27T08:26:37Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:29:37Z",
+          "conclusion": "success",
+          "name": "Install outside checkout, verify equations, failures and reinstall",
+          "number": 9,
+          "startedAt": "2026-10-27T08:28:16Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:29:40Z",
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "number": 10,
+          "startedAt": "2026-10-27T08:29:37Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:29:40Z",
+          "conclusion": "success",
+          "name": "Record completed checks",
+          "number": 11,
+          "startedAt": "2026-10-27T08:29:40Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:29:43Z",
+          "conclusion": "success",
+          "name": "Post Run ./.github/actions/rust-cache",
+          "number": 20,
+          "startedAt": "2026-10-27T08:29:40Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:29:43Z",
+          "conclusion": "success",
+          "name": "Post Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "number": 21,
+          "startedAt": "2026-10-27T08:29:43Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:29:44Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 22,
+          "startedAt": "2026-10-27T08:29:43Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:29:46Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 23,
+          "startedAt": "2026-10-27T08:29:44Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/BucketSran/vaEVAS/actions/runs/40473087175/job/122085776552"
+    },
+    {
+      "completedAt": "2026-10-27T08:26:39Z",
+      "conclusion": "success",
+      "databaseId": 122085776626,
+      "name": "benchmark / identity",
+      "startedAt": "2026-10-27T08:25:54Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-27T08:25:55Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-27T08:25:54Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:12Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 2,
+          "startedAt": "2026-10-27T08:25:55Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:12Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "number": 3,
+          "startedAt": "2026-10-27T08:26:12Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:13Z",
+          "conclusion": "success",
+          "name": "Frozen sources and current calibration consumers",
+          "number": 4,
+          "startedAt": "2026-10-27T08:26:12Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:13Z",
+          "conclusion": "success",
+          "name": "Current task registration and generated indexes",
+          "number": 5,
+          "startedAt": "2026-10-27T08:26:13Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:22Z",
+          "conclusion": "success",
+          "name": "Task registration, stage checks and preservation regressions",
+          "number": 6,
+          "startedAt": "2026-10-27T08:26:13Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:22Z",
+          "conclusion": "success",
+          "name": "Historical material path and frozen-plan consumers",
+          "number": 7,
+          "startedAt": "2026-10-27T08:26:22Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:24Z",
+          "conclusion": "success",
+          "name": "Identity and result reporting regressions",
+          "number": 8,
+          "startedAt": "2026-10-27T08:26:22Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:38Z",
+          "conclusion": "success",
+          "name": "Saved-candidate EVAS replay regressions",
+          "number": 9,
+          "startedAt": "2026-10-27T08:26:24Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:38Z",
+          "conclusion": "success",
+          "name": "Record completed checks",
+          "number": 10,
+          "startedAt": "2026-10-27T08:26:38Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:38Z",
+          "conclusion": "success",
+          "name": "Post Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "number": 19,
+          "startedAt": "2026-10-27T08:26:38Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:38Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 20,
+          "startedAt": "2026-10-27T08:26:38Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:38Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 21,
+          "startedAt": "2026-10-27T08:26:38Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/BucketSran/vaEVAS/actions/runs/40473087175/job/122085776626"
+    },
+    {
+      "completedAt": "2026-10-27T08:28:00Z",
+      "conclusion": "success",
+      "databaseId": 122085776682,
+      "name": "package / install (ubuntu-24.04, x86_64, 3.10)",
+      "startedAt": "2026-10-27T08:25:54Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-27T08:25:56Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-27T08:25:55Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:07Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 2,
+          "startedAt": "2026-10-27T08:25:56Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:12Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "number": 3,
+          "startedAt": "2026-10-27T08:26:07Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:20Z",
+          "conclusion": "success",
+          "name": "Run rustup toolchain install stable --profile minimal",
+          "number": 4,
+          "startedAt": "2026-10-27T08:26:12Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:22Z",
+          "conclusion": "success",
+          "name": "Run ./.github/actions/rust-cache",
+          "number": 5,
+          "startedAt": "2026-10-27T08:26:20Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:22Z",
+          "conclusion": "success",
+          "name": "Verify actual runner architecture",
+          "number": 6,
+          "startedAt": "2026-10-27T08:26:22Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:26:23Z",
+          "conclusion": "success",
+          "name": "Run python -m pip install build",
+          "number": 7,
+          "startedAt": "2026-10-27T08:26:22Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:27:12Z",
+          "conclusion": "success",
+          "name": "Build sdist, then build native wheel from that archive",
+          "number": 8,
+          "startedAt": "2026-10-27T08:26:23Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:27:54Z",
+          "conclusion": "success",
+          "name": "Install outside checkout, verify equations, failures and reinstall",
+          "number": 9,
+          "startedAt": "2026-10-27T08:27:12Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:27:56Z",
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "number": 10,
+          "startedAt": "2026-10-27T08:27:54Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:27:56Z",
+          "conclusion": "success",
+          "name": "Record completed checks",
+          "number": 11,
+          "startedAt": "2026-10-27T08:27:56Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:27:57Z",
+          "conclusion": "success",
+          "name": "Post Run ./.github/actions/rust-cache",
+          "number": 20,
+          "startedAt": "2026-10-27T08:27:56Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:27:57Z",
+          "conclusion": "success",
+          "name": "Post Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "number": 21,
+          "startedAt": "2026-10-27T08:27:57Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:27:57Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 22,
+          "startedAt": "2026-10-27T08:27:57Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:27:57Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 23,
+          "startedAt": "2026-10-27T08:27:57Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/BucketSran/vaEVAS/actions/runs/40473087175/job/122085776682"
+    },
+    {
+      "completedAt": "2026-10-27T08:29:46Z",
+      "conclusion": "success",
+      "databaseId": 122087089053,
+      "name": "regression-coverage",
+      "startedAt": "2026-10-27T08:29:20Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-27T08:29:22Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-27T08:29:21Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:29:36Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 2,
+          "startedAt": "2026-10-27T08:29:22Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:29:36Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "number": 3,
+          "startedAt": "2026-10-27T08:29:36Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:29:39Z",
+          "conclusion": "success",
+          "name": "Run actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093",
+          "number": 4,
+          "startedAt": "2026-10-27T08:29:36Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:29:42Z",
+          "conclusion": "success",
+          "name": "Verify complete raw coverage",
+          "number": 5,
+          "startedAt": "2026-10-27T08:29:39Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:29:44Z",
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "number": 6,
+          "startedAt": "2026-10-27T08:29:42Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:29:44Z",
+          "conclusion": "success",
+          "name": "Post Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "number": 11,
+          "startedAt": "2026-10-27T08:29:44Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:29:45Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 12,
+          "startedAt": "2026-10-27T08:29:44Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:29:45Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 13,
+          "startedAt": "2026-10-27T08:29:45Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/BucketSran/vaEVAS/actions/runs/40473087175/job/122087089053"
+    },
+    {
+      "completedAt": "2026-10-27T08:30:22Z",
+      "conclusion": "success",
+      "databaseId": 122087269477,
+      "name": "regression-admission",
+      "startedAt": "2026-10-27T08:29:49Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-27T08:29:50Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-27T08:29:49Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:30:07Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 2,
+          "startedAt": "2026-10-27T08:29:50Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:30:07Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "number": 3,
+          "startedAt": "2026-10-27T08:30:07Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:30:08Z",
+          "conclusion": "success",
+          "name": "Run actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093",
+          "number": 4,
+          "startedAt": "2026-10-27T08:30:07Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:30:19Z",
+          "conclusion": "success",
+          "name": "Compare raw observations with the trusted comparator",
+          "number": 5,
+          "startedAt": "2026-10-27T08:30:08Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:30:20Z",
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "number": 6,
+          "startedAt": "2026-10-27T08:30:19Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:30:20Z",
+          "conclusion": "success",
+          "name": "Post Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "number": 11,
+          "startedAt": "2026-10-27T08:30:20Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:30:21Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 12,
+          "startedAt": "2026-10-27T08:30:20Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:30:21Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 13,
+          "startedAt": "2026-10-27T08:30:21Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/BucketSran/vaEVAS/actions/runs/40473087175/job/122087269477"
+    },
+    {
+      "completedAt": "2026-10-27T08:35:39Z",
+      "conclusion": "success",
+      "databaseId": 122089457090,
+      "name": "ci-result",
+      "startedAt": "2026-10-27T08:35:24Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-27T08:35:26Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-27T08:35:25Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:35:36Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 2,
+          "startedAt": "2026-10-27T08:35:26Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:35:36Z",
+          "conclusion": "success",
+          "name": "Require every selected check and reusable child job to succeed",
+          "number": 3,
+          "startedAt": "2026-10-27T08:35:36Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:35:37Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 6,
+          "startedAt": "2026-10-27T08:35:36Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-27T08:35:37Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 7,
+          "startedAt": "2026-10-27T08:35:37Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/BucketSran/vaEVAS/actions/runs/40473087175/job/122089457090"
+    }
+  ],
+  "status": "completed",
+  "updatedAt": "2026-10-27T08:35:40Z",
+  "url": "https://github.com/BucketSran/vaEVAS/actions/runs/40473087175",
+  "workflowName": "vaEVAS CI"
+}

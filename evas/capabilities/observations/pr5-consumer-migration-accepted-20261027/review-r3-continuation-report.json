@@ -1,0 +1,590 @@
+{
+  "schema_version": 1,
+  "review_kind": "fresh-context independent Astra R3; Standards and Spec in one review; no implementation or further delegation",
+  "status": "completed_no_new_findings",
+  "conclusion": "固定 983b 增量无新增 Standards/Spec 发现。PR5-ASTRA-R1-01 在本范围内闭合。此结论不授予当前 CI、可信 context、科学资格或合入许可。",
+  "fixed_scope": {
+    "base": "e10e1af5796f0cc7af3b6b5f5d26c420c0c03325",
+    "previous_reviewed_head": "a7e82dcd514aa3b4fd75a2d9eb9c16319a8d19aa",
+    "head": "983b1ef6a4804c29483279ca34a7a92fce56a858",
+    "tree": "7a99e40b4a58e00c138e4c721f3deaab1bdb2ba6",
+    "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/source",
+    "source_private_git_head": "d9495c77f7d8a574e24d0977c1c49b6339ddfa2a",
+    "binding": "S 的 29 路径字节、预检收据和真实 Git 中最终 head 的 blob 逐项相同；S 私有 HEAD 仅为源码捕获。",
+    "complete_pr_paths": [
+      ".github/workflows/numerical-assurance.yml",
+      "evas/capabilities/data/asset-index.json",
+      "evas/capabilities/data/catalog-sources.json",
+      "evas/capabilities/data/entrypoint-index.json",
+      "evas/capabilities/data/historical-index.json",
+      "evas/capabilities/data/method-index.json",
+      "evas/capabilities/data/registry.json",
+      "evas/docs/development/TRACEABILITY.md",
+      "evas/validation/adapters/comparison_evas_worker.py",
+      "evas/validation/adapters/paper_evas_worker.py",
+      "evas/validation/adapters/precision_evas_worker.py",
+      "experiments/backends/comparison/freeze.py",
+      "experiments/backends/comparison/ingest.py",
+      "experiments/backends/comparison/runner.py",
+      "experiments/backends/comparison/test_worker_adapter.py",
+      "experiments/backends/paper/actual_observation.py",
+      "experiments/backends/paper/inputs.py",
+      "experiments/backends/paper/runner.py",
+      "experiments/backends/paper/test_evas_worker_adapter.py",
+      "experiments/backends/paper/test_producer_dependencies.py",
+      "experiments/backends/support/comparison_completion.py",
+      "experiments/backends/support/legacy_chain_run.py",
+      "experiments/backends/support/precision_run.py",
+      "experiments/backends/support/precision_v2_report.py",
+      "experiments/backends/support/probes.py",
+      "experiments/backends/support/test_precision_worker_adapter.py",
+      "scripts/ci_selection.py",
+      "scripts/tests/test_ci_inventory.py",
+      "scripts/tests/test_ci_selection.py"
+    ],
+    "incremental_paths": [
+      "evas/capabilities/data/asset-index.json",
+      "evas/capabilities/data/catalog-sources.json",
+      "evas/capabilities/data/entrypoint-index.json",
+      "evas/capabilities/data/method-index.json",
+      "evas/capabilities/data/registry.json",
+      "evas/docs/development/TRACEABILITY.md",
+      "experiments/backends/comparison/ingest.py",
+      "experiments/backends/comparison/runner.py",
+      "experiments/backends/comparison/test_worker_adapter.py"
+    ],
+    "unchanged_paths_reused": 20,
+    "actual_comparison": "a7e82dcd514aa3b4fd75a2d9eb9c16319a8d19aa..983b1ef6a4804c29483279ca34a7a92fce56a858",
+    "write_boundary": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-continuation-fix-astra-r3-20261027",
+    "original_brief": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/review-brief-r3.txt",
+    "prior_review": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-consumer-migration-astra-r1-20261027/review-report.json",
+      "sha256": "f93638e38000cffa7c370e4a5cfe7ea5edf5f860082ead66894bf07cef1a1ee7",
+      "reused_only_for_unchanged_scope": true
+    }
+  },
+  "runtime": {
+    "providerInstanceId": "codex",
+    "model": "gpt-6-astra",
+    "options": [
+      {
+        "id": "reasoningEffort",
+        "value": "max"
+      },
+      {
+        "id": "serviceTier",
+        "value": "default"
+      }
+    ],
+    "interaction_mode": "default",
+    "runtime_mode": "full-access",
+    "evidence": "runtime.json",
+    "delegation": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/review-delegation-r3.json",
+    "matches_requested_astra_max_default": true,
+    "subagents_spawned": 0,
+    "top_level_threads_created": 0
+  },
+  "time": {
+    "first_available_runtime_observation_utc": "2026-10-27T05:21:06.110Z",
+    "guard_before_utc": "2026-10-27T05:21:42.736569+00:00",
+    "guard_after_utc": "2026-10-27T05:33:41.196471+00:00",
+    "report_created_at_utc": "2026-10-27T05:36:14.208118+00:00",
+    "request_time_utc": null,
+    "queue_duration_seconds": null,
+    "exact_initial_execution_start_utc": null,
+    "unknown_note": "未提供请求/排队/首次 token 的精确时间，不由文件 mtime 或本轮记录跨度推算。",
+    "new_probe_started_at_utc": "2026-10-27T05:27:31.063700+00:00",
+    "new_probe_finished_at_utc": "2026-10-27T05:27:32.094621+00:00"
+  },
+  "standards_findings": [],
+  "spec_findings": [],
+  "prior_findings": [
+    {
+      "id": "PR5-ASTRA-R1-01",
+      "previous_status": "open / primary confirmed",
+      "current_status": "closed_for_fixed_head",
+      "severity": "P2",
+      "axis": "Spec",
+      "reviewed_head": "983b1ef6a4804c29483279ca34a7a92fce56a858",
+      "resolution": "execution_sources 将执行与分析来源分别验证；CONTINUATION 绑定旧 STARTED 的原字节摘要和结果 runner。新 runner 接续写明当前 worker_sources，旧 STARTED 不变。",
+      "locations": [
+        {
+          "path": "experiments/backends/comparison/ingest.py",
+          "start_line": 43,
+          "end_line": 64
+        },
+        {
+          "path": "experiments/backends/comparison/ingest.py",
+          "line": 123
+        },
+        {
+          "path": "experiments/backends/comparison/runner.py",
+          "start_line": 191,
+          "end_line": 196
+        }
+      ],
+      "evidence": [
+        "increment-code.diff",
+        "identity-audit.json",
+        "evidence-audit.json",
+        "records-consumer-control.json"
+      ],
+      "observed": "本轮用原 base runner 与当前真实 runner/adapter 源字节，执行合成 run→ingest→未改 records.validate(schema2)，8 条来源收据接受、24 条保持 unrun；原始 STARTED 字节保持。adapter 与 STARTED 各一项篡改均拒绝。",
+      "reused": "当前候选 15 方法原始日志覆盖 4 接受、7 预期拒绝、4 既有结构控制；原 worker 单独 1 个 runner setting 方法没有重跑。",
+      "limits": "合成来源消费控制，无实际后端、波形或科学快照验收。缺失历史分析依赖的材料仍被拒绝，不自动补写或接纳。",
+      "original_finding_retained": {
+        "id": "PR5-ASTRA-R1-01",
+        "severity": "P2",
+        "axis": "Spec",
+        "status": "open",
+        "confidence": "high",
+        "title": "分开旧执行与新分析的 comparison worker 依赖，保留历史接续入库",
+        "location": {
+          "path": "experiments/backends/comparison/ingest.py",
+          "start_line": 29,
+          "end_line": 35
+        },
+        "related_locations": [
+          {
+            "path": "experiments/backends/comparison/ingest.py",
+            "line": 98
+          },
+          {
+            "path": "experiments/backends/comparison/runner.py",
+            "line": 191
+          },
+          {
+            "path": "experiments/backends/comparison/runner.py",
+            "line": 283
+          }
+        ],
+        "body": "runner_sources 将 initial runner 和 analysis runner 所需 adapter 合并，然后仅与原 STARTED.worker_sources 比较。使用迁移后的 runner --resume-finished-spectre 接续迁移前已经完成仿真的批次时，STARTED 保持原字节且没有 worker_sources；CONTINUATION/result 记录新 runner。ingest 的实际调用于是传入 [旧 runner SHA, 新 runner SHA] 和 None，在所有来源文件均可检索且哈希正确时仍抛出 comparison worker source closure mismatch。新分析代码的 EVAS adapter 被要求出现在旧执行收据里，破坏了原有接续后入库路径。",
+        "trigger": "迁移前 STARTED 无 worker_sources；迁移后 runner 对已有 Spectre simulate.json/log 做允许的接续分析，result.runner_sha256 与 started.runner_sha256 不同。",
+        "impact": "合法旧批次的接续分析无法由当前 ingest 入库；不能通过给旧 STARTED 追加依赖来修复，否则会改写历史执行身份。旧执行仅按原 runner 入库及新执行自洽闭包不受本复现影响。",
+        "requirement": "validation-restructure-plan.md PR5 保持兼容入口和历史可读；原执行、原分析可检索，不能按当前代码为历史执行追加依赖。",
+        "reproduction": {
+          "script": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-consumer-migration-astra-r1-20261027/comparison-history-control.py",
+          "result": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-consumer-migration-astra-r1-20261027/comparison-history-control.json",
+          "stdout": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-consumer-migration-astra-r1-20261027/comparison-history-control.stdout",
+          "stderr": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-consumer-migration-astra-r1-20261027/comparison-history-control.stderr",
+          "source": "base/head 原文 runner 和当前 adapter 固定字节，全部复制到 R/scratch/comparison-history-r1；执行实际函数的 AST 定义。",
+          "controls": [
+            "旧 ingest 对 [旧 runner, 新 runner] 正常返回两个来源引用。",
+            "新 ingest 对旧 runner 单独调用正常。",
+            "新 ingest 对新 runner 和匹配 adapter 清单正常。",
+            "新 ingest 对旧执行加新分析、workers=None，稳定抛出 closure mismatch。"
+          ],
+          "returncode": 0,
+          "test_bodies_executed": false,
+          "real_resume_cli_executed": false
+        },
+        "evidence_classification": {
+          "observed": "实际闭包函数的条件触发及异常已由有界合成控制复现。",
+          "static_dataflow": "run 的 resume 分支保留旧 STARTED，并把当前 runner SHA 写入 continuation/results；ingest:98 仅从旧 STARTED 取 worker_sources。",
+          "not_claimed": "没有实际调用 Spectre、后端或完整 CLI，也不声称已知某一未提供的历史批次当前受损。"
+        },
+        "suggested_correction": "按原执行 runner 的合同校验原 worker 身份；若新分析确有额外来源，单独绑定新分析/CONTINUATION 身份。增加旧 STARTED 加新分析 runner 的合成接续入库控制，保持旧收据原字节。无需改变阈值、合法域或科学资格。"
+      }
+    }
+  ],
+  "coverage": [
+    {
+      "path": ".github/workflows/numerical-assurance.yml",
+      "sha256": "75da6ea8a3f0e7baa90b99388833ae2d757da66754b1d1dea3a8113d1fd1fa3b",
+      "mode": "R1 matching review reused",
+      "assessment": "唯一 comparison discover 接入 provenance-paper；30 分钟 static 上限及 PR4 Git fixture 隔离保持。"
+    },
+    {
+      "path": "evas/capabilities/data/asset-index.json",
+      "sha256": "8d8b2bd9e7a96d6d2e541d475f5a301d613c5316366cea56a913d2de88548607",
+      "mode": "R3 incremental direct review",
+      "assessment": "核验旧对象完整保留、新对象的精确引用、现行选择和新增来源收据；引用未改部分复用 R1 核验。"
+    },
+    {
+      "path": "evas/capabilities/data/catalog-sources.json",
+      "sha256": "d2b3fd7106b5d73d443949784288ff56c6a9beaee6e71df3aa4d55f081084f01",
+      "mode": "R3 incremental direct review",
+      "assessment": "核验旧对象完整保留、新对象的精确引用、现行选择和新增来源收据；引用未改部分复用 R1 核验。"
+    },
+    {
+      "path": "evas/capabilities/data/entrypoint-index.json",
+      "sha256": "e25bcbb5fe02827ecde34be5b88e46bca5e10b770311ed18e112b45d89d9541c",
+      "mode": "R3 incremental direct review",
+      "assessment": "核验旧对象完整保留、新对象的精确引用、现行选择和新增来源收据；引用未改部分复用 R1 核验。"
+    },
+    {
+      "path": "evas/capabilities/data/historical-index.json",
+      "sha256": "b37c874c621d6ee462deeec078c7c62d9192329bf6d82ef389a8cb831f43acc7",
+      "mode": "R1 matching review reused",
+      "assessment": "逐对象比较完整 base/head JSON，检查旧版本保留、精确引用、当前选择和来源内容；详见 catalog-audit.json。"
+    },
+    {
+      "path": "evas/capabilities/data/method-index.json",
+      "sha256": "b87bd2849c9be271a762a5e37da59a5a64bdbaeb7f785ad58f9ae680b0dfe811",
+      "mode": "R3 incremental direct review",
+      "assessment": "核验旧对象完整保留、新对象的精确引用、现行选择和新增来源收据；引用未改部分复用 R1 核验。"
+    },
+    {
+      "path": "evas/capabilities/data/registry.json",
+      "sha256": "50b1e76adda3f5004d4260869b6bf04004c7719a46aa555b0312052f85b6c20d",
+      "mode": "R3 incremental direct review",
+      "assessment": "核验旧对象完整保留、新对象的精确引用、现行选择和新增来源收据；引用未改部分复用 R1 核验。"
+    },
+    {
+      "path": "evas/docs/development/TRACEABILITY.md",
+      "sha256": "900af5dc22320a952f4baedf62fc0fc8cf876870b8b850391587d5af09227267",
+      "mode": "R3 incremental direct review",
+      "assessment": "两行派生计数 838→849、4732→4743 与当前登记一致；semantic reviewed=0 保持，未新增资格。"
+    },
+    {
+      "path": "evas/validation/adapters/comparison_evas_worker.py",
+      "sha256": "6677599736df6bd6f5367bb23878f227a5b3322c5a74c9aba6d29e9ab35523de",
+      "mode": "R1 matching review reused",
+      "assessment": "完整函数与 base worker 对照；仅把 ROOT 变成显式 root 参数，原条件、时间网格、错误与产物合同保持。"
+    },
+    {
+      "path": "evas/validation/adapters/paper_evas_worker.py",
+      "sha256": "78a1651e7628fb63e143f665e5dcbec1d7e1d9589faf5c74ad89e4b73122a05c",
+      "mode": "R1 matching review reused",
+      "assessment": "worker、raw response、effective record 和序列化 helper 对照；原浮点值、重复时刻、事件/观察信息与部分文件写入次序保持。"
+    },
+    {
+      "path": "evas/validation/adapters/precision_evas_worker.py",
+      "sha256": "c751e75d4e68d4b07f649eb608ac9119cf10d3c9a49f28acb53ca00fceea828b",
+      "mode": "R1 matching review reused",
+      "assessment": "完整 worker AST 相同；strobetimes、origins、三类异常和 raw 先于 strobe 检查的写入次序保持。"
+    },
+    {
+      "path": "experiments/backends/comparison/freeze.py",
+      "sha256": "4526b0b0477b56f49cb288ae29accf4ff721cf924e799e282aac9ae0f575d911",
+      "mode": "R1 matching review reused",
+      "assessment": "runtime 身份加入当前 runner AST 声明的 adapter；旧 runner 不按文件存在性追加依赖。"
+    },
+    {
+      "path": "experiments/backends/comparison/ingest.py",
+      "sha256": "6e80d747a7f6ab4ebff8fb58dbc22e67d162defd21e696427ca1a2dfa8f116cb",
+      "mode": "R3 incremental direct review",
+      "assessment": "按 STARTED 校验原执行闭包，按 CONTINUATION 校验本次分析闭包；校验原 STARTED 字节摘要和每条 result 的 analysis runner，拒绝缺失或不匹配身份。阻塞执行分支仍仅绑定原 STARTED。"
+    },
+    {
+      "path": "experiments/backends/comparison/runner.py",
+      "sha256": "2a75f9d8d898b920820b0a239a09c5c32267839e7cdfd9fd5dec2dac76f26f91",
+      "mode": "R3 incremental direct review",
+      "assessment": "接续分支将本次 runner 与 worker_sources 写入 CONTINUATION；STARTED 原字节、原工具身份、执行预算、结果字段与错误处理保持。"
+    },
+    {
+      "path": "experiments/backends/comparison/test_worker_adapter.py",
+      "sha256": "653fefd7133825d6f805c8ab86c55f4a0dda630f8fa1e3535117cc37df1c7d76",
+      "mode": "R3 incremental direct review",
+      "assessment": "逐项检查 11 个新增方法的 4 个接受、7 个拒绝控制和模拟边界。root.resolve 只修正新夹具的 macOS 路径别名；15 个集成方法日志与当前源码哈希匹配，另 1 个旧 runner setting 控制仅复用 worker 记录。"
+    },
+    {
+      "path": "experiments/backends/paper/actual_observation.py",
+      "sha256": "3ed118d6b1ef162adc9f876984e78be14adba05dcd6a87c5c9852b63ce4b5df3",
+      "mode": "R1 matching review reused",
+      "assessment": "生产依赖由被审 runner AST 判定；旧源无需 adapter，新源缺项/改项及未知路径仍拒绝。"
+    },
+    {
+      "path": "experiments/backends/paper/inputs.py",
+      "sha256": "a8d766bb6cf1216a99fb175c6569a96891e9317440569249cc03d990d9bf92d1",
+      "mode": "R1 matching review reused",
+      "assessment": "新 freeze 保存 adapter 字节和 ADAPTER_IDENTITY；原冻结输入不改写。"
+    },
+    {
+      "path": "experiments/backends/paper/runner.py",
+      "sha256": "6fdb86566d2ff03a9808b062c582f865cda7547082418af7341a24addc26afb1",
+      "mode": "R1 matching review reused",
+      "assessment": "公开函数及 worker CLI 保留并延迟载入 adapter；实际 stage 调用链与资源限制核对。"
+    },
+    {
+      "path": "experiments/backends/paper/test_evas_worker_adapter.py",
+      "sha256": "9691d8493462c538cd491414f59106c92fc40f4b8ea496aa512941787e2904bc",
+      "mode": "R1 matching review reused",
+      "assessment": "审查五个响应/失败/闭包控制，结合已保存的旧新 CLI 合成对照复用，不把 wrapper 自比当成科学证明。"
+    },
+    {
+      "path": "experiments/backends/paper/test_producer_dependencies.py",
+      "sha256": "ad970a1e9914dc8d9f35009996dcd3003afc5534043d2429d8cae7a5b92aec8a",
+      "mode": "R1 matching review reused",
+      "assessment": "审查新历史/迁移 AST 合同控制；未以历史 fixture 注入 adapter 隐藏缺项。"
+    },
+    {
+      "path": "experiments/backends/support/comparison_completion.py",
+      "sha256": "a96627bce2f77820bb01d63e1b0dedb8c4d509a288a6df7c46783281fb342c9f",
+      "mode": "R1 matching review reused",
+      "assessment": "freeze 身份含 paper 与 precision worker_source_files；run 经 precision.execute_one 的真实 CLI 调度。"
+    },
+    {
+      "path": "experiments/backends/support/legacy_chain_run.py",
+      "sha256": "0b23953786c82fada907601c1e98577f496b4a2eb10486118eaa3814646e8262",
+      "mode": "R1 matching review reused",
+      "assessment": "新执行 source_identity 绑定两个 adapter；build_identity 对原 producer_repo 验证，旧执行来源与当前分析分开。"
+    },
+    {
+      "path": "experiments/backends/support/precision_run.py",
+      "sha256": "16850212a0b3bd067459e3710f16eee29bacfdbf0b72794266871cd812d14e96",
+      "mode": "R1 matching review reused",
+      "assessment": "旧 worker/CLI 兼容；新 freeze/source_files 绑定两个 adapter；verify 使用冻结清单，既有分析入口保持。"
+    },
+    {
+      "path": "experiments/backends/support/precision_v2_report.py",
+      "sha256": "0b07bf65db05f16ca54c1107fee0ebeea39eb38327fbb45986d6061aadbd9838",
+      "mode": "R1 matching review reused",
+      "assessment": "新增 paper helper 是当前分析身份；没有改写历史收据或原 v1 成绩。"
+    },
+    {
+      "path": "experiments/backends/support/probes.py",
+      "sha256": "992f0e05b4da1e58c2b1dda810bbbf58c4f4f5e054684a9efced474a22ef56b4",
+      "mode": "R1 matching review reused",
+      "assessment": "paper worker 的实际调用者，新 ADAPTER_IDENTITY 含 paper adapter；进程预算和后端路径不变。"
+    },
+    {
+      "path": "experiments/backends/support/test_precision_worker_adapter.py",
+      "sha256": "c8966716e0734220b70c3fd1f45bb08cf58ead8315b6872b753e061165ce2ed6",
+      "mode": "R1 matching review reused",
+      "assessment": "审查五项边界控制及合成 EVAS 替身；重复/相邻 binary64、strobe/solutions 区分及失败部分产物覆盖。"
+    },
+    {
+      "path": "scripts/ci_selection.py",
+      "sha256": "26d18c67bc54cea796a2120d8ebba60f550f0b5d78d2e4278f89070ffe905f93",
+      "mode": "R1 matching review reused",
+      "assessment": "comparison/adapters 前缀保留校准与来源检查；未知路径保守全选；完整 29 路径全选，科学 CI 结果不预接受。"
+    },
+    {
+      "path": "scripts/tests/test_ci_inventory.py",
+      "sha256": "c297e26c71e1ddce4875b909049d267b7afd67f0d9a6f67a79fc952b999ed7b6",
+      "mode": "R1 matching review reused",
+      "assessment": "手写预期 30=7+23，comparison 唯一且 primary 单独；缺失/重复入口控制。"
+    },
+    {
+      "path": "scripts/tests/test_ci_selection.py",
+      "sha256": "85dad32d09660a1e082436ac957d15bb4b483c209260fdd38a729299d44928f4",
+      "mode": "R1 matching review reused",
+      "assessment": "新增四个迁移路径控制，复用同身份 36 项结果。"
+    }
+  ],
+  "affected_consumers": [
+    {
+      "path": "experiments/backends/comparison/records.py",
+      "lines": "270-271, 286-306, 319",
+      "identity_unchanged_since_r1": true,
+      "assessment": "原消费者逐项核对来源摘要与 STARTED/tool/run 身份，不把两个 runner 的依赖重新合并到旧 STARTED；本轮真实函数消费合成收据通过。"
+    },
+    {
+      "path": "experiments/backends/comparison/freeze.py",
+      "lines": "28-44",
+      "assessment": "worker 依赖仍由各自归档 runner 的 AST 合同决定，未知合同拒绝；未按当前文件存在性为历史执行追加依赖。"
+    },
+    {
+      "path": "experiments/backends/comparison/derive.py",
+      "lines": "13-54",
+      "assessment": "补充控制使用实际 freeze_candidates/source_bytes 和隔离 Git 仓库，未替换最终 records.validate 的判断逻辑。"
+    },
+    {
+      "path": ".github/workflows/numerical-assurance.yml",
+      "line": 228,
+      "assessment": "沿用 R1 唯一 comparison 发现入口；新收集仅 comparison 1 份，现行 78 个身份，新增恰为 11，无丢失或入口内重复。"
+    }
+  ],
+  "standards_assessment": [
+    "生产补丁局限于来源身份接续，模块归属、共享 adapter 的职责和原消费者入口保持。",
+    "当前完整快速门禁 7 行 rc0，原始 ci_lint 日志含 diagnostic_inventory --check、traceability --check --catalog-data、verify_validation_version、Rustfmt、Clippy；本轮只复用并核验日志。",
+    "只在 R3 写入临时夹具和报告。真实 Git 调用清除继承 GIT_*，使用显式 /usr/bin/git 和定位；夹具 Git/common-dir/work-tree 位于 R3。",
+    "主计划、原决策行与可得证据一致，保留原缺陷、夹具失败及 R2 cancelled，不把工具失败归为代码失败。"
+  ],
+  "spec_assessment": [
+    "旧执行无 adapter 合同时仍可使用旧 STARTED；新分析所需 adapter 单独绑定 CONTINUATION。",
+    "CONTINUATION 缺失、STARTED 摘要不符、分析 runner 不符、依赖缺失/多余/不可检索和未知合同的拒绝保留。",
+    "run 的请求、预算、原输出、错误类别与时间/事件信息处理没有本轮变更；记录科学结果的逻辑沿用 R1 覆盖。",
+    "当前 raw、可信 context、baseline 追加和激活未由本审核验收。没有调整 gate、合法域、阈值或预期。"
+  ],
+  "evidence_reuse": {
+    "evidence": "evidence-audit.json",
+    "current_precheck_rows": 7,
+    "current_precheck_new_execution_this_review": false,
+    "integrated_module": {
+      "methods": 15,
+      "method_ids": [
+        "test_worker_adapter.ContinuationIngestControls.test_legacy_continuation_without_worker_contract_to_actual_ingest",
+        "test_worker_adapter.ContinuationIngestControls.test_legacy_execution_to_actual_ingest",
+        "test_worker_adapter.ContinuationIngestControls.test_new_execution_to_actual_ingest",
+        "test_worker_adapter.ContinuationIngestControls.test_resume_rejects_missing_analysis_workers",
+        "test_worker_adapter.ContinuationIngestControls.test_resume_rejects_missing_continuation",
+        "test_worker_adapter.ContinuationIngestControls.test_resume_rejects_unknown_analysis_contract",
+        "test_worker_adapter.ContinuationIngestControls.test_resume_rejects_unknown_extra_dependency",
+        "test_worker_adapter.ContinuationIngestControls.test_resume_rejects_wrong_analysis_runner_digest",
+        "test_worker_adapter.ContinuationIngestControls.test_resume_rejects_wrong_analysis_worker_digest",
+        "test_worker_adapter.ContinuationIngestControls.test_resume_rejects_wrong_started_digest",
+        "test_worker_adapter.ContinuationIngestControls.test_resume_to_actual_ingest_preserves_started_and_binds_analysis",
+        "test_worker_adapter.WorkerAdapterControls.test_archive_closure_old_new_and_missing_or_changed",
+        "test_worker_adapter.WorkerAdapterControls.test_contract_uses_audited_source_not_file_presence",
+        "test_worker_adapter.WorkerAdapterControls.test_legacy_worker_dispatches_original_root",
+        "test_worker_adapter.WorkerAdapterControls.test_runtime_identity_binds_adapter_and_rejects_missing"
+      ],
+      "successful_ingestion_controls": 4,
+      "expected_rejection_controls": 7,
+      "existing_structure_controls": 4,
+      "source_hashes_match": true,
+      "new_execution_this_review": false
+    },
+    "prior_worker_methods": {
+      "unique_methods": 16,
+      "module_methods": 15,
+      "separate_runner_setting_method": 1,
+      "new_execution_this_review": false,
+      "receipt": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation/receipt.json"
+    },
+    "inventory_selector_capability_methods_reused": [
+      21,
+      36,
+      77
+    ],
+    "generated_views_reused": 82,
+    "comparison_prior_67": "复用 R1 已核历史覆盖及来源结论，不声称原 67 是当前 983b 完整重跑。",
+    "precision_history_176": "复用 R1 已核冻结来源和原分析重放结论；本轮无再次重放。",
+    "catalog_source_reuse": "38 个未变 catalog source 和其余原规范 source 内容核验复用 R1；本轮重新取回唯一变化的 discovery 来源并核对摘要。"
+  },
+  "new_review_operations": [
+    {
+      "operation": "29 路径与最终提交逐文件绑定，固定 9 路径增量",
+      "evidence": "identity-audit.json",
+      "kind": "read-only identity audit"
+    },
+    {
+      "operation": "完整增量源码与相邻消费路径审查",
+      "evidence": "increment-code.diff",
+      "kind": "static review"
+    },
+    {
+      "operation": "旧对象保留、新引用/新来源/新增方法集合核验",
+      "evidence": "catalog-delta-audit.json",
+      "kind": "read-only metadata audit"
+    },
+    {
+      "operation": "1 个实际函数合成接续消费接受控制及 2 个篡改拒绝控制",
+      "evidence": "records-consumer-control.json",
+      "process": "records-consumer-process.json",
+      "kind": "bounded synthetic controls; 0 existing unittest bodies"
+    },
+    {
+      "operation": "现有主计划和原决策日志相关变化审查",
+      "evidence": "trail-review.json",
+      "kind": "read-only evidence review"
+    },
+    {
+      "operation": "工作区可见性与真实 HEAD/index/config/20 文件前后守卫",
+      "evidence": "guard-comparison.json",
+      "kind": "read-only guard"
+    }
+  ],
+  "catalog_summary": {
+    "previous_versions_retained": 56182,
+    "added_versions": 89,
+    "old_versions_changed_or_missing": [],
+    "new_object_references_checked": 344,
+    "reference_failures": [],
+    "current_assets": 4222,
+    "current_methods": 4743,
+    "current_entrypoints": 36,
+    "current_history": 3260,
+    "current_catalog_sources": 39,
+    "all_registry_current_source_objects": 51,
+    "method_namespaces": {
+      "maintenance": 637,
+      "validation": 849,
+      "python-regression": 3257
+    },
+    "discovery_entry_count": 31,
+    "reused_discovery_receipts": 30,
+    "new_discovery_receipts": 1,
+    "comparison_methods_before": 67,
+    "comparison_methods_after": 78,
+    "added_methods": 11,
+    "missing_methods": 0,
+    "within_entry_duplicates": 0,
+    "qualification_pointers_unchanged": true,
+    "note": "51 包含 12 个原规范来源；本轮 catalog-sources 的 39 不与其混计。新增 89 个版本不表示新增 89 个方法。"
+  },
+  "trail_review": {
+    "record": "trail-review.json",
+    "method": "当前相关检查点和原决策日志相关行，逐项对照可得产物；不重审旧批次。",
+    "limitations": "未遍历主控完整原始对话。由原收据记录但不可取得的排队及首次交付时间保持未知。",
+    "new_flags": []
+  },
+  "known_failures_and_partials_preserved": {
+    "r2": {
+      "evidence": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/review-r2-cancelled.json",
+      "status": "cancelled",
+      "hasPendingChildRuns": false,
+      "reason": "unknown",
+      "adopted_findings": false
+    },
+    "fixture_red": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/candidate-integration/fixture-root-red.json",
+    "fixture_correction": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/fixture-root-correction.json",
+    "original_r1_report_untouched": true,
+    "worker_receipt_untouched": true,
+    "reviewer_operational_notes": [
+      "identity-r1-error.json",
+      "inspection-path-error.json",
+      "workspace-session-note.json"
+    ],
+    "classification": "两次不存在路径的探查和一次中断后的进程句柄丢失属于本审核操作记录；相应数据核验已完成，未据此推断候选缺陷。"
+  },
+  "unresolved": [
+    {
+      "kind": "CI/raw",
+      "state": "not accepted by this reviewer",
+      "owner": "coordinator",
+      "detail": "当前 983b 必要 CI/raw 由主控验收。本轮只读到本地主计划记录的 CI40454789703 in_progress；未查询或轮询 PR/CI。旧 a7 CI 的有限接收不能替代当前候选。"
+    },
+    {
+      "kind": "trusted-context and activation",
+      "state": "pending coordinator acceptance",
+      "owner": "coordinator",
+      "detail": "精确新 context 授权/bundle、单独 baseline 追加和激活仍须按既定顺序验收，本轮没有放宽 gate 或更改 baseline。"
+    }
+  ],
+  "scientific_boundary": {
+    "scientific_execution": false,
+    "scientific_qualification": false,
+    "actual_backend_runs": 0,
+    "kernel_or_compiler_runs": 0,
+    "spectre_or_ssh_or_harbor_calls": 0,
+    "full_scientific_regression_runs": 0,
+    "prior_history_replays": 0,
+    "new_probe": "合成 32 配置的来源消费夹具，8 条模拟既有执行接续、24 条 unrun；所有 8 条观察为 I/missing_waveform，不声称数值通过。",
+    "merge_authorization_granted": false
+  },
+  "guard": {
+    "record": "guard-comparison.json",
+    "all_protected_state_equal": true,
+    "real_head": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+    "tracked_candidates": 18,
+    "untracked_candidates": 2,
+    "head_index_shared_and_global_config_unchanged": true,
+    "all_20_candidate_bytes_unchanged": true,
+    "all_29_candidate_source_hashes_unchanged": true,
+    "workspaces_before": 14,
+    "workspaces_after": 14,
+    "visibility_errors": 0,
+    "fixture_binding": {
+      "git_dir": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-continuation-fix-astra-r3-20261027/scratch/records-consumer/.git",
+      "common_dir": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-continuation-fix-astra-r3-20261027/scratch/records-consumer/.git",
+      "work_tree": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-continuation-fix-astra-r3-20261027/scratch/records-consumer"
+    }
+  },
+  "publication": {
+    "pr": "https://github.com/BucketSran/vaEVAS/pull/266",
+    "reviewed_head": "983b1ef6a4804c29483279ca34a7a92fce56a858",
+    "pr_linked_to_this_thread": true,
+    "link_verification": "pr-link-verification.json",
+    "watching": false,
+    "review_comments_published": false,
+    "implementation_committed_or_pushed_by_reviewer": false
+  },
+  "delivery_checks": {
+    "summary": "summary.txt",
+    "summary_check": "passed",
+    "summary_check_receipt": "summary-check.json"
+  }
+}

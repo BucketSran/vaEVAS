@@ -1,0 +1,3 @@
+# Batch 5 accepted evidence
+
+Current paper, comparison and precision EVAS workers moved into owned adapters (#266). Their changed criteria identity was registered in three ordered transactions: exact authority on C0 (#267), a one-path baseline append (#268), and activation (#266). Each merged tree equals the reviewed and CI-verified candidate. Fresh-context Astra reviews R1/R3 (source) and r4 (exact context) have no open findings. Method outcomes are unchanged: 3257 methods and 7737 conditions, 2617 passed, 423 failed, 214 errored and 3 expected failures. Scientific qualification remains false; this archive does not certify simulator correctness.

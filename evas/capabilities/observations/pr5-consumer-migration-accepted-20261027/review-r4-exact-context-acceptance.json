@@ -1,0 +1,80 @@
+{
+  "accepted_at_utc": "2026-10-27T07:21:25.207815+00:00",
+  "accepted_by": "run 39 tclaude/claude-opus-5-5 (main controller)",
+  "candidate": "76d2152e478fee4c2108c4d33280df211da7b8a3",
+  "tree": "0d5efdc9ef84c23f881b980b95333b5208f54352",
+  "PR": "https://github.com/BucketSran/vaEVAS/pull/267",
+  "task": "node:delegated-task:command%3Amcp%3A560a6eb9-75ba-49ac-99ec-18d7c7a347e7%3Adelegate-task%3Aevas-pr5-c0-76d2152e-astra-r4-20261027",
+  "reviewer": {
+    "providerInstanceId": "codex",
+    "model": "gpt-6-astra",
+    "options": [
+      {
+        "id": "reasoningEffort",
+        "value": "max"
+      },
+      {
+        "id": "serviceTier",
+        "value": "default"
+      }
+    ],
+    "fresh_context": true
+  },
+  "review_report": {
+    "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-exact-context-astra-r4-20261027/review-report.json",
+    "sha256": "132c33c409feaf95805481397dc71d0d1c441d3ba11fd8697e51eab12e94d022"
+  },
+  "summary": {
+    "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-exact-context-astra-r4-20261027/summary.txt",
+    "sha256": "626ec72ff49c97f86bb07ecae8246141fd83fb65e6e3f78faa480dcfafbe1806"
+  },
+  "Standards_findings": [],
+  "Spec_findings": [],
+  "exact_governance": {
+    "accepted": true,
+    "entry": {
+      "accepted": true,
+      "file_sha256": "479b9dfa572c49e6d70f341bcb36a78c5de79d5afbb6f165ab3561cd4be8f3c5",
+      "canonical_sha256": "b8a67680cd5b0cc907b94c015fb6a66a2484e499b40f2008d690672cd80b706c"
+    },
+    "authority": {
+      "accepted": true,
+      "file_sha256": "c2b7f993296ed2248a06b1b13de9d77a9c4d8eb7da6b8edcb92239f0c8a4cd01",
+      "canonical_sha256": "1403a614ddcc3f8a97e5b8664b2410e9d59fb681f5cee08de3963c430984f5a2"
+    },
+    "review_record": {
+      "accepted": true,
+      "file_sha256": "10a264c44a5b3e709196770c68b1c1d197c2356be753c5af2194f2d7fcdc2f8d",
+      "canonical_sha256": "e27fffaf1a536d41706613637259c6779a507b53af0b771224d1905e53de6eab"
+    },
+    "bundle_pointer": {
+      "accepted": true,
+      "file_sha256": "cf1880ec72709eeb8e125b71cd11b2d177018925482152cbd38e83c65dc1a639",
+      "canonical_sha256": "13646d2f1904a609100066d75f6f5cf9888a5389e4cb9b7bc8528ce67947fe88"
+    },
+    "baseline_append": {
+      "accepted": true,
+      "file_sha256": "f765004c11b99673b95ddd87daabdc0c75fc6e4e3ef5b6cb2e9f31de96ae702b",
+      "canonical_sha256": "bcc18beb8a0b89454f686f73016d0b777f609072542f73c528f3b85c4ba29dd4"
+    }
+  },
+  "criteria_obligation": "18 criteria paths assessed; 7737 preserved mappings accepted by reviewer static/AST/dependency checks",
+  "primary_verification": [
+    "entry: report SHA == governance-draft/entry.json == proposal receipt",
+    "authority: report SHA == governance-draft/authority.json == proposal receipt",
+    "review_record: report SHA == governance-draft/review.json == proposal receipt",
+    "bundle_pointer: report SHA == governance-draft/bundle-pointer.json == proposal receipt",
+    "baseline_append: report SHA == governance-draft/baseline-append.json == proposal receipt",
+    "review_record and bundle_pointer SHAs equal the bytes in fixed head 76d2152e",
+    "entry/authority canonical SHAs equal the proposal receipt",
+    "observed counts equal accepted E1 and PR267 CI raw (3257/7737; 2617/423/214/3)"
+  ],
+  "CI": {
+    "run": 40463491460,
+    "verified_by_reviewer": false,
+    "verified_by_primary": true,
+    "raw_verification": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/context-registration-20261027/ci-40463491460/raw-verification.json"
+  },
+  "reviewer_noted_shared_ref_change": "Only refs/t3/orchestration-v2/checkpoints refs were added during the review window; non-checkpoint refs unchanged (shared-ref-change.json).",
+  "scientific_qualification": false
+}
