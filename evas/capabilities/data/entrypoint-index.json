@@ -6229,6 +6229,58 @@
     {
       "actual_receipt": {
         "id": "source:df3219c11d466021a33c91ab",
+        "sha256": "f0f39721ddb9faa05a388be865218e6ad63630317414e62631ed4a58cb37f805",
+        "version": "f5ad3ff57e40325f2610804546794945391da19dc442386e6160111b9cd1e7a3"
+      },
+      "ci_entrypoint_ids": [
+        "731c212693179dd8da1abe60e53fbe6689c67e9467f0ac2969d322297420e8cb"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s scripts/tests -v",
+      "dependencies": [
+        {
+          "id": "source:df3219c11d466021a33c91ab",
+          "sha256": "f0f39721ddb9faa05a388be865218e6ad63630317414e62631ed4a58cb37f805",
+          "version": "f5ad3ff57e40325f2610804546794945391da19dc442386e6160111b9cd1e7a3"
+        }
+      ],
+      "id": "entry:a5989df3cb3e6c55df6c7b06",
+      "kind": "entrypoint",
+      "namespace": "maintenance",
+      "pattern": "test*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12.15"
+        ],
+        "entry_id": "731c212693179dd8da1abe60e53fbe6689c67e9467f0ac2969d322297420e8cb",
+        "environment_overrides": {
+          "GIT_FIXTURE_RETAIN_DIR": "runs/git-fixture-isolation"
+        },
+        "job": "static-checks",
+        "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+        "line": 176,
+        "mode": "declared-ci-literal",
+        "namespace": "maintenance",
+        "pattern": "test*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "scripts/tests",
+        "step": "Traceability and frozen validation identities",
+        "step_if": "needs.selection.outputs.maintenance == 'true'",
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "9c2374144f965fe668f525ceb4f32902b9b879baea6264c574c4859340401312",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "scripts/tests",
+      "status": "active",
+      "version": "08de72cca272cd6e8f7c6f88ebc1450d74a421afebc930d82978bd99e457b1c8",
+      "workflow_sha256": "b2d897da3f8b794d4709849a0bd91bc1ada1b518513db06df60fcd9a705c1aaa"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:df3219c11d466021a33c91ab",
         "sha256": "3685a7efe8e04223f121e4302aaa8de94c47f9f7da09968648f95662aee28b83",
         "version": "f13a12102a46f62bc11f45199b233c2851d927310912ecabb5d479860f3eb0d0"
       },
