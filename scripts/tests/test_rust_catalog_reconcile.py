@@ -170,4 +170,15 @@ class RustCatalogReconciliation(unittest.TestCase):
         changed['environment']['variables']=dict(changed['environment']['variables'],RUSTFLAGS='-Copt-level=3')
         with self.assertRaisesRegex(ValueError,'profile drift'):self.require(changed)
 
+    def test_legacy_stable_receipt_still_reconciles_and_other_toolchain_requests_fail(self):
+        legacy=copy.deepcopy(self.receipt)
+        for name,argv in [('rustc',['rustc','+stable','-vV']),('cargo',['cargo','+stable','--version'])]:
+            legacy['toolchain'][name]['argv']=argv
+        self.register(legacy)
+        self.assertTrue(self.require()['reconciled'])
+        for argv in (['rustc','+nightly','-vV'],['rustc','+1.99.1','-vV'],['rustc','--version']):
+            with self.subTest(argv=argv):
+                other=copy.deepcopy(self.receipt);other['toolchain']['rustc']['argv']=argv
+                with self.assertRaisesRegex(ValueError,'toolchain identity'):self.require(other)
+
 if __name__=='__main__':unittest.main()

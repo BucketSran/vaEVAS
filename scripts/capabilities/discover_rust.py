@@ -25,9 +25,9 @@ PROFILE_ENV = ('CARGO_PROFILE_DEV_OPT_LEVEL', 'CARGO_PROFILE_DEV_DEBUG_ASSERTION
                'CARGO_PROFILE_DEV_OVERFLOW_CHECKS', 'CARGO_BUILD_TARGET', 'CARGO_TARGET_DIR',
                'CARGO_ENCODED_RUSTFLAGS', 'RUSTFLAGS', 'RUSTC', 'RUSTC_WRAPPER',
                'RUSTC_WORKSPACE_WRAPPER', 'RUSTC_BOOTSTRAP', 'RUST_TEST_THREADS', 'RUST_TEST_NOCAPTURE')
-METADATA_ARGV = ['cargo', '+stable', 'metadata', '--locked', '--offline', '--no-deps',
+METADATA_ARGV = ['cargo', 'metadata', '--locked', '--offline', '--no-deps',
                  '--format-version=1', '--manifest-path', 'evas/rust_core/Cargo.toml']
-BUILD_ARGV = ['cargo', '+stable', 'test', '--locked', '--workspace', '--no-run',
+BUILD_ARGV = ['cargo', 'test', '--locked', '--workspace', '--no-run',
               '--message-format=json', '--manifest-path', 'evas/rust_core/Cargo.toml']
 
 
@@ -338,7 +338,7 @@ def discover(repo, build_messages, build_exit, raw_directory):
         result['build']['sha256'] = hashlib.sha256(build_raw).hexdigest()
         if build_exit != 0:
             raise ValueError('Cargo no-run build failed with exit ' + str(build_exit))
-        for name, argv in [('rustc', ['rustc', '+stable', '-vV']), ('cargo', ['cargo', '+stable', '--version'])]:
+        for name, argv in [('rustc', ['rustc', '-vV']), ('cargo', ['cargo', '--version'])]:
             info = _command(argv, repo, raw, 'tool-' + name)
             result['toolchain'][name] = info
             _ok(info, name + ' identity')

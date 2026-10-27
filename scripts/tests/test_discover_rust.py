@@ -208,11 +208,28 @@ class RustListingTests(unittest.TestCase):
         self.assertNotEqual(result.returncode,0)
         self.assertFalse(report['complete'])
 
+    def test_ci_uses_one_fixed_rust_toolchain(self):
+        root=HELPER.parents[2]
+        text=(root/'.github/workflows/numerical-assurance.yml').read_text()
+        pins=re.findall(r"^  RUSTUP_TOOLCHAIN: '([^']*)'$",text,re.M)
+        self.assertEqual(len(pins),1)
+        self.assertRegex(pins[0],r'^[0-9]+\.[0-9]+\.[0-9]+$')
+        self.assertRegex(text,r"(?m)^env:\n  RUSTUP_TOOLCHAIN: '")
+        for path in [root/'.github/workflows/numerical-assurance.yml',root/'.github/actions/rust-cache/action.yml',HELPER,
+                     root/'scripts/ci_evidence.py',root/'scripts/ci_lint.py',root/'evas/capabilities/rust_listing.py']:
+            with self.subTest(path=path.name):
+                source=path.read_text()
+                self.assertNotIn('+stable',source.replace("['rustc','+stable','-vV']",'').replace("['cargo','+stable','--version']",''))
+                self.assertNotRegex(source,r'rustup (?:toolchain install|update) stable')
+        installs=re.findall(r'rustup toolchain install (\S+)',text)
+        self.assertTrue(installs)
+        self.assertTrue(all(name=='"$RUSTUP_TOOLCHAIN"' or name.startswith('nightly') for name in installs),installs)
+
     def test_real_workflow_listing_block_keeps_build_failure_and_raw_artifacts(self):
         workflow=HELPER.parents[2]/'.github/workflows/numerical-assurance.yml'
         text=workflow.read_text()
         job=re.search(r'^  rust-regression:\n(.*?)(?=^  regression:)',text,re.M|re.S).group(1)
-        self.assertIn('run: cargo +stable test --locked --workspace --manifest-path evas/rust_core/Cargo.toml',job)
+        self.assertIn('run: cargo test --locked --workspace --manifest-path evas/rust_core/Cargo.toml',job)
         self.assertNotIn('continue-on-error',job)
         self.assertIn('if: always()',job)
         self.assertNotIn('target/debug/deps',job)

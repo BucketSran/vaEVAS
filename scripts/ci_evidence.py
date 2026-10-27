@@ -195,9 +195,9 @@ def environment(repo):
         kernel_sha256=hashlib.sha256(
             (repo / "evas/rust_core/target/debug/evas-kernel").read_bytes()
         ).hexdigest(),
-        rustc=subprocess.check_output(["rustc", "+stable", "-vV"], text=True).strip(),
+        rustc=subprocess.check_output(["rustc", "-vV"], text=True).strip(),
         cargo=subprocess.check_output(
-            ["cargo", "+stable", "--version"], text=True
+            ["cargo", "--version"], text=True
         ).strip(),
         variables={k: os.environ.get(k) for k in ENVIRONMENT},
     )

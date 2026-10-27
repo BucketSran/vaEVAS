@@ -43,7 +43,6 @@ def commands(paths, *, rust=False, maintenance=False):
             [
                 [
                     "cargo",
-                    "+stable",
                     "fmt",
                     "--manifest-path",
                     "evas/rust_core/Cargo.toml",
@@ -52,7 +51,6 @@ def commands(paths, *, rust=False, maintenance=False):
                 ],
                 [
                     "cargo",
-                    "+stable",
                     "clippy",
                     "--locked",
                     "--workspace",

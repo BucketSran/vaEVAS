@@ -45,9 +45,10 @@ def checked(receipt):
     sha(receipt['observer']['sha256'])
     if receipt['build']['exit'] != 0:raise ValueError('failed Rust build')
     sha(receipt['build']['sha256'])
-    for name, argv in [('rustc',['rustc','+stable','-vV']), ('cargo',['cargo','+stable','--version'])]:
+    # Receipts observed before CI fixed RUSTUP_TOOLCHAIN named the stable channel on the command line.
+    for name, argvs in [('rustc',(['rustc','-vV'],['rustc','+stable','-vV'])), ('cargo',(['cargo','--version'],['cargo','+stable','--version']))]:
         tool = receipt['toolchain'][name]
-        if tool['argv'] != argv or tool['returncode'] != 0 or not tool['stdout'].strip():
+        if tool['argv'] not in argvs or tool['returncode'] != 0 or not tool['stdout'].strip():
             raise ValueError('missing actual Rust toolchain identity')
         if hashlib.sha256(tool['stdout'].encode()).hexdigest() != tool['stdout_sha256']:
             raise ValueError('Rust tool identity output hash mismatch')
