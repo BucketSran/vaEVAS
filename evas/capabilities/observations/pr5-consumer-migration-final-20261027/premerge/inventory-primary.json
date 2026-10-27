@@ -1,0 +1,90 @@
+{
+  "verified_at_utc": "2026-10-26T23:57:38.992695+00:00",
+  "taskId": "node:delegated-task:command%3Amcp%3A77237e4d-3f1a-49ed-b46c-0984553f1454%3Adelegate-task%3Aevas-pr5-ci-inventory-completion-grok-r1-20261027",
+  "patch_sha256": "ae8c42e477fa73ae91bbc2baa98702ffa2a9ee438c34f10c7e9ec683cb84e14b",
+  "changed_source_paths": [
+    "scripts/tests/test_ci_inventory.py"
+  ],
+  "patched_sha256": "c297e26c71e1ddce4875b909049d267b7afd67f0d9a6f67a79fc952b999ed7b6",
+  "unchanged_test_inputs": [
+    {
+      "path": "scripts/ci_selection.py",
+      "sha256": "26d18c67bc54cea796a2120d8ebba60f550f0b5d78d2e4278f89070ffe905f93"
+    },
+    {
+      "path": "scripts/run_regression.py",
+      "sha256": "dc2ed03b722fd35e9a20f6eda424ac2ff39b3c22f2081a29c5f0777a9b148985"
+    },
+    {
+      "path": "evas/capabilities/asset_catalog.py",
+      "sha256": "2907ebac2981fcb1050597e6c935ab991cf61eee8b9d6ec8c7f515b1b0b89825"
+    },
+    {
+      "path": "evas/validation/paper/test_precision.py",
+      "sha256": "cd0090276b5c1c6cf501b11cde530a83012c5311e14fe8875212f4974ab12858"
+    },
+    {
+      "path": "evas/validation/paper/test_criteria.py",
+      "sha256": "476daf4f28e7d3e9d191edb2a14772a17affb571a1ca606b12232b7d8148749b"
+    },
+    {
+      "path": "evas/validation/paper/test_precision_composition_root_v3.py",
+      "sha256": "3afa32b042bfccea9745da6f0659a58b7b98e4f1bd5ebf37fa6a08469601b9bf"
+    },
+    {
+      "path": "evas/validation/paper/test_primitives.py",
+      "sha256": "1104bd3731e7485f2e3460d22f7ab0b55d4ea471d7401da7384fb5ce317ad236"
+    },
+    {
+      "path": "evas/validation/paper/test_precision_root_v3.py",
+      "sha256": "82119d1fa80664a3beda52f318f63740de8345746509b2850df57aa7a2dbd72a"
+    },
+    {
+      "path": "evas/validation/paper/test_precision_v2.py",
+      "sha256": "89dc596bad7245b965f58606c8a51c56d2fe461d724c88b98dd0f4a05b648e36"
+    },
+    {
+      "path": "evas/validation/paper/test_root_windows.py",
+      "sha256": "d6f45949eb0e8966580d90a0960719d48e4e4ca9e48fbacb15979ee4eef36835"
+    },
+    {
+      "path": "evas/validation/paper/test_coefficient_first_order.py",
+      "sha256": "63a7a4bcc5ca20fc437a579bbe411844e5366e1d62f002f7e270eaa8016b9a04"
+    },
+    {
+      "path": "evas/validation/paper/test_precision_binding.py",
+      "sha256": "36be1c53d70f9592d3d6a266df0498f49a7ee27bc2dc1c0465561617a3453460"
+    },
+    {
+      "path": "scripts/capabilities/discover_methods.py",
+      "sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17"
+    },
+    {
+      "path": "scripts/capabilities/collect_ci_inventory.py",
+      "sha256": "c395291c70775bad84664f7e201a7c9d3ad9f40219ff80d988a6ddc1be7e6a1e"
+    },
+    {
+      "path": "scripts/capabilities/observe_assets.py",
+      "sha256": "359fdf080c0df7b1a1c2d3fb4f16395d607713a1e30f1ba61c8ce273262a70f6"
+    },
+    {
+      "path": ".github/workflows/numerical-assurance.yml",
+      "sha256": "c60ab83d880ec92b336ee3f35099cf39271e3b4a79ad30c196b911290f0dd39a"
+    }
+  ],
+  "reused_module_methods": 21,
+  "new_test_execution": false,
+  "literal_table": {
+    "total": 30,
+    "maintenance": 7,
+    "validation": 23
+  },
+  "confirmed_gap": "The prior composed workflow had the comparison entry while the explicit test table retained 29 rows.",
+  "attribution_limit": "Original composition task brief was not re-read; preparation gap is confirmed, responsibility beyond that is not assigned.",
+  "primary_prompt_correction": "The brief called 13 prior fixtures views. The known PR6 preparation has 13 fixtures and 84 generated files; this PR5 task generated no views.",
+  "integration": false,
+  "batch5_accepted": false,
+  "scientific_execution": false,
+  "scientific_qualification": false,
+  "next": "Apply after PR4 is accepted, then rebind catalog and run the normal PR5 precheck, CI and Astra review."
+}

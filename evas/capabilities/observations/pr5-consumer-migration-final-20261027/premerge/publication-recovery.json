@@ -1,0 +1,13 @@
+{
+  "at_utc": "2026-10-27T04:18:36.888290+00:00",
+  "classification": "environment_read_IO_error",
+  "exception": "OSError: [Errno 5] Input/output error while opening OLD/discovery-r1-error.json",
+  "phase": "copy compact local evidence before archive commit or push",
+  "publication_started": false,
+  "partial_archive_files_retained": true,
+  "bounded_followup_read": "succeeded, 503 bytes, SHA256 a902618bcd28751579a853dbdab68233dc809f131eb7709a35448581670026fd",
+  "immutable_git_copy": "8d019391be67a18cbd5111b95990d89222eb45c2:evas/capabilities/observations/pr5-consumer-migration-20261027/discovery-r1-error.json",
+  "immutable_git_sha256": "a902618bcd28751579a853dbdab68233dc809f131eb7709a35448581670026fd",
+  "resolution": "Verified existing copies, fill only absent archive paths using ordinary bytes; never overwrite the retained failed attempt or source.",
+  "frozen_candidate_changed": false
+}

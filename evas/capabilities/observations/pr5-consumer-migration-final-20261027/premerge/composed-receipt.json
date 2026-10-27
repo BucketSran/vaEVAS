@@ -1,0 +1,501 @@
+{
+  "ok": true,
+  "started_utc": "2026-10-26T22:19:29.059071Z",
+  "finished_utc": "2026-10-26T22:22:57.096025Z",
+  "python": "Python 3.12.13",
+  "scientific_qualification": false,
+  "integration": false,
+  "head": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+  "snapshot_commit": "307a30ef89ce843dba905b7942b39d9dce098190",
+  "snapshot_tree": "60e2dfd863a8d3c0c1bc4001ab6f81ca5d70b7a0",
+  "input_patches": {
+    "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/consumer-preparation-sol-salvage-20261027/paper-evas-worker-corrected.patch": "af8fba10db0ed3da6685428cc50f2b9c085bad6b597477bb31c1350e5814bb4e",
+    "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/comparison-preparation-sol-20261027/comparison-evas-worker.patch": "a94b7a6d1984b39bcb88dba2c3ec82e7b9a19e2b180ccc7cc006f08c2bd6e270",
+    "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/precision-preparation-sol-20261027/precision-evas-worker.patch": "dbc120761bbb3adc8b1af24925e7d72dc412f7136b72d619eef3608b27c3296c",
+    "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/precision-preparation-sol-20261027/paper-dependency.patch": "af8fba10db0ed3da6685428cc50f2b9c085bad6b597477bb31c1350e5814bb4e"
+  },
+  "paper_dependency_patch_applied": false,
+  "net_patch": {
+    "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/composed-consumers-grok-20261027/source.patch",
+    "sha256": "b2396c2e1041186cf1c87fa15b0d97eba290985f5d4671ee262da820caa56ac2",
+    "paths": [
+      "experiments/backends/paper/runner.py",
+      "experiments/backends/paper/inputs.py",
+      "experiments/backends/paper/actual_observation.py",
+      "experiments/backends/paper/test_producer_dependencies.py",
+      "experiments/backends/support/probes.py",
+      "experiments/backends/support/comparison_completion.py",
+      "experiments/backends/support/precision_v2_report.py",
+      "experiments/backends/support/precision_run.py",
+      "experiments/backends/paper/test_evas_worker_adapter.py",
+      "evas/validation/adapters/paper_evas_worker.py",
+      "experiments/backends/comparison/runner.py",
+      "experiments/backends/comparison/freeze.py",
+      "experiments/backends/comparison/ingest.py",
+      "experiments/backends/comparison/test_worker_adapter.py",
+      "evas/validation/adapters/comparison_evas_worker.py",
+      "scripts/ci_selection.py",
+      "scripts/tests/test_ci_selection.py",
+      ".github/workflows/numerical-assurance.yml",
+      "experiments/backends/support/legacy_chain_run.py",
+      "experiments/backends/support/test_precision_worker_adapter.py",
+      "evas/validation/adapters/precision_evas_worker.py"
+    ]
+  },
+  "byte_checks": [
+    {
+      "path": "experiments/backends/paper/runner.py",
+      "sha256": "6fdb86566d2ff03a9808b062c582f865cda7547082418af7341a24addc26afb1",
+      "matches": "paper-corrected"
+    },
+    {
+      "path": "experiments/backends/paper/inputs.py",
+      "sha256": "a8d766bb6cf1216a99fb175c6569a96891e9317440569249cc03d990d9bf92d1",
+      "matches": "paper-corrected"
+    },
+    {
+      "path": "experiments/backends/paper/actual_observation.py",
+      "sha256": "3ed118d6b1ef162adc9f876984e78be14adba05dcd6a87c5c9852b63ce4b5df3",
+      "matches": "paper-corrected"
+    },
+    {
+      "path": "experiments/backends/paper/test_producer_dependencies.py",
+      "sha256": "ad970a1e9914dc8d9f35009996dcd3003afc5534043d2429d8cae7a5b92aec8a",
+      "matches": "paper-corrected"
+    },
+    {
+      "path": "experiments/backends/support/probes.py",
+      "sha256": "992f0e05b4da1e58c2b1dda810bbbf58c4f4f5e054684a9efced474a22ef56b4",
+      "matches": "paper-corrected"
+    },
+    {
+      "path": "experiments/backends/support/comparison_completion.py",
+      "sha256": "a96627bce2f77820bb01d63e1b0dedb8c4d509a288a6df7c46783281fb342c9f",
+      "matches": "precision-candidate"
+    },
+    {
+      "path": "experiments/backends/support/precision_v2_report.py",
+      "sha256": "0b07bf65db05f16ca54c1107fee0ebeea39eb38327fbb45986d6061aadbd9838",
+      "matches": "paper-corrected"
+    },
+    {
+      "path": "experiments/backends/support/precision_run.py",
+      "sha256": "16850212a0b3bd067459e3710f16eee29bacfdbf0b72794266871cd812d14e96",
+      "matches": "precision-candidate"
+    },
+    {
+      "path": "experiments/backends/paper/test_evas_worker_adapter.py",
+      "sha256": "9691d8493462c538cd491414f59106c92fc40f4b8ea496aa512941787e2904bc",
+      "matches": "paper-corrected"
+    },
+    {
+      "path": "evas/validation/adapters/paper_evas_worker.py",
+      "sha256": "78a1651e7628fb63e143f665e5dcbec1d7e1d9589faf5c74ad89e4b73122a05c",
+      "matches": "paper-corrected"
+    },
+    {
+      "path": "experiments/backends/comparison/runner.py",
+      "sha256": "3080a990d11118ffbded2e8e9e639f319aa5d36abf4bb47d3adeb3585a258e9b",
+      "matches": "comparison-candidate"
+    },
+    {
+      "path": "experiments/backends/comparison/freeze.py",
+      "sha256": "4526b0b0477b56f49cb288ae29accf4ff721cf924e799e282aac9ae0f575d911",
+      "matches": "comparison-candidate"
+    },
+    {
+      "path": "experiments/backends/comparison/ingest.py",
+      "sha256": "fa27acd7d4b0bf29d093729a9e8431bcbf3c83cbc9c5a5930b4a54ba3ff4732a",
+      "matches": "comparison-candidate"
+    },
+    {
+      "path": "experiments/backends/comparison/test_worker_adapter.py",
+      "sha256": "1e09e247e52f5e68cf17a5e349e485d2acb3d69c6584f0fdd23b7f591ecff9b8",
+      "matches": "comparison-candidate"
+    },
+    {
+      "path": "evas/validation/adapters/comparison_evas_worker.py",
+      "sha256": "47d6f64c48658da8cce406e45bdb0fb93ab173f94d22bf64a2bcab199aeb1606",
+      "matches": "comparison-candidate"
+    },
+    {
+      "path": "scripts/ci_selection.py",
+      "sha256": "26d18c67bc54cea796a2120d8ebba60f550f0b5d78d2e4278f89070ffe905f93",
+      "matches": "comparison-candidate-superset-of-precision"
+    },
+    {
+      "path": "scripts/tests/test_ci_selection.py",
+      "sha256": "85dad32d09660a1e082436ac957d15bb4b483c209260fdd38a729299d44928f4",
+      "matches": "307-git-fixture-plus-comparison-method"
+    },
+    {
+      "path": ".github/workflows/numerical-assurance.yml",
+      "sha256": "c60ab83d880ec92b336ee3f35099cf39271e3b4a79ad30c196b911290f0dd39a",
+      "matches": "307-plus-one-comparison-discover"
+    },
+    {
+      "path": "experiments/backends/support/legacy_chain_run.py",
+      "sha256": "0b23953786c82fada907601c1e98577f496b4a2eb10486118eaa3814646e8262",
+      "matches": "precision-candidate"
+    },
+    {
+      "path": "experiments/backends/support/test_precision_worker_adapter.py",
+      "sha256": "c8966716e0734220b70c3fd1f45bb08cf58ead8315b6872b753e061165ce2ed6",
+      "matches": "precision-candidate"
+    },
+    {
+      "path": "evas/validation/adapters/precision_evas_worker.py",
+      "sha256": "c751e75d4e68d4b07f649eb608ac9119cf10d3c9a49f28acb53ca00fceea828b",
+      "matches": "precision-candidate"
+    }
+  ],
+  "consumers": {
+    "evas/validation/adapters/paper_evas_worker.py": [
+      "evas/validation/adapters/paper_evas_worker.py",
+      "experiments/backends/paper/actual_observation.py",
+      "experiments/backends/paper/inputs.py",
+      "experiments/backends/paper/runner.py",
+      "experiments/backends/paper/test_producer_dependencies.py",
+      "experiments/backends/support/comparison_completion.py",
+      "experiments/backends/support/precision_run.py",
+      "experiments/backends/support/precision_v2_report.py",
+      "experiments/backends/support/probes.py"
+    ],
+    "evas/validation/adapters/comparison_evas_worker.py": [
+      "experiments/backends/comparison/freeze.py",
+      "experiments/backends/comparison/runner.py",
+      "scripts/tests/test_ci_selection.py"
+    ],
+    "evas/validation/adapters/precision_evas_worker.py": [
+      "experiments/backends/support/precision_run.py",
+      "experiments/backends/support/test_precision_worker_adapter.py"
+    ]
+  },
+  "selector_reexecuted": {
+    "returncode": 0,
+    "log": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/composed-consumers-grok-20261027/logs/selector-composed-method.log"
+  },
+  "discovery": [
+    {
+      "job": "selection",
+      "start": "scripts/tests",
+      "pattern": "test_ci_selection.py",
+      "old_command": "python3 -B -m unittest discover -s scripts/tests -p test_ci_selection.py -v",
+      "new_command": "python3 -B -m unittest discover -s scripts/tests -p test_ci_selection.py -v",
+      "old_count": 35,
+      "new_count": 36,
+      "added": [
+        "test_ci_selection.RoutingTests.test_comparison_worker_migration_routes_actual_consumers"
+      ],
+      "removed": [],
+      "duplicate_old": false,
+      "duplicate_new": false
+    },
+    {
+      "job": "selection",
+      "start": "scripts/tests",
+      "pattern": "test_evas_check_policy.py",
+      "old_command": "python3 -B -m unittest discover -s scripts/tests -p test_evas_check_policy.py -v",
+      "new_command": "python3 -B -m unittest discover -s scripts/tests -p test_evas_check_policy.py -v",
+      "old_count": 12,
+      "new_count": 12,
+      "added": [],
+      "removed": [],
+      "duplicate_old": false,
+      "duplicate_new": false
+    },
+    {
+      "job": "selection",
+      "start": "scripts/tests",
+      "pattern": "test_fast_feedback.py",
+      "old_command": "python3 -B -m unittest discover -s scripts/tests -p test_fast_feedback.py -v",
+      "new_command": "python3 -B -m unittest discover -s scripts/tests -p test_fast_feedback.py -v",
+      "old_count": 14,
+      "new_count": 14,
+      "added": [],
+      "removed": [],
+      "duplicate_old": false,
+      "duplicate_new": false
+    },
+    {
+      "job": "selection",
+      "start": "scripts/tests",
+      "pattern": "test_independent_ci.py",
+      "old_command": "python3 -B -m unittest discover -s scripts/tests -p test_independent_ci.py -v",
+      "new_command": "python3 -B -m unittest discover -s scripts/tests -p test_independent_ci.py -v",
+      "old_count": 7,
+      "new_count": 7,
+      "added": [],
+      "removed": [],
+      "duplicate_old": false,
+      "duplicate_new": false
+    },
+    {
+      "job": "selection",
+      "start": "scripts/tests",
+      "pattern": "test_regression_runner.py",
+      "old_command": "python3 -B -m unittest discover -s scripts/tests -p test_regression_runner.py -v",
+      "new_command": "python3 -B -m unittest discover -s scripts/tests -p test_regression_runner.py -v",
+      "old_count": 25,
+      "new_count": 25,
+      "added": [],
+      "removed": [],
+      "duplicate_old": false,
+      "duplicate_new": false
+    },
+    {
+      "job": "provenance-paper",
+      "start": "evas/validation/paper",
+      "pattern": "test_criteria.py",
+      "old_command": "python3 -B -m unittest discover -s evas/validation/paper -p 'test_criteria.py' -v",
+      "new_command": "python3 -B -m unittest discover -s evas/validation/paper -p 'test_criteria.py' -v",
+      "old_count": 29,
+      "new_count": 29,
+      "added": [],
+      "removed": [],
+      "duplicate_old": false,
+      "duplicate_new": false
+    },
+    {
+      "job": "provenance-paper",
+      "start": "evas/validation/paper",
+      "pattern": "test_*root*.py",
+      "old_command": "python3 -B -m unittest discover -s evas/validation/paper -p 'test_*root*.py' -v",
+      "new_command": "python3 -B -m unittest discover -s evas/validation/paper -p 'test_*root*.py' -v",
+      "old_count": 34,
+      "new_count": 34,
+      "added": [],
+      "removed": [],
+      "duplicate_old": false,
+      "duplicate_new": false
+    },
+    {
+      "job": "provenance-paper",
+      "start": "evas/validation/checker_calibration",
+      "pattern": "test*.py",
+      "old_command": "python3 -B -m unittest discover -s evas/validation/checker_calibration -v",
+      "new_command": "python3 -B -m unittest discover -s evas/validation/checker_calibration -v",
+      "old_count": 22,
+      "new_count": 22,
+      "added": [],
+      "removed": [],
+      "duplicate_old": false,
+      "duplicate_new": false
+    },
+    {
+      "job": "provenance-paper",
+      "start": "evas/validation/paper",
+      "pattern": "test_coefficient_first_order.py",
+      "old_command": "python3 -B -m unittest discover -s evas/validation/paper -p 'test_coefficient_first_order.py' -v",
+      "new_command": "python3 -B -m unittest discover -s evas/validation/paper -p 'test_coefficient_first_order.py' -v",
+      "old_count": 3,
+      "new_count": 3,
+      "added": [],
+      "removed": [],
+      "duplicate_old": false,
+      "duplicate_new": false
+    },
+    {
+      "job": "provenance-paper",
+      "start": "evas/validation/paper",
+      "pattern": "test_precision.py",
+      "old_command": "python3 -B -m unittest discover -s evas/validation/paper -p 'test_precision.py' -v",
+      "new_command": "python3 -B -m unittest discover -s evas/validation/paper -p 'test_precision.py' -v",
+      "old_count": 12,
+      "new_count": 12,
+      "added": [],
+      "removed": [],
+      "duplicate_old": false,
+      "duplicate_new": false
+    },
+    {
+      "job": "provenance-paper",
+      "start": "evas/validation/paper",
+      "pattern": "test_precision_binding.py",
+      "old_command": "python3 -B -m unittest discover -s evas/validation/paper -p 'test_precision_binding.py' -v",
+      "new_command": "python3 -B -m unittest discover -s evas/validation/paper -p 'test_precision_binding.py' -v",
+      "old_count": 5,
+      "new_count": 5,
+      "added": [],
+      "removed": [],
+      "duplicate_old": false,
+      "duplicate_new": false
+    },
+    {
+      "job": "provenance-paper",
+      "start": "evas/validation/paper",
+      "pattern": "test_precision_v2.py",
+      "old_command": "python3 -B -m unittest discover -s evas/validation/paper -p 'test_precision_v2.py' -v",
+      "new_command": "python3 -B -m unittest discover -s evas/validation/paper -p 'test_precision_v2.py' -v",
+      "old_count": 16,
+      "new_count": 16,
+      "added": [],
+      "removed": [],
+      "duplicate_old": false,
+      "duplicate_new": false
+    },
+    {
+      "job": "provenance-paper",
+      "start": "evas/validation/paper",
+      "pattern": "test_primitives.py",
+      "old_command": "python3 -B -m unittest discover -s evas/validation/paper -p 'test_primitives.py' -v",
+      "new_command": "python3 -B -m unittest discover -s evas/validation/paper -p 'test_primitives.py' -v",
+      "old_count": 11,
+      "new_count": 11,
+      "added": [],
+      "removed": [],
+      "duplicate_old": false,
+      "duplicate_new": false
+    },
+    {
+      "job": "provenance-paper",
+      "start": "experiments/backends/paper",
+      "pattern": "test_*.py",
+      "old_command": "python3 -B -m unittest discover -s experiments/backends/paper -p 'test_*.py' -v",
+      "new_command": "python3 -B -m unittest discover -s experiments/backends/paper -p 'test_*.py' -v",
+      "old_count": 129,
+      "new_count": 135,
+      "added": [
+        "test_evas_worker_adapter.PaperEvasWorkerAdapter.test_compact_response_rejects_nan_and_an_existing_file",
+        "test_evas_worker_adapter.PaperEvasWorkerAdapter.test_incomplete_request_keeps_the_worker_failure_record",
+        "test_evas_worker_adapter.PaperEvasWorkerAdapter.test_missing_request_stops_before_a_worker_result",
+        "test_evas_worker_adapter.PaperEvasWorkerAdapter.test_production_closure_includes_the_adapter_file",
+        "test_evas_worker_adapter.PaperEvasWorkerAdapter.test_public_entry_and_adapter_write_the_same_response_bytes",
+        "test_producer_dependencies.ProducerDependencyContracts.test_audited_migrated_worker_requires_adapter_without_changing_legacy"
+      ],
+      "removed": [],
+      "duplicate_old": false,
+      "duplicate_new": false
+    },
+    {
+      "job": "provenance-paper",
+      "start": "evas/validation/support",
+      "pattern": "test_*.py",
+      "old_command": "python3 -B -m unittest discover -s evas/validation/support -p 'test_*.py' -v",
+      "new_command": "python3 -B -m unittest discover -s evas/validation/support -p 'test_*.py' -v",
+      "old_count": 3,
+      "new_count": 3,
+      "added": [],
+      "removed": [],
+      "duplicate_old": false,
+      "duplicate_new": false
+    },
+    {
+      "job": "provenance-support",
+      "start": "experiments/backends/support",
+      "pattern": "test_*.py",
+      "old_command": "python3 -B -m unittest discover -s experiments/backends/support -p 'test_*.py' -v",
+      "new_command": "python3 -B -m unittest discover -s experiments/backends/support -p 'test_*.py' -v",
+      "old_count": 221,
+      "new_count": 226,
+      "added": [
+        "test_precision_worker_adapter.PrecisionWorkerAdapter.test_current_freeze_binds_both_adapters_and_verify_rejects_drift",
+        "test_precision_worker_adapter.PrecisionWorkerAdapter.test_existing_waveform_and_bad_request_keep_worker_rejection",
+        "test_precision_worker_adapter.PrecisionWorkerAdapter.test_failure_classes_and_partial_artifacts_remain_distinct",
+        "test_precision_worker_adapter.PrecisionWorkerAdapter.test_missing_request_or_times_escapes_before_result",
+        "test_precision_worker_adapter.PrecisionWorkerAdapter.test_strobe_bytes_origins_and_public_arguments_are_preserved"
+      ],
+      "removed": [],
+      "duplicate_old": false,
+      "duplicate_new": false
+    },
+    {
+      "job": "provenance-paper",
+      "start": "experiments/backends/comparison",
+      "pattern": "test_*.py",
+      "old_command": null,
+      "new_command": "python3 -B -m unittest discover -s experiments/backends/comparison -p 'test_*.py' -v",
+      "old_count": 0,
+      "new_count": 67,
+      "added": [
+        "test_completion.CheckerReanalysisControls.test_frozen_bridge_and_tampering",
+        "test_completion.CheckerReanalysisControls.test_missing_fixed_git_objects_are_clear_rejections",
+        "test_completion.CompletionControls.test_complete_failure_cannot_be_renamed_as_pass",
+        "test_completion.CompletionControls.test_completion_updated_is_bound_to_fresh",
+        "test_completion.CompletionControls.test_fixed_checker_reanalysis_bridge_keeps_old_receipts",
+        "test_completion.CompletionControls.test_forged_tool_source_runtime_and_duplicate_run_are_rejected",
+        "test_completion.CompletionControls.test_incomplete_new_batch_is_rejected",
+        "test_completion.CompletionControls.test_three_full_batches_retain_failed_case_and_parent_evidence",
+        "test_completion.CompletionControls.test_transient_completion_archive_and_references_are_rejected",
+        "test_glm_controls.GlmControls.test_actual_c7_started_without_nanoseconds_remains_valid",
+        "test_glm_controls.GlmControls.test_ingest_new_receipts_preserve_status_and_canonical_raw_availability",
+        "test_glm_controls.GlmControls.test_plain_ingest_measurement_run_id_is_bound_to_started_receipt",
+        "test_glm_controls.GlmControls.test_seed_accepts_explicit_unsupported_and_missing_compile_artifact",
+        "test_glm_controls.GlmControls.test_worker_exit_failure_stays_simulate_and_missing_success_result_is_worker",
+        "test_records.FrozenBatchControls.test_exact_32_shared_dut_and_current_base_wrapper",
+        "test_records.RecordControls.test_common_subset_units_and_budget_retained",
+        "test_records.RecordControls.test_counts_round_trip_and_pending_unknown",
+        "test_records.RecordControls.test_denominator_shrinkage_rejected",
+        "test_records.RecordControls.test_docs_only_reuse_needs_identity_and_justification",
+        "test_records.RecordControls.test_duplicate_case_assignment_rejected",
+        "test_records.RecordControls.test_fail_unknown_unsupported_and_unrun_distinct",
+        "test_records.RecordControls.test_missing_evidence_cannot_pass",
+        "test_records.RecordControls.test_missing_output_never_becomes_zero_error",
+        "test_records.RecordControls.test_new_observation_requires_real_receipt_and_kernel",
+        "test_records.RecordControls.test_nonfinite_or_zero_budget_rejected",
+        "test_records.RecordControls.test_pending_application_candidate_still_checks_frozen_source",
+        "test_records.RecordControls.test_raw_absence_does_not_invalidate_compact_receipt",
+        "test_records.RecordControls.test_receipt_bound_to_actual_configuration",
+        "test_records.RecordControls.test_receipt_tool_identity_must_match_measured_identity",
+        "test_records.RecordControls.test_stage_failure_cannot_pass",
+        "test_records.RecordControls.test_stale_measurement_cannot_claim_latest",
+        "test_records.RecordControls.test_unrun_cannot_contain_observations",
+        "test_refresh.RefreshControls.test_archived_manifest_and_receipt_run_id_cannot_drift",
+        "test_refresh.RefreshControls.test_checker_drift_and_manifest_tampering_are_rejected",
+        "test_refresh.RefreshControls.test_mixed_new_execution_identity_and_failed_grade_boundaries",
+        "test_refresh.RefreshControls.test_named_receipt_reuse_is_a_valid_refresh_observation",
+        "test_refresh.RefreshControls.test_new_receipt_reuse_and_current_evas_render_and_derive",
+        "test_refresh.RefreshControls.test_original_snapshots_and_matrix_reuse_stay_valid",
+        "test_refresh.RefreshControls.test_outer_new_identity_cannot_hide_old_executed_tool",
+        "test_refresh.RefreshControls.test_parent_and_fresh_exact_configuration_boundaries",
+        "test_refresh.RefreshControls.test_physical_deck_request_source_and_condition_changes_are_rejected",
+        "test_refresh.RefreshControls.test_refreshed_snapshot_mutations_fail_full_validation",
+        "test_review_controls.ReviewControls.test_archived_source_is_bound_to_original_revision_and_hash",
+        "test_review_controls.ReviewControls.test_common_aggregate_uses_maximum_of_both_v2_normalized_properties",
+        "test_review_controls.ReviewControls.test_deriving_old_snapshot_survives_real_base1006_checker_drift",
+        "test_review_controls.ReviewControls.test_historical_candidate_survives_real_checker_fix_blob",
+        "test_review_controls.ReviewControls.test_legacy_v2_metric_is_explicitly_excluded_from_rendered_common_subset",
+        "test_review_controls.ReviewControls.test_metric_is_bound_to_receipt_observation_and_budget",
+        "test_review_controls.ReviewControls.test_old_and_derived_snapshots_survive_base1006_combination",
+        "test_review_controls.ReviewControls.test_reused_verdict_is_bound_to_named_matrix_observation",
+        "test_review_controls.ReviewControls.test_schema2_binds_every_actual_observation_and_retains_launch_count",
+        "test_review_controls.ReviewControls.test_schema2_mutations_cannot_change_normalized_properties",
+        "test_review_controls.ReviewControls.test_static_derivation_cannot_relabel_original_execution_identity",
+        "test_review_controls.ReviewControls.test_v2_differential_and_common_mode_have_separate_budgets",
+        "test_review_controls.ReviewControls.test_v2_independent_differential_and_common_mode_failures",
+        "test_runner.RunnerControls.test_checker_drift_prevents_any_launch",
+        "test_runner.RunnerControls.test_environment_image_inspection_has_bounded_timeout",
+        "test_runner.RunnerControls.test_input_drift_prevents_any_launch",
+        "test_runner.RunnerControls.test_invalid_selected_kernel_identity_prevents_simulation",
+        "test_runner.RunnerControls.test_selected_kernel_identity_is_recorded_before_simulation",
+        "test_runner.RunnerControls.test_shared_scientific_source_change_invalidates_checker_identity",
+        "test_runner.RunnerControls.test_spectre_settings_uses_exact_module_despite_name_collision",
+        "test_runner.RunnerControls.test_timeout_records_failure_and_never_retries",
+        "test_worker_adapter.WorkerAdapterControls.test_archive_closure_old_new_and_missing_or_changed",
+        "test_worker_adapter.WorkerAdapterControls.test_contract_uses_audited_source_not_file_presence",
+        "test_worker_adapter.WorkerAdapterControls.test_legacy_worker_dispatches_original_root",
+        "test_worker_adapter.WorkerAdapterControls.test_runtime_identity_binds_adapter_and_rejects_missing"
+      ],
+      "removed": [],
+      "duplicate_old": false,
+      "duplicate_new": false
+    }
+  ],
+  "reused_without_execution": {
+    "paper_checks_and_units": "25 checks and 23 units; unconflicted paper outputs byte-match",
+    "comparison_methods": "67/67 identities reused by discover equality; tests not executed",
+    "comparison_selector_remainder": "35 pre-existing selector methods not reexecuted",
+    "precision_units_cli_lines_history": "31 units, 22 CLI groups, 75 lines, 176 historical results not reexecuted"
+  },
+  "new_execution": {
+    "selector_method": 1,
+    "discover_commands": 17
+  },
+  "real_state_unchanged": true,
+  "held_candidate_count": 20,
+  "limits": [
+    "No catalog generation, ci_lint, CI, Astra, scientific regression, or publication.",
+    "Broad scripts/tests discover was not imported; only test_ci_selection.py changed there and its real CI command was collected.",
+    "Workspace-wide implicit Git scan was not run."
+  ]
+}

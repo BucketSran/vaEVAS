@@ -1,0 +1,298 @@
+{
+  "schema_version": 1,
+  "stage": "PR5 provisional paper slice preparation, corrected handoff; not independent review or PR5 acceptance",
+  "source_commit": "72f1c2e4c22d8a2f743da8ec23101d022a3096d5",
+  "scope": {
+    "only_writable_directory": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/consumer-preparation-sol-salvage-20261027",
+    "repository_writes": false,
+    "delegation": false,
+    "remote_or_backend_runs": false,
+    "publication": false
+  },
+  "source_facts": {
+    "preserved_files_verified": 26,
+    "git_archive_blobs_verified": 49548,
+    "original_patch_sha256": "6066f14aaa21568878e01e651a5ee95f6b9aaeb3b0eff1b3d403eb2d3787ff0c",
+    "original_artifacts_modified": false,
+    "consumer_inventory": "inventory.json",
+    "inventory_hits": 81,
+    "inventory_paths": 67,
+    "frozen_receipt_paths": 50,
+    "worker_sources": {
+      "experiments/backends/paper/runner.py": "d98907554aa01e7eb6425b1ea7be741fe98714bdba09c0d14fadf3d102c068ba",
+      "experiments/backends/comparison/runner.py": "ef3b402601b7e920eaa8734f20c7275709698976ea4570b27fec24b7198c341b",
+      "experiments/backends/support/precision_run.py": "ccda8f36efdf4d413fd77dc7ef0de8abff0fd6df1152ed6cd71b12cceefef3e4"
+    }
+  },
+  "agreed_conditions": [
+    "仅准备paper最小切片，不引入新数值条件",
+    "保留comparison不同合同及第三套precision worker",
+    "PR4后按届时main重新绑定登记/CI/历史消费者，再做独立Astra",
+    "旧收据身份不改写，真实后端与语义资格仍未取得"
+  ],
+  "findings": [
+    {
+      "id": "PR5-SALVAGE-01",
+      "responsibility": "worker implementation and validation",
+      "severity": "P2",
+      "status": "fixed in 2-file delta",
+      "fact": "PAPER_WORKERS unconditionally added new adapter, breaking production_dependencies on an authentic unmigrated source export; legacy test fixture incorrectly injected adapter too",
+      "reproduction": "original-historical-reproduction.json",
+      "fix": "select adapter from explicit audited runner loader path AST; require it only for migrated producer; still reject missing/changed adapter and unknown loader path",
+      "evidence": [
+        "historical-closure-fix.patch",
+        "logs/historical-and-current-identity.log",
+        "logs/final-test_producer_dependencies.log"
+      ]
+    },
+    {
+      "id": "PR5-SALVAGE-02",
+      "responsibility": "worker validation evidence gap",
+      "status": "filled within DUT-free scope",
+      "fact": "Original 16 rows did not compare the full real CI discovery identities or exercise successful CLI worker dispatch. Added exact collection comparison and four synthetic worker outcomes, not numerical qualification."
+    },
+    {
+      "id": "PR5-CONNECTION",
+      "responsibility": "connection environment",
+      "status": "preserved; not code-failure evidence",
+      "fact": "failed: Connection stalled repeatedly",
+      "hasPendingChildRuns": false
+    },
+    {
+      "id": "PR5-PROMPT",
+      "responsibility": "prompt gap",
+      "status": "none demonstrated",
+      "fact": "Original brief allowed a uniquely bounded slice where extraction dependencies need separation. No evidence supports attributing the unconditional historical closure defect to ambiguous instructions."
+    }
+  ],
+  "statistics": {
+    "original_reused": {
+      "source_commit": "72f1c2e4c22d8a2f743da8ec23101d022a3096d5",
+      "rows": 16,
+      "counts": {
+        "structure_complete": 6,
+        "execution_success": 8,
+        "expected_rejection": 2
+      },
+      "semantic_qualification_true": 0,
+      "failed_ids": []
+    },
+    "original_reuse_scope": "Only original patch identity. Unchanged evidence reused; changed producer contract validated again. Original 16 contain no historical compatibility case and do not refute PR5-SALVAGE-01.",
+    "new_check_rows": 25,
+    "new_counts": {
+      "structure_complete": 15,
+      "execution_success": 10
+    },
+    "new_failed_ids": [],
+    "new_semantic_qualification_true": 0,
+    "unit_tests": {
+      "test_producer_dependencies": 5,
+      "test_actual_observation": 13,
+      "test_evas_worker_adapter": 5
+    },
+    "unit_tests_total": 23,
+    "ci_collection": {
+      "base": 129,
+      "corrected": 135,
+      "added": [
+        "test_evas_worker_adapter.PaperEvasWorkerAdapter.test_compact_response_rejects_nan_and_an_existing_file",
+        "test_evas_worker_adapter.PaperEvasWorkerAdapter.test_incomplete_request_keeps_the_worker_failure_record",
+        "test_evas_worker_adapter.PaperEvasWorkerAdapter.test_missing_request_stops_before_a_worker_result",
+        "test_evas_worker_adapter.PaperEvasWorkerAdapter.test_production_closure_includes_the_adapter_file",
+        "test_evas_worker_adapter.PaperEvasWorkerAdapter.test_public_entry_and_adapter_write_the_same_response_bytes",
+        "test_producer_dependencies.ProducerDependencyContracts.test_audited_migrated_worker_requires_adapter_without_changing_legacy"
+      ],
+      "removed": [],
+      "executed_all_collected_tests": false
+    },
+    "exception_attribution": {
+      "original_recorded_failures": 0,
+      "confirmed_original_defects_outside_16": 1,
+      "corrected_check_failures": 0,
+      "connection_failures_counted_as_code_failures": 0,
+      "expected_cli_rejections_in_original": 2,
+      "new_guard_ValueError": "expected assertion inside a successful control process; not a failed backend or new scientific result"
+    },
+    "denominators": "16 original receipt rows; 25 new check rows include structural/collection/command controls. 23 unit tests are within 3 of the execution rows. 129/135 are collected identities, not executed tests. Do not add these denominators."
+  },
+  "acceptance_map": [
+    {
+      "item": "固定来源、原brief与保全完整性",
+      "status": "verified",
+      "evidence": [
+        "incremental-results.json:fixed-source-and-preserved-trees",
+        "additional-results.json:original-delta-full-patch-chain"
+      ]
+    },
+    {
+      "item": "paper三个函数迁入适配层，编排留experiments",
+      "status": "verified preparation only",
+      "evidence": [
+        "paper-evas-worker-corrected.patch",
+        "incremental-results.json:moved-functions-no-scientific-delta"
+      ]
+    },
+    {
+      "item": "旧函数/CLI/实际precision导入消费者兼容",
+      "status": "DUT-free verified; backend execution unqualified",
+      "evidence": [
+        "incremental-results.json:stub-cli-output-equality",
+        "additional-results.json:precision-actual-import-consumer"
+      ]
+    },
+    {
+      "item": "历史与新生产闭包分别绑定，缺项/改项拒绝",
+      "status": "verified after correction",
+      "evidence": [
+        "original-historical-reproduction.json",
+        "incremental-results.json:historical-and-current-identity"
+      ]
+    },
+    {
+      "item": "新模块无反向experiments依赖、无DUT/科学阈值改动",
+      "status": "verified for this patch",
+      "evidence": [
+        "incremental-results.json:moved-functions-no-scientific-delta",
+        "paper-evas-worker-corrected.patch"
+      ]
+    },
+    {
+      "item": "CI路径和真实discover身份集合",
+      "status": "selector receipts reused; collection verified; full CI not run",
+      "evidence": [
+        "../consumer-preparation-grok-20261026/results.json:ci-selection-existing-rules",
+        "incremental-results.json:ci-test-identities"
+      ]
+    },
+    {
+      "item": "历史precision收据可读、不改写、固定源码可找回、漂移拒绝",
+      "status": "identity-only verified; archived full analysis not replayed",
+      "evidence": [
+        "additional-results.json:frozen-historical-source-retrievable",
+        "additional-results.json:precision-historical-guard"
+      ]
+    },
+    {
+      "item": "comparison及第三套precision worker迁移",
+      "status": "not implemented; not PR5 complete",
+      "evidence": [
+        "inventory.json:worker_contracts"
+      ]
+    },
+    {
+      "item": "登记生成/夹具/完整回归/独立Astra",
+      "status": "deferred to owning main after PR4; no qualification granted",
+      "evidence": []
+    }
+  ],
+  "post_pr4_rebind": [
+    {
+      "path": "evas/capabilities/data/asset-index.json",
+      "action": "reobserve runner version and new adapter; role/consumer review remains pending"
+    },
+    {
+      "paths": [
+        "registry.json",
+        "asset-index.json",
+        "catalog-sources.json",
+        "method-index.json",
+        "entrypoint-index.json",
+        "historical-index.json"
+      ],
+      "owner": "evas/capabilities/data",
+      "action": "PR4后按届时main做不可变导出观察和selected-inputs生成；检查generation-report和traceability"
+    },
+    {
+      "path": ".github/workflows/numerical-assurance.yml",
+      "action": "keep existing paper discover; rebind source identity after PR4; compare exact discovered test IDs"
+    },
+    {
+      "path": "scripts/ci_selection.py",
+      "action": "current path rules reused; reclassify the final post-PR4 delta, not these provisional bytes"
+    },
+    {
+      "paths": [
+        "experiments/backends/paper/inputs.py",
+        "experiments/backends/support/probes.py",
+        "experiments/backends/support/comparison_completion.py",
+        "experiments/backends/support/precision_v2_report.py",
+        "experiments/backends/support/precision_run.py",
+        "experiments/backends/paper/actual_observation.py"
+      ],
+      "action": "new freezes include adapter; preserve old ADAPTER_IDENTITY/SOURCE_IDENTITY/production manifests"
+    },
+    {
+      "path": "experiments/backends/comparison/completion.py",
+      "action": "uses fixed Git revision runner; rebind only when comparison slice exists"
+    },
+    {
+      "path": "evas/capabilities/render.py",
+      "action": "PR6 owned; not generated here"
+    }
+  ],
+  "new_recommendations": [
+    "主控接纳时用完整修正patch；若已持有原patch则只用2文件增量，不叠加完整patch",
+    "保持comparison worker合同独立，另做迁移准备",
+    "历史完整重分析应从匹配冻结源码及真实归档运行，当前guard控制不替代它"
+  ],
+  "times": {
+    "timezone": "UTC; local zone Asia/Shanghai is +08:00",
+    "original_first_delivery_self_reported": "2026-10-26T16:13:30Z",
+    "original_first_delivery_tool_verified": null,
+    "original_started_self_reported": "2026-10-26T15:39:39Z",
+    "original_elapsed_minutes_self_reported_approx": 34,
+    "original_queue_and_execution_breakdown": null,
+    "preserved_at_utc": "2026-10-26T16:19:03.391500+00:00",
+    "salvage_first_recorded_control_at_utc": "2026-10-26T16:24:38.954601+00:00",
+    "first_correction_written_at_utc": "2026-10-26T16:25:27.811162+00:00",
+    "core_verification_started_at_utc": "2026-10-26T16:27:08.333726+00:00",
+    "core_verification_finished_at_utc": "2026-10-26T16:28:23.508089+00:00",
+    "additional_verification_finished_at_utc": "2026-10-26T16:30:15.177498+00:00",
+    "handoff_written_at_utc": "2026-10-26T16:33:20.045616+00:00",
+    "independent_acceptance_at_utc": null
+  },
+  "artifacts": {
+    "paper-evas-worker-corrected.patch": {
+      "sha256": "af8fba10db0ed3da6685428cc50f2b9c085bad6b597477bb31c1350e5814bb4e",
+      "bytes": 22519
+    },
+    "historical-closure-fix.patch": {
+      "sha256": "4307e44ce737e0364467ecfdb75a89e67209f1edce3fe142bf47b3adedcfdc81",
+      "bytes": 5784
+    },
+    "verify_salvage.py": {
+      "sha256": "12f93673ed0fb90c2005b0b44ec69c115a0b6cdb70ed555e9763c8e71b26e517",
+      "bytes": 15082
+    },
+    "verify_additional.py": {
+      "sha256": "9e006312fe3aab9f0b084c6f66b03d6f5a86f02eb4e46dc0f3b33c7b3de3dc4b",
+      "bytes": 5595
+    },
+    "incremental-results.json": {
+      "sha256": "b7e6d0ecb0be005708f21f7e781bb4775b5f114dbe83a876a1dca5183fedcaf7",
+      "bytes": 43884
+    },
+    "additional-results.json": {
+      "sha256": "0670e072f2a19819b1c255da4e87a447c4a914389c8b55bdcda5bfedc59afeb1",
+      "bytes": 8521
+    },
+    "inventory.json": {
+      "sha256": "485f25bd06bd45a261b87d5a06a24f7f27cff41f2f953b1c41fb407f600f945d",
+      "bytes": 28755
+    },
+    "original-historical-reproduction.json": {
+      "sha256": "fd36fad0a92d5c685db3207a26387e1e911e05dc4f777adecef49f8b03f96e58",
+      "bytes": 839
+    },
+    "historical-runner.py": {
+      "sha256": "481a986130e8a45622d5330b45509542bbd2d9f0c61cd85cf61dc0469646b484",
+      "bytes": 34119
+    }
+  },
+  "workspace_checks": {
+    "command": "python3 -B scripts/check_workspaces.py",
+    "start": "PASS; worktrees=14; errors=0",
+    "handoff": "PASS; worktrees=14; errors=0",
+    "raw_output": "tool transcript; not copied as a fabricated raw log"
+  }
+}

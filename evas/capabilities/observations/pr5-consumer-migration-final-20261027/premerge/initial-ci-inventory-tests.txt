@@ -1,0 +1,29 @@
+COMMAND ['/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python', '-B', '-m', 'unittest', 'discover', '-s', 'scripts/tests', '-p', 'test_ci_inventory.py', '-v']
+test_changed_source_or_workflow_during_construction_fails (test_ci_inventory.ConstructionTests.test_changed_source_or_workflow_during_construction_fails) ... ok
+test_import_error_is_retained_and_construction_fails (test_ci_inventory.ConstructionTests.test_import_error_is_retained_and_construction_fails) ... ok
+test_import_side_effect_failure_is_not_reported_as_a_test_body_result (test_ci_inventory.ConstructionTests.test_import_side_effect_failure_is_not_reported_as_a_test_body_result) ... ok
+test_independent_children_construct_only_and_keep_unique_vs_instance_counts (test_ci_inventory.ConstructionTests.test_independent_children_construct_only_and_keep_unique_vs_instance_counts) ... ok
+test_invalid_child_JSON_preserves_actual_stdout_and_stderr (test_ci_inventory.ConstructionTests.test_invalid_child_JSON_preserves_actual_stdout_and_stderr) ... ok
+test_namespace_source_identity_conflict_is_rejected (test_ci_inventory.ConstructionTests.test_namespace_source_identity_conflict_is_rejected) ... ok
+test_observe_only_never_calls_catalog_reconciliation (test_ci_inventory.ConstructionTests.test_observe_only_never_calls_catalog_reconciliation) ... ok
+test_registered_namespace_without_actual_discovery_is_not_reconciled (test_ci_inventory.ConstructionTests.test_registered_namespace_without_actual_discovery_is_not_reconciled) ... ok
+test_require_catalog_failure_never_falls_back_to_observe (test_ci_inventory.ConstructionTests.test_require_catalog_failure_never_falls_back_to_observe) ... ok
+test_require_catalog_history_retrieval_failure_is_not_structure_success (test_ci_inventory.ConstructionTests.test_require_catalog_history_retrieval_failure_is_not_structure_success) ... ok
+test_require_catalog_reads_each_history_with_explicit_local_repository_map (test_ci_inventory.ConstructionTests.test_require_catalog_reads_each_history_with_explicit_local_repository_map) ... ok
+test_runtimeID_collision_in_distinct_owner_modules_is_not_swallowed (test_ci_inventory.ConstructionTests.test_runtimeID_collision_in_distinct_owner_modules_is_not_swallowed) ... ok
+test_same_source_skip_and_native_runtime_observations_can_differ (test_ci_inventory.ConstructionTests.test_same_source_skip_and_native_runtime_observations_can_differ) ... ok
+test_capability_discovery_and_namespace_patch_are_present (test_ci_inventory.ParserTests.test_capability_discovery_and_namespace_patch_are_present) ... ok
+test_current_workflow_literals_and_separate_primary (test_ci_inventory.ParserTests.test_current_workflow_literals_and_separate_primary) ... ok
+test_dynamic_or_unknown_unittest_syntax_fails_instead_of_guessing (test_ci_inventory.ParserTests.test_dynamic_or_unknown_unittest_syntax_fails_instead_of_guessing) ... ok
+test_inline_pipe_and_folded_origins_retained (test_ci_inventory.ParserTests.test_inline_pipe_and_folded_origins_retained) ... ok
+test_missing_or_duplicate_comparison_literal_is_rejected (test_ci_inventory.ParserTests.test_missing_or_duplicate_comparison_literal_is_rejected) ... ok
+test_unknown_dynamic_phase_env_fails_but_known_outputs_are_declared (test_ci_inventory.ParserTests.test_unknown_dynamic_phase_env_fails_but_known_outputs_are_declared) ... ok
+test_gate_always_requires_inventory_without_changing_scientific_JOB_FLAGS (test_ci_inventory.RequiredGateTests.test_gate_always_requires_inventory_without_changing_scientific_JOB_FLAGS) ... ok
+test_workflow_has_dedicated_unconditional_phase_and_always_artifact (test_ci_inventory.RequiredGateTests.test_workflow_has_dedicated_unconditional_phase_and_always_artifact) ... ok
+
+----------------------------------------------------------------------
+Ran 21 tests in 3.300s
+
+OK
+
+returncode=0

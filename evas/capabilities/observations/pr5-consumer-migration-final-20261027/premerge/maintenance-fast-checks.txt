@@ -1,0 +1,14 @@
+COMMAND ['/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python', '-B', 'scripts/ci_lint.py', '--plan', '/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/consumer-integration-20261027/format-finalization-20261027/maintenance-plan.json']
+Check: /Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python -m ruff check --isolated --select E9,F63,F7,F82 -- scripts/ci_selection.py scripts/tests/test_ci_inventory.py scripts/tests/test_ci_selection.py
+All checks passed!
+Check: /Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python -B scripts/diagnostic_inventory.py --check
+Check: /Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python -B scripts/traceability.py --check --catalog-data evas/capabilities/data
+validated tags, targets and matrix freshness (332 test files)
+Check: /Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python -B scripts/verify_validation_version.py
+v1: verified 36 Git artifacts, 4 snapshot artifacts, and 13 original run inputs at b28a476ac0f5ccc063c41a93a59acb7f956d7e1d.
+Checks artifact identity only; does not certify simulator correctness or replay experiments.
+Check: cargo +stable fmt --manifest-path evas/rust_core/Cargo.toml -- --check
+Check: cargo +stable clippy --locked --workspace --manifest-path evas/rust_core/Cargo.toml --all-targets -- -D warnings
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.81s
+
+returncode=0

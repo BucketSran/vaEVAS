@@ -1,0 +1,157 @@
+{
+  "ok": true,
+  "scientific_qualification": false,
+  "scientific_execution": false,
+  "integration": false,
+  "review_opened": false,
+  "in_flight_commands": [],
+  "model": {
+    "provider_instance_id": "cursor",
+    "model": "grok-4.7",
+    "options": {
+      "reasoning_effort": "high",
+      "fastMode": false
+    }
+  },
+  "times": {
+    "composed_first_delivery_started_utc": "2026-10-26T22:19:29.059071Z",
+    "composed_first_delivery_finished_utc": "2026-10-26T22:22:57.096025Z",
+    "red_observed_utc": "2026-10-26T23:35:26.355738+00:00",
+    "module_started_utc": "2026-10-26T23:51:31.133222Z",
+    "module_finished_utc": "2026-10-26T23:51:34.583152Z",
+    "module_wall_seconds": 3.44993,
+    "unittest_seconds": "3.132",
+    "correction_count": 0,
+    "correction_utc": null,
+    "unstamped_reading_before_module": "unknown",
+    "queue": "unknown",
+    "acceptance_materials_ready_utc": "2026-10-26T23:55:35.881898Z"
+  },
+  "inputs": {
+    "baseline_commit": "307a30ef89ce843dba905b7942b39d9dce098190",
+    "baseline_tree": "60e2dfd863a8d3c0c1bc4001ab6f81ca5d70b7a0",
+    "composed_patch_sha256": "b2396c2e1041186cf1c87fa15b0d97eba290985f5d4671ee262da820caa56ac2",
+    "composed_patch_bytes": 55400,
+    "workflow_sha256": "c60ab83d880ec92b336ee3f35099cf39271e3b4a79ad30c196b911290f0dd39a",
+    "original_test_sha256": "7a201a97a28de706e6b5d8f73639eee1d4b44479f018f2d0d91defc14fc5fe43",
+    "original_test_bytes": 27170,
+    "red_returncode": 1,
+    "red_stderr_sha256": "4c8c0ba1a058d39a9ce85a265e73259fae8f2dc1da799f7fa88f51ecb25ea70b",
+    "red_stderr_bytes": 1496,
+    "red_stdout_bytes": 0,
+    "old_literal_rows": 29,
+    "old_maintenance_rows": 7,
+    "old_validation_rows": 22,
+    "differing_index": 26,
+    "workflow_comparison_line": 228,
+    "comparison_discover_occurrences": 1,
+    "red_preserved_files": 3
+  },
+  "guards": {
+    "unchanged": true,
+    "head_observed_after_run": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+    "head_source": "packed-refs refs/heads/codex/trusted-context-registration",
+    "loose_branch_ref_exists": false,
+    "config_sha256": "2365548f0cb7f5b21311860afc37dc5a8f41d775b667f50ec8a678eb22a3d7aa",
+    "config_bytes": 7152,
+    "index_sha256": "a2e18b66fd9b3e29093343793d45781c11a717c05c35103d4e9b1da8eec87d71",
+    "index_bytes": 10850564,
+    "held_paths": 20,
+    "inherited_git_keys_removed": 0,
+    "test_env_has_git_dir": false,
+    "test_env_has_git_work_tree": false,
+    "packed_refs_prestamp": false
+  },
+  "patch": {
+    "path": "scripts/tests/test_ci_inventory.py",
+    "paths": 1,
+    "sha256": "ae8c42e477fa73ae91bbc2baa98702ffa2a9ee438c34f10c7e9ec683cb84e14b",
+    "bytes": 4050,
+    "patched_test_sha256": "c297e26c71e1ddce4875b909049d267b7afd67f0d9a6f67a79fc952b999ed7b6",
+    "literal_rows": 30,
+    "maintenance_rows": 7,
+    "validation_rows": 23,
+    "calibration_rows": 0,
+    "python_regression_rows": 0,
+    "comparison_copies": 1,
+    "comparison_index": 26,
+    "primary_start_in_table": 0,
+    "pr4_entries": 6,
+    "duplicate_control_extra_lines": 1,
+    "duplicate_control_identities": 2
+  },
+  "module": {
+    "python": "Python 3.12.13",
+    "returncode": 0,
+    "ran": 21,
+    "ok": 21,
+    "failures": 0,
+    "errors": 0,
+    "parser_tests": 6,
+    "construction_tests": 13,
+    "gate_tests": 2,
+    "unittest_seconds": "3.132",
+    "stdout_bytes": 0,
+    "stderr_bytes": 3638,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "3a2a96994700fac4c76d8a42f0f21b7a8f8774217870acfc0483bfa053ef4204",
+    "log_dir": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/ci-inventory-completion-grok-20261027/logs/module-run-1"
+  },
+  "not_rerun": [
+    {
+      "name": "comparison discover identities",
+      "count": 67,
+      "field": "method_count",
+      "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/composed-consumers-grok-20261027/logs/discover-composed-provenance-paper__experiments_backends_comparison__test_star.py.json",
+      "executed_this_run": false
+    },
+    {
+      "name": "precision unit tests",
+      "count": 31,
+      "field": "reused_without_rerun.unit_tests",
+      "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/precision-history-grok-20261027/history-verification.json",
+      "executed_this_run": false
+    },
+    {
+      "name": "precision CLI pairs",
+      "count": 22,
+      "field": "reused_without_rerun.cli_pairs",
+      "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/precision-history-grok-20261027/history-verification.json",
+      "executed_this_run": false
+    },
+    {
+      "name": "historical semantic results",
+      "count": 176,
+      "field": "replay.comparison.semantic.original_results",
+      "source": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/precision-history-grok-20261027/history-verification.json",
+      "executed_this_run": false
+    },
+    {
+      "name": "views named by this task",
+      "task_named_count": 13,
+      "located_field_in_opened_receipts": false,
+      "generated_markdown_files_in_composed_tree": 3,
+      "generated_this_run": 0,
+      "executed_this_run": false
+    }
+  ],
+  "entry_checks": {
+    "overwrite_returncode": 2,
+    "escape_returncode": 2,
+    "symlink_output_returncode": 2,
+    "symlink_parent_returncode": 2,
+    "refusal_log_sha256": "0a94310ab0e8acfa311515b9e5a4fee3c349857ed1ff293f267c712f505c21d9",
+    "refusal_log_bytes": 1028,
+    "resolved_task_directory": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/ci-inventory-completion-grok-20261027"
+  },
+  "files": {
+    "verify_py_sha256": "e516f872f83a3008759e29d2627d4c25f516e307a2b2a51fe1fd96bab0d3d3b1",
+    "verify_py_bytes": 16593,
+    "report": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/ci-inventory-completion-grok-20261027/REPORT.md",
+    "receipt": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/ci-inventory-completion-grok-20261027/receipt.json",
+    "patch": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/ci-inventory-completion-grok-20261027/source.patch",
+    "verify": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr5/ci-inventory-completion-grok-20261027/verify.py",
+    "report_sha256": "c43863c9224d9a1b8ff299c7d7aec996af43df05c5cb2b22e0bfac513cb1126e",
+    "report_bytes": 5689
+  }
+}

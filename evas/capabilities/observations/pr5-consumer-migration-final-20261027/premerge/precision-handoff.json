@@ -1,0 +1,209 @@
+{
+  "stage": "PR5 precision preparation only; not integrated or qualified",
+  "baseline_commit": "842bde7101164330fa03e7aee58b45d1789cbed1",
+  "baseline_tree": "ef8b67599920019218ad28953df572b35c65be42",
+  "routing": {
+    "provider": "codex",
+    "model": "gpt-6.1-sol",
+    "reasoningEffort": "medium",
+    "serviceTier": "default",
+    "reason": "Cursor canRunChildTask=false; Cursor SDK catalog request failed. Check server logs for details.",
+    "existing_grok_fixture": "untouched"
+  },
+  "source_patch": {
+    "path": "precision-evas-worker.patch",
+    "sha256": "dbc120761bbb3adc8b1af24925e7d72dc412f7136b72d619eef3608b27c3296c",
+    "paths": [
+      {
+        "path": "experiments/backends/support/precision_run.py",
+        "change": "modified",
+        "old_sha256": "6768612c5f466a317b23825d7f013e0286e1fbe24ab632c4d94f9bfdf129d66d",
+        "new_sha256": "16850212a0b3bd067459e3710f16eee29bacfdbf0b72794266871cd812d14e96",
+        "asset_id": "asset:d1e5466699e33ca476461e22",
+        "role": "pending-review",
+        "consumer_registration": "pending-post-PR4-rebind",
+        "qualification": "not-granted"
+      },
+      {
+        "path": "experiments/backends/support/comparison_completion.py",
+        "change": "modified",
+        "old_sha256": "fb3a91b921a62efcb1c46e90ac494f92563bd09c923948b5b87cd973343b6da4",
+        "new_sha256": "a96627bce2f77820bb01d63e1b0dedb8c4d509a288a6df7c46783281fb342c9f",
+        "asset_id": "asset:3d0bb5a3c19201aaf6d95d69",
+        "role": "pending-review",
+        "consumer_registration": "pending-post-PR4-rebind",
+        "qualification": "not-granted"
+      },
+      {
+        "path": "experiments/backends/support/legacy_chain_run.py",
+        "change": "modified",
+        "old_sha256": "0dcffab11aeb8f47f9fd6013935ba4631b81cec7343b8aec96b1c34a3e1c578a",
+        "new_sha256": "0b23953786c82fada907601c1e98577f496b4a2eb10486118eaa3814646e8262",
+        "asset_id": "asset:570606540c9f987c2c94fc91",
+        "role": "pending-review",
+        "consumer_registration": "pending-post-PR4-rebind",
+        "qualification": "not-granted"
+      },
+      {
+        "path": "scripts/ci_selection.py",
+        "change": "modified",
+        "old_sha256": "a830dc21d632822dc42d6170027caa98f972e338e4e0b99ca12cdb4c945be5ce",
+        "new_sha256": "dff1c9712644445e6fd2528b338f473f7bfa1f16c5dfbdc0122bc38c0f20c866",
+        "asset_id": "asset:4ed9f7966bd6f3bcf1f69b57",
+        "role": "pending-review",
+        "consumer_registration": "pending-post-PR4-rebind",
+        "qualification": "not-granted"
+      },
+      {
+        "path": "experiments/backends/support/test_precision_worker_adapter.py",
+        "change": "added",
+        "old_sha256": null,
+        "new_sha256": "c8966716e0734220b70c3fd1f45bb08cf58ead8315b6872b753e061165ce2ed6",
+        "asset_id": "asset:57058dc4f1515db7640bf726",
+        "role": "pending-review",
+        "consumer_registration": "pending-post-PR4-rebind",
+        "qualification": "not-granted"
+      },
+      {
+        "path": "evas/validation/adapters/precision_evas_worker.py",
+        "change": "added",
+        "old_sha256": null,
+        "new_sha256": "c751e75d4e68d4b07f649eb608ac9119cf10d3c9a49f28acb53ca00fceea828b",
+        "asset_id": "asset:6044bd470fa639086f903e5f",
+        "role": "pending-review",
+        "consumer_registration": "pending-post-PR4-rebind",
+        "qualification": "not-granted"
+      }
+    ]
+  },
+  "provisional_dependency": {
+    "path": "paper-dependency.patch",
+    "sha256": "af8fba10db0ed3da6685428cc50f2b9c085bad6b597477bb31c1350e5814bb4e",
+    "original_deliverable_modified": false
+  },
+  "stats": {
+    "check_rows": 75,
+    "counts": {
+      "execution_success": 46,
+      "expected_rejection": 9,
+      "structure_complete": 20
+    },
+    "failed_check_ids": [],
+    "unit_tests": {
+      "precision-unit": 5,
+      "test_precision_reporting": 6,
+      "test_precision_precheck": 10,
+      "test_precision_v2_deferred_report": 5,
+      "paper-producer": 5
+    },
+    "unit_test_total": 31,
+    "cli_pairs": 22,
+    "stage_modes": 5,
+    "numerical_passes_claimed": 0,
+    "qualification_granted": 0,
+    "discovery": {
+      "criteria": {
+        "counts": {
+          "baseline": 29,
+          "paper-dependency": 29,
+          "precision": 29
+        },
+        "added": [],
+        "removed": []
+      },
+      "roots": {
+        "counts": {
+          "baseline": 34,
+          "paper-dependency": 34,
+          "precision": 34
+        },
+        "added": [],
+        "removed": []
+      },
+      "paper": {
+        "counts": {
+          "baseline": 129,
+          "paper-dependency": 135,
+          "precision": 135
+        },
+        "added": [],
+        "removed": []
+      },
+      "validation-support": {
+        "counts": {
+          "baseline": 3,
+          "paper-dependency": 3,
+          "precision": 3
+        },
+        "added": [],
+        "removed": []
+      },
+      "backend-support": {
+        "counts": {
+          "baseline": 221,
+          "paper-dependency": 221,
+          "precision": 226
+        },
+        "added": [
+          "test_precision_worker_adapter.PrecisionWorkerAdapter.test_current_freeze_binds_both_adapters_and_verify_rejects_drift",
+          "test_precision_worker_adapter.PrecisionWorkerAdapter.test_existing_waveform_and_bad_request_keep_worker_rejection",
+          "test_precision_worker_adapter.PrecisionWorkerAdapter.test_failure_classes_and_partial_artifacts_remain_distinct",
+          "test_precision_worker_adapter.PrecisionWorkerAdapter.test_missing_request_or_times_escapes_before_result",
+          "test_precision_worker_adapter.PrecisionWorkerAdapter.test_strobe_bytes_origins_and_public_arguments_are_preserved"
+        ],
+        "removed": []
+      }
+    }
+  },
+  "history": {
+    "receipt": "candidate/experiments/backends/support/20261011-precision-binding.json",
+    "receipt_sha256": "23ea554f2db596e8e9b137025057db281f895f8916b7cd87949cc924f3770a4e",
+    "pin": "c4ccb3cd0215bd0540f28c13ff7eb5ab2056a3e16b3e4bc0dd7adf82b2fcef3e",
+    "matching_revision": "520bfa50f9248b3adb99a4f036dd10609d2ebf85",
+    "search_limit": 32,
+    "history_revision_count": 2,
+    "full_historical_closure_verified": false,
+    "archived_full_analysis_replayed": false
+  },
+  "pending": [
+    "Full archived historical analysis/source closure not replayed",
+    "Rebind reviewed main after PR4; unified maintenance/catalog/fixture CI by main",
+    "Fresh-context Astra batch review"
+  ],
+  "source_facts": [
+    "Six precision slice paths; exact worker body moved; adapter imports migrated paper serialization/control helpers",
+    "Old public wrapper and file/module CLI executable",
+    "New freezes include both adapters; hand-listed comparison_completion and legacy-chain identities extended",
+    "No old receipt rewritten; current precision_report unchanged; its old-identity guard still refuses drift"
+  ],
+  "agreed_conditions": [
+    "No DUT, backend, SSH, Spectre, full scientific regression, delegation, new worktree/session, commit or publication",
+    "Only authorized output directory writable",
+    "No scientific condition or qualification change"
+  ],
+  "new_recommendations": [
+    "Apply the precision patch after exact paper dependency, then rebind on reviewed post-PR4 main",
+    "Do not substitute current freeze source_files for an old frozen producer; run the preserved producer or keep pending",
+    "Keep shared Git isolation tooling owned by the original fixture task; this evidence uses no scratch Git repository"
+  ],
+  "times": {
+    "started_at_utc": "2026-10-26T17:42:16.888159+00:00",
+    "checks_finished_at_utc": "2026-10-26T17:48:43.938579+00:00",
+    "historical_reads_finished_at_utc": "2026-10-26T17:49:13.417266+00:00",
+    "handoff_written_at_utc": "2026-10-26T17:52:33.581129+00:00",
+    "queue_time": null,
+    "independent_acceptance_time": null
+  },
+  "active_commands": [],
+  "replay": {
+    "command": "/opt/homebrew/bin/python3.12 -B /Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/precision-preparation-sol-20261027/replay.py",
+    "new_child_directory": true,
+    "executed": false,
+    "scope": "replays synthetic checks, source-bound discovery and patch application; excludes real Git reads"
+  },
+  "full_preflight_run": false,
+  "repository_readonly": "repository-readonly-evidence.json",
+  "raw_logs": "logs/",
+  "artifact_manifest": "artifact-manifest.json",
+  "incidental_inspection_failures": "inspection-notes.json"
+}

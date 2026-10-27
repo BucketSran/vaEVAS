@@ -1,0 +1,205 @@
+{
+  "base": "e10e1af5796f0cc7af3b6b5f5d26c420c0c03325",
+  "source_capture": "cb5ba2e8fdd5f5959cac4f53988d44e01e30bd1f",
+  "paths": [
+    ".github/workflows/numerical-assurance.yml",
+    "evas/capabilities/data/asset-index.json",
+    "evas/capabilities/data/catalog-sources.json",
+    "evas/capabilities/data/entrypoint-index.json",
+    "evas/capabilities/data/historical-index.json",
+    "evas/capabilities/data/method-index.json",
+    "evas/capabilities/data/registry.json",
+    "evas/docs/development/TRACEABILITY.md",
+    "evas/validation/adapters/comparison_evas_worker.py",
+    "evas/validation/adapters/paper_evas_worker.py",
+    "evas/validation/adapters/precision_evas_worker.py",
+    "experiments/backends/comparison/freeze.py",
+    "experiments/backends/comparison/ingest.py",
+    "experiments/backends/comparison/runner.py",
+    "experiments/backends/comparison/test_worker_adapter.py",
+    "experiments/backends/paper/actual_observation.py",
+    "experiments/backends/paper/inputs.py",
+    "experiments/backends/paper/runner.py",
+    "experiments/backends/paper/test_evas_worker_adapter.py",
+    "experiments/backends/paper/test_producer_dependencies.py",
+    "experiments/backends/support/comparison_completion.py",
+    "experiments/backends/support/legacy_chain_run.py",
+    "experiments/backends/support/precision_run.py",
+    "experiments/backends/support/precision_v2_report.py",
+    "experiments/backends/support/probes.py",
+    "experiments/backends/support/test_precision_worker_adapter.py",
+    "scripts/ci_selection.py",
+    "scripts/tests/test_ci_inventory.py",
+    "scripts/tests/test_ci_selection.py"
+  ],
+  "checks": [
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "scripts/traceability.py",
+        "--catalog-data",
+        "evas/capabilities/data"
+      ],
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/consumer-integration-20261027/format-finalization-20261027/traceability-generate.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-27T04:08:23.669942+00:00",
+      "finished_at_utc": "2026-10-27T04:09:19.118381+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "evas/capabilities/render.py"
+      ],
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/consumer-integration-20261027/format-finalization-20261027/capability-render.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-27T04:09:19.118687+00:00",
+      "finished_at_utc": "2026-10-27T04:10:32.006948+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "scripts/ci_lint.py",
+        "--plan",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/consumer-integration-20261027/format-finalization-20261027/maintenance-plan.json"
+      ],
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/consumer-integration-20261027/format-finalization-20261027/maintenance-fast-checks.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-27T04:11:39.504660+00:00",
+      "finished_at_utc": "2026-10-27T04:12:25.299923+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "--isolated",
+        "--select",
+        "E9,F63,F7,F82",
+        "--",
+        "evas/validation/adapters/comparison_evas_worker.py",
+        "evas/validation/adapters/paper_evas_worker.py",
+        "evas/validation/adapters/precision_evas_worker.py",
+        "experiments/backends/comparison/freeze.py",
+        "experiments/backends/comparison/ingest.py",
+        "experiments/backends/comparison/runner.py",
+        "experiments/backends/comparison/test_worker_adapter.py",
+        "experiments/backends/paper/actual_observation.py",
+        "experiments/backends/paper/inputs.py",
+        "experiments/backends/paper/runner.py",
+        "experiments/backends/paper/test_evas_worker_adapter.py",
+        "experiments/backends/paper/test_producer_dependencies.py",
+        "experiments/backends/support/comparison_completion.py",
+        "experiments/backends/support/legacy_chain_run.py",
+        "experiments/backends/support/precision_run.py",
+        "experiments/backends/support/precision_v2_report.py",
+        "experiments/backends/support/probes.py",
+        "experiments/backends/support/test_precision_worker_adapter.py"
+      ],
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/consumer-integration-20261027/format-finalization-20261027/migration-python-lint.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-27T04:12:25.318683+00:00",
+      "finished_at_utc": "2026-10-27T04:12:25.734401+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "evas/capabilities/render.py",
+        "--check"
+      ],
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/consumer-integration-20261027/format-finalization-20261027/capability-views.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-27T04:12:25.734676+00:00",
+      "finished_at_utc": "2026-10-27T04:13:32.290939+00:00"
+    },
+    {
+      "command": [
+        "/usr/bin/git",
+        "--git-dir=/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/consumer-integration-20261027/format-finalization-20261027/source/.git",
+        "--work-tree=/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/consumer-integration-20261027/format-finalization-20261027/source",
+        "diff",
+        "--check",
+        "e10e1af5796f0cc7af3b6b5f5d26c420c0c03325"
+      ],
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/consumer-integration-20261027/format-finalization-20261027/diff-check.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-27T04:13:32.291281+00:00",
+      "finished_at_utc": "2026-10-27T04:13:41.076064+00:00"
+    }
+  ],
+  "files": {
+    ".github/workflows/numerical-assurance.yml": "75da6ea8a3f0e7baa90b99388833ae2d757da66754b1d1dea3a8113d1fd1fa3b",
+    "evas/capabilities/data/asset-index.json": "82db3e003e19cf76b8f4cc1f2bac69ccbb89e5b9f2f0b52a5d11e6ce09477494",
+    "evas/capabilities/data/catalog-sources.json": "dbf90df450f046e8d4bdc75a59f6a645ab8e37a3ccffb57b922c58ddec31fcf7",
+    "evas/capabilities/data/entrypoint-index.json": "4980addb5a140f24ca14b472650bd7ad743d23b2e56db8bc4be66a55e26bb8e3",
+    "evas/capabilities/data/historical-index.json": "b37c874c621d6ee462deeec078c7c62d9192329bf6d82ef389a8cb831f43acc7",
+    "evas/capabilities/data/method-index.json": "407dbe87890a07e7f699c09572a3b94db97bf3fb285dfd0b2825ef74e62f69db",
+    "evas/capabilities/data/registry.json": "298b46471c88b77d03dfa3ae025b5af9218a2d4d4b33c39dd4d6383c966ea61f",
+    "evas/docs/development/TRACEABILITY.md": "20cba98c0db3df46002c8b507e5b8d4639f5810f704461a92807ad0d2d3202c5",
+    "evas/validation/adapters/comparison_evas_worker.py": "6677599736df6bd6f5367bb23878f227a5b3322c5a74c9aba6d29e9ab35523de",
+    "evas/validation/adapters/paper_evas_worker.py": "78a1651e7628fb63e143f665e5dcbec1d7e1d9589faf5c74ad89e4b73122a05c",
+    "evas/validation/adapters/precision_evas_worker.py": "c751e75d4e68d4b07f649eb608ac9119cf10d3c9a49f28acb53ca00fceea828b",
+    "experiments/backends/comparison/freeze.py": "4526b0b0477b56f49cb288ae29accf4ff721cf924e799e282aac9ae0f575d911",
+    "experiments/backends/comparison/ingest.py": "fa27acd7d4b0bf29d093729a9e8431bcbf3c83cbc9c5a5930b4a54ba3ff4732a",
+    "experiments/backends/comparison/runner.py": "3080a990d11118ffbded2e8e9e639f319aa5d36abf4bb47d3adeb3585a258e9b",
+    "experiments/backends/comparison/test_worker_adapter.py": "1e09e247e52f5e68cf17a5e349e485d2acb3d69c6584f0fdd23b7f591ecff9b8",
+    "experiments/backends/paper/actual_observation.py": "3ed118d6b1ef162adc9f876984e78be14adba05dcd6a87c5c9852b63ce4b5df3",
+    "experiments/backends/paper/inputs.py": "a8d766bb6cf1216a99fb175c6569a96891e9317440569249cc03d990d9bf92d1",
+    "experiments/backends/paper/runner.py": "6fdb86566d2ff03a9808b062c582f865cda7547082418af7341a24addc26afb1",
+    "experiments/backends/paper/test_evas_worker_adapter.py": "9691d8493462c538cd491414f59106c92fc40f4b8ea496aa512941787e2904bc",
+    "experiments/backends/paper/test_producer_dependencies.py": "ad970a1e9914dc8d9f35009996dcd3003afc5534043d2429d8cae7a5b92aec8a",
+    "experiments/backends/support/comparison_completion.py": "a96627bce2f77820bb01d63e1b0dedb8c4d509a288a6df7c46783281fb342c9f",
+    "experiments/backends/support/legacy_chain_run.py": "0b23953786c82fada907601c1e98577f496b4a2eb10486118eaa3814646e8262",
+    "experiments/backends/support/precision_run.py": "16850212a0b3bd067459e3710f16eee29bacfdbf0b72794266871cd812d14e96",
+    "experiments/backends/support/precision_v2_report.py": "0b07bf65db05f16ca54c1107fee0ebeea39eb38327fbb45986d6061aadbd9838",
+    "experiments/backends/support/probes.py": "992f0e05b4da1e58c2b1dda810bbbf58c4f4f5e054684a9efced474a22ef56b4",
+    "experiments/backends/support/test_precision_worker_adapter.py": "c8966716e0734220b70c3fd1f45bb08cf58ead8315b6872b753e061165ce2ed6",
+    "scripts/ci_selection.py": "26d18c67bc54cea796a2120d8ebba60f550f0b5d78d2e4278f89070ffe905f93",
+    "scripts/tests/test_ci_inventory.py": "c297e26c71e1ddce4875b909049d267b7afd67f0d9a6f67a79fc952b999ed7b6",
+    "scripts/tests/test_ci_selection.py": "85dad32d09660a1e082436ac957d15bb4b483c209260fdd38a729299d44928f4"
+  },
+  "reused_affected_tests": {
+    "original_source": "d1379dca93e09b4bee8cf0774ef728d739130393",
+    "fixed_source": "cb5ba2e8fdd5f5959cac4f53988d44e01e30bd1f",
+    "code_equivalence": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/consumer-integration-20261027/format-finalization-20261027/format-correction.json",
+    "checks": [
+      {
+        "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/consumer-integration-20261027/ci-inventory-tests.txt",
+        "sha256": "acc1ce3f6650cf0e46785754183b12e755553ea0bc86cd80949aecc215dd5cce",
+        "tests": 21,
+        "returncode": 0,
+        "new_execution": false,
+        "basis": "Same owning test and production code; only one trailing LF in comparison adapter changes. AST including positions identical. New catalog validity and all generated bytes are separately checked in this candidate."
+      },
+      {
+        "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/consumer-integration-20261027/ci-selection-tests.txt",
+        "sha256": "347b635516abbfc9c76fb4c60333205a27c27d9a96893d767714ad037ec66565",
+        "tests": 36,
+        "returncode": 0,
+        "new_execution": false,
+        "basis": "Same owning test and production code; only one trailing LF in comparison adapter changes. AST including positions identical. New catalog validity and all generated bytes are separately checked in this candidate."
+      },
+      {
+        "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/consumer-integration-20261027/capability-tests.txt",
+        "sha256": "8ff86ec479192cfdd8469f554b227f21c3d0fb4965c0939efa64eac792e72c9d",
+        "tests": 77,
+        "returncode": 0,
+        "new_execution": false,
+        "basis": "Same owning test and production code; only one trailing LF in comparison adapter changes. AST including positions identical. New catalog validity and all generated bytes are separately checked in this candidate."
+      }
+    ],
+    "scientific_execution": false
+  },
+  "retained_migration_checks": {
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/composed-consumers-grok-20261027/primary-verification.json": "64b762cfb6ab15ad217a803237e2375975a42e2fd9986aa560674180003d16ed",
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/ci-inventory-completion-grok-20261027/primary-verification.json": "84026ef0250383a6e25a0ee8e777b53f9021eb91d38de62764abeec1609d1fac",
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-remaining-grok-20261027/verification.json": "421c17554bcd34c0e6b2645d8f5fc856e82c1b59b351671c4897f38af28d6a12",
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/precision-history-grok-20261027/history-verification.json": "5c5fdb366148641bee5fa329f4f757a7535ce0283908a9b4878d8c9435da96a6"
+  },
+  "scientific_execution": false,
+  "scientific_qualification": false
+}
