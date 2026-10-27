@@ -31,12 +31,26 @@ HISTORICAL_FIELDS = (
 )
 FORBIDDEN_CELLS = {'', '✓', '✗', '✔', '✘', 'x', 'X', '√', '-', '—'}
 LIMITS = (
-    '这是暂定事实投影，不是已采用的支持视图，也不授予科学资格。',
+    '默认视图与预览都由登记生成；adopted 只表示当前默认视图身份，不是新的项目决定，也不授予要求级支持或科学资格。',
+    'pending、not_conferred 表示待审核或未取得资格，不等于 unsupported（不支持）或 known_nonconformance（已知不符合）。',
     '覆盖充分性未定义时保持 pending；单个案例资格不解释成要求或能力通过。',
     '工具链版本只来自已绑定记录上的显式 toolchain 列表；没有该列表时为 unknown。',
     'catalog.BACKENDS 的四个键不接收协议别名；无法精确对应的后端身份单独列出。',
     '历史成绩保持原身份，不进入当前要求分母。',
 )
+VIEW_STATUSES = {
+    'current-default': {
+        'title': '# 当前要求的四后端事实',
+        'note': 'adopted 只表示这是当前默认支持视图，不是新的项目决定，也不授予任何资格。',
+        'meaning': 'default current support view only; not a project decision; confers no requirement-level support or scientific qualification',
+    },
+    'preview': {
+        'title': '# 预览：当前要求的四后端事实',
+        'note': '预览输出不是当前默认支持视图，adopted 为 false，也不授予任何资格。',
+        'meaning': 'preview output only; not the current default support view; confers no requirement-level support or scientific qualification',
+    },
+}
+CONTRACT_FIELDS = ('allowed_behavior', 'conditions', 'observables')
 
 
 class SupportViewError(ValueError):
@@ -434,8 +448,10 @@ def _sorted_counts(values):
     return {key: values[key] for key in sorted(values)}
 
 
-def document(registry, historical=None):
+def document(registry, historical=None, status='current-default'):
     """Return the fact projection. historical nodes are citations unless they name a requirement."""
+    if status not in VIEW_STATUSES:
+        raise SupportViewError('unknown support view status: ' + str(status))
     historical = historical or {
         'identity': 'unknown', 'source': 'unknown', 'scope': 'unknown', 'nodes': [],
     }
@@ -587,9 +603,11 @@ def document(registry, historical=None):
         qualification_counts['true' if record['qualification']['current_qualified'] else 'false'] += 1
         execution_counts[record['execution']['state']] += 1
     return {
-        'schema': 'provisional-support-facts-v1',
-        'provisional': True,
-        'adopted': False,
+        'schema': 'support-facts-v1',
+        'view_status': status,
+        'adopted': status == 'current-default',
+        'provisional': status == 'preview',
+        'adoption_meaning': VIEW_STATUSES[status]['meaning'],
         'denominators': {
             'current_requirements': len(projected),
             'source_index_items': source_index,
@@ -645,26 +663,53 @@ def _show(fact):
     return str(state)
 
 
+def _component(item):
+    return f"{item.get('name', 'unknown')}/{item.get('role', 'unknown')}@{item.get('version', 'unknown')}"
+
+
+def _toolchain_source(source):
+    parts = [_component(item) for item in source.get('components') or []]
+    if not parts:
+        parts = ['unparsed:' + json.dumps(source['unparsed'], ensure_ascii=False, sort_keys=True)] if 'unparsed' in source else [_show(source)]
+    owner = source.get('owner')
+    return (f"{owner}@{source.get('version', 'unknown')}: " if owner else '') + ', '.join(parts)
+
+
+def _toolchain_tokens(fact):
+    """Component strings that must survive into Markdown for this toolchain fact."""
+    sources = (fact.get('components') or []) if fact.get('state') == 'records_listed' else [fact]
+    return [_component(item) for source in sources for item in (source.get('components') or [])]
+
+
 def _show_toolchain(fact):
-    if fact.get('state') == 'unknown':
+    state = fact.get('state')
+    if state == 'unknown':
         return 'unknown'
-    if fact.get('state') == 'records_listed':
-        return 'records_listed'
-    components = fact.get('components') or []
-    if not components:
-        return _show(fact)
-    return ', '.join(f"{item.get('name', 'unknown')}@{item.get('version', 'unknown')}"
-                     for item in components)
+    if state == 'records_listed':
+        sources = fact.get('components') or []
+        if not sources:
+            return 'records_listed'
+        return 'records_listed: ' + '; '.join(_toolchain_source(source) for source in sources)
+    return _toolchain_source(fact)
+
+
+def _contract_line(key, fields):
+    if key in fields:
+        return f"原文 {key}：{json.dumps(fields[key], ensure_ascii=False, sort_keys=True)}"
+    return f"原文 {key}：unknown"
 
 
 def markdown(document):
     """Render document without collapsing distinct facts into one mark."""
     denominators = document['denominators']
+    status = VIEW_STATUSES.get(document.get('view_status'), {'title': '# 未知视图状态', 'note': 'unknown view status'})
     lines = [
-        '# 暂定：当前要求的四后端事实',
+        status['title'],
         '',
-        'adopted: false',
-        'provisional: true',
+        f"view_status: {document.get('view_status')}",
+        f"adopted: {str(document.get('adopted')).lower()}",
+        f"provisional: {str(document.get('provisional')).lower()}",
+        status['note'],
         '',
         f"current_requirements: {denominators['current_requirements']}",
         f"source_index_items: {denominators['source_index_items']}",
@@ -703,6 +748,8 @@ def markdown(document):
         for key in ('gap', 'status', 'review', 'source_locations', 'required_boundaries', 'budget'):
             if key in requirement['source_fields']:
                 lines.append(f"原文 {key}：{json.dumps(requirement['source_fields'][key], ensure_ascii=False, sort_keys=True)}")
+        for key in CONTRACT_FIELDS:
+            lines.append(_contract_line(key, requirement['source_fields']))
         for gap in requirement['readiness_gaps']:
             lines.append(f"就绪缺口：{gap}")
         lines.append('')
@@ -776,7 +823,7 @@ def markdown(document):
     lines.append('')
     lines.append('classifications: ' + json.dumps(document['classifications'], ensure_ascii=False, sort_keys=True))
     lines.append('')
-    lines.append('## 本切片不做的事')
+    lines.append('## 本视图不做的事')
     lines.append('')
     for limit in document['limits']:
         lines.append(f'- {limit}')
@@ -842,8 +889,12 @@ def audit(document):
     errors = []
     requirements = document['requirements']
     denominators = document['denominators']
-    if document.get('provisional') is not True or document.get('adopted') is not False:
-        errors.append('projection is not marked provisional')
+    status = document.get('view_status')
+    expected = VIEW_STATUSES.get(status)
+    if (expected is None or document.get('adopted') is not (status == 'current-default')
+            or document.get('provisional') is not (status == 'preview')
+            or document.get('adoption_meaning') != expected['meaning']):
+        errors.append('projection adoption labels inconsistent')
     if denominators.get('current_requirements') != len(requirements):
         errors.append('current requirement denominator')
     if denominators.get('source_index_is_requirement_coverage') is not False:
@@ -925,6 +976,11 @@ def audit_markdown(document, text):
     for line in required:
         if line not in text:
             errors.append('markdown missing ' + line)
+    expected = VIEW_STATUSES.get(document.get('view_status'))
+    top = text.splitlines()[:7]
+    if (expected is None or expected['title'] not in top or expected['note'] not in top
+            or f"adopted: {str(document.get('adopted')).lower()}" not in top):
+        errors.append('markdown view status diverged')
     head, separator, _historical = text.partition('## 历史引用')
     if not separator:
         errors.append('markdown missing historical section')
@@ -945,6 +1001,14 @@ def audit_markdown(document, text):
         for cell in _table_cells(line):
             if cell in FORBIDDEN_CELLS:
                 errors.append('markdown collapsed a current cell')
+    for requirement in document['requirements']:
+        for key in CONTRACT_FIELDS:
+            if _contract_line(key, requirement['source_fields']) not in head:
+                errors.append('markdown dropped requirement contract field ' + key)
+    for record in _all_records(document['requirements'], document['unbound_qualifications']):
+        for token in _toolchain_tokens(record['toolchain']):
+            if token not in text:
+                errors.append('markdown dropped toolchain component')
     counts = document['classifications']['exception_counts']
     for kind, count in counts.items():
         if f'exception: {kind} {count}' not in text:
@@ -967,14 +1031,14 @@ def load_historical_import(path=None):
     }
 
 
-def projection_texts(registry, historical=None):
+def projection_texts(registry, historical=None, status='current-default'):
     """Return the JSON and Markdown produced from one registry projection."""
     if historical is None:
         historical = load_historical_import()
         imported = [node.get('id') for node in historical['nodes']]
         if imported != [node.get('id') for node in NODES]:
             raise SupportViewError('historical import nodes differ from catalog.NODES')
-    document_ = document(registry, historical=historical)
+    document_ = document(registry, historical=historical, status=status)
     text = markdown(document_)
     problems = audit(document_) + audit_markdown(document_, text)
     if problems:
@@ -983,7 +1047,7 @@ def projection_texts(registry, historical=None):
 
 
 def write_preview(registry, directory, *, historical=None):
-    facts, text = projection_texts(registry, historical)
+    facts, text = projection_texts(registry, historical, status='preview')
     directory = Path(directory)
     directory.mkdir(parents=True, exist_ok=True)
     paths = [directory / 'support-facts.json', directory / 'support.md']
@@ -1008,7 +1072,7 @@ def main(argv=None):
         written = write_preview(load(**kwargs), args.preview)
     except SupportViewError as error:
         raise SystemExit(str(error))
-    print(f'wrote {len(written)} provisional support files')
+    print(f'wrote {len(written)} support preview files')
 
 
 if __name__ == '__main__':

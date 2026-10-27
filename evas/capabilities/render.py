@@ -235,7 +235,7 @@ def main(argv=None):
             written = write_preview(load(), args.support_preview)
         except SupportViewError as error:
             raise SystemExit(str(error))
-        print(f"wrote {len(written)} provisional support files")
+        print(f"wrote {len(written)} support preview files")
         return
     from support_view import SupportViewError
     try:

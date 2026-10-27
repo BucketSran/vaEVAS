@@ -1,7 +1,9 @@
 {
-  "schema": "provisional-support-facts-v1",
-  "provisional": true,
-  "adopted": false,
+  "schema": "support-facts-v1",
+  "view_status": "current-default",
+  "adopted": true,
+  "provisional": false,
+  "adoption_meaning": "default current support view only; not a project decision; confers no requirement-level support or scientific qualification",
   "denominators": {
     "current_requirements": 4,
     "source_index_items": 12880,
@@ -2632,7 +2634,8 @@
     "not_current": []
   },
   "limits": [
-    "这是暂定事实投影，不是已采用的支持视图，也不授予科学资格。",
+    "默认视图与预览都由登记生成；adopted 只表示当前默认视图身份，不是新的项目决定，也不授予要求级支持或科学资格。",
+    "pending、not_conferred 表示待审核或未取得资格，不等于 unsupported（不支持）或 known_nonconformance（已知不符合）。",
     "覆盖充分性未定义时保持 pending；单个案例资格不解释成要求或能力通过。",
     "工具链版本只来自已绑定记录上的显式 toolchain 列表；没有该列表时为 unknown。",
     "catalog.BACKENDS 的四个键不接收协议别名；无法精确对应的后端身份单独列出。",

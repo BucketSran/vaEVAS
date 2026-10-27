@@ -1,7 +1,9 @@
-# 暂定：当前要求的四后端事实
+# 当前要求的四后端事实
 
-adopted: false
-provisional: true
+view_status: current-default
+adopted: true
+provisional: false
+adopted 只表示这是当前默认支持视图，不是新的项目决定，也不授予任何资格。
 
 current_requirements: 4
 source_index_items: 12880
@@ -35,6 +37,9 @@ readiness gaps are registry navigation, not a qualification verdict
 原文 source_locations：["9.1 Table 9-8", "9.11"]
 原文 required_boundaries：["positive and negative operands", "fractional and integral operands", "representation/range boundaries"]
 原文 budget："pending applicable referenced definition; no inferred rounding rule"
+原文 allowed_behavior："Permitted in analog context under selected 7920; actual conversion semantics depend on referenced IEEE 1364 definition."
+原文 conditions：["definition and aliases", "domain and boundary", "analog context"]
+原文 observables：unknown
 就绪缺口：reference:IEEE-1364-2005@1: missing source identity
 就绪缺口：reference:IEEE-1364-2005@1: pending
 就绪缺口：requirement:$itor@1: pending
@@ -70,6 +75,9 @@ readiness gaps are registry navigation, not a qualification verdict
 原文 source_locations：["9.1 Table 9-8", "9.11"]
 原文 required_boundaries：["positive and negative operands", "fractional and integral operands", "representation/range boundaries"]
 原文 budget："pending applicable referenced definition; no inferred rounding rule"
+原文 allowed_behavior："Permitted in analog context under selected 7920; actual conversion semantics depend on referenced IEEE 1364 definition."
+原文 conditions：["definition and aliases", "domain and boundary", "analog context"]
+原文 observables：unknown
 就绪缺口：reference:IEEE-1364-2005@1: missing source identity
 就绪缺口：reference:IEEE-1364-2005@1: pending
 就绪缺口：requirement:$rtoi@1: pending
@@ -103,6 +111,9 @@ readiness gaps are registry navigation, not a qualification verdict
 原文 source_locations：["4.3.1 Table 4-14"]
 原文 required_boundaries：["x=0", "small positive and negative x", "large magnitudes within selected numerical domain"]
 原文 budget："No invented universal tolerance; independent numerical acceptance pending review."
+原文 allowed_behavior："exp(x)-1 for numeric real-domain operands; operands converted to real."
+原文 conditions：["definition and aliases", "domain and boundary", "analog context"]
+原文 observables：["expm1(x)", "$expm1(x)"]
 就绪缺口：requirement:expm1@1: pending
 就绪缺口：requirement:expm1@1: review missing
 
@@ -134,6 +145,9 @@ readiness gaps are registry navigation, not a qualification verdict
 原文 source_locations：["4.3.1 Table 4-14"]
 原文 required_boundaries：["x approaches -1 from above", "x=0", "small positive and negative x"]
 原文 budget："Not a language-mandated binary64 ULP budget; numerical acceptance pending review."
+原文 allowed_behavior："Natural logarithm of 1+x for numeric x > -1; operands converted to real."
+原文 conditions：["definition and aliases", "domain and boundary", "analog context"]
+原文 observables：["ln1p(x)", "$ln1p(x)"]
 就绪缺口：requirement:ln1p@1: pending
 就绪缺口：requirement:ln1p@1: review missing
 
@@ -1007,9 +1021,10 @@ exception-detail: {"count": 78, "kind": "historical_unjoined", "reason": "histor
 
 classifications: {"backend_execution_cells": {"unknown": 16}, "exception_counts": {"coverage_sufficiency_pending": 4, "historical_unjoined": 1, "toolchain_unknown": 16, "unbound_qualification": 1}, "historical_node_status": {"compared": 57, "waiting": 21}, "qualification_records_current_qualified": {"false": 1}, "record_execution_states": {"recorded": 1}, "requirement_status": {"pending": 4}}
 
-## 本切片不做的事
+## 本视图不做的事
 
-- 这是暂定事实投影，不是已采用的支持视图，也不授予科学资格。
+- 默认视图与预览都由登记生成；adopted 只表示当前默认视图身份，不是新的项目决定，也不授予要求级支持或科学资格。
+- pending、not_conferred 表示待审核或未取得资格，不等于 unsupported（不支持）或 known_nonconformance（已知不符合）。
 - 覆盖充分性未定义时保持 pending；单个案例资格不解释成要求或能力通过。
 - 工具链版本只来自已绑定记录上的显式 toolchain 列表；没有该列表时为 unknown。
 - catalog.BACKENDS 的四个键不接收协议别名；无法精确对应的后端身份单独列出。

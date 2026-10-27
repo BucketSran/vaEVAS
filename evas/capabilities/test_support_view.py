@@ -1,4 +1,4 @@
-"""Fixture checks for the provisional four-backend requirement projection.
+"""Fixture checks for the four-backend requirement projection (current default support view).
 
 These controls do not add requirements to the real registry and do not confer
 scientific qualification.
@@ -312,7 +312,9 @@ class SupportViewFixtures(unittest.TestCase):
             })
             self.assertEqual([path.name for path in paths], ['support-facts.json', 'support.md'])
             saved = json.loads(paths[0].read_text())
+            self.assertEqual(saved['view_status'], 'preview')
             self.assertFalse(saved['adopted'])
+            self.assertTrue(saved['provisional'])
             self.assertIn('not_conferred', paths[1].read_text())
             self.assertEqual(paths[0].read_text(), dumps(saved))
         seen = {}
@@ -449,6 +451,54 @@ class SupportViewFixtures(unittest.TestCase):
         self.assertTrue(other['qualification']['current_qualified'])
         self.assertTrue(all(item['bound'] is True for item in consumer['evidence']['items']))
 
+
+    def test_adoption_labels_confer_no_support(self):
+        projected, text = checked(Registry(fixture()))
+        self.assertEqual(projected['view_status'], 'current-default')
+        self.assertEqual((projected['adopted'], projected['provisional']), (True, False))
+        self.assertEqual(projected['denominators']['current_requirement_support_conferred'], 0)
+        self.assertTrue(all(item['requirement_support'] == 'not_conferred' for item in projected['requirements']))
+        self.assertIn('adopted: true', text)
+        self.assertNotIn('暂定', text)
+        for field, value in (('adopted', False), ('provisional', True), ('adoption_meaning', ''), ('view_status', 'other')):
+            changed = copy.deepcopy(projected)
+            changed[field] = value
+            self.assertIn('projection adoption labels inconsistent', audit(changed))
+        conferred = copy.deepcopy(projected)
+        conferred['denominators']['current_requirement_support_conferred'] = 1
+        self.assertIn('requirement support was conferred', audit(conferred))
+        preview = document(Registry(fixture()), status='preview')
+        preview_text = markdown(preview)
+        self.assertEqual(audit(preview) + audit_markdown(preview, preview_text), [])
+        self.assertEqual((preview['adopted'], preview['provisional']), (False, True))
+        self.assertIn('markdown view status diverged', audit_markdown(projected, preview_text))
+
+    def test_multi_source_toolchain_versions_are_listed(self):
+        for backend, simulator, compiler in (('ngspice', 'ngspice', 'OpenVAF-R'), ('gnucap', 'Gnucap', 'modelgen-verilog')):
+            data = retarget(fixture(), backend)
+            by_id(data, 'fixture-execution')['toolchain'] = [{'role': 'simulator', 'name': simulator, 'version': 'sim-12345'}]
+            for name in ('consumer-a', 'consumer-b'):
+                by_id(data, name)['toolchain'] = [{'role': 'compiler', 'name': compiler, 'version': 'cc-67890'}]
+            projected, text = checked(Registry(refresh(data)))
+            records = requirement(projected, 'fixture-requirement')['backends'][backend]['records']
+            self.assertTrue(records)
+            self.assertTrue(all(record['toolchain']['state'] == 'records_listed' for record in records))
+            for token in (f'{simulator}/simulator@sim-12345', f'{compiler}/compiler@cc-67890'):
+                self.assertIn(token, text)
+            self.assertIn('markdown dropped toolchain component', audit_markdown(projected, text.replace('sim-12345', 'sim-x')))
+
+    def test_contract_fields_are_displayed_or_unknown(self):
+        data = fixture()
+        target = by_id(data, 'fixture-requirement')
+        target['allowed_behavior'] = 'fixture allowed behavior'
+        target['conditions'] = ['fixture condition x > -1']
+        target.pop('observables', None)
+        projected, text = checked(Registry(refresh(data)))
+        self.assertIn('原文 allowed_behavior："fixture allowed behavior"', text)
+        self.assertIn('原文 conditions：["fixture condition x > -1"]', text)
+        self.assertIn('原文 observables：unknown', text)
+        self.assertIn('markdown dropped requirement contract field allowed_behavior',
+                      audit_markdown(projected, text.replace('fixture allowed behavior', 'other')))
 
     def test_one_registration_change_reaches_default_json_and_markdown(self):
         data = retarget(fixture(), 'evas')
