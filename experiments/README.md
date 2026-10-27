@@ -2,8 +2,10 @@
 
 EVAS全部资料见[统一入口](../evas/README.md#evas-entry)；本目录维护执行、分析工具与结果证据。
 
-四后端固定条件实测与后续分项证据见 [support](backends/support/README.md)；支持结论只维护在 [EVAS 总表](../evas/docs/COMPARISON.md)。
-能力节点上的当前分类见 [能力目录](../evas/capabilities/README.md)。本目录继续保存执行工具和冻结收据，不按能力改名。
+四后端固定条件实测与后续分项证据见 [support](backends/support/README.md)。
+当前要求事实由登记生成，见 [support.md](../evas/capabilities/generated/support.md)。
+历史总表 [COMPARISON.md](../evas/docs/COMPARISON.md) 保留原成绩和链接。当前要求分母只计登记中的当前要求。
+能力节点上的历史分类见 [能力目录](../evas/capabilities/README.md)。本目录继续保存执行工具和冻结收据，不按能力改名。
 各份收据绑定自己的源码与后端版本，不能合称为当前 main 的一次完整重跑。
 
 这里提供 vaEVAS 的执行工具、精简结果、收据与历史材料入口。
@@ -26,7 +28,8 @@ EVAS全部资料见[统一入口](../evas/README.md#evas-entry)；本目录维�
 
 | 想了解什么 | 阅读入口 |
 | --- | --- |
-| 当前支持什么、还有哪些限制？ | [四后端支持范围](../evas/docs/COMPARISON.md) |
+| 当前要求的四后端事实是什么？ | [登记生成视图](../evas/capabilities/generated/support.md) |
+| 历史四后端成绩在哪里？ | [历史总表](../evas/docs/COMPARISON.md) |
 | 当前能力依据哪些执行证据？ | [分项证据索引](backends/support/README.md)；0.19.0 / IR23 的有限循环与数组见[专项验收](backends/support/event-runtime-control/README.md)，旧矩阵版本见[检查点说明](../evas/validation/README.md#latest-evas-checkpoint) |
 | 正确答案与精度要求从哪里来？ | [独立验证集](../evas/validation/README.md)、[技术手册](../evas/docs/README.md) |
 | 指定求解时刻是否与 Spectre 有限配对？ | [strobe 对照](backends/strobe/README.md)，保留缺失观测和有效设置差异 |

@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
-"""Write the capability registry and the two views derived from it.
+"""Write historical capability views and the current requirement view.
 
-    python3 evas/capabilities/render.py          # write registry, views, node pages
-    python3 evas/capabilities/render.py --check  # fail if those files drift
+    python3 evas/capabilities/render.py
+    python3 evas/capabilities/render.py --check
+
+The default write and --check emit the historical pages together with
+generated/support.md and generated/support-facts.json. Both current files
+come from one registry projection.
 """
 import argparse
 import json
@@ -18,6 +22,8 @@ HERE = Path(__file__).resolve().parent
 REGISTRY = HERE / "registry.json"
 COMPARISON = HERE / "generated" / "comparison.md"
 PAPER = HERE / "generated" / "paper.md"
+SUPPORT = HERE / "generated" / "support.md"
+SUPPORT_FACTS = HERE / "generated" / "support-facts.json"
 BACKEND_HEADINGS = {
     "spectre": "Spectre",
     "ngspice": "ngspice + OpenVAF-R",
@@ -26,8 +32,20 @@ BACKEND_HEADINGS = {
 }
 
 
-def registry():
-    normative = load()
+def historical_view():
+    from support_view import load_historical_import
+    raw = load_historical_import()
+    return {
+        "identity": raw["identity"],
+        "source": raw["source"],
+        "scope": raw["scope"],
+        "role": "historical-index",
+        "in_current_requirement_denominator": False,
+    }
+
+
+def registry(reg=None):
+    normative = load() if reg is None else reg
     return {
         "language_profile": normative.data["language_profile"]["id"],
         "target_scope": normative.data["target_scope"]["id"],
@@ -36,6 +54,7 @@ def registry():
                                 x["decision"] for x in normative.data["dispositions"]).items()))},
         "chapters": list(CHAPTERS),
         "campaigns": CAMPAIGNS,
+        "historical_view": historical_view(),
         "nodes": NODES,
     }
 
@@ -59,10 +78,26 @@ def evidence_scope():
     ]
 
 
+def historical_lines(data, view_link, facts_link):
+    view = data.get("historical_view") or {}
+    identity = view.get("identity") or "unknown"
+    source = view.get("source") or "unknown"
+    scope = view.get("scope") or "unknown"
+    return [
+        f"历史视图身份：`{identity}`。",
+        f"原输入：`{source}`。",
+        f"原判据范围：{scope}。",
+        "这些成绩留在该历史身份下。当前要求分母只计登记中的当前要求。",
+        f"当前逐要求四后端事实见 [support.md]({view_link}) 与 [support-facts.json]({facts_link})。",
+        "",
+    ]
+
+
 def comparison_markdown(data):
     lines = [
         "# 能力比较表",
         "",
+        *historical_lines(data, "support.md", "support-facts.json"),
         "由 `evas/capabilities/data/` 生成。已比较的成绩转录自",
         "[四后端支持表前五节](../../docs/COMPARISON.md#支持矩阵)，不改写该文的历史说明。",
         "没有四后端成绩的节点标为等待跑，不填通过或失败。",
@@ -92,6 +127,7 @@ def paper_markdown(data):
     lines = [
         "# 给使用者和审稿人的能力比较",
         "",
+        *historical_lines(data, "support.md", "support-facts.json"),
         "由 `evas/capabilities/data/` 生成。只包含已经有四后端成绩的能力节点。",
         "这一页不是实验开发的登记簿。落后和未验收留在格子里。",
         "",
@@ -107,10 +143,11 @@ def paper_markdown(data):
     return "\n".join(lines)
 
 
-def node_page(node):
+def node_page(node, data=None):
     lines = [
         f"# {node['title']}",
         "",
+        *historical_lines(data or {}, "../generated/support.md", "../generated/support-facts.json"),
         f"章节：{node['chapter']}。",
         f"状态：{'已比较' if node['status'] == 'compared' else '等待跑'}。",
         f"审核：{'成绩已转录' if node['review'] == 'recorded' else '待审核'}。",
@@ -140,7 +177,9 @@ def normative_markdown(reg):
     counts = Counter(x['decision'] for x in reg.data['dispositions'])
     target = reg.data['target_scope']
     lines = ['# 规范登记状态', '',
-             '由 `evas/capabilities/data/` 生成。规范索引、目标范围、资格和历史成绩分别记录。', '',
+             '由 `evas/capabilities/data/` 生成。规范索引、目标范围、资格和历史成绩分别记录。',
+             '当前逐要求四后端事实见 [support.md](support.md) 与 [support-facts.json](support-facts.json)。',
+             '',
              f"语言配置：`{profile['id']}`。基础为 LRM {profile['base']}，选入变化为 "
              + ', '.join(profile['selected_changes']) + '。', '',
              '未选入的变化继续采用基础版本；规范选入不表示后端已支持。Spectre 待跑。', '',
@@ -161,23 +200,49 @@ def normative_markdown(reg):
     return '\n'.join(lines)
 
 
-def outputs(data):
+def support_pair(reg, historical=None):
+    from support_view import projection_texts
+    return projection_texts(reg, historical)
+
+
+def outputs(data, reg=None):
+    reg = load() if reg is None else reg
+    facts, support = support_pair(reg)
     files = {
         REGISTRY: json.dumps(data, ensure_ascii=False, indent=2) + "\n",
         COMPARISON: comparison_markdown(data),
         PAPER: paper_markdown(data),
-        HERE / "generated" / "normative.md": normative_markdown(load()),
+        HERE / "generated" / "normative.md": normative_markdown(reg),
+        SUPPORT_FACTS: facts,
+        SUPPORT: support,
     }
     for node in data["nodes"]:
-        files[HERE / node["id"] / "README.md"] = node_page(node)
+        files[HERE / node["id"] / "README.md"] = node_page(node, data)
     return files
 
 
-def main():
+def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--check", action="store_true")
-    args = parser.parse_args()
-    files = outputs(registry())
+    parser.add_argument("--support-preview", metavar="DIR",
+                        help="write the same requirement projection into DIR; does not replace --check")
+    args = parser.parse_args(argv)
+    if args.support_preview:
+        if args.check:
+            raise SystemExit("support preview does not replace --check")
+        from support_view import SupportViewError, write_preview
+        try:
+            written = write_preview(load(), args.support_preview)
+        except SupportViewError as error:
+            raise SystemExit(str(error))
+        print(f"wrote {len(written)} provisional support files")
+        return
+    from support_view import SupportViewError
+    try:
+        reg = load()
+        files = outputs(registry(reg), reg)
+    except SupportViewError as error:
+        raise SystemExit(str(error))
     if args.check:
         stale = [path.relative_to(ROOT).as_posix() for path, text in files.items()
                  if not path.is_file() or path.read_text() != text]

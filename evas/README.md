@@ -29,6 +29,8 @@ EVAS主要使用以下三类验证材料，各自保留明确的范围：
 - **独立验证与共同比较条件**在 `evas/validation/`，包含模型、输入、数学答案、判定程序和错误对照。[验证入口](validation/README.md)说明用法，[COVERAGE](validation/paper/COVERAGE.md#summary-scopes)登记比较表每行的固定条件。
 - **工程原件重放**使用历史400家族以及实际工程请求，核对完整模型和消费者。原始材料见[来源库](../benchmark/material/historyref/README.md)，具体输入与checker修订以对应任务的记录为准。
 
+Paper、comparison 与 precision 的 EVAS 执行职责在 `validation/adapters/`。现行命令见[已组合的 EVAS 执行入口](docs/development/PROCESS.md#current-consumers)。
+
 模型规定要模拟的问题；独立答案和容差规定对错；实际运行产生波形与事件记录；判定程序据此给出结果。
 比较表引用这些结果及其固定范围。开发测试方法数、比较条件数和工程家族数分别报告。
 新增测试可以扩展覆盖，但每次验收都须固定源码、用例和判据，保留原失败。

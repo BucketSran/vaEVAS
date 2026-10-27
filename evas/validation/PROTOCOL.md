@@ -16,6 +16,9 @@ Table 4-14、A.8.2 或保留字表不能整表替换；共享容器中的未选�
 引用的 IEEE 1364 转换定义尚未固定时，相关要求保持待补证；独立精度预算须另行审核。
 外部后端兼容结论仍须真实比较，Spectre 待跑。
 
+当前四端要求视图由 `evas/capabilities/render.py` 从登记生成，见 [support.md](../capabilities/generated/support.md)。
+四个当前要求在取得匹配证据和审核之前保持 pending。本页既有协议计数和冻结收据保持原身份。
+
 ## 范围、编码与可比性
 
 ### 纳入

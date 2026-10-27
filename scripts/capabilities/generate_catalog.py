@@ -75,6 +75,39 @@ def select_finding_method(history,document,row,runtime_id,current,previous_objec
    return method
  raise ValueError('finding original subject identity unavailable; explicit unbound migration required: '+runtime_id)
 
+DERIVED_EXACT_PATHS={
+ 'evas/capabilities/registry.json',
+ 'evas/capabilities/generated/comparison.md',
+ 'evas/capabilities/generated/paper.md',
+ 'evas/capabilities/generated/normative.md',
+ 'evas/capabilities/generated/support-facts.json',
+ 'evas/capabilities/generated/support.md',
+ 'evas/docs/development/TRACEABILITY.md'}
+
+def generated_output_paths(legacy):
+ """Exact derived outputs plus historical node pages. Support views join this set; they are not a second registry."""
+ if not isinstance(legacy,dict) or not isinstance(legacy.get('nodes'),list):raise ValueError('historical comparison nodes required for derived node pages')
+ generated=set(DERIVED_EXACT_PATHS)
+ generated.update('evas/capabilities/'+n['id']+'/README.md' for n in legacy['nodes'])
+ return generated
+
+def external_asset_identity(path,generated,metadata_paths):
+ """External manifest for generated, catalog metadata, or governance paths. Ordinary sources stay hashed."""
+ if path in metadata_paths:role='catalog-meta'
+ elif path in generated:role='derived'
+ elif path in GOVERNANCE:role='governance'
+ else:return None
+ return role,{'algorithm':'external-input-manifest','scope':'actual-execution-inputs','producer':'capabilities.observe-assets-v1'}
+
+def retain_generated_object(merged,migrations,current,previous_current,obj):
+ """Keep every prior id/version and point current at the regenerated object."""
+ key=(obj['id'],obj['version'])
+ if key in merged and merged[key]!=obj:raise ValueError('conflicting reused object version')
+ merged[key]=obj
+ prior=previous_current.get(obj['id'])
+ if prior and prior['version']!=obj['version']:migrations.append({'id':obj['id'],'previous':ref(prior),'current':ref(obj),'reason':'version-bound regenerated content; previous object retained'})
+ current[obj['id']]=obj['version']
+
 def entry_inputs(config):
  result=[]
  for item in config['discoveries']:
@@ -189,9 +222,8 @@ def build(config,out):
   policy['bridges'].append(record);bridge_by_path[path]=(proof,chosen)
   include.append(path)
  metadata_paths={'evas/capabilities/data/registry.json',*('evas/capabilities/data/'+name for name in PARTS)}
- generated={'evas/capabilities/registry.json','evas/capabilities/generated/comparison.md','evas/capabilities/generated/paper.md','evas/capabilities/generated/normative.md','evas/docs/development/TRACEABILITY.md'}
  legacy=json.loads((root/'evas/capabilities/data/historical-comparison.json').read_text())
- generated.update('evas/capabilities/'+n['id']+'/README.md' for n in legacy['nodes'])
+ generated=generated_output_paths(legacy)
  readiness={}
  readiness_source=None
  if config.get('readiness_file'):
@@ -212,11 +244,12 @@ def build(config,out):
   prior_path=path if path in prior_assets else moves.get('assets',{}).get(path,path)
   previous_asset=prior_assets.get(prior_path)
   if prior_path!=path and previous_asset is None:raise ValueError('asset move lacks previous identity')
-  external=path in metadata_paths or path in generated or path in GOVERNANCE
-  role='catalog-meta' if path in metadata_paths else 'derived' if path in generated else 'governance' if path in GOVERNANCE else 'cross-component-source-read' if bridge else 'conservative-rust-tree-identity-input' if owner and all(e['collector']=='binary-listing' for e in owner.values()) else 'actual-unittest-owner' if owner else None
+  identity=external_asset_identity(path,generated,metadata_paths)
+  external=identity is not None
+  role=identity[0] if external else 'cross-component-source-read' if bridge else 'conservative-rust-tree-identity-input' if owner and all(e['collector']=='binary-listing' for e in owner.values()) else 'actual-unittest-owner' if owner else None
   a={'schema_version':1,'id':previous_asset['id'] if previous_asset else readiness.get(path,{}).get('id',sid('asset',path)),'version':'1' if external else row['sha256'],
     'kind':'asset','status':'active','namespace':'EVAS-assets','current_path':path,
-    'content':{'algorithm':'external-input-manifest','scope':'actual-execution-inputs','producer':'capabilities.observe-assets-v1'} if external else {'algorithm':'sha256','value':row['sha256']},
+    'content':identity[1] if external else {'algorithm':'sha256','value':row['sha256']},
     'role':{'status':'confirmed' if role else 'pending','value':role,'reason':'exact Registry/producer/governance path' if external else 'exact source-bound external read; partial consumers only' if bridge else 'conservative native source-tree identity; not compiler read or runtime closure' if role=='conservative-rust-tree-identity-input' else 'actual TestLoader owner module; no semantic qualification' if owner else 'responsibility awaits source review; path does not infer semantics'},
     'consumers':[ref(ep) for ep in sorted(owner.values(),key=lambda e:e['id'])],
     'consumer_status':'partial' if owner else 'pending','location_history':[],
@@ -321,13 +354,7 @@ def build(config,out):
  oldobjects=base['objects'];merged={(o['id'],o['version']):o for o in [*previous_objects,*oldobjects]}
  migrations=[]
  for objects in values.values():
-  for obj in objects:
-   key=(obj['id'],obj['version'])
-   if key in merged and merged[key]!=obj:raise ValueError('conflicting reused object version')
-   merged[key]=obj
-   prior=previous_current.get(obj['id'])
-   if prior and prior['version']!=obj['version']:migrations.append({'id':obj['id'],'previous':ref(prior),'current':ref(obj),'reason':'version-bound regenerated content; previous object retained'})
-   base['current'][obj['id']]=obj['version']
+  for obj in objects:retain_generated_object(merged,migrations,base['current'],previous_current,obj)
  base['_catalog_metadata_paths']=sorted(metadata_paths)
  actual=copy.deepcopy(base);actual['objects']=list(merged.values())
  reg=api.Registry(actual,root=root,repositories={'vaevas':archive,**config.get('source_repositories',{})});catalog=reg.catalog()

@@ -30,6 +30,8 @@ EVAS全部资料见[统一入口](../README.md#evas-entry)；本目录维护独�
 
 原31条件的当前输入与独立有限观察判据集中在[dvs2/](dvs2/README.md)。
 开发静态回归直接读取它们，后端适配器保留执行、文件读取与身份冻结职责。
+Paper、comparison、precision 的 EVAS worker 在 [adapters/](adapters/)。
+调用关系与现行命令见[已组合的 EVAS 执行入口](../docs/development/PROCESS.md#current-consumers)。
 
 近邻事件的非线性历史与 PWL 分段传播有[独立条件和冻结判据](ordered_event_history/README.md)，原始失败与严格计时诊断分别保留。
 

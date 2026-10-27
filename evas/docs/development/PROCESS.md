@@ -31,6 +31,54 @@
 文档和标签修改通常只需一致性检查；不要求全矩阵或远端仿真。
 先红后绿描述新增行为测试的实践，生成的矩阵不能证明这个时间顺序。
 
+## 当前支持视图
+
+行为变更仍走上面的五步。当前要求事实只从能力登记生成：
+
+```sh
+python3 -B evas/capabilities/render.py
+python3 -B evas/capabilities/render.py --check
+```
+
+`generated/support.md` 与 `generated/support-facts.json` 由这次生成同时写出。
+历史比较页保留原输入 `evas/docs/COMPARISON.md` 和身份 `historical-comparison-import-f210ebd5`。
+当前要求分母只计登记中的当前要求。
+
+规范变更、checker 变更、测试纠错、实现修复和纯迁移沿用
+`scripts/ci_selection.py` 与 `scripts/evas_check_policy.py` 已有选择。
+选择器没有单独的“纯迁移”豁免。未识别的 experiments 路径仍按现有规则进入完整检查。
+
+<a id="current-consumers"></a>
+
+## 已组合的 EVAS 执行入口
+
+Paper、comparison、precision 的 EVAS 执行在 `evas/validation/adapters/`。
+实验目录保留计划、预算和非 EVAS 后端。默认 `render.py` 不调用这些适配器。
+下面的命令是本批源码的入口。已发布检查点仍以上一已审版本为准。验证资格仍按资格协议单独判断。
+
+Paper 适配 `paper_evas_worker.py` 负责编译、瞬态和原始响应记录：
+
+```sh
+python3 -B experiments/backends/paper/runner.py worker <work> <kernel>
+python3 -B experiments/backends/paper/runner.py <inputs> <output> --backend <backend> --tool-profile <profile> --allocation <allocation>
+```
+
+Comparison 适配 `comparison_evas_worker.py` 执行 condition 与 requested_settings 合同。
+`freeze.py` 把该适配的源码哈希写入 worker 身份。runner 命令是：
+
+```sh
+python3 -B experiments/backends/comparison/runner.py <inputs> <output> --backend <backend> --allocation <id>
+```
+
+Precision 适配 `precision_evas_worker.py` 保留强制 strobe 与原始记录。
+研究计划和后端进程仍由 `precision_run.py` 持有。`--family` 接受 `sample_hold` 或 `first_order`：
+
+```sh
+python3 -B experiments/backends/support/precision_run.py worker <work> <kernel>
+python3 -B experiments/backends/support/precision_run.py freeze <output>
+python3 -B experiments/backends/support/precision_run.py run <inputs> <output> --backend <backend> --profile <profile> --family sample_hold
+```
+
 ## 标签与机械检查
 
 - 测试文件声明一个非空字符串列表 `GUARDS`。能力 ID 取自 [能力 ID 与证据索引](capability-evidence.md)，

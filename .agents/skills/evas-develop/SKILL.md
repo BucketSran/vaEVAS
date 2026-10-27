@@ -134,7 +134,9 @@ benchmark construction unless it is part of the requested scope.
 For semantic/numerical work, update the relevant handbook chapter using the
 [feature documentation contract](../../../evas/docs/README.md#feature-documentation-contract):
 behavior, source/assumption distinction, mathematics, numerical method, code map,
-independent evidence and limits. Update affected support summaries and evidence-index entries; do not
+independent evidence and limits. When support facts change, regenerate the current requirement view
+from the capability registration and update affected evidence-index entries. Leave historical scores in
+`evas/docs/COMPARISON.md` under their original identity. Do not
 promote branch work to merged support or an old run to verification of a new base.
 Hand off the requirements, actual diff and evidence for the independent review
 required by the [review policy](../../../CONTRIBUTING.md#reviewing-diffs).

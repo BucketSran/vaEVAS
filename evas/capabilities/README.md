@@ -14,7 +14,8 @@
 | [generated/normative.md](generated/normative.md) | 从登记生成的规范处置与资格缺口视图 |
 | [data/historical-comparison.json](data/historical-comparison.json) | 固定 `f210ebd5` 的旧成绩转录，保留历史范围，不授予当前 main 资格 |
 | [catalog.py](catalog.py) | 读取历史登记的兼容接口，不再维护 Python 成绩常量 |
-| [generated/comparison.md](generated/comparison.md) 与 [generated/paper.md](generated/paper.md) | 历史比较视图 |
+| [generated/comparison.md](generated/comparison.md) 与 [generated/paper.md](generated/paper.md) | 历史比较视图。身份来自 `data/historical-comparison.json`，原成绩可按各行链接检索 |
+| [generated/support.md](generated/support.md) 与 [generated/support-facts.json](generated/support-facts.json) | 登记生成的当前逐要求四后端事实。JSON 与 Markdown 同源。资格未授予时保持 pending |
 
 规范索引的分母来自官方文件，不从已有能力或通过测试反推。条款、表项、语法和附录的
 来源处置与语义要求审核分开；待判定项必须可枚举，不能当作已经排除或已经验证。
@@ -57,6 +58,9 @@ python3 -B evas/capabilities/render.py
 python3 -B evas/capabilities/render.py --check
 python3 -B -m unittest discover -s evas/capabilities -p 'test_*.py' -v
 ```
+
+默认写入和 `--check` 使用同一次登记投影。当前要求事实写入上面两个 support 文件。
+历史比较页、节点页和 `registry.json` 的 `historical_view` 保留原输入与判据身份。
 
 ## 资产、实际方法与历史来源
 
