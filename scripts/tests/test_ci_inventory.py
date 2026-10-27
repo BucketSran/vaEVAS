@@ -438,11 +438,14 @@ setattr(Main,'test_generated',factory())
                          environment_overrides={}, declared_python_versions=declared)
             with patch.object(inventory.subprocess, 'run', return_value=proc):
                 self.assertFalse(inventory.child(self.root, entry, 1)['complete'])
-        for declared in (['%d.%d.1' % (sys.version_info[0], sys.version_info[1] + 1)], [current, current]):
+        other_minor = '%d.%d.1' % (sys.version_info[0], sys.version_info[1] + 1)
+        for declared in ([other_minor], [current, current], [current + '.not-a-version'], [current + '.'],
+                         [current + '.15.extra'], [str(sys.version_info[0])], [current + 'x']):
             entry = dict(start='scripts/tests', pattern='test*.py', namespace='maintenance',
                          environment_overrides={}, declared_python_versions=declared)
-            with self.assertRaisesRegex(ValueError, 'major/minor'):
+            with patch.object(inventory.subprocess, 'run') as run, self.assertRaisesRegex(ValueError, 'major/minor'):
                 inventory.child(self.root, entry, 1)
+            run.assert_not_called()
 
 
 class RequiredGateTests(unittest.TestCase):

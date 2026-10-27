@@ -9,7 +9,7 @@ on:
 permissions:
   contents: read
 
-# Same fixed Rust toolchain as numerical-assurance.yml; the sdist build uses it through rustup.
+# Fixed Rust toolchain for the sdist build, which uses it through rustup.
 env:
   RUSTUP_TOOLCHAIN: '1.99.1'
 
