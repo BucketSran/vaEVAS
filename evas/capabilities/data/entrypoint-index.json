@@ -5042,6 +5042,58 @@
     },
     {
       "actual_receipt": {
+        "id": "source:0ed66c59ce30ddaff94b0abd",
+        "sha256": "fa2b99d0b5b09dcaac7f48325c549d1545eb3ad45c46722121270c62959a7c5a",
+        "version": "a3854776161963a4b2d4f6e929e509f923d76b238deb77d627b8bf36b9bf6f44"
+      },
+      "ci_entrypoint_ids": [
+        "7ca3014facd481757071df99f0ad67f44e04b45c671019efa8cd05a184dc88da"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s evas/capabilities -p 'test_*.py' -v",
+      "dependencies": [
+        {
+          "id": "source:0ed66c59ce30ddaff94b0abd",
+          "sha256": "fa2b99d0b5b09dcaac7f48325c549d1545eb3ad45c46722121270c62959a7c5a",
+          "version": "a3854776161963a4b2d4f6e929e509f923d76b238deb77d627b8bf36b9bf6f44"
+        }
+      ],
+      "id": "entry:b8939fdddbd82f98f7f06185",
+      "kind": "entrypoint",
+      "namespace": "maintenance",
+      "pattern": "test_*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "7ca3014facd481757071df99f0ad67f44e04b45c671019efa8cd05a184dc88da",
+        "environment_overrides": {
+          "GIT_FIXTURE_RETAIN_DIR": "runs/git-fixture-isolation"
+        },
+        "job": "static-checks",
+        "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+        "line": 177,
+        "mode": "declared-ci-literal",
+        "namespace": "maintenance",
+        "pattern": "test_*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "evas/capabilities",
+        "step": "Traceability and frozen validation identities",
+        "step_if": "needs.selection.outputs.maintenance == 'true'",
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "e08f2ba1f62dab810a2b9b2a87aedf1063a4dc757ee81e7b770063538334fece",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "evas/capabilities",
+      "status": "active",
+      "version": "fc8a5fde50f2353b84edf06d1c4f06a115842a9faee1a227912a91fa27bd5a65",
+      "workflow_sha256": "76c7387d4c8a3390edc2ba440f169c14794301867d1f277d3488b654cf585682"
+    },
+    {
+      "actual_receipt": {
         "id": "source:7e5d57119c335def56d06939",
         "sha256": "cad412cbcbc341eb7d14051eac362908aa6ae94ff345ec52595128d98a12af86",
         "version": "3120b40fa6c169d96dd6de8d009b1f237daee555c5de8746c8b0e5855c0e8182"
