@@ -144,7 +144,8 @@ class RustCatalogReconciliation(unittest.TestCase):
         return receipt
 
     def register(self,receipt):
-        scratch=Path(self.fx.tmp.name);(self.archive/'rust.json').write_text(json.dumps(receipt))
+        # Indented bytes keep the commit nonempty when the runner already reports this platform.
+        scratch=Path(self.fx.tmp.name);(self.archive/'rust.json').write_text(json.dumps(receipt,indent=1))
         for args in [('add','.'),('-c','user.name=Fixture','-c','user.email=fixture@example.invalid','commit','-m','Linux receipt')]:
             git_fixture.run(['-C',str(self.archive),*args],scratch=scratch,check=True,capture_output=True)
         commit=git_fixture.run(['-C',str(self.archive),'rev-parse','HEAD'],scratch=scratch,check=True,capture_output=True,text=True).stdout.strip()
