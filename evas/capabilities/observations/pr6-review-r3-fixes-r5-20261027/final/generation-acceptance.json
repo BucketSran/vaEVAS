@@ -1,0 +1,66 @@
+{
+  "paths": [
+    "evas/capabilities/data/asset-index.json",
+    "evas/capabilities/data/catalog-sources.json",
+    "evas/capabilities/data/entrypoint-index.json",
+    "evas/capabilities/data/historical-index.json",
+    "evas/capabilities/data/method-index.json",
+    "evas/capabilities/data/registry.json"
+  ],
+  "old_versions_retained": 67104,
+  "retention": {
+    "main": {
+      "revision": "02dee32b2c9b25f166cbd77f8a895953e004f288",
+      "objects": 57416,
+      "missing": 0,
+      "rewritten": 0
+    },
+    "prior_pr6": {
+      "revision": "c76cb65f7c260712eb77bc9322bb294ec32287c5",
+      "objects": 57101,
+      "missing": 0,
+      "rewritten": 0
+    },
+    "parent": {
+      "revision": "5455ae7b006488902476bba045e9e2971102d8f5",
+      "objects": 66296,
+      "missing": 0,
+      "rewritten": 0
+    }
+  },
+  "objects": {
+    "assets": 4227,
+    "entrypoints": 36,
+    "history": 3260,
+    "methods": 4785,
+    "sources": 39
+  },
+  "namespace_counts": {
+    "calibration": {
+      "entrypoints": 0,
+      "generated": 0,
+      "methods": 0
+    },
+    "maintenance": {
+      "entrypoints": 7,
+      "generated": 0,
+      "methods": 679
+    },
+    "python-regression": {
+      "entrypoints": 1,
+      "generated": 12,
+      "methods": 3257
+    },
+    "rust-tests": {
+      "entrypoints": 5,
+      "generated": 0,
+      "methods": 0
+    },
+    "validation": {
+      "entrypoints": 23,
+      "generated": 22,
+      "methods": 849
+    }
+  },
+  "scientific_qualification": false
+}
