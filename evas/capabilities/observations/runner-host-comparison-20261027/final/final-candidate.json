@@ -1,27 +1,26 @@
 {
   "base": "ac1b6e8d8de743b8da3f862c0f50bdf0a1a1ca14",
-  "commit": "dc8866d35c496ca33ee59f9975a832bdf0f5d036",
-  "tree": "49f493ad5ec6fa7c6bdf2a05c85f0a92da88abd5",
+  "commit": "4afde939d88f65fdfae896275aed59916e0ba04e",
+  "tree": "a68a89e1c145767f830fd5d602ab1be9f96b6b90",
   "paths": [
     "evas/capabilities/data/asset-index.json",
     "evas/capabilities/data/catalog-sources.json",
     "evas/capabilities/data/entrypoint-index.json",
     "evas/capabilities/data/method-index.json",
-    "evas/capabilities/data/registry.json",
-    "evas/docs/development/TRACEABILITY.md"
+    "evas/capabilities/data/registry.json"
   ],
   "files": {
-    "evas/capabilities/data/asset-index.json": "69607631d9e654477db76afaa976979234f0981cdeeffee80317d939c09262c4",
-    "evas/capabilities/data/catalog-sources.json": "43eedbdace520f0a6ed99755dd8bda8cd9c6c40bc67710d9f6d7c6fb2d27e685",
-    "evas/capabilities/data/entrypoint-index.json": "b64770fc121cdce7491d80a05d73b906511163410d39d7118fb079362cbd8b6f",
-    "evas/capabilities/data/method-index.json": "560359e162d6924c43899567e3e48343725c4e3516e70fffa30f9f09e3c599f6",
-    "evas/capabilities/data/registry.json": "7d239f4dff24067ab3aa3c3897e835dc9805a1ed80b7f60555270f62dbf884f9",
-    "evas/docs/development/TRACEABILITY.md": "7f86f45a8001fca4427ef4095f8d84ee1dafe05a9c4b8d8a537275b6d445c1df"
+    "evas/capabilities/data/asset-index.json": "86a38aa641e41b28664d6d7aad18a2eb6d07485b82ed72e33d3032511ba36fb9",
+    "evas/capabilities/data/catalog-sources.json": "51a7f96078125a59c7f9e1f4e5208e408c842f4fc3e759c030fed2ba952146be",
+    "evas/capabilities/data/entrypoint-index.json": "afac82ea6d0541e8ee61991cccf14cf3af1b4d818f90f8998b64c9d053b1fd89",
+    "evas/capabilities/data/method-index.json": "0316100d442cf22972c99944a49da4419cdf5c711cf761d91ce77a405c3d51ee",
+    "evas/capabilities/data/registry.json": "a64386ca681d4c5dd768f0d85d6817293c4c07da7e51c5b91fe7b763aca05d97"
   },
   "old20_preserved": true,
   "scientific_qualification": false,
-  "time_utc": "2026-10-27T11:52:30.893921+00:00",
-  "source_capture": "08fbc0f6239c76278b5c996c229e24bb311a27c7",
+  "time_utc": "2026-10-27T12:48:23.698330+00:00",
+  "parent": "dc8866d35c496ca33ee59f9975a832bdf0f5d036",
+  "source_capture": "78cb43748bf76470f4dedf1b843c67cbc0f0080e",
   "complete_paths": [
     "evas/capabilities/README.md",
     "evas/capabilities/data/asset-index.json",
@@ -41,8 +40,16 @@
     "scripts/tests/test_rust_catalog_reconcile.py",
     "scripts/tests/test_trusted_regression_gate.py"
   ],
-  "precheck": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/precheck-acceptance.json",
-  "review": "Fresh Astra on the complete ac1b6e8d..final delta required",
+  "delta_vs_parent": [
+    "evas/capabilities/data/asset-index.json",
+    "evas/capabilities/data/catalog-sources.json",
+    "evas/capabilities/data/entrypoint-index.json",
+    "evas/capabilities/data/method-index.json",
+    "evas/capabilities/data/registry.json",
+    "scripts/tests/test_rust_catalog_reconcile.py"
+  ],
+  "precheck": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/r2/precheck-acceptance.json",
+  "review": "Incremental tcodex Astra on dc8866d3..final plus r1 closure",
   "CI": "pending",
   "published": false
 }

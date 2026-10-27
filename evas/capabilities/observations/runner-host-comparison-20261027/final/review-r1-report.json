@@ -1,0 +1,537 @@
+{
+  "schema_version": 1,
+  "task": "PR #271 runner-host comparison 独立审核第1轮",
+  "review_type": "fresh-context independent review",
+  "brief": {
+    "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/review-r1-brief.txt",
+    "bytes": 8591,
+    "sha256": "42c777898024e009552e89cf04a7c309c63bd90cc7663eb187a3195d21a4523a",
+    "verified": true
+  },
+  "reviewer": {
+    "provider": "codex",
+    "model": "gpt-6-astra",
+    "options": {
+      "reasoningEffort": "max",
+      "serviceTier": "default"
+    },
+    "runtime_catalog": {
+      "parentThreadId": "thread:delegated-task:command%3Amcp%3A560a6eb9-75ba-49ac-99ec-18d7c7a347e7%3Adelegate-task%3Aevas-runner-host-dc8866d3-astra-r1-20261027",
+      "inheritedProviderInstanceId": "codex",
+      "inheritedModel": "gpt-6-astra",
+      "inheritedOptions": [
+        {
+          "id": "reasoningEffort",
+          "value": "max"
+        },
+        {
+          "id": "serviceTier",
+          "value": "default"
+        }
+      ],
+      "runtimeMode": "full-access",
+      "interactionMode": "default"
+    },
+    "configuration_matches_brief": true,
+    "delegated_further": false
+  },
+  "timing": {
+    "first_recorded_guard_at_utc": "2026-10-27T12:01:10.912197+00:00",
+    "completed_at_utc": "2026-10-27T12:21:23.394567+00:00",
+    "wall_seconds_since_first_guard": 1212.482,
+    "full_turn_start_at_utc": null,
+    "queue_seconds": null,
+    "note": "仅报告可得守卫区间与各检查收据的时间；没有调度排队或完整模型执行耗时。"
+  },
+  "scope": {
+    "pr": "https://github.com/BucketSran/vaEVAS/pull/271",
+    "base": "ac1b6e8d8de743b8da3f862c0f50bdf0a1a1ca14",
+    "base_tree": "1b83f28af63dbaddc60fea500309f19962e7f947",
+    "head": "dc8866d35c496ca33ee59f9975a832bdf0f5d036",
+    "head_tree": "49f493ad5ec6fa7c6bdf2a05c85f0a92da88abd5",
+    "source_capture": "08fbc0f6239c76278b5c996c229e24bb311a27c7",
+    "comparison": "explicit endpoints",
+    "paths": [
+      "evas/capabilities/README.md",
+      "evas/capabilities/data/asset-index.json",
+      "evas/capabilities/data/catalog-sources.json",
+      "evas/capabilities/data/entrypoint-index.json",
+      "evas/capabilities/data/method-index.json",
+      "evas/capabilities/data/registry.json",
+      "evas/capabilities/rust_listing.py",
+      "evas/docs/development/TRACEABILITY.md",
+      "scripts/README.md",
+      "scripts/regression_context_registration.py",
+      "scripts/regression_gate.py",
+      "scripts/tests/regression_registration_fixtures.py",
+      "scripts/tests/test_context_registration.py",
+      "scripts/tests/test_regression_gate.py",
+      "scripts/tests/test_regression_transition.py",
+      "scripts/tests/test_rust_catalog_reconcile.py",
+      "scripts/tests/test_trusted_regression_gate.py"
+    ],
+    "path_count": 17,
+    "source_root": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/source",
+    "fixed_source_verified_git_blobs": 49572,
+    "excluded": "真实工作区的18个tracked改动及2个untracked旧科学候选；CI合并例外条件2–5；完整科学回归。"
+  },
+  "standards": {
+    "findings": [],
+    "conclusion": "未发现需要修复的规范、可信边界、证据身份或派生数据问题。"
+  },
+  "spec": {
+    "findings": [],
+    "conclusion": "固定候选满足方案T和总协调a–e，未发现放宽到其它context字段、跳过观察或由HEAD自授权的问题。"
+  },
+  "coordinator_requirements": {
+    "a": {
+      "result": "pass",
+      "conclusion": "compare_report、transition 的可信 old_entry 与 registration 均调用 _matching_contexts。刷新在 head 中精确查找该已匹配 old_entry 的登记 context；这使三个入口选中同一条目，并满足 d 对保留旧宿主 context 的要求。",
+      "locations": [
+        {
+          "commit": "dc8866d35c496ca33ee59f9975a832bdf0f5d036",
+          "file": "scripts/regression_gate.py",
+          "line": 520,
+          "end_line": 528
+        },
+        {
+          "commit": "dc8866d35c496ca33ee59f9975a832bdf0f5d036",
+          "file": "scripts/regression_gate.py",
+          "line": 765,
+          "end_line": 803
+        },
+        {
+          "commit": "dc8866d35c496ca33ee59f9975a832bdf0f5d036",
+          "file": "scripts/regression_context_registration.py",
+          "line": 387,
+          "end_line": 396
+        }
+      ],
+      "evidence": [
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/independent-controls.json",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/maintained-checks.json"
+      ]
+    },
+    "b": {
+      "result": "pass",
+      "conclusion": "仅归一化 runtime_profile.platform 的 Linux release 段及 variables.ImageVersion；存在 execution_toolchain 时仅处理其同名字段。machine、glibc、Python、PATH、其它变量和其余 context 均保留，并以规范 JSON 精确匹配。非 Linux、尾部附加内容、缺失/畸形字段不会进入宿主容忍路径。",
+      "locations": [
+        {
+          "commit": "dc8866d35c496ca33ee59f9975a832bdf0f5d036",
+          "file": "scripts/regression_gate.py",
+          "line": 25,
+          "end_line": 77
+        }
+      ],
+      "evidence": [
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/independent-controls.json",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/parser-edges.json",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/real-data-independent.json"
+      ]
+    },
+    "c": {
+      "result": "pass",
+      "conclusion": "精确匹配优先且不因其观察失败而退回容忍匹配。无精确匹配时，只有一个宿主候选才能通过；两个及以上候选在 compare、transition、registration 均拒绝，重复精确条目也拒绝。",
+      "locations": [
+        {
+          "commit": "dc8866d35c496ca33ee59f9975a832bdf0f5d036",
+          "file": "scripts/regression_gate.py",
+          "line": 57,
+          "end_line": 77
+        },
+        {
+          "commit": "dc8866d35c496ca33ee59f9975a832bdf0f5d036",
+          "file": "scripts/regression_gate.py",
+          "line": 520,
+          "end_line": 526
+        }
+      ],
+      "evidence": [
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/independent-controls.json"
+      ]
+    },
+    "d": {
+      "result": "pass",
+      "conclusion": "新通过要求刷新；刷新 context 和 observations.metadata 保持原登记值。observed_host 必须与实际宿主字典完全相等，observed_run 必须是去空白后非空的字符串。retention 仅将实际观察的 metadata 替换为已登记 context，全部观察保留，execution_subject 仍须精确等于实际运行。",
+      "locations": [
+        {
+          "commit": "dc8866d35c496ca33ee59f9975a832bdf0f5d036",
+          "file": "scripts/regression_gate.py",
+          "line": 774,
+          "end_line": 825
+        }
+      ],
+      "evidence": [
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/independent-controls.json",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/logs/test_regression_transition.txt"
+      ]
+    },
+    "e": {
+      "result": "pass",
+      "conclusion": "Rust 与回归比较器使用相同的 HOST_PLATFORM 格式。Rust 只归一化 kernel release，环境其它部分、工具链、源身份、target、profile、ID 与 ignored 状态仍比较。新增差异报告不改变旧收据的自对账结果。真实新镜像收据 904 个 ID 对账通过。",
+      "locations": [
+        {
+          "commit": "dc8866d35c496ca33ee59f9975a832bdf0f5d036",
+          "file": "evas/capabilities/rust_listing.py",
+          "line": 106,
+          "end_line": 170
+        },
+        {
+          "commit": "dc8866d35c496ca33ee59f9975a832bdf0f5d036",
+          "file": "scripts/capabilities/generate_catalog.py",
+          "line": 339,
+          "end_line": 345
+        },
+        {
+          "commit": "dc8866d35c496ca33ee59f9975a832bdf0f5d036",
+          "file": "scripts/traceability.py",
+          "line": 231,
+          "end_line": 241
+        }
+      ],
+      "evidence": [
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/real-data-independent.json",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/parser-edges.json",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/generation-replay.json",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/logs/test_rust_catalog_reconcile.txt"
+      ]
+    }
+  },
+  "assessments": [
+    {
+      "id": "parser-and-runtime-shape",
+      "result": "pass",
+      "detail": "fullmatch 锚定 Linux、受 machine 约束的末尾架构和 glibc major.minor 字面值。惰性 release 允许连字符，不能吞掉最终 glibc 差异。两边均缺 execution_toolchain 时保留同一缺失结构；仅一边缺失或值类型异常不能容忍。ImageVersion 只要求非空字符串，不额外限定版本号语法。原来可精确匹配的非 Linux 或历史简化结构仍走精确路径。",
+      "evidence": [
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/independent-controls.json",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/parser-edges.json"
+      ]
+    },
+    {
+      "id": "all-observations-and-retention",
+      "result": "pass",
+      "detail": "宿主匹配后仍执行原 method manifest、setup skip、通过条件签名、非通过条件身份/诊断及 fixture 检查。新增通过仍触发刷新，未以环境容忍跳过观察比较。独立控制覆盖改变失败、删除既有通过和更改通过身份。刷新拒绝伪造宿主、缺 run、换 context、换 observation 或把 execution_subject 回填成旧宿主。",
+      "evidence": [
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/independent-controls.json",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/logs/test_regression_gate.txt",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/logs/test_regression_transition.txt"
+      ]
+    },
+    {
+      "id": "trusted-boundary-and-consumers",
+      "result": "pass",
+      "detail": "workflow 固定 bootstrap 72f1c2e4c22d8a2f743da8ec23101d022a3096d5 的实际 blob 与本轮测试的 loader 完全相同。gate 与 registration 从事件选定可信提交读取；旧比较失败前不读 HEAD proposal。loader 第204–207行继续精确核对 trusted_comparison。workflow 只核对结果/退出码并保存完整 JSON，新增 host_runtime_difference 不破坏其消费者。未改变收据 schema 或 raw_successful。",
+      "locations": [
+        {
+          "commit": "dc8866d35c496ca33ee59f9975a832bdf0f5d036",
+          "file": "scripts/run_trusted_regression_gate.py",
+          "line": 128,
+          "end_line": 207
+        },
+        {
+          "commit": "dc8866d35c496ca33ee59f9975a832bdf0f5d036",
+          "file": ".github/workflows/numerical-assurance.yml",
+          "line": 474,
+          "end_line": 487
+        },
+        {
+          "commit": "dc8866d35c496ca33ee59f9975a832bdf0f5d036",
+          "file": ".github/workflows/numerical-assurance.yml",
+          "line": 589,
+          "end_line": 608
+        }
+      ],
+      "evidence": [
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/scope-and-trust.json",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/logs/test_trusted_regression_gate.txt"
+      ]
+    },
+    {
+      "id": "registration-authority",
+      "result": "pass",
+      "detail": "固定 language/runtime/invocation、必须改变 criteria 或 collector、旧 baseline 摘要、当前 context 摘要、entry/E1/raw artifacts/审查与映射摘要的绑定均保留。host-only 查找仅选择当前旧条目，不放宽 E1 的运行配置，也不产生新增授权。",
+      "locations": [
+        {
+          "commit": "dc8866d35c496ca33ee59f9975a832bdf0f5d036",
+          "file": "scripts/regression_context_registration.py",
+          "line": 327,
+          "end_line": 415
+        }
+      ],
+      "evidence": [
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/independent-controls.json",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/logs/test_context_registration.txt"
+      ]
+    },
+    {
+      "id": "unchanged-criteria-collector-language-invocation",
+      "result": "pass",
+      "detail": "完整17路径差异未修改 evas/tests、evas/validation、evas/examples、experiments、报告采集器、判据身份、语言配置、workflow 或 invocation。12个相关受保护文件逐一核对 base/head Git blob 相同。",
+      "evidence": [
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/scope-and-trust.json"
+      ]
+    },
+    {
+      "id": "discovery-and-derived-data",
+      "result": "pass",
+      "detail": "31个发现入口中复用30个、重收scripts维护入口1个。逐一核验收据哈希、固定归档Git blob、collector与owner module身份。重放固定生成器后5个改变的catalog JSON逐字节等于head，旧56194个对象版本完整保留。新方法ID共11个，与TRACEABILITY中maintenance 637→648、pending 4743→4754一致，未新增语义资格。",
+      "evidence": [
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/discovery-independent.json",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/generation-replay.json",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/archive-and-derivation.json"
+      ]
+    },
+    {
+      "id": "documentation-and-evidence-scope",
+      "result": "pass",
+      "detail": "两份README及PR说明准确列出精确优先、唯一宿主匹配、glibc/架构约束、逐条观察和来源字段。Rust仍明确listing不是测试体执行。新宿主能否准入取决于其余字段及观察；本报告不将40487169246的字段差异推广为所有未来镜像的保证。",
+      "locations": [
+        {
+          "commit": "dc8866d35c496ca33ee59f9975a832bdf0f5d036",
+          "file": "scripts/README.md",
+          "line": 264,
+          "end_line": 270
+        },
+        {
+          "commit": "dc8866d35c496ca33ee59f9975a832bdf0f5d036",
+          "file": "evas/capabilities/README.md",
+          "line": 104,
+          "end_line": 111
+        }
+      ],
+      "evidence": [
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/pr-body.final.md",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/real-data-independent.json"
+      ]
+    },
+    {
+      "id": "real-image-other-fields",
+      "result": "pass",
+      "detail": "独立递归比较40487169246的四个完整metadata，以及四个登记context的runtime_profile。差异恰为top-level与execution_toolchain内的platform和variables.ImageVersion；PATH、Python构建串、其余变量及工具链无额外差异。未建议或实现其它字段放宽。",
+      "evidence": [
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/real-data-independent.json"
+      ]
+    }
+  ],
+  "decision": {
+    "review_passed": true,
+    "no_unresolved_blocking_findings": true,
+    "blocking_finding_count": 0,
+    "nonblocking_finding_count": 0,
+    "condition_1_satisfied": true,
+    "conclusion": "本轮独立审核通过，满足“无未决阻断发现”。此结论只覆盖固定候选代码和上述证据，不代替主控核验CI与合入条件。"
+  },
+  "checks": {
+    "newly_executed": {
+      "maintained_tests": [
+        {
+          "module": "test_regression_gate",
+          "command": [
+            "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+            "-B",
+            "-m",
+            "unittest",
+            "discover",
+            "-s",
+            "scripts/tests",
+            "-p",
+            "test_regression_gate.py",
+            "-v"
+          ],
+          "returncode": 0,
+          "start": "2026-10-27T12:05:41.605040+00:00",
+          "end": "2026-10-27T12:05:43.566969+00:00",
+          "log": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/logs/test_regression_gate.txt",
+          "tests_run": 27,
+          "cwd": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/scratch/source"
+        },
+        {
+          "module": "test_regression_transition",
+          "command": [
+            "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+            "-B",
+            "-m",
+            "unittest",
+            "discover",
+            "-s",
+            "scripts/tests",
+            "-p",
+            "test_regression_transition.py",
+            "-v"
+          ],
+          "returncode": 0,
+          "start": "2026-10-27T12:05:43.567425+00:00",
+          "end": "2026-10-27T12:05:43.844636+00:00",
+          "log": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/logs/test_regression_transition.txt",
+          "tests_run": 33,
+          "cwd": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/scratch/source"
+        },
+        {
+          "module": "test_context_registration",
+          "command": [
+            "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+            "-B",
+            "-m",
+            "unittest",
+            "discover",
+            "-s",
+            "scripts/tests",
+            "-p",
+            "test_context_registration.py",
+            "-v"
+          ],
+          "returncode": 0,
+          "start": "2026-10-27T12:05:43.845241+00:00",
+          "end": "2026-10-27T12:05:46.684723+00:00",
+          "log": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/logs/test_context_registration.txt",
+          "tests_run": 36,
+          "cwd": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/scratch/source"
+        },
+        {
+          "module": "test_trusted_regression_gate",
+          "command": [
+            "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+            "-B",
+            "-m",
+            "unittest",
+            "discover",
+            "-s",
+            "scripts/tests",
+            "-p",
+            "test_trusted_regression_gate.py",
+            "-v"
+          ],
+          "returncode": 0,
+          "start": "2026-10-27T12:05:46.685306+00:00",
+          "end": "2026-10-27T12:06:42.328582+00:00",
+          "log": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/logs/test_trusted_regression_gate.txt",
+          "tests_run": 20,
+          "cwd": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/scratch/source"
+        },
+        {
+          "module": "test_rust_catalog_reconcile",
+          "command": [
+            "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+            "-B",
+            "-m",
+            "unittest",
+            "discover",
+            "-s",
+            "scripts/tests",
+            "-p",
+            "test_rust_catalog_reconcile.py",
+            "-v"
+          ],
+          "returncode": 0,
+          "start": "2026-10-27T12:06:42.329666+00:00",
+          "end": "2026-10-27T12:07:00.053245+00:00",
+          "log": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/logs/test_rust_catalog_reconcile.txt",
+          "tests_run": 6,
+          "cwd": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/scratch/source"
+        }
+      ],
+      "maintained_tests_count": 122,
+      "independent_report_controls": {
+        "count": 103,
+        "failed": 0,
+        "evidence": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/independent-controls.json"
+      },
+      "rust_real_receipt_controls": {
+        "count": 18,
+        "failed": 0,
+        "evidence": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/real-data-independent.json"
+      },
+      "parser_edge_controls": {
+        "count": 10,
+        "failed": 0,
+        "evidence": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/parser-edges.json"
+      },
+      "generator_replay": {
+        "exit_code": 0,
+        "changed_json_outputs": 5,
+        "all_byte_identical": true,
+        "evidence": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/generation-replay.json"
+      },
+      "archive_bindings_verified": 19,
+      "source_and_guard_evidence": [
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/source-identity.json",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/scope-and-trust.json",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/fixture-boundary.json",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/guard-comparison.json"
+      ],
+      "workspace_checks_before_after": {
+        "before_exit": 0,
+        "after_exit": 0
+      },
+      "diff_check": {
+        "exit_code": 0,
+        "log": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/diff-check.txt"
+      }
+    },
+    "reused": {
+      "precheck_source_capture": "08fbc0f6239c76278b5c996c229e24bb311a27c7",
+      "precheck_final_file_bindings": 17,
+      "identity_mismatches": [],
+      "scripts_modules": 13,
+      "scripts_tests": 246,
+      "capabilities_tests": 77,
+      "capability_view_files": 82,
+      "maintenance": "ci_lint.py --plan 全部选定检查返回0；本审核未重跑cargo或科学测试。",
+      "inventory": "已归档require-catalog日志返回0，31个入口对账；未重复执行完整inventory。",
+      "receipts": [
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/precheck-acceptance.json",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/inventory-acceptance.json",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/reused-checks.json"
+      ]
+    },
+    "count_note": "简报称14个scripts模块；实际预检日志与PR正文为13个、246项。本轮按实际证据报告。122项新执行测试是其子集，不叠加为新的独立覆盖分母。",
+    "corrected_review_probe": {
+      "evidence": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/probe-attempts.json",
+      "reason": "首次对生成时与重新载入后的Rust结果直接比较，因binaries顺序不同触发审查脚本断言。按entrypoint对账字段完全相同，并追加base/head同catalog精确相等检查；不是候选缺陷。"
+    }
+  },
+  "preservation": {
+    "real_head": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+    "index_sha256": "a2e18b66fd9b3e29093343793d45781c11a717c05c35103d4e9b1da8eec87d71",
+    "old_candidates": {
+      "tracked": 18,
+      "untracked": 2,
+      "all_paths_statuses_and_content_hashes_unchanged": true
+    },
+    "shared_config_sha256": "de2b08ef3ba66e96be8b70c87346ff4a96f905e1272934ddd86c218dba501ea8",
+    "shared_config_equals_accepted": true,
+    "extra_editor_metadata_changes": [],
+    "guard_before": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/guard-before.json",
+    "guard_after": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/guard-after.json",
+    "comparison": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027/guard-comparison.json",
+    "allowed_write_root": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/runner-host-comparison-astra-r1-20261027",
+    "project_worktrees_created": 0,
+    "independent_scratch_git_only": true
+  },
+  "unresolved_findings": [],
+  "ci": {
+    "checked_by_this_review": false,
+    "checks_status": "unknown; not queried or awaited",
+    "watching": false,
+    "coordinator_owned_conditions": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "note": "未核验PR自身admission失败原因、其余CI颜色、PR本次CI报告离线判定、合入树或main workflow_dispatch复验。"
+  },
+  "limits": [
+    "未执行真实compiler/kernel/DUT/backend/SSH/Spectre/Harbor或科学测试体。Rust执行路径测试使用既有fake工具fixture，真实CI listing仅离线读取。",
+    "observed_run要求非空来源引用；代码不向GitHub验证该字符串是否真实运行，真实性仍依赖受审来源记录。observed_host与实际报告字段有精确机器校验。",
+    "只审核ac1b6e8d8de743b8da3f862c0f50bdf0a1a1ca14..dc8866d35c496ca33ee59f9975a832bdf0f5d036；若候选代码、条件或证据变化，需要对增量复核。"
+  ],
+  "scientific_qualification": false,
+  "semantic_qualification": false,
+  "pr_link": {
+    "registered": true,
+    "url": "https://github.com/BucketSran/vaEVAS/pull/271",
+    "verified_in_thread": true,
+    "watching": false
+  }
+}
