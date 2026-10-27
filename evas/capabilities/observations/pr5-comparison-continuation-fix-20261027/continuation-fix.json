@@ -1,0 +1,17 @@
+{
+  "finding": "PR5-ASTRA-R1-01",
+  "original_candidate": "a7e82dcd514aa3b4fd75a2d9eb9c16319a8d19aa",
+  "fixed_capture": "54effb075a42b6a2de55520e8bc335e6cfe0885a",
+  "worker_patch": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation/source.patch",
+  "patch_sha256": "858005452e3ba1094ec49c17c17e0e04d4d1b2eddd8c68a45953c6400778eea4",
+  "worker_receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/sol-implementation/receipt.json",
+  "primary_intake": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/worker-intake.json",
+  "paths": [
+    "experiments/backends/comparison/ingest.py",
+    "experiments/backends/comparison/runner.py",
+    "experiments/backends/comparison/test_worker_adapter.py"
+  ],
+  "old_START_initial_bytes_preserved": true,
+  "new_analysis_sources_bound_to_CONTINUATION": true,
+  "scientific_execution": false
+}
