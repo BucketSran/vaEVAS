@@ -1303,6 +1303,38 @@
       "version": "2aa2834ba89e9ecaca15e6161ff79051021db8fc2c3e3d08230e5684d4bf74e0"
     },
     {
+      "collector": "binary-listing",
+      "dependencies": [
+        {
+          "id": "source:dd8b4eb4612b272f0eb05592",
+          "sha256": "4dfdae5a715daf0e83f1cb40bdfc7cd45222bdcb84dab7a22e062cd6c82e00c1",
+          "version": "6363af9172e623f12169cf5a27a49a8ece1460c0330e2c038970aa3ce3fda11e"
+        }
+      ],
+      "id": "entry:31be033026c87fb6c21b9022",
+      "kind": "entrypoint",
+      "listing_profile": "linux-x86_64-regression-opt1-v1",
+      "listing_source": {
+        "id": "source:dd8b4eb4612b272f0eb05592",
+        "sha256": "4dfdae5a715daf0e83f1cb40bdfc7cd45222bdcb84dab7a22e062cd6c82e00c1",
+        "version": "6363af9172e623f12169cf5a27a49a8ece1460c0330e2c038970aa3ce3fda11e"
+      },
+      "namespace": "rust-tests",
+      "observer_sha256": "f1ade74617fa171c5048246986d52e772b0913ffce28713af6e2fa4af5904892",
+      "provenance_scope": "actual native listing, original observer; not upgraded to later helper execution",
+      "rust_target": {
+        "name": "evas_kernel",
+        "package": "evas-kernel",
+        "target_kind": [
+          "lib"
+        ],
+        "version": "0.25.0"
+      },
+      "schema_version": 1,
+      "status": "active",
+      "version": "fff6be9e447139304d3ca3086a5bc386e89d030032ae3609dfa63889eda5ae00"
+    },
+    {
       "actual_receipt": {
         "id": "source:1fe2949616d9beea1c2f3e99",
         "sha256": "5e43585e046d86faa3a673e8753c695c3ca1938180392097e85ada3ffcaacd81",
@@ -5215,6 +5247,38 @@
       "version": "2ed3e94272dc73646a16de6e02a96a0bf90c53d027e5809d398e1a8cfd475fbe"
     },
     {
+      "collector": "binary-listing",
+      "dependencies": [
+        {
+          "id": "source:dd8b4eb4612b272f0eb05592",
+          "sha256": "4dfdae5a715daf0e83f1cb40bdfc7cd45222bdcb84dab7a22e062cd6c82e00c1",
+          "version": "6363af9172e623f12169cf5a27a49a8ece1460c0330e2c038970aa3ce3fda11e"
+        }
+      ],
+      "id": "entry:875c284ae4c832b541413dbb",
+      "kind": "entrypoint",
+      "listing_profile": "linux-x86_64-regression-opt1-v1",
+      "listing_source": {
+        "id": "source:dd8b4eb4612b272f0eb05592",
+        "sha256": "4dfdae5a715daf0e83f1cb40bdfc7cd45222bdcb84dab7a22e062cd6c82e00c1",
+        "version": "6363af9172e623f12169cf5a27a49a8ece1460c0330e2c038970aa3ce3fda11e"
+      },
+      "namespace": "rust-tests",
+      "observer_sha256": "f1ade74617fa171c5048246986d52e772b0913ffce28713af6e2fa4af5904892",
+      "provenance_scope": "actual native listing, original observer; not upgraded to later helper execution",
+      "rust_target": {
+        "name": "history_consumer",
+        "package": "evas-kernel",
+        "target_kind": [
+          "test"
+        ],
+        "version": "0.25.0"
+      },
+      "schema_version": 1,
+      "status": "active",
+      "version": "7477e435d2f6589f248a763843532b8895b9176be2f6ffc0e7c528478c8253cd"
+    },
+    {
       "actual_receipt": {
         "id": "source:16aa47b506444bff1b75b5c1",
         "sha256": "2f8853cdcb3ca7f0fe212471e1996c26c82c65b30b32bd1e74cb8fb7490d9378",
@@ -5345,6 +5409,38 @@
       "schema_version": 1,
       "status": "active",
       "version": "0f672280ecc37ae40cdbbe8a20b98ba0a4faaa429d6102b7764854ae51709a85"
+    },
+    {
+      "collector": "binary-listing",
+      "dependencies": [
+        {
+          "id": "source:dd8b4eb4612b272f0eb05592",
+          "sha256": "4dfdae5a715daf0e83f1cb40bdfc7cd45222bdcb84dab7a22e062cd6c82e00c1",
+          "version": "6363af9172e623f12169cf5a27a49a8ece1460c0330e2c038970aa3ce3fda11e"
+        }
+      ],
+      "id": "entry:8c3f459a1a336792a4a33ae8",
+      "kind": "entrypoint",
+      "listing_profile": "linux-x86_64-regression-opt1-v1",
+      "listing_source": {
+        "id": "source:dd8b4eb4612b272f0eb05592",
+        "sha256": "4dfdae5a715daf0e83f1cb40bdfc7cd45222bdcb84dab7a22e062cd6c82e00c1",
+        "version": "6363af9172e623f12169cf5a27a49a8ece1460c0330e2c038970aa3ce3fda11e"
+      },
+      "namespace": "rust-tests",
+      "observer_sha256": "f1ade74617fa171c5048246986d52e772b0913ffce28713af6e2fa4af5904892",
+      "provenance_scope": "actual native listing, original observer; not upgraded to later helper execution",
+      "rust_target": {
+        "name": "evas-kernel",
+        "package": "evas-kernel",
+        "target_kind": [
+          "bin"
+        ],
+        "version": "0.25.0"
+      },
+      "schema_version": 1,
+      "status": "active",
+      "version": "f7830c53ecf99c5c03265b9e032e17f2ef9a62b2ddade053647e955b855017e4"
     },
     {
       "actual_receipt": {
@@ -6527,6 +6623,38 @@
       "schema_version": 1,
       "status": "active",
       "version": "0ddcce0f385b8791a74416ecbdccfb2465f8fd11fbacbf6d420cb38b356f8f50"
+    },
+    {
+      "collector": "binary-listing",
+      "dependencies": [
+        {
+          "id": "source:dd8b4eb4612b272f0eb05592",
+          "sha256": "4dfdae5a715daf0e83f1cb40bdfc7cd45222bdcb84dab7a22e062cd6c82e00c1",
+          "version": "6363af9172e623f12169cf5a27a49a8ece1460c0330e2c038970aa3ce3fda11e"
+        }
+      ],
+      "id": "entry:ad9c0c08e83601848bd17d89",
+      "kind": "entrypoint",
+      "listing_profile": "linux-x86_64-regression-opt1-v1",
+      "listing_source": {
+        "id": "source:dd8b4eb4612b272f0eb05592",
+        "sha256": "4dfdae5a715daf0e83f1cb40bdfc7cd45222bdcb84dab7a22e062cd6c82e00c1",
+        "version": "6363af9172e623f12169cf5a27a49a8ece1460c0330e2c038970aa3ce3fda11e"
+      },
+      "namespace": "rust-tests",
+      "observer_sha256": "f1ade74617fa171c5048246986d52e772b0913ffce28713af6e2fa4af5904892",
+      "provenance_scope": "actual native listing, original observer; not upgraded to later helper execution",
+      "rust_target": {
+        "name": "evas_ir",
+        "package": "evas-ir",
+        "target_kind": [
+          "lib"
+        ],
+        "version": "0.1.0"
+      },
+      "schema_version": 1,
+      "status": "active",
+      "version": "418a05d621f8327496857c3942afed459a7c038503d75cfe4d41ae663c8ad2dc"
     },
     {
       "actual_receipt": {
@@ -9638,6 +9766,38 @@
       "status": "active",
       "version": "f30ad145b3a884f7e9082e0b5075a5b5e8b7ca4eaf3b8c10f7807ff881fb05ef",
       "workflow_sha256": "70dba1d0705b83d4811e2d79502cb96b891fe3cd8ea32cfb5c5ddf7b3f407dfa"
+    },
+    {
+      "collector": "binary-listing",
+      "dependencies": [
+        {
+          "id": "source:dd8b4eb4612b272f0eb05592",
+          "sha256": "4dfdae5a715daf0e83f1cb40bdfc7cd45222bdcb84dab7a22e062cd6c82e00c1",
+          "version": "6363af9172e623f12169cf5a27a49a8ece1460c0330e2c038970aa3ce3fda11e"
+        }
+      ],
+      "id": "entry:f0df6da6a340ee8656bf7a13",
+      "kind": "entrypoint",
+      "listing_profile": "linux-x86_64-regression-opt1-v1",
+      "listing_source": {
+        "id": "source:dd8b4eb4612b272f0eb05592",
+        "sha256": "4dfdae5a715daf0e83f1cb40bdfc7cd45222bdcb84dab7a22e062cd6c82e00c1",
+        "version": "6363af9172e623f12169cf5a27a49a8ece1460c0330e2c038970aa3ce3fda11e"
+      },
+      "namespace": "rust-tests",
+      "observer_sha256": "f1ade74617fa171c5048246986d52e772b0913ffce28713af6e2fa4af5904892",
+      "provenance_scope": "actual native listing, original observer; not upgraded to later helper execution",
+      "rust_target": {
+        "name": "transport",
+        "package": "evas-ir",
+        "target_kind": [
+          "test"
+        ],
+        "version": "0.1.0"
+      },
+      "schema_version": 1,
+      "status": "active",
+      "version": "0f04745a8145a141b878efd4bc6cc58b1d19dbeaaa9567aa93d5dc7a4fd72195"
     },
     {
       "collector": "binary-listing",
