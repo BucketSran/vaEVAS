@@ -1,0 +1,72 @@
+{
+  "accepted_at_utc": "2026-10-27T08:20:15.142738+00:00",
+  "accepted_by": "tclaude/claude-opus-5-5 main controller",
+  "candidate": "b7c913ffc93d145302b73014d470a44d7d91a223",
+  "tree": "1b83f28af63dbaddc60fea500309f19962e7f947",
+  "base": "8a091f4db5fca23b38fef7fef674f675799161cb",
+  "previous_reviewed_head": "983b1ef6a4804c29483279ca34a7a92fce56a858",
+  "source_review": {
+    "acceptance": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/review-r3-acceptance.json",
+    "report": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-continuation-fix-astra-r3-20261027/review-report.json",
+    "report_sha256": "8a824b9b4c72050670fbfd4b065dfe877daf4147a603a73f6c0cda8292543d6d",
+    "model": "gpt-6-astra",
+    "options": [
+      {
+        "id": "reasoningEffort",
+        "value": "max"
+      },
+      {
+        "id": "serviceTier",
+        "value": "default"
+      }
+    ],
+    "findings": 0
+  },
+  "context_review": {
+    "acceptance": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/context-registration-20261027/review-r4-acceptance.json",
+    "report": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr5-exact-context-astra-r4-20261027/review-report.json",
+    "report_sha256": "132c33c409feaf95805481397dc71d0d1c441d3ba11fd8697e51eab12e94d022",
+    "findings": 0
+  },
+  "reviewed_source_paths_exact": 22,
+  "delta_from_reviewed_head": [
+    "evas/capabilities/data/asset-index.json",
+    "evas/capabilities/data/catalog-sources.json",
+    "evas/capabilities/data/entrypoint-index.json",
+    "evas/capabilities/data/method-index.json",
+    "evas/capabilities/data/registry.json",
+    "evas/validation/baselines/regression-v1.json",
+    "evas/validation/baselines/regression-v1.review.json",
+    "scripts/context-registration-bundle.json"
+  ],
+  "delta_classes": {
+    "generated_regenerated": [
+      "evas/capabilities/data/asset-index.json",
+      "evas/capabilities/data/catalog-sources.json",
+      "evas/capabilities/data/entrypoint-index.json",
+      "evas/capabilities/data/method-index.json",
+      "evas/capabilities/data/registry.json"
+    ],
+    "main_reviewed_merged": [
+      "evas/validation/baselines/regression-v1.json",
+      "evas/validation/baselines/regression-v1.review.json",
+      "scripts/context-registration-bundle.json"
+    ]
+  },
+  "generated_checks": [
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/context-registration-20261027/pr266-rebind-20261027/traceability-generate.txt",
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/context-registration-20261027/pr266-rebind-20261027/capability-render.txt",
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/context-registration-20261027/pr266-rebind-20261027/maintenance-fast-checks.txt",
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/context-registration-20261027/pr266-rebind-20261027/capability-views.txt",
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/context-registration-20261027/pr266-rebind-20261027/affected-catalog-tests.txt",
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/context-registration-20261027/pr266-rebind-20261027/affected-inventory-tests.txt",
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/context-registration-20261027/pr266-rebind-20261027/affected-selection-tests.txt",
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/context-registration-20261027/pr266-rebind-20261027/diff-check.txt"
+  ],
+  "activation_workflow": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/context-registration-20261027/pr266-rebind-20261027/activation-workflow-acceptance.json",
+  "remaining_actionable_findings": [],
+  "new_review_round_required": false,
+  "reason": "Every reviewed 983b source byte is retained; the remaining delta is main content already accepted by r4 and merged (#267, #268) plus deterministic catalog/traceability outputs checked by the generator, ci_lint and 82-view consistency (README rule: derived-output corrections are verified by the main controller).",
+  "necessary_CI": "pending",
+  "scientific_qualification": false
+}
