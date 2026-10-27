@@ -1,0 +1,29 @@
+{
+  "base": "e10e1af5796f0cc7af3b6b5f5d26c420c0c03325",
+  "source_capture": "4fc9adf029702b60cfac8dcd1ad307c3705d5454",
+  "paths": [
+    "evas/validation/baselines/regression-v1.review.json",
+    "scripts/context-registration-bundle.json"
+  ],
+  "criteria_id": "f54a2eac6238fa60cd4bc71b5aa74a6717077ad2cc9a8c8b25b4c2ca2880c625",
+  "criteria_files": 3604,
+  "dut_id": "5e9bf28ad121569a6975811f0b5ea9e60423e676e6dfcf88048948bfd19ba056",
+  "dut_files": 327,
+  "criteria_DUT_exact_current_context": true,
+  "unchanged_execution_and_trust_paths": [
+    ".github/workflows/numerical-assurance.yml",
+    "evas/validation/baselines/regression-v1.json",
+    "scripts/run_trusted_regression_gate.py",
+    "scripts/regression_gate.py",
+    "scripts/regression_context_registration.py",
+    "scripts/materialize_registration_bundle.py",
+    "scripts/run_regression.py",
+    "scripts/ci_evidence.py",
+    "scripts/regression_reason_identity.py",
+    "scripts/regression_observation_policy.json"
+  ],
+  "baseline_unchanged": true,
+  "proposal": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/context-registration-20261027/governance-draft/receipt.json",
+  "scientific_execution": false,
+  "scientific_qualification": false
+}
