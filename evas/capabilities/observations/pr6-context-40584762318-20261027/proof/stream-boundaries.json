@@ -1,0 +1,72 @@
+{
+  "stdout": {
+    "parts": [
+      {
+        "shard_index": 0,
+        "source": "pr6/e1-bundle-sonnet-20261027/artifacts/python-regression-shard-0/regression-evidence/stdout.txt",
+        "offset": 0,
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "shard_index": 1,
+        "source": "pr6/e1-bundle-sonnet-20261027/artifacts/python-regression-shard-1/regression-evidence/stdout.txt",
+        "offset": 0,
+        "bytes": 170,
+        "sha256": "31885cbb279f62211e79e79a07f9884381416585397d403a2216a93af4cfbce1"
+      },
+      {
+        "shard_index": 2,
+        "source": "pr6/e1-bundle-sonnet-20261027/artifacts/python-regression-shard-2/regression-evidence/stdout.txt",
+        "offset": 170,
+        "bytes": 10391,
+        "sha256": "ebb893730317d81d9a6303fc36bfebf60aaddfa95a033b3d14eaf4a0d4c9792f"
+      },
+      {
+        "shard_index": 3,
+        "source": "pr6/e1-bundle-sonnet-20261027/artifacts/python-regression-shard-3/regression-evidence/stdout.txt",
+        "offset": 10561,
+        "bytes": 921,
+        "sha256": "583f1eaee4dcbb66f13ef6011bd9c33970ea5baac984334788d8606e10411bc3"
+      }
+    ],
+    "total_bytes": 11482,
+    "total_sha256": "9a16bdb2b074fd1afc2bce9763b978a9060c6de504e816446848aa6cafa53f40",
+    "order": "ascending shard_index 0..3, plain byte concatenation without separator"
+  },
+  "stderr": {
+    "parts": [
+      {
+        "shard_index": 0,
+        "source": "pr6/e1-bundle-sonnet-20261027/artifacts/python-regression-shard-0/regression-evidence/stderr.txt",
+        "offset": 0,
+        "bytes": 401495,
+        "sha256": "cad70a02fbcb9709ebb8b91cb1080c92319421d64c2b0c813527381c447f7ffa"
+      },
+      {
+        "shard_index": 1,
+        "source": "pr6/e1-bundle-sonnet-20261027/artifacts/python-regression-shard-1/regression-evidence/stderr.txt",
+        "offset": 401495,
+        "bytes": 403111,
+        "sha256": "0d7cff05bbc4a85ce112ad23646fd420c0b17d26ea24ebf714f0301ed8e8f149"
+      },
+      {
+        "shard_index": 2,
+        "source": "pr6/e1-bundle-sonnet-20261027/artifacts/python-regression-shard-2/regression-evidence/stderr.txt",
+        "offset": 804606,
+        "bytes": 431739,
+        "sha256": "1fa3a2578d870e65152400b9fb893cbc08305d638d507e6d4257585334cdef31"
+      },
+      {
+        "shard_index": 3,
+        "source": "pr6/e1-bundle-sonnet-20261027/artifacts/python-regression-shard-3/regression-evidence/stderr.txt",
+        "offset": 1236345,
+        "bytes": 430952,
+        "sha256": "b180cf9839771322cc0a2a9d19f2777bf7c6fee5224f979b652bcce06c1cdd81"
+      }
+    ],
+    "total_bytes": 1667297,
+    "total_sha256": "3339f28b11497b4c2b36504e7371d14199d154743b4846cb6184c2bae598f36f",
+    "order": "ascending shard_index 0..3, plain byte concatenation without separator"
+  }
+}

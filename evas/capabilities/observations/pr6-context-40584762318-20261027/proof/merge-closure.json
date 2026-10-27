@@ -1,0 +1,24 @@
+{
+  "at_utc": "2026-10-27T21:48:41.374968+00:00",
+  "run": 40584762318,
+  "attempt": 1,
+  "merge_commit": "253082c49e6b37155becf8ed2e40a899bf99c130",
+  "parents": [
+    "4d6ebc71efea35822a28f2861f2b0a2a6db17e59",
+    "fa5556de20de4fecbf9db4e3630cd5d6754b07c2"
+  ],
+  "tree": "470ad588ddeb848b7c05d3f23656a96f085f8bfd",
+  "tree_equals_head_tree": true,
+  "paths_differing_from_head": 0,
+  "source": "checkout step of jobs 122474859180 (regression (0)) and 122477257042 (regression-admission): fetch +253082c4\u2026:refs/remotes/pull/269/merge, HEAD is now at 253082c4 Merge fa5556de\u2026 into 4d6ebc71\u2026",
+  "logs": {
+    "job-122474859180.log": "7ad92c7b2367ec5901046b495c70ff5a9568ebbf85e91f42d1ff6828ff8484bb",
+    "job-122477257042.log": "4b0a7b6b036d408e0c0f50207b8a8a5e79da5803a2dc23fbc19d8a83640742b5"
+  },
+  "fetch": {
+    "argv": "git --no-lazy-fetch fetch --no-tags --no-write-fetch-head --no-auto-maintenance --no-recurse-submodules https://github.com/BucketSran/vaEVAS.git 253082c4\u2026",
+    "returncode": 0,
+    "writes": "objects only; no ref, no FETCH_HEAD; shared config sha256 de2b08ef\u2026 before and after"
+  },
+  "verified_by": "primary mcp:90cdf183-ff98-4a99-8913-5020e3397b08 with git rev-list --parents, rev-parse ^{tree}, diff --name-only"
+}

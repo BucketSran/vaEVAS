@@ -1,0 +1,91 @@
+{
+  "run": 40584762318,
+  "attempt": 1,
+  "head": "fa5556de20de4fecbf9db4e3630cd5d6754b07c2",
+  "tree": "470ad588ddeb848b7c05d3f23656a96f085f8bfd",
+  "trusted_base": "4d6ebc71efea35822a28f2861f2b0a2a6db17e59",
+  "ci_merge_checkout": "253082c49e6b37155becf8ed2e40a899bf99c130",
+  "ci_merge_checkout_locally_verified": true,
+  "files": [
+    {
+      "path": "bundle/artifact_manifest",
+      "bytes": 1396,
+      "sha256": "67a90613841be53eb60a54909c96090e19670a1b23b4f88496bbaa3bf9cc5cb1"
+    },
+    {
+      "path": "bundle/collector_manifest",
+      "bytes": 356,
+      "sha256": "07c2295a3e878c283f6d0d1870b154303bc2038f4a3744ed3fdf27788ff25bcb"
+    },
+    {
+      "path": "bundle/composition_recipe",
+      "bytes": 620,
+      "sha256": "4536d2c83a482ca519c3c00d5a030b45281e8ad3bccf05e8999ca784e7e6da9a"
+    },
+    {
+      "path": "bundle/dut_build",
+      "bytes": 2057,
+      "sha256": "0e08420cee2f2d8fa48adc08affd346cdc800df6fd895c33908a500fb6c5e9e7"
+    },
+    {
+      "path": "bundle/kernel_binary",
+      "bytes": 105862328,
+      "sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe"
+    },
+    {
+      "path": "bundle/report.json",
+      "bytes": 41458228,
+      "sha256": "35d74e62f8933cb10c8f8298f5a65389fa56b1cd6faadb4f8a09108f14d3fa75"
+    },
+    {
+      "path": "bundle/shard_reports",
+      "bytes": 44736958,
+      "sha256": "9d831047d49defaab4bcd4a143f60d22306503bf9cd27b6b6b5e9cc32913d0bd"
+    },
+    {
+      "path": "bundle/snapshot_manifest",
+      "bytes": 12764289,
+      "sha256": "61feefb5d100468cc763b49e3255d4b5554a10375e7800f25cf57442dd44d450"
+    },
+    {
+      "path": "bundle/stderr",
+      "bytes": 1667297,
+      "sha256": "3339f28b11497b4c2b36504e7371d14199d154743b4846cb6184c2bae598f36f"
+    },
+    {
+      "path": "bundle/stdout",
+      "bytes": 11482,
+      "sha256": "9a16bdb2b074fd1afc2bce9763b978a9060c6de504e816446848aa6cafa53f40"
+    }
+  ],
+  "ten_file_bundle_bytes_verified_by_production_evidence_function": true,
+  "evidence_function": "regression_context_registration.evidence (4d6ebc71 blob) with an in-memory harness; no authorization object exists in any output",
+  "snapshot_entries": 49598,
+  "snapshot_entry_order": "git ls-files order as written by ci_evidence.fingerprint; reproduces each shard identity key",
+  "snapshot_order_differs_from_Path_sort": true,
+  "entry_provenance_preview": {
+    "schema_version": 1,
+    "snapshot_revision": "fa5556de20de4fecbf9db4e3630cd5d6754b07c2",
+    "snapshot_reference": "https://github.com/BucketSran/vaEVAS/tree/fa5556de20de4fecbf9db4e3630cd5d6754b07c2; CI inventory checkout 253082c49e6b37155becf8ed2e40a899bf99c130 is locally observed (parents 4d6ebc71efea35822a28f2861f2b0a2a6db17e59, fa5556de20de4fecbf9db4e3630cd5d6754b07c2; tree 470ad588ddeb848b7c05d3f23656a96f085f8bfd; GitHub signature header present but not verified); its recorded tree equals the head tree 470ad588ddeb848b7c05d3f23656a96f085f8bfd",
+    "raw_reference": "https://github.com/BucketSran/vaEVAS/actions/runs/40584762318 attempt 1; original zipped artifact index and members retained in e1-bundle-sonnet-20261027",
+    "recipe_sha256": "4536d2c83a482ca519c3c00d5a030b45281e8ad3bccf05e8999ca784e7e6da9a",
+    "artifact_manifest_sha256": "67a90613841be53eb60a54909c96090e19670a1b23b4f88496bbaa3bf9cc5cb1"
+  },
+  "role_sources": {
+    "report": "python-regression-timings/python-regression.json (byte copy)",
+    "shard_reports": "4 x python-regression-shard-N/regression-evidence/report.json texts as JSON array",
+    "kernel_binary": "python-regression-shard-0/regression-build/evas-kernel (byte copy, 4 shards identical, never executed)",
+    "stdout": "shard-index-order concatenation",
+    "stderr": "shard-index-order concatenation",
+    "snapshot_manifest": "catalog-inventory/assets-before.json x git ls-tree order, reproduces input_list_sha256 and 4 identity keys",
+    "collector_manifest": "four collector source SHA256 from snapshot + fa5556de blobs",
+    "composition_recipe": "derived",
+    "dut_build": "derived from shard build records and identities",
+    "artifact_manifest": "derived"
+  },
+  "kernel_equals_pr5_bundle_kernel": true,
+  "pr5_bundle_kernel_path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/context-registration-20261027/bundle-preparation-sonnet/run-r3/bundle/kernel_binary",
+  "governance_authorization_created": false,
+  "E1_or_new_context_accepted": false,
+  "semantic_qualification": false
+}

@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "files": [
+    {
+      "name": "artifact_manifest",
+      "stored_bytes": 1396,
+      "stored_sha256": "67a90613841be53eb60a54909c96090e19670a1b23b4f88496bbaa3bf9cc5cb1",
+      "materialized_bytes": 1396,
+      "materialized_sha256": "67a90613841be53eb60a54909c96090e19670a1b23b4f88496bbaa3bf9cc5cb1",
+      "encoding": "identity"
+    },
+    {
+      "name": "collector_manifest",
+      "stored_bytes": 356,
+      "stored_sha256": "07c2295a3e878c283f6d0d1870b154303bc2038f4a3744ed3fdf27788ff25bcb",
+      "materialized_bytes": 356,
+      "materialized_sha256": "07c2295a3e878c283f6d0d1870b154303bc2038f4a3744ed3fdf27788ff25bcb",
+      "encoding": "identity"
+    },
+    {
+      "name": "composition_recipe",
+      "stored_bytes": 620,
+      "stored_sha256": "4536d2c83a482ca519c3c00d5a030b45281e8ad3bccf05e8999ca784e7e6da9a",
+      "materialized_bytes": 620,
+      "materialized_sha256": "4536d2c83a482ca519c3c00d5a030b45281e8ad3bccf05e8999ca784e7e6da9a",
+      "encoding": "identity"
+    },
+    {
+      "name": "dut_build",
+      "stored_bytes": 2057,
+      "stored_sha256": "0e08420cee2f2d8fa48adc08affd346cdc800df6fd895c33908a500fb6c5e9e7",
+      "materialized_bytes": 2057,
+      "materialized_sha256": "0e08420cee2f2d8fa48adc08affd346cdc800df6fd895c33908a500fb6c5e9e7",
+      "encoding": "identity"
+    },
+    {
+      "name": "kernel_binary",
+      "stored_bytes": 22916941,
+      "stored_sha256": "6b6c592c12de213e6df8b91d84fd325bf6b228ad512f0e3107157489812d0065",
+      "materialized_bytes": 105862328,
+      "materialized_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+      "encoding": "gzip"
+    },
+    {
+      "name": "report.json",
+      "stored_bytes": 41458228,
+      "stored_sha256": "35d74e62f8933cb10c8f8298f5a65389fa56b1cd6faadb4f8a09108f14d3fa75",
+      "materialized_bytes": 41458228,
+      "materialized_sha256": "35d74e62f8933cb10c8f8298f5a65389fa56b1cd6faadb4f8a09108f14d3fa75",
+      "encoding": "identity"
+    },
+    {
+      "name": "shard_reports",
+      "stored_bytes": 44736958,
+      "stored_sha256": "9d831047d49defaab4bcd4a143f60d22306503bf9cd27b6b6b5e9cc32913d0bd",
+      "materialized_bytes": 44736958,
+      "materialized_sha256": "9d831047d49defaab4bcd4a143f60d22306503bf9cd27b6b6b5e9cc32913d0bd",
+      "encoding": "identity"
+    },
+    {
+      "name": "snapshot_manifest",
+      "stored_bytes": 12764289,
+      "stored_sha256": "61feefb5d100468cc763b49e3255d4b5554a10375e7800f25cf57442dd44d450",
+      "materialized_bytes": 12764289,
+      "materialized_sha256": "61feefb5d100468cc763b49e3255d4b5554a10375e7800f25cf57442dd44d450",
+      "encoding": "identity"
+    },
+    {
+      "name": "stderr",
+      "stored_bytes": 1667297,
+      "stored_sha256": "3339f28b11497b4c2b36504e7371d14199d154743b4846cb6184c2bae598f36f",
+      "materialized_bytes": 1667297,
+      "materialized_sha256": "3339f28b11497b4c2b36504e7371d14199d154743b4846cb6184c2bae598f36f",
+      "encoding": "identity"
+    },
+    {
+      "name": "stdout",
+      "stored_bytes": 11482,
+      "stored_sha256": "9a16bdb2b074fd1afc2bce9763b978a9060c6de504e816446848aa6cafa53f40",
+      "materialized_bytes": 11482,
+      "materialized_sha256": "9a16bdb2b074fd1afc2bce9763b978a9060c6de504e816446848aa6cafa53f40",
+      "encoding": "identity"
+    }
+  ],
+  "kernel_binary": {
+    "encoding": "gzip",
+    "decoded_bytes": 105862328,
+    "decoded_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe"
+  },
+  "scientific_qualification": false,
+  "codec": "unchanged accepted schema2; the identical actual kernel reuses the prior single-member gzip"
+}

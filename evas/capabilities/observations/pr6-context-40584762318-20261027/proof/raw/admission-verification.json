@@ -1,0 +1,157 @@
+{
+  "artifact": {
+    "valid": true,
+    "raw_successful": false,
+    "merge_allowed": false,
+    "semantic_qualification": false,
+    "differences": [
+      "expected exactly one matching trusted baseline context"
+    ],
+    "transition": {
+      "proposal_evaluated": false,
+      "refresh_required": null,
+      "accepted": false,
+      "differences": []
+    }
+  },
+  "recomputed_trusted_comparison": {
+    "valid": true,
+    "raw_successful": false,
+    "merge_allowed": false,
+    "differences": [
+      "expected exactly one matching trusted baseline context"
+    ],
+    "semantic_qualification": false
+  },
+  "trusted_comparison_matches_artifact": true,
+  "expected_rejection_reproduced": true,
+  "candidate_baseline_is_authority": false,
+  "trust": {
+    "trusted_commit": "4d6ebc71efea35822a28f2861f2b0a2a6db17e59",
+    "source": "event.pull_request.base.sha",
+    "code_sha256": "65e3542fa4989b35d31ee6998c9dc14f8975524e4b30a23b76539abf7317b38e",
+    "code_sha256_matches_trusted_blob": true,
+    "baseline_sha256": "f765004c11b99673b95ddd87daabdc0c75fc6e4e3ef5b6cb2e9f31de96ae702b",
+    "baseline_sha256_matches_trusted_blob": true
+  },
+  "shell": {
+    "pins_from_head_workflow": {
+      "BOOTSTRAP_COMMIT": "72f1c2e4c22d8a2f743da8ec23101d022a3096d5",
+      "BOOTSTRAP_SHA256": "30cb19e469db4ea26b00ca4959e68c4aa1196be15a9051452ff491210619aa63",
+      "BOOTSTRAP_PATH": "scripts/run_trusted_regression_gate.py"
+    },
+    "loader_sha256": "30cb19e469db4ea26b00ca4959e68c4aa1196be15a9051452ff491210619aa63",
+    "loader_matches_pin_and_receipt": true,
+    "bootstrap_receipt": {
+      "schema_version": 1,
+      "source": "fixed-reviewed-main-commit",
+      "bootstrap_commit": "72f1c2e4c22d8a2f743da8ec23101d022a3096d5",
+      "bootstrap_path": "scripts/run_trusted_regression_gate.py",
+      "expected_loader_sha256": "30cb19e469db4ea26b00ca4959e68c4aa1196be15a9051452ff491210619aa63",
+      "loaded": true,
+      "execution_cwd": "isolated-temporary-directory",
+      "bootstrap_blob": "f89e547183f3ac554dc9a76e1c0d3b7c6f231c70",
+      "bootstrap_mode": "100644",
+      "loader_sha256": "30cb19e469db4ea26b00ca4959e68c4aa1196be15a9051452ff491210619aa63",
+      "bootstrap_exit": 1,
+      "event_trusted_commit": "4d6ebc71efea35822a28f2861f2b0a2a6db17e59",
+      "event_trust_source": "event.pull_request.base.sha"
+    },
+    "bootstrap_exit_note": "1 = the trusted loader reports the expected gate rejection, not a loader fault"
+  },
+  "bundle_source": {
+    "schema_version": 1,
+    "requested": false,
+    "materialized": false,
+    "trusted_commit": "4d6ebc71efea35822a28f2861f2b0a2a6db17e59"
+  },
+  "baseline": {
+    "path": "evas/validation/baselines/regression-v1.json",
+    "bytes": 89943276,
+    "sha256": "f765004c11b99673b95ddd87daabdc0c75fc6e4e3ef5b6cb2e9f31de96ae702b",
+    "contexts": 4,
+    "head_equals_trusted": true,
+    "equals_02dee32b": true,
+    "git_oid_trusted": "14a5079516b3d19e8a2b2281c94d0174f2ee8f24",
+    "git_oid_head": "14a5079516b3d19e8a2b2281c94d0174f2ee8f24",
+    "review_path_equal": true
+  },
+  "merge_checkout": {
+    "commit": "253082c49e6b37155becf8ed2e40a899bf99c130",
+    "ref": "refs/pull/269/merge",
+    "locally_present": true,
+    "fetched": false,
+    "verified": true,
+    "fixed_head": "fa5556de20de4fecbf9db4e3630cd5d6754b07c2",
+    "fixed_head_parents": [
+      "797a21161e224181609f4113a74d719dde6ac9fa"
+    ],
+    "trusted_is_ancestor_of_head": true,
+    "expectation": {
+      "parents": [
+        "4d6ebc71efea35822a28f2861f2b0a2a6db17e59",
+        "fa5556de20de4fecbf9db4e3630cd5d6754b07c2"
+      ],
+      "tree": "470ad588ddeb848b7c05d3f23656a96f085f8bfd",
+      "status": "expected; subsequently observed in the local object (see observed_* fields)",
+      "basis": "job log line 'HEAD is now at 253082c4 Merge fa5556de... into 4d6ebc71...' in regression-admission.txt; run-initial.json referenced_workflows ref refs/pull/269/merge; inventory source_tree equals the head tree; trusted main is an ancestor of the head, so a GitHub merge of head into base keeps the head tree"
+    },
+    "job_log_checkout_line": "HEAD is now at 253082c4 Merge fa5556de20de4fecbf9db4e3630cd5d6754b07c2 into 4d6ebc71efea35822a28f2861f2b0a2a6db17e59",
+    "observed_parents": [
+      "4d6ebc71efea35822a28f2861f2b0a2a6db17e59",
+      "fa5556de20de4fecbf9db4e3630cd5d6754b07c2"
+    ],
+    "observed_tree": "470ad588ddeb848b7c05d3f23656a96f085f8bfd",
+    "observed_committer": [
+      "committer GitHub <noreply@github.com> 1793135525 +0800"
+    ],
+    "observed_message_first_line": "Merge fa5556de20de4fecbf9db4e3630cd5d6754b07c2 into 4d6ebc71efea35822a28f2861f2b0a2a6db17e59",
+    "has_gpgsig_header": true,
+    "signature_verified": false,
+    "signature_note": "the GitHub signature header is present but was not verified by this worker",
+    "loose_object_mtime_utc": "2026-10-27T21:48:25.644335+00:00",
+    "presence_history": "absent when the worker first checked (cat-file -t failed, about 2026-10-27T21:32Z); present at this run. The worker never fetched; the object was added to the shared object store by another process."
+  },
+  "referenced_workflow_objects": [
+    {
+      "path": "BucketSran/vaEVAS/.github/workflows/benchmark-evidence.yml@253082c49e6b37155becf8ed2e40a899bf99c130",
+      "sha": "253082c49e6b37155becf8ed2e40a899bf99c130",
+      "ref": "refs/pull/269/merge",
+      "locally_present": true,
+      "fetched": false
+    },
+    {
+      "path": "BucketSran/vaEVAS/.github/workflows/package-install.yml@253082c49e6b37155becf8ed2e40a899bf99c130",
+      "sha": "253082c49e6b37155becf8ed2e40a899bf99c130",
+      "ref": "refs/pull/269/merge",
+      "locally_present": true,
+      "fetched": false
+    }
+  ],
+  "c274_trusted_comparison": {
+    "valid": true,
+    "merge_allowed": true,
+    "differences": [],
+    "host_runtime_difference": null,
+    "matched_context_index": 3,
+    "matched_exactly": true
+  },
+  "c274_vs_context_observations": {
+    "keys_equal": true,
+    "retention_equal": true,
+    "outcome_equal": true,
+    "discovered_equal": true,
+    "counters_equal": true
+  },
+  "pr271_cross_reference": {
+    "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/runner-image-tolerance-20261027/r2/ci-40507402194/attempt-1/artifacts/python-regression-timings/python-regression.json",
+    "sha256": "2ac54327462bb8a557f665ce3a1937d63b1b38135fd8854d0a7ff4503c725f40",
+    "context_equals_c274": true,
+    "criteria_id": "145a6118739af5c1419269c4d46faae6cd666d766843d41dd38150d8da77d21b",
+    "collector_sha256": "e48ade34c276c578c6ea092f2595b85ed3a5ad7d4d048cfe40d51ce33fdd1917",
+    "keys_equal_c274": true,
+    "retention_equal_c274": true,
+    "matching_trusted_contexts": 1
+  },
+  "e1_gate_matching_contexts": 0
+}

@@ -1,0 +1,293 @@
+{
+  "purpose": "PR6 E1 raw evidence intake (CI 40584762318 attempt 1) and ten-role bundle with draft obligation map; data verification and composition only",
+  "started_at_utc": "2026-10-27T21:34:53.741801+00:00",
+  "finished_at_utc": "2026-10-27T22:07:14.915815+00:00",
+  "queue_time_seconds": null,
+  "queue_time": "unknown",
+  "execution_time_note": "available local start/completion only; no invented scheduling durations",
+  "actual_model": {
+    "providerInstanceId": "tclaude",
+    "model": "claude-sonnet-5-5",
+    "options": [
+      {
+        "id": "effort",
+        "value": "high"
+      }
+    ]
+  },
+  "delegation_task_id": "unknown (delegation record not visible to the worker)",
+  "identity": {
+    "pr": "https://github.com/BucketSran/vaEVAS/pull/269",
+    "head": "fa5556de20de4fecbf9db4e3630cd5d6754b07c2",
+    "tree": "470ad588ddeb848b7c05d3f23656a96f085f8bfd",
+    "base": "4d6ebc71efea35822a28f2861f2b0a2a6db17e59",
+    "base_tree": "33a1a097624a24d46dda3ec289b1d899280d7e18",
+    "run": 40584762318,
+    "attempt": 1,
+    "run_conclusion": "failure",
+    "ci_merge_checkout": {
+      "commit": "253082c49e6b37155becf8ed2e40a899bf99c130",
+      "locally_present": true,
+      "fetched_by_worker": false,
+      "verified": true,
+      "observed_parents": [
+        "4d6ebc71efea35822a28f2861f2b0a2a6db17e59",
+        "fa5556de20de4fecbf9db4e3630cd5d6754b07c2"
+      ],
+      "observed_tree": "470ad588ddeb848b7c05d3f23656a96f085f8bfd",
+      "signature_verified": false
+    },
+    "current_context": {
+      "run": 40569530278,
+      "head": "5fe590c0c573c7296b30f38245f769ff2f71ab8a",
+      "report_sha256": "9cb0aa443f6f3d3298fa5261f554f1c58bf28819241cf756cd7103dae6b9978a",
+      "criteria_id": "145a6118739af5c1419269c4d46faae6cd666d766843d41dd38150d8da77d21b",
+      "matched_trusted_context_index": 3
+    },
+    "new_context": {
+      "report_sha256": "35d74e62f8933cb10c8f8298f5a65389fa56b1cd6faadb4f8a09108f14d3fa75",
+      "criteria_id": "7d70e5b5ab69abf428a2ab06d47999ec6aa9193e1f038d5248c1c92f2f5f8400",
+      "collector_sha256": "fb887b59bb92063d784dd7cb56d39ec1ec6cb5e7ef9265ab0bd39b9089fe6dc5"
+    }
+  },
+  "status": {
+    "execution_success": true,
+    "structure_complete": true,
+    "expected_rejection_reproduced": true,
+    "expected_rejection_text": "expected exactly one matching trusted baseline context",
+    "semantic_qualification": false,
+    "scientific_qualification": false,
+    "merge_allowed": false,
+    "raw_successful": false,
+    "independent_review_approved": false,
+    "authorization_created": false,
+    "baseline_written": false,
+    "scientific_execution": false,
+    "new_scientific_thresholds": false,
+    "fetch_performed": false,
+    "fixture_created": false
+  },
+  "counts": {
+    "archives": 13,
+    "archive_members": 467,
+    "jobs": 21,
+    "methods": 3257,
+    "conditions": 7737,
+    "method_outcomes": {
+      "passed": 2617,
+      "error": 214,
+      "failed": 423,
+      "expected_failure": 3
+    },
+    "condition_outcomes": {
+      "passed": 6841,
+      "error": 296,
+      "failed": 597,
+      "expected_failure": 3
+    },
+    "unittest_condition_counters": {
+      "failures": 597,
+      "errors": 296,
+      "skipped": 0,
+      "expected_failures": 3,
+      "unexpected_successes": 0
+    },
+    "criteria_files": 3610,
+    "criteria_changed": 4,
+    "dut_files": 327,
+    "inventory_paths": 49608,
+    "blobs_read": 25599,
+    "execution_inputs": 49598,
+    "mapping_entries": 7737,
+    "verifier_checks": 43
+  },
+  "kernel": {
+    "sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+    "bytes": 105862328,
+    "equals_pr5_bundle_kernel_by_direct_hash": true,
+    "pr5_path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/context-registration-20261027/bundle-preparation-sonnet/run-r3/bundle/kernel_binary",
+    "executed": false
+  },
+  "findings": 0,
+  "open_gaps": [],
+  "failed_rounds": [
+    "raw-r1",
+    "raw-r2",
+    "run-r1"
+  ],
+  "final_rounds": {
+    "raw": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/raw-r5",
+    "bundle": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/run-r2",
+    "verify": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/verify-r1"
+  },
+  "deliverables": {
+    "REPORT.md": {
+      "bytes": 24345,
+      "sha256": "d7cf39ede03417add1f2dd7adb8f43d030cdbe37b6c7756d24bd7816ce6f21df"
+    },
+    "raw-verification.json": {
+      "bytes": 58997,
+      "sha256": "aee3f076b6cf6d8bef188e2352ad8859813946bd2f7d931ed6a3c33835ea6b6b"
+    },
+    "archive-download-manifest.json": {
+      "bytes": 4118,
+      "sha256": "1fc1ae18f26f08584c28555f355968924df65765e1130bef6562661669499903"
+    },
+    "archive-members-verified.json": {
+      "bytes": 209238,
+      "sha256": "c1971b853a464dd9bbc66ca64971b10a83ef10417ee2acf7aa0b74252af62fcf"
+    },
+    "guard-before.json": {
+      "bytes": 4179,
+      "sha256": "25225f12c49289c26ccc3b9621da6ac10677fe4028baea68c17fa559ac42e21b"
+    },
+    "guard-after.json": {
+      "bytes": 4179,
+      "sha256": "25225f12c49289c26ccc3b9621da6ac10677fe4028baea68c17fa559ac42e21b"
+    },
+    "output-refusal-verification.json": {
+      "bytes": 829,
+      "sha256": "06a615ed9b146de709eb8bf62021f2ae4b35237ed32294003c7b1444a9ddbc82"
+    },
+    "context-digests.json": {
+      "bytes": 550,
+      "sha256": "75106c05169e4bdc5baeb499c90a4233bf408ae90a05a3d70507c0deffe85487"
+    },
+    "prepare_bundle.py": {
+      "bytes": 36887,
+      "sha256": "9aa05d5ffc2bb5f6c6dc17b5ddb7f7e4cefef650add4bd291aa374ad5338e923"
+    },
+    "verify.py": {
+      "bytes": 23217,
+      "sha256": "f1895886ece4e8fe511ad0387a19a7fb9c8f68077ddaf096b4384d66f5efd10e"
+    },
+    "raw_verify.py": {
+      "bytes": 62410,
+      "sha256": "3fde9ed88e9c7caafc25a296348ac93a5ce1e2d121b298f5a04eabd2aaaf70fc"
+    },
+    "common.py": {
+      "bytes": 5187,
+      "sha256": "7130320ae058a163263e6998f720ffe2d3fe00ab63b5c0ff5f9cf6819127a845"
+    },
+    "intake.py": {
+      "bytes": 4287,
+      "sha256": "42c653c9fa5317b6566f9b058033c639243490b883f012af7bb740ae06945a53"
+    },
+    "finalize.py": {
+      "bytes": 36170,
+      "sha256": "4c53a31c25a6c3df7780d9c88c2f149ea9ffcb609b63af19f8dfce4acde00fdb"
+    },
+    "raw-r5/raw-verification.json": {
+      "bytes": 32229,
+      "sha256": "417786bf9c86d7f40001836c04aa46ada1efee38088d73e46e0cd5e8d955ddee"
+    },
+    "raw-r5/role-original-index.json": {
+      "bytes": 21603,
+      "sha256": "94ee3066be5c2db2ca72b97aeaaafacc244a6dbeae3349f23a914dbf147cda92"
+    },
+    "raw-r5/source-identity-field-bindings.json": {
+      "bytes": 1903521,
+      "sha256": "229875cdabd227c0bdf3f599a8d006186453cf36812dc3af5c05141a1401db08"
+    },
+    "raw-r5/inventory-verification.json": {
+      "bytes": 45910,
+      "sha256": "a2a8beb6aaed12caffe58683df782073624cd933a6d0c7c808c09d4c74446475"
+    },
+    "raw-r5/admission-verification.json": {
+      "bytes": 6713,
+      "sha256": "5b391308e87bf1b1168b03ebe0620cc85c823627619cb8eea3f8562664929ac5"
+    },
+    "run-r2/receipt.json": {
+      "bytes": 17855,
+      "sha256": "438c26daf0ac4023767cf2c422aed2262b5cc57fbd5e6d5a8c0ddcca82757625"
+    },
+    "run-r2/bundle-byte-binding.json": {
+      "bytes": 4436,
+      "sha256": "ab947689614e4da081072f1b1779d4f91df213cad4fa8704638eb68207c70c41"
+    },
+    "run-r2/stream-boundaries.json": {
+      "bytes": 2831,
+      "sha256": "d8b059dc22f3310314397464d60d02580d25b50b3f849170ae74684c2a29d882"
+    },
+    "run-r2/obligation-map-draft.json": {
+      "bytes": 6717320,
+      "sha256": "9e894cd05b70aa4a3d4d7b2d049de3cf25e69c9703bca7e8f50af1aa147ecf80"
+    },
+    "run-r2/obligation-map-proof.json": {
+      "bytes": 138324,
+      "sha256": "d4b9e77e621e8d5411b69e5939cc72d554bb74ea0b5153166003354147509046"
+    },
+    "verify-r1/verification.json": {
+      "bytes": 6848,
+      "sha256": "d81d758698954c883fe9809c893caf22e175a7155e8806028e6e16a2a64c599a"
+    },
+    "run-r2/bundle/artifact_manifest": {
+      "bytes": 1396,
+      "sha256": "67a90613841be53eb60a54909c96090e19670a1b23b4f88496bbaa3bf9cc5cb1"
+    },
+    "run-r2/bundle/collector_manifest": {
+      "bytes": 356,
+      "sha256": "07c2295a3e878c283f6d0d1870b154303bc2038f4a3744ed3fdf27788ff25bcb"
+    },
+    "run-r2/bundle/composition_recipe": {
+      "bytes": 620,
+      "sha256": "4536d2c83a482ca519c3c00d5a030b45281e8ad3bccf05e8999ca784e7e6da9a"
+    },
+    "run-r2/bundle/dut_build": {
+      "bytes": 2057,
+      "sha256": "0e08420cee2f2d8fa48adc08affd346cdc800df6fd895c33908a500fb6c5e9e7"
+    },
+    "run-r2/bundle/kernel_binary": {
+      "bytes": 105862328,
+      "sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe"
+    },
+    "run-r2/bundle/report.json": {
+      "bytes": 41458228,
+      "sha256": "35d74e62f8933cb10c8f8298f5a65389fa56b1cd6faadb4f8a09108f14d3fa75"
+    },
+    "run-r2/bundle/shard_reports": {
+      "bytes": 44736958,
+      "sha256": "9d831047d49defaab4bcd4a143f60d22306503bf9cd27b6b6b5e9cc32913d0bd"
+    },
+    "run-r2/bundle/snapshot_manifest": {
+      "bytes": 12764289,
+      "sha256": "61feefb5d100468cc763b49e3255d4b5554a10375e7800f25cf57442dd44d450"
+    },
+    "run-r2/bundle/stderr": {
+      "bytes": 1667297,
+      "sha256": "3339f28b11497b4c2b36504e7371d14199d154743b4846cb6184c2bae598f36f"
+    },
+    "run-r2/bundle/stdout": {
+      "bytes": 11482,
+      "sha256": "9a16bdb2b074fd1afc2bce9763b978a9060c6de504e816446848aa6cafa53f40"
+    }
+  },
+  "guard_equal_before_after": true,
+  "replay_commands": [
+    [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-B",
+      "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/raw_verify.py",
+      "--output",
+      "NEW-UNUSED-DIRECTORY"
+    ],
+    [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-B",
+      "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/prepare_bundle.py",
+      "--raw",
+      "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/raw-r5",
+      "--output",
+      "NEW-UNUSED-DIRECTORY"
+    ],
+    [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-B",
+      "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/verify.py",
+      "--prepared",
+      "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/run-r2",
+      "--output",
+      "NEW-UNUSED-DIRECTORY"
+    ]
+  ]
+}

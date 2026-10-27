@@ -1,0 +1,869 @@
+{
+  "inventory": {
+    "inventory_paths": 49608,
+    "git_blob_paths": 49608,
+    "unique_blobs": 25599,
+    "blobs_read": 25599,
+    "bytes_read": 463666274,
+    "reused_from_other_run": 0,
+    "reuse_note": "full read of every blob in the fixed head tree; no reuse of #274 inventory rows was needed",
+    "source_export_files_hashed": 49608,
+    "source_export_mismatch": 0,
+    "excluded_inputs": [
+      ".agents/skills/evas-develop/SKILL.md",
+      ".agents/skills/evas-validate/SKILL.md",
+      ".agents/skills/vaevas-prepare-pr/SKILL.md",
+      ".agents/skills/vaevas-review-pr/SKILL.md",
+      ".agents/skills/vaevas-workflow/SKILL.md",
+      "AGENTS.md",
+      "CONTRIBUTING.md",
+      "docs/contributing/evidence.md",
+      "docs/contributing/workspaces.md",
+      "evas/docs/development/diagnostic-inventory.json"
+    ],
+    "execution_input_count": 49598,
+    "execution_input_list_sha256": "a5297be72fd6359418b064063588604fa6abd161a15dcc6dbbd29c12405adc96",
+    "execution_input_unbound": [],
+    "entry_order": "git ls-tree order (= git ls-files order), as ci_evidence.fingerprint writes it",
+    "path_order_differs_from_Path_sort": true,
+    "source_commit": "253082c49e6b37155becf8ed2e40a899bf99c130",
+    "source_tree": "470ad588ddeb848b7c05d3f23656a96f085f8bfd",
+    "dirty_paths": [],
+    "content_binding": "actual-checkout-bytes-not-commit-identity",
+    "source_commit_relationship": "head-context-only",
+    "capture_commit": "797a21161e224181609f4113a74d719dde6ac9fa",
+    "capture_binding_counts": {
+      "matched": 49571,
+      "capture_to_final_deltas": 37,
+      "unexpected": 0
+    },
+    "capture_to_final_delta_paths": [
+      "evas/capabilities/data/asset-index.json",
+      "evas/capabilities/data/catalog-sources.json",
+      "evas/capabilities/data/entrypoint-index.json",
+      "evas/capabilities/data/historical-index-00.json",
+      "evas/capabilities/data/historical-index-01.json",
+      "evas/capabilities/data/historical-index-02.json",
+      "evas/capabilities/data/historical-index-03.json",
+      "evas/capabilities/data/historical-index-04.json",
+      "evas/capabilities/data/historical-index-05.json",
+      "evas/capabilities/data/historical-index-06.json",
+      "evas/capabilities/data/historical-index-07.json",
+      "evas/capabilities/data/historical-index-08.json",
+      "evas/capabilities/data/historical-index-09.json",
+      "evas/capabilities/data/historical-index-10.json",
+      "evas/capabilities/data/historical-index-11.json",
+      "evas/capabilities/data/historical-index-12.json",
+      "evas/capabilities/data/historical-index-13.json",
+      "evas/capabilities/data/historical-index-14.json",
+      "evas/capabilities/data/historical-index-15.json",
+      "evas/capabilities/data/method-index-00.json",
+      "evas/capabilities/data/method-index-01.json",
+      "evas/capabilities/data/method-index-02.json",
+      "evas/capabilities/data/method-index-03.json",
+      "evas/capabilities/data/method-index-04.json",
+      "evas/capabilities/data/method-index-05.json",
+      "evas/capabilities/data/method-index-06.json",
+      "evas/capabilities/data/method-index-07.json",
+      "evas/capabilities/data/method-index-08.json",
+      "evas/capabilities/data/method-index-09.json",
+      "evas/capabilities/data/method-index-10.json",
+      "evas/capabilities/data/method-index-11.json",
+      "evas/capabilities/data/method-index-12.json",
+      "evas/capabilities/data/method-index-13.json",
+      "evas/capabilities/data/method-index-14.json",
+      "evas/capabilities/data/method-index-15.json",
+      "evas/capabilities/data/registry.json",
+      "evas/docs/development/TRACEABILITY.md"
+    ],
+    "final_candidate_files_bound": 37,
+    "final_candidate_all_match": true,
+    "derive_acceptance_files_bound": 37,
+    "derive_all_match": true,
+    "changed_paths_vs_trusted_base": 153,
+    "precheck_not_rerun": true
+  },
+  "final_candidate_binding": [
+    {
+      "path": "evas/capabilities/data/asset-index.json",
+      "recorded_sha256": "975ce86410a8ace568939a1c4a4a9d25ca240c81519642b9eca4d572ecc296b0",
+      "inventory_sha256": "975ce86410a8ace568939a1c4a4a9d25ca240c81519642b9eca4d572ecc296b0",
+      "git_sha256": "975ce86410a8ace568939a1c4a4a9d25ca240c81519642b9eca4d572ecc296b0",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/catalog-sources.json",
+      "recorded_sha256": "98a1ffb62cfc6cd13532423379bf6bc2310cb03b6d8608db46488bb19a1fb3be",
+      "inventory_sha256": "98a1ffb62cfc6cd13532423379bf6bc2310cb03b6d8608db46488bb19a1fb3be",
+      "git_sha256": "98a1ffb62cfc6cd13532423379bf6bc2310cb03b6d8608db46488bb19a1fb3be",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/entrypoint-index.json",
+      "recorded_sha256": "ea744197dae6b46b1cd7da5ee38bb291f044ac208e4227fd811d2a7fd9ff8312",
+      "inventory_sha256": "ea744197dae6b46b1cd7da5ee38bb291f044ac208e4227fd811d2a7fd9ff8312",
+      "git_sha256": "ea744197dae6b46b1cd7da5ee38bb291f044ac208e4227fd811d2a7fd9ff8312",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-00.json",
+      "recorded_sha256": "ab34f1e0cc853dd4fc4ada7e8d9077b066980ef335c6bd42092cd2310248adb0",
+      "inventory_sha256": "ab34f1e0cc853dd4fc4ada7e8d9077b066980ef335c6bd42092cd2310248adb0",
+      "git_sha256": "ab34f1e0cc853dd4fc4ada7e8d9077b066980ef335c6bd42092cd2310248adb0",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-01.json",
+      "recorded_sha256": "7083cb0e2530b799867ba194996f17581050f4e726ee91c3eff3e75290c91571",
+      "inventory_sha256": "7083cb0e2530b799867ba194996f17581050f4e726ee91c3eff3e75290c91571",
+      "git_sha256": "7083cb0e2530b799867ba194996f17581050f4e726ee91c3eff3e75290c91571",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-02.json",
+      "recorded_sha256": "71561843fb7c37ed3c0acbc3b8a30867826e04ba8934bbb90066b43558be5105",
+      "inventory_sha256": "71561843fb7c37ed3c0acbc3b8a30867826e04ba8934bbb90066b43558be5105",
+      "git_sha256": "71561843fb7c37ed3c0acbc3b8a30867826e04ba8934bbb90066b43558be5105",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-03.json",
+      "recorded_sha256": "ca5911b7a6137dff33f83e27c777c12cc10bc65343f430a01563d38ff9cf99d2",
+      "inventory_sha256": "ca5911b7a6137dff33f83e27c777c12cc10bc65343f430a01563d38ff9cf99d2",
+      "git_sha256": "ca5911b7a6137dff33f83e27c777c12cc10bc65343f430a01563d38ff9cf99d2",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-04.json",
+      "recorded_sha256": "9e5645dc4fcbb2a638416d038303ff2675ddc6539d06b47d5ea7a1a264399f73",
+      "inventory_sha256": "9e5645dc4fcbb2a638416d038303ff2675ddc6539d06b47d5ea7a1a264399f73",
+      "git_sha256": "9e5645dc4fcbb2a638416d038303ff2675ddc6539d06b47d5ea7a1a264399f73",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-05.json",
+      "recorded_sha256": "1bf83dada966c6702eeb56d849b55c22f4a0fa4da5a5121e8e23c5693ad8a9d0",
+      "inventory_sha256": "1bf83dada966c6702eeb56d849b55c22f4a0fa4da5a5121e8e23c5693ad8a9d0",
+      "git_sha256": "1bf83dada966c6702eeb56d849b55c22f4a0fa4da5a5121e8e23c5693ad8a9d0",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-06.json",
+      "recorded_sha256": "feeb1c3424e596df7b90a12cfaac1ba5f0fe3be2bf4da5804c49289dc4a89810",
+      "inventory_sha256": "feeb1c3424e596df7b90a12cfaac1ba5f0fe3be2bf4da5804c49289dc4a89810",
+      "git_sha256": "feeb1c3424e596df7b90a12cfaac1ba5f0fe3be2bf4da5804c49289dc4a89810",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-07.json",
+      "recorded_sha256": "0550f5057148310e597899e7528ef0b01ccf286d90879fc686cdd7b623fec610",
+      "inventory_sha256": "0550f5057148310e597899e7528ef0b01ccf286d90879fc686cdd7b623fec610",
+      "git_sha256": "0550f5057148310e597899e7528ef0b01ccf286d90879fc686cdd7b623fec610",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-08.json",
+      "recorded_sha256": "3ab68e7a11d4faa9668461e2c5f385b3ec7c535345c8b1e9781dbbdcacf51fb2",
+      "inventory_sha256": "3ab68e7a11d4faa9668461e2c5f385b3ec7c535345c8b1e9781dbbdcacf51fb2",
+      "git_sha256": "3ab68e7a11d4faa9668461e2c5f385b3ec7c535345c8b1e9781dbbdcacf51fb2",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-09.json",
+      "recorded_sha256": "c1aa9c60af5a725cb97508900e590f63589119d0703e981e8eaf32473475d831",
+      "inventory_sha256": "c1aa9c60af5a725cb97508900e590f63589119d0703e981e8eaf32473475d831",
+      "git_sha256": "c1aa9c60af5a725cb97508900e590f63589119d0703e981e8eaf32473475d831",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-10.json",
+      "recorded_sha256": "e426476257f661b3a06be1bedb716a4dfd6f923d7deea426f819d6d6fc9cd2ce",
+      "inventory_sha256": "e426476257f661b3a06be1bedb716a4dfd6f923d7deea426f819d6d6fc9cd2ce",
+      "git_sha256": "e426476257f661b3a06be1bedb716a4dfd6f923d7deea426f819d6d6fc9cd2ce",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-11.json",
+      "recorded_sha256": "4a65bdea56ead2d47c7dc57bab1267839f35a564dc7c4d1842a26509dc95980b",
+      "inventory_sha256": "4a65bdea56ead2d47c7dc57bab1267839f35a564dc7c4d1842a26509dc95980b",
+      "git_sha256": "4a65bdea56ead2d47c7dc57bab1267839f35a564dc7c4d1842a26509dc95980b",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-12.json",
+      "recorded_sha256": "29aee790fc14ed93fb52e356328b9d529a6a3ebc6258405b4dd49a44e1edc146",
+      "inventory_sha256": "29aee790fc14ed93fb52e356328b9d529a6a3ebc6258405b4dd49a44e1edc146",
+      "git_sha256": "29aee790fc14ed93fb52e356328b9d529a6a3ebc6258405b4dd49a44e1edc146",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-13.json",
+      "recorded_sha256": "c59199f207e4f053f02ac752e5ce04bc78223c663a6d176a701487584deafe01",
+      "inventory_sha256": "c59199f207e4f053f02ac752e5ce04bc78223c663a6d176a701487584deafe01",
+      "git_sha256": "c59199f207e4f053f02ac752e5ce04bc78223c663a6d176a701487584deafe01",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-14.json",
+      "recorded_sha256": "eb53c35ebc2167aeed679c0d483ada702c95d2d1cc306e9dcdabd61bad295322",
+      "inventory_sha256": "eb53c35ebc2167aeed679c0d483ada702c95d2d1cc306e9dcdabd61bad295322",
+      "git_sha256": "eb53c35ebc2167aeed679c0d483ada702c95d2d1cc306e9dcdabd61bad295322",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-15.json",
+      "recorded_sha256": "7e4d9836f43f68b93e16d58e958deb0e0514903765a5cd289423026081baafa0",
+      "inventory_sha256": "7e4d9836f43f68b93e16d58e958deb0e0514903765a5cd289423026081baafa0",
+      "git_sha256": "7e4d9836f43f68b93e16d58e958deb0e0514903765a5cd289423026081baafa0",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/method-index-00.json",
+      "recorded_sha256": "c8685e3a738a939335c86bcd7eb7ca63dee94af5f708a3c9271532cc7f457030",
+      "inventory_sha256": "c8685e3a738a939335c86bcd7eb7ca63dee94af5f708a3c9271532cc7f457030",
+      "git_sha256": "c8685e3a738a939335c86bcd7eb7ca63dee94af5f708a3c9271532cc7f457030",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/method-index-01.json",
+      "recorded_sha256": "c02cbc6cb5a2d3e44b31e82aa181f4c9fc58df1516f2654621a25e3eee96dade",
+      "inventory_sha256": "c02cbc6cb5a2d3e44b31e82aa181f4c9fc58df1516f2654621a25e3eee96dade",
+      "git_sha256": "c02cbc6cb5a2d3e44b31e82aa181f4c9fc58df1516f2654621a25e3eee96dade",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/method-index-02.json",
+      "recorded_sha256": "d1c4d0d8579379aff2fc6285b97a5d324190feab0cac0bfaab888567a383bcd9",
+      "inventory_sha256": "d1c4d0d8579379aff2fc6285b97a5d324190feab0cac0bfaab888567a383bcd9",
+      "git_sha256": "d1c4d0d8579379aff2fc6285b97a5d324190feab0cac0bfaab888567a383bcd9",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/method-index-03.json",
+      "recorded_sha256": "6fa72d4ac5b6d857bba26eebca5ca731fe47c28605c0354aaffd7808b2d851af",
+      "inventory_sha256": "6fa72d4ac5b6d857bba26eebca5ca731fe47c28605c0354aaffd7808b2d851af",
+      "git_sha256": "6fa72d4ac5b6d857bba26eebca5ca731fe47c28605c0354aaffd7808b2d851af",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/method-index-04.json",
+      "recorded_sha256": "6f87f81de91c20410f472f8d4f85f40a85c19ccf4169d9da3e030623be67e9f6",
+      "inventory_sha256": "6f87f81de91c20410f472f8d4f85f40a85c19ccf4169d9da3e030623be67e9f6",
+      "git_sha256": "6f87f81de91c20410f472f8d4f85f40a85c19ccf4169d9da3e030623be67e9f6",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/method-index-05.json",
+      "recorded_sha256": "a66a1027ca190b3a298726bcb8cf9a3132126be8270ca1d6b0c28392a2203ceb",
+      "inventory_sha256": "a66a1027ca190b3a298726bcb8cf9a3132126be8270ca1d6b0c28392a2203ceb",
+      "git_sha256": "a66a1027ca190b3a298726bcb8cf9a3132126be8270ca1d6b0c28392a2203ceb",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/method-index-06.json",
+      "recorded_sha256": "83a15e11c1de55ae3bf7cf2b6697376e31afb9b6ed9ed367edc18573c5d60299",
+      "inventory_sha256": "83a15e11c1de55ae3bf7cf2b6697376e31afb9b6ed9ed367edc18573c5d60299",
+      "git_sha256": "83a15e11c1de55ae3bf7cf2b6697376e31afb9b6ed9ed367edc18573c5d60299",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/method-index-07.json",
+      "recorded_sha256": "b2256f657ecfbf85355f0f4e785dc95b973be31cd25b6d984571be09f2950652",
+      "inventory_sha256": "b2256f657ecfbf85355f0f4e785dc95b973be31cd25b6d984571be09f2950652",
+      "git_sha256": "b2256f657ecfbf85355f0f4e785dc95b973be31cd25b6d984571be09f2950652",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/method-index-08.json",
+      "recorded_sha256": "9115616efe1b0ca994bba03228146ebed73848bb6838d7b6af83c6db610da4da",
+      "inventory_sha256": "9115616efe1b0ca994bba03228146ebed73848bb6838d7b6af83c6db610da4da",
+      "git_sha256": "9115616efe1b0ca994bba03228146ebed73848bb6838d7b6af83c6db610da4da",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/method-index-09.json",
+      "recorded_sha256": "f754d21069147f92067886db88ff314f84a5cc708752b8aaf2f119edd3b7ef29",
+      "inventory_sha256": "f754d21069147f92067886db88ff314f84a5cc708752b8aaf2f119edd3b7ef29",
+      "git_sha256": "f754d21069147f92067886db88ff314f84a5cc708752b8aaf2f119edd3b7ef29",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/method-index-10.json",
+      "recorded_sha256": "2e746d2af0c52ec89710cb3959cc1f1a1abbb87004cd080b9922002ed3973f0d",
+      "inventory_sha256": "2e746d2af0c52ec89710cb3959cc1f1a1abbb87004cd080b9922002ed3973f0d",
+      "git_sha256": "2e746d2af0c52ec89710cb3959cc1f1a1abbb87004cd080b9922002ed3973f0d",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/method-index-11.json",
+      "recorded_sha256": "23e80caf36273a8a17350fa2b11d15cbd76474ac483e39f6ac58a6151514f531",
+      "inventory_sha256": "23e80caf36273a8a17350fa2b11d15cbd76474ac483e39f6ac58a6151514f531",
+      "git_sha256": "23e80caf36273a8a17350fa2b11d15cbd76474ac483e39f6ac58a6151514f531",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/method-index-12.json",
+      "recorded_sha256": "169243f098c2e3c9aa481456c68754a7bbe0dbb8ef7249b256c72ae008c56ff7",
+      "inventory_sha256": "169243f098c2e3c9aa481456c68754a7bbe0dbb8ef7249b256c72ae008c56ff7",
+      "git_sha256": "169243f098c2e3c9aa481456c68754a7bbe0dbb8ef7249b256c72ae008c56ff7",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/method-index-13.json",
+      "recorded_sha256": "280c018f60b684261ec53a78b3f2520c4d530b3215ebd48cea8653d22fd827a9",
+      "inventory_sha256": "280c018f60b684261ec53a78b3f2520c4d530b3215ebd48cea8653d22fd827a9",
+      "git_sha256": "280c018f60b684261ec53a78b3f2520c4d530b3215ebd48cea8653d22fd827a9",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/method-index-14.json",
+      "recorded_sha256": "bf05b9596c1023b0ee3642d81297a8558321cf741914211c700785c63ea194e0",
+      "inventory_sha256": "bf05b9596c1023b0ee3642d81297a8558321cf741914211c700785c63ea194e0",
+      "git_sha256": "bf05b9596c1023b0ee3642d81297a8558321cf741914211c700785c63ea194e0",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/method-index-15.json",
+      "recorded_sha256": "cb94797e616de4b251b7514867ff9d1ba9f7cafa4833fd8d491cd7e5d3e2bd4f",
+      "inventory_sha256": "cb94797e616de4b251b7514867ff9d1ba9f7cafa4833fd8d491cd7e5d3e2bd4f",
+      "git_sha256": "cb94797e616de4b251b7514867ff9d1ba9f7cafa4833fd8d491cd7e5d3e2bd4f",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/registry.json",
+      "recorded_sha256": "ab9896acac5fe890429b3740cca5ff44eaa288765c21a4182b4a5a636ec3196d",
+      "inventory_sha256": "ab9896acac5fe890429b3740cca5ff44eaa288765c21a4182b4a5a636ec3196d",
+      "git_sha256": "ab9896acac5fe890429b3740cca5ff44eaa288765c21a4182b4a5a636ec3196d",
+      "match": true
+    },
+    {
+      "path": "evas/docs/development/TRACEABILITY.md",
+      "recorded_sha256": "b69901116ed04593f42dabd6d0e62a3ddb23cf4cc0b57e4c252471697aa535df",
+      "inventory_sha256": "b69901116ed04593f42dabd6d0e62a3ddb23cf4cc0b57e4c252471697aa535df",
+      "git_sha256": "b69901116ed04593f42dabd6d0e62a3ddb23cf4cc0b57e4c252471697aa535df",
+      "match": true
+    }
+  ],
+  "derive_binding": [
+    {
+      "path": "evas/capabilities/data/asset-index.json",
+      "recorded_sha256": "975ce86410a8ace568939a1c4a4a9d25ca240c81519642b9eca4d572ecc296b0",
+      "inventory_sha256": "975ce86410a8ace568939a1c4a4a9d25ca240c81519642b9eca4d572ecc296b0",
+      "git_sha256": "975ce86410a8ace568939a1c4a4a9d25ca240c81519642b9eca4d572ecc296b0",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/catalog-sources.json",
+      "recorded_sha256": "98a1ffb62cfc6cd13532423379bf6bc2310cb03b6d8608db46488bb19a1fb3be",
+      "inventory_sha256": "98a1ffb62cfc6cd13532423379bf6bc2310cb03b6d8608db46488bb19a1fb3be",
+      "git_sha256": "98a1ffb62cfc6cd13532423379bf6bc2310cb03b6d8608db46488bb19a1fb3be",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/entrypoint-index.json",
+      "recorded_sha256": "ea744197dae6b46b1cd7da5ee38bb291f044ac208e4227fd811d2a7fd9ff8312",
+      "inventory_sha256": "ea744197dae6b46b1cd7da5ee38bb291f044ac208e4227fd811d2a7fd9ff8312",
+      "git_sha256": "ea744197dae6b46b1cd7da5ee38bb291f044ac208e4227fd811d2a7fd9ff8312",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-00.json",
+      "recorded_sha256": "ab34f1e0cc853dd4fc4ada7e8d9077b066980ef335c6bd42092cd2310248adb0",
+      "inventory_sha256": "ab34f1e0cc853dd4fc4ada7e8d9077b066980ef335c6bd42092cd2310248adb0",
+      "git_sha256": "ab34f1e0cc853dd4fc4ada7e8d9077b066980ef335c6bd42092cd2310248adb0",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-01.json",
+      "recorded_sha256": "7083cb0e2530b799867ba194996f17581050f4e726ee91c3eff3e75290c91571",
+      "inventory_sha256": "7083cb0e2530b799867ba194996f17581050f4e726ee91c3eff3e75290c91571",
+      "git_sha256": "7083cb0e2530b799867ba194996f17581050f4e726ee91c3eff3e75290c91571",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-02.json",
+      "recorded_sha256": "71561843fb7c37ed3c0acbc3b8a30867826e04ba8934bbb90066b43558be5105",
+      "inventory_sha256": "71561843fb7c37ed3c0acbc3b8a30867826e04ba8934bbb90066b43558be5105",
+      "git_sha256": "71561843fb7c37ed3c0acbc3b8a30867826e04ba8934bbb90066b43558be5105",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-03.json",
+      "recorded_sha256": "ca5911b7a6137dff33f83e27c777c12cc10bc65343f430a01563d38ff9cf99d2",
+      "inventory_sha256": "ca5911b7a6137dff33f83e27c777c12cc10bc65343f430a01563d38ff9cf99d2",
+      "git_sha256": "ca5911b7a6137dff33f83e27c777c12cc10bc65343f430a01563d38ff9cf99d2",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-04.json",
+      "recorded_sha256": "9e5645dc4fcbb2a638416d038303ff2675ddc6539d06b47d5ea7a1a264399f73",
+      "inventory_sha256": "9e5645dc4fcbb2a638416d038303ff2675ddc6539d06b47d5ea7a1a264399f73",
+      "git_sha256": "9e5645dc4fcbb2a638416d038303ff2675ddc6539d06b47d5ea7a1a264399f73",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-05.json",
+      "recorded_sha256": "1bf83dada966c6702eeb56d849b55c22f4a0fa4da5a5121e8e23c5693ad8a9d0",
+      "inventory_sha256": "1bf83dada966c6702eeb56d849b55c22f4a0fa4da5a5121e8e23c5693ad8a9d0",
+      "git_sha256": "1bf83dada966c6702eeb56d849b55c22f4a0fa4da5a5121e8e23c5693ad8a9d0",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-06.json",
+      "recorded_sha256": "feeb1c3424e596df7b90a12cfaac1ba5f0fe3be2bf4da5804c49289dc4a89810",
+      "inventory_sha256": "feeb1c3424e596df7b90a12cfaac1ba5f0fe3be2bf4da5804c49289dc4a89810",
+      "git_sha256": "feeb1c3424e596df7b90a12cfaac1ba5f0fe3be2bf4da5804c49289dc4a89810",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-07.json",
+      "recorded_sha256": "0550f5057148310e597899e7528ef0b01ccf286d90879fc686cdd7b623fec610",
+      "inventory_sha256": "0550f5057148310e597899e7528ef0b01ccf286d90879fc686cdd7b623fec610",
+      "git_sha256": "0550f5057148310e597899e7528ef0b01ccf286d90879fc686cdd7b623fec610",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-08.json",
+      "recorded_sha256": "3ab68e7a11d4faa9668461e2c5f385b3ec7c535345c8b1e9781dbbdcacf51fb2",
+      "inventory_sha256": "3ab68e7a11d4faa9668461e2c5f385b3ec7c535345c8b1e9781dbbdcacf51fb2",
+      "git_sha256": "3ab68e7a11d4faa9668461e2c5f385b3ec7c535345c8b1e9781dbbdcacf51fb2",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-09.json",
+      "recorded_sha256": "c1aa9c60af5a725cb97508900e590f63589119d0703e981e8eaf32473475d831",
+      "inventory_sha256": "c1aa9c60af5a725cb97508900e590f63589119d0703e981e8eaf32473475d831",
+      "git_sha256": "c1aa9c60af5a725cb97508900e590f63589119d0703e981e8eaf32473475d831",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-10.json",
+      "recorded_sha256": "e426476257f661b3a06be1bedb716a4dfd6f923d7deea426f819d6d6fc9cd2ce",
+      "inventory_sha256": "e426476257f661b3a06be1bedb716a4dfd6f923d7deea426f819d6d6fc9cd2ce",
+      "git_sha256": "e426476257f661b3a06be1bedb716a4dfd6f923d7deea426f819d6d6fc9cd2ce",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-11.json",
+      "recorded_sha256": "4a65bdea56ead2d47c7dc57bab1267839f35a564dc7c4d1842a26509dc95980b",
+      "inventory_sha256": "4a65bdea56ead2d47c7dc57bab1267839f35a564dc7c4d1842a26509dc95980b",
+      "git_sha256": "4a65bdea56ead2d47c7dc57bab1267839f35a564dc7c4d1842a26509dc95980b",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-12.json",
+      "recorded_sha256": "29aee790fc14ed93fb52e356328b9d529a6a3ebc6258405b4dd49a44e1edc146",
+      "inventory_sha256": "29aee790fc14ed93fb52e356328b9d529a6a3ebc6258405b4dd49a44e1edc146",
+      "git_sha256": "29aee790fc14ed93fb52e356328b9d529a6a3ebc6258405b4dd49a44e1edc146",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-13.json",
+      "recorded_sha256": "c59199f207e4f053f02ac752e5ce04bc78223c663a6d176a701487584deafe01",
+      "inventory_sha256": "c59199f207e4f053f02ac752e5ce04bc78223c663a6d176a701487584deafe01",
+      "git_sha256": "c59199f207e4f053f02ac752e5ce04bc78223c663a6d176a701487584deafe01",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-14.json",
+      "recorded_sha256": "eb53c35ebc2167aeed679c0d483ada702c95d2d1cc306e9dcdabd61bad295322",
+      "inventory_sha256": "eb53c35ebc2167aeed679c0d483ada702c95d2d1cc306e9dcdabd61bad295322",
+      "git_sha256": "eb53c35ebc2167aeed679c0d483ada702c95d2d1cc306e9dcdabd61bad295322",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-15.json",
+      "recorded_sha256": "7e4d9836f43f68b93e16d58e958deb0e0514903765a5cd289423026081baafa0",
+      "inventory_sha256": "7e4d9836f43f68b93e16d58e958deb0e0514903765a5cd289423026081baafa0",
+      "git_sha256": "7e4d9836f43f68b93e16d58e958deb0e0514903765a5cd289423026081baafa0",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/method-index-00.json",
+      "recorded_sha256": "c8685e3a738a939335c86bcd7eb7ca63dee94af5f708a3c9271532cc7f457030",
+      "inventory_sha256": "c8685e3a738a939335c86bcd7eb7ca63dee94af5f708a3c9271532cc7f457030",
+      "git_sha256": "c8685e3a738a939335c86bcd7eb7ca63dee94af5f708a3c9271532cc7f457030",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/method-index-01.json",
+      "recorded_sha256": "c02cbc6cb5a2d3e44b31e82aa181f4c9fc58df1516f2654621a25e3eee96dade",
+      "inventory_sha256": "c02cbc6cb5a2d3e44b31e82aa181f4c9fc58df1516f2654621a25e3eee96dade",
+      "git_sha256": "c02cbc6cb5a2d3e44b31e82aa181f4c9fc58df1516f2654621a25e3eee96dade",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/method-index-02.json",
+      "recorded_sha256": "d1c4d0d8579379aff2fc6285b97a5d324190feab0cac0bfaab888567a383bcd9",
+      "inventory_sha256": "d1c4d0d8579379aff2fc6285b97a5d324190feab0cac0bfaab888567a383bcd9",
+      "git_sha256": "d1c4d0d8579379aff2fc6285b97a5d324190feab0cac0bfaab888567a383bcd9",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/method-index-03.json",
+      "recorded_sha256": "6fa72d4ac5b6d857bba26eebca5ca731fe47c28605c0354aaffd7808b2d851af",
+      "inventory_sha256": "6fa72d4ac5b6d857bba26eebca5ca731fe47c28605c0354aaffd7808b2d851af",
+      "git_sha256": "6fa72d4ac5b6d857bba26eebca5ca731fe47c28605c0354aaffd7808b2d851af",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/method-index-04.json",
+      "recorded_sha256": "6f87f81de91c20410f472f8d4f85f40a85c19ccf4169d9da3e030623be67e9f6",
+      "inventory_sha256": "6f87f81de91c20410f472f8d4f85f40a85c19ccf4169d9da3e030623be67e9f6",
+      "git_sha256": "6f87f81de91c20410f472f8d4f85f40a85c19ccf4169d9da3e030623be67e9f6",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/method-index-05.json",
+      "recorded_sha256": "a66a1027ca190b3a298726bcb8cf9a3132126be8270ca1d6b0c28392a2203ceb",
+      "inventory_sha256": "a66a1027ca190b3a298726bcb8cf9a3132126be8270ca1d6b0c28392a2203ceb",
+      "git_sha256": "a66a1027ca190b3a298726bcb8cf9a3132126be8270ca1d6b0c28392a2203ceb",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/method-index-06.json",
+      "recorded_sha256": "83a15e11c1de55ae3bf7cf2b6697376e31afb9b6ed9ed367edc18573c5d60299",
+      "inventory_sha256": "83a15e11c1de55ae3bf7cf2b6697376e31afb9b6ed9ed367edc18573c5d60299",
+      "git_sha256": "83a15e11c1de55ae3bf7cf2b6697376e31afb9b6ed9ed367edc18573c5d60299",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/method-index-07.json",
+      "recorded_sha256": "b2256f657ecfbf85355f0f4e785dc95b973be31cd25b6d984571be09f2950652",
+      "inventory_sha256": "b2256f657ecfbf85355f0f4e785dc95b973be31cd25b6d984571be09f2950652",
+      "git_sha256": "b2256f657ecfbf85355f0f4e785dc95b973be31cd25b6d984571be09f2950652",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/method-index-08.json",
+      "recorded_sha256": "9115616efe1b0ca994bba03228146ebed73848bb6838d7b6af83c6db610da4da",
+      "inventory_sha256": "9115616efe1b0ca994bba03228146ebed73848bb6838d7b6af83c6db610da4da",
+      "git_sha256": "9115616efe1b0ca994bba03228146ebed73848bb6838d7b6af83c6db610da4da",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/method-index-09.json",
+      "recorded_sha256": "f754d21069147f92067886db88ff314f84a5cc708752b8aaf2f119edd3b7ef29",
+      "inventory_sha256": "f754d21069147f92067886db88ff314f84a5cc708752b8aaf2f119edd3b7ef29",
+      "git_sha256": "f754d21069147f92067886db88ff314f84a5cc708752b8aaf2f119edd3b7ef29",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/method-index-10.json",
+      "recorded_sha256": "2e746d2af0c52ec89710cb3959cc1f1a1abbb87004cd080b9922002ed3973f0d",
+      "inventory_sha256": "2e746d2af0c52ec89710cb3959cc1f1a1abbb87004cd080b9922002ed3973f0d",
+      "git_sha256": "2e746d2af0c52ec89710cb3959cc1f1a1abbb87004cd080b9922002ed3973f0d",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/method-index-11.json",
+      "recorded_sha256": "23e80caf36273a8a17350fa2b11d15cbd76474ac483e39f6ac58a6151514f531",
+      "inventory_sha256": "23e80caf36273a8a17350fa2b11d15cbd76474ac483e39f6ac58a6151514f531",
+      "git_sha256": "23e80caf36273a8a17350fa2b11d15cbd76474ac483e39f6ac58a6151514f531",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/method-index-12.json",
+      "recorded_sha256": "169243f098c2e3c9aa481456c68754a7bbe0dbb8ef7249b256c72ae008c56ff7",
+      "inventory_sha256": "169243f098c2e3c9aa481456c68754a7bbe0dbb8ef7249b256c72ae008c56ff7",
+      "git_sha256": "169243f098c2e3c9aa481456c68754a7bbe0dbb8ef7249b256c72ae008c56ff7",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/method-index-13.json",
+      "recorded_sha256": "280c018f60b684261ec53a78b3f2520c4d530b3215ebd48cea8653d22fd827a9",
+      "inventory_sha256": "280c018f60b684261ec53a78b3f2520c4d530b3215ebd48cea8653d22fd827a9",
+      "git_sha256": "280c018f60b684261ec53a78b3f2520c4d530b3215ebd48cea8653d22fd827a9",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/method-index-14.json",
+      "recorded_sha256": "bf05b9596c1023b0ee3642d81297a8558321cf741914211c700785c63ea194e0",
+      "inventory_sha256": "bf05b9596c1023b0ee3642d81297a8558321cf741914211c700785c63ea194e0",
+      "git_sha256": "bf05b9596c1023b0ee3642d81297a8558321cf741914211c700785c63ea194e0",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/method-index-15.json",
+      "recorded_sha256": "cb94797e616de4b251b7514867ff9d1ba9f7cafa4833fd8d491cd7e5d3e2bd4f",
+      "inventory_sha256": "cb94797e616de4b251b7514867ff9d1ba9f7cafa4833fd8d491cd7e5d3e2bd4f",
+      "git_sha256": "cb94797e616de4b251b7514867ff9d1ba9f7cafa4833fd8d491cd7e5d3e2bd4f",
+      "match": true
+    },
+    {
+      "path": "evas/capabilities/data/registry.json",
+      "recorded_sha256": "ab9896acac5fe890429b3740cca5ff44eaa288765c21a4182b4a5a636ec3196d",
+      "inventory_sha256": "ab9896acac5fe890429b3740cca5ff44eaa288765c21a4182b4a5a636ec3196d",
+      "git_sha256": "ab9896acac5fe890429b3740cca5ff44eaa288765c21a4182b4a5a636ec3196d",
+      "match": true
+    },
+    {
+      "path": "evas/docs/development/TRACEABILITY.md",
+      "recorded_sha256": "b69901116ed04593f42dabd6d0e62a3ddb23cf4cc0b57e4c252471697aa535df",
+      "inventory_sha256": "b69901116ed04593f42dabd6d0e62a3ddb23cf4cc0b57e4c252471697aa535df",
+      "git_sha256": "b69901116ed04593f42dabd6d0e62a3ddb23cf4cc0b57e4c252471697aa535df",
+      "match": true
+    }
+  ],
+  "capture_to_final_deltas": [
+    {
+      "path": "evas/capabilities/data/asset-index.json",
+      "capture_sha256": "592db65083b767abfaf12490e302477bb7891f28440a6d381df5362cad77ffc8",
+      "inventory_sha256": "975ce86410a8ace568939a1c4a4a9d25ca240c81519642b9eca4d572ecc296b0",
+      "capture_oid": "fefa71106265db8e115f00de4471e325de7683b8",
+      "inventory_oid": "a76d02b23a00c4fa65e7b71df5701692ba856b8f"
+    },
+    {
+      "path": "evas/capabilities/data/catalog-sources.json",
+      "capture_sha256": "ad593c871fd7465b4fdbd56224b001e9ddb9d92ce1e53a9a12a8d110c42e041f",
+      "inventory_sha256": "98a1ffb62cfc6cd13532423379bf6bc2310cb03b6d8608db46488bb19a1fb3be",
+      "capture_oid": "7c846a8268c0a99eae6accb76a7eba5089531700",
+      "inventory_oid": "49a392d9c1615a4f53aecbb01a0cf8fdc2c96e92"
+    },
+    {
+      "path": "evas/capabilities/data/entrypoint-index.json",
+      "capture_sha256": "0a8fdd8b78038d83f82bf3d8a5a1c1a9bf259d903e3d36368dddeb5bc9a15b74",
+      "inventory_sha256": "ea744197dae6b46b1cd7da5ee38bb291f044ac208e4227fd811d2a7fd9ff8312",
+      "capture_oid": "4a5f42ac3c47fe3d4badbc64fe1fc5678db952a8",
+      "inventory_oid": "7a9c11a11082fdc21c6b3c7d8e0606f8f5d78d7b"
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-00.json",
+      "capture_sha256": "2462c58579ec270065a2c1e2489504515055d1b603416864cb98072e66455d82",
+      "inventory_sha256": "ab34f1e0cc853dd4fc4ada7e8d9077b066980ef335c6bd42092cd2310248adb0",
+      "capture_oid": "b29db750ec2ebd1c53498e50799cebd835a6477f",
+      "inventory_oid": "ef14d421197e078d82dc904b14b0e7f7afb6d8e6"
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-01.json",
+      "capture_sha256": "6d19d66037569e068d61836d7d6f9c54ba2544a0231a8cb7b21bf286801d202b",
+      "inventory_sha256": "7083cb0e2530b799867ba194996f17581050f4e726ee91c3eff3e75290c91571",
+      "capture_oid": "e27ad0aca98e80d26dbe9d7cbde77efd89d0bba6",
+      "inventory_oid": "00d993bb93839203d9bbb3ce94b61f165dc9baf9"
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-02.json",
+      "capture_sha256": "a076ca89bd3f6930ec702c9f0bb0a581372bc127c8103ed87613ae9ef53c77ff",
+      "inventory_sha256": "71561843fb7c37ed3c0acbc3b8a30867826e04ba8934bbb90066b43558be5105",
+      "capture_oid": "60935cd635531ab970eb4a938a3f8540238beaae",
+      "inventory_oid": "d8c3c30bff24ac240c04570c280d04f1e39a105e"
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-03.json",
+      "capture_sha256": "29d0a629e75705760840a624064e5f0407d43fef86f7f2d03d399469cb7ae7fa",
+      "inventory_sha256": "ca5911b7a6137dff33f83e27c777c12cc10bc65343f430a01563d38ff9cf99d2",
+      "capture_oid": "16f08275c596dbf2057a950803649b130fe6f680",
+      "inventory_oid": "3089f690643e77041260759acab260d3002e8708"
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-04.json",
+      "capture_sha256": "166d967683189c2ed7b3fbf5ecc3d981b91ae7052f86ea69ac68ee4c53d3e608",
+      "inventory_sha256": "9e5645dc4fcbb2a638416d038303ff2675ddc6539d06b47d5ea7a1a264399f73",
+      "capture_oid": "2144671be866e4c0da98884073f3dd5755690719",
+      "inventory_oid": "0ede19c3fef20447ac36fcce31632edf3d71ed1a"
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-05.json",
+      "capture_sha256": "d343f4b2e45876f94c6dd848961162105c33d6d0afa9095ae14f138ea48a5cf3",
+      "inventory_sha256": "1bf83dada966c6702eeb56d849b55c22f4a0fa4da5a5121e8e23c5693ad8a9d0",
+      "capture_oid": "d26e1fd3b1b78bc5d6326cedb91fd3ff66f5fd9f",
+      "inventory_oid": "2a2aa56118381addb8b7f3366f9c18498952531a"
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-06.json",
+      "capture_sha256": "787a76dc6d7fc39d8a7119486f3d3ac3fb44b57f5071b83e3d9be35dbc8fbae6",
+      "inventory_sha256": "feeb1c3424e596df7b90a12cfaac1ba5f0fe3be2bf4da5804c49289dc4a89810",
+      "capture_oid": "85d43eab9a9dc99701a92ad619aa96984ff74e53",
+      "inventory_oid": "11fd8e3752748906ed8d2f5b4db3d32aa50b95f7"
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-07.json",
+      "capture_sha256": "95e19fa4e609498b1cdc4f9eeb500ce58377ef0753366cccacb81b10e237fd96",
+      "inventory_sha256": "0550f5057148310e597899e7528ef0b01ccf286d90879fc686cdd7b623fec610",
+      "capture_oid": "f50f6df7b21a4b3f2886f60de2ac50f3f05f3f2b",
+      "inventory_oid": "2fbde5e4612cbc66e5f795851b7c229a126149ea"
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-08.json",
+      "capture_sha256": "da16145da8aa57092bb5c7c4845cee5cc645f08601500f519c40e04fd47ca726",
+      "inventory_sha256": "3ab68e7a11d4faa9668461e2c5f385b3ec7c535345c8b1e9781dbbdcacf51fb2",
+      "capture_oid": "af6c9dd0917b65fb933441efa60816bf2196ab27",
+      "inventory_oid": "760eab9ad18cc74cc51fedd67ceaf5fd8ae8565b"
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-09.json",
+      "capture_sha256": "46cd040bb8388afa8b3538957c2b20ffc1c0d5e4fa065ca3fc74e5a9df1939b6",
+      "inventory_sha256": "c1aa9c60af5a725cb97508900e590f63589119d0703e981e8eaf32473475d831",
+      "capture_oid": "cc0573cdcea0f2872820a164824090478db298e9",
+      "inventory_oid": "0a378e09344e778765f4a16134247fcf07ffc4af"
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-10.json",
+      "capture_sha256": "634c984e6b1341908e5c8ea6545179a9ea4a5997b2c2c39145348e6723638d80",
+      "inventory_sha256": "e426476257f661b3a06be1bedb716a4dfd6f923d7deea426f819d6d6fc9cd2ce",
+      "capture_oid": "77422855a496da4c089994690ac0d64f831715f8",
+      "inventory_oid": "32f0020e1fc1e5df16afbe4754f6841594723e07"
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-11.json",
+      "capture_sha256": "90efba053bd2c14623cbd95bb977d7a7dc8c95d16c0b11c1d3e724d41896fd4f",
+      "inventory_sha256": "4a65bdea56ead2d47c7dc57bab1267839f35a564dc7c4d1842a26509dc95980b",
+      "capture_oid": "55685a5ea00147dbd379f42dd993c3b3bdd254e8",
+      "inventory_oid": "c09848cfaba5af59bcb2b1d6a7f74eb7d0984e10"
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-12.json",
+      "capture_sha256": "2a013066944edf260c26cabddabb187a1fdd9489d79c7918eb4e89051820b7f1",
+      "inventory_sha256": "29aee790fc14ed93fb52e356328b9d529a6a3ebc6258405b4dd49a44e1edc146",
+      "capture_oid": "d1c39950c28fff204d28208d6f5cd0fddaefab90",
+      "inventory_oid": "6c5ded5bd37b44a08d829771262947d9fa3adb86"
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-13.json",
+      "capture_sha256": "816b043c87a6ca86a7abb74415fd7c58dfa816b5feef6df365c62a713b6eb3c5",
+      "inventory_sha256": "c59199f207e4f053f02ac752e5ce04bc78223c663a6d176a701487584deafe01",
+      "capture_oid": "9c3498730c04fe18e98fd8557fc1966747be714c",
+      "inventory_oid": "a6e5889b5a0ca0f721b2c29507cb38a4bf466fee"
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-14.json",
+      "capture_sha256": "1862e9c584e525d3791c68546efdea7dfbe0680fae54fc97c35dfa42a1cbf6bd",
+      "inventory_sha256": "eb53c35ebc2167aeed679c0d483ada702c95d2d1cc306e9dcdabd61bad295322",
+      "capture_oid": "c2d0e3bc0ccdde60c982adbcfb3cc286019f2f5d",
+      "inventory_oid": "45ac265364b6b169efb41a440327f880f8687db3"
+    },
+    {
+      "path": "evas/capabilities/data/historical-index-15.json",
+      "capture_sha256": "dc798b008bb1940250820d37da8c79466474a9cae4bf605f2e91cecac4f62962",
+      "inventory_sha256": "7e4d9836f43f68b93e16d58e958deb0e0514903765a5cd289423026081baafa0",
+      "capture_oid": "880f51500bc16933a86c317caa9f2731c28bdc09",
+      "inventory_oid": "ade2ea4b50ebb55ce7714b65d0a0bc4ead548577"
+    },
+    {
+      "path": "evas/capabilities/data/method-index-00.json",
+      "capture_sha256": "7f5b2c3235be1a6cf22b7d540cea674c57594c1c54dd79ec021fb990d9058a83",
+      "inventory_sha256": "c8685e3a738a939335c86bcd7eb7ca63dee94af5f708a3c9271532cc7f457030",
+      "capture_oid": "51e3fcb4b469e3d9194634afaf346f2b6632c142",
+      "inventory_oid": "47831313c4aa59bcd0086aaacf1463c299214366"
+    },
+    {
+      "path": "evas/capabilities/data/method-index-01.json",
+      "capture_sha256": "d364e96781de4c56862141c87f26d97875a94a04552da1fdce0e6b0ab328492a",
+      "inventory_sha256": "c02cbc6cb5a2d3e44b31e82aa181f4c9fc58df1516f2654621a25e3eee96dade",
+      "capture_oid": "cd2f93ca55b8d6dc00f42b67956b0a72f2a6e167",
+      "inventory_oid": "9d50143b357f93d5c7093ad9e1d45d1e8f62f07c"
+    },
+    {
+      "path": "evas/capabilities/data/method-index-02.json",
+      "capture_sha256": "81ab8dcd67db257211d6ec67e195efc66d8187345bb5c0be2dd9df00647c8353",
+      "inventory_sha256": "d1c4d0d8579379aff2fc6285b97a5d324190feab0cac0bfaab888567a383bcd9",
+      "capture_oid": "1aacc06e9f2048ab1d1796307fce79037e03f70b",
+      "inventory_oid": "71d3a2cbb295c61ce2471f6970dcbb62ccfe8948"
+    },
+    {
+      "path": "evas/capabilities/data/method-index-03.json",
+      "capture_sha256": "02c22a8f163b3d1e5c62ebf5f025788e10acc252a3cc46a3dbaa23f2f3b993b5",
+      "inventory_sha256": "6fa72d4ac5b6d857bba26eebca5ca731fe47c28605c0354aaffd7808b2d851af",
+      "capture_oid": "7831b44b60f1ad93560a157992f0dc38f79c5d1e",
+      "inventory_oid": "f63025a567406e22bc7fd8d42482af0ca2d8c933"
+    },
+    {
+      "path": "evas/capabilities/data/method-index-04.json",
+      "capture_sha256": "0504945f4ae1a4e09ec86203775ca0cd229d5afa6b85e4b27baf5025fac37ad8",
+      "inventory_sha256": "6f87f81de91c20410f472f8d4f85f40a85c19ccf4169d9da3e030623be67e9f6",
+      "capture_oid": "af323e23a4fbd054d472c743c170fb2e456e2745",
+      "inventory_oid": "0fb1cd64f1e11be4e6b4c0beca184d453644ab30"
+    },
+    {
+      "path": "evas/capabilities/data/method-index-05.json",
+      "capture_sha256": "3fab0ed7bc1f11c60d81d3a1857439eb4149a737948796962d277bc612caac84",
+      "inventory_sha256": "a66a1027ca190b3a298726bcb8cf9a3132126be8270ca1d6b0c28392a2203ceb",
+      "capture_oid": "08a939206deca4d81cca27a7e9b99493d9b02d4b",
+      "inventory_oid": "2b8ce3bcf469a884f9c44ee319f6ca419434362c"
+    },
+    {
+      "path": "evas/capabilities/data/method-index-06.json",
+      "capture_sha256": "953188a028cf1ed5cd50fde61bb6983efff711d0690fb625150f6b730b7d9024",
+      "inventory_sha256": "83a15e11c1de55ae3bf7cf2b6697376e31afb9b6ed9ed367edc18573c5d60299",
+      "capture_oid": "5162589e1695161bb2ee34bb4abd22871109ce77",
+      "inventory_oid": "ed07bda2256d6952a71b197cd9d97a1ed60a80b9"
+    },
+    {
+      "path": "evas/capabilities/data/method-index-07.json",
+      "capture_sha256": "2865bdd1581fa8582faeb788a8e7ca5798e7c06016684b2ccdee1f179dbfb1bf",
+      "inventory_sha256": "b2256f657ecfbf85355f0f4e785dc95b973be31cd25b6d984571be09f2950652",
+      "capture_oid": "4cf868ad8e33542468ffbc08ff68180d2f92669f",
+      "inventory_oid": "1cdaf3a7765ac192a34aa1484d5a787a8469c831"
+    },
+    {
+      "path": "evas/capabilities/data/method-index-08.json",
+      "capture_sha256": "f9bc907f16892bad5da859b59b12e3b42bfaef45c7b7b7b828e0ba973386dad3",
+      "inventory_sha256": "9115616efe1b0ca994bba03228146ebed73848bb6838d7b6af83c6db610da4da",
+      "capture_oid": "3fa4fcba1e72fc69c059295da96d241d8d65870d",
+      "inventory_oid": "744b823ca26d7e81c978e6a8c99d7922fe359285"
+    },
+    {
+      "path": "evas/capabilities/data/method-index-09.json",
+      "capture_sha256": "cd83f36e8c5ef195eec43b158efb33139ba477f2f51dae7b2f17e4e30f15d5ef",
+      "inventory_sha256": "f754d21069147f92067886db88ff314f84a5cc708752b8aaf2f119edd3b7ef29",
+      "capture_oid": "0bf4c8b8c95759eefa6ca9d01ae42c7eff1bc966",
+      "inventory_oid": "faf3ef2d89b308fecfc4439ea81641e30e35b31b"
+    },
+    {
+      "path": "evas/capabilities/data/method-index-10.json",
+      "capture_sha256": "fa40fcc547555082502f4a261ea624941dc55b49e240ef65ed9b8a7a700e3bf1",
+      "inventory_sha256": "2e746d2af0c52ec89710cb3959cc1f1a1abbb87004cd080b9922002ed3973f0d",
+      "capture_oid": "521aaa12336a960c37415f04659811e5f848f9de",
+      "inventory_oid": "23279d78902f06d01c9dd6bdaa37656b47199f1d"
+    },
+    {
+      "path": "evas/capabilities/data/method-index-11.json",
+      "capture_sha256": "73bacdaf6a08b804c2f63dafe6f929ae59f2cdc841a4cf5427bffef07ec3fed4",
+      "inventory_sha256": "23e80caf36273a8a17350fa2b11d15cbd76474ac483e39f6ac58a6151514f531",
+      "capture_oid": "4eade1a144a0cbaf3073126e63767ee8d7bf8dad",
+      "inventory_oid": "98d9076336b15fe722449640c90080e24a6abf5d"
+    },
+    {
+      "path": "evas/capabilities/data/method-index-12.json",
+      "capture_sha256": "b75646889f83a3c0d6366bd2624c899bcef214be634d7bdd345b74e2b9050087",
+      "inventory_sha256": "169243f098c2e3c9aa481456c68754a7bbe0dbb8ef7249b256c72ae008c56ff7",
+      "capture_oid": "680ef086df323e56b6581277b2734c51be1e32cc",
+      "inventory_oid": "ec0fc6aca925f9b803443aa972d0f2cda7c7a667"
+    },
+    {
+      "path": "evas/capabilities/data/method-index-13.json",
+      "capture_sha256": "2f73b27f8ef4f07f04cc0b46ac23481688497c4b1f13a096dd169ec42a73414e",
+      "inventory_sha256": "280c018f60b684261ec53a78b3f2520c4d530b3215ebd48cea8653d22fd827a9",
+      "capture_oid": "890490681a11208574dfeb5a8b9a1d7d24dc37f5",
+      "inventory_oid": "4d59708d2232a7a9b25e2446bfb83e76d4588be1"
+    },
+    {
+      "path": "evas/capabilities/data/method-index-14.json",
+      "capture_sha256": "4a89b3e32c38f09b510298be48d0e40d60a0c0421b75a04f39be9c133da54c92",
+      "inventory_sha256": "bf05b9596c1023b0ee3642d81297a8558321cf741914211c700785c63ea194e0",
+      "capture_oid": "21b2e4621f97dbcf04671b5395654e20033b905f",
+      "inventory_oid": "ed813e1a4362b1125bf9ee61b6abe85b377d3881"
+    },
+    {
+      "path": "evas/capabilities/data/method-index-15.json",
+      "capture_sha256": "6603412ef2e65c7a8aba1ab262f447b587a1909f60e33697e146d26a7d2c5615",
+      "inventory_sha256": "cb94797e616de4b251b7514867ff9d1ba9f7cafa4833fd8d491cd7e5d3e2bd4f",
+      "capture_oid": "d07a7083d19c9dad5313c09e001f84626271156b",
+      "inventory_oid": "030f938600d16588e02db26792c0517dfe3df25f"
+    },
+    {
+      "path": "evas/capabilities/data/registry.json",
+      "capture_sha256": "8401c28d6952168a75f1afec15252369e04fc22a9f0bb0deb56c8bca228b0151",
+      "inventory_sha256": "ab9896acac5fe890429b3740cca5ff44eaa288765c21a4182b4a5a636ec3196d",
+      "capture_oid": "0be21ba7acea9f6278c8b8f94802a69356a56e88",
+      "inventory_oid": "9a74a6c91c1e9134a7d1d84f1376bd28d2510116"
+    },
+    {
+      "path": "evas/docs/development/TRACEABILITY.md",
+      "capture_sha256": "24f165bce2e9a84fa98d660703065bafca25b2a9886e721c1a391944d8201928",
+      "inventory_sha256": "b69901116ed04593f42dabd6d0e62a3ddb23cf4cc0b57e4c252471697aa535df",
+      "capture_oid": "80ea4d993fe71fc4087e109c06267e505e12a45a",
+      "inventory_oid": "6546d846ac1d14d0e92a7115b1797031237d9f8d"
+    }
+  ]
+}

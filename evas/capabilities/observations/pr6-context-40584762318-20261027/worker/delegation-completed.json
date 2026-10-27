@@ -1,0 +1,23 @@
+{
+  "taskId": "node:delegated-task:command%3Amcp%3A27545977-2ca5-42b2-adf9-35ea91e9276b%3Adelegate-task%3Aevas-pr6-e1-bundle-sonnet-r1-20261027",
+  "childThreadId": "thread:delegated-task:command%3Amcp%3A27545977-2ca5-42b2-adf9-35ea91e9276b%3Adelegate-task%3Aevas-pr6-e1-bundle-sonnet-r1-20261027",
+  "status": "completed",
+  "workState": "result_available",
+  "hasPendingChildRuns": false,
+  "providerInstanceId": "tclaude",
+  "model": "claude-sonnet-5-5",
+  "options": [
+    {
+      "id": "effort",
+      "value": "high"
+    }
+  ],
+  "dispatched_at_utc": "2026-10-27T21:31:20.499045+00:00",
+  "observed_completed_at_utc": "2026-10-27T22:09:32.008765+00:00",
+  "summary_points_confirmed_by_primary": {
+    "merge_object": "fetched by the primary at 21:48Z (merge-closure/merge-closure.json); parents [4d6ebc71, fa5556de], tree 470ad588; the worker text \"locally observed ... signature header present but not verified\" is accurate and kept",
+    "dut_revision": "842bde71 kept (DUT manifest 5e9bf28a equal at 842bde71, 4d6ebc71, fa5556de), as in PR5",
+    "evidence_env": "evidence() and previous_context_sha256 require the registration run on the E1 environment; this is decision B (old pool)",
+    "runner_header_vs_ImageVersion": "runner log header Version 20261012.334.1 and context ImageVersion 20261023.334.3 are different fields; both old pool"
+  }
+}

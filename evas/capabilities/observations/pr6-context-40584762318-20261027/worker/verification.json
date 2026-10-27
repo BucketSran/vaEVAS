@@ -1,0 +1,233 @@
+{
+  "prepared": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/run-r2",
+  "started_at_utc": "2026-10-27T22:03:17.184349+00:00",
+  "finished_at_utc": "2026-10-27T22:03:40.640098+00:00",
+  "all_checks_ok": true,
+  "checks": {
+    "real_workspace_guard_start": {
+      "ok": true
+    },
+    "raw_verification_input": {
+      "ok": true
+    },
+    "trusted_code_regression_gate.py": {
+      "ok": true,
+      "sha256": "65e3542fa4989b35d31ee6998c9dc14f8975524e4b30a23b76539abf7317b38e"
+    },
+    "trusted_code_regression_context_registration.py": {
+      "ok": true,
+      "sha256": "138ca3036008c8f0616d0e21019f1e434ab1cd1b6498694cd2613c275c261a22"
+    },
+    "candidate_code_ci_evidence": {
+      "ok": true,
+      "sha256": "c64a7b268f2a8615ac257a19a5edb9fdbe399ad4d577e6c2fe65f6e2a86fc5cc",
+      "note": "PR6 changes the collector: ci_evidence.py head differs from the base"
+    },
+    "consumed_inputs_unchanged": {
+      "ok": true,
+      "count": 32,
+      "changed": []
+    },
+    "ten_role_files": {
+      "ok": true,
+      "names": [
+        "artifact_manifest",
+        "collector_manifest",
+        "composition_recipe",
+        "dut_build",
+        "kernel_binary",
+        "report.json",
+        "shard_reports",
+        "snapshot_manifest",
+        "stderr",
+        "stdout"
+      ]
+    },
+    "report_original_bytes": {
+      "ok": true
+    },
+    "old_report_identity": {
+      "ok": true
+    },
+    "report_valid_whole_merged": {
+      "ok": true
+    },
+    "snapshot_entries_and_order": {
+      "ok": true,
+      "count": 49598
+    },
+    "snapshot_reproduces_four_shard_identity_keys": {
+      "ok": true,
+      "per_shard": [
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    "snapshot_order_is_not_path_sorted": {
+      "ok": true,
+      "note": "git ls-files order reproduces the CI identity keys; Path or string re-sorting would not"
+    },
+    "collector_manifest": {
+      "ok": true,
+      "collector": {
+        "runner": "dc2ed03b722fd35e9a20f6eda424ac2ff39b3c22f2081a29c5f0777a9b148985",
+        "environment_policy": "c64a7b268f2a8615ac257a19a5edb9fdbe399ad4d577e6c2fe65f6e2a86fc5cc",
+        "assertion_capture": "3b7969bbefb3a7d89d4015871200b33d2ef63d7baaf897a4bc0b44a009adc718",
+        "assertion_policy": "42ea0b232286934c1af0905dbc89a15e6fa6eebacd641890b69c047fc78e7d93"
+      }
+    },
+    "kernel_binary": {
+      "ok": true,
+      "bytes": 105862328,
+      "executable_bit": false,
+      "equals_pr5_bundle_kernel": true
+    },
+    "composition_recipe": {
+      "ok": true
+    },
+    "dut_build_bindings": {
+      "ok": true
+    },
+    "shard_reports_exact_text_and_order": {
+      "ok": true
+    },
+    "stream_stdout": {
+      "ok": true,
+      "lengths": [
+        0,
+        170,
+        10391,
+        921
+      ],
+      "total": 11482
+    },
+    "stream_stderr": {
+      "ok": true,
+      "lengths": [
+        401495,
+        403111,
+        431739,
+        430952
+      ],
+      "total": 1667297
+    },
+    "artifact_manifest": {
+      "ok": true
+    },
+    "production_evidence_function": {
+      "ok": true,
+      "note": "in-memory harness authorization; no authorization file exists"
+    },
+    "obligation_map_recomputed_exact": {
+      "ok": true,
+      "unmapped": 0,
+      "entries": 7737
+    },
+    "obligation_map_draft_label": {
+      "ok": true
+    },
+    "obligation_counts": {
+      "ok": true
+    },
+    "production_mapped_obligations": {
+      "ok": true
+    },
+    "production_mapped_obligations_against_trusted_context_expansion": {
+      "ok": true,
+      "context_index": 3
+    },
+    "proof_matches_file": {
+      "ok": true,
+      "canonical_mapping_sha256": "53f6cb79277a690cd132465e89954b8b0d00738c4ed6207ed288222747ea2196"
+    },
+    "source_bindings_actual_blobs": {
+      "ok": true,
+      "distinct": 332,
+      "bad": []
+    },
+    "receipt_output_digests": {
+      "ok": true,
+      "count": 16
+    },
+    "binding_file_digests": {
+      "ok": true
+    },
+    "status_flags": {
+      "ok": true
+    },
+    "expected_rejection_text": {
+      "ok": true
+    },
+    "receipt_identity": {
+      "ok": true
+    },
+    "expected_rejection_tamper_stdout_captured_std": {
+      "ok": true,
+      "message": "captured stdout differs"
+    },
+    "expected_rejection_tamper_kernel_binary_retrievable_": {
+      "ok": true,
+      "message": "retrievable binary differs from D0"
+    },
+    "expected_rejection_tamper_shard_reports_shard_raw_by": {
+      "ok": true,
+      "message": "shard raw bytes differ from capture manifest"
+    },
+    "expected_rejection_tamper_snapshot_manifest_all-input_su": {
+      "ok": true,
+      "message": "all-input subject differs from fixed snapshot"
+    },
+    "expected_rejection_mapping_unknown_new": {
+      "ok": true,
+      "message": "lost, unknown or duplicate obligation mapping"
+    },
+    "expected_rejection_mapping_omitted": {
+      "ok": true,
+      "message": "old obligations omitted from explicit manual mapping"
+    },
+    "expected_rejection_mapping_false_pass_class": {
+      "ok": true,
+      "message": "false-pass attribution has wrong outcomes"
+    },
+    "output_path_refusals": {
+      "ok": true,
+      "probes": {
+        "existing_prepared_directory": {
+          "exit_code": 1,
+          "message": "refusing existing path (directory, file or symlink): /Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/run-r2"
+        },
+        "outside": {
+          "exit_code": 1,
+          "message": "refusing output outside /Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027"
+        },
+        "parent_traversal": {
+          "exit_code": 1,
+          "message": "refusing output outside /Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027"
+        },
+        "symlink_final": {
+          "exit_code": 1,
+          "message": "refusing existing path (directory, file or symlink): /Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/verify-r1/refusal-probe/link"
+        },
+        "through_symlink_parent": {
+          "exit_code": 1,
+          "message": "refusing symlink or missing parent: /Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/verify-r1/refusal-probe/link"
+        },
+        "existing_file": {
+          "exit_code": 1,
+          "message": "refusing existing path (directory, file or symlink): /Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/run-r2/receipt.json"
+        }
+      }
+    },
+    "real_workspace_guard_unchanged": {
+      "ok": true,
+      "candidates": 20
+    }
+  },
+  "unhandled_failure": null,
+  "execution_success": true,
+  "semantic_qualification": false,
+  "scientific_qualification": false,
+  "python": "3.14.6"
+}

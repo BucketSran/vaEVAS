@@ -1,0 +1,821 @@
+{
+  "run": 40584762318,
+  "attempt": 1,
+  "run_conclusion": "failure",
+  "run_status": "completed",
+  "run_html": "https://github.com/BucketSran/vaEVAS/actions/runs/40584762318",
+  "run_started_at": "2026-10-27T21:12:09Z",
+  "run_updated_at": "2026-10-27T21:27:08Z",
+  "head": "fa5556de20de4fecbf9db4e3630cd5d6754b07c2",
+  "tree": "470ad588ddeb848b7c05d3f23656a96f085f8bfd",
+  "parents": [
+    "797a21161e224181609f4113a74d719dde6ac9fa"
+  ],
+  "trusted_base": "4d6ebc71efea35822a28f2861f2b0a2a6db17e59",
+  "trusted_tree": "33a1a097624a24d46dda3ec289b1d899280d7e18",
+  "pr_field_source": "headRefOid/baseRefOid on the saved flat gh pr view JSON",
+  "pr_number": 269,
+  "pr_state": "OPEN",
+  "pr_mergeable": "MERGEABLE",
+  "job_count": 21,
+  "job_results": {
+    "selection": "success",
+    "fast-checks": "success",
+    "static-checks": "success",
+    "fuzz-smoke (run, 24)": "success",
+    "rust-regression": "success",
+    "fuzz-smoke (parse_request, 65536)": "success",
+    "provenance-paper": "success",
+    "provenance-support": "success",
+    "regression (3)": "success",
+    "properties-and-ngspice": "success",
+    "catalog-inventory": "success",
+    "regression (2)": "success",
+    "package / install (macos-14, arm64, 3.12)": "success",
+    "regression (0)": "success",
+    "regression (1)": "success",
+    "benchmark / first-batch": "success",
+    "package / install (ubuntu-24.04, x86_64, 3.10)": "success",
+    "benchmark / identity": "success",
+    "regression-coverage": "success",
+    "regression-admission": "failure",
+    "ci-result": "failure"
+  },
+  "job_conclusion_counts": {
+    "success": 19,
+    "failure": 2
+  },
+  "host_job_success_is_scientific_qualification": false,
+  "archives": [
+    {
+      "name": "git-fixture-isolation",
+      "id": 12772716921,
+      "bytes": 112937,
+      "sha256": "8cd4a3972aced783a474f1765cff7abaec8c6cd98d809bf6a2d1157905fd934d",
+      "github_digest_matches": true,
+      "file_count": 180
+    },
+    {
+      "name": "ngspice-comparison",
+      "id": 12772490800,
+      "bytes": 136726,
+      "sha256": "7ead0cd5b27ff840a8aa71fb1381844e2e7315588528a5ff8e526f93adb066da",
+      "github_digest_matches": true,
+      "file_count": 79
+    },
+    {
+      "name": "fast-feedback",
+      "id": 12772445653,
+      "bytes": 9879,
+      "sha256": "a4c80aff04c52313219fc8983c541c0a55613349e4a6b6ee11041df8eda8c04e",
+      "github_digest_matches": true,
+      "file_count": 2
+    },
+    {
+      "name": "python-regression-shard-2",
+      "id": 12772381449,
+      "bytes": 24368180,
+      "sha256": "4630dfd584f4e3eba6f0f73ff3a246c0c045722f09d587ec9bc5f5a7e72121b8",
+      "github_digest_matches": true,
+      "file_count": 9
+    },
+    {
+      "name": "python-regression-shard-3",
+      "id": 12772256432,
+      "bytes": 27095930,
+      "sha256": "ee55be3a1024729348ec4091bedcc35ed9c9bd1f6ef0cd5632a8cd83c7ac7a60",
+      "github_digest_matches": true,
+      "file_count": 9
+    },
+    {
+      "name": "python-regression-shard-0",
+      "id": 12772006414,
+      "bytes": 24502572,
+      "sha256": "8c539cc920211b54f33401d8efb69b0b0a9782e2e750431cc541d09e81017019",
+      "github_digest_matches": true,
+      "file_count": 9
+    },
+    {
+      "name": "python-regression-shard-1",
+      "id": 12771427081,
+      "bytes": 24604303,
+      "sha256": "bcbbd714cecd2872f1e6a0e8c8cd5045f9130df176426786cca9464612fda1ed",
+      "github_digest_matches": true,
+      "file_count": 9
+    },
+    {
+      "name": "rust-test-listing",
+      "id": 12771362618,
+      "bytes": 78018,
+      "sha256": "3e3ccc893fd796899ff05bc922863138b3c8d5d3dd18fc856af79416a72a935d",
+      "github_digest_matches": true,
+      "file_count": 29
+    },
+    {
+      "name": "python-regression-admission",
+      "id": 12771312813,
+      "bytes": 1445,
+      "sha256": "87e718dfa21ebe841c33855c070a304bf7dd3c95f6a8b6f80562fd499659ab7e",
+      "github_digest_matches": true,
+      "file_count": 3
+    },
+    {
+      "name": "package-macos-14-arm64-py3.12",
+      "id": 12771146974,
+      "bytes": 5694338,
+      "sha256": "bd0013461da9ddb25d1f6c1a2451029260f448e1ad6f9af64a977882cf4833a3",
+      "github_digest_matches": true,
+      "file_count": 48
+    },
+    {
+      "name": "package-ubuntu-24.04-x86_64-py3.10",
+      "id": 12771091933,
+      "bytes": 6197979,
+      "sha256": "b95c2a6f6b46dd5d7f0379c4fd9b7fc16fa4c326006e3bae6d9b6d96139e7714",
+      "github_digest_matches": true,
+      "file_count": 48
+    },
+    {
+      "name": "catalog-inventory",
+      "id": 12770977366,
+      "bytes": 7694579,
+      "sha256": "955d8b85ec6275672963d14cce6135388bf3463f9241cf7832fc4b3c3484a328",
+      "github_digest_matches": true,
+      "file_count": 40
+    },
+    {
+      "name": "python-regression-timings",
+      "id": 12770764459,
+      "bytes": 3367933,
+      "sha256": "0b89ed72542ca231bfcd7fe89cc4f6123676d24ecc791d503a3bc20f9462deaf",
+      "github_digest_matches": true,
+      "file_count": 2
+    }
+  ],
+  "archive_members": 467,
+  "c274": {
+    "run": 40569530278,
+    "head": "5fe590c0c573c7296b30f38245f769ff2f71ab8a",
+    "conclusion": "success",
+    "html": "https://github.com/BucketSran/vaEVAS/actions/runs/40569530278",
+    "archive": [
+      {
+        "name": "python-regression-timings",
+        "id": 12764648426,
+        "bytes": 3367463,
+        "sha256": "e3b9c57d87ab130da0beec5b053babd48e0c2e9a669b8dc5d07b0ccd60e6ad95",
+        "github_digest_matches": true,
+        "file_count": 2
+      }
+    ],
+    "members": 2,
+    "run_identity_ok": true
+  },
+  "merge_checkout": {
+    "commit": "253082c49e6b37155becf8ed2e40a899bf99c130",
+    "ref": "refs/pull/269/merge",
+    "locally_present": true,
+    "fetched": false,
+    "verified": true,
+    "fixed_head": "fa5556de20de4fecbf9db4e3630cd5d6754b07c2",
+    "fixed_head_parents": [
+      "797a21161e224181609f4113a74d719dde6ac9fa"
+    ],
+    "trusted_is_ancestor_of_head": true,
+    "expectation": {
+      "parents": [
+        "4d6ebc71efea35822a28f2861f2b0a2a6db17e59",
+        "fa5556de20de4fecbf9db4e3630cd5d6754b07c2"
+      ],
+      "tree": "470ad588ddeb848b7c05d3f23656a96f085f8bfd",
+      "status": "expected; subsequently observed in the local object (see observed_* fields)",
+      "basis": "job log line 'HEAD is now at 253082c4 Merge fa5556de... into 4d6ebc71...' in regression-admission.txt; run-initial.json referenced_workflows ref refs/pull/269/merge; inventory source_tree equals the head tree; trusted main is an ancestor of the head, so a GitHub merge of head into base keeps the head tree"
+    },
+    "job_log_checkout_line": "HEAD is now at 253082c4 Merge fa5556de20de4fecbf9db4e3630cd5d6754b07c2 into 4d6ebc71efea35822a28f2861f2b0a2a6db17e59",
+    "observed_parents": [
+      "4d6ebc71efea35822a28f2861f2b0a2a6db17e59",
+      "fa5556de20de4fecbf9db4e3630cd5d6754b07c2"
+    ],
+    "observed_tree": "470ad588ddeb848b7c05d3f23656a96f085f8bfd",
+    "observed_committer": [
+      "committer GitHub <noreply@github.com> 1793135525 +0800"
+    ],
+    "observed_message_first_line": "Merge fa5556de20de4fecbf9db4e3630cd5d6754b07c2 into 4d6ebc71efea35822a28f2861f2b0a2a6db17e59",
+    "has_gpgsig_header": true,
+    "signature_verified": false,
+    "signature_note": "the GitHub signature header is present but was not verified by this worker",
+    "loose_object_mtime_utc": "2026-10-27T21:48:25.644335+00:00",
+    "presence_history": "absent when the worker first checked (cat-file -t failed, about 2026-10-27T21:32Z); present at this run. The worker never fetched; the object was added to the shared object store by another process."
+  },
+  "source_export_private_git_head": "fa5556de20de4fecbf9db4e3630cd5d6754b07c2",
+  "code": {
+    "regression_gate.py": {
+      "trusted_sha256": "65e3542fa4989b35d31ee6998c9dc14f8975524e4b30a23b76539abf7317b38e",
+      "candidate_sha256": "65e3542fa4989b35d31ee6998c9dc14f8975524e4b30a23b76539abf7317b38e",
+      "main_02dee32b_sha256": "65e3542fa4989b35d31ee6998c9dc14f8975524e4b30a23b76539abf7317b38e",
+      "trusted_equals_candidate": true,
+      "trusted_equals_02dee32b": true,
+      "source_export_equals_candidate": true
+    },
+    "regression_context_registration.py": {
+      "trusted_sha256": "138ca3036008c8f0616d0e21019f1e434ab1cd1b6498694cd2613c275c261a22",
+      "candidate_sha256": "138ca3036008c8f0616d0e21019f1e434ab1cd1b6498694cd2613c275c261a22",
+      "main_02dee32b_sha256": "138ca3036008c8f0616d0e21019f1e434ab1cd1b6498694cd2613c275c261a22",
+      "trusted_equals_candidate": true,
+      "trusted_equals_02dee32b": true,
+      "source_export_equals_candidate": true
+    },
+    "run_trusted_regression_gate.py": {
+      "trusted_sha256": "30cb19e469db4ea26b00ca4959e68c4aa1196be15a9051452ff491210619aa63",
+      "candidate_sha256": "30cb19e469db4ea26b00ca4959e68c4aa1196be15a9051452ff491210619aa63",
+      "main_02dee32b_sha256": "30cb19e469db4ea26b00ca4959e68c4aa1196be15a9051452ff491210619aa63",
+      "trusted_equals_candidate": true,
+      "trusted_equals_02dee32b": true,
+      "source_export_equals_candidate": true
+    },
+    "run_regression.py": {
+      "trusted_sha256": "dc2ed03b722fd35e9a20f6eda424ac2ff39b3c22f2081a29c5f0777a9b148985",
+      "candidate_sha256": "dc2ed03b722fd35e9a20f6eda424ac2ff39b3c22f2081a29c5f0777a9b148985",
+      "main_02dee32b_sha256": "dc2ed03b722fd35e9a20f6eda424ac2ff39b3c22f2081a29c5f0777a9b148985",
+      "trusted_equals_candidate": true,
+      "trusted_equals_02dee32b": true,
+      "source_export_equals_candidate": true
+    },
+    "ci_evidence.py": {
+      "trusted_sha256": "238c45d156225b29e566665997fdd5e1fc19b2301142e69cdc39243ce56c0257",
+      "candidate_sha256": "c64a7b268f2a8615ac257a19a5edb9fdbe399ad4d577e6c2fe65f6e2a86fc5cc",
+      "main_02dee32b_sha256": "238c45d156225b29e566665997fdd5e1fc19b2301142e69cdc39243ce56c0257",
+      "trusted_equals_candidate": false,
+      "trusted_equals_02dee32b": true,
+      "source_export_equals_candidate": true
+    }
+  },
+  "ci_evidence": {
+    "excluded_equal": true,
+    "kernel_selectors_equal": true,
+    "candidate_changed_vs_trusted": true
+  },
+  "inventory": {
+    "inventory_paths": 49608,
+    "git_blob_paths": 49608,
+    "unique_blobs": 25599,
+    "blobs_read": 25599,
+    "bytes_read": 463666274,
+    "reused_from_other_run": 0,
+    "reuse_note": "full read of every blob in the fixed head tree; no reuse of #274 inventory rows was needed",
+    "source_export_files_hashed": 49608,
+    "source_export_mismatch": 0,
+    "excluded_inputs": [
+      ".agents/skills/evas-develop/SKILL.md",
+      ".agents/skills/evas-validate/SKILL.md",
+      ".agents/skills/vaevas-prepare-pr/SKILL.md",
+      ".agents/skills/vaevas-review-pr/SKILL.md",
+      ".agents/skills/vaevas-workflow/SKILL.md",
+      "AGENTS.md",
+      "CONTRIBUTING.md",
+      "docs/contributing/evidence.md",
+      "docs/contributing/workspaces.md",
+      "evas/docs/development/diagnostic-inventory.json"
+    ],
+    "execution_input_count": 49598,
+    "execution_input_list_sha256": "a5297be72fd6359418b064063588604fa6abd161a15dcc6dbbd29c12405adc96",
+    "execution_input_unbound": [],
+    "entry_order": "git ls-tree order (= git ls-files order), as ci_evidence.fingerprint writes it",
+    "path_order_differs_from_Path_sort": true,
+    "source_commit": "253082c49e6b37155becf8ed2e40a899bf99c130",
+    "source_tree": "470ad588ddeb848b7c05d3f23656a96f085f8bfd",
+    "dirty_paths": [],
+    "content_binding": "actual-checkout-bytes-not-commit-identity",
+    "source_commit_relationship": "head-context-only",
+    "capture_commit": "797a21161e224181609f4113a74d719dde6ac9fa",
+    "capture_binding_counts": {
+      "matched": 49571,
+      "capture_to_final_deltas": 37,
+      "unexpected": 0
+    },
+    "capture_to_final_delta_paths": [
+      "evas/capabilities/data/asset-index.json",
+      "evas/capabilities/data/catalog-sources.json",
+      "evas/capabilities/data/entrypoint-index.json",
+      "evas/capabilities/data/historical-index-00.json",
+      "evas/capabilities/data/historical-index-01.json",
+      "evas/capabilities/data/historical-index-02.json",
+      "evas/capabilities/data/historical-index-03.json",
+      "evas/capabilities/data/historical-index-04.json",
+      "evas/capabilities/data/historical-index-05.json",
+      "evas/capabilities/data/historical-index-06.json",
+      "evas/capabilities/data/historical-index-07.json",
+      "evas/capabilities/data/historical-index-08.json",
+      "evas/capabilities/data/historical-index-09.json",
+      "evas/capabilities/data/historical-index-10.json",
+      "evas/capabilities/data/historical-index-11.json",
+      "evas/capabilities/data/historical-index-12.json",
+      "evas/capabilities/data/historical-index-13.json",
+      "evas/capabilities/data/historical-index-14.json",
+      "evas/capabilities/data/historical-index-15.json",
+      "evas/capabilities/data/method-index-00.json",
+      "evas/capabilities/data/method-index-01.json",
+      "evas/capabilities/data/method-index-02.json",
+      "evas/capabilities/data/method-index-03.json",
+      "evas/capabilities/data/method-index-04.json",
+      "evas/capabilities/data/method-index-05.json",
+      "evas/capabilities/data/method-index-06.json",
+      "evas/capabilities/data/method-index-07.json",
+      "evas/capabilities/data/method-index-08.json",
+      "evas/capabilities/data/method-index-09.json",
+      "evas/capabilities/data/method-index-10.json",
+      "evas/capabilities/data/method-index-11.json",
+      "evas/capabilities/data/method-index-12.json",
+      "evas/capabilities/data/method-index-13.json",
+      "evas/capabilities/data/method-index-14.json",
+      "evas/capabilities/data/method-index-15.json",
+      "evas/capabilities/data/registry.json",
+      "evas/docs/development/TRACEABILITY.md"
+    ],
+    "final_candidate_files_bound": 37,
+    "final_candidate_all_match": true,
+    "derive_acceptance_files_bound": 37,
+    "derive_all_match": true,
+    "changed_paths_vs_trusted_base": 153,
+    "precheck_not_rerun": true
+  },
+  "shards": [
+    {
+      "index": 0,
+      "methods": 818,
+      "conditions": 1480,
+      "collection": {
+        "valid": true,
+        "raw_exit": 1,
+        "cacheable": false,
+        "raw_successful": false,
+        "report_sha256": "cffeb2a8585bf580b6a12355c811d78e80f22a13be547107680f98e41073d4db",
+        "identity_key": "a22bf28c158ba9150278c376905cd09c79dca396bf39ee078353ac577c5bfd65"
+      },
+      "input_fingerprint": "a22bf28c158ba9150278c376905cd09c79dca396bf39ee078353ac577c5bfd65",
+      "fingerprint_matches_inventory": true,
+      "comparison_subject_matches": true,
+      "input_count": 49598,
+      "kernel_file_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+      "kernel_identity_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+      "kernel_report_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+      "kernel_selectors": {
+        "EVAS_BRANCH_KERNEL": null,
+        "EVAS_CAUSAL_KERNEL": null,
+        "EVAS_CERTIFICATE_KERNEL": null,
+        "EVAS_COMPACT_SOURCE_KERNEL": null,
+        "EVAS_DAE_EVENT_KERNEL": null,
+        "EVAS_DC_FACTOR_KERNEL": null,
+        "EVAS_DC_TARGET_KERNEL": null,
+        "EVAS_DEADLINE_KERNEL": null,
+        "EVAS_EVENT_BODY_ALIAS_KERNEL": null,
+        "EVAS_HELD_PROOF_KERNEL": null,
+        "EVAS_HELD_TIME_KERNEL": null,
+        "EVAS_INITIAL_OBSERVER_KERNEL": null,
+        "EVAS_INITIAL_SEED_KERNEL": null,
+        "EVAS_KERNEL": null,
+        "EVAS_PASSIVE_HISTORY_KERNEL": null,
+        "EVAS_PASSIVE_KERNEL": null,
+        "EVAS_RATIONAL_PROBE_KERNEL": null,
+        "EVAS_SOURCE_SLEW_DC_KERNEL": null,
+        "EVAS_SOURCE_SLEW_KERNEL": null,
+        "EVAS_STATISTICS_KERNEL": null,
+        "EVAS_TEST_BASELINE_KERNEL": null,
+        "EVAS_TEST_KERNEL": null,
+        "FORCING_POINT_KERNEL": null,
+        "FORCING_SHAPE_KERNEL": null
+      },
+      "kernel_selectors_all_null": true,
+      "build_parameters": {
+        "CARGO_PROFILE_DEV_OPT_LEVEL": "1",
+        "CARGO_PROFILE_DEV_DEBUG_ASSERTIONS": "true",
+        "CARGO_PROFILE_DEV_OVERFLOW_CHECKS": "true"
+      },
+      "python": "3.12.15 (main, Oct  1 2026, 02:35:59) [GCC 13.3.0]",
+      "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)\nbinary: rustc\ncommit-hash: 58cf8f9c35b355199727627d07ae34a4e2846d67\ncommit-date: 2026-10-13\nhost: x86_64-unknown-linux-gnu\nrelease: 1.99.1\nLLVM version: 23.1.1",
+      "cargo": "cargo 1.99.1 (5f94df478 2026-08-27)",
+      "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+      "image_version": "20261023.334.3",
+      "jsonl_stop_exact": true,
+      "jsonl_start_exact": true,
+      "bound_report": true,
+      "setup_skipped_test_ids": [],
+      "build_stdout": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "build_stderr": {
+        "sha256": "4a5e0cac6edc9817eb095979409023a856f46b4495592d031899492a233e4bb8",
+        "bytes": 233
+      }
+    },
+    {
+      "index": 1,
+      "methods": 831,
+      "conditions": 3072,
+      "collection": {
+        "valid": true,
+        "raw_exit": 1,
+        "cacheable": false,
+        "raw_successful": false,
+        "report_sha256": "5fe92029f690e106b49e336b6117241397964cbe27990ea6cc488e0d80028c56",
+        "identity_key": "4a479bda2deb61cf8fe233097effe372e891436df0a0cc247fe4ed419ffef43a"
+      },
+      "input_fingerprint": "4a479bda2deb61cf8fe233097effe372e891436df0a0cc247fe4ed419ffef43a",
+      "fingerprint_matches_inventory": true,
+      "comparison_subject_matches": true,
+      "input_count": 49598,
+      "kernel_file_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+      "kernel_identity_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+      "kernel_report_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+      "kernel_selectors": {
+        "EVAS_BRANCH_KERNEL": null,
+        "EVAS_CAUSAL_KERNEL": null,
+        "EVAS_CERTIFICATE_KERNEL": null,
+        "EVAS_COMPACT_SOURCE_KERNEL": null,
+        "EVAS_DAE_EVENT_KERNEL": null,
+        "EVAS_DC_FACTOR_KERNEL": null,
+        "EVAS_DC_TARGET_KERNEL": null,
+        "EVAS_DEADLINE_KERNEL": null,
+        "EVAS_EVENT_BODY_ALIAS_KERNEL": null,
+        "EVAS_HELD_PROOF_KERNEL": null,
+        "EVAS_HELD_TIME_KERNEL": null,
+        "EVAS_INITIAL_OBSERVER_KERNEL": null,
+        "EVAS_INITIAL_SEED_KERNEL": null,
+        "EVAS_KERNEL": null,
+        "EVAS_PASSIVE_HISTORY_KERNEL": null,
+        "EVAS_PASSIVE_KERNEL": null,
+        "EVAS_RATIONAL_PROBE_KERNEL": null,
+        "EVAS_SOURCE_SLEW_DC_KERNEL": null,
+        "EVAS_SOURCE_SLEW_KERNEL": null,
+        "EVAS_STATISTICS_KERNEL": null,
+        "EVAS_TEST_BASELINE_KERNEL": null,
+        "EVAS_TEST_KERNEL": null,
+        "FORCING_POINT_KERNEL": null,
+        "FORCING_SHAPE_KERNEL": null
+      },
+      "kernel_selectors_all_null": true,
+      "build_parameters": {
+        "CARGO_PROFILE_DEV_OPT_LEVEL": "1",
+        "CARGO_PROFILE_DEV_DEBUG_ASSERTIONS": "true",
+        "CARGO_PROFILE_DEV_OVERFLOW_CHECKS": "true"
+      },
+      "python": "3.12.15 (main, Oct  1 2026, 02:35:59) [GCC 13.3.0]",
+      "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)\nbinary: rustc\ncommit-hash: 58cf8f9c35b355199727627d07ae34a4e2846d67\ncommit-date: 2026-10-13\nhost: x86_64-unknown-linux-gnu\nrelease: 1.99.1\nLLVM version: 23.1.1",
+      "cargo": "cargo 1.99.1 (5f94df478 2026-08-27)",
+      "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+      "image_version": "20261023.334.3",
+      "jsonl_stop_exact": true,
+      "jsonl_start_exact": true,
+      "bound_report": true,
+      "setup_skipped_test_ids": [],
+      "build_stdout": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "build_stderr": {
+        "sha256": "f22c743d10e56c1531b43a83ecf032e963a8221cdf9b92a6701a76c50c9950cf",
+        "bytes": 233
+      }
+    },
+    {
+      "index": 2,
+      "methods": 823,
+      "conditions": 1526,
+      "collection": {
+        "valid": true,
+        "raw_exit": 1,
+        "cacheable": false,
+        "raw_successful": false,
+        "report_sha256": "e241c48c7d032dde497a957a1be0f45253f165d1849f378a450a50559ce7839a",
+        "identity_key": "aa252dcd7e0602b7f6461794e047be33c1b12b392503bea63fdfc55cc31302f2"
+      },
+      "input_fingerprint": "aa252dcd7e0602b7f6461794e047be33c1b12b392503bea63fdfc55cc31302f2",
+      "fingerprint_matches_inventory": true,
+      "comparison_subject_matches": true,
+      "input_count": 49598,
+      "kernel_file_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+      "kernel_identity_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+      "kernel_report_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+      "kernel_selectors": {
+        "EVAS_BRANCH_KERNEL": null,
+        "EVAS_CAUSAL_KERNEL": null,
+        "EVAS_CERTIFICATE_KERNEL": null,
+        "EVAS_COMPACT_SOURCE_KERNEL": null,
+        "EVAS_DAE_EVENT_KERNEL": null,
+        "EVAS_DC_FACTOR_KERNEL": null,
+        "EVAS_DC_TARGET_KERNEL": null,
+        "EVAS_DEADLINE_KERNEL": null,
+        "EVAS_EVENT_BODY_ALIAS_KERNEL": null,
+        "EVAS_HELD_PROOF_KERNEL": null,
+        "EVAS_HELD_TIME_KERNEL": null,
+        "EVAS_INITIAL_OBSERVER_KERNEL": null,
+        "EVAS_INITIAL_SEED_KERNEL": null,
+        "EVAS_KERNEL": null,
+        "EVAS_PASSIVE_HISTORY_KERNEL": null,
+        "EVAS_PASSIVE_KERNEL": null,
+        "EVAS_RATIONAL_PROBE_KERNEL": null,
+        "EVAS_SOURCE_SLEW_DC_KERNEL": null,
+        "EVAS_SOURCE_SLEW_KERNEL": null,
+        "EVAS_STATISTICS_KERNEL": null,
+        "EVAS_TEST_BASELINE_KERNEL": null,
+        "EVAS_TEST_KERNEL": null,
+        "FORCING_POINT_KERNEL": null,
+        "FORCING_SHAPE_KERNEL": null
+      },
+      "kernel_selectors_all_null": true,
+      "build_parameters": {
+        "CARGO_PROFILE_DEV_OPT_LEVEL": "1",
+        "CARGO_PROFILE_DEV_DEBUG_ASSERTIONS": "true",
+        "CARGO_PROFILE_DEV_OVERFLOW_CHECKS": "true"
+      },
+      "python": "3.12.15 (main, Oct  1 2026, 02:35:59) [GCC 13.3.0]",
+      "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)\nbinary: rustc\ncommit-hash: 58cf8f9c35b355199727627d07ae34a4e2846d67\ncommit-date: 2026-10-13\nhost: x86_64-unknown-linux-gnu\nrelease: 1.99.1\nLLVM version: 23.1.1",
+      "cargo": "cargo 1.99.1 (5f94df478 2026-08-27)",
+      "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+      "image_version": "20261023.334.3",
+      "jsonl_stop_exact": true,
+      "jsonl_start_exact": true,
+      "bound_report": true,
+      "setup_skipped_test_ids": [],
+      "build_stdout": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "build_stderr": {
+        "sha256": "0f322d1a902d98c9d03895e76c5d893bc0f5bb46eb0bbb8ba6df2f3bb9bb757c",
+        "bytes": 233
+      }
+    },
+    {
+      "index": 3,
+      "methods": 785,
+      "conditions": 1659,
+      "collection": {
+        "valid": true,
+        "raw_exit": 1,
+        "cacheable": false,
+        "raw_successful": false,
+        "report_sha256": "723f91bd79f88fc107a784fe2043ffe2419b54160f1cd2ef130b9942525769b7",
+        "identity_key": "3c5d1cdacde6c2848d2a269c9eb15cd9dd5190bed83ac6ef3c4c192f8e83e4a2"
+      },
+      "input_fingerprint": "3c5d1cdacde6c2848d2a269c9eb15cd9dd5190bed83ac6ef3c4c192f8e83e4a2",
+      "fingerprint_matches_inventory": true,
+      "comparison_subject_matches": true,
+      "input_count": 49598,
+      "kernel_file_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+      "kernel_identity_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+      "kernel_report_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+      "kernel_selectors": {
+        "EVAS_BRANCH_KERNEL": null,
+        "EVAS_CAUSAL_KERNEL": null,
+        "EVAS_CERTIFICATE_KERNEL": null,
+        "EVAS_COMPACT_SOURCE_KERNEL": null,
+        "EVAS_DAE_EVENT_KERNEL": null,
+        "EVAS_DC_FACTOR_KERNEL": null,
+        "EVAS_DC_TARGET_KERNEL": null,
+        "EVAS_DEADLINE_KERNEL": null,
+        "EVAS_EVENT_BODY_ALIAS_KERNEL": null,
+        "EVAS_HELD_PROOF_KERNEL": null,
+        "EVAS_HELD_TIME_KERNEL": null,
+        "EVAS_INITIAL_OBSERVER_KERNEL": null,
+        "EVAS_INITIAL_SEED_KERNEL": null,
+        "EVAS_KERNEL": null,
+        "EVAS_PASSIVE_HISTORY_KERNEL": null,
+        "EVAS_PASSIVE_KERNEL": null,
+        "EVAS_RATIONAL_PROBE_KERNEL": null,
+        "EVAS_SOURCE_SLEW_DC_KERNEL": null,
+        "EVAS_SOURCE_SLEW_KERNEL": null,
+        "EVAS_STATISTICS_KERNEL": null,
+        "EVAS_TEST_BASELINE_KERNEL": null,
+        "EVAS_TEST_KERNEL": null,
+        "FORCING_POINT_KERNEL": null,
+        "FORCING_SHAPE_KERNEL": null
+      },
+      "kernel_selectors_all_null": true,
+      "build_parameters": {
+        "CARGO_PROFILE_DEV_OPT_LEVEL": "1",
+        "CARGO_PROFILE_DEV_DEBUG_ASSERTIONS": "true",
+        "CARGO_PROFILE_DEV_OVERFLOW_CHECKS": "true"
+      },
+      "python": "3.12.15 (main, Oct  1 2026, 02:35:59) [GCC 13.3.0]",
+      "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)\nbinary: rustc\ncommit-hash: 58cf8f9c35b355199727627d07ae34a4e2846d67\ncommit-date: 2026-10-13\nhost: x86_64-unknown-linux-gnu\nrelease: 1.99.1\nLLVM version: 23.1.1",
+      "cargo": "cargo 1.99.1 (5f94df478 2026-08-27)",
+      "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+      "image_version": "20261023.334.3",
+      "jsonl_stop_exact": true,
+      "jsonl_start_exact": true,
+      "bound_report": true,
+      "setup_skipped_test_ids": [],
+      "build_stdout": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "build_stderr": {
+        "sha256": "7ed2d871adbf53caeec4b09d111a472613a7709e69535e8a0d7bf1620c68c609",
+        "bytes": 233
+      }
+    }
+  ],
+  "shard_method_sum": 3257,
+  "shard_condition_sum": 7737,
+  "shard_ids_disjoint": true,
+  "merged_exact": true,
+  "report_valid": true,
+  "merged_collection_counters_match": true,
+  "raw_sha256": "35d74e62f8933cb10c8f8298f5a65389fa56b1cd6faadb4f8a09108f14d3fa75",
+  "c274_raw_sha256": "9cb0aa443f6f3d3298fa5261f554f1c58bf28819241cf756cd7103dae6b9978a",
+  "methods": 3257,
+  "c274_methods": 3257,
+  "conditions": 7737,
+  "c274_conditions": 7737,
+  "unique_condition_ids": 7737,
+  "method_outcomes": {
+    "passed": 2617,
+    "error": 214,
+    "failed": 423,
+    "expected_failure": 3
+  },
+  "c274_method_outcomes": {
+    "passed": 2617,
+    "error": 214,
+    "failed": 423,
+    "expected_failure": 3
+  },
+  "condition_outcomes": {
+    "passed": 6841,
+    "error": 296,
+    "failed": 597,
+    "expected_failure": 3
+  },
+  "c274_condition_outcomes": {
+    "passed": 6841,
+    "error": 296,
+    "failed": 597,
+    "expected_failure": 3
+  },
+  "nonpass_method_count": 637,
+  "expected_failure_method_count": 3,
+  "nonpass_ids_equal_c274": true,
+  "expected_failure_ids_equal_c274": true,
+  "unittest_condition_counters": {
+    "failures": 597,
+    "errors": 296,
+    "skipped": 0,
+    "expected_failures": 3,
+    "unexpected_successes": 0
+  },
+  "c274_unittest_condition_counters": {
+    "failures": 597,
+    "errors": 296,
+    "skipped": 0,
+    "expected_failures": 3,
+    "unexpected_successes": 0
+  },
+  "gate_counters": {
+    "tests_run": 3257,
+    "failures": 597,
+    "errors": 296,
+    "skipped": 0,
+    "expected_failures": 3,
+    "unexpected_successes": 0
+  },
+  "gate_counters_equal_c274": true,
+  "raw_successful": false,
+  "c274_raw_successful": false,
+  "methods_added_vs_c274": [],
+  "methods_missing_vs_c274": [],
+  "method_outcome_changes": [],
+  "condition_delta_methods": [],
+  "retention_signature_diff_methods": [],
+  "condition_ids_equal_and_ordered": true,
+  "discovered_equal": true,
+  "selected_equal": true,
+  "assignment_equal": true,
+  "fixtures": {
+    "new": 0,
+    "c274": 0
+  },
+  "setup_skipped": {
+    "new": [],
+    "c274": []
+  },
+  "top_level_keys_changed_vs_c274": [
+    "seconds"
+  ],
+  "criteria_changed_paths_vs_c274": [
+    "evas/validation/METHOD_QUALIFICATION.md",
+    "evas/validation/PROTOCOL.md",
+    "evas/validation/README.md",
+    "experiments/README.md"
+  ],
+  "metadata_changed_keys_vs_c274": [
+    "collector_sha256",
+    "criteria_id"
+  ],
+  "criteria_id": "7d70e5b5ab69abf428a2ab06d47999ec6aa9193e1f038d5248c1c92f2f5f8400",
+  "c274_criteria_id": "145a6118739af5c1419269c4d46faae6cd666d766843d41dd38150d8da77d21b",
+  "collector_sha256": "fb887b59bb92063d784dd7cb56d39ec1ec6cb5e7ef9265ab0bd39b9089fe6dc5",
+  "c274_collector_sha256": "e48ade34c276c578c6ea092f2595b85ed3a5ad7d4d048cfe40d51ce33fdd1917",
+  "collector_changed_roles": [
+    "environment_policy"
+  ],
+  "language_profile_ok": true,
+  "dut_files_count": 327,
+  "dut_files_equal_c274": true,
+  "dut_files_sha256": "5e9bf28ad121569a6975811f0b5ea9e60423e676e6dfcf88048948bfd19ba056",
+  "c274_dut_files_sha256": "5e9bf28ad121569a6975811f0b5ea9e60423e676e6dfcf88048948bfd19ba056",
+  "kernel": {
+    "sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+    "bytes": 105862328,
+    "four_shards_identical": true,
+    "equals_c274_kernel": true,
+    "equals_pr5_bundle_kernel": true,
+    "pr5_bundle_kernel_bytes": 105862328,
+    "pr5_bundle_kernel_path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr5/context-registration-20261027/bundle-preparation-sonnet/run-r3/bundle/kernel_binary",
+    "executed": false
+  },
+  "kernel_selectors_all_null": true,
+  "build_parameters": {
+    "CARGO_PROFILE_DEV_OPT_LEVEL": "1",
+    "CARGO_PROFILE_DEV_DEBUG_ASSERTIONS": "true",
+    "CARGO_PROFILE_DEV_OVERFLOW_CHECKS": "true"
+  },
+  "environment_keys_changed_vs_c274": [],
+  "environment_variables_changed_vs_c274": [],
+  "execution_subject_environment_equal_c274": true,
+  "comparison_subject_files_sha256": {
+    "new": "1132798d99937b9600307e2dbeb886fc9a3d1524751eb4bf75de904fca5802da",
+    "c274": "96802cc5cfcc5668a4d7a4859a3cfe18dc39f7d647a46d5a0f13c42d881ce877"
+  },
+  "input_count": {
+    "new": 49596,
+    "c274": 49591
+  },
+  "runner_pool": {
+    "source": "rerun-log.json written by main control; job logs were not downloaded by this worker",
+    "attempt": 1,
+    "same_pool": true,
+    "provisioner_header_versions": {
+      "3": "20261012.334.1",
+      "2": "20261012.334.1",
+      "0": "20261012.334.1",
+      "1": "20261012.334.1"
+    },
+    "report_ImageVersion_variable": [
+      "20261023.334.3"
+    ],
+    "note": "log header Version 20261012.334.1 (provisioner) differs from the ImageVersion variable 20261023.334.3 recorded in the reports; reports of E1 and #274 carry identical runtime profiles"
+  },
+  "baseline": {
+    "path": "evas/validation/baselines/regression-v1.json",
+    "bytes": 89943276,
+    "sha256": "f765004c11b99673b95ddd87daabdc0c75fc6e4e3ef5b6cb2e9f31de96ae702b",
+    "contexts": 4,
+    "head_equals_trusted": true,
+    "equals_02dee32b": true,
+    "git_oid_trusted": "14a5079516b3d19e8a2b2281c94d0174f2ee8f24",
+    "git_oid_head": "14a5079516b3d19e8a2b2281c94d0174f2ee8f24",
+    "review_path_equal": true
+  },
+  "c274_matched_context_index": 3,
+  "admission": {
+    "artifact_valid": true,
+    "raw_successful": false,
+    "merge_allowed": false,
+    "semantic_qualification": false,
+    "differences": [
+      "expected exactly one matching trusted baseline context"
+    ],
+    "expected_rejection_reproduced": true,
+    "binding_ok": true,
+    "bootstrap_ok": true,
+    "bundle_requested": false,
+    "bundle_materialized": false
+  },
+  "precheck_reuse": {
+    "context_diff_keys": [
+      "actual_host_fields",
+      "compare_report",
+      "contexts",
+      "report_sha256",
+      "run",
+      "shard_environments"
+    ],
+    "observations_condition2_holds": true,
+    "observations_report_sha256": "35d74e62f8933cb10c8f8298f5a65389fa56b1cd6faadb4f8a09108f14d3fa75",
+    "old_conditions": 7737,
+    "e1_conditions": 7737,
+    "matched_context_index": 3
+  },
+  "role_index_missing": [],
+  "scientific_execution": false,
+  "scientific_qualification": false,
+  "semantic_qualification": false,
+  "merge_permission": false,
+  "identity_findings": [],
+  "open_gaps": [],
+  "started_at_utc": "2026-10-27T22:01:07.394978+00:00",
+  "guard_equal_before_after": true,
+  "finished_at_utc": "2026-10-27T22:01:59.757374+00:00"
+}

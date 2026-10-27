@@ -1,0 +1,57 @@
+你是 EVAS 第6批的有界证据 worker（tclaude/claude-sonnet-5-5，effort=high）。任务分两段：先接收 PR6 E1 运行的原始证据，再组合精确 context 的十角色 bundle 与逐条件义务映射。两段都只做数据核验与组合，交付可验证的产物。不审查、不合入、不授予资格、不写授权，也不再委派。中文报告。主控是唯一集成者，负责闭合 merge 对象、精确授权、C0 PR 与 Astra 审核。
+
+B=/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023
+
+一、固定身份
+- PR6（https://github.com/BucketSran/vaEVAS/pull/269）head fa5556de20de4fecbf9db4e3630cd5d6754b07c2，tree 470ad588ddeb848b7c05d3f23656a96f085f8bfd；base（可信主线）main 4d6ebc71efea35822a28f2861f2b0a2a6db17e59，tree 33a1a097624a24d46dda3ec289b1d899280d7e18。可信 gate 与登记代码（scripts/regression_gate.py、scripts/regression_context_registration.py、scripts/run_trusted_regression_gate.py）在 02dee32b 与 4d6ebc71 之间没有改动。
+- E1 = CI 40584762318 attempt 1（pull_request，head fa5556de）。终态 completed/failure：19 个作业成功，regression-admission 与 ci-result 失败。准入原文为 expected exactly one matching trusted baseline context。四个回归分片都在旧 runner 池（日志头 Version 20261012.334.1；context ImageVersion 20261023.334.3），coverage 第一次就合并成功。13 个 artifact。
+- 主控已做的 E1 条件核对（总协调决定 B），只读复用，不重做：
+  - B/pr6/e1-precheck-20261027/context-diff-40584762318.json：对全部 4 个可信 context 只差 /collector_sha256 与 /criteria_id，runtime_profile 逐字节相同。
+  - e1-observations-40584762318.json：与匹配的可信 context 3 相比 7737 个条件全部相同，计数器相同（3257 方法；597 failures、296 errors、3 expected failures，均为 subTest 级原始计数）。
+  - 已下载的合并报告：B/pr6/e1-precheck-20261027/ci-40584762318/python-regression.json。这些数字要由你从原件实际推导，不能照抄。
+- “当前 context”报告（用于 previous_context 与义务映射的 old 一侧）：#274 的 CI 40569530278（head 5fe590c0c573c7296b30f38245f769ff2f71ab8a，合入后即 main 4d6ebc71 的树 33a1a097）。它的准入 merge_allowed=true，无差异，无宿主差异，即精确匹配可信 context 3。请自行下载并以 digest 核验它的 python-regression-timings artifact。匹配的可信 context 3 也对应 PR271 的 CI 40507402194 报告，本地已有：B/pr6/runner-image-tolerance-20261027/r2/ci-40507402194/attempt-1/artifacts/python-regression-timings/python-regression.json，可作交叉对照。
+- 主控已保存 E1 运行的元数据（只读）：C=B/pr6/rebind-r7-20261027/ci-40584762318/ 下的 run-initial.json、jobs-initial.json、artifacts-initial.json、pr-initial.json（扁平结构，使用 headRefOid/baseRefOid）、regression-admission.txt。
+- 固定源码导出：S=B/pr6/rebind-r7-20261027/source（工作树字节等于 fa5556de；其私有 .git HEAD 为 fa5556de）。构造、生成与预检的收据在 B/pr6/rebind-r7-20261027/ 下（final-candidate、source-equality、assets、generation-acceptance、precheck-acceptance、inventory-acceptance 等）。
+- 真实工作区 W=/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/ir33-regression-night，HEAD 168a9d7a，18 tracked + 2 untracked 是旧科学候选，不在本批。保留前后守卫。真实 Git 只读：/usr/bin/git --no-lazy-fetch --git-dir=/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/.git/worktrees/ir33-regression-night --work-tree=W，每次清除继承的 GIT_*，禁止写真实 config、index、refs、objects，不 fetch。CI 实际检出的是 PR 合并对象（预期 parents [4d6ebc71, fa5556de]；由于 fa5556de 已包含 4d6ebc71，预期 tree 等于 470ad588）。若本地缺该对象，记录日志里的精确 SHA 与预期 parents/tree，交主控一次取对象闭合，不要冒称已验证。
+
+二、模板（只读，沿用既有构造思路，不新造门禁）
+- PR5 原始接收：B/pr5/comparison-continuation-fix-20261027/fixture-root-finalization/ci-40454789703/raw-intake-sol/（brief.txt、intake.py、verify.py、receipt.json、raw-verification.json、verification-r3/），主控验收：同目录 primary-raw-acceptance.json 与 verify_primary_intake.py。
+- PR5 bundle：B/pr5/context-registration-20261027/bundle-preparation-sonnet/（brief.txt、prepare_bundle.py、verify.py、run-r3/ 的十角色 bundle、bundle-byte-binding、stream-boundaries、obligation-map-draft/proof、receipt），以及主控接收后的 B/pr5/context-registration-20261027/bundle-intake.json、bundle-bound/、bundle-archive.json。
+- 十角色：report.json、composition_recipe、snapshot_manifest、dut_build、kernel_binary、collector_manifest、artifact_manifest、stdout、stderr、shard_reports。
+
+三、唯一可写目录
+D=B/pr6/e1-bundle-sonnet-20261027
+只在 D 内写下载、scratch、脚本、结果和报告。允许用 gh 下载本 E1 运行与 #274 运行（40569530278）已有的 artifact 到 D/zips 和 D/artifacts，按 GitHub digest 校验 zip 原字节，逐文件做哈希、安全路径与普通文件检查。不执行其中任何二进制（包括内核）。代理：逐进程设置 HTTPS_PROXY=http://127.0.0.1:12639。不改系统、shell 或 Git 配置。不启动作业，不运行任何科学测试、回归、compiler、kernel、DUT、backend、SSH、Spectre 或 Harbor。首次失败或不完整的文件保留，不覆盖；重新核验写到新的输出目录。
+
+四、第一段：原始证据接收（与 PR5 Sol 接收同范围）
+1. 固定 run、head、base、attempt、全部作业终态与 13 个 zip 的成员完整。四个分片的原始 jsonl、collection 清单与合并报告一致，无漏、无重复。用可信 base 的 gate（validate_report、merge_reports）核对，不触发测试 body。
+2. 精确比较新报告与当前 context 报告（#274 CI 40569530278）的方法 ID 与 outcome、条件 ID 与 signature，保留 unittest 另一套计数与 raw_successful。criteria identity 允许变化，但须逐字段绑定 fa5556de 的实际源码；不能写成“与旧 criteria 相同”。DUT 文件、实际 kernel、selector 变量、构建设置、语言、invocation、collector 都要实际核验，任何差异据实列出。预期的 criteria 变化是 PR6 的 4 个文档（evas/validation/METHOD_QUALIFICATION.md、PROTOCOL.md、README.md 与 experiments/README.md），collector 变化是 scripts/ci_evidence.py（Rust 固定）。
+3. inventory 全部路径、mode、blob、sha 与固定 head 及执行输入绑定；同 OID 且已核过字节的可复用。
+4. 原 admission、loader、bootstrap、bundle-source 收据与可信 base 绑定；现行基线（4 个 context，89,943,276 字节）字节不变。
+5. 返回十个角色各自所在的原路径和摘要，以及任何缺项。
+
+五、第二段：十角色 bundle 与义务映射（与 PR5 Sonnet bundle 同范围）
+1. 组合十个角色：
+   - report.json 保留新 CI 原字节；
+   - 四个分片报告的文本字节完整；
+   - stdout/stderr 按分片序号精确串接，记录边界、长度和 sha；
+   - snapshot_manifest 按原次序保留全部输入的 path、git mode、actual mode 和 sha，不能用字符串排序覆盖 collector 的 Path 排序；
+   - 绑定 collector 真实源码摘要、DUT 实际构建记录和 kernel 原字节 sha。
+   kernel 不执行，原件不压缩、不改动。若 kernel 原字节 sha 与 PR5 bundle 的 kernel 相同，在报告中写明，主控可复用既有 schema2 压缩件；不同就如实写出。
+2. 从当前 context（#274 CI 40569530278 报告，精确匹配可信 context 3）到 E1 新 context，逐项生成 obligation-map-draft.json 与机器 proof：
+   - 方法和条件按 id 绑定，用 gate._retention_condition 与来源逐项核对；
+   - 7737 个条件预期全部相同，但必须实际验证；
+   - 未知或不相同的如实列出，不编造映射；
+   - review_reference 写明 DRAFT、independent exact-context acceptance pending；
+   - classification 只在合同允许且实际吻合时写 preserved；
+   - 不写批准的 authority 或 baseline，不改旧 review，不先登记。
+3. 交付可运行的 prepare_bundle.py 和 verify.py：输出只写入 D 内尚不存在的普通目录，拒绝已有目录、符号链接和越界路径；首轮失败全部保留。
+
+六、交付
+- D/REPORT.md：中文，来源事实、已定条件与新建议分列，附原始来源链接。
+- D/receipt.json 与 raw-verification.json：机器可读。
+- archive 下载清单与成员哈希清单。
+- bundle/ 十个角色文件，以及 bundle-byte-binding、stream-boundaries、obligation-map-draft/proof 与各自的 receipt。
+- 前后守卫。
+写法要求：执行成功、结构完整、预期拒绝、语义资格分开表述；计数从结构化结果生成。不引入新的科学阈值或合法域，科学资格为 false。元数据引用写实际的 run 和 head；时间或排队情况拿不到的写 unknown。记录实际模型和 options、开始与完成时间；失败和重试保留原名。
+守卫：完成前后各记录一次真实工作区 HEAD、index SHA256、共享 config SHA256（已接受基准 de2b08ef3ba66e96be8b70c87346ff4a96f905e1272934ddd86c218dba501ea8；只新增 vscode-merge-base 行属已接受编辑器元数据），以及 20 个旧候选文件哈希（B/main-plan.json 中 handoff.files 里 evas/tests/ 前缀的 20 行）。

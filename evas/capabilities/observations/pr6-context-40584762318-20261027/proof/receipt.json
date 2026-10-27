@@ -1,0 +1,376 @@
+{
+  "purpose": "Compose PR6 E1 (CI 40584762318) ten-role bundle and draft obligation map (data composition and proof only)",
+  "started_at_utc": "2026-10-27T22:02:23.137698+00:00",
+  "finished_at_utc": "2026-10-27T22:03:09.001891+00:00",
+  "queue_time_seconds": null,
+  "queue_time": "unknown",
+  "actual_model": {
+    "providerInstanceId": "tclaude",
+    "model": "claude-sonnet-5-5",
+    "options": [
+      {
+        "id": "effort",
+        "value": "high"
+      }
+    ]
+  },
+  "delegation_task_id": "unknown (delegation record not visible to the worker)",
+  "identity": {
+    "ci_run": 40584762318,
+    "attempt": 1,
+    "ci_conclusion": "failure",
+    "head": "fa5556de20de4fecbf9db4e3630cd5d6754b07c2",
+    "tree": "470ad588ddeb848b7c05d3f23656a96f085f8bfd",
+    "trusted_base": "4d6ebc71efea35822a28f2861f2b0a2a6db17e59",
+    "trusted_tree": "33a1a097624a24d46dda3ec289b1d899280d7e18",
+    "ci_merge_checkout": "253082c49e6b37155becf8ed2e40a899bf99c130",
+    "ci_merge_checkout_verified": true,
+    "ci_merge_checkout_observed": {
+      "parents": [
+        "4d6ebc71efea35822a28f2861f2b0a2a6db17e59",
+        "fa5556de20de4fecbf9db4e3630cd5d6754b07c2"
+      ],
+      "tree": "470ad588ddeb848b7c05d3f23656a96f085f8bfd",
+      "signature_verified": false
+    },
+    "ci_merge_checkout_expectation": {
+      "parents": [
+        "4d6ebc71efea35822a28f2861f2b0a2a6db17e59",
+        "fa5556de20de4fecbf9db4e3630cd5d6754b07c2"
+      ],
+      "tree": "470ad588ddeb848b7c05d3f23656a96f085f8bfd",
+      "status": "expected and observed"
+    },
+    "current_context_report": {
+      "ci_run": 40569530278,
+      "ci_head": "5fe590c0c573c7296b30f38245f769ff2f71ab8a",
+      "sha256": "9cb0aa443f6f3d3298fa5261f554f1c58bf28819241cf756cd7103dae6b9978a",
+      "criteria_id": "145a6118739af5c1419269c4d46faae6cd666d766843d41dd38150d8da77d21b",
+      "matched_trusted_context_index": 3
+    },
+    "new_context_report": {
+      "sha256": "35d74e62f8933cb10c8f8298f5a65389fa56b1cd6faadb4f8a09108f14d3fa75",
+      "criteria_id": "7d70e5b5ab69abf428a2ab06d47999ec6aa9193e1f038d5248c1c92f2f5f8400",
+      "collector_sha256": "fb887b59bb92063d784dd7cb56d39ec1ec6cb5e7ef9265ab0bd39b9089fe6dc5"
+    }
+  },
+  "status": {
+    "execution_success": true,
+    "structure_complete": true,
+    "expected_rejection_reproduced": true,
+    "expected_rejection_text": "expected exactly one matching trusted baseline context",
+    "semantic_qualification": false,
+    "scientific_qualification": false,
+    "merge_allowed": false,
+    "raw_successful": false,
+    "independent_review_approved": false,
+    "authorization_created": false,
+    "baseline_written": false
+  },
+  "counts": {
+    "methods": 3257,
+    "conditions": 7737,
+    "snapshot_entries": 49598,
+    "shards": 4,
+    "bundle_files": 10,
+    "method_outcomes": {
+      "passed": 2617,
+      "error": 214,
+      "failed": 423,
+      "expected_failure": 3
+    }
+  },
+  "code_sha256": {
+    "regression_gate.py": {
+      "trusted_sha256": "65e3542fa4989b35d31ee6998c9dc14f8975524e4b30a23b76539abf7317b38e",
+      "head_sha256": "65e3542fa4989b35d31ee6998c9dc14f8975524e4b30a23b76539abf7317b38e",
+      "trusted_equals_head": true
+    },
+    "regression_context_registration.py": {
+      "trusted_sha256": "138ca3036008c8f0616d0e21019f1e434ab1cd1b6498694cd2613c275c261a22",
+      "head_sha256": "138ca3036008c8f0616d0e21019f1e434ab1cd1b6498694cd2613c275c261a22",
+      "trusted_equals_head": true
+    },
+    "ci_evidence.py": {
+      "trusted_sha256": "238c45d156225b29e566665997fdd5e1fc19b2301142e69cdc39243ce56c0257",
+      "head_sha256": "c64a7b268f2a8615ac257a19a5edb9fdbe399ad4d577e6c2fe65f6e2a86fc5cc",
+      "trusted_equals_head": false
+    }
+  },
+  "dut_manifest_checks": {
+    "842bde7101164330fa03e7aee58b45d1789cbed1": {
+      "sha256": "5e9bf28ad121569a6975811f0b5ea9e60423e676e6dfcf88048948bfd19ba056",
+      "files": 327
+    },
+    "4d6ebc71efea35822a28f2861f2b0a2a6db17e59": {
+      "sha256": "5e9bf28ad121569a6975811f0b5ea9e60423e676e6dfcf88048948bfd19ba056",
+      "files": 327
+    },
+    "fa5556de20de4fecbf9db4e3630cd5d6754b07c2": {
+      "sha256": "5e9bf28ad121569a6975811f0b5ea9e60423e676e6dfcf88048948bfd19ba056",
+      "files": 327
+    }
+  },
+  "dut_revision_used_in_recipe": "842bde7101164330fa03e7aee58b45d1789cbed1",
+  "kernel": {
+    "sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe",
+    "bytes": 105862328,
+    "executed": false,
+    "equals_pr5_bundle_kernel": true,
+    "shards": [
+      {
+        "shard_index": 0,
+        "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/artifacts/python-regression-shard-0/regression-build/evas-kernel",
+        "bytes": 105862328,
+        "sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe"
+      },
+      {
+        "shard_index": 1,
+        "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/artifacts/python-regression-shard-1/regression-build/evas-kernel",
+        "bytes": 105862328,
+        "sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe"
+      },
+      {
+        "shard_index": 2,
+        "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/artifacts/python-regression-shard-2/regression-build/evas-kernel",
+        "bytes": 105862328,
+        "sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe"
+      },
+      {
+        "shard_index": 3,
+        "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/artifacts/python-regression-shard-3/regression-build/evas-kernel",
+        "bytes": 105862328,
+        "sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe"
+      }
+    ]
+  },
+  "stream_boundaries": "stream-boundaries.json",
+  "consumed_inputs": {
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/artifacts/python-regression-timings/python-regression.json": {
+      "bytes": 41458228,
+      "sha256": "35d74e62f8933cb10c8f8298f5a65389fa56b1cd6faadb4f8a09108f14d3fa75"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/artifacts-274/python-regression-timings/python-regression.json": {
+      "bytes": 41458515,
+      "sha256": "9cb0aa443f6f3d3298fa5261f554f1c58bf28819241cf756cd7103dae6b9978a"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/artifacts/catalog-inventory/assets-before.json": {
+      "bytes": 21894440,
+      "sha256": "934fdd219fd82a699f884d02f103446774116467acc19abce65b8151d0aaea59"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/artifacts/catalog-inventory/assets-after.json": {
+      "bytes": 21894440,
+      "sha256": "934fdd219fd82a699f884d02f103446774116467acc19abce65b8151d0aaea59"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/artifacts/python-regression-shard-0/regression-identity.json": {
+      "bytes": 6768,
+      "sha256": "2559dec667ad58c45485e9569ec8fa466d44031eb0204ed9565ff0dd48343638"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/artifacts/python-regression-shard-1/regression-identity.json": {
+      "bytes": 6768,
+      "sha256": "2237f18b5128a707857899489251fca2eed0630ea6d42479a18554a9c742875f"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/artifacts/python-regression-shard-2/regression-identity.json": {
+      "bytes": 6768,
+      "sha256": "f8699ebe6314d8ccec926fa882668683f88543b025100fbe131bfc3d50abbb61"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/artifacts/python-regression-shard-3/regression-identity.json": {
+      "bytes": 6768,
+      "sha256": "0e886a775d6f9cccef2bb3b699678ce38dd2627bf1c62a44d1154b65c3774856"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/artifacts/python-regression-shard-0/regression-build/evas-kernel": {
+      "bytes": 105862328,
+      "sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/artifacts/python-regression-shard-1/regression-build/evas-kernel": {
+      "bytes": 105862328,
+      "sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/artifacts/python-regression-shard-2/regression-build/evas-kernel": {
+      "bytes": 105862328,
+      "sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/artifacts/python-regression-shard-3/regression-build/evas-kernel": {
+      "bytes": 105862328,
+      "sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/artifacts/python-regression-shard-0/regression-evidence/stdout.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/artifacts/python-regression-shard-1/regression-evidence/stdout.txt": {
+      "bytes": 170,
+      "sha256": "31885cbb279f62211e79e79a07f9884381416585397d403a2216a93af4cfbce1"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/artifacts/python-regression-shard-2/regression-evidence/stdout.txt": {
+      "bytes": 10391,
+      "sha256": "ebb893730317d81d9a6303fc36bfebf60aaddfa95a033b3d14eaf4a0d4c9792f"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/artifacts/python-regression-shard-3/regression-evidence/stdout.txt": {
+      "bytes": 921,
+      "sha256": "583f1eaee4dcbb66f13ef6011bd9c33970ea5baac984334788d8606e10411bc3"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/artifacts/python-regression-shard-0/regression-evidence/stderr.txt": {
+      "bytes": 401495,
+      "sha256": "cad70a02fbcb9709ebb8b91cb1080c92319421d64c2b0c813527381c447f7ffa"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/artifacts/python-regression-shard-1/regression-evidence/stderr.txt": {
+      "bytes": 403111,
+      "sha256": "0d7cff05bbc4a85ce112ad23646fd420c0b17d26ea24ebf714f0301ed8e8f149"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/artifacts/python-regression-shard-2/regression-evidence/stderr.txt": {
+      "bytes": 431739,
+      "sha256": "1fa3a2578d870e65152400b9fb893cbc08305d638d507e6d4257585334cdef31"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/artifacts/python-regression-shard-3/regression-evidence/stderr.txt": {
+      "bytes": 430952,
+      "sha256": "b180cf9839771322cc0a2a9d19f2777bf7c6fee5224f979b652bcce06c1cdd81"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/artifacts/python-regression-shard-0/regression-evidence/report.json": {
+      "bytes": 6842558,
+      "sha256": "cffeb2a8585bf580b6a12355c811d78e80f22a13be547107680f98e41073d4db"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/artifacts/python-regression-shard-1/regression-evidence/report.json": {
+      "bytes": 8927094,
+      "sha256": "5fe92029f690e106b49e336b6117241397964cbe27990ea6cc488e0d80028c56"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/artifacts/python-regression-shard-2/regression-evidence/report.json": {
+      "bytes": 7073343,
+      "sha256": "e241c48c7d032dde497a957a1be0f45253f165d1849f378a450a50559ce7839a"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/artifacts/python-regression-shard-3/regression-evidence/report.json": {
+      "bytes": 19449898,
+      "sha256": "723f91bd79f88fc107a784fe2043ffe2419b54160f1cd2ef130b9942525769b7"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/artifacts/python-regression-shard-0/regression-build/stdout.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/artifacts/python-regression-shard-0/regression-build/stderr.txt": {
+      "bytes": 233,
+      "sha256": "4a5e0cac6edc9817eb095979409023a856f46b4495592d031899492a233e4bb8"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/artifacts/python-regression-shard-1/regression-build/stdout.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/artifacts/python-regression-shard-1/regression-build/stderr.txt": {
+      "bytes": 233,
+      "sha256": "f22c743d10e56c1531b43a83ecf032e963a8221cdf9b92a6701a76c50c9950cf"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/artifacts/python-regression-shard-2/regression-build/stdout.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/artifacts/python-regression-shard-2/regression-build/stderr.txt": {
+      "bytes": 233,
+      "sha256": "0f322d1a902d98c9d03895e76c5d893bc0f5bb46eb0bbb8ba6df2f3bb9bb757c"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/artifacts/python-regression-shard-3/regression-build/stdout.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/artifacts/python-regression-shard-3/regression-build/stderr.txt": {
+      "bytes": 233,
+      "sha256": "7ed2d871adbf53caeec4b09d111a472613a7709e69535e8a0d7bf1620c68c609"
+    }
+  },
+  "raw_verification_dir": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/raw-r5",
+  "raw_verification_sha256": "417786bf9c86d7f40001836c04aa46ada1efee38088d73e46e0cd5e8d955ddee",
+  "outputs": [
+    {
+      "path": "bundle/artifact_manifest",
+      "bytes": 1396,
+      "sha256": "67a90613841be53eb60a54909c96090e19670a1b23b4f88496bbaa3bf9cc5cb1"
+    },
+    {
+      "path": "bundle/collector_manifest",
+      "bytes": 356,
+      "sha256": "07c2295a3e878c283f6d0d1870b154303bc2038f4a3744ed3fdf27788ff25bcb"
+    },
+    {
+      "path": "bundle/composition_recipe",
+      "bytes": 620,
+      "sha256": "4536d2c83a482ca519c3c00d5a030b45281e8ad3bccf05e8999ca784e7e6da9a"
+    },
+    {
+      "path": "bundle/dut_build",
+      "bytes": 2057,
+      "sha256": "0e08420cee2f2d8fa48adc08affd346cdc800df6fd895c33908a500fb6c5e9e7"
+    },
+    {
+      "path": "bundle/kernel_binary",
+      "bytes": 105862328,
+      "sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe"
+    },
+    {
+      "path": "bundle/report.json",
+      "bytes": 41458228,
+      "sha256": "35d74e62f8933cb10c8f8298f5a65389fa56b1cd6faadb4f8a09108f14d3fa75"
+    },
+    {
+      "path": "bundle/shard_reports",
+      "bytes": 44736958,
+      "sha256": "9d831047d49defaab4bcd4a143f60d22306503bf9cd27b6b6b5e9cc32913d0bd"
+    },
+    {
+      "path": "bundle/snapshot_manifest",
+      "bytes": 12764289,
+      "sha256": "61feefb5d100468cc763b49e3255d4b5554a10375e7800f25cf57442dd44d450"
+    },
+    {
+      "path": "bundle/stderr",
+      "bytes": 1667297,
+      "sha256": "3339f28b11497b4c2b36504e7371d14199d154743b4846cb6184c2bae598f36f"
+    },
+    {
+      "path": "bundle/stdout",
+      "bytes": 11482,
+      "sha256": "9a16bdb2b074fd1afc2bce9763b978a9060c6de504e816446848aa6cafa53f40"
+    },
+    {
+      "path": "obligation-map-draft.json",
+      "bytes": 6717320,
+      "sha256": "9e894cd05b70aa4a3d4d7b2d049de3cf25e69c9703bca7e8f50af1aa147ecf80"
+    },
+    {
+      "path": "obligation-map-proof.json",
+      "bytes": 138324,
+      "sha256": "d4b9e77e621e8d5411b69e5939cc72d554bb74ea0b5153166003354147509046"
+    },
+    {
+      "path": "bundle-byte-binding.json",
+      "bytes": 4436,
+      "sha256": "ab947689614e4da081072f1b1779d4f91df213cad4fa8704638eb68207c70c41"
+    },
+    {
+      "path": "stream-boundaries.json",
+      "bytes": 2831,
+      "sha256": "d8b059dc22f3310314397464d60d02580d25b50b3f849170ae74684c2a29d882"
+    },
+    {
+      "path": "guard-before.json",
+      "bytes": 4179,
+      "sha256": "25225f12c49289c26ccc3b9621da6ac10677fe4028baea68c17fa559ac42e21b"
+    },
+    {
+      "path": "guard-after.json",
+      "bytes": 4179,
+      "sha256": "25225f12c49289c26ccc3b9621da6ac10677fe4028baea68c17fa559ac42e21b"
+    }
+  ],
+  "guard_equal_before_after": true,
+  "new_scientific_thresholds": false,
+  "fetch_performed": false,
+  "fixture_created": false,
+  "python": "3.14.6",
+  "command": [
+    "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "-B",
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/prepare_bundle.py",
+    "--raw",
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/raw-r5",
+    "--output",
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-bundle-sonnet-20261027/run-r2"
+  ]
+}
