@@ -161,6 +161,24 @@ class ProofWorkLimitProtocol(unittest.TestCase):
             with self.subTest(value=value), self.assertRaisesRegex(KernelError, 'proof work limit'):
                 self.check(lambda c: c.update(proof_work_limit=value))
 
+    def test_c8_comparison_requires_the_echoed_default_before_removing_it(self):
+        # history_migration_contract.response_body maps a schema-33 response onto the
+        # C8 baseline, which predates the echo. The echoed default is the only mapped
+        # difference: it must be present as the integer 1e9, never merely tolerated.
+        from history_migration_contract import response_body
+        engine = self.base['engine']
+        body = response_body(self.base, 33, engine)
+        self.assertNotIn('proof_work_limit', controls(body))
+        self.assertEqual(controls(body), {k: v for k, v in controls(self.base).items()
+                                          if k != 'proof_work_limit'})
+        for name, mutate in (('missing', lambda c: c.pop('proof_work_limit')),
+                             ('other limit', lambda c: c.update(proof_work_limit=2_000_000_000_000)),
+                             ('float', lambda c: c.update(proof_work_limit=1e9))):
+            response = copy.deepcopy(self.base)
+            mutate(controls(response))
+            with self.subTest(echo=name), self.assertRaises(AssertionError):
+                response_body(response, 33, engine)
+
 
 class ProofWorkLimitKernel(unittest.TestCase):
     def raw(self, field, kernel=KERNEL):
