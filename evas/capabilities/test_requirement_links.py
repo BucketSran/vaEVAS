@@ -430,7 +430,9 @@ BATCH1_PYTHON = {
         'ProofWorkLimitFrontend.test_unset_request_is_byte_identical_to_the_previous_request',
         'ProofWorkLimitKernel.test_explicit_default_is_the_same_ledger_as_unset',
         'ProofWorkLimitKernel.test_kernel_accepts_the_exact_boundaries',
+        'ProofWorkLimitKernel.test_kernel_rejects_an_unknown_transient_field_by_name',
         'ProofWorkLimitKernel.test_kernel_rejects_every_invalid_shape_as_invalid_inputs',
+        'ProofWorkLimitProtocol.test_c8_comparison_requires_the_echoed_default_before_removing_it',
         'ProofWorkLimitProtocol.test_default_request_echoes_the_default_limit',
         'ProofWorkLimitProtocol.test_echo_must_equal_a_requested_limit',
         'ProofWorkLimitProtocol.test_malformed_echoes_are_invalid_responses',
@@ -508,7 +510,7 @@ class CurrentRegistryLinks(unittest.TestCase):
         self.assertEqual(self.report['errors'], [])
 
     def test_each_batch1_python_method_is_linked_to_its_card(self):
-        self.assertEqual(sum(map(len, BATCH1_PYTHON.values())), 40)
+        self.assertEqual(sum(map(len, BATCH1_PYTHON.values())), 42)
         for module, names in BATCH1_PYTHON.items():
             stem = Path(module).stem
             for name in names:
