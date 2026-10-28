@@ -24,8 +24,12 @@ DISTINCT_STATES = ('not_run', 'missing_evidence', 'unsupported', 'known_nonconfo
 PRESERVE_FIELDS = (
     'status', 'review', 'gap', 'budget', 'allowed_behavior', 'conditions',
     'observables', 'required_boundaries', 'source_locations', 'language_profile',
-    'coverage_sufficiency',
+    'coverage_sufficiency', 'normative_basis', 'related_source_locations',
+    'target_scope_applicability', 'independent_answers',
 )
+CARD_FIELDS = ('gap', 'status', 'review', 'source_locations', 'required_boundaries', 'budget',
+               'normative_basis', 'related_source_locations', 'target_scope_applicability',
+               'independent_answers')
 HISTORICAL_FIELDS = (
     'id', 'title', 'chapter', 'label', 'status', 'review', 'evidence',
     'results', 'depends_on', 'gap', 'requirement', 'requirements',
@@ -413,6 +417,27 @@ def _claim_ids(qualification):
     return found
 
 
+def _linked_cases(registry, requirement):
+    """Current cases that pin this requirement by content. Test links are navigation only."""
+    rows = []
+    for case in _objects(registry, 'case'):
+        if not _binds(registry, case, requirement):
+            continue
+        tests = Counter(test.get('namespace') if isinstance(test, dict) and isinstance(test.get('namespace'), str)
+                        else 'unknown' for test in case.get('tests') or [])
+        tests.update('explicit-check' for _check in case.get('checks') or [])
+        rows.append({
+            'id': case['id'],
+            'version': case['version'],
+            'sha256': digest(case),
+            'status': _status(case),
+            'review': case.get('review') if isinstance(case.get('review'), str) else 'unknown',
+            'tests': _sorted_counts(tests),
+            'confers_requirement_support': False,
+        })
+    return rows
+
+
 def _historical_ids(node):
     found = []
     single = node.get('requirement')
@@ -534,6 +559,7 @@ def document(registry, historical=None, status='current-default'):
             'coverage_sufficiency': 'pending',
             'coverage_note': 'coverage sufficiency is not defined for this requirement',
             'versions': _versions(registry, {requirement['id']}),
+            'linked_cases': _linked_cases(registry, requirement),
             'backends': columns,
             'unassigned_backend_records': [record for record in records if record['column'] is None],
             'historical_references': by_requirement[requirement['id']],
@@ -762,13 +788,20 @@ def markdown(document):
             )
             if ref.get('gap'):
                 lines.append(f"引用未决：{ref['gap']}")
-        for key in ('gap', 'status', 'review', 'source_locations', 'required_boundaries', 'budget'):
+        for key in CARD_FIELDS:
             if key in requirement['source_fields']:
                 lines.append(f"原文 {key}：{json.dumps(requirement['source_fields'][key], ensure_ascii=False, sort_keys=True)}")
         for key in CONTRACT_FIELDS:
             lines.append(_contract_line(key, requirement['source_fields']))
         for gap in requirement['readiness_gaps']:
             lines.append(f"就绪缺口：{gap}")
+        for case in requirement['linked_cases']:
+            lines.append(
+                f"关联案例：`{case['id']}`@{case['version']} sha256 {case['sha256']} 状态 {case['status']} "
+                f"审核 {case['review']} 测试 {json.dumps(case['tests'], ensure_ascii=False, sort_keys=True)}"
+                '；测试关联只作导航，不授予要求级支持')
+        if not requirement['linked_cases']:
+            lines.append('关联案例：none')
         lines.append('')
         lines.append('| 后端 | 工具链 | 执行 | 完整性 | 数值 | 资格 | 证据 |')
         lines.append('| --- | --- | --- | --- | --- | --- | --- |')
@@ -1025,6 +1058,8 @@ def audit(document):
     for requirement in requirements:
         if requirement['requirement_support'] != 'not_conferred':
             errors.append('requirement support changed')
+        if any(case.get('confers_requirement_support') is not False for case in requirement['linked_cases']):
+            errors.append('linked case conferred requirement support')
         if requirement['coverage_sufficiency'] != 'pending':
             errors.append('coverage sufficiency was scored')
         if list(requirement['backends']) != list(BACKENDS):

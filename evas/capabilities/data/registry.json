@@ -4301,6 +4301,12 @@
     "asset:ffca9221c26b1669fd5b866d": "191d92a8360c85ab812f3efa06b84d2d0123f8a509b6a46ab398a8e65ab97920",
     "asset:fff06209fd2b3a26bf45eb6c": "5f4d002b51570a38488c27d70a4fe3ab24936486055e1e04a143fdd23bef7c39",
     "calibration:sef": "1",
+    "case:output-point-limit-python": "1",
+    "case:output-point-limit-rust": "1",
+    "case:proof-work-limit-python": "1",
+    "case:proof-work-limit-rust": "1",
+    "checker:output-point-limit": "1",
+    "checker:proof-work-limit": "1",
     "checker:sef": "1",
     "entry:03afac1a212f19d22790209d": "47648eae2ab00445f7e55f157edd27c1a2d0d9e5ed592a0e8460fea8b8d7d83a",
     "entry:070ac966664a892c8b166583": "0f85982f293a9c70098415e988b55462bc708e86898ddfd755c4f0fb35824b28",
@@ -12452,6 +12458,8 @@
     "requirement:$rtoi": "1",
     "requirement:expm1": "1",
     "requirement:ln1p": "1",
+    "requirement:output-point-limit": "1",
+    "requirement:proof-work-limit": "1",
     "review:sef-calibration-pr1": "1",
     "source:00d50af6575865e6452d0e81": "cba39dff1a0cd435ed721451a23e38ca99aebb9c4878904106ba84f114c0a65f",
     "source:033ffc03c2744461db47bd4d": "ac274cef069ac3cf1d80df061ece6d598ed1682a7c94fef39a71df5a796e2d02",
@@ -12496,6 +12504,9 @@
     "source:internal-budget": "1",
     "source:language-profile": "1",
     "source:negative-control": "1",
+    "source:output-point-limit-tests": "1",
+    "source:proof-work-limit-tests": "1",
+    "source:request-limits-contract": "1",
     "source:sef-calibration": "1",
     "source:sef-calibration-execution": "1",
     "source:sef-contract": "1",
@@ -13074,6 +13085,856 @@
       "path": "evas/capabilities/data/target-scope.json",
       "sha256": "54471d86a6f06a5496d9cd7580a44825369869ebf16a1ba2ccced47343f98a85",
       "status": "active",
+      "version": "1"
+    },
+    {
+      "id": "source:request-limits-contract",
+      "kind": "source",
+      "origin": "evas/docs/reference/proof-work-limit.md",
+      "path": "evas/docs/reference/proof-work-limit.md",
+      "sha256": "e2fdc645bf8da6f75c6cb257ba4561706c0d221aa791232022ab5c6ab8018c2f",
+      "status": "active",
+      "version": "1"
+    },
+    {
+      "id": "source:proof-work-limit-tests",
+      "kind": "source",
+      "origin": "evas/tests/test_proof_work_limit.py",
+      "path": "evas/tests/test_proof_work_limit.py",
+      "sha256": "853a673f0b2ec7ee5f356528123336d95aceff253820ced8b6305844077f3e2e",
+      "status": "active",
+      "version": "1"
+    },
+    {
+      "id": "source:output-point-limit-tests",
+      "kind": "source",
+      "origin": "evas/tests/test_output_point_limit.py",
+      "path": "evas/tests/test_output_point_limit.py",
+      "sha256": "6ea23b04679534f54aa369bf5bbadb7437af1f04f141d65062c5d3a26aed2948",
+      "status": "active",
+      "version": "1"
+    },
+    {
+      "allowed_behavior": [
+        "Unset: the request ledger is [128, 8192, 1000000000], the request bytes are those of the previous release (the field is not sent) and the response echoes effective_controls.proof_work_limit = 1000000000.",
+        "Set to an integer N with 1 <= N <= 10000000000000: the ledger is [128, 8192, N]; slots 0 and 1, the one sticky ledger per request and the no-refund rule for failed reservations are unchanged.",
+        "Every other value (0, above 1e13, negative, any float including 2e12 and 2000000000000.0, bool, string, null, an integer beyond u64) is invalid_inputs in the kernel; the Python API raises ValueError before sending; the CLI accepts decimal digits only, and only for transient and simulate.",
+        "Exhaustion reports step_budget with the limit in force (\"exceeds N\").",
+        "The limit is request metadata, not part of the serialized config identity: a request that completes under two limits is charged the same work and returns the same values.",
+        "A kernel without the field rejects it as invalid_request (fail closed); request_protocol_version stays null."
+      ],
+      "budget": "Exact for every control fact: echo, error kind, limit in the message, ledger slots and request bytes compare by equality. Raising the limit changes no numerical result: unset and explicit default give byte-identical responses; simulate_scs at 2e12 saves data equal to the default run; the explicit check against a kernel built from main finds the default response equal to the previous kernel's after removing only the echo key. Completed rows of the slew request (tolerances absolute 1e-12 V, relative 0) are within 1e-11 V of the closed form, compared with Fractions. No universal tolerance is introduced.",
+      "conditions": [
+        "default and explicit default",
+        "range boundaries",
+        "invalid value shapes",
+        "natural exhaustion and completion under a larger limit",
+        "sticky ledger without refunds",
+        "echo and response validation",
+        "Python, CLI and SCS surfaces"
+      ],
+      "dependencies": [
+        {
+          "id": "lrm-2.4",
+          "sha256": "afdb66b8baec11cb63e0572346862434fb6652faf3849a402c96bb02f03f13cf",
+          "version": "1"
+        },
+        {
+          "id": "lrm-2023",
+          "sha256": "86b19cb490fab45c0d8dbc077a3412a3dffdd4a553741ac196c825a0cbae3194",
+          "version": "1"
+        },
+        {
+          "id": "source:language-profile",
+          "sha256": "96bad1a55d3da59d733ad376d4659e3ff6b821c9a0e5ab41ed6353e794453599",
+          "version": "1"
+        },
+        {
+          "id": "source:target-scope",
+          "sha256": "bbc16ec9f813042a44b714014359fef63bbf28e2c43a113f4aa5868bcd0264cc",
+          "version": "1"
+        },
+        {
+          "id": "source:request-limits-contract",
+          "sha256": "60652977314327f8b38fbd14c40ac76c09c5995ffd5f26c53eee29a2ed4a6796",
+          "version": "1"
+        }
+      ],
+      "gap": "Requirement card for capability batch 1A. Tests are linked through case:proof-work-limit-python and case:proof-work-limit-rust; review, calibration and execution evidence are pending and the links confer no support.",
+      "id": "requirement:proof-work-limit",
+      "independent_answers": [
+        {
+          "derivation": "Literals of the designed contract written in the tests, not read from the constants under test.",
+          "expected": "1000000000 and 10000000000000",
+          "observable": "default and hard bound"
+        },
+        {
+          "derivation": "Literal slots of the unchanged default ledger; only slot 2 takes N.",
+          "expected": "[128, 8192, N]",
+          "observable": "ledger slots"
+        },
+        {
+          "derivation": "Request contract in evas/docs/reference/proof-work-limit.md; rejected shapes are written as raw JSON text so Python cannot normalize 2e12 or true.",
+          "expected": "accepted exactly when the value is a JSON integer in [1, 1e13]",
+          "observable": "accepted and rejected values"
+        },
+        {
+          "derivation": "u ramps from 0 to 1 on [0, 1]; the selected target becomes 1 once u > 0.5, i.e. after t = 1/2; slew(target, 1, -2) rises at 1 V/s. Evaluated with fractions.Fraction without the kernel.",
+          "expected": "y(t) = min(1, max(0, t - 1/2)) on [0, 2]",
+          "observable": "slew end-to-end rows"
+        },
+        {
+          "derivation": "Differential reference: the same request unset, with the explicit default, and (explicit check, not collected by CI) through the kernel built from main before the field existed.",
+          "expected": "identical response bytes apart from the echo",
+          "observable": "the limit is not a numerical input"
+        }
+      ],
+      "kind": "requirement",
+      "language_profile": "evas-va-2.4-plus-2023-v1",
+      "normative_basis": "No clause of LRM 2.4 or LRM 2023 defines a proof-work budget. The limit is an EVAS request contract and implementation budget recorded in evas/docs/reference/proof-work-limit.md; it is neither a correctness criterion nor a performance promise.",
+      "observables": [
+        "observation_evidence.effective_controls.proof_work_limit",
+        "error kind and message: invalid_inputs, step_budget (\"exceeds N\"), invalid_request",
+        "transient rows and node voltages",
+        "serialized request and response bytes",
+        "Rust: ledger slots, serialized config identity bytes and the work they are charged"
+      ],
+      "related_source_locations": [
+        {
+          "clause": "8.3.2",
+          "editions": [
+            "2.4",
+            "2023"
+          ],
+          "relation": "The LRM leaves the numerical method and its effort to the simulator (\"There are a number of different approaches to solving this problem numerically\"); it sets no work budget.",
+          "title": "Transient analysis"
+        },
+        {
+          "clause": "4.5.8",
+          "editions": [
+            "2.4",
+            "2023"
+          ],
+          "relation": "EVAS charges the ledger while certifying transition() source plans; the operator semantics do not depend on the limit.",
+          "title": "Transition filter"
+        },
+        {
+          "clause": "4.5.9",
+          "editions": [
+            "2.4",
+            "2023"
+          ],
+          "relation": "The end-to-end answers use slew(); the limit decides only whether certification finishes.",
+          "title": "Slew filter"
+        },
+        {
+          "clause": "5.10.3",
+          "editions": [
+            "2.4",
+            "2023"
+          ],
+          "relation": "Event certification inside a transient request draws on the same ledger.",
+          "title": "Monitored events"
+        }
+      ],
+      "required_boundaries": [
+        "N = 1",
+        "N = 10000000000000",
+        "N = 0 and N = 10000000000001",
+        "2e12 written as a JSON float",
+        "an integer beyond u64",
+        "unset versus explicit 1000000000",
+        "default exhaustion versus completion at 1e10 for one 3000-row request"
+      ],
+      "review": "pending",
+      "scope": "EVAS transient request contract (capability batch 1A); voltage-domain analog context; implementation resource limit, not a Verilog-A language rule",
+      "source_locations": [],
+      "status": "pending",
+      "target_scope_applicability": {
+        "analysis": "transient requests only; the static solve path keeps its fixed default ledger and has no request field",
+        "included_groups": [
+          "voltage-relations",
+          "analog-state-events",
+          "language-for-voltage-models"
+        ],
+        "statement": "Applies to every transient request EVAS admits in the voltage-domain target. It admits no construct and no model outside the target: general-current-kcl, mixed-digital-ams, noise-ac-pss-rf, general-multistability and vpi stay excluded, and fine-grained clause membership stays pending.",
+        "target_scope": "evas-voltage-domain-v1"
+      },
+      "version": "1"
+    },
+    {
+      "allowed_behavior": [
+        "One limit of 1000000 points at the eight Python checkpoints (SCS grid, rows after including source corners, saved rows with forced points, pulse corners, explicit, periodic and combined strobe tables, response strobe_evidence.times) and at the kernel's strobetimes count; the Python and Rust constants are equal.",
+        "A count within the limit is admitted; one more is rejected and the message names the limit in force, for example \"output point budget (1000000) exceeded\".",
+        "The SCS grid is admitted while floor(stop/maxstep) + 2 <= limit; an exactly divisible stop/maxstep needs only floor + 1 rows, so admission is conservative by one row.",
+        "Counts above the former 100000 boundary are admitted; unrelated budgets that share the number 100000 (netlist tokens, integer invariants, native audit) are unchanged.",
+        "The limit changes admission only; admitted requests compute the same results as before."
+      ],
+      "budget": "Exact for counts (integer equality) and messages (pattern match). Values on the 120001-row stateless-gain grid are within 1e-12 V (input) and 3e-12 V (output) of the closed form, compared with Fractions; the explicit dynamic RC check (release kernel, not collected by CI) is within 1e-9 V of 1 - exp(-t) evaluated with 50-digit Decimal.",
+      "conditions": [
+        "cap - 1, cap and cap + 1 at every checkpoint",
+        "former 100000 boundary",
+        "conservative grid bound",
+        "message names the enforced limit",
+        "Python and Rust constants agree",
+        "end to end above 100000 rows"
+      ],
+      "dependencies": [
+        {
+          "id": "lrm-2.4",
+          "sha256": "afdb66b8baec11cb63e0572346862434fb6652faf3849a402c96bb02f03f13cf",
+          "version": "1"
+        },
+        {
+          "id": "lrm-2023",
+          "sha256": "86b19cb490fab45c0d8dbc077a3412a3dffdd4a553741ac196c825a0cbae3194",
+          "version": "1"
+        },
+        {
+          "id": "source:language-profile",
+          "sha256": "96bad1a55d3da59d733ad376d4659e3ff6b821c9a0e5ab41ed6353e794453599",
+          "version": "1"
+        },
+        {
+          "id": "source:target-scope",
+          "sha256": "bbc16ec9f813042a44b714014359fef63bbf28e2c43a113f4aa5868bcd0264cc",
+          "version": "1"
+        },
+        {
+          "id": "source:request-limits-contract",
+          "sha256": "60652977314327f8b38fbd14c40ac76c09c5995ffd5f26c53eee29a2ed4a6796",
+          "version": "1"
+        }
+      ],
+      "gap": "Requirement card for capability batch 2A. Tests are linked through case:output-point-limit-python and case:output-point-limit-rust; review, calibration and execution evidence are pending and the links confer no support.",
+      "id": "requirement:output-point-limit",
+      "independent_answers": [
+        {
+          "derivation": "Output grid {k*maxstep < stop} U {stop}; the floor is computed with Fractions of the binary64 stop and maxstep.",
+          "expected": "admitted while floor(stop/maxstep) + 2 <= 1000000; floor + 1 rows for an exact ratio",
+          "observable": "SCS grid rows"
+        },
+        {
+          "derivation": "Points start + delay + k*period <= end, counted with exact rationals.",
+          "expected": "floor((end - start - delay)/period) + 1",
+          "observable": "periodic strobe count"
+        },
+        {
+          "derivation": "Explicit points on odd multiples of 2^-21 never meet periodic points on multiples of 2^-20, so the union size is the sum.",
+          "expected": "size of the set union",
+          "observable": "combined strobe count"
+        },
+        {
+          "derivation": "Four corners per period (rise start and end, fall start and end) plus the first and last points, from the pulse definition.",
+          "expected": "4*periods + 2",
+          "observable": "pulse corners"
+        },
+        {
+          "derivation": "The grid {0, .25, .5, .75, 1} contains no odd sixteenth or odd thirty-second, so the counts add.",
+          "expected": "5 grid rows plus the distinct odd-sixteenth corners or odd-thirty-second points",
+          "observable": "rows with source corners and saved rows"
+        },
+        {
+          "derivation": "Stateless gain driven by a PWL triangle: exact piecewise-linear arithmetic with Fractions on the 2^-20 grid.",
+          "expected": "u is the triangle ramp and y = 3u",
+          "observable": "large-grid values"
+        }
+      ],
+      "kind": "requirement",
+      "language_profile": "evas-va-2.4-plus-2023-v1",
+      "normative_basis": "No clause of LRM 2.4 or LRM 2023 limits the number of transient output or forced time points. MAX_OUTPUT_POINTS = 1000000 is an EVAS implementation budget recorded in evas/docs/reference/proof-work-limit.md and referenced by evas/docs/reference/strobe.md.",
+      "observables": [
+        "admission or rejection and its message at each checkpoint",
+        "number of output, saved and forced rows",
+        "values on a 120001-row grid",
+        "Rust: strobetimes count accepted or rejected by Trajectory"
+      ],
+      "related_source_locations": [
+        {
+          "clause": "8.3.2",
+          "editions": [
+            "2.4",
+            "2023"
+          ],
+          "relation": "Time points are the simulator's choice (\"The simulator controls the interval between the time points\"); the LRM fixes no count.",
+          "title": "Transient analysis"
+        },
+        {
+          "clause": "9.17.2",
+          "editions": [
+            "2.4",
+            "2023"
+          ],
+          "relation": "A model may bound the step and so raise the number of time points; the limit does not change that semantics.",
+          "title": "$bound_step task"
+        },
+        {
+          "clause": "5.10.3.3",
+          "editions": [
+            "2.4",
+            "2023"
+          ],
+          "relation": "Timer events add time points; forced strobe points are an EVAS request control, not an LRM construct.",
+          "title": "timer function"
+        }
+      ],
+      "required_boundaries": [
+        "999999, 1000000 and 1000001 points",
+        "floor(stop/maxstep) from limit - 2 to limit + 1",
+        "100000 and 100001 rows",
+        "pulse corners 4*periods + 2 around the limit"
+      ],
+      "review": "pending",
+      "scope": "EVAS transient request and SCS adapter contract (capability batch 2A); voltage-domain analog context; implementation resource limit, not a Verilog-A language rule",
+      "source_locations": [],
+      "status": "pending",
+      "target_scope_applicability": {
+        "analysis": "transient requests and SCS transient decks",
+        "included_groups": [
+          "voltage-relations",
+          "analog-state-events",
+          "language-for-voltage-models"
+        ],
+        "statement": "Applies to every voltage-domain transient request and SCS deck EVAS admits and changes only admission by point count. It admits no construct and no model outside the target: general-current-kcl, mixed-digital-ams, noise-ac-pss-rf, general-multistability and vpi stay excluded, and fine-grained clause membership stays pending.",
+        "target_scope": "evas-voltage-domain-v1"
+      },
+      "version": "1"
+    },
+    {
+      "dependencies": [
+        {
+          "id": "source:proof-work-limit-tests",
+          "sha256": "e2d7c963ddcab89e2f88e78fe417c02a7a9de1bc08bcda0532739533f913373e",
+          "version": "1"
+        }
+      ],
+      "gap": "The assertions are written in the bound test module. The Rust assertions live in kernel sources and are located only through the native listing. No checker-definition, calibration or review is bound.",
+      "id": "checker:proof-work-limit",
+      "kind": "checker",
+      "review": "pending",
+      "scope": "Batch 1A acceptance assertions and their independent answers",
+      "status": "pending",
+      "version": "1"
+    },
+    {
+      "dependencies": [
+        {
+          "id": "source:output-point-limit-tests",
+          "sha256": "baed4df45e254eef44bc2fe9542e86315ba8bb198ef133c7f634278245ec8923",
+          "version": "1"
+        }
+      ],
+      "gap": "The assertions are written in the bound test module. The Rust assertions live in kernel sources and are located only through the native listing. No checker-definition, calibration or review is bound.",
+      "id": "checker:output-point-limit",
+      "kind": "checker",
+      "review": "pending",
+      "scope": "Batch 2A acceptance assertions and their independent answers",
+      "status": "pending",
+      "version": "1"
+    },
+    {
+      "checks": [
+        {
+          "module": "evas/tests/test_proof_work_limit.py",
+          "runtime_id": "test_proof_work_limit.ProofWorkLimitKernel.check_default_request_response_equals_main_except_the_echoed_default"
+        },
+        {
+          "module": "evas/tests/test_proof_work_limit.py",
+          "runtime_id": "test_proof_work_limit.ProofWorkLimitKernel.check_kernel_without_the_field_rejects_it_explicitly"
+        }
+      ],
+      "dependencies": [
+        {
+          "id": "requirement:proof-work-limit",
+          "sha256": "8e5ecd74b64165d2f5a57d4edc8ab3488b850b942786fd48274f99ee7be8c763",
+          "version": "1"
+        },
+        {
+          "id": "checker:proof-work-limit",
+          "sha256": "34b315eda3f25cb337e925f785e3d17cede34268eae5fa9012087f0f48e85f33",
+          "version": "1"
+        },
+        {
+          "id": "source:target-scope",
+          "sha256": "bbc16ec9f813042a44b714014359fef63bbf28e2c43a113f4aa5868bcd0264cc",
+          "version": "1"
+        }
+      ],
+      "gap": "Test links for review. No case-inputs, execution, analysis or review is bound, so this case confers no support.",
+      "id": "case:proof-work-limit-python",
+      "kind": "case",
+      "requirements": [
+        {
+          "id": "requirement:proof-work-limit",
+          "sha256": "8e5ecd74b64165d2f5a57d4edc8ab3488b850b942786fd48274f99ee7be8c763",
+          "version": "1"
+        }
+      ],
+      "review": "pending",
+      "scope": "Batch 1A Python tests: request contract, echo validation, kernel value shapes, natural exhaustion and the Python, CLI and SCS surfaces",
+      "status": "pending",
+      "test_scope": [
+        {
+          "module": "evas/tests/test_proof_work_limit.py",
+          "namespace": "python-regression"
+        }
+      ],
+      "tests": [
+        {
+          "module": "evas/tests/test_proof_work_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_proof_work_limit.ProofWorkLimitEndToEnd.test_a_lower_request_limit_exhausts_the_same_request_that_default_completes"
+        },
+        {
+          "module": "evas/tests/test_proof_work_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_proof_work_limit.ProofWorkLimitEndToEnd.test_default_exhausts_naturally_and_a_larger_limit_completes_with_exact_answers"
+        },
+        {
+          "module": "evas/tests/test_proof_work_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_proof_work_limit.ProofWorkLimitEndToEnd.test_failed_reservations_are_not_refunded_so_a_retry_cannot_launder_the_ledger"
+        },
+        {
+          "module": "evas/tests/test_proof_work_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_proof_work_limit.ProofWorkLimitFrontend.test_integer_subclass_is_not_an_integer_request"
+        },
+        {
+          "module": "evas/tests/test_proof_work_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_proof_work_limit.ProofWorkLimitFrontend.test_invalid_values_are_rejected_and_never_sent"
+        },
+        {
+          "module": "evas/tests/test_proof_work_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_proof_work_limit.ProofWorkLimitFrontend.test_limits_are_the_designed_named_constants"
+        },
+        {
+          "module": "evas/tests/test_proof_work_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_proof_work_limit.ProofWorkLimitFrontend.test_set_value_is_sent_as_an_exact_integer"
+        },
+        {
+          "module": "evas/tests/test_proof_work_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_proof_work_limit.ProofWorkLimitFrontend.test_unset_request_is_byte_identical_to_the_previous_request"
+        },
+        {
+          "module": "evas/tests/test_proof_work_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_proof_work_limit.ProofWorkLimitKernel.test_explicit_default_is_the_same_ledger_as_unset"
+        },
+        {
+          "module": "evas/tests/test_proof_work_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_proof_work_limit.ProofWorkLimitKernel.test_kernel_accepts_the_exact_boundaries"
+        },
+        {
+          "module": "evas/tests/test_proof_work_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_proof_work_limit.ProofWorkLimitKernel.test_kernel_rejects_every_invalid_shape_as_invalid_inputs"
+        },
+        {
+          "module": "evas/tests/test_proof_work_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_proof_work_limit.ProofWorkLimitProtocol.test_default_request_echoes_the_default_limit"
+        },
+        {
+          "module": "evas/tests/test_proof_work_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_proof_work_limit.ProofWorkLimitProtocol.test_echo_must_equal_a_requested_limit"
+        },
+        {
+          "module": "evas/tests/test_proof_work_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_proof_work_limit.ProofWorkLimitProtocol.test_malformed_echoes_are_invalid_responses"
+        },
+        {
+          "module": "evas/tests/test_proof_work_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_proof_work_limit.ProofWorkLimitProtocol.test_old_kernel_without_the_echo_is_still_accepted_without_a_request"
+        },
+        {
+          "module": "evas/tests/test_proof_work_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_proof_work_limit.ProofWorkLimitProtocol.test_requested_limit_cannot_be_silently_dropped"
+        },
+        {
+          "module": "evas/tests/test_proof_work_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_proof_work_limit.ProofWorkLimitProtocol.test_unrequested_echo_must_be_the_default"
+        },
+        {
+          "module": "evas/tests/test_proof_work_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_proof_work_limit.ProofWorkLimitSurfaces.test_cli_flag_is_only_for_transient_and_simulate"
+        },
+        {
+          "module": "evas/tests/test_proof_work_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_proof_work_limit.ProofWorkLimitSurfaces.test_cli_rejects_malformed_values_before_running"
+        },
+        {
+          "module": "evas/tests/test_proof_work_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_proof_work_limit.ProofWorkLimitSurfaces.test_cli_simulate_accepts_a_digits_only_limit"
+        },
+        {
+          "module": "evas/tests/test_proof_work_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_proof_work_limit.ProofWorkLimitSurfaces.test_cli_transient_manifest_forwards_the_limit"
+        },
+        {
+          "module": "evas/tests/test_proof_work_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_proof_work_limit.ProofWorkLimitSurfaces.test_simulate_scs_forwards_and_echoes_the_limit"
+        }
+      ],
+      "version": "1"
+    },
+    {
+      "dependencies": [
+        {
+          "id": "requirement:proof-work-limit",
+          "sha256": "8e5ecd74b64165d2f5a57d4edc8ab3488b850b942786fd48274f99ee7be8c763",
+          "version": "1"
+        },
+        {
+          "id": "checker:proof-work-limit",
+          "sha256": "34b315eda3f25cb337e925f785e3d17cede34268eae5fa9012087f0f48e85f33",
+          "version": "1"
+        },
+        {
+          "id": "source:target-scope",
+          "sha256": "bbc16ec9f813042a44b714014359fef63bbf28e2c43a113f4aa5868bcd0264cc",
+          "version": "1"
+        }
+      ],
+      "gap": "Test links for review. No case-inputs, execution, analysis or review is bound, so this case confers no support. transition_source_plan::budget_tests::reservations_share_exhaustion_without_refunding_rejected_work predates batch 1 and is linked because it states the unchanged no-refund rule.",
+      "id": "case:proof-work-limit-rust",
+      "kind": "case",
+      "requirements": [
+        {
+          "id": "requirement:proof-work-limit",
+          "sha256": "8e5ecd74b64165d2f5a57d4edc8ab3488b850b942786fd48274f99ee7be8c763",
+          "version": "1"
+        }
+      ],
+      "review": "pending",
+      "scope": "Batch 1A Rust unit tests: request parsing, echo, trajectory validation and the request ledger",
+      "status": "pending",
+      "test_scope": [
+        {
+          "module_path": "request_resource_limit_tests",
+          "namespace": "rust-tests",
+          "package": "evas-ir",
+          "target": "evas_ir",
+          "target_kind": "lib"
+        },
+        {
+          "module_path": "observation::echo_tests",
+          "namespace": "rust-tests",
+          "package": "evas-kernel",
+          "target": "evas_kernel",
+          "target_kind": "lib"
+        },
+        {
+          "module_path": "transition_source_plan::budget_tests",
+          "namespace": "rust-tests",
+          "package": "evas-kernel",
+          "target": "evas_kernel",
+          "target_kind": "lib"
+        }
+      ],
+      "tests": [
+        {
+          "local_id": "request_resource_limit_tests::named_limits_have_the_designed_values",
+          "namespace": "rust-tests",
+          "package": "evas-ir",
+          "target": "evas_ir",
+          "target_kind": "lib"
+        },
+        {
+          "local_id": "request_resource_limit_tests::field_is_request_metadata_and_never_part_of_the_serialized_config",
+          "namespace": "rust-tests",
+          "package": "evas-ir",
+          "target": "evas_ir",
+          "target_kind": "lib"
+        },
+        {
+          "local_id": "request_resource_limit_tests::integers_within_one_and_the_hard_bound_are_accepted_exactly",
+          "namespace": "rust-tests",
+          "package": "evas-ir",
+          "target": "evas_ir",
+          "target_kind": "lib"
+        },
+        {
+          "local_id": "request_resource_limit_tests::every_other_shape_is_invalid_inputs",
+          "namespace": "rust-tests",
+          "package": "evas-ir",
+          "target": "evas_ir",
+          "target_kind": "lib"
+        },
+        {
+          "local_id": "observation::echo_tests::effective_controls_echo_the_requested_and_the_default_proof_limit",
+          "namespace": "rust-tests",
+          "package": "evas-kernel",
+          "target": "evas_kernel",
+          "target_kind": "lib"
+        },
+        {
+          "local_id": "pwl::output_point_limit_tests::trajectory_rejects_an_out_of_range_proof_limit",
+          "namespace": "rust-tests",
+          "package": "evas-kernel",
+          "target": "evas_kernel",
+          "target_kind": "lib"
+        },
+        {
+          "local_id": "transition_source_plan::budget_tests::request_constructors_equal_the_default_ledger_when_unset",
+          "namespace": "rust-tests",
+          "package": "evas-kernel",
+          "target": "evas_kernel",
+          "target_kind": "lib"
+        },
+        {
+          "local_id": "transition_source_plan::budget_tests::request_constructors_change_only_the_work_slot",
+          "namespace": "rust-tests",
+          "package": "evas-kernel",
+          "target": "evas_kernel",
+          "target_kind": "lib"
+        },
+        {
+          "local_id": "transition_source_plan::budget_tests::request_constructor_rejects_an_unvalidated_limit",
+          "namespace": "rust-tests",
+          "package": "evas-kernel",
+          "target": "evas_kernel",
+          "target_kind": "lib"
+        },
+        {
+          "local_id": "transition_source_plan::budget_tests::config_identity_bytes_and_their_charge_do_not_depend_on_the_requested_limit",
+          "namespace": "rust-tests",
+          "package": "evas-kernel",
+          "target": "evas_kernel",
+          "target_kind": "lib"
+        },
+        {
+          "local_id": "transition_source_plan::budget_tests::requested_limit_is_one_sticky_ledger_with_the_actual_limit_in_the_message",
+          "namespace": "rust-tests",
+          "package": "evas-kernel",
+          "target": "evas_kernel",
+          "target_kind": "lib"
+        },
+        {
+          "local_id": "transition_source_plan::budget_tests::reservations_share_exhaustion_without_refunding_rejected_work",
+          "namespace": "rust-tests",
+          "package": "evas-kernel",
+          "target": "evas_kernel",
+          "target_kind": "lib"
+        }
+      ],
+      "version": "1"
+    },
+    {
+      "checks": [
+        {
+          "module": "evas/tests/test_output_point_limit.py",
+          "runtime_id": "test_output_point_limit.LargeGridEndToEnd.check_rc_step_response_over_a_hundred_thousand_rows"
+        }
+      ],
+      "dependencies": [
+        {
+          "id": "requirement:output-point-limit",
+          "sha256": "b151f4a4d8d03dd62b52106d7faa7835ccd6f4827364a6e1bb6dd69abcf13b41",
+          "version": "1"
+        },
+        {
+          "id": "checker:output-point-limit",
+          "sha256": "962c250ec0faefabe3c19f50678dfbb670521f62475621a083f1486be7e4cbcc",
+          "version": "1"
+        },
+        {
+          "id": "source:target-scope",
+          "sha256": "bbc16ec9f813042a44b714014359fef63bbf28e2c43a113f4aa5868bcd0264cc",
+          "version": "1"
+        }
+      ],
+      "gap": "Test links for review. No case-inputs, execution, analysis or review is bound, so this case confers no support.",
+      "id": "case:output-point-limit-python",
+      "kind": "case",
+      "requirements": [
+        {
+          "id": "requirement:output-point-limit",
+          "sha256": "b151f4a4d8d03dd62b52106d7faa7835ccd6f4827364a6e1bb6dd69abcf13b41",
+          "version": "1"
+        }
+      ],
+      "review": "pending",
+      "scope": "Batch 2A Python tests: the eight checkpoints, constants, kernel check and grids above 100000 rows",
+      "status": "pending",
+      "test_scope": [
+        {
+          "module": "evas/tests/test_output_point_limit.py",
+          "namespace": "python-regression"
+        }
+      ],
+      "tests": [
+        {
+          "module": "evas/tests/test_output_point_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_output_point_limit.KernelCheckpoint.test_kernel_rejects_one_more_than_the_limit_of_forced_points"
+        },
+        {
+          "module": "evas/tests/test_output_point_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_output_point_limit.LargeGridEndToEnd.test_exceeding_the_new_limit_is_still_rejected_with_the_actual_constant"
+        },
+        {
+          "module": "evas/tests/test_output_point_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_output_point_limit.LargeGridEndToEnd.test_stateless_gain_over_a_hundred_thousand_rows_matches_the_closed_form"
+        },
+        {
+          "module": "evas/tests/test_output_point_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_output_point_limit.OutputPointLimitConstants.test_no_stray_hundred_thousand_remains_at_the_eight_checkpoints"
+        },
+        {
+          "module": "evas/tests/test_output_point_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_output_point_limit.OutputPointLimitConstants.test_python_symbols_are_the_one_named_limit"
+        },
+        {
+          "module": "evas/tests/test_output_point_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_output_point_limit.OutputPointLimitConstants.test_rust_constant_has_the_same_value_and_guards_the_kernel_check"
+        },
+        {
+          "module": "evas/tests/test_output_point_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_output_point_limit.PulseCornerCheckpoint.test_corner_count_cap_minus_one_cap_and_cap_plus_one"
+        },
+        {
+          "module": "evas/tests/test_output_point_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_output_point_limit.PulseCornerCheckpoint.test_real_limit_rejects_before_building_a_million_corners"
+        },
+        {
+          "module": "evas/tests/test_output_point_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_output_point_limit.ResponseEvidenceCheckpoint.test_times_length_cap_minus_one_cap_and_cap_plus_one"
+        },
+        {
+          "module": "evas/tests/test_output_point_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_output_point_limit.ScsCornerAndSavedCheckpoints.test_rows_after_including_source_corners"
+        },
+        {
+          "module": "evas/tests/test_output_point_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_output_point_limit.ScsCornerAndSavedCheckpoints.test_saved_rows_with_forced_points"
+        },
+        {
+          "module": "evas/tests/test_output_point_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_output_point_limit.ScsGridCheckpoint.test_grid_is_admitted_exactly_while_floor_ratio_plus_two_fits"
+        },
+        {
+          "module": "evas/tests/test_output_point_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_output_point_limit.ScsGridCheckpoint.test_message_names_the_enforced_limit"
+        },
+        {
+          "module": "evas/tests/test_output_point_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_output_point_limit.ScsGridCheckpoint.test_the_previous_hundred_thousand_rows_are_no_longer_rejected"
+        },
+        {
+          "module": "evas/tests/test_output_point_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_output_point_limit.StrobeCheckpoints.test_explicit_count"
+        },
+        {
+          "module": "evas/tests/test_output_point_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_output_point_limit.StrobeCheckpoints.test_patched_symbol_changes_the_enforced_limit_and_message"
+        },
+        {
+          "module": "evas/tests/test_output_point_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_output_point_limit.StrobeCheckpoints.test_periodic_count"
+        },
+        {
+          "module": "evas/tests/test_output_point_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_output_point_limit.StrobeCheckpoints.test_union_count"
+        }
+      ],
+      "version": "1"
+    },
+    {
+      "dependencies": [
+        {
+          "id": "requirement:output-point-limit",
+          "sha256": "b151f4a4d8d03dd62b52106d7faa7835ccd6f4827364a6e1bb6dd69abcf13b41",
+          "version": "1"
+        },
+        {
+          "id": "checker:output-point-limit",
+          "sha256": "962c250ec0faefabe3c19f50678dfbb670521f62475621a083f1486be7e4cbcc",
+          "version": "1"
+        },
+        {
+          "id": "source:target-scope",
+          "sha256": "bbc16ec9f813042a44b714014359fef63bbf28e2c43a113f4aa5868bcd0264cc",
+          "version": "1"
+        }
+      ],
+      "gap": "Test links for review. No case-inputs, execution, analysis or review is bound, so this case confers no support.",
+      "id": "case:output-point-limit-rust",
+      "kind": "case",
+      "requirements": [
+        {
+          "id": "requirement:output-point-limit",
+          "sha256": "b151f4a4d8d03dd62b52106d7faa7835ccd6f4827364a6e1bb6dd69abcf13b41",
+          "version": "1"
+        }
+      ],
+      "review": "pending",
+      "scope": "Batch 2A Rust unit tests: the shared constant and the kernel strobetimes boundary",
+      "status": "pending",
+      "test_scope": [
+        {
+          "module_path": "pwl::output_point_limit_tests",
+          "namespace": "rust-tests",
+          "package": "evas-kernel",
+          "target": "evas_kernel",
+          "target_kind": "lib"
+        }
+      ],
+      "tests": [
+        {
+          "local_id": "request_resource_limit_tests::named_limits_have_the_designed_values",
+          "namespace": "rust-tests",
+          "package": "evas-ir",
+          "target": "evas_ir",
+          "target_kind": "lib"
+        },
+        {
+          "local_id": "pwl::output_point_limit_tests::strobe_count_boundary_is_the_shared_million_point_limit",
+          "namespace": "rust-tests",
+          "package": "evas-kernel",
+          "target": "evas_kernel",
+          "target_kind": "lib"
+        },
+        {
+          "local_id": "pwl::output_point_limit_tests::previous_hundred_thousand_boundary_no_longer_rejects",
+          "namespace": "rust-tests",
+          "package": "evas-kernel",
+          "target": "evas_kernel",
+          "target_kind": "lib"
+        }
+      ],
       "version": "1"
     }
   ],
