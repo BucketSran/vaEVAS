@@ -1,0 +1,80 @@
+{
+  "test_commit": "30ac23c4e670c833bc42230e9503f4aa6fd69010",
+  "paths_vs_test_commit": [
+    "evas/capabilities/data/asset-index.json",
+    "evas/capabilities/data/catalog-sources.json",
+    "evas/capabilities/data/entrypoint-index.json",
+    "evas/capabilities/data/method-index-00.json",
+    "evas/capabilities/data/method-index-01.json",
+    "evas/capabilities/data/method-index-02.json",
+    "evas/capabilities/data/method-index-03.json",
+    "evas/capabilities/data/method-index-04.json",
+    "evas/capabilities/data/method-index-05.json",
+    "evas/capabilities/data/method-index-06.json",
+    "evas/capabilities/data/method-index-07.json",
+    "evas/capabilities/data/method-index-08.json",
+    "evas/capabilities/data/method-index-09.json",
+    "evas/capabilities/data/method-index-10.json",
+    "evas/capabilities/data/method-index-11.json",
+    "evas/capabilities/data/method-index-12.json",
+    "evas/capabilities/data/method-index-13.json",
+    "evas/capabilities/data/method-index-14.json",
+    "evas/capabilities/data/method-index-15.json",
+    "evas/capabilities/data/registry.json",
+    "evas/docs/development/TRACEABILITY.md"
+  ],
+  "render_outputs": 84,
+  "checks": [
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "scripts/traceability.py",
+        "--catalog-data",
+        "evas/capabilities/data"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4/traceability-generate.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-28T04:29:00.843556+00:00",
+      "finished_at_utc": "2026-10-28T04:29:40.342691+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "evas/capabilities/render.py"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4/capability-render.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-28T04:29:40.349039+00:00",
+      "finished_at_utc": "2026-10-28T04:30:14.907204+00:00"
+    }
+  ],
+  "files": {
+    "evas/capabilities/data/asset-index.json": "c3b1f5bf19b8165caebd55ed24596377995387a356980570eb5819c1bf33d91a",
+    "evas/capabilities/data/catalog-sources.json": "1b996cbe84837853d29876a92940df3d8ad276e3647b2bca61329b806aac1f29",
+    "evas/capabilities/data/entrypoint-index.json": "a44ae79c071f8deaa415cb27ff68976bcb080615508598294c9b75d3ae2a4df8",
+    "evas/capabilities/data/method-index-00.json": "eafa26cf01f55e59ae0770b4fadca981e1f891d7962317a4e73bbfb6ecb3ea9f",
+    "evas/capabilities/data/method-index-01.json": "9e24e130244cfebba26e0258b1fdeda2da55ae6daf4e3f74810a43a3f1560758",
+    "evas/capabilities/data/method-index-02.json": "31085c549032f73f6d113801be3f085dade146392923f223a9eb591536055a41",
+    "evas/capabilities/data/method-index-03.json": "03a87006e7e3262383c35c794f5175c96ee9b2c829e793c4fd4a9e0760ed3720",
+    "evas/capabilities/data/method-index-04.json": "c7f686b1b3220d3a94f07d2aa4f255d68fffc1bd6f971614d841c95cd4220f7c",
+    "evas/capabilities/data/method-index-05.json": "fd5b2da66700750bf4159b327157dfc0fac0880487671c9bbdc41dabaf06dee8",
+    "evas/capabilities/data/method-index-06.json": "d60672163252a5b2613fb1f91e205e89cc85dc899ca12753149310f762e19bb6",
+    "evas/capabilities/data/method-index-07.json": "6dcd1b613cb18745399398eb4e58d9196cd981ea05ec83ad83f4083bcedc5b29",
+    "evas/capabilities/data/method-index-08.json": "327aa5c6349a41708ada4f45aa2621a1ffb823f7b74083f06e26135fe014c004",
+    "evas/capabilities/data/method-index-09.json": "dcdaea7f69bf865f8ef49ef5a523a3a024e2b79449ccc26b0404b5ccf5bb3dab",
+    "evas/capabilities/data/method-index-10.json": "c9f9ee8b923d4fd5d076091b66a83de24a31b720359d1b693a04063cb0fc061a",
+    "evas/capabilities/data/method-index-11.json": "1fb0d1b97d69560b7dafd4806fba950a1a5926a0cc21beb72282f3fa5ea83d1b",
+    "evas/capabilities/data/method-index-12.json": "74bf4d167be318a03e3b20f36be81360cf742d7df151ae81baffd9df37ca1a36",
+    "evas/capabilities/data/method-index-13.json": "b7ed3e8974b01c30017cd47ccab7ee4e6cb8d0d7d610e2c388c1030b89bc1575",
+    "evas/capabilities/data/method-index-14.json": "a6ae68ac1e98aa88ec2d972cf9416cdc12ef48def4d1a80940d5d10940d214c1",
+    "evas/capabilities/data/method-index-15.json": "7a336badb8eb433a54c552f138fdcdbb02ca6af797a8061abec373738a25e2aa",
+    "evas/capabilities/data/registry.json": "d355d2e3bf6b760180abf2b399f952124754125a5fe5d1b60d78195d5090cc7e",
+    "evas/docs/development/TRACEABILITY.md": "4ec943e65e6d23ac660df733ffa5a2c0ed1aaab127a5f97e0d4855ae6abd320d"
+  },
+  "scientific_execution": false,
+  "scientific_qualification": false
+}
