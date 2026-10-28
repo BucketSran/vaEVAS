@@ -303,6 +303,11 @@ pub(crate) fn classify(
                         let inherit=match (kind,op) {
                             (Some("assign"),_) => key=="rhs",
                             (_,Some("select")) => sampled&&matches!(key.as_str(),"then_value"|"else_value"),
+                            // A sample or store boundary only rounds the value
+                            // it wraps; its "kind" names the boundary, not a
+                            // statement. Snapshot, argument and return
+                            // boundaries keep the older contract.
+                            (Some("sample"|"store"),Some("real_boundary")) => sampled&&key=="value",
                             (None,Some(_)) => sampled,
                             _ => false,
                         };

@@ -1035,7 +1035,13 @@ impl EventModel {
                 &program,
                 &event.origin.instance,
                 passive_events[index],
-                original_role_work,
+                // A procedure-backed display argument is a Plan effect root:
+                // its qualification walk runs on the procedure owner (NF-11).
+                if event.procedure_id.is_some() {
+                    original_role_work.or(real_work.as_ref())
+                } else {
+                    original_role_work
+                },
             )?;
         }
         let mut actions = Vec::new();

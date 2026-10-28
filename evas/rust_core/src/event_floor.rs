@@ -2,7 +2,7 @@
 //! No accepted history, no source cache, and no fresh per-call quota.
 use crate::exact_source::{binary, enclosure, Budget};
 use crate::interval::Interval as I;
-use crate::ir::{Error, EventMathFunction as F, Expression as E};
+use crate::ir::{Error, EventMathFunction as F, Expression as E, RealOperation};
 use crate::transition_source_plan::Work;
 use num_rational::BigRational as R;
 use num_traits::ToPrimitive;
@@ -24,6 +24,12 @@ pub(crate) fn binary_scale(v: f64) -> bool {
     v == 0. || v.is_finite() && if e == 0 { f.count_ones() == 1 } else { f == 0 }
 }
 pub(crate) fn new_operand_charged(e: &E, w: &Work) -> Result<bool, Error> {
+    operand(e, w, false)
+}
+/// With `rounded`, also read through IR33's RN boundaries: a real_binary
+/// applies the same operation as its unrounded form, and a real_boundary only
+/// rounds the value it wraps.
+fn operand(e: &E, w: &Work, rounded: bool) -> Result<bool, Error> {
     charge(w, 1, "floor_source_operand_scan")?;
     Ok(match e {
         E::Divide { .. } => true,
@@ -38,23 +44,39 @@ pub(crate) fn new_operand_charged(e: &E, w: &Work) -> Result<bool, Error> {
             }
             found
         }
-        E::Multiply { left, right } => {
-            let mut constant = false;
-            for child in [left.as_ref(), right.as_ref()] {
-                charge(w, 1, "floor_source_operand_scan")?;
-                if matches!(child,E::Affine{constant,terms} if terms.is_empty()&&!binary_scale(*constant))
-                {
-                    constant = true;
-                    break;
-                }
+        E::Multiply { left, right } => product(left, right, w, rounded)?,
+        E::Add { left, right } => operand(left, w, rounded)? || operand(right, w, rounded)?,
+        E::RealBinary {
+            operation,
+            left,
+            right,
+            ..
+        } if rounded => match operation {
+            RealOperation::Divide => true,
+            RealOperation::Multiply => product(left, right, w, rounded)?,
+            RealOperation::Add | RealOperation::Subtract => {
+                operand(left, w, rounded)? || operand(right, w, rounded)?
             }
-            constant || new_operand_charged(left, w)? || new_operand_charged(right, w)?
-        }
-        E::Add { left, right } => new_operand_charged(left, w)? || new_operand_charged(right, w)?,
+        },
+        E::RealBoundary { value, .. } if rounded => operand(value, w, rounded)?,
         _ => false,
     })
 }
+fn product(left: &E, right: &E, w: &Work, rounded: bool) -> Result<bool, Error> {
+    let mut constant = false;
+    for child in [left, right] {
+        charge(w, 1, "floor_source_operand_scan")?;
+        if matches!(child,E::Affine{constant,terms} if terms.is_empty()&&!binary_scale(*constant)) {
+            constant = true;
+            break;
+        }
+    }
+    Ok(constant || operand(left, w, rounded)? || operand(right, w, rounded)?)
+}
 pub(crate) fn contains_charged(e: &E, w: &Work) -> Result<bool, Error> {
+    contains(e, w, false)
+}
+fn contains(e: &E, w: &Work, rounded: bool) -> Result<bool, Error> {
     charge(w, 1, "floor_source_dispatch_scan")?;
     Ok(match e {
         E::IntegerRound { .. } => true,
@@ -64,7 +86,7 @@ pub(crate) fn contains_charged(e: &E, w: &Work) -> Result<bool, Error> {
             ..
         } => {
             if let Some(arg) = args.first() {
-                new_operand_charged(arg, w)?
+                operand(arg, w, rounded)?
             } else {
                 false
             }
@@ -72,7 +94,7 @@ pub(crate) fn contains_charged(e: &E, w: &Work) -> Result<bool, Error> {
         E::EventMath { args, .. } => {
             let mut found = false;
             for arg in args {
-                if contains_charged(arg, w)? {
+                if contains(arg, w, rounded)? {
                     found = true;
                     break;
                 }
@@ -80,11 +102,15 @@ pub(crate) fn contains_charged(e: &E, w: &Work) -> Result<bool, Error> {
             found
         }
         E::Add { left, right } | E::Multiply { left, right } | E::Divide { left, right } => {
-            contains_charged(left, w)? || contains_charged(right, w)?
+            contains(left, w, rounded)? || contains(right, w, rounded)?
         }
-        E::CheckedInteger { value, .. } => contains_charged(value, w)?,
-        E::CheckedIndex { index, .. } | E::ArrayRead { index, .. } => contains_charged(index, w)?,
-        E::Power { base, .. } => contains_charged(base, w)?,
+        E::RealBinary { left, right, .. } if rounded => {
+            contains(left, w, rounded)? || contains(right, w, rounded)?
+        }
+        E::RealBoundary { value, .. } if rounded => contains(value, w, rounded)?,
+        E::CheckedInteger { value, .. } => contains(value, w, rounded)?,
+        E::CheckedIndex { index, .. } | E::ArrayRead { index, .. } => contains(index, w, rounded)?,
+        E::Power { base, .. } => contains(base, w, rounded)?,
         E::Select {
             left,
             right,
@@ -94,7 +120,7 @@ pub(crate) fn contains_charged(e: &E, w: &Work) -> Result<bool, Error> {
         } => {
             let mut found = false;
             for child in [left, right, then_value, else_value] {
-                if contains_charged(child, w)? {
+                if contains(child, w, rounded)? {
                     found = true;
                     break;
                 }
@@ -106,6 +132,8 @@ pub(crate) fn contains_charged(e: &E, w: &Work) -> Result<bool, Error> {
 }
 /// This exception requires the already admitted source owner. Legacy display
 /// arithmetic retains its old observer gate without a new eligibility walk.
+/// The walk reads through IR33's RN boundaries (NF-11): they round values but
+/// leave the qualified operations, so every operand under them is checked.
 pub(crate) fn display_operand(e: &E, work: Option<&Work>) -> Result<bool, Error> {
     let Some(w) = work else { return Ok(false) };
     fn allowed(e: &E, w: &Work) -> Result<bool, Error> {
@@ -115,16 +143,18 @@ pub(crate) fn display_operand(e: &E, work: Option<&Work>) -> Result<bool, Error>
                 function: F::Floor,
                 args,
                 ..
-            } => args.len() == 1 && new_operand_charged(&args[0], w)?,
+            } => args.len() == 1 && operand(&args[0], w, true)?,
             E::EventMath { .. }
             | E::IntegerPrimitive { .. }
             | E::ArrayRead { .. }
             | E::CheckedIndex { .. }
             | E::IntegerRound { .. }
             | E::CheckedInteger { .. } => false,
-            E::Add { left, right } | E::Multiply { left, right } | E::Divide { left, right } => {
-                allowed(left, w)? && allowed(right, w)?
-            }
+            E::Add { left, right }
+            | E::Multiply { left, right }
+            | E::Divide { left, right }
+            | E::RealBinary { left, right, .. } => allowed(left, w)? && allowed(right, w)?,
+            E::RealBoundary { value, .. } => allowed(value, w)?,
             E::Power { base, .. } => allowed(base, w)?,
             E::Select {
                 left,
@@ -145,7 +175,7 @@ pub(crate) fn display_operand(e: &E, work: Option<&Work>) -> Result<bool, Error>
             _ => true,
         })
     }
-    Ok(contains_charged(e, w)? && allowed(e, w)?)
+    Ok(contains(e, w, true)? && allowed(e, w)?)
 }
 fn invalid(s: &str) -> Error {
     Error::new("event_condition", s)

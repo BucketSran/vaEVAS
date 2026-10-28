@@ -549,11 +549,16 @@ class CurrentRegistryLinks(unittest.TestCase):
             self.assertFalse(self.registry.qualified(name))
 
 
-# Batch 2 (defect fixes): each card links whole test modules and one kernel test module.
+# Batch 2 (defect fixes): each card links whole test modules and, where it has
+# kernel unit tests, one kernel test module.
 BATCH2 = {
     'requirement:cross-event-body-right-limit': dict(
         python={'evas/tests/test_cross_right_limit.py': 15, 'evas/tests/test_cross_body_right_limit_cases.py': 18},
         rust=('procedure::plan::right_limit::tests', 4)),
+    'requirement:event-observer-math-isolation': dict(
+        python={'evas/tests/test_group_math_sampled_domain.py': 10,
+                'evas/tests/test_event_observer_math_display.py': 2},
+        rust=None),
 }
 
 
@@ -584,6 +589,8 @@ class Batch2RegistryLinks(unittest.TestCase):
 
     def test_every_batch2_rust_test_is_linked_to_its_card(self):
         for card, spec in BATCH2.items():
+            if spec['rust'] is None:
+                continue
             module, count = spec['rust']
             prefix = f'rust-tests:evas-kernel/lib/evas_kernel::{module}::'
             linked = sorted(key for key, cards in self.cards.items() if key.startswith(prefix))

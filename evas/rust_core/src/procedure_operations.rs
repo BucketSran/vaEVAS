@@ -850,6 +850,20 @@ impl Operation {
                             F::Max => a.max(values[1]),
                             F::Sqrt if a >= 0. => a.sqrt(),
                             F::Ln if a > 0. => a.ln(),
+                            // Name the violated LRM Table 4-14 domain as
+                            // event_numeric's sampled domain rule does.
+                            F::Sqrt => {
+                                return Err(Error::new(
+                                    "event_domain",
+                                    "pure procedure mathematics outside its domain: event sqrt requires nonnegative input",
+                                ))
+                            }
+                            F::Ln => {
+                                return Err(Error::new(
+                                    "event_domain",
+                                    "pure procedure mathematics outside its domain: event ln requires strictly positive input",
+                                ))
+                            }
                             _ => {
                                 return Err(Error::new(
                                     "event_domain",

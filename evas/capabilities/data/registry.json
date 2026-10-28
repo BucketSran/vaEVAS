@@ -4313,11 +4313,13 @@
     "calibration:sef": "1",
     "case:cross-event-body-right-limit-python": "1",
     "case:cross-event-body-right-limit-rust": "1",
+    "case:event-observer-math-isolation-python": "1",
     "case:output-point-limit-python": "1",
     "case:output-point-limit-rust": "1",
     "case:proof-work-limit-python": "1",
     "case:proof-work-limit-rust": "1",
     "checker:cross-event-body-right-limit": "1",
+    "checker:event-observer-math-isolation": "1",
     "checker:output-point-limit": "1",
     "checker:proof-work-limit": "1",
     "checker:sef": "1",
@@ -12598,6 +12600,7 @@
     "requirement:$itor": "1",
     "requirement:$rtoi": "1",
     "requirement:cross-event-body-right-limit": "2",
+    "requirement:event-observer-math-isolation": "3",
     "requirement:expm1": "1",
     "requirement:ln1p": "1",
     "requirement:output-point-limit": "1",
@@ -12642,8 +12645,10 @@
     "source:dd8b4eb4612b272f0eb05592": "51c227bc529cc13cd2ee9ee295daca5610173607c3fa91dad34c60c8dd8ab113",
     "source:e68a1e88032a6579fff4a3ee": "86ffbb65bba2c06e95f7d3b6c7a85e330363fe8185468af9902c843dcc825536",
     "source:e748f6b47b17823ae8faf871": "006e6bc76690c30e0ec2f61c0ba4713dbb55d4bb30c1d73fe4dce1cc77d48830",
+    "source:event-observer-math-display-tests": "1",
     "source:existing-positive": "1",
     "source:fadaf31296d206f593b63c1f": "959c91b8a51892a1029a5b57b663bf5745169906d96339b319f86550b40ca3d8",
+    "source:group-math-sampled-domain-tests": "1",
     "source:guards-ast-transition": "aade79717ece6bfb3b2df9002769952e29119c873dc15ca5241c853af4d2b1a0",
     "source:internal-budget": "1",
     "source:language-profile": "1",
@@ -15376,6 +15381,598 @@
           "package": "evas-kernel",
           "target": "evas_kernel",
           "target_kind": "lib"
+        }
+      ],
+      "version": "1"
+    },
+    {
+      "id": "source:group-math-sampled-domain-tests",
+      "kind": "source",
+      "origin": "evas/tests/test_group_math_sampled_domain.py",
+      "path": "evas/tests/test_group_math_sampled_domain.py",
+      "sha256": "f228bef0097ad14f7ba480805565c36c133e9a15aff91f7f3a4d4ea6f7473a43",
+      "status": "active",
+      "version": "1"
+    },
+    {
+      "id": "source:event-observer-math-display-tests",
+      "kind": "source",
+      "origin": "evas/tests/test_event_observer_math_display.py",
+      "path": "evas/tests/test_event_observer_math_display.py",
+      "sha256": "9dc58650282f818719e3744ba4ff236ad5ddc3ad50b8d6c2036a22d2eaf14726",
+      "status": "active",
+      "version": "1"
+    },
+    {
+      "allowed_behavior": {
+        "implementation_choice": [
+          {
+            "basis": "推断",
+            "text": "Recognise meters whose outputs are held reports as isolated observers, or extend observer math to events that also read control nodes."
+          },
+          {
+            "basis": "推断",
+            "text": "Make control() transparent to real_boundary(kind in {store, sample}) by passing 'sampled' to its value (E-H proposal, S). Keep the refusals pinned at test_group_math_sampled_domain.py:136-146 and test_event_statistics.py:134."
+          }
+        ],
+        "lrm_mandated": [
+          {
+            "basis": "静态阅读",
+            "text": "Evaluate ln on the held values at the event."
+          }
+        ],
+        "must_not": [
+          {
+            "basis": "推断",
+            "text": "Refuse with 'observer mathematics and control nodes require an isolated observer event' for a pure meter."
+          }
+        ]
+      },
+      "batch": "orig-4",
+      "benchmark_commit": "c485de860c6005f451133e8cdc05fe923da29206",
+      "blocked_slots": [
+        9,
+        29
+      ],
+      "budget": {
+        "basis": "静态阅读 + 来源事实 (review r1 B2-SP-02)",
+        "diagnostics": "a changed diagnostic text in any of the 9 methods that were green before #243 is a test-expectation change: it needs a standard-line signoff naming the old and new text; skip, expectedFailure or a wider tolerance are not allowed",
+        "enclosure": "voltage_bounds_V of every report row must contain the high-precision answer; the box includes the source errors",
+        "minimal_tests": "the acceptance tests of this card are the sampled-math tests already in test_group_math_sampled_domain.py: sqrt and ln positives (lines 94-121) with their own vabstol/reltol and box assertions, the strict positive-domain negatives and the future-amplification negatives (lines 148-172); each keeps its original numeric assertions and budget",
+        "reports": "held report outputs of the meter, read at the strobe times after each completed record (completed_at_s plus one output row); for every reported quantity Q: |V - Q_exact| <= vabstol + reltol*|Q_exact| + e_dec, where vabstol and reltol are the effective controls echoed in observation_evidence (EVAS defaults 1e-12 V and 1e-10 when the bench sets none) and e_dec is the decimal truncation of the stored answer string (half a unit in its last printed digit; 5e-12 for 2.554206714999e+1); the high-precision value 25.542067149988333... (review r1, 80-digit DFT) lies inside this interval"
+      },
+      "candidate_impact": {
+        "basis": "来源事实",
+        "slot29": "all candidates (fixed comparator)",
+        "slot9": "candidate_common_form (dB conversion must be in the model)"
+      },
+      "card_source": {
+        "note": "standards-line card v3; incremental review batch2-cards-r2 passed",
+        "path": "runs/standard-line-20261028/cards/batch-orig-4/event-observer-math-isolation.json",
+        "review": "pending",
+        "sha256": "e5bad3dbebe606b295d7f9d5c7f14a3dbda6435ea538fef5127884580fa6d185",
+        "status": "draft",
+        "version": "3"
+      },
+      "classification_eh": "implementation defect (IR33 regression), size S per E-H",
+      "conditions": [
+        "slot 9 ADC meter (dB of fund/noise)",
+        "slot 29 fixed comparator after the NF-10 bypass (prep finding a)"
+      ],
+      "constructs": [
+        {
+          "basis": "来源事实",
+          "diagnostic": {
+            "code": "kernel.unsupported_transient",
+            "message": "observer mathematics and control nodes require an isolated observer event",
+            "reached_by": "probe s09 it3; gone in it4 (ratios instead of dB)"
+          },
+          "evidence": "runs/t3-harbor30-20261027/issue270-resolution/evas-probe/items.json NF-11; runs/t3-harbor30-20261027/issue270-resolution/round3-facts/nf-options.md §3.21",
+          "file": "benchmark/material/draftbench/batches/v3-01/tasks/v3-converter-adc-spectrum/solution/dut.va:23",
+          "role": "reference solution",
+          "slot": 9,
+          "task": "v3-converter-adc-spectrum",
+          "text": "out_sndr=10*ln(fund/noise)/ln(10);out_sfdr=10*ln(fund/spurious)/ln(10);"
+        },
+        {
+          "basis": "来源事实",
+          "diagnostic": {
+            "code": "kernel.unsupported_transient",
+            "message": "same",
+            "reached_by": "prep b0/b1 runs"
+          },
+          "evidence": "grill-vams-2023/capability-batch2-prep-sonnet-20261028 REPORT §2.3a",
+          "file": "grill-vams-2023/capability-batch2-prep-sonnet-20261028/repro/nf10_slot29_single_ended",
+          "role": "fixed comparator after single-ended rewrite (prep)",
+          "slot": 29,
+          "task": "v2-test-comparator-delay",
+          "text": "cross body with ln(V(vdd)/diff_abs)"
+        }
+      ],
+      "corrections": [
+        "Revision 2 described GroupMathSampledDomain as an accepted counterpart: wrong, those tests fail in the regression baseline (E-H §2.1).",
+        "The localization test proposed in revision 2 is superseded by the located root."
+      ],
+      "dependencies": [
+        {
+          "id": "lrm-2.4",
+          "sha256": "afdb66b8baec11cb63e0572346862434fb6652faf3849a402c96bb02f03f13cf",
+          "version": "1"
+        },
+        {
+          "id": "lrm-2023",
+          "sha256": "86b19cb490fab45c0d8dbc077a3412a3dffdd4a553741ac196c825a0cbae3194",
+          "version": "1"
+        },
+        {
+          "id": "source:language-profile",
+          "sha256": "96bad1a55d3da59d733ad376d4659e3ff6b821c9a0e5ab41ed6353e794453599",
+          "version": "1"
+        },
+        {
+          "id": "source:target-scope",
+          "sha256": "bbc16ec9f813042a44b714014359fef63bbf28e2c43a113f4aa5868bcd0264cc",
+          "version": "1"
+        }
+      ],
+      "drafted_by": "claude-opus-5-5 (requirement-card worker, 2026-10-28)",
+      "eh_facts": [
+        {
+          "basis": "来源事实",
+          "evidence": "grill-vams-2023/capability-families-eh-sonnet-20261028/REPORT.md §2.1 (static + measurement)",
+          "text": "Root of NF-11: causal_event.rs:287-321 control() only inherits the 'sampled position' through assign.rhs, select arms and kind-less expression nodes; IR33 wraps event assignment values in real_boundary(kind=store) and samples in real_boundary(kind=sample), so sqrt/ln below them are never in a sampled position and :317/:321 refuse."
+        },
+        {
+          "basis": "来源事实",
+          "evidence": "grill-vams-2023/capability-families-eh-sonnet-20261028/REPORT.md §2.1",
+          "text": "evas/tests/test_group_math_sampled_domain.py: 9 of 10 tests are failed/error in validation/baselines/regression-v1.json and in a local rerun on bf2ec410 (failures=4, errors=5)."
+        },
+        {
+          "basis": "来源事实",
+          "evidence": "grill-vams-2023/capability-families-eh-sonnet-20261028/REPORT.md §2.1",
+          "text": "Stripping real_boundary in the request (measurement only, not a fix): 6 minimal cases pass the gate; slot 29 with R09 + NF-09 + ln(V(vdd)...) runs 29023 rows on b1; the test file goes 5/9 green; 4 tests stay red with changed diagnostics (assertion drift or a further defect, undecided)."
+        },
+        {
+          "basis": "来源事实",
+          "evidence": "grill-vams-2023/capability-families-eh-sonnet-20261028/REPORT.md §2.1",
+          "text": "Minimal repros e11_s1...s12 (sqrt/ln of samples, states, ratios, dB) all give the same message; e11_s8 min(0.2, ln(...)) is refused earlier by the decision-expression rule."
+        }
+      ],
+      "eh_integration": {
+        "note": "executed evidence of another worker (cited, not re-run in W)",
+        "source": "grill-vams-2023/capability-families-eh-sonnet-20261028/REPORT.md",
+        "source_sha256": "10158e107eddf1535f03544cd5a2b2cb2d29c66dcf72b961d4766b610560e609"
+      },
+      "evas_source_commit": "bf2ec4105a17af2bf73f2802c828c5f76a6236b5",
+      "existing_tests": [
+        {
+          "basis": "静态阅读",
+          "checks_card_observables": false,
+          "covers": "pins: observer event math may not feed any voltage contribution, even with zero weight",
+          "file": "evas/tests/test_event_statistics.py",
+          "method": "EventStatistics.test_observer_math_cannot_feed_a_voltage_contribution_even_at_zero_weight",
+          "note": "likely root of NF-11 (推断): the ADC meter's dB results drive V(sndr)<+out_sndr etc., so the instance is not an isolated observer in EVAS's sense"
+        },
+        {
+          "basis": "静态阅读",
+          "checks_card_observables": false,
+          "covers": "pins 'isolated observer' refusal for a zero-delay timer with sqrt",
+          "file": "evas/tests/test_event_statistics.py",
+          "method": "EventStatistics.test_zero_timer_keeps_the_existing_narrow_contract"
+        },
+        {
+          "basis": "静态阅读",
+          "checks_card_observables": "pattern",
+          "covers": "accepted isolated observer math (display only)",
+          "file": "evas/tests/test_event_statistics.py",
+          "method": "EventStatistics.test_math_uses_source_order_and_extra_queries_do_not_reexecute"
+        },
+        {
+          "basis": "静态阅读",
+          "checks_card_observables": "pattern",
+          "covers": "passive observer with its own contribution",
+          "file": "evas/tests/test_passive_events.py",
+          "method": "PassiveEvents.test_own_contribution_preserves_physical_dependency_rejection"
+        },
+        {
+          "basis": "静态阅读",
+          "checks_card_observables": "currently error in the regression baseline (this defect); not an accepted counterpart",
+          "covers": "accepted shape: sampled ln of a driven ratio in a cross body feeding a transition",
+          "file": "evas/tests/test_group_math_sampled_domain.py",
+          "method": "GroupMathSampledDomain.test_cross_ln_ratio_reaches_physical_transition"
+        },
+        {
+          "basis": "静态阅读",
+          "checks_card_observables": "the only passing test of that file (must stay)",
+          "covers": "exp/cos/tanh in the same position stay rejected",
+          "file": "evas/tests/test_group_math_sampled_domain.py",
+          "method": "GroupMathSampledDomain.test_other_sampled_math_functions_remain_rejected"
+        }
+      ],
+      "family": "E (prep §3.1)",
+      "gap": "causal_event.rs:287-321: sampled-position inheritance stops at real_boundary wrappers (E-H root); isolated-observer rule at 317-321. Tests are linked through case:event-observer-math-isolation-python; calibration and execution evidence are pending and the links confer no support.",
+      "id": "requirement:event-observer-math-isolation",
+      "implementation": "pending batch assignment (controller: after E-H quantification)",
+      "independent_answers": [
+        {
+          "answer_file": "answers/b4_history.json",
+          "answer_sha256": "072bfe7df34d984f353b3cf88dbde161f788e2d4d7706080b4587a77cda049b3",
+          "basis": "已执行验证",
+          "script": "scripts/b4_history.py",
+          "script_sha256": "5571e8fd453099cc17be1c35956cb586c816f40a324d02670c5e2656cb4fefb3",
+          "test": "adc_db_values",
+          "values": {
+            "normal": {
+              "completed_records": 1,
+              "reports": [
+                {
+                  "completed_at_s": "31601/100000000000",
+                  "dc": "2.048000000000e+3",
+                  "enob": "3.950509493354e+0",
+                  "fund": "1.799772697512e+5",
+                  "noise": "5.023552488055e+2",
+                  "sfdr_dB": "2.598843728573e+1",
+                  "sndr_dB": "2.554206714999e+1",
+                  "spur": "4.532876959543e+2",
+                  "valid": 1
+                }
+              ],
+              "samples_in_last_open_record": 64
+            },
+            "private-0": {
+              "completed_records": 1,
+              "reports": [
+                {
+                  "completed_at_s": "31601/100000000000",
+                  "dc": "2.048000000000e+3",
+                  "enob": "4.502673832623e+0",
+                  "fund": "2.591271883225e+5",
+                  "noise": "3.364366775466e+2",
+                  "sfdr_dB": "2.955069925023e+1",
+                  "sndr_dB": "2.886609647239e+1",
+                  "spur": "2.873710783789e+2",
+                  "valid": 1
+                }
+              ],
+              "samples_in_last_open_record": 64
+            },
+            "private-1": {
+              "completed_records": 1,
+              "reports": [
+                {
+                  "completed_at_s": "31601/100000000000",
+                  "dc": "2.048000000000e+3",
+                  "enob": "3.332989555284e+0",
+                  "fund": "1.351611674139e+5",
+                  "noise": "8.879575861497e+2",
+                  "sfdr_dB": "2.207150867245e+1",
+                  "sndr_dB": "2.182459712281e+1",
+                  "spur": "8.388823692787e+2",
+                  "valid": 1
+                }
+              ],
+              "samples_in_last_open_record": 64
+            },
+            "private-2": {
+              "completed_records": 1,
+              "reports": [
+                {
+                  "completed_at_s": "31601/100000000000",
+                  "dc": "0",
+                  "enob": "0",
+                  "reason": {
+                    "all_sample_ok": false,
+                    "first_low_sample_ok_index": 23,
+                    "in_range": true,
+                    "integral": true
+                  },
+                  "sfdr_dB": "0",
+                  "sndr_dB": "0",
+                  "valid": 0
+                }
+              ],
+              "samples_in_last_open_record": 64
+            },
+            "private-3": {
+              "completed_records": 2,
+              "reports": [
+                {
+                  "completed_at_s": "31601/100000000000",
+                  "dc": "2.048000000000e+3",
+                  "enob": "3.921028966953e+0",
+                  "fund": "1.921852882123e+5",
+                  "noise": "5.588055376676e+2",
+                  "sfdr_dB": "2.576371716947e+1",
+                  "sndr_dB": "2.536459438106e+1",
+                  "spur": "5.097396570329e+2",
+                  "valid": 1
+                },
+                {
+                  "completed_at_s": "63601/100000000000",
+                  "dc": "0",
+                  "enob": "0",
+                  "reason": {
+                    "all_sample_ok": false,
+                    "first_low_sample_ok_index": 23,
+                    "in_range": true,
+                    "integral": true
+                  },
+                  "sfdr_dB": "0",
+                  "sndr_dB": "0",
+                  "valid": 0
+                }
+              ],
+              "samples_in_last_open_record": 64
+            },
+            "private-4": {
+              "completed_records": 0,
+              "final": {
+                "dc": "0",
+                "enob": "0",
+                "reason": "fewer than 64 clk edges before stop",
+                "sfdr_dB": "0",
+                "sndr_dB": "0",
+                "valid": 0
+              },
+              "reports": [],
+              "samples_in_last_open_record": 32
+            }
+          }
+        }
+      ],
+      "kind": "requirement",
+      "language_profile": "evas-va-2.4-plus-2023-v1",
+      "lrm_basis": {
+        "basis": [
+          {
+            "basis": "静态阅读",
+            "text": "Ordinary math in an event body."
+          }
+        ],
+        "legal": true
+      },
+      "lrm_citations": {
+        "2.4": [
+          {
+            "clause": "4.3.1 Table 4-14",
+            "pdf_page": 76,
+            "use": "ln domain x>0 (table row)"
+          }
+        ],
+        "2023": [
+          {
+            "clause": "4.3.1",
+            "pdf_page": 75,
+            "use": "Table 4-14 unchanged apart from ln1p/expm1 additions"
+          }
+        ]
+      },
+      "observables": [
+        "held dB reports",
+        "current diagnostic"
+      ],
+      "open_questions": [
+        "静态阅读（修订）：causal_event.rs:274-322 的闸门对“赋值非仿射”的非被动事件生效：非过程事件里的循环/数组、floor 以外的事件数学、以及不在采样位置（赋值右端、非判定谓词）的 sqrt/ln 都拒；sqrt/ln 若在孤立观察实例（无贡献/算子/步长界、状态不被读取）里也拒。slot 9 的计量模块有报告贡献，不是孤立实例，所以触发点更可能是同一事件里的数组/循环或 ln 的位置；slot 29（prep nf10_m2）看起来与已接受的 GroupMath 形状相同仍被拒，差别未定位，见上面的定位测试。",
+        "slot 29 还要求 ln 结果经 t_fire 控制 timer（测试文件注释：'MATH170 still requires ln and held-delay qualification beyond this contract'），超出现有 sqrt/ln 采样合同。",
+        "E-H 风险：只让 control() 透明能否让后段 event_numeric::bounds 正确处理被 real_boundary 包着的 EventMath，没有证据；剩余 4 条红测试需逐条判定。"
+      ],
+      "probe_evas_commit": "02dee32b2c9b25f166cbd77f8a895953e004f288",
+      "proposed_tests": [
+        {
+          "budget": "budget.reports",
+          "expected": {
+            "completed_records": 1,
+            "reports": [
+              {
+                "completed_at_s": "31601/100000000000",
+                "dc": "2.048000000000e+3",
+                "enob": "3.950509493354e+0",
+                "fund": "1.799772697512e+5",
+                "noise": "5.023552488055e+2",
+                "sfdr_dB": "2.598843728573e+1",
+                "sndr_dB": "2.554206714999e+1",
+                "spur": "4.532876959543e+2",
+                "valid": 1
+              }
+            ],
+            "samples_in_last_open_record": 64
+          },
+          "input": "slot-9 meter on the original Benchmark files (the floor rewrite R30 was returned on 2026-10-28, so this run also needs the floor card); compare with the budget above",
+          "kind": "integration (needs other capabilities; not the acceptance test of this card)",
+          "name": "test_meter_event_ln_db_report",
+          "observables": [
+            "sndr/sfdr"
+          ]
+        },
+        {
+          "expected": "the 9 methods that were green before #243 pass with their original assertions; any diagnostic-text change goes through a standard-line signoff; no skip, xfail or relaxed tolerance",
+          "kind": "regression (existing file)",
+          "name": "test_group_math_sampled_domain_back_to_green"
+        }
+      ],
+      "required_boundaries": [
+        "fund/noise <= 1e-8 invalid path (no ln executed)"
+      ],
+      "review": "pending",
+      "review_r1_disposition": {
+        "B2_SP_02": "executable budget with effective controls and decimal truncation; acceptance bound to the existing minimal sampled-math tests; diagnostics changes need signoffs; slot-9 meter downgraded to integration"
+      },
+      "revision_history": [
+        {
+          "by": "standard line (claude-opus-5-5), 2026-10-28",
+          "change": "r1 B2-SP-02: executable budget; acceptance via the existing minimal tests; diagnostic changes need signoffs",
+          "from_sha256": "d480420f705283639d39dc292fa311b9b8e82af1ae129e8a199804601295a4c8",
+          "from_version": "2",
+          "source": "batch-2 card review r1 (night-coordination/batch2-cards-astra-r1-20261028/review-report.json, sha256 5d972cd3...)",
+          "to_version": "3"
+        }
+      ],
+      "scope": "Meter modules whose event bodies compute ln-based dB values from accumulated state; the kernel requires an isolated observer event.",
+      "source_locations": [
+        "4.3.1 Table 4-14",
+        "4.3.1"
+      ],
+      "status": "pending",
+      "title_zh": "事件体观察数学（dB 换算 ln）与“孤立观察事件”闸门（NF-11；slot 29 亦有同文闸门）",
+      "version": "3",
+      "voltage_domain": {
+        "applicable": true,
+        "basis": "静态阅读",
+        "premise": "observer module (inputs read, report outputs only)"
+      }
+    },
+    {
+      "dependencies": [
+        {
+          "id": "source:group-math-sampled-domain-tests",
+          "sha256": "4c31251705d09cb5604c1792c63bf224f0c17b7e067f324b95174a4d75c8dd0c",
+          "version": "1"
+        },
+        {
+          "id": "source:event-observer-math-display-tests",
+          "sha256": "c002adc625bbaa33bb7ee26602e8dd298f0a227ec2ca2261495eeab52c06d788",
+          "version": "1"
+        }
+      ],
+      "gap": "The assertions are written in the bound test modules. The Rust assertions live in kernel sources and are located only through the native listing. No checker-definition, calibration or review is bound.",
+      "id": "checker:event-observer-math-isolation",
+      "kind": "checker",
+      "review": "pending",
+      "scope": "Batch 2 E1 (NF-11): event observer-math gates read through IR33 RN boundaries: assertions and their independent answers",
+      "status": "pending",
+      "version": "1"
+    },
+    {
+      "dependencies": [
+        {
+          "id": "requirement:event-observer-math-isolation",
+          "sha256": "dc5644b29a72fab7e6c66af63d2a5f9eb80871f7fb629bf55ba651d9fe763168",
+          "version": "3"
+        },
+        {
+          "id": "checker:event-observer-math-isolation",
+          "sha256": "bf46f7267a29b4038ea837ce7847d6711a6b63636af1ce027f00d3db229e269b",
+          "version": "1"
+        },
+        {
+          "id": "source:target-scope",
+          "sha256": "bbc16ec9f813042a44b714014359fef63bbf28e2c43a113f4aa5868bcd0264cc",
+          "version": "1"
+        }
+      ],
+      "gap": "Test links for review. No case-inputs, execution, analysis or review is bound, so this case confers no support.",
+      "id": "case:event-observer-math-isolation-python",
+      "kind": "case",
+      "requirements": [
+        {
+          "id": "requirement:event-observer-math-isolation",
+          "sha256": "dc5644b29a72fab7e6c66af63d2a5f9eb80871f7fb629bf55ba651d9fe763168",
+          "version": "3"
+        }
+      ],
+      "review": "pending",
+      "scope": "Batch 2 E1 (NF-11): event observer-math gates read through IR33 RN boundaries (Python tests)",
+      "status": "pending",
+      "test_scope": [
+        {
+          "module": "evas/tests/test_group_math_sampled_domain.py",
+          "namespace": "python-regression"
+        },
+        {
+          "module": "evas/tests/test_event_observer_math_display.py",
+          "namespace": "python-regression"
+        }
+      ],
+      "tests": [
+        {
+          "module": "evas/tests/test_group_math_sampled_domain.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_group_math_sampled_domain.GroupMathSampledDomain.test_cross_ln_ratio_reaches_physical_transition"
+        },
+        {
+          "module": "evas/tests/test_group_math_sampled_domain.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_group_math_sampled_domain.GroupMathSampledDomain.test_cross_sqrt_ratio_reaches_physical_transition_with_exact_edges"
+        },
+        {
+          "module": "evas/tests/test_group_math_sampled_domain.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_group_math_sampled_domain.GroupMathSampledDomain.test_fixed_timer_uses_same_domain_contract_and_real_transition"
+        },
+        {
+          "module": "evas/tests/test_group_math_sampled_domain.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_group_math_sampled_domain.GroupMathSampledDomain.test_four_sample_rms_uses_completed_sum_before_reset"
+        },
+        {
+          "module": "evas/tests/test_group_math_sampled_domain.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_group_math_sampled_domain.GroupMathSampledDomain.test_ln_requires_strictly_positive_argument"
+        },
+        {
+          "module": "evas/tests/test_group_math_sampled_domain.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_group_math_sampled_domain.GroupMathSampledDomain.test_nonpoint_input_domain_is_not_replaced_by_nominal_sample"
+        },
+        {
+          "module": "evas/tests/test_group_math_sampled_domain.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_group_math_sampled_domain.GroupMathSampledDomain.test_other_sampled_math_functions_remain_rejected"
+        },
+        {
+          "module": "evas/tests/test_group_math_sampled_domain.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_group_math_sampled_domain.GroupMathSampledDomain.test_sampled_math_needs_a_sample_in_an_assignment_value"
+        },
+        {
+          "module": "evas/tests/test_group_math_sampled_domain.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_group_math_sampled_domain.GroupMathSampledDomain.test_selected_negative_sqrt_is_not_hidden_by_later_clamp"
+        },
+        {
+          "module": "evas/tests/test_group_math_sampled_domain.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_group_math_sampled_domain.GroupMathSampledDomain.test_uncertain_math_result_survives_transition_and_future_amplification"
+        },
+        {
+          "module": "evas/tests/test_event_observer_math_display.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_event_observer_math_display.FloorDisplay.test_binary_scale_floor_display_keeps_the_observer_gate"
+        },
+        {
+          "module": "evas/tests/test_event_observer_math_display.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_event_observer_math_display.FloorDisplay.test_source_floor_display_in_a_physical_event"
+        },
+        {
+          "module": "evas/tests/test_event_statistics.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_event_statistics.EventStatistics.test_observer_math_cannot_feed_a_voltage_contribution_even_at_zero_weight"
+        },
+        {
+          "module": "evas/tests/test_event_statistics.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_event_statistics.EventStatistics.test_zero_timer_keeps_the_existing_narrow_contract"
+        },
+        {
+          "module": "evas/tests/test_event_statistics.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_event_statistics.EventStatistics.test_math_uses_source_order_and_extra_queries_do_not_reexecute"
+        },
+        {
+          "module": "evas/tests/test_event_statistics.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_event_statistics.EventStatistics.test_selected_negative_sqrt_is_a_domain_failure"
+        },
+        {
+          "module": "evas/tests/test_passive_events.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_passive_events.PassiveEvents.test_own_contribution_preserves_physical_dependency_rejection"
+        },
+        {
+          "module": "evas/tests/test_source_floor_event.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_source_floor_event.SourceFloorEvent.test_certified_bin_controls_source_order_branch_and_display"
         }
       ],
       "version": "1"

@@ -1165,6 +1165,17 @@ IR24 候选允许事件赋值由本实例的保持状态和实际 driven 电压�
 不确定源目前只在固定 timer 加代数消费者时进入该规则；`cross` 或 `transition` 消费者由
 `unsupported_source_uncertainty` 先行拒绝。回归见 [采样定义域](../../tests/test_group_math_sampled_domain.py)。
 
+IR33 把事件算术包在 `real_binary` 中，把采样与赋值值包在 `real_boundary`（sample、store）中。
+它们只舍入数值，不改变事件体施加的运算。上述准入扫描（`causal_event.rs::classify`）与显示里的源 floor
+资格检查（`event_floor.rs::display_operand`）都读穿这两种节点，#243 之前准入的程序重新准入，
+拒绝集合不变：判定谓词与显示中的 `sqrt`/`ln`、只按 2 的幂缩放参数的 floor 显示仍报原诊断。
+过程事件的显示参数是 Plan 的效应根，资格扫描记入过程预算。定义域错误同时给出 IR33 的类别与具体规则，
+例如 `pure procedure mathematics outside its domain: event sqrt requires nonnegative input`。
+不确定源的样本经舍入边界进入这类数学时，同刻证书遇到不可微的舍入而返回
+`waveform_accuracy: nonfinite interval Jacobian`；这是证书的另一缺口，不属本节准入规则。
+回归见 [显示中的源 floor](../../tests/test_event_observer_math_display.py)
+（NF-11，requirement:event-observer-math-isolation v3）。
+
 有限实数除法也使用这条事件标量路径。例如先写`span=V(vdd,vss)`，按源码条件设置正下限，
 再计算`x=clip01((V(in)-V(vss))/span)`，后续递推必须读取本次更新后的span和x。
 计数率`(1.0*hits)/n`在先执行`n=n+1`之后使用新计数；这不是整数截断除法。
