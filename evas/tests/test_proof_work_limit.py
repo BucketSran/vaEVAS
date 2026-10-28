@@ -10,6 +10,7 @@ GUARDS = ["SLEW", "TIMED-OPERATOR", "DEV:scs-input"]
 
 from fractions import Fraction as F
 import copy
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -31,9 +32,13 @@ from test_affine import KERNEL, instance, model
 # records no skip. They are one-time acceptance evidence for the change that added
 # the field (once it is merged, main has the field), not CI tests; the collected
 # test_kernel_rejects_an_unknown_transient_field_by_name keeps the fail-closed rule
-# under CI. Run one by name with EVAS_TEST_MAIN_KERNEL set, for example
+# under CI. They read the registered EVAS_TEST_BASELINE_KERNEL and
+# EVAS_TEST_BASELINE_SHA256. Here these name the release kernel built from main
+# d6b7543f, not the C8 baseline kernel that the history checks in test_history_forcing
+# read through the same variables; the pinned SHA-256 tells the two apart, so a C8
+# kernel cannot stand in for main. Run one by name with both set, for example
 #   python3 -B -m unittest test_proof_work_limit.ProofWorkLimitKernel.check_kernel_without_the_field_rejects_it_explicitly
-MAIN_KERNEL = os.environ.get('EVAS_TEST_MAIN_KERNEL')
+MAIN_KERNEL_SHA256 = '061c9c8e008e60864ab1606df962ef85965112290241df834aa3af808214d62b'
 
 BODY = 'V(y,r)<+slew(V(u,r)>0.5?1.0:0.0,1,-2);'
 POINTS = [[0, 0], [1, 1], [2, 1]]
@@ -223,21 +228,39 @@ class ProofWorkLimitKernel(unittest.TestCase):
                 else:
                     self.assertEqual(controls(response)['proof_work_limit'], value)
 
+    def main_reference_identity(self):
+        """The main kernel of the two old-kernel checks, identified by its pinned SHA-256."""
+        baseline = os.environ.get('EVAS_TEST_BASELINE_KERNEL')
+        self.assertTrue(baseline, 'EVAS_TEST_BASELINE_KERNEL must name the main kernel built from d6b7543f')
+        self.assertEqual(os.environ.get('EVAS_TEST_BASELINE_SHA256'), MAIN_KERNEL_SHA256,
+                         'EVAS_TEST_BASELINE_SHA256 must be the d6b7543f main kernel, not the C8 baseline')
+        baseline = Path(baseline).resolve()
+        self.assertEqual(hashlib.sha256(baseline.read_bytes()).hexdigest(), MAIN_KERNEL_SHA256,
+                         'EVAS_TEST_BASELINE_KERNEL is not the d6b7543f main kernel')
+        self.assertNotEqual(baseline, Path(KERNEL).resolve())
+        return baseline
+
     def check_kernel_without_the_field_rejects_it_explicitly(self):
-        self.assertTrue(MAIN_KERNEL, 'EVAS_TEST_MAIN_KERNEL must name a kernel built from main')
-        with self.assertRaises(KernelError) as caught:
-            _invoke(self.raw({'proof_work_limit': 2_000_000_000_000}), MAIN_KERNEL)
-        self.assertEqual(caught.exception.detail['kind'], 'invalid_request')
-        self.assertIn('proof_work_limit', caught.exception.detail['message'])
+        main = self.main_reference_identity()
+        try:
+            with self.assertRaises(KernelError) as caught:
+                _invoke(self.raw({'proof_work_limit': 2_000_000_000_000}), main)
+            self.assertEqual(caught.exception.detail['kind'], 'invalid_request')
+            self.assertIn('proof_work_limit', caught.exception.detail['message'])
+        finally:
+            self.main_reference_identity()
 
     def check_default_request_response_equals_main_except_the_echoed_default(self):
-        self.assertTrue(MAIN_KERNEL, 'EVAS_TEST_MAIN_KERNEL must name a kernel built from main')
-        request = self.raw({})
-        old = _invoke(request, MAIN_KERNEL)
-        new = _invoke(request, KERNEL)
-        self.assertEqual(new['observation_evidence']['effective_controls'].pop('proof_work_limit'),
-                         1_000_000_000)
-        self.assertEqual(json.dumps(new, sort_keys=True), json.dumps(old, sort_keys=True))
+        main = self.main_reference_identity()
+        try:
+            request = self.raw({})
+            old = _invoke(request, main)
+            new = _invoke(request, KERNEL)
+            self.assertEqual(new['observation_evidence']['effective_controls'].pop('proof_work_limit'),
+                             1_000_000_000)
+            self.assertEqual(json.dumps(new, sort_keys=True), json.dumps(old, sort_keys=True))
+        finally:
+            self.main_reference_identity()
 
     def test_explicit_default_is_the_same_ledger_as_unset(self):
         request = self.raw({})
