@@ -1,0 +1,17 @@
+check_kernel_without_the_field_rejects_it_explicitly (test_proof_work_limit.ProofWorkLimitKernel.check_kernel_without_the_field_rejects_it_explicitly) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.072s
+
+OK
+check_default_request_response_equals_main_except_the_echoed_default (test_proof_work_limit.ProofWorkLimitKernel.check_default_request_response_equals_main_except_the_echoed_default) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.555s
+
+OK
+explicit check test_proof_work_limit.ProofWorkLimitKernel.check_kernel_without_the_field_rejects_it_explicitly: executed 1 time, outcome ok, 0.809 s
+explicit check test_proof_work_limit.ProofWorkLimitKernel.check_default_request_response_equals_main_except_the_echoed_default: executed 1 time, outcome ok, 0.97 s
+EVAS_TEST_BASELINE_KERNEL sha256 061c9c8e008e60864ab1606df962ef85965112290241df834aa3af808214d62b
+EVAS_TEST_KERNEL sha256 2bf421f7718f0922fdfd8407528b3c24c6acc70fb322749608f4cb28a908e3a9
+explicit checks: 2 named, 2 executed exactly once and passed

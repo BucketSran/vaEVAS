@@ -1,0 +1,36 @@
+{
+ "checks": [
+  {
+   "environment_sha256": {
+    "EVAS_TEST_KERNEL": "b2b671bf4ecc07683218136ed4fa8c657c897fb73b09a3fb0df6d8d9a673e2ca"
+   },
+   "executed": 1,
+   "id": "test_output_point_limit.LargeGridEndToEnd.check_rc_step_response_over_a_hundred_thousand_rows",
+   "line": 343,
+   "module": "evas/tests/test_output_point_limit.py",
+   "module_sha256": "9c59429d38ebff1ab316ff0c9a6a6fdf71d15276c17b271cbff0540dcaf8b6fd",
+   "outcome": "ok",
+   "problems": [],
+   "process_returncode": 0,
+   "registered_by": [
+    "case:output-point-limit-python@1"
+   ],
+   "seconds": 112.558
+  }
+ ],
+ "environment_files": {
+  "EVAS_TEST_KERNEL": {
+   "sha256": "b2b671bf4ecc07683218136ed4fa8c657c897fb73b09a3fb0df6d8d9a673e2ca",
+   "value": "evas/rust_core/target/release/evas-kernel"
+  }
+ },
+ "producer": "scripts/run_explicit_checks.py",
+ "python": "3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]",
+ "refused": [],
+ "required_environment": {
+  "EVAS_TEST_KERNEL": "evas/rust_core/target/release/evas-kernel"
+ },
+ "schema_version": 1,
+ "start": "evas/tests",
+ "success": true
+}
