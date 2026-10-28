@@ -45,6 +45,7 @@ fn nf_fixture() -> (EventModel, Trajectory, Controller, Vec<ScheduledEvent>) {
             output_times: vec![0., 0.0625, 0.25, 0.375, 0.75, 1.],
             stop: 1.,
             max_step: 0.125,
+            proof_work_limit: None,
         },
         1,
     )

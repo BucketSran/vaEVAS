@@ -215,6 +215,7 @@ mod tests {
                 strobetimes: vec![],
                 stop,
                 max_step: stop,
+                proof_work_limit: None,
             },
             1,
         )

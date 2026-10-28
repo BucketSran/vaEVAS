@@ -555,6 +555,7 @@ mod auxiliary_budget_tests {
                 output_times: vec![0., 1.],
                 stop: 1.,
                 max_step: 0.1,
+                proof_work_limit: None,
             },
             0,
         )

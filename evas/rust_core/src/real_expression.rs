@@ -103,5 +103,7 @@ pub(crate) fn work(model: &crate::events::EventModel) -> &crate::transition_sour
     if let Some(owner) = &model.source_context {
         return owner.borrow_work();
     }
-    model.mixed_cold_work.get_or_init(Default::default)
+    model
+        .mixed_cold_work
+        .get_or_init(|| crate::transition_source_plan::Work::for_limit(model.proof_work_limit))
 }

@@ -18,6 +18,7 @@ fn source(tail: f64) -> Trajectory {
             output_times: vec![0.0, 1.0, 2.0, 3.0],
             stop: 3.0,
             max_step: 3.0,
+            proof_work_limit: None,
         },
         1,
     )

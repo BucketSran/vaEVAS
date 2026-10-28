@@ -1033,7 +1033,9 @@ pub(crate) fn run(
     }
     let mut trajectory = Trajectory::new(config, driven.len())?;
     if !program.procedures.is_empty() {
-        trajectory.bind_procedure_work(&crate::transition_source_plan::Work::default())?;
+        trajectory.bind_procedure_work(&crate::transition_source_plan::Work::for_trajectory(
+            &trajectory,
+        ))?;
     }
     let (flow, coordinates) = initialize(&program, &trajectory, &driven, &tolerances)?;
     let mut solutions = Vec::<Solution>::new();
@@ -1108,6 +1110,7 @@ mod tests {
                 output_times: vec![0., 0.5],
                 stop: 0.5,
                 max_step: 0.5,
+                proof_work_limit: None,
             },
             1,
         )
@@ -1353,6 +1356,7 @@ mod tests {
                 output_times: vec![0.0, 0.75],
                 stop: 0.75,
                 max_step: 0.75,
+                proof_work_limit: None,
             },
             1,
         )
@@ -1389,6 +1393,7 @@ mod tests {
                 output_times: vec![0.0, 1.0],
                 stop: 1.0,
                 max_step: 1.0,
+                proof_work_limit: None,
             },
             1,
         )

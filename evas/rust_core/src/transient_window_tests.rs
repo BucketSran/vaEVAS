@@ -32,6 +32,7 @@ fn fixture() -> (EventModel, Trajectory, Frame) {
             output_times: vec![0.0, 1.0],
             stop: 1.0,
             max_step: 1.0,
+            proof_work_limit: None,
         },
         1,
     )

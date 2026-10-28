@@ -53,6 +53,7 @@ fn fixture_with_dc(
             output_times: vec![0., 0.5, 1.],
             stop: 1.,
             max_step: 1.,
+            proof_work_limit: None,
         },
         count,
     )

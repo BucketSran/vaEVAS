@@ -37,6 +37,7 @@ fn fixture() -> (EventModel, Trajectory, Controller, Vec<ScheduledEvent>) {
             strobetimes: vec![],
             stop: 0.8,
             max_step: 0.1,
+            proof_work_limit: None,
         },
         1,
     )

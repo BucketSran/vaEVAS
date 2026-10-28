@@ -79,6 +79,12 @@ def response_body(value, schema, engine):
     result = copy.deepcopy(value)
     assert result.pop('schema_version') == schema
     assert result.pop('engine') == engine
+    # The C8 baseline kernel predates the echoed request proof work limit. The
+    # candidate echoes the default 1e9 for these default requests; that single
+    # key is the only mapped difference, so it is checked and then removed.
+    controls = result.get('observation_evidence', {}).get('effective_controls', {})
+    if schema == 33 and 'proof_work_limit' in controls:
+        assert controls.pop('proof_work_limit') == 1_000_000_000
     return result
 
 

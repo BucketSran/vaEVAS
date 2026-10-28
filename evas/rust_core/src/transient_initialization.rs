@@ -272,7 +272,9 @@ fn cold_work(model: &EventModel) -> &crate::transition_source_plan::Work {
     if let Some(context) = &model.source_context {
         return context.borrow_work();
     }
-    model.mixed_cold_work.get_or_init(Default::default)
+    model
+        .mixed_cold_work
+        .get_or_init(|| crate::transition_source_plan::Work::for_limit(model.proof_work_limit))
 }
 fn cold_charge(model: &EventModel, items: usize) -> Result<(), Error> {
     cold_work(model).debit(2, items as u64)
@@ -1016,9 +1018,11 @@ impl MixedCold {
                     match model.mixed_cold_context.get() {
                         Some(context) => context.clone(),
                         None => {
-                            let work = model
-                                .mixed_cold_work
-                                .get_or_init(crate::transition_source_plan::Work::default);
+                            let work = model.mixed_cold_work.get_or_init(|| {
+                                crate::transition_source_plan::Work::for_limit(
+                                    model.proof_work_limit,
+                                )
+                            });
                             let context = crate::transition_source_plan::ProofContext::event_request_with_work(
                             &model.program, trajectory, &model.driven,
                             model.source_copy_items, work.clone())?;
@@ -1375,6 +1379,7 @@ mod tests {
                 output_times: vec![0., 1.],
                 stop: 1.,
                 max_step: 1.,
+                proof_work_limit: None,
             },
             1,
         )
@@ -1731,6 +1736,7 @@ mod tests {
                 output_times: vec![0., 0.125, 0.375, 0.75, 1.],
                 stop: 1.,
                 max_step: 1.,
+                proof_work_limit: None,
             },
             1,
         )

@@ -2,8 +2,10 @@
 from fractions import Fraction
 import math
 
+from .limits import MAX_OUTPUT_POINTS
+
 FIELDS = {'strobetimes', 'strobeperiod', 'strobedelay', 'skipstart', 'skipstop'}
-MAX_POINTS = 100_000
+MAX_POINTS = MAX_OUTPUT_POINTS
 
 
 def _number(value, name):

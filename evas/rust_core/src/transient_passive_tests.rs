@@ -42,6 +42,7 @@ fn fixture_with_period(
             output_times: vec![0., 0.25, 1.],
             stop: 1.,
             max_step: 1.,
+            proof_work_limit: None,
         },
         1,
     )
@@ -280,6 +281,7 @@ fn branch_review_same_controller_failure_keeps_history_proof_records_then_retrie
                 output_times: vec![0., 0.25, 0.6, 1.],
                 stop: 1.,
                 max_step: 0.1,
+                proof_work_limit: None,
             },
             1,
         )

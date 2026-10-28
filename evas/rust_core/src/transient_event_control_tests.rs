@@ -135,6 +135,7 @@ fn later_array_failure_rolls_back_prefix_displays_and_old_history_then_retries()
                 output_times: vec![0., 1.],
                 stop: 1.,
                 max_step: 1.,
+                proof_work_limit: None,
             },
             1,
         )

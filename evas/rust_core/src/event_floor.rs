@@ -402,7 +402,7 @@ impl Request {
         let p = admission.program();
         let work = provided
             .as_ref()
-            .map_or_else(Work::default, |s| s.borrow_work().clone());
+            .map_or_else(|| Work::for_trajectory(t), |s| s.borrow_work().clone());
         crate::diagnostics::counter("floor_source_work_begin", work.spent() as usize);
         let program_bytes = encoded(p, &work)?;
         let size = program_bytes.len();

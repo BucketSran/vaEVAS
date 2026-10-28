@@ -2214,7 +2214,7 @@ pub(crate) fn run_inner(mut request: Request) -> Result<Response, Error> {
     let mut transient = request.transient.unwrap();
     let analytic = !transient.analytic_sources.is_empty();
     let work = if analytic {
-        Some(crate::transition_source_plan::Work::default())
+        Some(crate::transition_source_plan::Work::for_inputs(&transient)?)
     } else {
         None
     };
@@ -2233,7 +2233,9 @@ pub(crate) fn run_inner(mut request: Request) -> Result<Response, Error> {
         let legacy = if request.program.procedures.is_empty() {
             true
         } else {
-            let work = trajectory.analytic_work().cloned().unwrap_or_default();
+            let work = trajectory.analytic_work().cloned().unwrap_or_else(|| {
+                crate::transition_source_plan::Work::for_trajectory(&trajectory)
+            });
             let captures_only = crate::procedure::captures_only(&request.program, &work)?;
             if captures_only && request.program.step_bounds.is_empty() {
                 crate::procedure::validate(&request.program, &work)?;
@@ -2338,7 +2340,7 @@ pub(crate) fn run_inner(mut request: Request) -> Result<Response, Error> {
             .procedure_work()
             .or(trajectory.analytic_work())
             .cloned()
-            .unwrap_or_default();
+            .unwrap_or_else(|| crate::transition_source_plan::Work::for_trajectory(&trajectory));
         trajectory.bind_procedure_work(&owner)?;
         crate::procedure::closed_math_program(&request.program, &owner)?
     } else {
@@ -3463,6 +3465,7 @@ mod tests {
                 output_times: vec![0.0, 3.0],
                 stop: 3.0,
                 max_step: 3.0,
+                proof_work_limit: None,
             },
             1,
         )
@@ -3542,6 +3545,7 @@ mod tests {
                 stop: 24.,
                 max_step: 24.,
                 strobetimes: vec![],
+                proof_work_limit: None,
             },
             1,
         )
@@ -3929,6 +3933,7 @@ mod tests {
                 strobetimes: vec![0., 0.5e-6, 4.5e-6],
                 stop: 5e-6,
                 max_step: 5e-6,
+                proof_work_limit: None,
             },
             1,
         )
@@ -4138,6 +4143,7 @@ mod tests {
                 output_times: vec![0.0, 1.0, 2.0, 3.0],
                 stop: 3.0,
                 max_step: 3.0,
+                proof_work_limit: None,
             },
             1,
         )
@@ -4223,6 +4229,7 @@ mod tests {
                 output_times: vec![0.0, 2.0],
                 stop: 2.0,
                 max_step: 2.0,
+                proof_work_limit: None,
             },
             1,
         )

@@ -255,7 +255,7 @@ impl Prepared {
                 work.debit(2, 16)?;
                 work.clone()
             } else {
-                crate::transition_source_plan::Work::default()
+                crate::transition_source_plan::Work::for_trajectory(trajectory)
             };
             crate::procedure::validate(program, &work)?;
             trajectory.charge_source_copy(&work)?;

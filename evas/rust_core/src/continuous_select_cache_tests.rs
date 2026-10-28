@@ -53,6 +53,7 @@ fn trajectory(points: Vec<[f64; 2]>) -> Trajectory {
             stop: 1.,
             max_step: 1.,
             strobetimes: vec![],
+            proof_work_limit: None,
         },
         1,
     )

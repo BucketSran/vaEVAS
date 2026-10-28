@@ -558,6 +558,7 @@ mod tests {
                 strobetimes: vec![],
                 stop: 64e-9,
                 max_step: 1e-9,
+                proof_work_limit: None,
             },
             2,
         )

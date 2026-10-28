@@ -40,6 +40,13 @@ impl Default for Work {
     }
 }
 impl Work {
+    /// The request ledger with a given work-slot limit. Slots 0 and 1 are fixed
+    /// (128 plans, 8192 cuts); the ledger keeps its semantics (one sticky
+    /// account, no refunds). Self-contained: scripts/evas_integration_checks.py
+    /// compiles this primitive alone.
+    pub(crate) fn for_limit(proof_work_limit: u64) -> Self {
+        Self::limited([128, 8192, proof_work_limit])
+    }
     pub(crate) fn same_owner(&self, other: &Self) -> bool {
         Arc::ptr_eq(&self.0, &other.0)
     }
@@ -97,6 +104,18 @@ fn constant(value: f64) -> Expression {
     }
 }
 
+impl Work {
+    /// A new request ledger from the transient inputs, rejecting an invalid limit.
+    pub(crate) fn for_inputs(inputs: &crate::ir::TransientInputs) -> Result<Self, Error> {
+        inputs.validate_proof_work_limit()?;
+        Ok(Self::for_limit(inputs.effective_proof_work_limit()))
+    }
+    /// A new ledger for a consumer that already holds the validated trajectory.
+    pub(crate) fn for_trajectory(trajectory: &Trajectory) -> Self {
+        Self::for_limit(trajectory.proof_work_limit())
+    }
+}
+
 fn binary_dc_value(
     value: &num_rational::BigRational,
     slope: &num_rational::BigRational,
@@ -128,6 +147,100 @@ mod budget_tests {
         assert_eq!(work.debit(1, 1).unwrap_err().kind, "step_budget");
         work.debit(2, 0).unwrap();
         assert_eq!(retry.debit(2, 1).unwrap_err().kind, "step_budget");
+    }
+
+    fn inputs(limit: Option<u64>) -> crate::ir::TransientInputs {
+        crate::ir::TransientInputs {
+            analytic_sources: vec![],
+            pwl_errors_v: None,
+            strobetimes: vec![],
+            pwl: vec![],
+            output_times: vec![0.0],
+            stop: 1.0,
+            max_step: 1.0,
+            proof_work_limit: limit,
+        }
+    }
+
+    #[test]
+    fn request_constructors_equal_the_default_ledger_when_unset() {
+        // The designed default slots are literals: 128 plans, 8192 cuts, 1e9 work.
+        assert_eq!(Work::default().0.limits, [128, 8192, 1_000_000_000]);
+        assert_eq!(
+            Work::default().0.limits,
+            Work::for_limit(crate::ir::DEFAULT_PROOF_WORK_LIMIT)
+                .0
+                .limits
+        );
+        assert_eq!(
+            Work::for_inputs(&inputs(None)).unwrap().0.limits,
+            [128, 8192, 1_000_000_000]
+        );
+        let trajectory = crate::pwl::Trajectory::new(inputs(None), 0).unwrap();
+        assert_eq!(
+            Work::for_trajectory(&trajectory).0.limits,
+            [128, 8192, 1_000_000_000]
+        );
+    }
+
+    #[test]
+    fn request_constructors_change_only_the_work_slot() {
+        for limit in [1u64, 7, 2_000_000_000_000, 10_000_000_000_000] {
+            let work = Work::for_inputs(&inputs(Some(limit))).unwrap();
+            assert_eq!(work.0.limits, [128, 8192, limit]);
+            let trajectory = crate::pwl::Trajectory::new(inputs(Some(limit)), 0).unwrap();
+            assert_eq!(
+                Work::for_trajectory(&trajectory).0.limits,
+                [128, 8192, limit]
+            );
+        }
+    }
+
+    #[test]
+    fn request_constructor_rejects_an_unvalidated_limit() {
+        for bad in [0u64, 10_000_000_000_001] {
+            assert_eq!(
+                Work::for_inputs(&inputs(Some(bad))).err().unwrap().kind,
+                "invalid_inputs"
+            );
+        }
+    }
+
+    #[test]
+    fn config_identity_bytes_and_their_charge_do_not_depend_on_the_requested_limit() {
+        // event_floor compares and charges the serialized config; the limit is
+        // request metadata, so the same physical request costs the same work.
+        let charge = |limit: Option<u64>| {
+            let trajectory = crate::pwl::Trajectory::new(inputs(limit), 0).unwrap();
+            let work = Work::for_limit(u64::MAX);
+            let size = crate::event_floor::encoded_size(&trajectory.config, &work).unwrap();
+            (size, work.spent())
+        };
+        let unset = charge(None);
+        assert!(
+            unset.1 > 0,
+            "the serializer must actually charge the ledger"
+        );
+        for limit in [1u64, 1_000_000_000, 2_000_000_000_000, 10_000_000_000_000] {
+            assert_eq!(charge(Some(limit)), unset, "limit {limit}");
+        }
+    }
+
+    #[test]
+    fn requested_limit_is_one_sticky_ledger_with_the_actual_limit_in_the_message() {
+        let work = Work::for_inputs(&inputs(Some(5))).unwrap();
+        let retry = work.clone();
+        work.debit(2, 5).unwrap();
+        let error = retry.debit(2, 1).unwrap_err();
+        assert_eq!(error.kind, "step_budget");
+        assert!(
+            error.message.contains("used 5 + 1 exceeds 5"),
+            "{}",
+            error.message
+        );
+        // The failed reservation is not refunded: the owner stays exhausted.
+        assert_eq!(work.debit(2, 0).unwrap_err().kind, "step_budget");
+        assert!(work.same_owner(&retry));
     }
 }
 fn bind(expr: &Expression, states: &[I], work: &Work) -> Result<Expression, Error> {
@@ -248,7 +361,13 @@ impl ProofContext {
         driven: &[String],
         copy_items: usize,
     ) -> Result<Arc<Self>, Error> {
-        Self::event_request_with_work(program, trajectory, driven, copy_items, Work::default())
+        Self::event_request_with_work(
+            program,
+            trajectory,
+            driven,
+            copy_items,
+            Work::for_trajectory(trajectory),
+        )
     }
     /// One prepaid event-source owner. All new event consumers borrow this
     /// same ledger; the actual lookup/copy helper cannot run before reservation.
@@ -303,7 +422,7 @@ impl ProofContext {
         driven: &[String],
         program_items: usize,
     ) -> Result<Arc<Self>, Error> {
-        let work = Work::default();
+        let work = Work::for_trajectory(trajectory);
         Self::source_math_with_work(program, trajectory, driven, program_items, work)
     }
 
@@ -2156,6 +2275,7 @@ mod proof_cache_tests {
                 output_times: vec![0., 1.],
                 stop: 1.,
                 max_step: 1.,
+                proof_work_limit: None,
             },
             1,
         )
@@ -2519,6 +2639,7 @@ mod proof_cache_tests {
                 output_times: vec![0., 1.],
                 stop: 1.,
                 max_step: 1.,
+                proof_work_limit: None,
             },
             1,
         )

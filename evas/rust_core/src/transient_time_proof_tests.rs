@@ -60,6 +60,7 @@ fn fixture_impl(nonlinear: bool) -> (EventModel, Trajectory, Controller, Vec<Sch
             stop: 1.,
             max_step: 1. / 64.,
             strobetimes: vec![],
+            proof_work_limit: None,
         },
         2,
     )
