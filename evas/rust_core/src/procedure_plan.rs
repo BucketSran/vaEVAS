@@ -33,12 +33,16 @@ fn arena<T>(result: Result<T, Fault<Error>>) -> Result<T, Error> {
 mod control;
 #[path = "procedure_history.rs"]
 mod history;
+#[path = "procedure_right_limit.rs"]
+mod right_limit;
 #[derive(Clone)]
 pub(crate) struct Guard {
     pub relation: ir::Relation,
     pub left: Id,
     pub right: Id,
     value: bool,
+    // Decided at the right limit tau+ of a cross-fired body.
+    post_root: bool,
 }
 #[derive(Clone)]
 struct Selector {
@@ -92,6 +96,8 @@ struct Builder<'a> {
     graph: Graph<O>,
     values: Vec<Cell>,
     physical_values: Vec<bool>,
+    // Values stored by an assignment of this activation (latched reads).
+    stored: Vec<bool>,
     states: Vec<Id>,
     initial: Vec<Id>,
     bindings: Vec<Option<Id>>,
@@ -141,6 +147,7 @@ impl Builder<'_> {
         }
         self.w.debit(2, 16)?;
         self.physical_values.push(physical);
+        self.stored.push(false);
         self.values.push(value);
         Ok(id)
     }
@@ -449,15 +456,35 @@ impl Builder<'_> {
         right: &E,
         origin: &ir::Origin,
     ) -> Result<bool, Error> {
+        self.decide(relation, left, right, origin)?
+    }
+    /// Ok(Err): a comparison of a body that reads at tau+ is exactly zero at
+    /// its crossing root and has no post-root certificate (right_limit).
+    fn decide(
+        &mut self,
+        relation: ir::Relation,
+        left: &E,
+        right: &E,
+        origin: &ir::Origin,
+    ) -> Result<Result<bool, Error>, Error> {
         let left = self.resolve(left)?;
         let right = self.resolve(right)?;
         self.effect(left)?;
         self.effect(right)?;
         let a = &self.values[left];
         let b = &self.values[right];
-        let value = if let Some(value) = control::compare(relation, a, b, self.w)? {
-            value
+        let compared = control::compare(relation, a, b, self.w)?;
+        let post = self.event != usize::MAX && crate::event_conditions::post_root_reads(self.event);
+        let decided = if post {
+            match right_limit::decide(self, relation, left, right, compared, origin)? {
+                right_limit::Outcome::Decided(value, post_root) => Some((value, post_root)),
+                right_limit::Outcome::Unsided(error) => return Ok(Err(error)),
+                right_limit::Outcome::Undecided => None,
+            }
         } else {
+            compared.map(|value| (value, false))
+        };
+        let Some((value, post_root)) = decided else {
             self.w.debit(
                 2,
                 (origin.source.len() + origin.instance.len())
@@ -472,9 +499,10 @@ impl Builder<'_> {
             left,
             right,
             value,
+            post_root,
         });
         self.decisions.push(value);
-        Ok(value)
+        Ok(Ok(value))
     }
     fn capture_operator(&mut self, index: usize) -> Result<(), Error> {
         self.w.step()?;
@@ -552,6 +580,7 @@ impl Builder<'_> {
                         p.events.get(self.event).map(|e| &e.origin),
                     )?;
                     self.effect(value)?;
+                    self.stored[value] = true;
                     self.states[a.state] = value;
                     if self.event != usize::MAX {
                         self.actions.last_mut().unwrap().1.push(*index);
@@ -581,6 +610,7 @@ impl Builder<'_> {
                     let rhs = self.resolve(rhs)?;
                     let rhs = self.checked_store(states[slot], rhs, Some(origin))?;
                     self.effect(rhs)?;
+                    self.stored[rhs] = true;
                     self.states[states[slot]] = rhs;
                     if self.event != usize::MAX {
                         self.actions.last_mut().unwrap().1.push(*index + slot);
@@ -614,7 +644,19 @@ impl Builder<'_> {
                     else_body,
                     origin,
                 } => {
-                    let yes = self.condition(*relation, left, right, origin)?;
+                    let yes = match self.decide(*relation, left, right, origin)? {
+                        Ok(yes) => yes,
+                        // Without a tau+ certificate only identical arms continue.
+                        Err(error) => {
+                            if !right_limit::same_arms(then_body, else_body, self.w)? {
+                                return Err(error);
+                            }
+                            self.w.debit(2, 16)?;
+                            self.decisions.extend([false, true]);
+                            crate::diagnostics::counter("event_equivalent_branch_proofs", 1);
+                            true
+                        }
+                    };
                     let start = *index;
                     let yes_count = count(then_body, self.w)?;
                     if yes {
@@ -1302,6 +1344,7 @@ pub(crate) fn execute(
         graph: Graph::new(),
         values: Vec::new(),
         physical_values: Vec::new(),
+        stored: Vec::new(),
         states: Vec::new(),
         initial: Vec::new(),
         bindings: vec![None; p.real_bindings.len()],

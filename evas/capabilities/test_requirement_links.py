@@ -549,5 +549,59 @@ class CurrentRegistryLinks(unittest.TestCase):
             self.assertFalse(self.registry.qualified(name))
 
 
+# Batch 2 (defect fixes): each card links whole test modules and one kernel test module.
+BATCH2 = {
+    'requirement:cross-event-body-right-limit': dict(
+        python={'evas/tests/test_cross_right_limit.py': 15, 'evas/tests/test_cross_body_right_limit_cases.py': 18},
+        rust=('procedure::plan::right_limit::tests', 4)),
+}
+
+
+class Batch2RegistryLinks(unittest.TestCase):
+    """The real registry: every batch-2 test module is linked to its card only."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.registry = load(root=ROOT, repositories={'vaevas': ROOT})
+        cls.report = links.check(cls.registry)
+        cls.cards = {}
+        for item in cls.report['links']:
+            cls.cards.setdefault(item['test'], set()).update(
+                name.rsplit('@', 1)[0] for name in item['requirements'])
+
+    def test_every_batch2_python_method_is_linked_to_its_card(self):
+        import ast
+        for card, spec in BATCH2.items():
+            for module, count in spec['python'].items():
+                tree = ast.parse((ROOT / module).read_text())
+                names = [f'{node.name}.{item.name}' for node in tree.body if isinstance(node, ast.ClassDef)
+                         for item in node.body if isinstance(item, ast.FunctionDef) and item.name.startswith('test')]
+                self.assertEqual(len(names), count, module)
+                for name in names:
+                    with self.subTest(module=module, name=name):
+                        key = f'{PYTHON}:{module}:{Path(module).stem}.{name}'
+                        self.assertEqual(self.cards.get(key), {card})
+
+    def test_every_batch2_rust_test_is_linked_to_its_card(self):
+        for card, spec in BATCH2.items():
+            module, count = spec['rust']
+            prefix = f'rust-tests:evas-kernel/lib/evas_kernel::{module}::'
+            linked = sorted(key for key, cards in self.cards.items() if key.startswith(prefix))
+            self.assertEqual(len(linked), count, module)
+            for key in linked:
+                self.assertEqual(self.cards[key], {card}, key)
+
+    def test_batch2_cards_are_current_pending_and_unqualified(self):
+        current = self.registry.data['current']
+        for name in BATCH2:
+            card = self.registry.objects[(name, current[name])]
+            self.assertEqual((card['kind'], card['status'], card['review']), ('requirement', 'pending', 'pending'))
+            for field in ('source_locations', 'allowed_behavior', 'observables', 'budget', 'independent_answers',
+                          'card_source'):
+                self.assertIn(field, card, (name, field))
+            self.assertEqual(card['version'], card['card_source']['version'])
+            self.assertFalse(self.registry.qualified(name))
+
+
 if __name__ == '__main__':
     unittest.main()

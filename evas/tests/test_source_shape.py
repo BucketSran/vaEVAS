@@ -129,8 +129,10 @@ class SourceShapeContracts(unittest.TestCase):
         for extra in [{},{'source_shapes':{'u':shape}}]:
             result=transient(program,{'u':[[0,0],[1,1]]},[0,.5,1],
                              stop=1,max_step=1,kernel=KERNEL,**extra)
-            event=result['transient']['events'][0]
-            self.assertEqual(len(result['transient']['events']),1)
+            # IR33 records the initial_step batch first, at t=0.
+            records=[e for e in result['transient']['events'] if e['kind']!='initial_step']
+            event=records[0]
+            self.assertEqual(len(records),1)
             self.assertEqual(event['time'],.5)
             self.assertEqual(dict(zip(result['transient']['state_names'],event['after'])),
                              {'dut:q':1,'dut:sample':1,'dut:tie':1})

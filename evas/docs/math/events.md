@@ -1463,9 +1463,11 @@ PWL 根另有精确零点证书：当端点 guard 和到候选时刻的两侧时
 集合跨越多个值时，后续条件、timer 和历史继续使用完整包围，不能只看名义值。
 例如 `[1-2^-55, 1+2^-55]` 全部舍入为 1，可以取得单值证明；跨越舍入格边界的真实采样域仍须保留多值。
 
-程序条件在采样和各步运算完成舍入后判断。物理 cross 的根后方向证明不能越过这些舍入边界继续使用。
-例如 `u=3t` 在 `cross(u-1,+1)` 的根为 `1/3`；对充分小的正数 `e`，`RN(1+3e)` 仍为 1，
-所以程序条件 `V(u)>1` 为假。下文 IR32 的未舍入条件右极限解释不能替代这项 IR33 规则。
+程序条件在采样和各步运算完成舍入后判断。[ADR-006](../development/DECISIONS.md#adr-006) 只规定程序 real
+的逐次舍入，不覆盖在 cross 根处差值恰为零的比较：这类比较按 [ADR-003](../development/DECISIONS.md#adr-003)
+读根后右极限 `te=tau+`，规则与证书见本文件[根后右极限](#cross-right-limit)一节，IR33 的源序过程执行同样适用
+（`procedure_right_limit.rs`，#281，requirement:cross-event-body-right-limit v2）。这一点将由 #283 批次 C
+第 2 项用 Spectre 再确认。
 固定 timer 读取 PWL 时也先采样为 binary64，再比较；舍入前插值与阈值的微小差异不能恢复成程序值的差异。
 源幅度或真实根的不确定性仍必须先形成完整输入域；只有完整舍入像允许的结论才能用于选支。
 
@@ -1841,9 +1843,22 @@ LRM 2.4 §4.2、§5.3 的 analog 变量在两次求值之间保留取值：本�
 例如 `u` 上升、`w` 同刻下降过 0.5 时，`cross(u-0.5) or cross(w-0.5)` 内
 `u>0.5` 为真、`w>0.5` 为假；`w` 恒为 0.5 时 `w>0.5` 仍为假、`w>=0.5` 为真。
 `u` 的 PWL 在 0.5 处另有节点时结论不变；`u` 在 0.5 触顶回落时 `u>=0.5` 为假。
-独立答案见 [test_cross_right_limit.py](../../tests/test_cross_right_limit.py)。
+独立答案见 [test_cross_right_limit.py](../../tests/test_cross_right_limit.py)
+与 [test_cross_body_right_limit_cases.py](../../tests/test_cross_body_right_limit_cases.py)。
 入口为 `event_conditions.rs::PostRootSides`、`event_conditions.rs::Conditions::dependence`、
 `pwl.rs::Root::post_root_side`、`transient.rs::post_root_scope` 与 `transient.rs::right_window`。
+
+IR33 的事件体由源序过程执行，同一规则在 `procedure_right_limit.rs::decide` 中判定（#281）。
+比较在 tau 恰为零时依次找证书：与实际触发叶 guard 精确同零集（线性形式按精确有理数比较，
+读穿 RN 边界，舍入不决定根后一侧）；只读驱动输入、不读状态的差值，用批次安装的输入导数包围
+（区间同上，付费上下文不安装）；所读节点与历史在 W 上都不动即平台；否则用 W 上的包围判定。
+W 按节点给出：驱动输入，以及经同一前事件节点提供者求得的独立节点（只读正边沿 transition 历史，
+不依赖本批写入的状态；历史只在未付费的全 cross 批次读取）。本次执行中先赋值后读取的状态是锁存读，
+不提供同零集或导数证书。三元式、if/else、循环条件同此规则；没有证书时，只有两臂语句在去掉源位置后
+完全相同且不含 `$display` 才继续。窗口入口为 `transient.rs::procedure_window` 与
+`PostRootSides::with_input_slopes`。零点触碰、零平台和 stop 处到达的触发规则是 EVAS 的约定
+（本文“精确零点归到达段所有”一段），timer 的精确点时刻是 EVAS 在 LRM 时间容差内的选择，
+二者都不是 LRM 的强制要求。
 这只约束事件体读取；普通贡献式的 Select 是 tau 处的连续时间表达式，
 仍按原 `g(tau)=0` 判定，避免代表时刻电压验收与事件体选择不一致。
 其余条件先在可行输入盒内证明选择；若有限误差盒无法决定选择，只有两臂行为完全相同时才可继续，规则见下文。其他情况拒绝，点时刻 timer 保持原观察语义。

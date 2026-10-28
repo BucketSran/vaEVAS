@@ -4311,10 +4311,13 @@
     "asset:ffca9221c26b1669fd5b866d": "191d92a8360c85ab812f3efa06b84d2d0123f8a509b6a46ab398a8e65ab97920",
     "asset:fff06209fd2b3a26bf45eb6c": "5f4d002b51570a38488c27d70a4fe3ab24936486055e1e04a143fdd23bef7c39",
     "calibration:sef": "1",
+    "case:cross-event-body-right-limit-python": "1",
+    "case:cross-event-body-right-limit-rust": "1",
     "case:output-point-limit-python": "1",
     "case:output-point-limit-rust": "1",
     "case:proof-work-limit-python": "1",
     "case:proof-work-limit-rust": "1",
+    "checker:cross-event-body-right-limit": "1",
     "checker:output-point-limit": "1",
     "checker:proof-work-limit": "1",
     "checker:sef": "1",
@@ -12594,6 +12597,7 @@
     "reference:IEEE-754-1985": "1",
     "requirement:$itor": "1",
     "requirement:$rtoi": "1",
+    "requirement:cross-event-body-right-limit": "2",
     "requirement:expm1": "1",
     "requirement:ln1p": "1",
     "requirement:output-point-limit": "1",
@@ -12630,6 +12634,8 @@
     "source:a3284a9ec67acebef49ba896": "ec3fa1d2368e71c4863149f030cc1dac89953089fc3d3d06b8d7f65c02b3c78a",
     "source:b11c8ec0ef444c1039a37323": "2acb6f65ba0ab57d5c791d3b98e44ca53e5ced1a485f3e764e1c05c18c500090",
     "source:bc47264731c409c85f3a5abd": "e3d68a7527ea9baa80e8247a3c22e5b4a0536604a7fb15106b67c28d18e44e3e",
+    "source:cross-body-right-limit-cases-tests": "1",
+    "source:cross-right-limit-tests": "1",
     "source:d0ec5fdcd6f1114d29315761": "0d8e4ecc3b6de40533bd1c30bfa5ce8a6fe40d5ae410f684ceb2296187f5285c",
     "source:d348c91dc263219b28292522": "e2f34d69f43305d22d314492efae3a86eb408aa2c7346b130ef2ec5717500b3a",
     "source:db2d208f0492a3d17dc5af12": "d1409c4f5add6d04edfedda103a29e308a89d87e7c6247bb72c44b6b2725ad68",
@@ -12643,6 +12649,7 @@
     "source:language-profile": "1",
     "source:negative-control": "1",
     "source:output-point-limit-tests": "1",
+    "source:procedure-right-limit-tests": "1",
     "source:proof-work-limit-tests": "1",
     "source:request-limits-contract": "1",
     "source:sef-calibration": "1",
@@ -14108,6 +14115,1263 @@
         },
         {
           "local_id": "pwl::output_point_limit_tests::previous_hundred_thousand_boundary_no_longer_rejects",
+          "namespace": "rust-tests",
+          "package": "evas-kernel",
+          "target": "evas_kernel",
+          "target_kind": "lib"
+        }
+      ],
+      "version": "1"
+    },
+    {
+      "id": "source:cross-right-limit-tests",
+      "kind": "source",
+      "origin": "evas/tests/test_cross_right_limit.py",
+      "path": "evas/tests/test_cross_right_limit.py",
+      "sha256": "b82848c38a1b53279478111ad9c7128959efbcd0d0c0d310d43c2adb55933a0f",
+      "status": "active",
+      "version": "1"
+    },
+    {
+      "id": "source:cross-body-right-limit-cases-tests",
+      "kind": "source",
+      "origin": "evas/tests/test_cross_body_right_limit_cases.py",
+      "path": "evas/tests/test_cross_body_right_limit_cases.py",
+      "sha256": "c2fba8e1ccde0c36ab607a8e4f74b3a1be543111272fff8bb8aff1665eba752d",
+      "status": "active",
+      "version": "1"
+    },
+    {
+      "id": "source:procedure-right-limit-tests",
+      "kind": "source",
+      "origin": "evas/rust_core/src/procedure_right_limit_tests.rs",
+      "path": "evas/rust_core/src/procedure_right_limit_tests.rs",
+      "sha256": "ff96383758f2b2c772e61e126cab27972b543ecb490d13f51ba69e79a3627ae0",
+      "status": "active",
+      "version": "1"
+    },
+    {
+      "allowed_behavior": {
+        "implementation_choice": [
+          {
+            "basis": "来源事实",
+            "id": "arrival-convention",
+            "text": "EVAS convention, not an LRM rule (events.md:1269-1276 at d6b7543f; standard-line decision item SL-DEC-20261028-01, recommendation A, awaiting the coordinator): an exact zero belongs to the arriving segment. A guard pair (a, 0) with a nonzero fires once in direction -sign(a), filtered by dir, whether or not a next segment exists; this covers isolated zeros, zero-plateau entry and stop. Zero to zero and zero to nonzero do not fire; an initial zero plateau and an all-zero input do not fire. LRM 5.10.3.1 and 5.10.3.2 do not define these four degenerate cases."
+          },
+          {
+            "basis": "来源事实",
+            "id": "timer-point-time",
+            "text": "EVAS executes timer-triggered bodies, including an OR body fired by its timer leaf at the same instant as a cross, at the exact scheduled time and compares point values (events.md:1835-1838). This is the expected value for this batch; it is not a cross-backend tie answer, because a simulator placing the point just beyond the time may decide an exactly-at-threshold comparison the other way."
+          },
+          {
+            "basis": "来源事实",
+            "text": "Documented EVAS contract (events.md@d6b7543f #cross-right-limit): read te=tau+; a comparison exactly zero at tau needs a post-root certificate: (1) fired leaf with an exact same zero set d=k*g, sign(k)*s with s the PWL side (segment end sign; at a knot the next segment; a zero end value is a proven plateau); (2) other stateless conditions: derivative enclosure of the accepted history on [lo, next_up(hi)] strictly signed, or exactly [0,0] (plateau); (3) right window W=[lo, next_up(hi)]: plateau (first-order dependence exactly zero on W, e.g. constant inputs, exact cancellation q=V(w); V(w)-q, floor/real-to-integer only when all of W lies in one bin) or a window enclosure that already decides the comparison."
+          },
+          {
+            "basis": "来源事实",
+            "text": "Without a certificate return kernel event_condition; continue only when both arms behave identically. Loop conditions use the same rule (while loops are unrolled into guarded trips)."
+          },
+          {
+            "basis": "来源事实",
+            "text": "Time-invariant equalities keep their value (the difference reads no input or operator column and no state assigned in this body from a voltage or history)."
+          },
+          {
+            "basis": "来源事实",
+            "text": "Timer-triggered bodies, including an OR body fired by its timer leaf at the same instant as a cross, run at the exact time; an unrelated same-instant timer does not change a cross body's reads; a cross-triggered body in a batch that also contains a separate timer block uses only conditions without operator columns (this restriction does not apply to an OR body fired by its own timer leaf); paid history contexts install only the leaf side and charge right-window reads to the same ledger; budget/resource/IR errors are reported as such, not as missing certificates."
+          },
+          {
+            "basis": "来源事实",
+            "text": "Known limit: assigned values use the tau root box (the right limit for continuous quantities); floor/rounding arguments exactly on a breakpoint at tau assign the tau value, so only exactly-zero comparisons are protected. Ordinary contribution Selects are continuous-time expressions and keep the g(tau)=0 decision."
+          }
+        ],
+        "lrm_mandated": [
+          {
+            "basis": "静态阅读",
+            "text": "A cross-triggered body observes the post-crossing side: with exact PWL ramps, V(code)>=1.5 after a falling crossing of 1.5 is false and V(u)>0.5 after a rising crossing of 0.5 is true."
+          },
+          {
+            "basis": "静态阅读",
+            "text": "A timer event occurs at a time point within time_tol of its scheduled time; without time_tol the point is at, or just beyond, that time (5.10.3.3). The LRM therefore does not fix a unique branch when a timer-body comparison is exactly at its threshold at the scheduled time."
+          },
+          {
+            "basis": "静态阅读",
+            "text": "cross() generates no event at t=0 (5.10.3.2)."
+          }
+        ],
+        "must_not": [
+          {
+            "basis": "来源事实",
+            "text": "Return the value at tau (g(tau)=0 treated as equality) without a diagnostic: observed on d6b7543f for single leaf, falling-only leaf, two and three OR leaves, ternary, if/else, integer and real targets, rising with strict >, and cross OR a non-coincident timer."
+          },
+          {
+            "basis": "来源事实",
+            "text": "Choose a branch by a nominal or rounded sample when no certificate exists."
+          }
+        ]
+      },
+      "batch": 2,
+      "benchmark_commit": "c485de860c6005f451133e8cdc05fe923da29206",
+      "blocked_slots": [],
+      "budget": {
+        "basis": "静态阅读",
+        "branch": "exact (no tolerance); every decided comparison follows a certificate or the run refuses",
+        "time": "event times within the certified root window",
+        "voltage": "EVAS certified-path contract for assigned real values"
+      },
+      "candidate_impact": {
+        "basis": "来源事实",
+        "kind": "candidate_common_form (comparison ladders, ternaries and if/else in cross bodies)",
+        "source": "issue #281 body ('候选答案可能用三元式或 if 判档的写法')"
+      },
+      "card_source": {
+        "note": "standards-line card v2; incremental review batch2-cards-r2 passed",
+        "path": "runs/standard-line-20261028/cards/batch-2/cross-event-body-right-limit.json",
+        "review": "pending",
+        "sha256": "d49394e3079010512a17d84af854b477ca579efd3554f8c2af510b4beb179e44",
+        "status": "draft",
+        "version": "2"
+      },
+      "conditions": [
+        "rising and falling crossings; dir 0/+1/-1",
+        "one, two and three OR leaves (including a leaf that never fires)",
+        "ternary chains and if/else chains",
+        "integer and real targets",
+        "same-instant timer: separate block vs OR leaf",
+        "knot exactly at the threshold, touch-and-return, plateau at the threshold",
+        "latched reads (q=V(u) then compare q)",
+        "floor argument on an integer at tau (falling vs rising)",
+        "settled vs moving histories (transition outputs)",
+        "loop conditions in a front-end-supported form",
+        "paid history contexts",
+        "root reached exactly at stop (no right side)"
+      ],
+      "constructs": [
+        {
+          "basis": "来源事实",
+          "diagnostic": {
+            "code": "none (silent)",
+            "message": "EVAS returns 3, 3, 2 at 1.0/1.5/2.5 us instead of 3, 2, 1"
+          },
+          "evidence": "grill-vams-2023/cross-body-tau-defect-20261028/confirmation-receipt.json case f_or3_ternary; issue #281 body",
+          "role": "Benchmark rewrite candidate (three OR leaves + ternary ladder), replaced by the control form after this defect was found",
+          "slot": 27,
+          "task": "v3-filter-programmable-lp",
+          "text": "@(cross(V(code)-0.5,0) or cross(V(code)-1.5,0) or cross(V(code)-2.5,0)) c=(V(code)>=2.5)?3:((V(code)>=1.5)?2:((V(code)>=0.5)?1:0));"
+        },
+        {
+          "basis": "来源事实",
+          "diagnostic": {
+            "code": "none (silent)",
+            "message": "y stays 2 after the falling crossing at 1.75 us; expected 1"
+          },
+          "file": "grill-vams-2023/cross-body-tau-defect-20261028/cases/f_single_ge/dut.va",
+          "role": "probe",
+          "slot": null,
+          "task": "minimal repro (issue #281)",
+          "text": "@(cross(V(code)-1.5,0)) c=(V(code)>=1.5)?2:1;"
+        },
+        {
+          "basis": "来源事实",
+          "evidence": "grill-vams-2023/cross-body-tau-defect-20261028/bisect-receipt.json",
+          "role": "regression source",
+          "slot": null,
+          "task": "EVAS repository",
+          "text": "0097ef90 (checkpoint(evas): preserve IR33 candidate, inside #243); last good 2a790344; first bad first-parent 5ab52780 (#243 merge)"
+        }
+      ],
+      "dependencies": [
+        {
+          "id": "lrm-2.4",
+          "sha256": "afdb66b8baec11cb63e0572346862434fb6652faf3849a402c96bb02f03f13cf",
+          "version": "1"
+        },
+        {
+          "id": "lrm-2023",
+          "sha256": "86b19cb490fab45c0d8dbc077a3412a3dffdd4a553741ac196c825a0cbae3194",
+          "version": "1"
+        },
+        {
+          "id": "source:language-profile",
+          "sha256": "96bad1a55d3da59d733ad376d4659e3ff6b821c9a0e5ab41ed6353e794453599",
+          "version": "1"
+        },
+        {
+          "id": "source:target-scope",
+          "sha256": "bbc16ec9f813042a44b714014359fef63bbf28e2c43a113f4aa5868bcd0264cc",
+          "version": "1"
+        }
+      ],
+      "drafted_by": "claude-opus-5-5 (requirement-card worker, 2026-10-28)",
+      "evas_source_commit": "bf2ec4105a17af2bf73f2802c828c5f76a6236b5",
+      "evidence": {
+        "baseline_red_classification": {
+          "basis": "CI 40633031425 attempt 2 merged report (PR273 head fa87b8df, DUT identical to main d6b7543f)",
+          "file": "grill-vams-2023/cross-body-tau-defect-20261028/baseline-red-classification.json",
+          "sha256": "b7f51d36be31c734597251a4f68acc2127f4ef90a094d6e2660e20331dbc4613"
+        },
+        "bisect_receipt": {
+          "file": "grill-vams-2023/cross-body-tau-defect-20261028/bisect-receipt.json",
+          "sha256": "d6cca8464d57288a3c39e91db3e51d58f405c635163027f3ffd938186cc9d944"
+        },
+        "confirmation_receipt": {
+          "file": "grill-vams-2023/cross-body-tau-defect-20261028/confirmation-receipt.json",
+          "sha256": "d4a039472934edc782e9dbd1b20bad41473b1365dbf8eed787f5b7d79e5e1a6f"
+        },
+        "doc_extract": {
+          "file": "tmp/events-d6b7543f.md",
+          "lines": "1805-1850",
+          "sha256": "406eefbe57d72d1a1bbdd567b3be71fd6bb57bfcf8b495c52a9eee0368a2f38d"
+        },
+        "issue": {
+          "body_sha256": "8446c09c0aa3919f637d7141e76809ab69fba78b3bbe4c85d21ca06972a81abf",
+          "comment_sha256": "22553f32ff7fdfb7df058d1c0f2d1b7f6bc3aedaf29da8ea06e6d1438fbe01f3",
+          "url": "https://github.com/BucketSran/vaEVAS/issues/281"
+        },
+        "kernel_sha256_d6b7543f_release": "061c9c8e008e60864ab1606df962ef85965112290241df834aa3af808214d62b"
+      },
+      "existing_tests": [
+        {
+          "checks_card_observables": "yes (rising case must be restored to q=2)",
+          "failure_kind": "value_assertion",
+          "file": "evas/tests/test_cross_right_limit.py",
+          "first_assertion_note": "first assertion = check_rounded_rising_cross (0097ef90 rewrite, asserts q=3 at tau and passes on the defective build); the second assertion run(...,u=DOWN)==[3] then fails on the record format",
+          "method": "CrossRightLimit.test_fired_guard_predicate_sees_crossing_side",
+          "note_basis": "静态阅读",
+          "outcome_basis": "来源事实",
+          "trusted_contexts_5": "failed x5"
+        },
+        {
+          "checks_card_observables": "yes",
+          "failure_kind": "value_assertion",
+          "file": "evas/tests/test_cross_right_limit.py",
+          "first_assertion_note": "first assertion compares a list without the IR33 initial_step record (e.g. expects [2], the run now returns [0, ...]): fails on record format before it can test tau+",
+          "method": "CrossRightLimit.test_or_leaves_with_opposite_simultaneous_crossings",
+          "note_basis": "静态阅读",
+          "outcome_basis": "来源事实",
+          "trusted_contexts_5": "failed x5"
+        },
+        {
+          "checks_card_observables": "yes",
+          "failure_kind": "value_assertion",
+          "file": "evas/tests/test_cross_right_limit.py",
+          "first_assertion_note": "first assertion compares a list without the IR33 initial_step record (e.g. expects [2], the run now returns [0, ...]): fails on record format before it can test tau+",
+          "method": "CrossRightLimit.test_coincident_unfired_input_uses_its_right_slope",
+          "note_basis": "静态阅读",
+          "outcome_basis": "来源事实",
+          "trusted_contexts_5": "failed x5"
+        },
+        {
+          "checks_card_observables": "yes (plateau, late crossing, source band, point timer)",
+          "failure_kind": "value_assertion",
+          "file": "evas/tests/test_cross_right_limit.py",
+          "first_assertion_note": "first assertion compares a list without the IR33 initial_step record (e.g. expects [2], the run now returns [0, ...]): fails on record format before it can test tau+",
+          "method": "CrossRightLimit.test_negative_controls_keep_value_without_side_certificate",
+          "note_basis": "静态阅读",
+          "outcome_basis": "来源事实",
+          "trusted_contexts_5": "failed x5"
+        },
+        {
+          "checks_card_observables": "yes (knot, touch-and-return, plateau)",
+          "failure_kind": "value_assertion",
+          "file": "evas/tests/test_cross_right_limit.py",
+          "first_assertion_note": "first assertion compares a list without the IR33 initial_step record (e.g. expects [2], the run now returns [0, ...]): fails on record format before it can test tau+",
+          "method": "CrossRightLimit.test_knot_at_the_threshold_takes_the_leaving_segment_side",
+          "note_basis": "静态阅读",
+          "outcome_basis": "来源事实",
+          "trusted_contexts_5": "failed x5"
+        },
+        {
+          "checks_card_observables": "yes (refusal without certificate; identical arms continue)",
+          "failure_kind": "expected_rejection_not_raised",
+          "file": "evas/tests/test_cross_right_limit.py",
+          "first_assertion_note": "first assertion expects event_condition and EVAS returns a value (semantic failure)",
+          "method": "CrossRightLimit.test_arrival_at_stop_has_no_right_limit",
+          "note_basis": "静态阅读",
+          "outcome_basis": "来源事实",
+          "trusted_contexts_5": "failed x5"
+        },
+        {
+          "checks_card_observables": "yes (same-instant timer: separate block keeps tau+, OR body fired by its timer runs at the exact time)",
+          "failure_kind": "value_assertion",
+          "file": "evas/tests/test_cross_right_limit.py",
+          "first_assertion_note": "first assertion compares a list without the IR33 initial_step record (e.g. expects [2], the run now returns [0, ...]): fails on record format before it can test tau+",
+          "method": "CrossRightLimit.test_unrelated_simultaneous_timer_keeps_the_crossing_side",
+          "note_basis": "静态阅读",
+          "outcome_basis": "来源事实",
+          "trusted_contexts_5": "failed x5"
+        },
+        {
+          "checks_card_observables": "yes",
+          "failure_kind": "expected_rejection_not_raised",
+          "file": "evas/tests/test_cross_right_limit.py",
+          "first_assertion_note": "first assertion expects event_condition for q=V(u); if (q>0.5) and EVAS returns a value (semantic failure)",
+          "method": "CrossRightLimit.test_latched_crossing_value_needs_a_side_certificate",
+          "note_basis": "静态阅读",
+          "outcome_basis": "来源事实",
+          "trusted_contexts_5": "failed x5"
+        },
+        {
+          "checks_card_observables": "yes",
+          "failure_kind": "value_assertion",
+          "file": "evas/tests/test_cross_right_limit.py",
+          "first_assertion_note": "first assertion compares a list without the IR33 initial_step record (e.g. expects [2], the run now returns [0, ...]): fails on record format before it can test tau+",
+          "method": "CrossRightLimit.test_state_dependent_guard_reads_its_side",
+          "note_basis": "静态阅读",
+          "outcome_basis": "来源事实",
+          "trusted_contexts_5": "failed x5"
+        },
+        {
+          "checks_card_observables": "yes",
+          "failure_kind": "value_assertion",
+          "file": "evas/tests/test_cross_right_limit.py",
+          "first_assertion_note": "first assertion compares a list without the IR33 initial_step record (e.g. expects [2], the run now returns [0, ...]): fails on record format before it can test tau+",
+          "method": "CrossRightLimit.test_negated_scale_on_a_falling_crossing",
+          "note_basis": "静态阅读",
+          "outcome_basis": "来源事实",
+          "trusted_contexts_5": "failed x5"
+        },
+        {
+          "checks_card_observables": "yes (plateau certificate)",
+          "failure_kind": null,
+          "file": "evas/tests/test_cross_right_limit.py",
+          "first_assertion_note": "rewritten by 0097ef90 with floor_contract('right') and the [0, ...] record prefix; semantic values unchanged",
+          "method": "CrossRightWindow.test_floor_inside_one_bin_is_a_plateau",
+          "note_basis": "静态阅读",
+          "outcome_basis": "来源事实",
+          "trusted_contexts_5": "not red x5 (absent from the red classification)"
+        },
+        {
+          "checks_card_observables": "yes after restoring the refusal",
+          "failure_kind": null,
+          "file": "evas/tests/test_cross_right_limit.py",
+          "first_assertion_note": "rewritten by 0097ef90: the falling case now expects [0, 3] instead of event_condition, so it passes on the defective build",
+          "method": "CrossRightWindow.test_floor_argument_on_an_integer_needs_its_bin_after_tau",
+          "note_basis": "静态阅读",
+          "outcome_basis": "来源事实",
+          "trusted_contexts_5": "not red x5 (absent from the red classification)"
+        },
+        {
+          "checks_card_observables": "yes (exact cancellation plateau; strict > refused)",
+          "failure_kind": "value_assertion",
+          "file": "evas/tests/test_cross_right_limit.py",
+          "first_assertion_note": "first assertion compares a list without the IR33 initial_step record (e.g. expects [2], the run now returns [0, ...]): fails on record format before it can test tau+",
+          "method": "CrossRightWindow.test_latched_input_cancels_exactly",
+          "note_basis": "静态阅读",
+          "outcome_basis": "来源事实",
+          "trusted_contexts_5": "failed x5"
+        },
+        {
+          "checks_card_observables": "yes",
+          "failure_kind": "value_assertion",
+          "file": "evas/tests/test_cross_right_limit.py",
+          "first_assertion_note": "first assertion compares a list without the IR33 initial_step record (e.g. expects [2], the run now returns [0, ...]): fails on record format before it can test tau+",
+          "method": "CrossRightWindow.test_constant_inputs_keep_an_exact_root_tie",
+          "note_basis": "静态阅读",
+          "outcome_basis": "来源事实",
+          "trusted_contexts_5": "failed x5"
+        },
+        {
+          "checks_card_observables": "yes (settled vs moving history)",
+          "failure_kind": "value_assertion",
+          "file": "evas/tests/test_cross_right_limit.py",
+          "first_assertion_note": "first assertion expects [0, 3] from the timer + cross records; with the IR33 initial record the list gains a leading entry (static reading)",
+          "method": "CrossRightWindow.test_settled_history_is_a_plateau_but_a_moving_one_is_not",
+          "note_basis": "静态阅读",
+          "outcome_basis": "来源事实",
+          "trusted_contexts_5": "failed x5"
+        }
+      ],
+      "family": "batch-2 item 0 (controller 2026-10-28; public issue #281; defect: IR33 regression from 0097ef90)",
+      "first30_status": "no first-30 reference uses the defective form after the slot-27 switch to one direct assignment per crossing; the defect is silent, so candidates using comparison ladders in cross bodies get wrong waveforms",
+      "gap": "Since 0097ef90 (inside #243) cross-triggered bodies read comparisons at tau (g(tau)=0) with no diagnostic; the documented tau+ rule and its certificates are not applied (bisect: last good 2a790344, first bad first-parent 5ab52780). Tests are linked through case:cross-event-body-right-limit-python and case:cross-event-body-right-limit-rust; calibration and execution evidence are pending and the links confer no support.",
+      "id": "requirement:cross-event-body-right-limit",
+      "implementation": "batch 2, first item (before NF-12b)",
+      "independent_answers": [
+        {
+          "agreement": {
+            "c_direction": {
+              "right_limit == receipt expected": true,
+              "value_at_tau == EVAS got": true
+            },
+            "f_or2_ternary": {
+              "right_limit == receipt expected": true,
+              "value_at_tau == EVAS got": true
+            },
+            "f_or3_ifelse": {
+              "right_limit == receipt expected": true,
+              "value_at_tau == EVAS got": true
+            },
+            "f_or3_ternary": {
+              "right_limit == receipt expected": true,
+              "value_at_tau == EVAS got": true
+            },
+            "f_single_ge": {
+              "right_limit == receipt expected": true,
+              "value_at_tau == EVAS got": true
+            },
+            "f_single_ge_dir": {
+              "right_limit == receipt expected": true,
+              "value_at_tau == EVAS got": true
+            },
+            "f_single_real": {
+              "right_limit == receipt expected": true,
+              "value_at_tau == EVAS got": true
+            },
+            "r_or2_gt": {
+              "right_limit == receipt expected": true,
+              "value_at_tau == EVAS got": true
+            },
+            "s_timer_or": {
+              "right_limit == receipt expected": true,
+              "value_at_tau == EVAS got": true
+            },
+            "s_while": {
+              "right_limit == receipt expected": true,
+              "value_at_tau == EVAS got": null
+            }
+          },
+          "answer_file": "answers/b2_right_limit.json",
+          "answer_sha256": "b895b4bd287e6aa126e96d07b327d9a3667897d511b38e8d791796601b128c61",
+          "basis": "已执行验证",
+          "method": "exact event-level evaluation of the ten cases/ benches (binary64 corners as exact rationals); post-root sign from the leaving PWL segment",
+          "note": "right_limit equals every case's expected value; value_at_tau reproduces every EVAS result on d6b7543f, i.e. the observed outputs are exactly the g(tau)=0 reading",
+          "script": "scripts/b2_right_limit.py",
+          "script_sha256": "3b20fb644b40f9e233693ea1903267af9913ac7c36d37f27b265f66e0b2d9b51",
+          "test": "probe_cases_right_limit",
+          "values": {
+            "c_direction": {
+              "receipt_expected": {
+                "1.0u": 3,
+                "1.5u": 2,
+                "2.5u": 1
+              },
+              "receipt_got": {
+                "1.0u": 3.0,
+                "1.5u": 2.0,
+                "2.5u": 1.0
+              },
+              "right_limit": {
+                "1.0u": 3,
+                "1.5u": 2,
+                "2.5u": 1
+              },
+              "value_at_tau": {
+                "1.0u": 3,
+                "1.5u": 2,
+                "2.5u": 1
+              }
+            },
+            "f_or2_ternary": {
+              "receipt_expected": {
+                "1.0u": 3,
+                "1.5u": 2,
+                "2.5u": 1
+              },
+              "receipt_got": {
+                "1.0u": 3.0,
+                "1.5u": 3.0,
+                "2.5u": 2.0
+              },
+              "right_limit": {
+                "1.0u": 3,
+                "1.5u": 2,
+                "2.5u": 1
+              },
+              "value_at_tau": {
+                "1.0u": 3,
+                "1.5u": 3,
+                "2.5u": 2
+              }
+            },
+            "f_or3_ifelse": {
+              "receipt_expected": {
+                "1.0u": 3,
+                "1.5u": 2,
+                "2.5u": 1
+              },
+              "receipt_got": {
+                "1.0u": 3.0,
+                "1.5u": 3.0,
+                "2.5u": 2.0
+              },
+              "right_limit": {
+                "1.0u": 3,
+                "1.5u": 2,
+                "2.5u": 1
+              },
+              "value_at_tau": {
+                "1.0u": 3,
+                "1.5u": 3,
+                "2.5u": 2
+              }
+            },
+            "f_or3_ternary": {
+              "receipt_expected": {
+                "1.0u": 3,
+                "1.5u": 2,
+                "2.5u": 1
+              },
+              "receipt_got": {
+                "1.0u": 3.0,
+                "1.5u": 3.0,
+                "2.5u": 2.0
+              },
+              "right_limit": {
+                "1.0u": 3,
+                "1.5u": 2,
+                "2.5u": 1
+              },
+              "value_at_tau": {
+                "1.0u": 3,
+                "1.5u": 3,
+                "2.5u": 2
+              }
+            },
+            "f_single_ge": {
+              "receipt_expected": {
+                "1.0u": 2,
+                "1.5u": 2,
+                "2.5u": 1
+              },
+              "receipt_got": {
+                "1.0u": 2.0,
+                "1.5u": 2.0,
+                "2.5u": 2.0
+              },
+              "right_limit": {
+                "1.0u": 2,
+                "1.5u": 2,
+                "2.5u": 1
+              },
+              "value_at_tau": {
+                "1.0u": 2,
+                "1.5u": 2,
+                "2.5u": 2
+              }
+            },
+            "f_single_ge_dir": {
+              "receipt_expected": {
+                "1.0u": 2,
+                "1.5u": 2,
+                "2.5u": 1
+              },
+              "receipt_got": {
+                "1.0u": 2.0,
+                "1.5u": 2.0,
+                "2.5u": 2.0
+              },
+              "right_limit": {
+                "1.0u": 2,
+                "1.5u": 2,
+                "2.5u": 1
+              },
+              "value_at_tau": {
+                "1.0u": 2,
+                "1.5u": 2,
+                "2.5u": 2
+              }
+            },
+            "f_single_real": {
+              "receipt_expected": {
+                "1.0u": 2,
+                "1.5u": 2,
+                "2.5u": 1
+              },
+              "receipt_got": {
+                "1.0u": 2.0,
+                "1.5u": 2.0,
+                "2.5u": 2.0
+              },
+              "right_limit": {
+                "1.0u": 2,
+                "1.5u": 2,
+                "2.5u": 1
+              },
+              "value_at_tau": {
+                "1.0u": 2,
+                "1.5u": 2,
+                "2.5u": 2
+              }
+            },
+            "r_or2_gt": {
+              "receipt_expected": {
+                "1.0u": 1,
+                "1.5u": 2,
+                "2.5u": 3
+              },
+              "receipt_got": {
+                "1.0u": 1.0,
+                "1.5u": 1.0,
+                "2.5u": 2.0
+              },
+              "right_limit": {
+                "1.0u": 1,
+                "1.5u": 2,
+                "2.5u": 3
+              },
+              "value_at_tau": {
+                "1.0u": 1,
+                "1.5u": 1,
+                "2.5u": 2
+              }
+            },
+            "s_timer_or": {
+              "receipt_expected": {
+                "1.0u": 2,
+                "1.6u": 2,
+                "1.8u": 1,
+                "2.4u": 1,
+                "2.6u": 1
+              },
+              "receipt_got": {
+                "1.0u": 2.0,
+                "1.6u": 2.0,
+                "1.8u": 2.0,
+                "2.4u": 2.0,
+                "2.6u": 1.0
+              },
+              "right_limit": {
+                "1.0u": 2,
+                "1.6u": 2,
+                "1.8u": 1,
+                "2.4u": 1,
+                "2.6u": 1
+              },
+              "value_at_tau": {
+                "1.0u": 2,
+                "1.6u": 2,
+                "1.8u": 2,
+                "2.4u": 2,
+                "2.6u": 1
+              }
+            },
+            "s_while": {
+              "receipt_expected": {
+                "1.0u": 5,
+                "2.5u": 0
+              },
+              "receipt_got": null,
+              "right_limit": {
+                "1.0u": 5,
+                "2.5u": 0
+              },
+              "value_at_tau": {
+                "1.0u": 5,
+                "2.5u": 7
+              }
+            }
+          }
+        },
+        {
+          "answer_file": "answers/b2_right_limit.json",
+          "answer_sha256": "b895b4bd287e6aa126e96d07b327d9a3667897d511b38e8d791796601b128c61",
+          "basis": "已执行验证",
+          "script": "scripts/b2_right_limit.py",
+          "script_sha256": "3b20fb644b40f9e233693ea1903267af9913ac7c36d37f27b265f66e0b2d9b51",
+          "test": "exact_crossing_times",
+          "values": {
+            "falling 3->1 over [1us,2us]": {
+              "0.5 V": "never (minimum 1 V)",
+              "1.5 V": "33056565380087515/18889465931478580854784 s (1.75*fl(1e-6))",
+              "2.5 V": "23611832414348225/18889465931478580854784 s (1.25*fl(1e-6))"
+            },
+            "timer(0.5e-6, 1e-6)": "fl(0.5e-6) + k*fl(1e-6): never equal to a crossing"
+          }
+        },
+        {
+          "answer_file": "answers/b2_right_limit.json",
+          "answer_sha256": "b895b4bd287e6aa126e96d07b327d9a3667897d511b38e8d791796601b128c61",
+          "basis": "已执行验证",
+          "script": "scripts/b2_right_limit.py",
+          "script_sha256": "3b20fb644b40f9e233693ea1903267af9913ac7c36d37f27b265f66e0b2d9b51",
+          "test": "restored_test_expectations",
+          "values": {
+            "R1 test_fired_guard_predicate_sees_crossing_side, rising if(V(u)>0.5) q=2; else q=3": {
+              "IR33 record format": "events: initial_step (q=0, p=0), then cross at 0.5 with after=[2, 0]; states at [0,.25,.75,1] = [[0,0],[0,0],[2,0],[2,0]]",
+              "q": 2,
+              "right_limit_u>0.5": true,
+              "value_0097ef90_expects": 3
+            },
+            "R2 test_floor_argument_on_an_integer_needs_its_bin_after_tau, w=DOWN": {
+              "2*w(tau)": "1",
+              "expected": "KernelError event_condition (floor argument exactly integral at tau with falling input: no certificate)",
+              "q assigned (tau value)": 1,
+              "q<1 at tau+ would be": true,
+              "value_0097ef90_expects": "[0, 3]",
+              "w slope after tau": -1
+            },
+            "R3 same method, w=UP": {
+              "IR33 record format": "[0, 3] (initial record + cross); semantic value unchanged",
+              "bin over the right window": 1,
+              "p": 3,
+              "q<1": false,
+              "w slope after tau": 1
+            },
+            "tau": "1/2"
+          }
+        },
+        {
+          "basis": "来源事实",
+          "file_sha256_0097ef90_and_d6b7543f": "678597388cb60cb7baf1674a726cf15ec694d3cfc98f25f0cbd15fa5c0d7007f",
+          "file_sha256_2a790344": "3d5fb66aeede7f0ee8e53da80a91489b9763d6354a87b761cfd5528c6b22e3bb",
+          "method": "the 2a790344 version of test_cross_right_limit.py decides every branch by hand from the ramp directions (docstring); 15/15 passed on 2a790344 (CI 40114724924)",
+          "test": "test_file_answers"
+        }
+      ],
+      "kind": "requirement",
+      "language_profile": "evas-va-2.4-plus-2023-v1",
+      "lrm_basis": {
+        "basis": [
+          {
+            "basis": "已执行验证",
+            "text": "Clause numbers and quotes checked in both local extracts (scripts/lrm_verify.py, tmp/q281.json): same wording in 2.4 and 2023."
+          },
+          {
+            "basis": "静态阅读",
+            "text": "Reading: a cross-triggered body runs after the crossing, so a comparison that is exactly zero at the root takes the post-crossing side; the LRM gives no rule for an exactly constant (plateau) difference beyond its value."
+          }
+        ],
+        "legal": true
+      },
+      "lrm_citations": {
+        "2.4": [
+          {
+            "clause": "5.10.3.1",
+            "pdf_page": 137,
+            "use": "sentence continues on the next page"
+          },
+          {
+            "clause": "5.10.3.1",
+            "pdf_page": 138,
+            "use": "the body observes the post-crossing side within the tolerance box"
+          },
+          {
+            "clause": "5.10.3.3",
+            "pdf_page": 140,
+            "use": "introduces timer events; scheduling within time_tol is the next entry"
+          },
+          {
+            "clause": "5.10.1",
+            "pdf_page": 135
+          },
+          {
+            "clause": "4.2.12",
+            "pdf_page": 74
+          },
+          {
+            "clause": "5.8.1",
+            "pdf_page": 129
+          },
+          {
+            "clause": "5.9.1",
+            "pdf_page": 131
+          },
+          {
+            "clause": "5.10.3.3",
+            "pdf_page": 140,
+            "use": "timer events are scheduled within time_tol, not at an exact instant"
+          },
+          {
+            "clause": "5.10.3.3",
+            "pdf_page": 140
+          },
+          {
+            "clause": "5.10.3.2",
+            "pdf_page": 139,
+            "use": "no cross event at t=0"
+          }
+        ],
+        "2023": [
+          {
+            "clause": "5.10.3.1",
+            "pdf_page": 139
+          },
+          {
+            "clause": "5.10.3.1",
+            "pdf_page": 140
+          },
+          {
+            "clause": "5.10.3.3",
+            "pdf_page": 142,
+            "use": "introduces timer events; scheduling within time_tol is the next entry"
+          },
+          {
+            "clause": "5.10.1",
+            "pdf_page": 137
+          },
+          {
+            "clause": "4.2.12",
+            "pdf_page": 72
+          },
+          {
+            "clause": "5.8.1",
+            "pdf_page": 131
+          },
+          {
+            "clause": "5.9.1",
+            "pdf_page": 133
+          },
+          {
+            "clause": "5.10.3.3",
+            "pdf_page": 142,
+            "use": "timer events are scheduled within time_tol, not at an exact instant"
+          },
+          {
+            "clause": "5.10.3.3",
+            "pdf_page": 142
+          },
+          {
+            "clause": "5.10.3.2",
+            "pdf_page": 141,
+            "use": "no cross event at t=0"
+          }
+        ]
+      },
+      "observables": [
+        "value written by the body after each crossing (integer or real state, then the output contribution)",
+        "refusal kind and message (kernel event_condition) when no one-sided certificate exists",
+        "event records: crossing time, kind, before/after states (IR33 record format includes the initial_step record)"
+      ],
+      "open_questions": [
+        "0097ef90 同时改变了 run()/events() 的结果格式（IR33 初始事件记录）；恢复时按新格式重写列表期望，不改语义值（R3）。",
+        "s_while 的写法前端拒绝；循环条件的负例需要用前端支持的写法（上面的 k<m 形式），请实现者先在 b0 确认可准入。",
+        "与 requirement:event-comparison-at-exact-tie（NF-12a）同原则（无证明不选支），但对象不同：NF-12a 是非根时刻的数值平局，本卡是 cross 根处恰为零的比较。",
+        "NF-05 的单调 else-if 链平衡化若用于事件体，计算顺序改变会改变哪些“恰为零的比较”被求值，进而改变拒绝集合；已在 NF-05 卡补等价条件 E8。"
+      ],
+      "probe_evas_commit": "02dee32b2c9b25f166cbd77f8a895953e004f288",
+      "proposed_tests": [
+        {
+          "currently": "13/15 red in all 5 trusted contexts; R1/R2 currently encode the defect",
+          "expected": "15/15 pass after: (R1) rising V(u)>0.5 back to q=2 with the IR33 record format; (R2) floor(2*w) falling back to event_condition; (R3) every list expectation updated for the IR33 initial_step record without changing its semantic value",
+          "kind": "red-first (existing file)",
+          "name": "restore test_cross_right_limit.py"
+        },
+        {
+          "expected": "answers/b2_right_limit.json right_limit values (e.g. f_or3_ternary 3, 2, 1; r_or2_gt 1, 2, 3; s_timer_or 2, 2, 1, 1, 1)",
+          "input": "the nine cases of cross-body-tau-defect-20261028/cases with their benches (f_single_ge, f_single_ge_dir, f_single_real, f_or2_ternary, f_or3_ternary, f_or3_ifelse, r_or2_gt, s_timer_or, c_direction control)",
+          "kind": "red-first (new)",
+          "name": "test_cross_body_probe_cases"
+        },
+        {
+          "expected": "(a) the cross block reads tau+: q=3, p=1; (b) the OR body fired by its timer leaf runs at the exact time: u=0.5, q=2 (the existing UP/strict-> case gives [3])",
+          "input": "DOWN ramp (u falls through 0.5 at tau=0.5), body if (V(u)>=0.5) q=2; else q=3: (a) @(cross(V(u)-0.5,0)) block plus a separate @(timer(0.5)) p=1 block; (b) one OR body @(cross(V(u)-0.5,0) or timer(0.5))",
+          "kind": "boundary (new)",
+          "name": "test_cross_or_timer_same_instant"
+        },
+        {
+          "expected": "falling: m=0, c=0; rising: m=1, c=7",
+          "input": "front-end-supported form: m=(V(code)>=1.5)?1:0; k=0; while (k<m) begin c=7; k=k+1; end (integer trip bound 1); falling and rising benches",
+          "kind": "red-first (new)",
+          "name": "test_cross_loop_condition_right_limit",
+          "note": "cases/s_while (while (k<1 && V(code)>=1.5)) is refused by the front end ('while loop needs an integer trip-count bound <= 64 proven from integer state invariants'); confirm admission of this form on b0 before adding"
+        },
+        {
+          "evidence": "review r1 B2-SP-01: completes with p=3 on 2a790344 and d6b7543f (r1b_mixed_or_history)",
+          "expected": "p=3: the timer leaf fires, the OR body runs at the exact time (events.md:1835-1836), y(0.5)=1/2 and the strict > is false",
+          "input": "q set to 1 by timer(0.25); y=transition(q,0,0.5,0.5); @(cross(V(u)-0.5,+1) or timer(0.5)) if (V(y)>0.5) p=2; else p=3; u=t",
+          "kind": "positive (new; replaces the r1 negative)",
+          "name": "test_cross_or_timer_moving_history_uses_point_value"
+        },
+        {
+          "evidence": "review r1: 2a790344 returns event_condition; d6b7543f completes (r1b_mixed_separate_history), i.e. the #281 defect",
+          "expected": "kernel event_condition (mixed batch: the cross body may not read an operator column without a certificate)",
+          "input": "same q, y and u; @(timer(0.5)) r=1; and a separate @(cross(V(u)-0.5,+1)) if (V(y)>0.5) p=2; else p=3; y is moving and exactly at the threshold at tau; no certificate",
+          "kind": "negative (red-first on d6b7543f)",
+          "name": "test_separate_timer_block_and_cross_block_refuse_moving_history"
+        },
+        {
+          "expected": "leaf-side certificate honoured; no history window reads; exhaustion reported as a budget error, not a missing certificate",
+          "input": "the fired-leaf and history cases routed through a paid history context (history/forcing owner)",
+          "kind": "negative (new)",
+          "name": "test_paid_context_installs_leaf_side_only",
+          "note": "the implementer chooses the construction that forces the paid path"
+        },
+        {
+          "expected": "kernel event_condition; identical arms continue",
+          "input": "root at stop; latched q=V(u); if (q>0.5); floor(2*w) falling; moving history with strict >",
+          "kind": "negative (existing + new)",
+          "name": "test_no_certificate_refuses"
+        }
+      ],
+      "required_boundaries": [
+        "root at stop: the event exists under the arrival convention; refuse unless arms identical",
+        "plateau exactly at threshold (event fired at plateau entry under the arrival convention): >= true, > false",
+        "PWL knot at the threshold (ordinary crossing or arrival): leaving segment decides",
+        "touch and turn back (event fired at the touch under the arrival convention): u>=0.5 false",
+        "window enclosure [0, e]: >= decided, > refused",
+        "initial value exactly at the threshold: no event at t=0 (LRM 5.10.3.2); leaving the zero later does not fire (arrival convention)"
+      ],
+      "review": "pending",
+      "review_r1_disposition": {
+        "B2_SP_01": "OR case turned into a point-value positive (p=3); new negative with separate timer and cross blocks",
+        "B2_ST_01": "arrival convention added as implementation_choice[0] and bound to the zero boundaries; t=0 kept as LRM-mandated; tau+ for ordinary crossings unchanged",
+        "B2_ST_02": "exact timer reading moved to implementation_choice[1]; lrm_mandated now states scheduling within time_tol (5.10.3.3)",
+        "restoration_note": "test_cross_right_limit restoration stays R1 (rising q=3 back to q=2), R2 (only the falling floor(2*w) back to event_condition), R3 (record-format updates only; the four floor(3*w) values and the rising floor(2*w) keep their values); EVAS submits the signoff requests after this card passes the incremental review"
+      },
+      "revision_history": [
+        {
+          "by": "standard line (claude-opus-5-5), 2026-10-28",
+          "change": "r1 B2-ST-01, B2-ST-02, B2-SP-01: arrival convention labelled and bound; timer scheduling within time_tol; OR case positive, separate-block negative",
+          "from_sha256": "69e8118e16fe07447ee35b6b609f25fa8235e32bea2d7b718cb70102475a213c",
+          "from_version": "1",
+          "source": "batch-2 card review r1 (night-coordination/batch2-cards-astra-r1-20261028/review-report.json, sha256 5d972cd3...)",
+          "to_version": "2"
+        }
+      ],
+      "scope": "Bodies of events triggered by cross leaves (single or OR'ed, with or without timer leaves) whose conditions, ternaries, if/else chains or loop conditions compare a quantity that is exactly zero at the crossing root tau (the crossing signal itself, a same-zero-set expression, a coincident unfired input, latched reads, floor arguments, histories).",
+      "source_locations": [
+        "5.10.3.1",
+        "5.10.3.3",
+        "5.10.1",
+        "4.2.12",
+        "5.8.1",
+        "5.9.1",
+        "5.10.3.2"
+      ],
+      "status": "pending",
+      "title_zh": "cross 事件体内比较的根后右极限：在穿越根 tau 恰为零的比较取 tau+，无证书则拒绝（#281）",
+      "version": "2",
+      "voltage_domain": {
+        "applicable": true,
+        "basis": "静态阅读",
+        "premise": "triggering signals are PWL sources (exact rational corners) or same-zero-set expressions of them; histories enter only through the documented history window"
+      }
+    },
+    {
+      "dependencies": [
+        {
+          "id": "source:cross-right-limit-tests",
+          "sha256": "9eb9e41ccc45aa245da15e63eb5c904fc1dd44048ffe5b1beb85df63af61e4db",
+          "version": "1"
+        },
+        {
+          "id": "source:cross-body-right-limit-cases-tests",
+          "sha256": "9059416bf0d8d23d61817d4bf42074bb1c2a3ea2c0cc6dc9ed21eb70c8c302b9",
+          "version": "1"
+        },
+        {
+          "id": "source:procedure-right-limit-tests",
+          "sha256": "b7832961d8ff437cd81cc46df542728a64ebfcf2e9915ba7c33594e42ad860e2",
+          "version": "1"
+        }
+      ],
+      "gap": "The assertions are written in the bound test modules. The Rust assertions live in kernel sources and are located only through the native listing. No checker-definition, calibration or review is bound.",
+      "id": "checker:cross-event-body-right-limit",
+      "kind": "checker",
+      "review": "pending",
+      "scope": "Batch 2 #281: comparisons in cross event bodies at the right limit tau+: assertions and their independent answers",
+      "status": "pending",
+      "version": "1"
+    },
+    {
+      "dependencies": [
+        {
+          "id": "requirement:cross-event-body-right-limit",
+          "sha256": "4ba3ffa2012f92fb93a614b18f330d81c443c4be44fe10723c8bec421002a50a",
+          "version": "2"
+        },
+        {
+          "id": "checker:cross-event-body-right-limit",
+          "sha256": "f63b283635d4f8a4da171ad77ff3d0509d0dba81131b185af494e8627dc5e93d",
+          "version": "1"
+        },
+        {
+          "id": "source:target-scope",
+          "sha256": "bbc16ec9f813042a44b714014359fef63bbf28e2c43a113f4aa5868bcd0264cc",
+          "version": "1"
+        }
+      ],
+      "gap": "Test links for review. No case-inputs, execution, analysis or review is bound, so this case confers no support.",
+      "id": "case:cross-event-body-right-limit-python",
+      "kind": "case",
+      "requirements": [
+        {
+          "id": "requirement:cross-event-body-right-limit",
+          "sha256": "4ba3ffa2012f92fb93a614b18f330d81c443c4be44fe10723c8bec421002a50a",
+          "version": "2"
+        }
+      ],
+      "review": "pending",
+      "scope": "Batch 2 #281: comparisons in cross event bodies at the right limit tau+ (Python tests)",
+      "status": "pending",
+      "test_scope": [
+        {
+          "module": "evas/tests/test_cross_right_limit.py",
+          "namespace": "python-regression"
+        },
+        {
+          "module": "evas/tests/test_cross_body_right_limit_cases.py",
+          "namespace": "python-regression"
+        }
+      ],
+      "tests": [
+        {
+          "module": "evas/tests/test_cross_right_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_cross_right_limit.CrossRightLimit.test_arrival_at_stop_has_no_right_limit"
+        },
+        {
+          "module": "evas/tests/test_cross_right_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_cross_right_limit.CrossRightLimit.test_coincident_unfired_input_uses_its_right_slope"
+        },
+        {
+          "module": "evas/tests/test_cross_right_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_cross_right_limit.CrossRightLimit.test_fired_guard_predicate_sees_crossing_side"
+        },
+        {
+          "module": "evas/tests/test_cross_right_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_cross_right_limit.CrossRightLimit.test_knot_at_the_threshold_takes_the_leaving_segment_side"
+        },
+        {
+          "module": "evas/tests/test_cross_right_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_cross_right_limit.CrossRightLimit.test_latched_crossing_value_needs_a_side_certificate"
+        },
+        {
+          "module": "evas/tests/test_cross_right_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_cross_right_limit.CrossRightLimit.test_negated_scale_on_a_falling_crossing"
+        },
+        {
+          "module": "evas/tests/test_cross_right_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_cross_right_limit.CrossRightLimit.test_negative_controls_keep_value_without_side_certificate"
+        },
+        {
+          "module": "evas/tests/test_cross_right_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_cross_right_limit.CrossRightLimit.test_or_leaves_with_opposite_simultaneous_crossings"
+        },
+        {
+          "module": "evas/tests/test_cross_right_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_cross_right_limit.CrossRightLimit.test_state_dependent_guard_reads_its_side"
+        },
+        {
+          "module": "evas/tests/test_cross_right_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_cross_right_limit.CrossRightLimit.test_unrelated_simultaneous_timer_keeps_the_crossing_side"
+        },
+        {
+          "module": "evas/tests/test_cross_right_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_cross_right_limit.CrossRightWindow.test_constant_inputs_keep_an_exact_root_tie"
+        },
+        {
+          "module": "evas/tests/test_cross_right_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_cross_right_limit.CrossRightWindow.test_floor_argument_on_an_integer_needs_its_bin_after_tau"
+        },
+        {
+          "module": "evas/tests/test_cross_right_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_cross_right_limit.CrossRightWindow.test_floor_inside_one_bin_is_a_plateau"
+        },
+        {
+          "module": "evas/tests/test_cross_right_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_cross_right_limit.CrossRightWindow.test_latched_input_cancels_exactly"
+        },
+        {
+          "module": "evas/tests/test_cross_right_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_cross_right_limit.CrossRightWindow.test_settled_history_is_a_plateau_but_a_moving_one_is_not"
+        },
+        {
+          "module": "evas/tests/test_cross_body_right_limit_cases.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_cross_body_right_limit_cases.BodyForms.test_else_if_chain_on_both_directions"
+        },
+        {
+          "module": "evas/tests/test_cross_body_right_limit_cases.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_cross_body_right_limit_cases.BodyForms.test_integer_and_real_ternary_targets_read_the_post_root_side"
+        },
+        {
+          "module": "evas/tests/test_cross_body_right_limit_cases.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_cross_body_right_limit_cases.BodyForms.test_loop_condition_uses_the_same_rule"
+        },
+        {
+          "module": "evas/tests/test_cross_body_right_limit_cases.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_cross_body_right_limit_cases.KernelUnitFixture.test_kernel_unit_fixture_matches_the_front_end"
+        },
+        {
+          "module": "evas/tests/test_cross_body_right_limit_cases.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_cross_body_right_limit_cases.MovingHistory.test_cross_or_timer_moving_history_uses_point_value"
+        },
+        {
+          "module": "evas/tests/test_cross_body_right_limit_cases.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_cross_body_right_limit_cases.MovingHistory.test_separate_timer_block_and_cross_block_refuse_moving_history"
+        },
+        {
+          "module": "evas/tests/test_cross_body_right_limit_cases.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_cross_body_right_limit_cases.NoCertificate.test_identical_arms_continue_without_a_side"
+        },
+        {
+          "module": "evas/tests/test_cross_body_right_limit_cases.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_cross_body_right_limit_cases.NoCertificate.test_refusals_without_a_one_sided_certificate"
+        },
+        {
+          "module": "evas/tests/test_cross_body_right_limit_cases.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_cross_body_right_limit_cases.ProbeCases.test_cross_or_an_unrelated_timer"
+        },
+        {
+          "module": "evas/tests/test_cross_body_right_limit_cases.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_cross_body_right_limit_cases.ProbeCases.test_direct_assignment_control"
+        },
+        {
+          "module": "evas/tests/test_cross_body_right_limit_cases.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_cross_body_right_limit_cases.ProbeCases.test_rising_crossings_with_strict_comparisons"
+        },
+        {
+          "module": "evas/tests/test_cross_body_right_limit_cases.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_cross_body_right_limit_cases.ProbeCases.test_single_falling_only_leaf"
+        },
+        {
+          "module": "evas/tests/test_cross_body_right_limit_cases.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_cross_body_right_limit_cases.ProbeCases.test_single_leaf_integer_target"
+        },
+        {
+          "module": "evas/tests/test_cross_body_right_limit_cases.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_cross_body_right_limit_cases.ProbeCases.test_single_leaf_real_target"
+        },
+        {
+          "module": "evas/tests/test_cross_body_right_limit_cases.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_cross_body_right_limit_cases.ProbeCases.test_three_or_leaves_with_a_ternary_ladder"
+        },
+        {
+          "module": "evas/tests/test_cross_body_right_limit_cases.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_cross_body_right_limit_cases.ProbeCases.test_three_or_leaves_with_an_if_else_ladder"
+        },
+        {
+          "module": "evas/tests/test_cross_body_right_limit_cases.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_cross_body_right_limit_cases.ProbeCases.test_two_or_leaves_with_a_ternary_ladder"
+        },
+        {
+          "module": "evas/tests/test_cross_body_right_limit_cases.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_cross_body_right_limit_cases.SameInstantTimers.test_separate_timer_block_and_or_timer_leaf"
+        },
+        {
+          "module": "evas/tests/test_event_conditions.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_event_conditions.ConditionalEvents.test_cross_selects_at_actual_event_time"
+        },
+        {
+          "module": "evas/tests/test_event_or.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_event_or.EventOrContracts.test_simultaneous_clock_reset_obeys_source_comparison_after_exact_root"
+        },
+        {
+          "module": "evas/tests/test_event_window_sampling.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_event_window_sampling.EventWindowSamplingContracts.test_matching_fired_guard_proves_equality_at_the_actual_root"
+        },
+        {
+          "module": "evas/tests/test_floor_rn_contract.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_floor_rn_contract.FloorRNOracle.test_actual_exact_root_sample"
+        },
+        {
+          "module": "evas/tests/test_passive_events.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_passive_events.PassiveEvents.test_condition_at_exact_cross_root_keeps_strict_comparison"
+        },
+        {
+          "module": "evas/tests/test_source_shape.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_source_shape.SourceShapeContracts.test_equivalent_shape_keeps_internal_affine_root_sample_and_strict_tie"
+        },
+        {
+          "module": "evas/tests/test_compact_physical_select.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_compact_physical_select.CompactPhysicalSelect.test_small_root_correlated_choice_keeps_legacy_conditional_certification"
+        }
+      ],
+      "version": "1"
+    },
+    {
+      "dependencies": [
+        {
+          "id": "requirement:cross-event-body-right-limit",
+          "sha256": "4ba3ffa2012f92fb93a614b18f330d81c443c4be44fe10723c8bec421002a50a",
+          "version": "2"
+        },
+        {
+          "id": "checker:cross-event-body-right-limit",
+          "sha256": "f63b283635d4f8a4da171ad77ff3d0509d0dba81131b185af494e8627dc5e93d",
+          "version": "1"
+        },
+        {
+          "id": "source:target-scope",
+          "sha256": "bbc16ec9f813042a44b714014359fef63bbf28e2c43a113f4aa5868bcd0264cc",
+          "version": "1"
+        }
+      ],
+      "gap": "Test links for review. No case-inputs, execution, analysis or review is bound, so this case confers no support.",
+      "id": "case:cross-event-body-right-limit-rust",
+      "kind": "case",
+      "requirements": [
+        {
+          "id": "requirement:cross-event-body-right-limit",
+          "sha256": "4ba3ffa2012f92fb93a614b18f330d81c443c4be44fe10723c8bec421002a50a",
+          "version": "2"
+        }
+      ],
+      "review": "pending",
+      "scope": "Batch 2 #281: comparisons in cross event bodies at the right limit tau+ (kernel unit tests)",
+      "status": "pending",
+      "test_scope": [
+        {
+          "module_path": "procedure::plan::right_limit::tests",
+          "namespace": "rust-tests",
+          "package": "evas-kernel",
+          "target": "evas_kernel",
+          "target_kind": "lib"
+        }
+      ],
+      "tests": [
+        {
+          "local_id": "procedure::plan::right_limit::tests::fired_guard_side_decides_an_exact_zero_without_derivatives",
+          "namespace": "rust-tests",
+          "package": "evas-kernel",
+          "target": "evas_kernel",
+          "target_kind": "lib"
+        },
+        {
+          "local_id": "procedure::plan::right_limit::tests::unfired_input_needs_its_own_derivative",
+          "namespace": "rust-tests",
+          "package": "evas-kernel",
+          "target": "evas_kernel",
+          "target_kind": "lib"
+        },
+        {
+          "local_id": "procedure::plan::right_limit::tests::identical_arms_continue_without_a_side",
+          "namespace": "rust-tests",
+          "package": "evas-kernel",
+          "target": "evas_kernel",
+          "target_kind": "lib"
+        },
+        {
+          "local_id": "procedure::plan::right_limit::tests::certificate_work_exhaustion_is_a_budget_error",
           "namespace": "rust-tests",
           "package": "evas-kernel",
           "target": "evas_kernel",

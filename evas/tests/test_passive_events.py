@@ -71,7 +71,9 @@ class PassiveEvents(unittest.TestCase):
         # the condition decidable just after the root fires: seen=1.
         result=run(p,points=[[0,.1],[1,.9]])
         self.assertEqual(final(result),[1,1,100,0])
-        self.assertEqual(len(result['transient']['events']),2)
+        # IR33 records each instance's initial_step batch at t=0 first.
+        self.assertEqual(len([e for e in result['transient']['events']
+                              if e['kind']!='initial_step']),2)
         # Negative control: a falling observed node crosses the threshold from
         # above (u(t)=0.9-0.8t, root at t=0.5), so y<0.5 just after the root
         # and the body must not fire. Cross fires in either direction here.

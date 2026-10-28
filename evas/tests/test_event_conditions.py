@@ -74,13 +74,13 @@ class ConditionalEvents(unittest.TestCase):
         text = source('if (V(u,r)>=0.5) q=2; else q=3;',
                       trigger='cross(V(u,r)-0.5,1,0.001,0.001)')
         self.assertEqual(states(execute(text, initial_records=([0], [0], 1))), [0,2,2])
-        # u(tau)=1 and RN(1+3*epsilon)=1 throughout a sufficiently
-        # small positive neighborhood. IR32 physical right-side sign does not
-        # survive this program sample boundary (ADR-006).
+        # The exact root is 1/3, where u=1. LRM 2.4 5.10.3.1 places the event
+        # after the crossing; the matching-guard certificate proves u>1 just
+        # after tau. A rounded representative cannot flip the falling side.
         text = source('if (V(u,r)>1) q=2; else q=3;',
                       trigger='cross(V(u,r)-1,1,0.001,0.001)')
         result = execute(text, points=[[0,0],[1,3]], initial_records=([0], [0], 1))
-        self.assertEqual([e['after'] for e in result['transient']['events'] if e['kind']=='cross'], [[3]])
+        self.assertEqual([e['after'] for e in result['transient']['events'] if e['kind']=='cross'], [[2]])
         text = source('if (V(u,r)>1) q=2; else q=3;',
                       trigger='cross(V(u,r)-1,-1,0.001,0.001)')
         result = execute(text, points=[[0,3],[1,0]], initial_records=([0], [0], 1))

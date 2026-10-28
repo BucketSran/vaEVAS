@@ -150,6 +150,7 @@ mod tests {
             let window = window.map(|w| RightWindow {
                 inputs: vec![w, w],
                 operators: Vec::new(),
+                procedure: None,
             });
             let _scope = PostRootSides::install(vec![(0, 1)], Vec::new(), vec![0], window);
             conditions
@@ -269,6 +270,18 @@ struct PostRoot {
     // Event bodies fired only by cross leaves in this batch; they read at tau+.
     events: Vec<usize>,
     window: Option<RightWindow>,
+    // Source-order bodies have no compiled predicates: derivative enclosures
+    // of the driven inputs over the same post-root interval, by node. None in
+    // paid contexts, which install sides and input windows only.
+    input_slopes: Option<InputSlopes>,
+}
+
+/// Driven input derivatives by node, with the driven names that let a body
+/// expand an internal node forced only by driven inputs.
+#[derive(Clone)]
+pub(crate) struct InputSlopes {
+    pub(crate) by_node: Vec<Option<I>>,
+    pub(crate) driven: Vec<String>,
 }
 
 /// Enclosures over the right window of one batch: driven inputs, and the
@@ -277,6 +290,18 @@ struct PostRoot {
 pub(crate) struct RightWindow {
     pub(crate) inputs: Vec<I>,
     pub(crate) operators: Vec<Option<I>>,
+    pub(crate) procedure: Option<ProcedureWindow>,
+}
+
+/// The same window by node for source-order bodies, which have no compiled
+/// read columns: ground and driven inputs. A body that needs another node
+/// bounds it lazily through the pre-event node provider over the window.
+#[derive(Clone)]
+pub(crate) struct ProcedureWindow {
+    pub(crate) nodes: Vec<I>,
+    pub(crate) driven: Vec<String>,
+    // Bodies of the batch; their writes exclude a node from the provider.
+    pub(crate) fired: Vec<usize>,
 }
 
 thread_local! {
@@ -300,8 +325,14 @@ impl PostRootSides {
                 slopes,
                 events,
                 window,
+                input_slopes: None,
             })
         }))
+    }
+    /// Add the input derivatives of an unpaid batch to this scope.
+    pub(crate) fn with_input_slopes(self, slopes: InputSlopes) -> Self {
+        POST_ROOT.with(|cell| cell.borrow_mut().input_slopes = Some(slopes));
+        self
     }
 }
 impl Drop for PostRootSides {
@@ -333,6 +364,25 @@ fn post_root_event(event: usize) -> bool {
 
 fn post_root_window() -> Option<RightWindow> {
     POST_ROOT.with(|cell| cell.borrow().window.clone())
+}
+
+/// Whether a source-order event body reads at the right limit tau+.
+pub(crate) fn post_root_reads(event: usize) -> bool {
+    post_root_event(event)
+}
+
+/// Node and history enclosures over the right window, for source-order bodies.
+pub(crate) fn post_root_node_window() -> Option<(ProcedureWindow, Vec<Option<I>>)> {
+    POST_ROOT.with(|cell| {
+        let cell = cell.borrow();
+        let window = cell.window.as_ref()?;
+        Some((window.procedure.clone()?, window.operators.clone()))
+    })
+}
+
+/// Input derivative enclosures by node over the post-root interval, if installed.
+pub(crate) fn post_root_input_slopes() -> Option<InputSlopes> {
+    POST_ROOT.with(|cell| cell.borrow().input_slopes.clone())
 }
 
 /// Right-window reads of one body walk. A numeric read of an unsolved node
@@ -501,7 +551,7 @@ fn window_bounds(e: &Expression, nodes: &[I], states: &[I]) -> Result<I, Error> 
     crate::event_numeric::bounds(&resolve(e, nodes, states)?, nodes, states)
 }
 
-fn side_value(side: i8) -> I {
+pub(crate) fn side_value(side: i8) -> I {
     match side {
         1 => I {
             lo: f64::MIN_POSITIVE,

@@ -107,7 +107,12 @@ impl Plan {
                 let b = values
                     .next()
                     .ok_or_else(|| invalid("missing guard right"))?;
-                if compare(guard.relation, a, b, w)? != Some(guard.value) {
+                let same = if guard.post_root {
+                    super::right_limit::recertify(guard.relation, a, b, guard.value, w)?
+                } else {
+                    compare(guard.relation, a, b, w)? == Some(guard.value)
+                };
+                if !same {
                     return Err(Error::new("event_condition",
                         "current independent node enclosure changes source-position branch execution"));
                 }
