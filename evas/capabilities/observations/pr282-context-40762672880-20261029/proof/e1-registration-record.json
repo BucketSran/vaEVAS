@@ -1,0 +1,73 @@
+{
+ "recorded_at_utc": "2026-10-28T21:30:04.552574+00:00",
+ "decision": "coordinator 2026-10-29: E1 = CI 40762672880 (frozen head 84d6b71f); E1 and baseline-PR CI on the same (new) pool; mapping by the main session; bundle/C0/baseline PR by the first free implementation slot (PR6 flow); activation by the main session",
+ "e1": {
+  "run": 40762672880,
+  "run_attempt": 1,
+  "head": "84d6b71f8fbfd19b31f1696a88cb35643b375b3d",
+  "report": "ci-40762672880/python-regression.json",
+  "report_sha256": "7cc4bd08613c01716c69d47eeb29e6e484781664a454aa1c8497b4259561c6ac",
+  "pool": "new: Linux-7.0.0-1017-azure, ImageVersion 20261026.354.1 on all four shards",
+  "context_diff_sha256": "58d2fd51bfbe18f3e9d6097e1c3317112020394c9ff9730a4df56996702a71f0"
+ },
+ "issue_280_check": {
+  "issue": "#280 open (not fixed in main)",
+  "run_attempts": 1,
+  "artifacts": [
+   "catalog-inventory",
+   "explicit-checks",
+   "fast-feedback",
+   "git-fixture-isolation",
+   "ngspice-comparison",
+   "package-macos-14-arm64-py3.12.10",
+   "package-ubuntu-24.04-x86_64-py3.10.22",
+   "python-regression-admission",
+   "python-regression-shard-0-attempt-1",
+   "python-regression-shard-1-attempt-1",
+   "python-regression-shard-2-attempt-1",
+   "python-regression-shard-3-attempt-1",
+   "python-regression-timings",
+   "rust-test-listing"
+  ],
+  "duplicate_artifact_names": [],
+  "conclusion": "single attempt and one artifact per shard and one merged report, so the by-name download cannot pick an earlier attempt for this E1"
+ },
+ "matched_old_context": {
+  "index": 4,
+  "reason": "only host-only candidate after removing criteria_id (the PR6 context)"
+ },
+ "mapping": {
+  "file": "e1-mapping.json",
+  "sha256": "2c144950169c347721566f4530fdf3dd7daeca19303855b12f3d69fdb075a477",
+  "summary_sha256": "911d9c26d38b6a98bfddfc113e3d629136922c0f0758a3cf67fc0e86c0305c79",
+  "old_obligations": 7737,
+  "e1_obligations": 7856,
+  "pairing": {
+   "identity": 7716,
+   "position-free": 6,
+   "order": 15
+  },
+  "unmapped_old": 0,
+  "outcome_changes": 0,
+  "classification": {
+   "preserved": 7737
+  },
+  "new_only": {
+   "count": 119,
+   "outcomes": {
+    "passed": 119
+   },
+   "file": "e1-new-only.json",
+   "sha256": "e53d1caccc9465523120e1ad238fd26ebc321e7e350b52676e82c1f78c9f6a79"
+  },
+  "non_identity_explained": {
+   "test_observation_evidence (18)": "test file bytes changed by batch 1 (exact effective_controls dict gains proof_work_limit), condition ids follow the file sha",
+   "test_event_writers, test_initial_static_loops, test_sample_edge_filter (1 each)": "known failing tests; the captured locals in the condition context now include the echoed proof_work_limit; same assertion and outcome"
+  },
+  "identity_with_signature_change": 6,
+  "production_replay": "accepted by production mapped_obligations (d6b7543f)",
+  "builder": "build_mapping.py",
+  "builder_sha256": "fe0072dda9637a36f825b767448003afdef4db2d137de0e4b0f1d13ef566f657"
+ },
+ "scientific_qualification": false
+}

@@ -1,0 +1,34 @@
+{
+ "run": "40762672880",
+ "e1_report_sha256": "7cc4bd08613c01716c69d47eeb29e6e484781664a454aa1c8497b4259561c6ac",
+ "main": "d6b7543fc815aaa584c886108691b6f2c01eb220",
+ "old_context_index": 4,
+ "old_obligations": 7737,
+ "e1_obligations": 7856,
+ "paired": 7737,
+ "pairing_counts": {
+  "identity": 7716,
+  "position-free": 6,
+  "order": 15
+ },
+ "unmapped_old": [],
+ "outcome_changes": [],
+ "new_only_count": 119,
+ "new_only_outcomes": {
+  "passed": 119
+ },
+ "non_identity_owners": [
+  "test_event_writers.EventWriterContracts.test_instance_order_does_not_merge_state_writers",
+  "test_initial_static_loops.InitialStaticLoops.test_legal_zero_trip_mixed_loop_matches_empty_or_body",
+  "test_observation_evidence.ObservationEvidence.test_causal_frame_keeps_distinct_physical_timer_phases",
+  "test_observation_evidence.ObservationEvidence.test_event_sample_exposes_history_error_after_amplification",
+  "test_observation_evidence.ObservationEvidence.test_implicit_history_returns_existing_enclosure_and_applies_max_step",
+  "test_observation_evidence.ObservationEvidence.test_near_zero_output_keeps_the_actual_absolute_error_enclosure",
+  "test_observation_evidence.ObservationEvidence.test_nonlinear_certificate_encloses_exact_pwl_square",
+  "test_observation_evidence.ObservationEvidence.test_optional_response_validation_preserves_old_and_rejects_invalid_bounds",
+  "test_observation_evidence.ObservationEvidence.test_phase_and_sine_bounds_remain_aligned_after_internal_node_lowering",
+  "test_observation_evidence.ObservationEvidence.test_stateless_reports_actual_controls_and_working_point_origin",
+  "test_sample_edge_filter.SampleEdgeFilter.test_periodic_sample_at_stop_preserves_transition_and_filter_history"
+ ],
+ "production_replay": "accepted by production mapped_obligations (d6b7543f)"
+}

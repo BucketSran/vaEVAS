@@ -1,0 +1,268 @@
+{
+  "run": "40762672880",
+  "report_sha256": "7cc4bd08613c01716c69d47eeb29e6e484781664a454aa1c8497b4259561c6ac",
+  "actual_host_fields": {
+    "runtime_profile": {
+      "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+      "ImageVersion": "20261026.354.1"
+    },
+    "execution_toolchain": {
+      "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+      "ImageVersion": "20261026.354.1"
+    }
+  },
+  "shard_environments": [
+    "0-of-4",
+    "1-of-4",
+    "2-of-4",
+    "3-of-4"
+  ],
+  "compare_report": {
+    "valid": true,
+    "merge_allowed": false,
+    "differences": [
+      "expected exactly one matching trusted baseline context"
+    ],
+    "host_runtime_difference": null
+  },
+  "contexts": [
+    {
+      "index": 0,
+      "differences": [
+        {
+          "path": "/collector_sha256",
+          "kind": "value",
+          "actual": "fb887b59bb92063d784dd7cb56d39ec1ec6cb5e7ef9265ab0bd39b9089fe6dc5",
+          "trusted": "ff85b2e64a3922775d95f23808cba418159e5ea97429038d4c2c9274d2580bef"
+        },
+        {
+          "path": "/criteria_id",
+          "kind": "value",
+          "actual": "9dbfb4aa2afa8a6012899b338c0b192dc273b3ab3aaa938fcad6375f1b8ccf4f",
+          "trusted": "8bb94d471fcfba2e09dc051186621fee4d782a1e4e087dd2624935d1d82aa485"
+        },
+        {
+          "path": "/runtime_profile/execution_toolchain/platform",
+          "kind": "value",
+          "actual": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+          "trusted": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39"
+        },
+        {
+          "path": "/runtime_profile/execution_toolchain/variables/ImageVersion",
+          "kind": "value",
+          "actual": "20261026.354.1",
+          "trusted": "20261023.334.3"
+        },
+        {
+          "path": "/runtime_profile/platform",
+          "kind": "value",
+          "actual": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+          "trusted": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39"
+        },
+        {
+          "path": "/runtime_profile/variables/ImageVersion",
+          "kind": "value",
+          "actual": "20261026.354.1",
+          "trusted": "20261023.334.3"
+        }
+      ],
+      "difference_paths": [
+        "/collector_sha256",
+        "/criteria_id",
+        "/runtime_profile/execution_toolchain/platform",
+        "/runtime_profile/execution_toolchain/variables/ImageVersion",
+        "/runtime_profile/platform",
+        "/runtime_profile/variables/ImageVersion"
+      ]
+    },
+    {
+      "index": 1,
+      "differences": [
+        {
+          "path": "/collector_sha256",
+          "kind": "value",
+          "actual": "fb887b59bb92063d784dd7cb56d39ec1ec6cb5e7ef9265ab0bd39b9089fe6dc5",
+          "trusted": "e48ade34c276c578c6ea092f2595b85ed3a5ad7d4d048cfe40d51ce33fdd1917"
+        },
+        {
+          "path": "/criteria_id",
+          "kind": "value",
+          "actual": "9dbfb4aa2afa8a6012899b338c0b192dc273b3ab3aaa938fcad6375f1b8ccf4f",
+          "trusted": "8bb94d471fcfba2e09dc051186621fee4d782a1e4e087dd2624935d1d82aa485"
+        },
+        {
+          "path": "/runtime_profile/execution_toolchain/platform",
+          "kind": "value",
+          "actual": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+          "trusted": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39"
+        },
+        {
+          "path": "/runtime_profile/execution_toolchain/variables/ImageVersion",
+          "kind": "value",
+          "actual": "20261026.354.1",
+          "trusted": "20261023.334.3"
+        },
+        {
+          "path": "/runtime_profile/platform",
+          "kind": "value",
+          "actual": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+          "trusted": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39"
+        },
+        {
+          "path": "/runtime_profile/variables/ImageVersion",
+          "kind": "value",
+          "actual": "20261026.354.1",
+          "trusted": "20261023.334.3"
+        }
+      ],
+      "difference_paths": [
+        "/collector_sha256",
+        "/criteria_id",
+        "/runtime_profile/execution_toolchain/platform",
+        "/runtime_profile/execution_toolchain/variables/ImageVersion",
+        "/runtime_profile/platform",
+        "/runtime_profile/variables/ImageVersion"
+      ]
+    },
+    {
+      "index": 2,
+      "differences": [
+        {
+          "path": "/collector_sha256",
+          "kind": "value",
+          "actual": "fb887b59bb92063d784dd7cb56d39ec1ec6cb5e7ef9265ab0bd39b9089fe6dc5",
+          "trusted": "e48ade34c276c578c6ea092f2595b85ed3a5ad7d4d048cfe40d51ce33fdd1917"
+        },
+        {
+          "path": "/criteria_id",
+          "kind": "value",
+          "actual": "9dbfb4aa2afa8a6012899b338c0b192dc273b3ab3aaa938fcad6375f1b8ccf4f",
+          "trusted": "f54a2eac6238fa60cd4bc71b5aa74a6717077ad2cc9a8c8b25b4c2ca2880c625"
+        },
+        {
+          "path": "/runtime_profile/execution_toolchain/platform",
+          "kind": "value",
+          "actual": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+          "trusted": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39"
+        },
+        {
+          "path": "/runtime_profile/execution_toolchain/variables/ImageVersion",
+          "kind": "value",
+          "actual": "20261026.354.1",
+          "trusted": "20261023.334.3"
+        },
+        {
+          "path": "/runtime_profile/platform",
+          "kind": "value",
+          "actual": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+          "trusted": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39"
+        },
+        {
+          "path": "/runtime_profile/variables/ImageVersion",
+          "kind": "value",
+          "actual": "20261026.354.1",
+          "trusted": "20261023.334.3"
+        }
+      ],
+      "difference_paths": [
+        "/collector_sha256",
+        "/criteria_id",
+        "/runtime_profile/execution_toolchain/platform",
+        "/runtime_profile/execution_toolchain/variables/ImageVersion",
+        "/runtime_profile/platform",
+        "/runtime_profile/variables/ImageVersion"
+      ]
+    },
+    {
+      "index": 3,
+      "differences": [
+        {
+          "path": "/collector_sha256",
+          "kind": "value",
+          "actual": "fb887b59bb92063d784dd7cb56d39ec1ec6cb5e7ef9265ab0bd39b9089fe6dc5",
+          "trusted": "e48ade34c276c578c6ea092f2595b85ed3a5ad7d4d048cfe40d51ce33fdd1917"
+        },
+        {
+          "path": "/criteria_id",
+          "kind": "value",
+          "actual": "9dbfb4aa2afa8a6012899b338c0b192dc273b3ab3aaa938fcad6375f1b8ccf4f",
+          "trusted": "145a6118739af5c1419269c4d46faae6cd666d766843d41dd38150d8da77d21b"
+        },
+        {
+          "path": "/runtime_profile/execution_toolchain/platform",
+          "kind": "value",
+          "actual": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+          "trusted": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39"
+        },
+        {
+          "path": "/runtime_profile/execution_toolchain/variables/ImageVersion",
+          "kind": "value",
+          "actual": "20261026.354.1",
+          "trusted": "20261023.334.3"
+        },
+        {
+          "path": "/runtime_profile/platform",
+          "kind": "value",
+          "actual": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+          "trusted": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39"
+        },
+        {
+          "path": "/runtime_profile/variables/ImageVersion",
+          "kind": "value",
+          "actual": "20261026.354.1",
+          "trusted": "20261023.334.3"
+        }
+      ],
+      "difference_paths": [
+        "/collector_sha256",
+        "/criteria_id",
+        "/runtime_profile/execution_toolchain/platform",
+        "/runtime_profile/execution_toolchain/variables/ImageVersion",
+        "/runtime_profile/platform",
+        "/runtime_profile/variables/ImageVersion"
+      ]
+    },
+    {
+      "index": 4,
+      "differences": [
+        {
+          "path": "/criteria_id",
+          "kind": "value",
+          "actual": "9dbfb4aa2afa8a6012899b338c0b192dc273b3ab3aaa938fcad6375f1b8ccf4f",
+          "trusted": "7d70e5b5ab69abf428a2ab06d47999ec6aa9193e1f038d5248c1c92f2f5f8400"
+        },
+        {
+          "path": "/runtime_profile/execution_toolchain/platform",
+          "kind": "value",
+          "actual": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+          "trusted": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39"
+        },
+        {
+          "path": "/runtime_profile/execution_toolchain/variables/ImageVersion",
+          "kind": "value",
+          "actual": "20261026.354.1",
+          "trusted": "20261023.334.3"
+        },
+        {
+          "path": "/runtime_profile/platform",
+          "kind": "value",
+          "actual": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+          "trusted": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39"
+        },
+        {
+          "path": "/runtime_profile/variables/ImageVersion",
+          "kind": "value",
+          "actual": "20261026.354.1",
+          "trusted": "20261023.334.3"
+        }
+      ],
+      "difference_paths": [
+        "/criteria_id",
+        "/runtime_profile/execution_toolchain/platform",
+        "/runtime_profile/execution_toolchain/variables/ImageVersion",
+        "/runtime_profile/platform",
+        "/runtime_profile/variables/ImageVersion"
+      ]
+    }
+  ]
+}
