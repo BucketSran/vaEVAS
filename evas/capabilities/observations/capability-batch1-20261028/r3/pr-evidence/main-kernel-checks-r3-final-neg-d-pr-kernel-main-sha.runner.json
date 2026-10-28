@@ -1,0 +1,69 @@
+{
+ "checks": [
+  {
+   "environment_sha256": {
+    "EVAS_TEST_BASELINE_KERNEL": "b2b671bf4ecc07683218136ed4fa8c657c897fb73b09a3fb0df6d8d9a673e2ca",
+    "EVAS_TEST_KERNEL": "b2b671bf4ecc07683218136ed4fa8c657c897fb73b09a3fb0df6d8d9a673e2ca"
+   },
+   "executed": 1,
+   "id": "test_proof_work_limit.ProofWorkLimitKernel.check_kernel_without_the_field_rejects_it_explicitly",
+   "line": 243,
+   "module": "evas/tests/test_proof_work_limit.py",
+   "module_sha256": "4bcd16e1c01be56f4f5131d0364294ca2f1376278d552b0cd83358650fa1698c",
+   "outcome": "FAIL",
+   "problems": [
+    "outcomes {\"test_proof_work_limit.ProofWorkLimitKernel.check_kernel_without_the_field_rejects_it_explicitly\": [\"FAIL\"]}"
+   ],
+   "process_returncode": 0,
+   "registered_by": [
+    "case:proof-work-limit-python@1"
+   ],
+   "seconds": 0.636
+  },
+  {
+   "environment_sha256": {
+    "EVAS_TEST_BASELINE_KERNEL": "b2b671bf4ecc07683218136ed4fa8c657c897fb73b09a3fb0df6d8d9a673e2ca",
+    "EVAS_TEST_KERNEL": "b2b671bf4ecc07683218136ed4fa8c657c897fb73b09a3fb0df6d8d9a673e2ca"
+   },
+   "executed": 1,
+   "id": "test_proof_work_limit.ProofWorkLimitKernel.check_default_request_response_equals_main_except_the_echoed_default",
+   "line": 253,
+   "module": "evas/tests/test_proof_work_limit.py",
+   "module_sha256": "4bcd16e1c01be56f4f5131d0364294ca2f1376278d552b0cd83358650fa1698c",
+   "outcome": "FAIL",
+   "problems": [
+    "outcomes {\"test_proof_work_limit.ProofWorkLimitKernel.check_default_request_response_equals_main_except_the_echoed_default\": [\"FAIL\"]}"
+   ],
+   "process_returncode": 0,
+   "registered_by": [
+    "case:proof-work-limit-python@1"
+   ],
+   "seconds": 0.345
+  }
+ ],
+ "environment_files": {
+  "EVAS_TEST_BASELINE_KERNEL": {
+   "sha256": "b2b671bf4ecc07683218136ed4fa8c657c897fb73b09a3fb0df6d8d9a673e2ca",
+   "value": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-r2-fixes-opus-20261028/r3/export/final-c3/evas/rust_core/target/release/evas-kernel"
+  },
+  "EVAS_TEST_BASELINE_SHA256": {
+   "sha256": null,
+   "value": "061c9c8e008e60864ab1606df962ef85965112290241df834aa3af808214d62b"
+  },
+  "EVAS_TEST_KERNEL": {
+   "sha256": "b2b671bf4ecc07683218136ed4fa8c657c897fb73b09a3fb0df6d8d9a673e2ca",
+   "value": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-r2-fixes-opus-20261028/r3/export/final-c3/evas/rust_core/target/release/evas-kernel"
+  }
+ },
+ "producer": "scripts/run_explicit_checks.py",
+ "python": "3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]",
+ "refused": [],
+ "required_environment": {
+  "EVAS_TEST_BASELINE_KERNEL": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-r2-fixes-opus-20261028/r3/export/final-c3/evas/rust_core/target/release/evas-kernel",
+  "EVAS_TEST_BASELINE_SHA256": "061c9c8e008e60864ab1606df962ef85965112290241df834aa3af808214d62b",
+  "EVAS_TEST_KERNEL": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-r2-fixes-opus-20261028/r3/export/final-c3/evas/rust_core/target/release/evas-kernel"
+ },
+ "schema_version": 1,
+ "start": "evas/tests",
+ "success": false
+}

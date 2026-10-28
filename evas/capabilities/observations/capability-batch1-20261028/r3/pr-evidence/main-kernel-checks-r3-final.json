@@ -1,0 +1,377 @@
+{
+ "checks": [
+  "test_proof_work_limit.ProofWorkLimitKernel.check_kernel_without_the_field_rejects_it_explicitly",
+  "test_proof_work_limit.ProofWorkLimitKernel.check_default_request_response_equals_main_except_the_echoed_default"
+ ],
+ "evidence": "one-time PR evidence for capability batch 1 (PR #282), not a CI test; final r3 rerun after the checks moved from EVAS_TEST_MAIN_KERNEL to the registered EVAS_TEST_BASELINE_KERNEL and EVAS_TEST_BASELINE_SHA256 (R1-ST-01), on the tree that also has R1-ST-02 and R1-SP-01",
+ "host": {
+  "platform": "macOS-26.3.2-arm64-arm-64bit-Mach-O",
+  "python": "3.12.13 (lint venv; CI pins 3.12.15)",
+  "rust_note": "local rustc 1.99.0; CI pins 1.99.1",
+  "simulation_slots": "at most 1 own kernel process; machine-wide evas-kernel processes counted before each run (r3/logs/kernel-slot.log)"
+ },
+ "kernels": {
+  "c8_baseline_for_negative_controls": {
+   "note": "C8_SHA of evas/tests/history_migration_contract.py",
+   "sha256": "9c8c9fdf469c7347f2b507ad231bd3a70e355d192b648fec6e6eecd25dfc6e98"
+  },
+  "main": {
+   "built_from": "git archive d6b7543fc815aaa584c886108691b6f2c01eb220 evas/src evas/rust_core",
+   "executed_only": true,
+   "profile": "release",
+   "sha256": "061c9c8e008e60864ab1606df962ef85965112290241df834aa3af808214d62b",
+   "source_check": "327 files of evas/src and evas/rust_core compared blob by blob with d6b7543f: 0 differ, 0 missing, 0 extra",
+   "variable": "EVAS_TEST_BASELINE_KERNEL"
+  },
+  "pr_built_from": "git archive of the final r3 code tree, cargo build --locked --offline",
+  "pr_debug": {
+   "profile": "dev with CARGO_PROFILE_DEV_OPT_LEVEL=1, debug assertions and overflow checks (CI)",
+   "sha256": "2bf421f7718f0922fdfd8407528b3c24c6acc70fb322749608f4cb28a908e3a9",
+   "variable": "EVAS_TEST_KERNEL"
+  },
+  "pr_release": {
+   "profile": "release",
+   "sha256": "b2b671bf4ecc07683218136ed4fa8c657c897fb73b09a3fb0df6d8d9a673e2ca",
+   "variable": "EVAS_TEST_KERNEL"
+  },
+  "toolchain": [
+   "rustc 1.99.0 (b940084d7 2026-09-28)",
+   "binary: rustc",
+   "commit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4",
+   "commit-date: 2026-09-28",
+   "host: aarch64-apple-darwin",
+   "release: 1.99.0",
+   "LLVM version: 23.1.1"
+  ]
+ },
+ "negative_controls": [
+  {
+   "EVAS_TEST_BASELINE_KERNEL": "C8 baseline kernel",
+   "EVAS_TEST_BASELINE_SHA256": "C8 SHA-256 9c8c9fdf...",
+   "case": "neg-a-c8-kernel-c8-sha",
+   "expected": "both checks fail on the identity assertions before any kernel runs",
+   "results": [
+    {
+     "environment_sha256": {
+      "EVAS_TEST_BASELINE_KERNEL": "9c8c9fdf469c7347f2b507ad231bd3a70e355d192b648fec6e6eecd25dfc6e98",
+      "EVAS_TEST_KERNEL": "b2b671bf4ecc07683218136ed4fa8c657c897fb73b09a3fb0df6d8d9a673e2ca"
+     },
+     "executed": 1,
+     "id": "test_proof_work_limit.ProofWorkLimitKernel.check_kernel_without_the_field_rejects_it_explicitly",
+     "module_sha256": "4bcd16e1c01be56f4f5131d0364294ca2f1376278d552b0cd83358650fa1698c",
+     "outcome": "FAIL",
+     "registered_by": [
+      "case:proof-work-limit-python@1"
+     ]
+    },
+    {
+     "environment_sha256": {
+      "EVAS_TEST_BASELINE_KERNEL": "9c8c9fdf469c7347f2b507ad231bd3a70e355d192b648fec6e6eecd25dfc6e98",
+      "EVAS_TEST_KERNEL": "b2b671bf4ecc07683218136ed4fa8c657c897fb73b09a3fb0df6d8d9a673e2ca"
+     },
+     "executed": 1,
+     "id": "test_proof_work_limit.ProofWorkLimitKernel.check_default_request_response_equals_main_except_the_echoed_default",
+     "module_sha256": "4bcd16e1c01be56f4f5131d0364294ca2f1376278d552b0cd83358650fa1698c",
+     "outcome": "FAIL",
+     "registered_by": [
+      "case:proof-work-limit-python@1"
+     ]
+    }
+   ],
+   "runner_recorded_kernel_sha256": {
+    "EVAS_TEST_BASELINE_KERNEL": "9c8c9fdf469c7347f2b507ad231bd3a70e355d192b648fec6e6eecd25dfc6e98",
+    "EVAS_TEST_BASELINE_SHA256": null,
+    "EVAS_TEST_KERNEL": "b2b671bf4ecc07683218136ed4fa8c657c897fb73b09a3fb0df6d8d9a673e2ca"
+   },
+   "runner_report": {
+    "file": "main-kernel-checks-r3-final-neg-a-c8-kernel-c8-sha.runner.json",
+    "sha256": "1e9a8380e3a3885e38209b76c5c82357d4ee10f31fcdfa4a463810596310bfa2"
+   },
+   "success": false
+  },
+  {
+   "EVAS_TEST_BASELINE_KERNEL": "main kernel",
+   "EVAS_TEST_BASELINE_SHA256": "64 x \"f\"",
+   "case": "neg-b-main-kernel-other-sha",
+   "expected": "both checks fail on the identity assertions before any kernel runs",
+   "results": [
+    {
+     "environment_sha256": {
+      "EVAS_TEST_BASELINE_KERNEL": "061c9c8e008e60864ab1606df962ef85965112290241df834aa3af808214d62b",
+      "EVAS_TEST_KERNEL": "b2b671bf4ecc07683218136ed4fa8c657c897fb73b09a3fb0df6d8d9a673e2ca"
+     },
+     "executed": 1,
+     "id": "test_proof_work_limit.ProofWorkLimitKernel.check_kernel_without_the_field_rejects_it_explicitly",
+     "module_sha256": "4bcd16e1c01be56f4f5131d0364294ca2f1376278d552b0cd83358650fa1698c",
+     "outcome": "FAIL",
+     "registered_by": [
+      "case:proof-work-limit-python@1"
+     ]
+    },
+    {
+     "environment_sha256": {
+      "EVAS_TEST_BASELINE_KERNEL": "061c9c8e008e60864ab1606df962ef85965112290241df834aa3af808214d62b",
+      "EVAS_TEST_KERNEL": "b2b671bf4ecc07683218136ed4fa8c657c897fb73b09a3fb0df6d8d9a673e2ca"
+     },
+     "executed": 1,
+     "id": "test_proof_work_limit.ProofWorkLimitKernel.check_default_request_response_equals_main_except_the_echoed_default",
+     "module_sha256": "4bcd16e1c01be56f4f5131d0364294ca2f1376278d552b0cd83358650fa1698c",
+     "outcome": "FAIL",
+     "registered_by": [
+      "case:proof-work-limit-python@1"
+     ]
+    }
+   ],
+   "runner_recorded_kernel_sha256": {
+    "EVAS_TEST_BASELINE_KERNEL": "061c9c8e008e60864ab1606df962ef85965112290241df834aa3af808214d62b",
+    "EVAS_TEST_BASELINE_SHA256": null,
+    "EVAS_TEST_KERNEL": "b2b671bf4ecc07683218136ed4fa8c657c897fb73b09a3fb0df6d8d9a673e2ca"
+   },
+   "runner_report": {
+    "file": "main-kernel-checks-r3-final-neg-b-main-kernel-other-sha.runner.json",
+    "sha256": "64e10c29968da3213d65a124c82be6ddc4bb36fc73c26921bacedf9d906c9d21"
+   },
+   "success": false
+  },
+  {
+   "EVAS_TEST_BASELINE_KERNEL": "C8 baseline kernel",
+   "EVAS_TEST_BASELINE_SHA256": "main SHA-256",
+   "case": "neg-c-c8-kernel-main-sha",
+   "expected": "both checks fail on the identity assertions before any kernel runs",
+   "results": [
+    {
+     "environment_sha256": {
+      "EVAS_TEST_BASELINE_KERNEL": "9c8c9fdf469c7347f2b507ad231bd3a70e355d192b648fec6e6eecd25dfc6e98",
+      "EVAS_TEST_KERNEL": "b2b671bf4ecc07683218136ed4fa8c657c897fb73b09a3fb0df6d8d9a673e2ca"
+     },
+     "executed": 1,
+     "id": "test_proof_work_limit.ProofWorkLimitKernel.check_kernel_without_the_field_rejects_it_explicitly",
+     "module_sha256": "4bcd16e1c01be56f4f5131d0364294ca2f1376278d552b0cd83358650fa1698c",
+     "outcome": "FAIL",
+     "registered_by": [
+      "case:proof-work-limit-python@1"
+     ]
+    },
+    {
+     "environment_sha256": {
+      "EVAS_TEST_BASELINE_KERNEL": "9c8c9fdf469c7347f2b507ad231bd3a70e355d192b648fec6e6eecd25dfc6e98",
+      "EVAS_TEST_KERNEL": "b2b671bf4ecc07683218136ed4fa8c657c897fb73b09a3fb0df6d8d9a673e2ca"
+     },
+     "executed": 1,
+     "id": "test_proof_work_limit.ProofWorkLimitKernel.check_default_request_response_equals_main_except_the_echoed_default",
+     "module_sha256": "4bcd16e1c01be56f4f5131d0364294ca2f1376278d552b0cd83358650fa1698c",
+     "outcome": "FAIL",
+     "registered_by": [
+      "case:proof-work-limit-python@1"
+     ]
+    }
+   ],
+   "runner_recorded_kernel_sha256": {
+    "EVAS_TEST_BASELINE_KERNEL": "9c8c9fdf469c7347f2b507ad231bd3a70e355d192b648fec6e6eecd25dfc6e98",
+    "EVAS_TEST_BASELINE_SHA256": null,
+    "EVAS_TEST_KERNEL": "b2b671bf4ecc07683218136ed4fa8c657c897fb73b09a3fb0df6d8d9a673e2ca"
+   },
+   "runner_report": {
+    "file": "main-kernel-checks-r3-final-neg-c-c8-kernel-main-sha.runner.json",
+    "sha256": "b1da60eb5b4e87e0998919b9e209df66ae8726e89d8fb976b2c30f8c1e58a911"
+   },
+   "success": false
+  },
+  {
+   "EVAS_TEST_BASELINE_KERNEL": "PR release kernel",
+   "EVAS_TEST_BASELINE_SHA256": "main SHA-256",
+   "case": "neg-d-pr-kernel-main-sha",
+   "expected": "both checks fail on the identity assertions before any kernel runs",
+   "results": [
+    {
+     "environment_sha256": {
+      "EVAS_TEST_BASELINE_KERNEL": "b2b671bf4ecc07683218136ed4fa8c657c897fb73b09a3fb0df6d8d9a673e2ca",
+      "EVAS_TEST_KERNEL": "b2b671bf4ecc07683218136ed4fa8c657c897fb73b09a3fb0df6d8d9a673e2ca"
+     },
+     "executed": 1,
+     "id": "test_proof_work_limit.ProofWorkLimitKernel.check_kernel_without_the_field_rejects_it_explicitly",
+     "module_sha256": "4bcd16e1c01be56f4f5131d0364294ca2f1376278d552b0cd83358650fa1698c",
+     "outcome": "FAIL",
+     "registered_by": [
+      "case:proof-work-limit-python@1"
+     ]
+    },
+    {
+     "environment_sha256": {
+      "EVAS_TEST_BASELINE_KERNEL": "b2b671bf4ecc07683218136ed4fa8c657c897fb73b09a3fb0df6d8d9a673e2ca",
+      "EVAS_TEST_KERNEL": "b2b671bf4ecc07683218136ed4fa8c657c897fb73b09a3fb0df6d8d9a673e2ca"
+     },
+     "executed": 1,
+     "id": "test_proof_work_limit.ProofWorkLimitKernel.check_default_request_response_equals_main_except_the_echoed_default",
+     "module_sha256": "4bcd16e1c01be56f4f5131d0364294ca2f1376278d552b0cd83358650fa1698c",
+     "outcome": "FAIL",
+     "registered_by": [
+      "case:proof-work-limit-python@1"
+     ]
+    }
+   ],
+   "runner_recorded_kernel_sha256": {
+    "EVAS_TEST_BASELINE_KERNEL": "b2b671bf4ecc07683218136ed4fa8c657c897fb73b09a3fb0df6d8d9a673e2ca",
+    "EVAS_TEST_BASELINE_SHA256": null,
+    "EVAS_TEST_KERNEL": "b2b671bf4ecc07683218136ed4fa8c657c897fb73b09a3fb0df6d8d9a673e2ca"
+   },
+   "runner_report": {
+    "file": "main-kernel-checks-r3-final-neg-d-pr-kernel-main-sha.runner.json",
+    "sha256": "004abfa2f7a993778b34c5e8b608f48ddfcd8026ed7770ff8537d38cae4b3ded"
+   },
+   "success": false
+  }
+ ],
+ "review_finding": "R1-ST-01",
+ "runs": [
+  {
+   "command": "python3 -B scripts/run_explicit_checks.py --start evas/tests --require-env EVAS_TEST_BASELINE_KERNEL --require-env EVAS_TEST_BASELINE_SHA256 --require-env EVAS_TEST_KERNEL --check <each check> --report <runner report>",
+   "end_utc": "2026-10-28T16:35:38Z",
+   "environment": {
+    "EVAS_TEST_BASELINE_KERNEL": "kernels.main",
+    "EVAS_TEST_BASELINE_SHA256": "061c9c8e008e60864ab1606df962ef85965112290241df834aa3af808214d62b",
+    "EVAS_TEST_KERNEL": "kernels.pr_release",
+    "PYTHONPATH": "evas/src of the tree"
+   },
+   "pr_kernel": "pr_release",
+   "raw_log": {
+    "file": "main-kernel-checks-r3-final-release.log",
+    "sha256": "54880bea90f657ed5015c9d0921d995d22137e5e72ac9e6f31aba0b4e77a2011"
+   },
+   "results": [
+    {
+     "environment_sha256": {
+      "EVAS_TEST_BASELINE_KERNEL": "061c9c8e008e60864ab1606df962ef85965112290241df834aa3af808214d62b",
+      "EVAS_TEST_KERNEL": "b2b671bf4ecc07683218136ed4fa8c657c897fb73b09a3fb0df6d8d9a673e2ca"
+     },
+     "executed": 1,
+     "id": "test_proof_work_limit.ProofWorkLimitKernel.check_kernel_without_the_field_rejects_it_explicitly",
+     "module_sha256": "4bcd16e1c01be56f4f5131d0364294ca2f1376278d552b0cd83358650fa1698c",
+     "outcome": "ok",
+     "registered_by": [
+      "case:proof-work-limit-python@1"
+     ]
+    },
+    {
+     "environment_sha256": {
+      "EVAS_TEST_BASELINE_KERNEL": "061c9c8e008e60864ab1606df962ef85965112290241df834aa3af808214d62b",
+      "EVAS_TEST_KERNEL": "b2b671bf4ecc07683218136ed4fa8c657c897fb73b09a3fb0df6d8d9a673e2ca"
+     },
+     "executed": 1,
+     "id": "test_proof_work_limit.ProofWorkLimitKernel.check_default_request_response_equals_main_except_the_echoed_default",
+     "module_sha256": "4bcd16e1c01be56f4f5131d0364294ca2f1376278d552b0cd83358650fa1698c",
+     "outcome": "ok",
+     "registered_by": [
+      "case:proof-work-limit-python@1"
+     ]
+    }
+   ],
+   "returncode": 0,
+   "runner_recorded_kernel_sha256": {
+    "EVAS_TEST_BASELINE_KERNEL": "061c9c8e008e60864ab1606df962ef85965112290241df834aa3af808214d62b",
+    "EVAS_TEST_BASELINE_SHA256": null,
+    "EVAS_TEST_KERNEL": "b2b671bf4ecc07683218136ed4fa8c657c897fb73b09a3fb0df6d8d9a673e2ca"
+   },
+   "runner_report": {
+    "file": "main-kernel-checks-r3-final-release.runner.json",
+    "sha256": "69920e70b3d6661a3faa5754bfb8cb19fc8ed3f30930dc1531a423956b33e976"
+   },
+   "start_utc": "2026-10-28T16:35:35Z",
+   "success": true
+  },
+  {
+   "command": "python3 -B scripts/run_explicit_checks.py --start evas/tests --require-env EVAS_TEST_BASELINE_KERNEL --require-env EVAS_TEST_BASELINE_SHA256 --require-env EVAS_TEST_KERNEL --check <each check> --report <runner report>",
+   "end_utc": "2026-10-28T16:35:40Z",
+   "environment": {
+    "EVAS_TEST_BASELINE_KERNEL": "kernels.main",
+    "EVAS_TEST_BASELINE_SHA256": "061c9c8e008e60864ab1606df962ef85965112290241df834aa3af808214d62b",
+    "EVAS_TEST_KERNEL": "kernels.pr_debug",
+    "PYTHONPATH": "evas/src of the tree"
+   },
+   "pr_kernel": "pr_debug",
+   "raw_log": {
+    "file": "main-kernel-checks-r3-final-debug.log",
+    "sha256": "9491db79fbaf32eb201392c3be29065a52b8f36a7a6f4dc8b904299f95e12038"
+   },
+   "results": [
+    {
+     "environment_sha256": {
+      "EVAS_TEST_BASELINE_KERNEL": "061c9c8e008e60864ab1606df962ef85965112290241df834aa3af808214d62b",
+      "EVAS_TEST_KERNEL": "2bf421f7718f0922fdfd8407528b3c24c6acc70fb322749608f4cb28a908e3a9"
+     },
+     "executed": 1,
+     "id": "test_proof_work_limit.ProofWorkLimitKernel.check_kernel_without_the_field_rejects_it_explicitly",
+     "module_sha256": "4bcd16e1c01be56f4f5131d0364294ca2f1376278d552b0cd83358650fa1698c",
+     "outcome": "ok",
+     "registered_by": [
+      "case:proof-work-limit-python@1"
+     ]
+    },
+    {
+     "environment_sha256": {
+      "EVAS_TEST_BASELINE_KERNEL": "061c9c8e008e60864ab1606df962ef85965112290241df834aa3af808214d62b",
+      "EVAS_TEST_KERNEL": "2bf421f7718f0922fdfd8407528b3c24c6acc70fb322749608f4cb28a908e3a9"
+     },
+     "executed": 1,
+     "id": "test_proof_work_limit.ProofWorkLimitKernel.check_default_request_response_equals_main_except_the_echoed_default",
+     "module_sha256": "4bcd16e1c01be56f4f5131d0364294ca2f1376278d552b0cd83358650fa1698c",
+     "outcome": "ok",
+     "registered_by": [
+      "case:proof-work-limit-python@1"
+     ]
+    }
+   ],
+   "returncode": 0,
+   "runner_recorded_kernel_sha256": {
+    "EVAS_TEST_BASELINE_KERNEL": "061c9c8e008e60864ab1606df962ef85965112290241df834aa3af808214d62b",
+    "EVAS_TEST_BASELINE_SHA256": null,
+    "EVAS_TEST_KERNEL": "2bf421f7718f0922fdfd8407528b3c24c6acc70fb322749608f4cb28a908e3a9"
+   },
+   "runner_report": {
+    "file": "main-kernel-checks-r3-final-debug.runner.json",
+    "sha256": "5733fbd0db78aef43575e89227bf1fb6c4cc7bc6075cfc538b557def1aaac834"
+   },
+   "start_utc": "2026-10-28T16:35:38Z",
+   "success": true
+  }
+ ],
+ "schema_version": 1,
+ "signoff": "SL-SO-20261028-003",
+ "supersedes": [
+  "main-kernel-checks.json (r2; archived; sha256 721cd514ba1087b5f177424ad76ba0825212f31f724419c3d8b2968653749a08)",
+  "main-kernel-checks-r3.json (intermediate r3 run on the R1-ST-01 commit alone; not archived)"
+ ],
+ "tree": {
+  "description": "eb26e5b12e1ec6b36024e972d1211aec4e288ab3 plus the three r3 code commits (R1-ST-01, R1-ST-02, R1-SP-01), before the card commit (cards do not touch these trees)",
+  "git_tree_ids": {
+   "evas/rust_core": "3e01e2a200cb61a1623a839477ad61bb873791ec",
+   "evas/src": "055ba454a1726be9e84df472cf5f3cb7ce32f319",
+   "evas/tests": "2d9b3b36c2f321eb6977c89fb01b9d8efc058ee9",
+   "scripts": "20f7c746083f363e923c3b31d0c8809e8f8279ae"
+  },
+  "module_sha256": {
+   "evas/src/evas/manifest.py": "357556fb99bb8402f99dc3124314120f7202206e509eccd7266f5a638a1c3043",
+   "evas/tests/test_affine.py": "d0f7a2df8c81139e3eaaeba7699827843163080e7c5ce0d39d9ce123558a2e9e",
+   "evas/tests/test_output_point_limit.py": "9c59429d38ebff1ab316ff0c9a6a6fdf71d15276c17b271cbff0540dcaf8b6fd",
+   "evas/tests/test_proof_work_limit.py": "4bcd16e1c01be56f4f5131d0364294ca2f1376278d552b0cd83358650fa1698c",
+   "scripts/run_explicit_checks.py": "6485eeb680e695026917f5d9b1c416c977e8e9bdd03db915ea2bb7663aa8509a",
+   "scripts/verify_explicit_checks.py": "f828e3bdb16734785967da48d733cf41dc7a7482310307ea04612e0362342187"
+  },
+  "scratch_commits": {
+   "r3-1 R1-ST-01": "1acf60123a517f3d7466243c524594504d7b91b7",
+   "r3-2 R1-ST-02": "7e6dd60683a1a4bb89dd02e8b6b0fe4954e25828",
+   "r3-3 R1-SP-01": "c68d1083dc5b6de966fae38c709792491c336b08"
+  },
+  "unchanged_from_eb26e5b1": {
+   "evas/rust_core": true,
+   "evas/src": false,
+   "evas/tests": false,
+   "scripts": false
+  }
+ },
+ "variables": {
+  "EVAS_TEST_BASELINE_KERNEL": "path of the reference kernel: here the release kernel built from main d6b7543f (the history checks use the same variable for the C8 kernel)",
+  "EVAS_TEST_BASELINE_SHA256": "must equal the SHA-256 pinned in the test, 061c9c8e...; checked against the file before and after the run",
+  "EVAS_TEST_KERNEL": "the PR kernel under test"
+ }
+}

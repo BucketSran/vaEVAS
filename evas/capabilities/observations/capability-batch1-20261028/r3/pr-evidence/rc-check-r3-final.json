@@ -1,0 +1,94 @@
+{
+ "check": "test_output_point_limit.LargeGridEndToEnd.check_rc_step_response_over_a_hundred_thousand_rows",
+ "commands": [
+  "cargo build --locked --release --manifest-path evas/rust_core/Cargo.toml",
+  "python3 -B scripts/run_explicit_checks.py --start evas/tests --require-env EVAS_TEST_KERNEL --check test_output_point_limit.LargeGridEndToEnd.check_rc_step_response_over_a_hundred_thousand_rows --report runs/explicit-checks.json",
+  "python3 -B scripts/verify_explicit_checks.py --report runs/explicit-checks.json --check test_output_point_limit.LargeGridEndToEnd.check_rc_step_response_over_a_hundred_thousand_rows --require-file-env EVAS_TEST_KERNEL"
+ ],
+ "end_utc": "2026-10-28T16:38:15Z",
+ "environment": {
+  "EVAS_TEST_KERNEL": "evas/rust_core/target/release/evas-kernel",
+  "PYTHONPATH": "evas/src"
+ },
+ "evidence": "local run of the two rust-regression steps on the final r3 tree, as CI runs them: the RC check by name through scripts/run_explicit_checks.py, then scripts/verify_explicit_checks.py on its receipt",
+ "host": {
+  "platform": "macOS-26.3.2-arm64-arm-64bit-Mach-O",
+  "python": "3.12.13 (lint venv; CI pins 3.12.15)",
+  "rust_note": "local rustc 1.99.0; CI pins 1.99.1",
+  "simulation_slots": "at most 1 own kernel process; machine-wide evas-kernel processes counted before each run (r3/logs/kernel-slot.log)"
+ },
+ "pr_kernel": {
+  "built_from": "git archive of the final r3 code tree, cargo build --locked --offline",
+  "profile": "release",
+  "sha256": "b2b671bf4ecc07683218136ed4fa8c657c897fb73b09a3fb0df6d8d9a673e2ca",
+  "toolchain": [
+   "rustc 1.99.0 (b940084d7 2026-09-28)",
+   "binary: rustc",
+   "commit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4",
+   "commit-date: 2026-09-28",
+   "host: aarch64-apple-darwin",
+   "release: 1.99.0",
+   "LLVM version: 23.1.1"
+  ],
+  "variable": "EVAS_TEST_KERNEL"
+ },
+ "raw_log": {
+  "file": "rc-check-r3-final.log",
+  "sha256": "bdd8059fa9d5f884c26ae032e09f74e0a363b48dfeacec152d7c4865254ac387"
+ },
+ "results": [
+  {
+   "environment_sha256": {
+    "EVAS_TEST_KERNEL": "b2b671bf4ecc07683218136ed4fa8c657c897fb73b09a3fb0df6d8d9a673e2ca"
+   },
+   "executed": 1,
+   "id": "test_output_point_limit.LargeGridEndToEnd.check_rc_step_response_over_a_hundred_thousand_rows",
+   "module_sha256": "9c59429d38ebff1ab316ff0c9a6a6fdf71d15276c17b271cbff0540dcaf8b6fd",
+   "outcome": "ok",
+   "registered_by": [
+    "case:output-point-limit-python@1"
+   ]
+  }
+ ],
+ "returncode": 0,
+ "review_finding": "R1-ST-02",
+ "runner_recorded_kernel_sha256": {
+  "EVAS_TEST_KERNEL": "b2b671bf4ecc07683218136ed4fa8c657c897fb73b09a3fb0df6d8d9a673e2ca"
+ },
+ "runner_report": {
+  "file": "rc-check-r3-final.runner.json",
+  "sha256": "9968857281bfec3b0f3e40bc520472db88879ad7c0cccb2f92bb254ab9786a44"
+ },
+ "schema_version": 1,
+ "signoff": "SL-SO-20261028-004",
+ "start_utc": "2026-10-28T16:36:20Z",
+ "success": true,
+ "tree": {
+  "description": "eb26e5b12e1ec6b36024e972d1211aec4e288ab3 plus the three r3 code commits (R1-ST-01, R1-ST-02, R1-SP-01), before the card commit (cards do not touch these trees)",
+  "git_tree_ids": {
+   "evas/rust_core": "3e01e2a200cb61a1623a839477ad61bb873791ec",
+   "evas/src": "055ba454a1726be9e84df472cf5f3cb7ce32f319",
+   "evas/tests": "2d9b3b36c2f321eb6977c89fb01b9d8efc058ee9",
+   "scripts": "20f7c746083f363e923c3b31d0c8809e8f8279ae"
+  },
+  "module_sha256": {
+   "evas/src/evas/manifest.py": "357556fb99bb8402f99dc3124314120f7202206e509eccd7266f5a638a1c3043",
+   "evas/tests/test_affine.py": "d0f7a2df8c81139e3eaaeba7699827843163080e7c5ce0d39d9ce123558a2e9e",
+   "evas/tests/test_output_point_limit.py": "9c59429d38ebff1ab316ff0c9a6a6fdf71d15276c17b271cbff0540dcaf8b6fd",
+   "evas/tests/test_proof_work_limit.py": "4bcd16e1c01be56f4f5131d0364294ca2f1376278d552b0cd83358650fa1698c",
+   "scripts/run_explicit_checks.py": "6485eeb680e695026917f5d9b1c416c977e8e9bdd03db915ea2bb7663aa8509a",
+   "scripts/verify_explicit_checks.py": "f828e3bdb16734785967da48d733cf41dc7a7482310307ea04612e0362342187"
+  },
+  "scratch_commits": {
+   "r3-1 R1-ST-01": "1acf60123a517f3d7466243c524594504d7b91b7",
+   "r3-2 R1-ST-02": "7e6dd60683a1a4bb89dd02e8b6b0fe4954e25828",
+   "r3-3 R1-SP-01": "c68d1083dc5b6de966fae38c709792491c336b08"
+  },
+  "unchanged_from_eb26e5b1": {
+   "evas/rust_core": true,
+   "evas/src": false,
+   "evas/tests": false,
+   "scripts": false
+  }
+ }
+}

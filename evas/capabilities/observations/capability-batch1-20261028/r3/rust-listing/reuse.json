@@ -1,0 +1,20 @@
+{
+  "reused_from": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-20261028/rust-listing",
+  "run": 40663661365,
+  "listing_head": "5888e9fad23601021e70edce16ec41fafc6e6c6b",
+  "head": "6fd50bda4907296767d551a9de4c593b6c749fbe",
+  "round": 3,
+  "rust_inputs_changed_since_listing_head": [],
+  "rust_input_rule": "evas/rust_core/**, Cargo.toml, Cargo.lock, rust-toolchain*, scripts/capabilities/discover_rust.py",
+  "workflow_rule": "one inserted, self-contained step in rust-regression (step-level env, no GITHUB_ENV/PATH/OUTPUT, no Rust profile, toolchain or target changes); every other line of the job, including checkout, toolchain, cache, the Rust regression and the listing steps, is byte-identical",
+  "inserted_step_sha256": "2bafc3d7b8a1120a80629dfde96010741be11989fa4a42ad135c5d16a4f17c9e",
+  "inserted_lines": 21,
+  "rust_job_sha256": {
+    "prev": "0b9c1a78b1867daa38d4bc889a8f84a6eaba594aea04bead29a25c4f3f20ce52",
+    "head": "d309d51a33d4548cb3e6495ea485ed839c4b6fe08eaadf7c4e313b0086457f51",
+    "unchanged_prefix_sha256": "1309ba85e4f4f79e10738902c23f44c744a4d46992196ffadc93a71d6deece65"
+  },
+  "artifact_digest": "sha256:1ccd418a36d7bdd50b54fb9d338b50e3eca0e98dd8bcfcd65313fe52728d5de9",
+  "receipt_sha256": "d5527f958d8ea15b0cde2b32d4e2b3e9b996bba11d7c60994346d3b5709608d3",
+  "scientific_qualification": false
+}
