@@ -2,6 +2,11 @@ name: Installed EVAS package
 
 on:
   workflow_call:
+    inputs:
+      rust_toolchain:
+        description: Rust toolchain installed and used for the sdist and wheel builds; passed by the caller
+        type: string
+        required: true
     outputs:
       install_result:
         value: ${{ jobs.install.outputs.result }}
@@ -11,6 +16,8 @@ permissions:
 
 jobs:
   install:
+    env:
+      RUSTUP_TOOLCHAIN: ${{ inputs.rust_toolchain }}
     outputs:
       result: ${{ steps.verified.outputs.result }}
     strategy:
@@ -32,7 +39,7 @@ jobs:
           python-version: ${{ matrix.python }}
           cache: pip
           cache-dependency-path: evas/pyproject.toml
-      - run: rustup toolchain install stable --profile minimal
+      - run: rustup toolchain install "$RUSTUP_TOOLCHAIN" --profile minimal
       - uses: ./.github/actions/rust-cache
         with:
           # Cache downloads only. The sdist must build its own fresh executable.

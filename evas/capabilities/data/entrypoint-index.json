@@ -3,6 +3,56 @@
   "objects": [
     {
       "actual_receipt": {
+        "id": "source:704d6f788bd56d7bd3c70422",
+        "sha256": "83ecd31209be52a7e4813e8be84cc5459aa262ed4c52deed51a6bc2570663676",
+        "version": "8a916b0a95c4277742c15527643d5848d7147b4bac513fae3baad680d7850e2a"
+      },
+      "ci_entrypoint_ids": [
+        "0edbfcca9e18f1b3bda643cc49c8d94af6c40aed5707ac184dcfd1a6feb144d8"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s evas/validation/event_alignment -p 'test_checker.py' -v",
+      "dependencies": [
+        {
+          "id": "source:704d6f788bd56d7bd3c70422",
+          "sha256": "83ecd31209be52a7e4813e8be84cc5459aa262ed4c52deed51a6bc2570663676",
+          "version": "8a916b0a95c4277742c15527643d5848d7147b4bac513fae3baad680d7850e2a"
+        }
+      ],
+      "id": "entry:02cfd70084a677f52cc0355d",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test_checker.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "0edbfcca9e18f1b3bda643cc49c8d94af6c40aed5707ac184dcfd1a6feb144d8",
+        "environment_overrides": {},
+        "job": "static-checks",
+        "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+        "line": 206,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test_checker.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "evas/validation/event_alignment",
+        "step": "Independent mathematics and checker calibration (no simulator)",
+        "step_if": "needs.selection.outputs.calibration == 'true'",
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "f248635cfc9c2692039fa91ef0f5e56c9130bde8f0c908794e933eac73fcb52f",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "evas/validation/event_alignment",
+      "status": "active",
+      "version": "3792e862a6c78879b8577920b38b5988284d24325080ffca4df29927aa01c1d5",
+      "workflow_sha256": "fa6d43b7b339d932a950b0cf099d646236dd5266d17252597f6d5b22b7cb0f14"
+    },
+    {
+      "actual_receipt": {
         "id": "source:996a333e5d1fa9b868fefd56",
         "sha256": "44fc2c6e36cb4429ff8ea29f7017c364ba371d3672bd26bf65b648b1485853ae",
         "version": "8f2a88a1ce9add2480937b101f3859d918c9d47398456ee7a441146cedf5de64"
@@ -100,6 +150,108 @@
       "status": "active",
       "version": "91dc6626d2f8d0f4086ac03e320e5e56afad976adf09dc4a63f4981b568a8fd9",
       "workflow_sha256": "354b71b77cf7357d3999860b5fcae2fcb311ae3dcda89adc5253faf7ef6f89dc"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:10cd5a293035673cd5127e5c",
+        "sha256": "cce4d2b9e0eb4e4a79e50306a2a95d70227998204d7b07f1762954a67648651b",
+        "version": "9884e17bc76e3e312fac42f020937ba9df9b7f23402c3030721ed086a031a91c"
+      },
+      "ci_entrypoint_ids": [
+        "aadfcb064bac66c821e02d5724518be040b17571eea8d5693624052062b3a138"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s experiments/backends/spectre-alignment -p 'test_*.py' -v",
+      "dependencies": [
+        {
+          "id": "source:10cd5a293035673cd5127e5c",
+          "sha256": "cce4d2b9e0eb4e4a79e50306a2a95d70227998204d7b07f1762954a67648651b",
+          "version": "9884e17bc76e3e312fac42f020937ba9df9b7f23402c3030721ed086a031a91c"
+        }
+      ],
+      "id": "entry:08c768ab2626251e9f21cc5a",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test_*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "aadfcb064bac66c821e02d5724518be040b17571eea8d5693624052062b3a138",
+        "environment_overrides": {},
+        "job": "static-checks",
+        "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+        "line": 201,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test_*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "experiments/backends/spectre-alignment",
+        "step": "Independent mathematics and checker calibration (no simulator)",
+        "step_if": "needs.selection.outputs.calibration == 'true'",
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "d75a533f6e0784b5bcbe558c3642fc83a33be6181732e2b1381a7df0f4133609",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "experiments/backends/spectre-alignment",
+      "status": "active",
+      "version": "34dc97d4384764f45df20163ad6bd4d8508a07f78d146cfba1da338cb9418787",
+      "workflow_sha256": "c1289f9d76dfeabf105ed9558224bcdaa91038c947b6f7b1d69509ecd42adc74"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:d4d9fe92a80666a801134657",
+        "sha256": "ab61c0a5b0273efde29382046d8e01a3b096fc49e544be0c57c0d8f15f99d108",
+        "version": "448a880a9aadf72bff824f5ef68e4150abbe9e24d4ef4d3edc5c0d57558a8ee6"
+      },
+      "ci_entrypoint_ids": [
+        "37df9f5b0bc1225aebf2d0eb637bf712c9adb760bbbe2cbf77848f20687a6eea"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s scripts/tests -v",
+      "dependencies": [
+        {
+          "id": "source:d4d9fe92a80666a801134657",
+          "sha256": "ab61c0a5b0273efde29382046d8e01a3b096fc49e544be0c57c0d8f15f99d108",
+          "version": "448a880a9aadf72bff824f5ef68e4150abbe9e24d4ef4d3edc5c0d57558a8ee6"
+        }
+      ],
+      "id": "entry:0a2c699d011115d6df386c5d",
+      "kind": "entrypoint",
+      "namespace": "maintenance",
+      "pattern": "test*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "37df9f5b0bc1225aebf2d0eb637bf712c9adb760bbbe2cbf77848f20687a6eea",
+        "environment_overrides": {
+          "GIT_FIXTURE_RETAIN_DIR": "runs/git-fixture-isolation"
+        },
+        "job": "static-checks",
+        "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+        "line": 176,
+        "mode": "declared-ci-literal",
+        "namespace": "maintenance",
+        "pattern": "test*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "scripts/tests",
+        "step": "Traceability and frozen validation identities",
+        "step_if": "needs.selection.outputs.maintenance == 'true'",
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "334dd0fd3e58460ef29304d8342f9e2d5306d789718899f01e5a45d37e064033",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "scripts/tests",
+      "status": "active",
+      "version": "1dd38d3a6a41e35f1823f5dbb6a8ca5a2211e88b89db9ee8bbd1136ca3dbccc9",
+      "workflow_sha256": "75da6ea8a3f0e7baa90b99388833ae2d757da66754b1d1dea3a8113d1fd1fa3b"
     },
     {
       "actual_receipt": {
@@ -467,6 +619,56 @@
     },
     {
       "actual_receipt": {
+        "id": "source:10b30577061505beba2c6468",
+        "sha256": "e3466a3e3a9bcbaf63d65da235f66f78bc89f680be29684426efe98f104a2654",
+        "version": "3c93668eb6f5430c43ee78b6db41b030268a691efcc039be4eaafb298b779dfe"
+      },
+      "ci_entrypoint_ids": [
+        "0a809e57e925e1542a5afe3b326ec417b7cdf5d3b11c441f6ae99934351ab571"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s experiments/backends/event-alignment -p 'test_*.py' -v",
+      "dependencies": [
+        {
+          "id": "source:10b30577061505beba2c6468",
+          "sha256": "e3466a3e3a9bcbaf63d65da235f66f78bc89f680be29684426efe98f104a2654",
+          "version": "3c93668eb6f5430c43ee78b6db41b030268a691efcc039be4eaafb298b779dfe"
+        }
+      ],
+      "id": "entry:0b8b758ceba3e717d8726dda",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test_*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "0a809e57e925e1542a5afe3b326ec417b7cdf5d3b11c441f6ae99934351ab571",
+        "environment_overrides": {},
+        "job": "static-checks",
+        "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+        "line": 204,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test_*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "experiments/backends/event-alignment",
+        "step": "Independent mathematics and checker calibration (no simulator)",
+        "step_if": "needs.selection.outputs.calibration == 'true'",
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "e5e7230c690e83315c242ab9a0da0e824934dcd5069ce86f1120ad76fdaacca9",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "experiments/backends/event-alignment",
+      "status": "active",
+      "version": "6d4ff65073002a08fb7140065a7d5dceab1ae05bf141b2f83bafc86f86ab0e29",
+      "workflow_sha256": "c1289f9d76dfeabf105ed9558224bcdaa91038c947b6f7b1d69509ecd42adc74"
+    },
+    {
+      "actual_receipt": {
         "id": "source:cef2726b9bafdc90c89206e4",
         "sha256": "7e2b5549906d7761790efc3a64d262884de546836f2d771ed829cd60e5845fd0",
         "version": "694c1cc20131736d41276f097a9d6071d6e00035d24ed80fbd3066075ae38341"
@@ -823,6 +1025,256 @@
     },
     {
       "actual_receipt": {
+        "id": "source:bab305c9bd43248cf523d442",
+        "sha256": "f0311664ffb44c89f97cf7f4b86b2e5741a0c3ecb868509ce9a344caec124d01",
+        "version": "fb0dc35029b3e41bc95453df5bd13b27e81bfec6c0d9266d746bc2f0023d1919"
+      },
+      "ci_entrypoint_ids": [
+        "1107ec3884eb1ad914d8f28379e739a66d6a317b800204f10a7b3ce0e1423a8a"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s evas/validation/paper -p 'test_precision_v2.py' -v",
+      "dependencies": [
+        {
+          "id": "source:bab305c9bd43248cf523d442",
+          "sha256": "f0311664ffb44c89f97cf7f4b86b2e5741a0c3ecb868509ce9a344caec124d01",
+          "version": "fb0dc35029b3e41bc95453df5bd13b27e81bfec6c0d9266d746bc2f0023d1919"
+        }
+      ],
+      "id": "entry:105cc721a701d3cf95b6e8a6",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test_precision_v2.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "1107ec3884eb1ad914d8f28379e739a66d6a317b800204f10a7b3ce0e1423a8a",
+        "environment_overrides": {},
+        "job": "provenance-paper",
+        "job_if": "needs.selection.outputs.provenance == 'true'",
+        "line": 230,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test_precision_v2.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "evas/validation/paper",
+        "step": "Paper contracts, observable criteria and table provenance",
+        "step_if": null,
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "14accca10686bc0bde6491cd9a929c6fde1e5cc948ac72c81bf4089cf3102f30",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "evas/validation/paper",
+      "status": "active",
+      "version": "1c512d4dbd3840a284313d17516c3d6fd6055d842585b25afa22066dc1fe87a7",
+      "workflow_sha256": "c1289f9d76dfeabf105ed9558224bcdaa91038c947b6f7b1d69509ecd42adc74"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:c14d8b88e8d06ce9033a8740",
+        "sha256": "b428ae448cb6769d691128693364e7057a8dbe8364a9f095d169169030ff51dd",
+        "version": "b7f13948fbccd31ee954fcde65985fc0b6afb6c3fbacead28fbee8620100f534"
+      },
+      "ci_entrypoint_ids": [
+        "9c54e52cb547ee58e8a2e4ad8f73a20e79bba78b1c92ad988c556a8bbeba0a7d"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s evas/validation/paper -p 'test_*root*.py' -v",
+      "dependencies": [
+        {
+          "id": "source:c14d8b88e8d06ce9033a8740",
+          "sha256": "b428ae448cb6769d691128693364e7057a8dbe8364a9f095d169169030ff51dd",
+          "version": "b7f13948fbccd31ee954fcde65985fc0b6afb6c3fbacead28fbee8620100f534"
+        }
+      ],
+      "id": "entry:15e8c783fdf03afa808aca66",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test_*root*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "9c54e52cb547ee58e8a2e4ad8f73a20e79bba78b1c92ad988c556a8bbeba0a7d",
+        "environment_overrides": {},
+        "job": "provenance-paper",
+        "job_if": "needs.selection.outputs.provenance == 'true'",
+        "line": 229,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test_*root*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "evas/validation/paper",
+        "step": "Paper contracts, observable criteria and table provenance",
+        "step_if": null,
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "4ec05e98c2c2abf5956fdee84f0f9beaf995090d9482658f5fc1aa20b66d598e",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "evas/validation/paper",
+      "status": "active",
+      "version": "a7de91b913a79b5b07d2374072a6f433b60c652bc804d5bb0c427764990aec8a",
+      "workflow_sha256": "fa6d43b7b339d932a950b0cf099d646236dd5266d17252597f6d5b22b7cb0f14"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:7b8a952a61437ae27a179e7e",
+        "sha256": "763742079a7a164fd44752c6e30128d9acfe96c5bc8b09bdea077553d6c6f691",
+        "version": "e893032368e2fea4a498347393c86d184cdcc66eb00ad7fdcbf4371587e6482c"
+      },
+      "ci_entrypoint_ids": [
+        "370f7f824145b10d8dd9cb12401baf4f5e30bcab294e1ab4bbf4ce8ca412567d"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s experiments/backends/dvs2-spectre-validation -p 'test_*.py' -v",
+      "dependencies": [
+        {
+          "id": "source:7b8a952a61437ae27a179e7e",
+          "sha256": "763742079a7a164fd44752c6e30128d9acfe96c5bc8b09bdea077553d6c6f691",
+          "version": "e893032368e2fea4a498347393c86d184cdcc66eb00ad7fdcbf4371587e6482c"
+        }
+      ],
+      "id": "entry:185bff58e39724d2a9dcb268",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test_*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "370f7f824145b10d8dd9cb12401baf4f5e30bcab294e1ab4bbf4ce8ca412567d",
+        "environment_overrides": {},
+        "job": "static-checks",
+        "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+        "line": 204,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test_*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "experiments/backends/dvs2-spectre-validation",
+        "step": "Independent mathematics and checker calibration (no simulator)",
+        "step_if": "needs.selection.outputs.calibration == 'true'",
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "58d0e22eb3387c99a8bc89b2e263c0d458f561cf0d2937eb92f0cb948968d992",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "experiments/backends/dvs2-spectre-validation",
+      "status": "active",
+      "version": "40d38d736604d9574051c50bbd871ab556e8d82b2050e3f3d51ed139462880dc",
+      "workflow_sha256": "fa6d43b7b339d932a950b0cf099d646236dd5266d17252597f6d5b22b7cb0f14"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:e5074c671b043e8169efef02",
+        "sha256": "0c83781d09e229b6a2f542758d1d8a673ddf3d7900e4e9ad0a77dea2101a590c",
+        "version": "bcee25f2b2f6226c888b078c248e197c5e885beb073da11b799bf03baf92eccd"
+      },
+      "ci_entrypoint_ids": [
+        "44c18d24d28d865ce668b13e975739913f153a24c566748fa17c3fd87483dd62"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s evas/validation/paper -p 'test_coefficient_first_order.py' -v",
+      "dependencies": [
+        {
+          "id": "source:e5074c671b043e8169efef02",
+          "sha256": "0c83781d09e229b6a2f542758d1d8a673ddf3d7900e4e9ad0a77dea2101a590c",
+          "version": "bcee25f2b2f6226c888b078c248e197c5e885beb073da11b799bf03baf92eccd"
+        }
+      ],
+      "id": "entry:1a481157b54218e8b31189fc",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test_coefficient_first_order.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "44c18d24d28d865ce668b13e975739913f153a24c566748fa17c3fd87483dd62",
+        "environment_overrides": {},
+        "job": "provenance-paper",
+        "job_if": "needs.selection.outputs.provenance == 'true'",
+        "line": 227,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test_coefficient_first_order.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "evas/validation/paper",
+        "step": "Paper contracts, observable criteria and table provenance",
+        "step_if": null,
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "22a977b7867e86d256a1b65abe75106c4dbf7ef488e728eda0ab54f5c4ea96b6",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "evas/validation/paper",
+      "status": "active",
+      "version": "1ebb86fb926245e6a41362df2b9d6c65624f63ae7c43262008d7ed3cf9f63ba6",
+      "workflow_sha256": "c1289f9d76dfeabf105ed9558224bcdaa91038c947b6f7b1d69509ecd42adc74"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:f96d201b14d7867479d49e6e",
+        "sha256": "169a6ad652ac1592a6260607cd1ca091076756a2f8cb812d74104641b4464668",
+        "version": "2a67f0a2ab1f5823c5f5caf80e19c130ca84845f955bd6928f8f8711c5076e72"
+      },
+      "ci_entrypoint_ids": [
+        "f0131af83657d4b47215c5e420339238539a8f320608d3e98d8633092c8d13a3"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s experiments/backends/support -p 'test_*.py' -v",
+      "dependencies": [
+        {
+          "id": "source:f96d201b14d7867479d49e6e",
+          "sha256": "169a6ad652ac1592a6260607cd1ca091076756a2f8cb812d74104641b4464668",
+          "version": "2a67f0a2ab1f5823c5f5caf80e19c130ca84845f955bd6928f8f8711c5076e72"
+        }
+      ],
+      "id": "entry:1d35108d2bc7e0f02b028a1d",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test_*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "f0131af83657d4b47215c5e420339238539a8f320608d3e98d8633092c8d13a3",
+        "environment_overrides": {},
+        "job": "provenance-support",
+        "job_if": "needs.selection.outputs.provenance == 'true'",
+        "line": 248,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test_*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "experiments/backends/support",
+        "step": "Backend support checker tests",
+        "step_if": null,
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "c65e5c7e5080b897aae11216fa267b0f2d18d994ba7ff960eb8fcc8c60ddfd25",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "experiments/backends/support",
+      "status": "active",
+      "version": "548646f40d6b0d2b1083c7f9d5155a49d7f43cd5baf93c07a1ef5fdc2e973cf9",
+      "workflow_sha256": "c1289f9d76dfeabf105ed9558224bcdaa91038c947b6f7b1d69509ecd42adc74"
+    },
+    {
+      "actual_receipt": {
         "id": "source:0bc61362170923381d15c43a",
         "sha256": "b3812f24acc5f9e66d5c8f182b44aabda0f39089b285964b1abd9860f0eacbbb",
         "version": "46d7740cad3aff3d96149bc5c2b56334b3c2f4d98d3f1df61501a6f96802c5c3"
@@ -870,6 +1322,56 @@
       "status": "active",
       "version": "3771efef2a24f9b6534053d4ad90f701e4d422740075330c5b15b7309daf7478",
       "workflow_sha256": "75da6ea8a3f0e7baa90b99388833ae2d757da66754b1d1dea3a8113d1fd1fa3b"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:f83a572ba4c4a3c234beac86",
+        "sha256": "628c40e4ec0fadd4a4bc29003c1684e61ac37ffbf11324670afd8e0bfd467b69",
+        "version": "9af12a92e8afbe19956a9ec46174f2375d8ad952d60495c3f164c1beb8ca7305"
+      },
+      "ci_entrypoint_ids": [
+        "ed80a040cfa59e13289119aea1015e04fc35dcf5dde583e5cf69d2eae81e5453"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s evas/validation/paper -p 'test_*root*.py' -v",
+      "dependencies": [
+        {
+          "id": "source:f83a572ba4c4a3c234beac86",
+          "sha256": "628c40e4ec0fadd4a4bc29003c1684e61ac37ffbf11324670afd8e0bfd467b69",
+          "version": "9af12a92e8afbe19956a9ec46174f2375d8ad952d60495c3f164c1beb8ca7305"
+        }
+      ],
+      "id": "entry:287a2496fe8f1ddcbcb438b5",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test_*root*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "ed80a040cfa59e13289119aea1015e04fc35dcf5dde583e5cf69d2eae81e5453",
+        "environment_overrides": {},
+        "job": "provenance-paper",
+        "job_if": "needs.selection.outputs.provenance == 'true'",
+        "line": 225,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test_*root*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "evas/validation/paper",
+        "step": "Paper contracts, observable criteria and table provenance",
+        "step_if": null,
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "58e041f9acd97f4b413f940466d2864c5915319208d7dfa6756bafe080c1a434",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "evas/validation/paper",
+      "status": "active",
+      "version": "1955b756ae81bddd0e5a7cdfc008e28a18bc655de5ac96efa6463e7188b00e38",
+      "workflow_sha256": "c1289f9d76dfeabf105ed9558224bcdaa91038c947b6f7b1d69509ecd42adc74"
     },
     {
       "actual_receipt": {
@@ -922,6 +1424,107 @@
       "workflow_sha256": "76c7387d4c8a3390edc2ba440f169c14794301867d1f277d3488b654cf585682"
     },
     {
+      "actual_receipt": {
+        "id": "source:60c996ed09c410689dbd3361",
+        "sha256": "1b86b967482f72f28dff0b3c905c4cb5f8cd266f9f91876c3ae8b82248cc8416",
+        "version": "fcbd52ac0301713667014f424f4cfe12fa3cb26c07593796f77489c24a820881"
+      },
+      "ci_entrypoint_ids": [
+        "8b944e1536b9651c1336c9f988ff9305e1e579059d1777deb280bc98478de71e"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s scripts/tests -p test_independent_ci.py -v",
+      "dependencies": [
+        {
+          "id": "source:60c996ed09c410689dbd3361",
+          "sha256": "1b86b967482f72f28dff0b3c905c4cb5f8cd266f9f91876c3ae8b82248cc8416",
+          "version": "fcbd52ac0301713667014f424f4cfe12fa3cb26c07593796f77489c24a820881"
+        }
+      ],
+      "id": "entry:2c27b7425e56cfee9e602a18",
+      "kind": "entrypoint",
+      "namespace": "maintenance",
+      "pattern": "test_independent_ci.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [],
+        "entry_id": "8b944e1536b9651c1336c9f988ff9305e1e579059d1777deb280bc98478de71e",
+        "environment_overrides": {
+          "CI_BASE": "${{ steps.changes.outputs.base }}",
+          "CI_HEAD": "${{ steps.changes.outputs.head }}"
+        },
+        "job": "selection",
+        "job_if": null,
+        "line": 68,
+        "mode": "declared-ci-literal",
+        "namespace": "maintenance",
+        "pattern": "test_independent_ci.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "scripts/tests",
+        "step": "Check CI routing and changed-line whitespace",
+        "step_if": null,
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "21148ec7e30784c6c667671de416553e334f512fcb2000a603fc06fd2992382c",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "scripts/tests",
+      "status": "active",
+      "version": "1b766631d3563bf52b68f82ed71f750e9b1963bf9c4bd90a72a0af333153a668",
+      "workflow_sha256": "c1289f9d76dfeabf105ed9558224bcdaa91038c947b6f7b1d69509ecd42adc74"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:261b9fa637c19e0ccbde0cbb",
+        "sha256": "22cda489523598019785530ae481dc2fd9148ea4ab9638983a2d21cfa066d702",
+        "version": "372de18db8ccf9c187a41b08ebb63fcfbfef3af1754e9e5401700a0270367b42"
+      },
+      "ci_entrypoint_ids": [
+        "a517fe2469efb354c3452c710e55142aa774d8e7ae3a932258f70c6fc0084745"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s evas/validation/paper -p 'test_precision.py' -v",
+      "dependencies": [
+        {
+          "id": "source:261b9fa637c19e0ccbde0cbb",
+          "sha256": "22cda489523598019785530ae481dc2fd9148ea4ab9638983a2d21cfa066d702",
+          "version": "372de18db8ccf9c187a41b08ebb63fcfbfef3af1754e9e5401700a0270367b42"
+        }
+      ],
+      "id": "entry:2d95c6b8eafd30aa93e65fc9",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test_precision.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "a517fe2469efb354c3452c710e55142aa774d8e7ae3a932258f70c6fc0084745",
+        "environment_overrides": {},
+        "job": "provenance-paper",
+        "job_if": "needs.selection.outputs.provenance == 'true'",
+        "line": 228,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test_precision.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "evas/validation/paper",
+        "step": "Paper contracts, observable criteria and table provenance",
+        "step_if": null,
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "fa929bc8e97bc59feb2c10d5c57153898a824bbbc661db2ae53298773707f4f5",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "evas/validation/paper",
+      "status": "active",
+      "version": "a2442899c8d5455d513e70bd2189ee19962be390da1be68e82426e105a1bf864",
+      "workflow_sha256": "c1289f9d76dfeabf105ed9558224bcdaa91038c947b6f7b1d69509ecd42adc74"
+    },
+    {
       "collector": "binary-listing",
       "dependencies": [
         {
@@ -952,6 +1555,38 @@
       "schema_version": 1,
       "status": "active",
       "version": "2aa2834ba89e9ecaca15e6161ff79051021db8fc2c3e3d08230e5684d4bf74e0"
+    },
+    {
+      "collector": "binary-listing",
+      "dependencies": [
+        {
+          "id": "source:dd8b4eb4612b272f0eb05592",
+          "sha256": "4dfdae5a715daf0e83f1cb40bdfc7cd45222bdcb84dab7a22e062cd6c82e00c1",
+          "version": "6363af9172e623f12169cf5a27a49a8ece1460c0330e2c038970aa3ce3fda11e"
+        }
+      ],
+      "id": "entry:31be033026c87fb6c21b9022",
+      "kind": "entrypoint",
+      "listing_profile": "linux-x86_64-regression-opt1-v1",
+      "listing_source": {
+        "id": "source:dd8b4eb4612b272f0eb05592",
+        "sha256": "4dfdae5a715daf0e83f1cb40bdfc7cd45222bdcb84dab7a22e062cd6c82e00c1",
+        "version": "6363af9172e623f12169cf5a27a49a8ece1460c0330e2c038970aa3ce3fda11e"
+      },
+      "namespace": "rust-tests",
+      "observer_sha256": "f1ade74617fa171c5048246986d52e772b0913ffce28713af6e2fa4af5904892",
+      "provenance_scope": "actual native listing, original observer; not upgraded to later helper execution",
+      "rust_target": {
+        "name": "evas_kernel",
+        "package": "evas-kernel",
+        "target_kind": [
+          "lib"
+        ],
+        "version": "0.25.0"
+      },
+      "schema_version": 1,
+      "status": "active",
+      "version": "fff6be9e447139304d3ca3086a5bc386e89d030032ae3609dfa63889eda5ae00"
     },
     {
       "actual_receipt": {
@@ -1052,6 +1687,156 @@
       "status": "active",
       "version": "cbafdbe705fee9a44e94edb28ceb90b08ab3c1b456e20040fed610369bd8bc11",
       "workflow_sha256": "354b71b77cf7357d3999860b5fcae2fcb311ae3dcda89adc5253faf7ef6f89dc"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:5b3dcc1c0253eed16e8776ee",
+        "sha256": "e2ec7ff199800c2d702ee7b23eeead51ce43b47a2d08f82a6ae4f1a99ac084b3",
+        "version": "99a88bec1d9e6fbaa782b81fa81232350023b4031d8680521493c6272279ad00"
+      },
+      "ci_entrypoint_ids": [
+        "90e82afd7d3feea6b5bb0f204e7100febd7fc3e1826dd82e653d5416c6a21874"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s experiments/backends/paper -p 'test_*.py' -v",
+      "dependencies": [
+        {
+          "id": "source:5b3dcc1c0253eed16e8776ee",
+          "sha256": "e2ec7ff199800c2d702ee7b23eeead51ce43b47a2d08f82a6ae4f1a99ac084b3",
+          "version": "99a88bec1d9e6fbaa782b81fa81232350023b4031d8680521493c6272279ad00"
+        }
+      ],
+      "id": "entry:321c38408ecaf202e4a89441",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test_*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "90e82afd7d3feea6b5bb0f204e7100febd7fc3e1826dd82e653d5416c6a21874",
+        "environment_overrides": {},
+        "job": "provenance-paper",
+        "job_if": "needs.selection.outputs.provenance == 'true'",
+        "line": 232,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test_*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "experiments/backends/paper",
+        "step": "Paper contracts, observable criteria and table provenance",
+        "step_if": null,
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "114770b8864c8588be34a299c10af2367ebb1e11cdb541caf57813073f28fcd9",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "experiments/backends/paper",
+      "status": "active",
+      "version": "044aadf5c75ee33e274993523e805d8957dbccbb4a4f5a538bec2cec23db7302",
+      "workflow_sha256": "c1289f9d76dfeabf105ed9558224bcdaa91038c947b6f7b1d69509ecd42adc74"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:2b30684fbd2dc40c13ba62a5",
+        "sha256": "e5e3287f2f18929bb72a9bc1ddc5616f03f46ba82b426cff30f75d60fee6ef24",
+        "version": "896a82c55c3eb54af65cd2d7eb8dc75564f7bd7efd05bb1d0f2a81e950ff4e51"
+      },
+      "ci_entrypoint_ids": [
+        "591e7093f8f5ec01238d98a5fe64b515f3160d4b87bb3d4d3381ba2eae4d1468"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s experiments/backends/sample-edge-filter -p 'test_*.py' -v",
+      "dependencies": [
+        {
+          "id": "source:2b30684fbd2dc40c13ba62a5",
+          "sha256": "e5e3287f2f18929bb72a9bc1ddc5616f03f46ba82b426cff30f75d60fee6ef24",
+          "version": "896a82c55c3eb54af65cd2d7eb8dc75564f7bd7efd05bb1d0f2a81e950ff4e51"
+        }
+      ],
+      "id": "entry:32756f71c4f6add8a836dd07",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test_*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "591e7093f8f5ec01238d98a5fe64b515f3160d4b87bb3d4d3381ba2eae4d1468",
+        "environment_overrides": {},
+        "job": "static-checks",
+        "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+        "line": 210,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test_*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "experiments/backends/sample-edge-filter",
+        "step": "Independent mathematics and checker calibration (no simulator)",
+        "step_if": "needs.selection.outputs.calibration == 'true'",
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "74f5504fcb4db8227e9b784400e638caeb6d93bfb5efa0f80a9a36a997b3ec9c",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "experiments/backends/sample-edge-filter",
+      "status": "active",
+      "version": "c5ba6c1d124881153e3f74d96fb1e9f585a2b4fa5e3e18d072def0645a69c423",
+      "workflow_sha256": "fa6d43b7b339d932a950b0cf099d646236dd5266d17252597f6d5b22b7cb0f14"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:1905cd6f539f5921e62d804a",
+        "sha256": "3614f25ac274b31e11dc9abc45be68e2b0da2542bfc987b591013752fb02495a",
+        "version": "8a7ce9ed9a73c3477654c2e966ff51c1f9ba37f0b694dac42d2cb094b2b504aa"
+      },
+      "ci_entrypoint_ids": [
+        "c47624f0ca7e3ec9cff7bac26f571a6037aee47a01fa6cf20fa13fd81a8d9c7c"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s evas/validation/support -p 'test_*.py' -v",
+      "dependencies": [
+        {
+          "id": "source:1905cd6f539f5921e62d804a",
+          "sha256": "3614f25ac274b31e11dc9abc45be68e2b0da2542bfc987b591013752fb02495a",
+          "version": "8a7ce9ed9a73c3477654c2e966ff51c1f9ba37f0b694dac42d2cb094b2b504aa"
+        }
+      ],
+      "id": "entry:3366062f9adcacfbc966f181",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test_*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "c47624f0ca7e3ec9cff7bac26f571a6037aee47a01fa6cf20fa13fd81a8d9c7c",
+        "environment_overrides": {},
+        "job": "provenance-paper",
+        "job_if": "needs.selection.outputs.provenance == 'true'",
+        "line": 234,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test_*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "evas/validation/support",
+        "step": "Paper contracts, observable criteria and table provenance",
+        "step_if": null,
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "3641267e6b586cebd127828f0b9f318909252a3b74e57e7266e98cb1eff33e72",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "evas/validation/support",
+      "status": "active",
+      "version": "8d60139f6dad685a382ec6c91238614a0bba5763d2c5ac57ad36f3d3c4686fc8",
+      "workflow_sha256": "c1289f9d76dfeabf105ed9558224bcdaa91038c947b6f7b1d69509ecd42adc74"
     },
     {
       "actual_receipt": {
@@ -1205,6 +1990,57 @@
       "status": "active",
       "version": "70a414b3b3531f2550b30ff6be6e6ca387ceccc8b1b3cccfcbcbaa24a06bfaee",
       "workflow_sha256": "74e97b41f0312d1769f8a93757fb073158a890095c431351c4956cdbaabf4cec"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:4599bf4de1c80733dc767b58",
+        "sha256": "6412d34b75291d618f677d5b06c282452e5bac274a2ffaccf73faf99b05f597f",
+        "version": "79c7e6a255ff99bfe9ac2b51b3c428f51038889c21730332a140d7f4901452e3"
+      },
+      "ci_entrypoint_ids": [
+        "8728e565f4468c702b40aba87fcffd8b90398dd6078040c590b2a72ba63b4cc8"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s scripts/tests -p test_ci_selection.py -v",
+      "dependencies": [
+        {
+          "id": "source:4599bf4de1c80733dc767b58",
+          "sha256": "6412d34b75291d618f677d5b06c282452e5bac274a2ffaccf73faf99b05f597f",
+          "version": "79c7e6a255ff99bfe9ac2b51b3c428f51038889c21730332a140d7f4901452e3"
+        }
+      ],
+      "id": "entry:33d79f4622ba12bd64197c56",
+      "kind": "entrypoint",
+      "namespace": "maintenance",
+      "pattern": "test_ci_selection.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [],
+        "entry_id": "8728e565f4468c702b40aba87fcffd8b90398dd6078040c590b2a72ba63b4cc8",
+        "environment_overrides": {
+          "CI_BASE": "${{ steps.changes.outputs.base }}",
+          "CI_HEAD": "${{ steps.changes.outputs.head }}"
+        },
+        "job": "selection",
+        "job_if": null,
+        "line": 59,
+        "mode": "declared-ci-literal",
+        "namespace": "maintenance",
+        "pattern": "test_ci_selection.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "scripts/tests",
+        "step": "Check CI routing and changed-line whitespace",
+        "step_if": null,
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "d6fc53513c30bfb93e6ed16a9f0aa797e1758a8f9e50caa7645099e3ec48dfb7",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "scripts/tests",
+      "status": "active",
+      "version": "70e907a2a264d4ec8ab4351667de8d92919edff61ccbf3fc31ec138c324a5eae",
+      "workflow_sha256": "75da6ea8a3f0e7baa90b99388833ae2d757da66754b1d1dea3a8113d1fd1fa3b"
     },
     {
       "actual_receipt": {
@@ -1667,6 +2503,56 @@
     },
     {
       "actual_receipt": {
+        "id": "source:4e1b2a39122a86e1036924dd",
+        "sha256": "867c0af4291f82a74d5119a9b21c00ccb6fd674b495c34ed185050bd1c76710d",
+        "version": "15622e078ce6a8212466b76a8f7c15e3a1c8135acf8ec66a16c3fea7777f6083"
+      },
+      "ci_entrypoint_ids": [
+        "6d321bba6fca49b43d5fb5762d305b551cfad21a419c0ef87d4df1693039c603"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s evas/validation/differential -v",
+      "dependencies": [
+        {
+          "id": "source:4e1b2a39122a86e1036924dd",
+          "sha256": "867c0af4291f82a74d5119a9b21c00ccb6fd674b495c34ed185050bd1c76710d",
+          "version": "15622e078ce6a8212466b76a8f7c15e3a1c8135acf8ec66a16c3fea7777f6083"
+        }
+      ],
+      "id": "entry:35bd1a59205d89986d11362f",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "6d321bba6fca49b43d5fb5762d305b551cfad21a419c0ef87d4df1693039c603",
+        "environment_overrides": {},
+        "job": "properties-and-ngspice",
+        "job_if": "needs.selection.outputs.differential == 'true'",
+        "line": 650,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "evas/validation/differential",
+        "step": null,
+        "step_if": null,
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "19e9fbdf3076d7b5b5b4059b1885be45c1676c084c7114aafd9a56b28eb721a0",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "evas/validation/differential",
+      "status": "active",
+      "version": "f36b75b4c027458e6f3f3303473e9d1d80df98c0bd8592e008fcc5ad43b9bf48",
+      "workflow_sha256": "c1289f9d76dfeabf105ed9558224bcdaa91038c947b6f7b1d69509ecd42adc74"
+    },
+    {
+      "actual_receipt": {
         "id": "source:21b13a49a7d295a1650453b9",
         "sha256": "3432c0448a4e2a936a005481de98b4602f78ccb23fd46cdbb8c2039c9c27be46",
         "version": "fe3cd2cf6f5b8607067d8d4291d439d9939974a3b0df3c9470851c4839010a5b"
@@ -1846,6 +2732,57 @@
     },
     {
       "actual_receipt": {
+        "id": "source:05413545ee92081fe1f55370",
+        "sha256": "654fd164dfe08e43d96f4a6e407086e8b8091dd0a20ce6dc063e96ca2ebdd01d",
+        "version": "d63a7f6ea0fea7790b620153c120c38d6d3b445897f28fb1cd3d5088bf7030ce"
+      },
+      "ci_entrypoint_ids": [
+        "89c8c250e2965fd3384030acf9eab53dcb073f247e83f27364efc527f53745a5"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s scripts/tests -p test_fast_feedback.py -v",
+      "dependencies": [
+        {
+          "id": "source:05413545ee92081fe1f55370",
+          "sha256": "654fd164dfe08e43d96f4a6e407086e8b8091dd0a20ce6dc063e96ca2ebdd01d",
+          "version": "d63a7f6ea0fea7790b620153c120c38d6d3b445897f28fb1cd3d5088bf7030ce"
+        }
+      ],
+      "id": "entry:3a64fe2e79ce802a0351e8ba",
+      "kind": "entrypoint",
+      "namespace": "maintenance",
+      "pattern": "test_fast_feedback.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [],
+        "entry_id": "89c8c250e2965fd3384030acf9eab53dcb073f247e83f27364efc527f53745a5",
+        "environment_overrides": {
+          "CI_BASE": "${{ steps.changes.outputs.base }}",
+          "CI_HEAD": "${{ steps.changes.outputs.head }}"
+        },
+        "job": "selection",
+        "job_if": null,
+        "line": 71,
+        "mode": "declared-ci-literal",
+        "namespace": "maintenance",
+        "pattern": "test_fast_feedback.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "scripts/tests",
+        "step": "Check CI routing and changed-line whitespace",
+        "step_if": null,
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "a7f3adc998109082c9c9eedae71a824d2d34d3e7322581f898bd247062bc6f25",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "scripts/tests",
+      "status": "active",
+      "version": "f87ac0bcca0caff28c92cffce742defebd348d3e3d173af41467c75091213a5e",
+      "workflow_sha256": "fa6d43b7b339d932a950b0cf099d646236dd5266d17252597f6d5b22b7cb0f14"
+    },
+    {
+      "actual_receipt": {
         "id": "source:90b1cedfa02f0930f70f8caf",
         "sha256": "f08397b1ac54c7d68bc47478d52d4836f7a4bc044397a1b3e9af1634193f56c0",
         "version": "1c0da308d08b61c8378241871059ca34623447f50c4b29d6be5d20a62a278edb"
@@ -1943,6 +2880,106 @@
       "status": "active",
       "version": "5370380136cb3c7820e4e82098370a40d0ebf77a8db375fc8022e446a7ef41a1",
       "workflow_sha256": "37456de701eea3dc7943ea1be778994dfd55fc40ce7b3fcc9985c7972310859c"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:2cd132beaef713345a90a5cf",
+        "sha256": "38be28deac861e7c1d146e96a249172aafa9795346d20d00c8d7a29ef4bef95a",
+        "version": "41210511d65fb06f324f617566f6fe4718fa376c36900ee927375e211fa014fd"
+      },
+      "ci_entrypoint_ids": [
+        "20d1bec2d131ef058430dcc08a88b6f6b4e5538da1c8dbe29b6699a0aefed267"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s experiments/backends/support -p 'test_*.py' -v",
+      "dependencies": [
+        {
+          "id": "source:2cd132beaef713345a90a5cf",
+          "sha256": "38be28deac861e7c1d146e96a249172aafa9795346d20d00c8d7a29ef4bef95a",
+          "version": "41210511d65fb06f324f617566f6fe4718fa376c36900ee927375e211fa014fd"
+        }
+      ],
+      "id": "entry:3f2322ec2ac700bac746f70a",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test_*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "20d1bec2d131ef058430dcc08a88b6f6b4e5538da1c8dbe29b6699a0aefed267",
+        "environment_overrides": {},
+        "job": "provenance-support",
+        "job_if": "needs.selection.outputs.provenance == 'true'",
+        "line": 252,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test_*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "experiments/backends/support",
+        "step": "Backend support checker tests",
+        "step_if": null,
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "d9112e0fc62a9bf7aa98cac1f39ec1d0f72d72dfd2278f01ededa9c378cae4b0",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "experiments/backends/support",
+      "status": "active",
+      "version": "1dc0a6c91e009f8aef66d4fdf1d5cf98c063ec692d75cc61f6e6e0fd7a424953",
+      "workflow_sha256": "fa6d43b7b339d932a950b0cf099d646236dd5266d17252597f6d5b22b7cb0f14"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:50f37c16e92869fed86cac9d",
+        "sha256": "9176633f2b896ac39e90ded3c518e15740a1f09e4c478f4fa5a650a08fc4a23c",
+        "version": "33a2c5c4d44bb93c338c43ee486dce7853cf80409ad916127aacb976e7901621"
+      },
+      "ci_entrypoint_ids": [
+        "94d637a719214ecf6a35142af9dfd090cb846f23296245903fff76aafd03807e"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s evas/validation/event_alignment -p 'test_checker.py' -v",
+      "dependencies": [
+        {
+          "id": "source:50f37c16e92869fed86cac9d",
+          "sha256": "9176633f2b896ac39e90ded3c518e15740a1f09e4c478f4fa5a650a08fc4a23c",
+          "version": "33a2c5c4d44bb93c338c43ee486dce7853cf80409ad916127aacb976e7901621"
+        }
+      ],
+      "id": "entry:41184a2ceff2291b78a5a93f",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test_checker.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "94d637a719214ecf6a35142af9dfd090cb846f23296245903fff76aafd03807e",
+        "environment_overrides": {},
+        "job": "static-checks",
+        "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+        "line": 202,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test_checker.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "evas/validation/event_alignment",
+        "step": "Independent mathematics and checker calibration (no simulator)",
+        "step_if": "needs.selection.outputs.calibration == 'true'",
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "416089ba9de13709aa4fe4a45143799acc64c65200cb2b9de09e0774aaa8d095",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "evas/validation/event_alignment",
+      "status": "active",
+      "version": "026ee262db13233ea2ab9b71698cfd02548010631703c8d89a3336b582efd493",
+      "workflow_sha256": "c1289f9d76dfeabf105ed9558224bcdaa91038c947b6f7b1d69509ecd42adc74"
     },
     {
       "actual_receipt": {
@@ -2143,6 +3180,56 @@
       "status": "active",
       "version": "105ba868bf30caf33eed917c3d018cae605d66a48a56827b7f7a67e495cfec54",
       "workflow_sha256": "75da6ea8a3f0e7baa90b99388833ae2d757da66754b1d1dea3a8113d1fd1fa3b"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:17c4054bc2c0c097c116c90e",
+        "sha256": "b091dae940128aa4662313c883e58355657f33f8343b48c29561a50a19e2ee3e",
+        "version": "feba1d77a35758ccba9b03c200f7755909af57c0ff63c89a4bc7e345bc3129b9"
+      },
+      "ci_entrypoint_ids": [
+        "cd7e0acb9fda4b625b6ced7e2ac2125df59287b3e58cad209b0a686e1106bcf6"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s experiments/backends/comparison -p 'test_*.py' -v",
+      "dependencies": [
+        {
+          "id": "source:17c4054bc2c0c097c116c90e",
+          "sha256": "b091dae940128aa4662313c883e58355657f33f8343b48c29561a50a19e2ee3e",
+          "version": "feba1d77a35758ccba9b03c200f7755909af57c0ff63c89a4bc7e345bc3129b9"
+        }
+      ],
+      "id": "entry:43050700f03f00050f24fd1b",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test_*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "cd7e0acb9fda4b625b6ced7e2ac2125df59287b3e58cad209b0a686e1106bcf6",
+        "environment_overrides": {},
+        "job": "provenance-paper",
+        "job_if": "needs.selection.outputs.provenance == 'true'",
+        "line": 233,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test_*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "experiments/backends/comparison",
+        "step": "Paper contracts, observable criteria and table provenance",
+        "step_if": null,
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "47a0173633ed417b726bfef1afa62bffad488a972eb7cfd4d41060d660642fd3",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "experiments/backends/comparison",
+      "status": "active",
+      "version": "04752d41a622ced67d6d19ad61c0f83195a736f4329fc076ae21e45cd17e64a7",
+      "workflow_sha256": "c1289f9d76dfeabf105ed9558224bcdaa91038c947b6f7b1d69509ecd42adc74"
     },
     {
       "actual_receipt": {
@@ -2852,6 +3939,158 @@
     },
     {
       "actual_receipt": {
+        "id": "source:45c0f177cb0c156e6364fc12",
+        "sha256": "d71fe109cc6da681bf8587170cb83ef96d2ae2842c75884ac2335cbbe5386db1",
+        "version": "c48b5fd04d582274773f16cc5bcb5ff1b38c5fb9f28bc77b3e681cbfb3f72959"
+      },
+      "ci_entrypoint_ids": [
+        "e2c2446c49f1acf5b9e1ef7ab7ee2780698a5f415fea5c9f0217902395308e0e"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s scripts/tests -p test_ci_selection.py -v",
+      "dependencies": [
+        {
+          "id": "source:45c0f177cb0c156e6364fc12",
+          "sha256": "d71fe109cc6da681bf8587170cb83ef96d2ae2842c75884ac2335cbbe5386db1",
+          "version": "c48b5fd04d582274773f16cc5bcb5ff1b38c5fb9f28bc77b3e681cbfb3f72959"
+        }
+      ],
+      "id": "entry:4fd01c66dcd4055929e39c46",
+      "kind": "entrypoint",
+      "namespace": "maintenance",
+      "pattern": "test_ci_selection.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [],
+        "entry_id": "e2c2446c49f1acf5b9e1ef7ab7ee2780698a5f415fea5c9f0217902395308e0e",
+        "environment_overrides": {
+          "CI_BASE": "${{ steps.changes.outputs.base }}",
+          "CI_HEAD": "${{ steps.changes.outputs.head }}"
+        },
+        "job": "selection",
+        "job_if": null,
+        "line": 64,
+        "mode": "declared-ci-literal",
+        "namespace": "maintenance",
+        "pattern": "test_ci_selection.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "scripts/tests",
+        "step": "Check CI routing and changed-line whitespace",
+        "step_if": null,
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "219efad4c47291dd3b1c0adc9896acc9afde350e05ee9e2907d7c414221b7d65",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "scripts/tests",
+      "status": "active",
+      "version": "300d1748e398bdec3f1ac5f53bb494caa3319918ef9516835dd6c08eab943138",
+      "workflow_sha256": "c1289f9d76dfeabf105ed9558224bcdaa91038c947b6f7b1d69509ecd42adc74"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:9a21b8ac115b9ed844363134",
+        "sha256": "04ca0bf4f9c0d093a37b73caa1bdf7f13af9c9f1886caa66db5d998a5464885f",
+        "version": "601da478bcb85c77c355b19c9f2d99a981dfea963a35f82230fe5d6e4f4c5a15"
+      },
+      "ci_entrypoint_ids": [
+        "53a1f3141e51386beb490d39540277f5b1f9c203281edfa1cbac4882f8faeaba"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s experiments/backends/sample-edge-filter -p 'test_*.py' -v",
+      "dependencies": [
+        {
+          "id": "source:9a21b8ac115b9ed844363134",
+          "sha256": "04ca0bf4f9c0d093a37b73caa1bdf7f13af9c9f1886caa66db5d998a5464885f",
+          "version": "601da478bcb85c77c355b19c9f2d99a981dfea963a35f82230fe5d6e4f4c5a15"
+        }
+      ],
+      "id": "entry:539a4b4ec80f989f9dd96432",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test_*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "53a1f3141e51386beb490d39540277f5b1f9c203281edfa1cbac4882f8faeaba",
+        "environment_overrides": {},
+        "job": "static-checks",
+        "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+        "line": 206,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test_*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "experiments/backends/sample-edge-filter",
+        "step": "Independent mathematics and checker calibration (no simulator)",
+        "step_if": "needs.selection.outputs.calibration == 'true'",
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "9a5e2c06bc91fe4eb435d18213b80a55131f944e06a025303b1025aa40edc26e",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "experiments/backends/sample-edge-filter",
+      "status": "active",
+      "version": "15cb83ca07bad86ef06471f14e5479f3ac0ecb983ebca6d19994b850cff8d072",
+      "workflow_sha256": "c1289f9d76dfeabf105ed9558224bcdaa91038c947b6f7b1d69509ecd42adc74"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:25018ea6dc0aec44988765ef",
+        "sha256": "11f2c2593241af3267294fe1c9574d34af537695d2e22181812556f2c3665490",
+        "version": "5d7211a952f2b9d8f979091c1952d492cf9839b662a745ed7461d313be5a1242"
+      },
+      "ci_entrypoint_ids": [
+        "faa55386a80fa827c135238079ae43ac841d035332ab254bef6642eb2a99e28d"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s scripts/tests -p test_fast_feedback.py -v",
+      "dependencies": [
+        {
+          "id": "source:25018ea6dc0aec44988765ef",
+          "sha256": "11f2c2593241af3267294fe1c9574d34af537695d2e22181812556f2c3665490",
+          "version": "5d7211a952f2b9d8f979091c1952d492cf9839b662a745ed7461d313be5a1242"
+        }
+      ],
+      "id": "entry:539fd07fa1f60db5a9a8689f",
+      "kind": "entrypoint",
+      "namespace": "maintenance",
+      "pattern": "test_fast_feedback.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [],
+        "entry_id": "faa55386a80fa827c135238079ae43ac841d035332ab254bef6642eb2a99e28d",
+        "environment_overrides": {
+          "CI_BASE": "${{ steps.changes.outputs.base }}",
+          "CI_HEAD": "${{ steps.changes.outputs.head }}"
+        },
+        "job": "selection",
+        "job_if": null,
+        "line": 67,
+        "mode": "declared-ci-literal",
+        "namespace": "maintenance",
+        "pattern": "test_fast_feedback.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "scripts/tests",
+        "step": "Check CI routing and changed-line whitespace",
+        "step_if": null,
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "a026886929c7cb66dbe43fb53c465535f48091def787d7cd0f2bda0143e176cf",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "scripts/tests",
+      "status": "active",
+      "version": "7832a39164f15f2c486dfa179fe10a9b98202f5b37a5e951df69d65444d392b0",
+      "workflow_sha256": "c1289f9d76dfeabf105ed9558224bcdaa91038c947b6f7b1d69509ecd42adc74"
+    },
+    {
+      "actual_receipt": {
         "id": "source:909089b551a0f237b2c885ad",
         "sha256": "8438192e209d65ba73572eccd3af0c10f38e94d153bd9cb560175aff1ee1bba8",
         "version": "1a48ff0cbf8dfdd047c8c7b2a4218cc7e3371a3bc40ee2ff6a28d33768534c2c"
@@ -3152,6 +4391,106 @@
     },
     {
       "actual_receipt": {
+        "id": "source:5bef7187de9f18b0afc1e8fb",
+        "sha256": "1d07bc694e051103a126da67f19de300b4ec19097e6ee99dc5af9c291d97e4d4",
+        "version": "6cb275263d647e4e78748727367514e285bd3e8d35b26fbffce1d3779ec58fb6"
+      },
+      "ci_entrypoint_ids": [
+        "0dce940ca6abc31774edaac640c9b5d6b61114d859d4471f45e9b3f4bfd80a1d"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s experiments/backends/evidence -v",
+      "dependencies": [
+        {
+          "id": "source:5bef7187de9f18b0afc1e8fb",
+          "sha256": "1d07bc694e051103a126da67f19de300b4ec19097e6ee99dc5af9c291d97e4d4",
+          "version": "6cb275263d647e4e78748727367514e285bd3e8d35b26fbffce1d3779ec58fb6"
+        }
+      ],
+      "id": "entry:599ef4f418e73824d151c510",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "0dce940ca6abc31774edaac640c9b5d6b61114d859d4471f45e9b3f4bfd80a1d",
+        "environment_overrides": {},
+        "job": "static-checks",
+        "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+        "line": 203,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "experiments/backends/evidence",
+        "step": "Independent mathematics and checker calibration (no simulator)",
+        "step_if": "needs.selection.outputs.calibration == 'true'",
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "ec562edf2f7ad068a05cbf7f86edcb2dbda87be8c41652b864c06c8696d70ad7",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "experiments/backends/evidence",
+      "status": "active",
+      "version": "8ec7daf650a3e2a33804689afb746ac984ac031f23d1e5588dfd0e21f92c73b7",
+      "workflow_sha256": "fa6d43b7b339d932a950b0cf099d646236dd5266d17252597f6d5b22b7cb0f14"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:e965473eb9c6f7ce3a706ba3",
+        "sha256": "bce2036b1abfd6ae3279884ba0c77c0928f587c50b3097fb524b3e1ebecafd53",
+        "version": "2d38dd963952a6e7c3a9b5c203d1ab98c347a71ebb8fd32a2cb62bd38b9dbdce"
+      },
+      "ci_entrypoint_ids": [
+        "bd38427a5f3255473382a321b8a82d48fb2aeab8c114d7edf3499cf7730a3eaa"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s evas/validation/strobe -p 'test_*.py' -v",
+      "dependencies": [
+        {
+          "id": "source:e965473eb9c6f7ce3a706ba3",
+          "sha256": "bce2036b1abfd6ae3279884ba0c77c0928f587c50b3097fb524b3e1ebecafd53",
+          "version": "2d38dd963952a6e7c3a9b5c203d1ab98c347a71ebb8fd32a2cb62bd38b9dbdce"
+        }
+      ],
+      "id": "entry:5dba125a4f3484229d36f31a",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test_*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "bd38427a5f3255473382a321b8a82d48fb2aeab8c114d7edf3499cf7730a3eaa",
+        "environment_overrides": {},
+        "job": "static-checks",
+        "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+        "line": 203,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test_*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "evas/validation/strobe",
+        "step": "Independent mathematics and checker calibration (no simulator)",
+        "step_if": "needs.selection.outputs.calibration == 'true'",
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "3c9344a8335706412a014c3668d5d9780cc3f6673b9fb09325af16a1639b457f",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "evas/validation/strobe",
+      "status": "active",
+      "version": "8278646bc1aebbd0106203456b3b58960ea50b4f8746ffcb135c8cfa462e663b",
+      "workflow_sha256": "c1289f9d76dfeabf105ed9558224bcdaa91038c947b6f7b1d69509ecd42adc74"
+    },
+    {
+      "actual_receipt": {
         "id": "source:ae1427725ec9d69cfbc87862",
         "sha256": "a49af03dac0653d4c6d13c490c725f12aa6ec9cef85e3a9920f5e47e5ccd0694",
         "version": "754561cc080b0970bc3818a165de1ad089bb17bc4a17ce82ae1187425ac2ca8f"
@@ -3431,6 +4770,308 @@
     },
     {
       "actual_receipt": {
+        "id": "source:87bab28e84a8d7c7f639a8b3",
+        "sha256": "7c73109e2f902a1e9c6e7e8e5776268663982d1936be7ca0d2152a2893bbf913",
+        "version": "392aeacb202c9ac77dfeae689a966441bb2591ad710c3fa7b4459db3a0271faf"
+      },
+      "ci_entrypoint_ids": [
+        "7f6d1abbf31f0028b3130fb22972ddb069cdfea22805954d8650100bf2a9e4fc"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s evas/validation/paper -p 'test_coefficient_first_order.py' -v",
+      "dependencies": [
+        {
+          "id": "source:87bab28e84a8d7c7f639a8b3",
+          "sha256": "7c73109e2f902a1e9c6e7e8e5776268663982d1936be7ca0d2152a2893bbf913",
+          "version": "392aeacb202c9ac77dfeae689a966441bb2591ad710c3fa7b4459db3a0271faf"
+        }
+      ],
+      "id": "entry:622abb5a06103a92700e91dc",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test_coefficient_first_order.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "7f6d1abbf31f0028b3130fb22972ddb069cdfea22805954d8650100bf2a9e4fc",
+        "environment_overrides": {},
+        "job": "provenance-paper",
+        "job_if": "needs.selection.outputs.provenance == 'true'",
+        "line": 231,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test_coefficient_first_order.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "evas/validation/paper",
+        "step": "Paper contracts, observable criteria and table provenance",
+        "step_if": null,
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "a958bfe34f9c72e3f2a9f6514679c3a6c1dd27c3a7eb2006457164cc9df66e85",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "evas/validation/paper",
+      "status": "active",
+      "version": "2aa800af09d79f4644921d7e0d27f339b907497aa4ac090f9efc682c20cddafe",
+      "workflow_sha256": "fa6d43b7b339d932a950b0cf099d646236dd5266d17252597f6d5b22b7cb0f14"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:2648364784089c5e5c794d7d",
+        "sha256": "415da0640a46672c7331ade066b7316f6db76f8623c7438a5c4d45d4112b80e4",
+        "version": "175f38acc06747c8d2c56d6cb75101351d94a8d9e04a3d6eeeeb85614959e5ee"
+      },
+      "ci_entrypoint_ids": [
+        "884c3a0c62db126dcaa0f9707d280a83aff6b190ca2f596c83a465dbf71d21c7"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s experiments/backends/dvs2-spectre-validation -p 'test_*.py' -v",
+      "dependencies": [
+        {
+          "id": "source:2648364784089c5e5c794d7d",
+          "sha256": "415da0640a46672c7331ade066b7316f6db76f8623c7438a5c4d45d4112b80e4",
+          "version": "175f38acc06747c8d2c56d6cb75101351d94a8d9e04a3d6eeeeb85614959e5ee"
+        }
+      ],
+      "id": "entry:63e481facb16ee35e0691716",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test_*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "884c3a0c62db126dcaa0f9707d280a83aff6b190ca2f596c83a465dbf71d21c7",
+        "environment_overrides": {},
+        "job": "static-checks",
+        "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+        "line": 200,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test_*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "experiments/backends/dvs2-spectre-validation",
+        "step": "Independent mathematics and checker calibration (no simulator)",
+        "step_if": "needs.selection.outputs.calibration == 'true'",
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "b7f52e30492686f85cbed2e6c86b1891a8163f25fffd84dd416fd7d4013606c8",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "experiments/backends/dvs2-spectre-validation",
+      "status": "active",
+      "version": "2a94c25843d1e70a2a2e3e09a2904c1572be8ad9bf00bcdbf1ac3f99965c4bf6",
+      "workflow_sha256": "c1289f9d76dfeabf105ed9558224bcdaa91038c947b6f7b1d69509ecd42adc74"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:8ef2a65300bb848c24ed68ba",
+        "sha256": "1d50605fcbb32a02ca3dff57e0c3c93bc81f39af70503820247115106a763b7f",
+        "version": "498dd7158ffc80553f56a70d1e6d426bec19021055125500203aa69b919c9b6f"
+      },
+      "ci_entrypoint_ids": [
+        "c06f59de87d92b5cd3a776c956fe23097377a104222e142718813f396e908f2f"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s experiments/backends/event-alignment -p 'test_*.py' -v",
+      "dependencies": [
+        {
+          "id": "source:8ef2a65300bb848c24ed68ba",
+          "sha256": "1d50605fcbb32a02ca3dff57e0c3c93bc81f39af70503820247115106a763b7f",
+          "version": "498dd7158ffc80553f56a70d1e6d426bec19021055125500203aa69b919c9b6f"
+        }
+      ],
+      "id": "entry:65797131bca5d128e76cd2a9",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test_*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "c06f59de87d92b5cd3a776c956fe23097377a104222e142718813f396e908f2f",
+        "environment_overrides": {},
+        "job": "static-checks",
+        "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+        "line": 208,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test_*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "experiments/backends/event-alignment",
+        "step": "Independent mathematics and checker calibration (no simulator)",
+        "step_if": "needs.selection.outputs.calibration == 'true'",
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "1e7ddb55a624d0090f47fd665e66fc8976d328114d599baba40ac42513e28cab",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "experiments/backends/event-alignment",
+      "status": "active",
+      "version": "cbb7e155e006ef68d13b548a58aa3d3ba05ca26cad038268a5b0398607f29858",
+      "workflow_sha256": "fa6d43b7b339d932a950b0cf099d646236dd5266d17252597f6d5b22b7cb0f14"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:f58248cbb14fc047c5164c5a",
+        "sha256": "7207dcfd1e673af117b096bcb91d0da8a502bcd4747b33f79bec1ee2e0aac12f",
+        "version": "d2f3da72b7696e89339d58aa9fdc6555b43ca42b0013d7cbc730718fbd7f05eb"
+      },
+      "ci_entrypoint_ids": [
+        "3a345b8e8d85eb38e2e7d9a0f0d0e23cf2ed285ca7654e34a8d288327adf49ae"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s evas/validation/checker_calibration -v",
+      "dependencies": [
+        {
+          "id": "source:f58248cbb14fc047c5164c5a",
+          "sha256": "7207dcfd1e673af117b096bcb91d0da8a502bcd4747b33f79bec1ee2e0aac12f",
+          "version": "d2f3da72b7696e89339d58aa9fdc6555b43ca42b0013d7cbc730718fbd7f05eb"
+        }
+      ],
+      "id": "entry:65a4484bb91c769caa76cea9",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "3a345b8e8d85eb38e2e7d9a0f0d0e23cf2ed285ca7654e34a8d288327adf49ae",
+        "environment_overrides": {},
+        "job": "provenance-paper",
+        "job_if": "needs.selection.outputs.provenance == 'true'",
+        "line": 230,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "evas/validation/checker_calibration",
+        "step": "Paper contracts, observable criteria and table provenance",
+        "step_if": null,
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "e1eabe255a8679005a6248a42f281ece8adbc1644d3b54cce50a106688fe2d1b",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "evas/validation/checker_calibration",
+      "status": "active",
+      "version": "810d8bba76569bea1e145543755152691260c1a28e94ea6758ed020e12f7b223",
+      "workflow_sha256": "fa6d43b7b339d932a950b0cf099d646236dd5266d17252597f6d5b22b7cb0f14"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:85bcc1ae01154e56cde21756",
+        "sha256": "b273869b7dd2557dea869cc69ef607c84950d8afee6edf892b6bcd51464cdfee",
+        "version": "2db8578f522affbf71be125d6ef28ba6338624c10edd2d1a1db9353b96d7b547"
+      },
+      "ci_entrypoint_ids": [
+        "58e79f388022a831ff2a30c902e23542e3e95b3499e03d23b5b83d51e7a0a962"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s evas/validation/paper -p 'test_criteria.py' -v",
+      "dependencies": [
+        {
+          "id": "source:85bcc1ae01154e56cde21756",
+          "sha256": "b273869b7dd2557dea869cc69ef607c84950d8afee6edf892b6bcd51464cdfee",
+          "version": "2db8578f522affbf71be125d6ef28ba6338624c10edd2d1a1db9353b96d7b547"
+        }
+      ],
+      "id": "entry:65d055aaf5debde000b5a452",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test_criteria.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "58e79f388022a831ff2a30c902e23542e3e95b3499e03d23b5b83d51e7a0a962",
+        "environment_overrides": {},
+        "job": "provenance-paper",
+        "job_if": "needs.selection.outputs.provenance == 'true'",
+        "line": 228,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test_criteria.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "evas/validation/paper",
+        "step": "Paper contracts, observable criteria and table provenance",
+        "step_if": null,
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "aeb0ca1f6c078d2aba4fb50b42a96c62d34eb6f64bcab624b2be125824901cf1",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "evas/validation/paper",
+      "status": "active",
+      "version": "aa6a34daa708e362ade99ab637400b05dca8168848abbfe7df181f306cb2e6e5",
+      "workflow_sha256": "fa6d43b7b339d932a950b0cf099d646236dd5266d17252597f6d5b22b7cb0f14"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:1b7612b3a83e4b7b281131f0",
+        "sha256": "cd82a93e2340936ae8a9e93519b5648ce7e9ca234ff96d1bca736c8e718bb72a",
+        "version": "b8f3720429c6c352f6332018caf67c1fe9f85fb3241d0b8b46af80314ab8760a"
+      },
+      "ci_entrypoint_ids": [
+        "f03f3c38b0e5a8b9d595e8dfee2c23364aaa42b8dc7609751a477a0b4b29b7de"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s scripts/tests -v",
+      "dependencies": [
+        {
+          "id": "source:1b7612b3a83e4b7b281131f0",
+          "sha256": "cd82a93e2340936ae8a9e93519b5648ce7e9ca234ff96d1bca736c8e718bb72a",
+          "version": "b8f3720429c6c352f6332018caf67c1fe9f85fb3241d0b8b46af80314ab8760a"
+        }
+      ],
+      "id": "entry:684883efef038d8261c5768f",
+      "kind": "entrypoint",
+      "namespace": "maintenance",
+      "pattern": "test*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "f03f3c38b0e5a8b9d595e8dfee2c23364aaa42b8dc7609751a477a0b4b29b7de",
+        "environment_overrides": {
+          "GIT_FIXTURE_RETAIN_DIR": "runs/git-fixture-isolation"
+        },
+        "job": "static-checks",
+        "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+        "line": 181,
+        "mode": "declared-ci-literal",
+        "namespace": "maintenance",
+        "pattern": "test*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "scripts/tests",
+        "step": "Traceability and frozen validation identities",
+        "step_if": "needs.selection.outputs.maintenance == 'true'",
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "53228a6e35534642edd5253d7980ea284d99bfeaf3a9f8f833aad327cb2e5d16",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "scripts/tests",
+      "status": "active",
+      "version": "1afed5ddc2bce0cfc24bdc29209aca0088d96901068a37b924ea834c0ac9faf3",
+      "workflow_sha256": "c1289f9d76dfeabf105ed9558224bcdaa91038c947b6f7b1d69509ecd42adc74"
+    },
+    {
+      "actual_receipt": {
         "id": "source:a3661f6d25a07dcddda3fd69",
         "sha256": "ea75d9734692b31bc28b1c737a17e562b275f555962e8f383c3358fc55b26742",
         "version": "f3c93c3268548531e68a37dbf67dbd81b9eceab072bb9f9a34c53db54249d508"
@@ -3631,6 +5272,57 @@
     },
     {
       "actual_receipt": {
+        "id": "source:c44c0a5700768c62d8d93185",
+        "sha256": "4c0e82d277419c50be334ca3f7b7eed201b421492c1a2f8f59ab03b0e350904a",
+        "version": "fc3816a1f4d2cd95764fc3eeb725d915c423fbf467487fb5cc227d304ba1558b"
+      },
+      "ci_entrypoint_ids": [
+        "11d1bf2adec831a8909801804d08d380aad02a73efd9c6d834ac2c9f26b84be0"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s scripts/tests -p test_regression_runner.py -v",
+      "dependencies": [
+        {
+          "id": "source:c44c0a5700768c62d8d93185",
+          "sha256": "4c0e82d277419c50be334ca3f7b7eed201b421492c1a2f8f59ab03b0e350904a",
+          "version": "fc3816a1f4d2cd95764fc3eeb725d915c423fbf467487fb5cc227d304ba1558b"
+        }
+      ],
+      "id": "entry:76aecaf4751bb1b4535e804c",
+      "kind": "entrypoint",
+      "namespace": "maintenance",
+      "pattern": "test_regression_runner.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [],
+        "entry_id": "11d1bf2adec831a8909801804d08d380aad02a73efd9c6d834ac2c9f26b84be0",
+        "environment_overrides": {
+          "CI_BASE": "${{ steps.changes.outputs.base }}",
+          "CI_HEAD": "${{ steps.changes.outputs.head }}"
+        },
+        "job": "selection",
+        "job_if": null,
+        "line": 73,
+        "mode": "declared-ci-literal",
+        "namespace": "maintenance",
+        "pattern": "test_regression_runner.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "scripts/tests",
+        "step": "Check CI routing and changed-line whitespace",
+        "step_if": null,
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "8f65abd6251ca07bcb28918b07c59edc507a601456d667b7c407c495696697e4",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "scripts/tests",
+      "status": "active",
+      "version": "0894d7920db55215e0737a717fbc17b24ed32d5d4dca73bbb3972a12fe2a333b",
+      "workflow_sha256": "fa6d43b7b339d932a950b0cf099d646236dd5266d17252597f6d5b22b7cb0f14"
+    },
+    {
+      "actual_receipt": {
         "id": "source:1c9ddb23a0066aea02503b67",
         "sha256": "9e4de38d0679f69f9906dc077586af712ce1d554da7b660cfaac6d8647d431dc",
         "version": "e69de5ea6aed2b4aa78f2ba965a9f04402f8cc2c0d8d6db7b0bbdc8e20fa78b8"
@@ -3678,6 +5370,57 @@
       "status": "active",
       "version": "84f99b01273c6b27311d5934416443e231a8f786ab7a4f0e82da8d17245bed94",
       "workflow_sha256": "76c7387d4c8a3390edc2ba440f169c14794301867d1f277d3488b654cf585682"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:54cd09719411d8b5247aeb97",
+        "sha256": "5aaecf04f49c419b13afcf1f086b73193d1c17e4037e424aacf30ef7b7877da3",
+        "version": "1b44c24846c0ab82149b925f339930e0f244d6a2f3a252fb64213b94ca8e3bd6"
+      },
+      "ci_entrypoint_ids": [
+        "9649345d15180cd52d5a6331753cd58e69268c8657a46135eebd79a577f2172e"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s scripts/tests -p test_evas_check_policy.py -v",
+      "dependencies": [
+        {
+          "id": "source:54cd09719411d8b5247aeb97",
+          "sha256": "5aaecf04f49c419b13afcf1f086b73193d1c17e4037e424aacf30ef7b7877da3",
+          "version": "1b44c24846c0ab82149b925f339930e0f244d6a2f3a252fb64213b94ca8e3bd6"
+        }
+      ],
+      "id": "entry:79dcdf4c87ae584d9175b6a0",
+      "kind": "entrypoint",
+      "namespace": "maintenance",
+      "pattern": "test_evas_check_policy.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [],
+        "entry_id": "9649345d15180cd52d5a6331753cd58e69268c8657a46135eebd79a577f2172e",
+        "environment_overrides": {
+          "CI_BASE": "${{ steps.changes.outputs.base }}",
+          "CI_HEAD": "${{ steps.changes.outputs.head }}"
+        },
+        "job": "selection",
+        "job_if": null,
+        "line": 70,
+        "mode": "declared-ci-literal",
+        "namespace": "maintenance",
+        "pattern": "test_evas_check_policy.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "scripts/tests",
+        "step": "Check CI routing and changed-line whitespace",
+        "step_if": null,
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "5cdb3b4f641266a115f463190c6d60f6b6679ea36f938dc969c79e4acc06cb09",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "scripts/tests",
+      "status": "active",
+      "version": "fbe99449c99023e6821893843656a47faa5b2ed887ed9f13c2435edf7180983c",
+      "workflow_sha256": "fa6d43b7b339d932a950b0cf099d646236dd5266d17252597f6d5b22b7cb0f14"
     },
     {
       "actual_receipt": {
@@ -4081,6 +5824,212 @@
     },
     {
       "actual_receipt": {
+        "id": "source:2fa4df9ba5b135d593f1ff23",
+        "sha256": "4548766759a47af1c15e3f73d00a61ee549fd471c2485db7eed76f3b445af55c",
+        "version": "1cf895eaecaf7701fc7c5acac075a0f2c99d72fb03fda5cae222d287b8bfaf0f"
+      },
+      "ci_entrypoint_ids": [
+        "304598539646f4618ebc2fa421e22552f16f801af601dbfd02e9a162cff81663"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s evas/validation/paper -p 'test_primitives.py' -v",
+      "dependencies": [
+        {
+          "id": "source:2fa4df9ba5b135d593f1ff23",
+          "sha256": "4548766759a47af1c15e3f73d00a61ee549fd471c2485db7eed76f3b445af55c",
+          "version": "1cf895eaecaf7701fc7c5acac075a0f2c99d72fb03fda5cae222d287b8bfaf0f"
+        }
+      ],
+      "id": "entry:7eb7f4e000687498e3ca5eeb",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test_primitives.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "304598539646f4618ebc2fa421e22552f16f801af601dbfd02e9a162cff81663",
+        "environment_overrides": {},
+        "job": "provenance-paper",
+        "job_if": "needs.selection.outputs.provenance == 'true'",
+        "line": 231,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test_primitives.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "evas/validation/paper",
+        "step": "Paper contracts, observable criteria and table provenance",
+        "step_if": null,
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "fa1b2a107087e9bb2b30e26e06a19124f9b81021f263a1105c558cc8027c6c0e",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "evas/validation/paper",
+      "status": "active",
+      "version": "94e672de9e5a8f1ae2d739d14e1b9f722076101260bb57ad6ea1c6b98a5ec3f4",
+      "workflow_sha256": "c1289f9d76dfeabf105ed9558224bcdaa91038c947b6f7b1d69509ecd42adc74"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:1c9aaba595dded81292ca3d7",
+        "sha256": "5765f92e8532e7b191a9ee4eb6da90bf4dd6a46b1f98aef3066069864ff71bcc",
+        "version": "234cf24effbacee086f932196320c2284821614bcc1e1b31f874e5cdbaa15dfd"
+      },
+      "ci_entrypoint_ids": [
+        "b6669f1714063ac50b8b7e26a61ac8137ab7e9ca52196580037b6d64ca58d744"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s evas/capabilities -p 'test_*.py' -v",
+      "dependencies": [
+        {
+          "id": "source:1c9aaba595dded81292ca3d7",
+          "sha256": "5765f92e8532e7b191a9ee4eb6da90bf4dd6a46b1f98aef3066069864ff71bcc",
+          "version": "234cf24effbacee086f932196320c2284821614bcc1e1b31f874e5cdbaa15dfd"
+        }
+      ],
+      "id": "entry:8020406bd171f269f6e50128",
+      "kind": "entrypoint",
+      "namespace": "maintenance",
+      "pattern": "test_*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "b6669f1714063ac50b8b7e26a61ac8137ab7e9ca52196580037b6d64ca58d744",
+        "environment_overrides": {
+          "GIT_FIXTURE_RETAIN_DIR": "runs/git-fixture-isolation"
+        },
+        "job": "static-checks",
+        "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+        "line": 186,
+        "mode": "declared-ci-literal",
+        "namespace": "maintenance",
+        "pattern": "test_*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "evas/capabilities",
+        "step": "Traceability and frozen validation identities",
+        "step_if": "needs.selection.outputs.maintenance == 'true'",
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "2e072bb7e6f60871bac0128931c6a0b1f573f8fe459f5f8a04838cb01bae7807",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "evas/capabilities",
+      "status": "active",
+      "version": "002b478469ca20f58cb59ff6e3b20c3b6246f28b82d19aff740f234cf9228b73",
+      "workflow_sha256": "fa6d43b7b339d932a950b0cf099d646236dd5266d17252597f6d5b22b7cb0f14"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:1c9aaba595dded81292ca3d7",
+        "sha256": "fbfc7ae88546440c033c5be974ff03c15dff651410fe14c35b818bbcfe2df4a6",
+        "version": "816f418e9c1f1aa575ce7d4bf2c4d45351c472e877c483d6bbf76ea67eca7840"
+      },
+      "ci_entrypoint_ids": [
+        "b6669f1714063ac50b8b7e26a61ac8137ab7e9ca52196580037b6d64ca58d744"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s evas/capabilities -p 'test_*.py' -v",
+      "dependencies": [
+        {
+          "id": "source:1c9aaba595dded81292ca3d7",
+          "sha256": "fbfc7ae88546440c033c5be974ff03c15dff651410fe14c35b818bbcfe2df4a6",
+          "version": "816f418e9c1f1aa575ce7d4bf2c4d45351c472e877c483d6bbf76ea67eca7840"
+        }
+      ],
+      "id": "entry:8020406bd171f269f6e50128",
+      "kind": "entrypoint",
+      "namespace": "maintenance",
+      "pattern": "test_*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "b6669f1714063ac50b8b7e26a61ac8137ab7e9ca52196580037b6d64ca58d744",
+        "environment_overrides": {
+          "GIT_FIXTURE_RETAIN_DIR": "runs/git-fixture-isolation"
+        },
+        "job": "static-checks",
+        "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+        "line": 186,
+        "mode": "declared-ci-literal",
+        "namespace": "maintenance",
+        "pattern": "test_*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "evas/capabilities",
+        "step": "Traceability and frozen validation identities",
+        "step_if": "needs.selection.outputs.maintenance == 'true'",
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "91f4d90d78f8fab7df33d0bb02f3e0ecee828a902cb61de45828bc386274c111",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "evas/capabilities",
+      "status": "active",
+      "version": "21fbba83e8c294bd2ab07d6865fa4ae9c0017e64128fc2577722f066da09c3f7",
+      "workflow_sha256": "fa6d43b7b339d932a950b0cf099d646236dd5266d17252597f6d5b22b7cb0f14"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:1c9aaba595dded81292ca3d7",
+        "sha256": "fc77de6df5b5792aba584c7001e982735044eec9c31ec239be28fb3c8874b878",
+        "version": "af2f033c16c3a47f30a49f30bcfff5901079d2c88058e75e00e53b234a861439"
+      },
+      "ci_entrypoint_ids": [
+        "b6669f1714063ac50b8b7e26a61ac8137ab7e9ca52196580037b6d64ca58d744"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s evas/capabilities -p 'test_*.py' -v",
+      "dependencies": [
+        {
+          "id": "source:1c9aaba595dded81292ca3d7",
+          "sha256": "fc77de6df5b5792aba584c7001e982735044eec9c31ec239be28fb3c8874b878",
+          "version": "af2f033c16c3a47f30a49f30bcfff5901079d2c88058e75e00e53b234a861439"
+        }
+      ],
+      "id": "entry:8020406bd171f269f6e50128",
+      "kind": "entrypoint",
+      "namespace": "maintenance",
+      "pattern": "test_*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "b6669f1714063ac50b8b7e26a61ac8137ab7e9ca52196580037b6d64ca58d744",
+        "environment_overrides": {
+          "GIT_FIXTURE_RETAIN_DIR": "runs/git-fixture-isolation"
+        },
+        "job": "static-checks",
+        "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+        "line": 186,
+        "mode": "declared-ci-literal",
+        "namespace": "maintenance",
+        "pattern": "test_*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "evas/capabilities",
+        "step": "Traceability and frozen validation identities",
+        "step_if": "needs.selection.outputs.maintenance == 'true'",
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "3356506afa5aed1df6d897efc3ba8df6b9a49565df265e9c407c831bb48b37f9",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "evas/capabilities",
+      "status": "active",
+      "version": "f1195bfc7e54f88f9463ca56f9c9a68b41b0ac0c4b46dfc27b42aa8aac5f6423",
+      "workflow_sha256": "fa6d43b7b339d932a950b0cf099d646236dd5266d17252597f6d5b22b7cb0f14"
+    },
+    {
+      "actual_receipt": {
         "id": "source:deab6f90ffdb5fc4a8d179eb",
         "sha256": "4b34fcc01f7a76ea08347890f6f7e6708bd8b2cbb09b88bfa00203146c811c7c",
         "version": "f4b0aeb28d8f460ebd90e7a63357f517895cdffe69fcaa5d5cf226edaf92c33b"
@@ -4180,6 +6129,56 @@
       "workflow_sha256": "76c7387d4c8a3390edc2ba440f169c14794301867d1f277d3488b654cf585682"
     },
     {
+      "actual_receipt": {
+        "id": "source:2d5bc6d6e609fdfec87be8db",
+        "sha256": "d89310f77832711491e2aa45d47d3468ef6c9558194d4ed9dbd203d484a1d349",
+        "version": "632be63fce9d5e7dff0f0d4794dec891e72a136cc124b3e64ec86eb296eb295e"
+      },
+      "ci_entrypoint_ids": [
+        "d295c808cf4e8371a465c29ccfb90266057dfcdb1d30e6bd3aa1e71f765dd18b"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s experiments/performance -p 'test_*.py' -v",
+      "dependencies": [
+        {
+          "id": "source:2d5bc6d6e609fdfec87be8db",
+          "sha256": "d89310f77832711491e2aa45d47d3468ef6c9558194d4ed9dbd203d484a1d349",
+          "version": "632be63fce9d5e7dff0f0d4794dec891e72a136cc124b3e64ec86eb296eb295e"
+        }
+      ],
+      "id": "entry:82d69b41882dda24864bd45f",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test_*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "d295c808cf4e8371a465c29ccfb90266057dfcdb1d30e6bd3aa1e71f765dd18b",
+        "environment_overrides": {},
+        "job": "static-checks",
+        "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+        "line": 208,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test_*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "experiments/performance",
+        "step": "Independent mathematics and checker calibration (no simulator)",
+        "step_if": "needs.selection.outputs.calibration == 'true'",
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "989943ff5d9b165b48dd6a393d69f61b462b3462e5a8c27baedb72218a70c320",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "experiments/performance",
+      "status": "active",
+      "version": "5173f31f621969f047774fd6ea3ea9566f7a78238c4a9130370f9cd47dcee5ea",
+      "workflow_sha256": "c1289f9d76dfeabf105ed9558224bcdaa91038c947b6f7b1d69509ecd42adc74"
+    },
+    {
       "collector": "binary-listing",
       "dependencies": [
         {
@@ -4210,6 +6209,38 @@
       "schema_version": 1,
       "status": "active",
       "version": "2ed3e94272dc73646a16de6e02a96a0bf90c53d027e5809d398e1a8cfd475fbe"
+    },
+    {
+      "collector": "binary-listing",
+      "dependencies": [
+        {
+          "id": "source:dd8b4eb4612b272f0eb05592",
+          "sha256": "4dfdae5a715daf0e83f1cb40bdfc7cd45222bdcb84dab7a22e062cd6c82e00c1",
+          "version": "6363af9172e623f12169cf5a27a49a8ece1460c0330e2c038970aa3ce3fda11e"
+        }
+      ],
+      "id": "entry:875c284ae4c832b541413dbb",
+      "kind": "entrypoint",
+      "listing_profile": "linux-x86_64-regression-opt1-v1",
+      "listing_source": {
+        "id": "source:dd8b4eb4612b272f0eb05592",
+        "sha256": "4dfdae5a715daf0e83f1cb40bdfc7cd45222bdcb84dab7a22e062cd6c82e00c1",
+        "version": "6363af9172e623f12169cf5a27a49a8ece1460c0330e2c038970aa3ce3fda11e"
+      },
+      "namespace": "rust-tests",
+      "observer_sha256": "f1ade74617fa171c5048246986d52e772b0913ffce28713af6e2fa4af5904892",
+      "provenance_scope": "actual native listing, original observer; not upgraded to later helper execution",
+      "rust_target": {
+        "name": "history_consumer",
+        "package": "evas-kernel",
+        "target_kind": [
+          "test"
+        ],
+        "version": "0.25.0"
+      },
+      "schema_version": 1,
+      "status": "active",
+      "version": "7477e435d2f6589f248a763843532b8895b9176be2f6ffc0e7c528478c8253cd"
     },
     {
       "actual_receipt": {
@@ -4344,6 +6375,38 @@
       "version": "0f672280ecc37ae40cdbbe8a20b98ba0a4faaa429d6102b7764854ae51709a85"
     },
     {
+      "collector": "binary-listing",
+      "dependencies": [
+        {
+          "id": "source:dd8b4eb4612b272f0eb05592",
+          "sha256": "4dfdae5a715daf0e83f1cb40bdfc7cd45222bdcb84dab7a22e062cd6c82e00c1",
+          "version": "6363af9172e623f12169cf5a27a49a8ece1460c0330e2c038970aa3ce3fda11e"
+        }
+      ],
+      "id": "entry:8c3f459a1a336792a4a33ae8",
+      "kind": "entrypoint",
+      "listing_profile": "linux-x86_64-regression-opt1-v1",
+      "listing_source": {
+        "id": "source:dd8b4eb4612b272f0eb05592",
+        "sha256": "4dfdae5a715daf0e83f1cb40bdfc7cd45222bdcb84dab7a22e062cd6c82e00c1",
+        "version": "6363af9172e623f12169cf5a27a49a8ece1460c0330e2c038970aa3ce3fda11e"
+      },
+      "namespace": "rust-tests",
+      "observer_sha256": "f1ade74617fa171c5048246986d52e772b0913ffce28713af6e2fa4af5904892",
+      "provenance_scope": "actual native listing, original observer; not upgraded to later helper execution",
+      "rust_target": {
+        "name": "evas-kernel",
+        "package": "evas-kernel",
+        "target_kind": [
+          "bin"
+        ],
+        "version": "0.25.0"
+      },
+      "schema_version": 1,
+      "status": "active",
+      "version": "f7830c53ecf99c5c03265b9e032e17f2ef9a62b2ddade053647e955b855017e4"
+    },
+    {
       "actual_receipt": {
         "id": "source:5677fd16321edf436a193624",
         "sha256": "bd8367b03107df1b5e7609ba05f5b1b2c76d23869ad87f7d5cdf9dab17a8a545",
@@ -4392,6 +6455,106 @@
       "status": "active",
       "version": "bfb0674ef4ca5397f567bbdca7b35d64ccb8321335846e0502755e1583998efd",
       "workflow_sha256": "75da6ea8a3f0e7baa90b99388833ae2d757da66754b1d1dea3a8113d1fd1fa3b"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:4c30d9edd98dd5b42e7df0bc",
+        "sha256": "55f4d6d1722d7c9d5591558fd6bf9dcc72c574d64e3f312bd41ccbf6032c21b8",
+        "version": "eef953abeffe2793d210d7b2ce8c59b0ae4ae6f9645c170c97d43c5afcc7602d"
+      },
+      "ci_entrypoint_ids": [
+        "5b109e12efd276d45ea1c185d94cc4faca4f87ea83040fd24d08a9bb66f72e4f"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s evas/validation/strobe -p 'test_*.py' -v",
+      "dependencies": [
+        {
+          "id": "source:4c30d9edd98dd5b42e7df0bc",
+          "sha256": "55f4d6d1722d7c9d5591558fd6bf9dcc72c574d64e3f312bd41ccbf6032c21b8",
+          "version": "eef953abeffe2793d210d7b2ce8c59b0ae4ae6f9645c170c97d43c5afcc7602d"
+        }
+      ],
+      "id": "entry:8d6e43dd379478b5d315700b",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test_*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "5b109e12efd276d45ea1c185d94cc4faca4f87ea83040fd24d08a9bb66f72e4f",
+        "environment_overrides": {},
+        "job": "static-checks",
+        "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+        "line": 207,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test_*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "evas/validation/strobe",
+        "step": "Independent mathematics and checker calibration (no simulator)",
+        "step_if": "needs.selection.outputs.calibration == 'true'",
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "c9d59d7cd244e842343d5cc001948410957487f0482c0eb4af418e52179ee1d5",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "evas/validation/strobe",
+      "status": "active",
+      "version": "7a5457969218b249b625c9ad106f55d39351a62ade2be84cf0855f09a43b8cbe",
+      "workflow_sha256": "fa6d43b7b339d932a950b0cf099d646236dd5266d17252597f6d5b22b7cb0f14"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:9aedb74e4d84abee1a7d0be3",
+        "sha256": "34f3ece7a0d9ed013afc3bbad56db9f69a78cee59cdc8aee16cacff59ee0ef9c",
+        "version": "ff1cc34a5af2a7f48f804c1ba7eff16b980d66af5ddb80b51750c12a36c40fd0"
+      },
+      "ci_entrypoint_ids": [
+        "b1911c92a27d3294753e09ef8bd85e63563e2bce4748c3dc3c20c8f814260ad5"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s experiments/performance -p 'test_*.py' -v",
+      "dependencies": [
+        {
+          "id": "source:9aedb74e4d84abee1a7d0be3",
+          "sha256": "34f3ece7a0d9ed013afc3bbad56db9f69a78cee59cdc8aee16cacff59ee0ef9c",
+          "version": "ff1cc34a5af2a7f48f804c1ba7eff16b980d66af5ddb80b51750c12a36c40fd0"
+        }
+      ],
+      "id": "entry:8dcd7a84c127d00105f8914c",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test_*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "b1911c92a27d3294753e09ef8bd85e63563e2bce4748c3dc3c20c8f814260ad5",
+        "environment_overrides": {},
+        "job": "static-checks",
+        "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+        "line": 212,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test_*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "experiments/performance",
+        "step": "Independent mathematics and checker calibration (no simulator)",
+        "step_if": "needs.selection.outputs.calibration == 'true'",
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "63c9de8f151b39e72192198819fae0b39b77477ec7b5c18c26fb9e81cb2936ec",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "experiments/performance",
+      "status": "active",
+      "version": "dbdb0464a608da5ec45e742a24800cc6e12eefd135d5da96b9493a9d6042dd11",
+      "workflow_sha256": "fa6d43b7b339d932a950b0cf099d646236dd5266d17252597f6d5b22b7cb0f14"
     },
     {
       "actual_receipt": {
@@ -4595,6 +6758,106 @@
     },
     {
       "actual_receipt": {
+        "id": "source:65222e73414c3852d9e608e4",
+        "sha256": "232ec0678099f9a72102584497caa9a3eb306293a3c00030aa75b4af8878606d",
+        "version": "765d81955627312fa6d1177b9d7b26d67d169c14f45ea641a7e54a0e324b74f4"
+      },
+      "ci_entrypoint_ids": [
+        "3ba56f2dbff05d0d7591feffea4db76116eaa5bdf83afba8b3d2509c92c2460f"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s evas/validation/sample_edge_filter -p 'test_*.py' -v",
+      "dependencies": [
+        {
+          "id": "source:65222e73414c3852d9e608e4",
+          "sha256": "232ec0678099f9a72102584497caa9a3eb306293a3c00030aa75b4af8878606d",
+          "version": "765d81955627312fa6d1177b9d7b26d67d169c14f45ea641a7e54a0e324b74f4"
+        }
+      ],
+      "id": "entry:925803487dd355b723b70388",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test_*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "3ba56f2dbff05d0d7591feffea4db76116eaa5bdf83afba8b3d2509c92c2460f",
+        "environment_overrides": {},
+        "job": "static-checks",
+        "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+        "line": 209,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test_*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "evas/validation/sample_edge_filter",
+        "step": "Independent mathematics and checker calibration (no simulator)",
+        "step_if": "needs.selection.outputs.calibration == 'true'",
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "f042dc2b1f49be4afe3570e0b2bc05d328c2980fd634bf53a6eb867adb46c52f",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "evas/validation/sample_edge_filter",
+      "status": "active",
+      "version": "9ea9a384f9652740a4a16273a4fc8ce36c48e878a6f36c79983132ba75b10ddb",
+      "workflow_sha256": "fa6d43b7b339d932a950b0cf099d646236dd5266d17252597f6d5b22b7cb0f14"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:8ebf9689da233f0a4f527412",
+        "sha256": "ec6d2a9ee945f7a5e686f8501e7f0c9bc2d50c5453ea2608f64e1130ab9209ce",
+        "version": "f6214a12600e361ea91544729a056cc8e2662a1cf6a2d009fe8e8362c5cbabb1"
+      },
+      "ci_entrypoint_ids": [
+        "a779fee8dfb387c4dcf5672a92c209d651787dfa940cc3f700c326d24e8f73dd"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s evas/validation/paper -p 'test_precision_v2.py' -v",
+      "dependencies": [
+        {
+          "id": "source:8ebf9689da233f0a4f527412",
+          "sha256": "ec6d2a9ee945f7a5e686f8501e7f0c9bc2d50c5453ea2608f64e1130ab9209ce",
+          "version": "f6214a12600e361ea91544729a056cc8e2662a1cf6a2d009fe8e8362c5cbabb1"
+        }
+      ],
+      "id": "entry:9271e15e8ccf11877815f0fa",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test_precision_v2.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "a779fee8dfb387c4dcf5672a92c209d651787dfa940cc3f700c326d24e8f73dd",
+        "environment_overrides": {},
+        "job": "provenance-paper",
+        "job_if": "needs.selection.outputs.provenance == 'true'",
+        "line": 234,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test_precision_v2.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "evas/validation/paper",
+        "step": "Paper contracts, observable criteria and table provenance",
+        "step_if": null,
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "47f7c258a378470c74385b058f209cf33967aec86c11396c3a29deeb1fbdcec6",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "evas/validation/paper",
+      "status": "active",
+      "version": "0613de7690ac433c6ee30b894d429d42092ea26ceae9439e353655225a85e95f",
+      "workflow_sha256": "fa6d43b7b339d932a950b0cf099d646236dd5266d17252597f6d5b22b7cb0f14"
+    },
+    {
+      "actual_receipt": {
         "id": "source:0f861709c5fead2b6f47996d",
         "sha256": "c030688bcb054f16ba7631ab556f3db1782e0051600754929335ea401cf90a8e",
         "version": "ba02f877293b7f1de22e074663d0277b0476abfe387f78237519ccaba2f14f4a"
@@ -4642,6 +6905,106 @@
       "status": "active",
       "version": "0edf02875fd16e386e4c041142f5fc65f05ad8472fa9f5d60a1b9d75582ff65e",
       "workflow_sha256": "354b71b77cf7357d3999860b5fcae2fcb311ae3dcda89adc5253faf7ef6f89dc"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:449ece8e165dd6436430d454",
+        "sha256": "da980c81e69827c4676655cfab4384864334413c2737ab2e8e49e93ea88b00bb",
+        "version": "bf6951127bd9ff43822acc0479bb4746fd104139ceaa04e319848bd762aa8896"
+      },
+      "ci_entrypoint_ids": [
+        "be081671f1f682155ab79649097d68c5640ff05d103e200ac8324b4822c7a165"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s evas/validation/paper -p 'test_primitives.py' -v",
+      "dependencies": [
+        {
+          "id": "source:449ece8e165dd6436430d454",
+          "sha256": "da980c81e69827c4676655cfab4384864334413c2737ab2e8e49e93ea88b00bb",
+          "version": "bf6951127bd9ff43822acc0479bb4746fd104139ceaa04e319848bd762aa8896"
+        }
+      ],
+      "id": "entry:9536a45ecae7f60a94c93084",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test_primitives.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "be081671f1f682155ab79649097d68c5640ff05d103e200ac8324b4822c7a165",
+        "environment_overrides": {},
+        "job": "provenance-paper",
+        "job_if": "needs.selection.outputs.provenance == 'true'",
+        "line": 235,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test_primitives.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "evas/validation/paper",
+        "step": "Paper contracts, observable criteria and table provenance",
+        "step_if": null,
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "6af680e6ac2d4bee29402184b88f68fff6f356a8e676a372c2b1743adeaff0fa",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "evas/validation/paper",
+      "status": "active",
+      "version": "a2367fec80388ecf248a7989ad060d95aef5c13fb5ed64ce5588f8a1382237a1",
+      "workflow_sha256": "fa6d43b7b339d932a950b0cf099d646236dd5266d17252597f6d5b22b7cb0f14"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:d6c04487666d1ff0992d88ff",
+        "sha256": "e6feb3b294e7be70c3ca8db26a74dc8a5da95c8ffb6db4d942b56f84dd29cefa",
+        "version": "b754dd444127ae7756c8df29870012ebba9d51fae1d5fb8805304f749bdf0967"
+      },
+      "ci_entrypoint_ids": [
+        "0de9c9f78fe66fec2847947aca247fbf133fe7f3db67eb19d07b3f78cf39d19e"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s evas/validation/paper -p 'test_precision_binding.py' -v",
+      "dependencies": [
+        {
+          "id": "source:d6c04487666d1ff0992d88ff",
+          "sha256": "e6feb3b294e7be70c3ca8db26a74dc8a5da95c8ffb6db4d942b56f84dd29cefa",
+          "version": "b754dd444127ae7756c8df29870012ebba9d51fae1d5fb8805304f749bdf0967"
+        }
+      ],
+      "id": "entry:955978eb26fedc14e8905998",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test_precision_binding.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "0de9c9f78fe66fec2847947aca247fbf133fe7f3db67eb19d07b3f78cf39d19e",
+        "environment_overrides": {},
+        "job": "provenance-paper",
+        "job_if": "needs.selection.outputs.provenance == 'true'",
+        "line": 233,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test_precision_binding.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "evas/validation/paper",
+        "step": "Paper contracts, observable criteria and table provenance",
+        "step_if": null,
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "a8f093ffff83ef52c6a2010f2f67a9a78ee3c3efed7dc54114020d513153a439",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "evas/validation/paper",
+      "status": "active",
+      "version": "b0a56638acf383558e1a710b226ec5bbf9ecc65731093fc8ea1f52f235e3fc61",
+      "workflow_sha256": "fa6d43b7b339d932a950b0cf099d646236dd5266d17252597f6d5b22b7cb0f14"
     },
     {
       "actual_receipt": {
@@ -4745,6 +7108,56 @@
     },
     {
       "actual_receipt": {
+        "id": "source:d4cb51beed909e493064fb2e",
+        "sha256": "8914be8cf1a0e5ab48bc1118f72fc22efb197bb22bea4fd7345c6d1cbc2c9a94",
+        "version": "547f7b3fa16ddfb2aa809ecb3b15c87d0acfe2bdba3cc0886f83ee7dd4ec076b"
+      },
+      "ci_entrypoint_ids": [
+        "a849e408f99b64847ab3bc05ffef3292489bc73c294d1dbf0308f85fe098753f"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s evas/validation/paper -p 'test_precision_binding.py' -v",
+      "dependencies": [
+        {
+          "id": "source:d4cb51beed909e493064fb2e",
+          "sha256": "8914be8cf1a0e5ab48bc1118f72fc22efb197bb22bea4fd7345c6d1cbc2c9a94",
+          "version": "547f7b3fa16ddfb2aa809ecb3b15c87d0acfe2bdba3cc0886f83ee7dd4ec076b"
+        }
+      ],
+      "id": "entry:9db6cee9bafdc196654af1ac",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test_precision_binding.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "a849e408f99b64847ab3bc05ffef3292489bc73c294d1dbf0308f85fe098753f",
+        "environment_overrides": {},
+        "job": "provenance-paper",
+        "job_if": "needs.selection.outputs.provenance == 'true'",
+        "line": 229,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test_precision_binding.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "evas/validation/paper",
+        "step": "Paper contracts, observable criteria and table provenance",
+        "step_if": null,
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "aa125997eb28a62ad23f4239022f1635e62e3f86eb7ac9a0f0bdac09330ca0d5",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "evas/validation/paper",
+      "status": "active",
+      "version": "45a8e5fdc1c632a39cfde3485ec7c3bf0df94be0eed3ca8df4b4ec50a86e6839",
+      "workflow_sha256": "c1289f9d76dfeabf105ed9558224bcdaa91038c947b6f7b1d69509ecd42adc74"
+    },
+    {
+      "actual_receipt": {
         "id": "source:a801ac0d457aa4b32f892fdc",
         "sha256": "2f995ed7a1262582c75d5f7517d89361434b3d1a02c576cf3dbc1d878f419abf",
         "version": "6fff9e7911e47d0218e8ef698688ee01cba9c1c57cf4facd1fa5b88eecd155c2"
@@ -4842,6 +7255,185 @@
       "status": "active",
       "version": "e6b7ce3085846c7a5a80bfdce7d307beb843bd7fb243e41c2c8b8e6a0cb4d1cd",
       "workflow_sha256": "37456de701eea3dc7943ea1be778994dfd55fc40ce7b3fcc9985c7972310859c"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:6d308220fdcb36f34ac816ac",
+        "sha256": "20725ddb4bf65dc293cdfe30dac3ce07286593f096a8ac9455dab098d14b98c0",
+        "version": "22c0a4657aa4e6f8ca1ade089d35b594189a3d03d8bd14ac023863957091d823"
+      },
+      "ci_entrypoint_ids": [
+        "c75532fb494ca36216640a1f11d282653dd4c3c143c06c7265dc6e4674a686d4"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s evas/validation/sample_edge_filter -p 'test_*.py' -v",
+      "dependencies": [
+        {
+          "id": "source:6d308220fdcb36f34ac816ac",
+          "sha256": "20725ddb4bf65dc293cdfe30dac3ce07286593f096a8ac9455dab098d14b98c0",
+          "version": "22c0a4657aa4e6f8ca1ade089d35b594189a3d03d8bd14ac023863957091d823"
+        }
+      ],
+      "id": "entry:a1055e72fd44d922e14b20b1",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test_*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "c75532fb494ca36216640a1f11d282653dd4c3c143c06c7265dc6e4674a686d4",
+        "environment_overrides": {},
+        "job": "static-checks",
+        "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+        "line": 205,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test_*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "evas/validation/sample_edge_filter",
+        "step": "Independent mathematics and checker calibration (no simulator)",
+        "step_if": "needs.selection.outputs.calibration == 'true'",
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "11e12bf1b5adcb5f383c719e3eac91461b7d7ee51ae896ffd4dfd6a6b3443879",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "evas/validation/sample_edge_filter",
+      "status": "active",
+      "version": "a433daa5e7307906b1170a256c478873e7ba1bcfd8bf419518879fc0b7491a97",
+      "workflow_sha256": "c1289f9d76dfeabf105ed9558224bcdaa91038c947b6f7b1d69509ecd42adc74"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:d1b84eb5bb875035a9faff7e",
+        "sha256": "da20de16dc16ef7cc895944cd01449fa826aa8f0fbd60e49d69dc3468ccd897b",
+        "version": "009baae45961884d67ca6075fb00a60bb553b287d8c77752ff0fffcfda4536c3"
+      },
+      "ci_entrypoint_ids": [
+        "f44ecfcbb765777137e469b8b96d22b205d9d5f21cc95ccbbf85fbb51197c710"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": null,
+      "dependencies": [
+        {
+          "id": "source:d1b84eb5bb875035a9faff7e",
+          "sha256": "da20de16dc16ef7cc895944cd01449fa826aa8f0fbd60e49d69dc3468ccd897b",
+          "version": "009baae45961884d67ca6075fb00a60bb553b287d8c77752ff0fffcfda4536c3"
+        }
+      ],
+      "id": "entry:a11b6e01ce3bd7c46cee3cd6",
+      "kind": "entrypoint",
+      "namespace": "python-regression",
+      "pattern": "test*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "f44ecfcbb765777137e469b8b96d22b205d9d5f21cc95ccbbf85fbb51197c710",
+        "environment_overrides": {
+          "CARGO_PROFILE_DEV_DEBUG_ASSERTIONS": "true",
+          "CARGO_PROFILE_DEV_OPT_LEVEL": "1",
+          "CARGO_PROFILE_DEV_OVERFLOW_CHECKS": "true",
+          "PYTHONPATH": "evas/src"
+        },
+        "job": "regression",
+        "line": null,
+        "mode": "primary-runner-argparse-discovery-only",
+        "namespace": "python-regression",
+        "origins": [
+          {
+            "command": "python3 -B scripts/run_regression.py --shard-count 4 --shard-index ${{ matrix.shard }} --weights scripts/regression-weights.json --input-identity runs/regression-identity.json --report runs/regression-evidence/report.json > runs/regression-evidence/stdout.txt 2> runs/regression-evidence/stderr.txt",
+            "declared_python_versions": [
+              "3.12"
+            ],
+            "environment_overrides": {
+              "CARGO_PROFILE_DEV_DEBUG_ASSERTIONS": "true",
+              "CARGO_PROFILE_DEV_OPT_LEVEL": "1",
+              "CARGO_PROFILE_DEV_OVERFLOW_CHECKS": "true",
+              "PYTHONPATH": "evas/src"
+            },
+            "executed": false,
+            "job": "regression",
+            "job_if": "needs.selection.outputs.regression == 'true'",
+            "kind": "other-python-script",
+            "line": 373,
+            "method_denominator": null,
+            "source": "scripts/run_regression.py",
+            "step": "Collect complete Python regression observations",
+            "step_if": "steps.reuse.outputs.verified != 'true'",
+            "workflow": ".github/workflows/numerical-assurance.yml"
+          }
+        ],
+        "pattern": "test*.py",
+        "purpose": "Full method construction; not selected scientific test execution.",
+        "source": "scripts/run_regression.py",
+        "source_sha256": "dc2ed03b722fd35e9a20f6eda424ac2ff39b3c22f2081a29c5f0777a9b148985",
+        "start": "evas/tests",
+        "step": "primary argparse collection",
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "8f0bb33ec073e66330ac3eeff5f13cedb200b4dd6e2eb466b65e5c521c1f06cd",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "evas/tests",
+      "status": "active",
+      "version": "25f643fef7c4da5d55ae853e21c65e7fc98d8db8e6a1ba3442a0d994afb394a1",
+      "workflow_sha256": "fa6d43b7b339d932a950b0cf099d646236dd5266d17252597f6d5b22b7cb0f14"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:0bf82962600a9baff6ca431a",
+        "sha256": "1fbd9e96ac391f37eaa1712d14e85df831413f4cb07a9d864daf100449c32875",
+        "version": "2490f8ea32533d29540d738b161ff7ffc28b3c96d0e396d04e7592f8f6ac4a05"
+      },
+      "ci_entrypoint_ids": [
+        "c66312e1a786d21c4495964c1eb5cd6413ed4a5fc080846cf558229f5e0b621e"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s experiments/backends/implicit-event-restart -p 'test_check.py' -v",
+      "dependencies": [
+        {
+          "id": "source:0bf82962600a9baff6ca431a",
+          "sha256": "1fbd9e96ac391f37eaa1712d14e85df831413f4cb07a9d864daf100449c32875",
+          "version": "2490f8ea32533d29540d738b161ff7ffc28b3c96d0e396d04e7592f8f6ac4a05"
+        }
+      ],
+      "id": "entry:a27e04abb541a5897cfc07d2",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test_check.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "c66312e1a786d21c4495964c1eb5cd6413ed4a5fc080846cf558229f5e0b621e",
+        "environment_overrides": {},
+        "job": "static-checks",
+        "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+        "line": 211,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test_check.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "experiments/backends/implicit-event-restart",
+        "step": "Independent mathematics and checker calibration (no simulator)",
+        "step_if": "needs.selection.outputs.calibration == 'true'",
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "04673ad5c71b467c9425ae97c43d10e73e562d4b43ea057c8acd89e259f01738",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "experiments/backends/implicit-event-restart",
+      "status": "active",
+      "version": "79135d0bf9bb29892508c718754894d98982bfa1c3fbb9e3af3005f0cd6fc408",
+      "workflow_sha256": "fa6d43b7b339d932a950b0cf099d646236dd5266d17252597f6d5b22b7cb0f14"
     },
     {
       "actual_receipt": {
@@ -5042,6 +7634,106 @@
       "status": "active",
       "version": "f96cf65156d43ac1f009660250f8cafdc0654654c1d35697ef8cacc3c5e7c5f5",
       "workflow_sha256": "76c7387d4c8a3390edc2ba440f169c14794301867d1f277d3488b654cf585682"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:4136ab19c48052d840e5c984",
+        "sha256": "0636d8650e69a6d4f5016ee6ef84a37ec92f68ac0e5ea4bf3d11f0f76c032d8a",
+        "version": "9dd549fed31fa671aaab5c0a2d0b8daee522744a28e497d9589ecc1d8c258a68"
+      },
+      "ci_entrypoint_ids": [
+        "9187aa2a06fffe0880d8355db1826efbad5f46c03d0070deb46b7e7d095f6c46"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s experiments/backends/spectre-alignment -p 'test_*.py' -v",
+      "dependencies": [
+        {
+          "id": "source:4136ab19c48052d840e5c984",
+          "sha256": "0636d8650e69a6d4f5016ee6ef84a37ec92f68ac0e5ea4bf3d11f0f76c032d8a",
+          "version": "9dd549fed31fa671aaab5c0a2d0b8daee522744a28e497d9589ecc1d8c258a68"
+        }
+      ],
+      "id": "entry:a45b5fe8cd8dde2dc2496ec2",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test_*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "9187aa2a06fffe0880d8355db1826efbad5f46c03d0070deb46b7e7d095f6c46",
+        "environment_overrides": {},
+        "job": "static-checks",
+        "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+        "line": 205,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test_*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "experiments/backends/spectre-alignment",
+        "step": "Independent mathematics and checker calibration (no simulator)",
+        "step_if": "needs.selection.outputs.calibration == 'true'",
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "46b2400adaed1893cfcea4c25f271d9577a271429aa21dec423136b1570fcc41",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "experiments/backends/spectre-alignment",
+      "status": "active",
+      "version": "bd7932dbe511f4fa057afe3b8259c1dae8a7c7bfa210599589c4b1dea948fa4d",
+      "workflow_sha256": "fa6d43b7b339d932a950b0cf099d646236dd5266d17252597f6d5b22b7cb0f14"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:8fa7d6decfbfd9d2fb1af41f",
+        "sha256": "0324160d090844ed0ed82682a5ce18b571b3f847c6676c62616827f1c3893c51",
+        "version": "8ddad4515c426537a8d7366a160389fa66a81855090b7bff037ddbf1d475c65d"
+      },
+      "ci_entrypoint_ids": [
+        "b63afd7eec80526b9666b358bae46e1077a5ac71ce60d4f3fb3d00daa7cf22c4"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s evas/validation/paper -p 'test_precision.py' -v",
+      "dependencies": [
+        {
+          "id": "source:8fa7d6decfbfd9d2fb1af41f",
+          "sha256": "0324160d090844ed0ed82682a5ce18b571b3f847c6676c62616827f1c3893c51",
+          "version": "8ddad4515c426537a8d7366a160389fa66a81855090b7bff037ddbf1d475c65d"
+        }
+      ],
+      "id": "entry:a55afd5b7849b63a21632edd",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test_precision.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "b63afd7eec80526b9666b358bae46e1077a5ac71ce60d4f3fb3d00daa7cf22c4",
+        "environment_overrides": {},
+        "job": "provenance-paper",
+        "job_if": "needs.selection.outputs.provenance == 'true'",
+        "line": 232,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test_precision.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "evas/validation/paper",
+        "step": "Paper contracts, observable criteria and table provenance",
+        "step_if": null,
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "10b3a90c7fa212d1409df2694ee30992c3636f14c26362f29256d5b428ff6d4b",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "evas/validation/paper",
+      "status": "active",
+      "version": "f447a154dc48cadb8bc28af873a0fd30371577ee93c3d493a14fe082494983cb",
+      "workflow_sha256": "fa6d43b7b339d932a950b0cf099d646236dd5266d17252597f6d5b22b7cb0f14"
     },
     {
       "actual_receipt": {
@@ -5424,6 +8116,38 @@
       "schema_version": 1,
       "status": "active",
       "version": "0ddcce0f385b8791a74416ecbdccfb2465f8fd11fbacbf6d420cb38b356f8f50"
+    },
+    {
+      "collector": "binary-listing",
+      "dependencies": [
+        {
+          "id": "source:dd8b4eb4612b272f0eb05592",
+          "sha256": "4dfdae5a715daf0e83f1cb40bdfc7cd45222bdcb84dab7a22e062cd6c82e00c1",
+          "version": "6363af9172e623f12169cf5a27a49a8ece1460c0330e2c038970aa3ce3fda11e"
+        }
+      ],
+      "id": "entry:ad9c0c08e83601848bd17d89",
+      "kind": "entrypoint",
+      "listing_profile": "linux-x86_64-regression-opt1-v1",
+      "listing_source": {
+        "id": "source:dd8b4eb4612b272f0eb05592",
+        "sha256": "4dfdae5a715daf0e83f1cb40bdfc7cd45222bdcb84dab7a22e062cd6c82e00c1",
+        "version": "6363af9172e623f12169cf5a27a49a8ece1460c0330e2c038970aa3ce3fda11e"
+      },
+      "namespace": "rust-tests",
+      "observer_sha256": "f1ade74617fa171c5048246986d52e772b0913ffce28713af6e2fa4af5904892",
+      "provenance_scope": "actual native listing, original observer; not upgraded to later helper execution",
+      "rust_target": {
+        "name": "evas_ir",
+        "package": "evas-ir",
+        "target_kind": [
+          "lib"
+        ],
+        "version": "0.1.0"
+      },
+      "schema_version": 1,
+      "status": "active",
+      "version": "418a05d621f8327496857c3942afed459a7c038503d75cfe4d41ae663c8ad2dc"
     },
     {
       "actual_receipt": {
@@ -6128,6 +8852,58 @@
     {
       "actual_receipt": {
         "id": "source:0ed66c59ce30ddaff94b0abd",
+        "sha256": "40e639e1769788bfcd6b9237dadfc59b61da311fdc6ca6d4b9bacb8c1044faec",
+        "version": "ee68d8ed9ee41d1cbe1857d6e441d3942a92f9b79f565a2a7c88df86685e1da0"
+      },
+      "ci_entrypoint_ids": [
+        "7ca3014facd481757071df99f0ad67f44e04b45c671019efa8cd05a184dc88da"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s evas/capabilities -p 'test_*.py' -v",
+      "dependencies": [
+        {
+          "id": "source:0ed66c59ce30ddaff94b0abd",
+          "sha256": "40e639e1769788bfcd6b9237dadfc59b61da311fdc6ca6d4b9bacb8c1044faec",
+          "version": "ee68d8ed9ee41d1cbe1857d6e441d3942a92f9b79f565a2a7c88df86685e1da0"
+        }
+      ],
+      "id": "entry:b8939fdddbd82f98f7f06185",
+      "kind": "entrypoint",
+      "namespace": "maintenance",
+      "pattern": "test_*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "7ca3014facd481757071df99f0ad67f44e04b45c671019efa8cd05a184dc88da",
+        "environment_overrides": {
+          "GIT_FIXTURE_RETAIN_DIR": "runs/git-fixture-isolation"
+        },
+        "job": "static-checks",
+        "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+        "line": 177,
+        "mode": "declared-ci-literal",
+        "namespace": "maintenance",
+        "pattern": "test_*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "evas/capabilities",
+        "step": "Traceability and frozen validation identities",
+        "step_if": "needs.selection.outputs.maintenance == 'true'",
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "6447a90d3e81e6b854fe92b6a353772d250cba4faf4ab151929167bd1cd58cf9",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "evas/capabilities",
+      "status": "active",
+      "version": "231e1a2442a20ffd267df0c58c1aa29cb094e53a679406c9d3cb06575ad6264a",
+      "workflow_sha256": "75da6ea8a3f0e7baa90b99388833ae2d757da66754b1d1dea3a8113d1fd1fa3b"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:0ed66c59ce30ddaff94b0abd",
         "sha256": "7381d06b5a6fdf402eb055b075eeee48af2af2eb067d4c58e7c806e8a1f9df9c",
         "version": "5d29e400aeae8f2092972cf9397672b8d64a953d41002135cb4f88c79d53a7d7"
       },
@@ -6332,6 +9108,58 @@
       "status": "active",
       "version": "cdb20f73315c03d90fef5673ccc73df6d97a65657b43ee8a83d9a0c80746b295",
       "workflow_sha256": "76c7387d4c8a3390edc2ba440f169c14794301867d1f277d3488b654cf585682"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:0ed66c59ce30ddaff94b0abd",
+        "sha256": "720c9454726916c420aa0c8c1fee0180421ba5801e0ce242ef5704a883768957",
+        "version": "70c317726e40042ac4928ca161a112cd57282a817f70d74948bd4f0062fdedff"
+      },
+      "ci_entrypoint_ids": [
+        "7ca3014facd481757071df99f0ad67f44e04b45c671019efa8cd05a184dc88da"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s evas/capabilities -p 'test_*.py' -v",
+      "dependencies": [
+        {
+          "id": "source:0ed66c59ce30ddaff94b0abd",
+          "sha256": "720c9454726916c420aa0c8c1fee0180421ba5801e0ce242ef5704a883768957",
+          "version": "70c317726e40042ac4928ca161a112cd57282a817f70d74948bd4f0062fdedff"
+        }
+      ],
+      "id": "entry:b8939fdddbd82f98f7f06185",
+      "kind": "entrypoint",
+      "namespace": "maintenance",
+      "pattern": "test_*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "7ca3014facd481757071df99f0ad67f44e04b45c671019efa8cd05a184dc88da",
+        "environment_overrides": {
+          "GIT_FIXTURE_RETAIN_DIR": "runs/git-fixture-isolation"
+        },
+        "job": "static-checks",
+        "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+        "line": 177,
+        "mode": "declared-ci-literal",
+        "namespace": "maintenance",
+        "pattern": "test_*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "evas/capabilities",
+        "step": "Traceability and frozen validation identities",
+        "step_if": "needs.selection.outputs.maintenance == 'true'",
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "04ba675c285fe4052fd6930005e0d0da85e3328293b6e9af76694adc207cf1c6",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "evas/capabilities",
+      "status": "active",
+      "version": "db6a2e802fd49b2fb927012228fb500f0f0ed4599eed1fe5ce645fb42441ac49",
+      "workflow_sha256": "75da6ea8a3f0e7baa90b99388833ae2d757da66754b1d1dea3a8113d1fd1fa3b"
     },
     {
       "actual_receipt": {
@@ -6542,6 +9370,136 @@
       "status": "active",
       "version": "e997e3e7c85ac097485cb6116d4a7448758f1742709a3106c9cd1f7e53fef687",
       "workflow_sha256": "70dba1d0705b83d4811e2d79502cb96b891fe3cd8ea32cfb5c5ddf7b3f407dfa"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:75dc8030aff0f06565fcc928",
+        "sha256": "e91c9c4762727ef53438d29c5247c4c9b032eccef58fd16795de7ba997f04906",
+        "version": "cc701e495bed2eeeadfd59a95ad174588038ad4b428aa900c8c481f3c9e3636f"
+      },
+      "ci_entrypoint_ids": [
+        "58fa21f78379c9a86e146782caa08a8d02c101da29f84471ed52aed47fa5bd20"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s scripts/tests -p test_ci_selection.py -v",
+      "dependencies": [
+        {
+          "id": "source:75dc8030aff0f06565fcc928",
+          "sha256": "e91c9c4762727ef53438d29c5247c4c9b032eccef58fd16795de7ba997f04906",
+          "version": "cc701e495bed2eeeadfd59a95ad174588038ad4b428aa900c8c481f3c9e3636f"
+        }
+      ],
+      "id": "entry:bce4e94671b4b0edf5679a97",
+      "kind": "entrypoint",
+      "namespace": "maintenance",
+      "pattern": "test_ci_selection.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [],
+        "entry_id": "58fa21f78379c9a86e146782caa08a8d02c101da29f84471ed52aed47fa5bd20",
+        "environment_overrides": {
+          "CI_BASE": "${{ steps.changes.outputs.base }}",
+          "CI_HEAD": "${{ steps.changes.outputs.head }}"
+        },
+        "job": "selection",
+        "job_if": null,
+        "line": 68,
+        "mode": "declared-ci-literal",
+        "namespace": "maintenance",
+        "pattern": "test_ci_selection.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "scripts/tests",
+        "step": "Check CI routing and changed-line whitespace",
+        "step_if": null,
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "c6e78604e1bb808f8e8614b041d59eaba6939a440a8392be7c235810eee37c9d",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "scripts/tests",
+      "status": "active",
+      "version": "b699bb827c13ac1553d0160ab54b6fbcdb8268164bf8b0afca52ca60c6f5868d",
+      "workflow_sha256": "fa6d43b7b339d932a950b0cf099d646236dd5266d17252597f6d5b22b7cb0f14"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:c28ede602f85d4be5b718cde",
+        "sha256": "7df87e6ee512aef45682a8e18e4ef982bc450d62e3fabf9906e251b18fcc737d",
+        "version": "8819f8e0dea4f27f9c4fe22084abe693b759c832bc91171c68f3f12eaa33f7ce"
+      },
+      "ci_entrypoint_ids": [
+        "043a76dd117ff79473c0545a3cb134ed6f5b3b829887ad995634504a94ee0d0c"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": null,
+      "dependencies": [
+        {
+          "id": "source:c28ede602f85d4be5b718cde",
+          "sha256": "7df87e6ee512aef45682a8e18e4ef982bc450d62e3fabf9906e251b18fcc737d",
+          "version": "8819f8e0dea4f27f9c4fe22084abe693b759c832bc91171c68f3f12eaa33f7ce"
+        }
+      ],
+      "id": "entry:c1ebcf4f8e8f2278b3aa8c68",
+      "kind": "entrypoint",
+      "namespace": "python-regression",
+      "pattern": "test*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "043a76dd117ff79473c0545a3cb134ed6f5b3b829887ad995634504a94ee0d0c",
+        "environment_overrides": {
+          "CARGO_PROFILE_DEV_DEBUG_ASSERTIONS": "true",
+          "CARGO_PROFILE_DEV_OPT_LEVEL": "1",
+          "CARGO_PROFILE_DEV_OVERFLOW_CHECKS": "true",
+          "PYTHONPATH": "evas/src"
+        },
+        "job": "regression",
+        "line": null,
+        "mode": "primary-runner-argparse-discovery-only",
+        "namespace": "python-regression",
+        "origins": [
+          {
+            "command": "python3 -B scripts/run_regression.py --shard-count 4 --shard-index ${{ matrix.shard }} --weights scripts/regression-weights.json --input-identity runs/regression-identity.json --report runs/regression-evidence/report.json > runs/regression-evidence/stdout.txt 2> runs/regression-evidence/stderr.txt",
+            "declared_python_versions": [
+              "3.12"
+            ],
+            "environment_overrides": {
+              "CARGO_PROFILE_DEV_DEBUG_ASSERTIONS": "true",
+              "CARGO_PROFILE_DEV_OPT_LEVEL": "1",
+              "CARGO_PROFILE_DEV_OVERFLOW_CHECKS": "true",
+              "PYTHONPATH": "evas/src"
+            },
+            "executed": false,
+            "job": "regression",
+            "job_if": "needs.selection.outputs.regression == 'true'",
+            "kind": "other-python-script",
+            "line": 369,
+            "method_denominator": null,
+            "source": "scripts/run_regression.py",
+            "step": "Collect complete Python regression observations",
+            "step_if": "steps.reuse.outputs.verified != 'true'",
+            "workflow": ".github/workflows/numerical-assurance.yml"
+          }
+        ],
+        "pattern": "test*.py",
+        "purpose": "Full method construction; not selected scientific test execution.",
+        "source": "scripts/run_regression.py",
+        "source_sha256": "dc2ed03b722fd35e9a20f6eda424ac2ff39b3c22f2081a29c5f0777a9b148985",
+        "start": "evas/tests",
+        "step": "primary argparse collection",
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "85f5ee92d1c2aab7bf84409ff17932b434dcf45722b407767fe9c294e09bb404",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "evas/tests",
+      "status": "active",
+      "version": "cd8dbb2f4f224f716087f3baaa30b9a830ce3ec682f5e697ef88bf00d4321051",
+      "workflow_sha256": "c1289f9d76dfeabf105ed9558224bcdaa91038c947b6f7b1d69509ecd42adc74"
     },
     {
       "actual_receipt": {
@@ -6845,6 +9803,56 @@
     },
     {
       "actual_receipt": {
+        "id": "source:3ee99410598e866a934bda1b",
+        "sha256": "15dc60fe9715daf99f8114176f0cdfa2ad2268fe5c669328011a0adbd03b9324",
+        "version": "209c26e62fec2678ec8e004283cab2ec315e22fae49f3b09a4131043b0eaa11a"
+      },
+      "ci_entrypoint_ids": [
+        "a6b4f4eb6d676d866a8857f513b91bc86164c52965d0ee356e3f41bc25acf9d6"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s evas/validation/differential -v",
+      "dependencies": [
+        {
+          "id": "source:3ee99410598e866a934bda1b",
+          "sha256": "15dc60fe9715daf99f8114176f0cdfa2ad2268fe5c669328011a0adbd03b9324",
+          "version": "209c26e62fec2678ec8e004283cab2ec315e22fae49f3b09a4131043b0eaa11a"
+        }
+      ],
+      "id": "entry:ccf225779e336475b56130a2",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "a6b4f4eb6d676d866a8857f513b91bc86164c52965d0ee356e3f41bc25acf9d6",
+        "environment_overrides": {},
+        "job": "properties-and-ngspice",
+        "job_if": "needs.selection.outputs.differential == 'true'",
+        "line": 654,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "evas/validation/differential",
+        "step": null,
+        "step_if": null,
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "25694d8695d1dc0bfd747d38953fcbd35aef43be3b251c5ea3da1d65e4fafe78",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "evas/validation/differential",
+      "status": "active",
+      "version": "74f06da73296d0d389892a99fa3495c447175c77d7ca0dbf4e254289de5d36cb",
+      "workflow_sha256": "fa6d43b7b339d932a950b0cf099d646236dd5266d17252597f6d5b22b7cb0f14"
+    },
+    {
+      "actual_receipt": {
         "id": "source:01adec8bd9bd458f82cc76ab",
         "sha256": "5f1bde7a9d552d8b577e4ba4383d1d7c50a4f78f2630f4b056e5b0c697f8cf55",
         "version": "ef8c387aa941f170187a16acabf1b9e78a0c6d74d35f3dd47122d2076ff5071c"
@@ -7050,6 +10058,56 @@
       "status": "active",
       "version": "9500928bb361b784c87cc1048cdd13f6e794a66b95248c62980294ef344f4b41",
       "workflow_sha256": "354b71b77cf7357d3999860b5fcae2fcb311ae3dcda89adc5253faf7ef6f89dc"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:b2a46c7d3a907beb2a2e8f77",
+        "sha256": "4c60783f6186608751d7e8a09851a92c1413e178ea9ab9fbdab3a27db6d65aec",
+        "version": "e3b717da253e2b86b6be5ed2b12fcf0e7a2960ab5f937b33775beb0b12b43576"
+      },
+      "ci_entrypoint_ids": [
+        "e2e213f30e54d829bfeb07cbda0194622d28bec418983e8cea85db4960320b73"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s evas/validation/paper -p 'test_criteria.py' -v",
+      "dependencies": [
+        {
+          "id": "source:b2a46c7d3a907beb2a2e8f77",
+          "sha256": "4c60783f6186608751d7e8a09851a92c1413e178ea9ab9fbdab3a27db6d65aec",
+          "version": "e3b717da253e2b86b6be5ed2b12fcf0e7a2960ab5f937b33775beb0b12b43576"
+        }
+      ],
+      "id": "entry:d10036430e10e0fea258a568",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test_criteria.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "e2e213f30e54d829bfeb07cbda0194622d28bec418983e8cea85db4960320b73",
+        "environment_overrides": {},
+        "job": "provenance-paper",
+        "job_if": "needs.selection.outputs.provenance == 'true'",
+        "line": 224,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test_criteria.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "evas/validation/paper",
+        "step": "Paper contracts, observable criteria and table provenance",
+        "step_if": null,
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "3991a3a0c9be8c31f068fae0bc47ef265d4eabe8cb597f0970864f445c1e7ad3",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "evas/validation/paper",
+      "status": "active",
+      "version": "0f906f4d41299401c2c8dbe9e1a69546c2901bfe8f3601da2e9fadf14626c968",
+      "workflow_sha256": "c1289f9d76dfeabf105ed9558224bcdaa91038c947b6f7b1d69509ecd42adc74"
     },
     {
       "actual_receipt": {
@@ -7353,6 +10411,56 @@
     },
     {
       "actual_receipt": {
+        "id": "source:264610c8bcef291109582251",
+        "sha256": "ececc2d4fcf4f82f8a9e79ad2d78d0f66689cd7fd8a82cae4890ad6253d15084",
+        "version": "f2ffdd8f9604923790d36f3027f62471b1edf6734df0a8bf02877e6f2ac0eec0"
+      },
+      "ci_entrypoint_ids": [
+        "af19084ffb61b1bf38239c20099cedc6d6a98af0325e47027b3f5dbd0b9ef99e"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s evas/validation/checker_calibration -v",
+      "dependencies": [
+        {
+          "id": "source:264610c8bcef291109582251",
+          "sha256": "ececc2d4fcf4f82f8a9e79ad2d78d0f66689cd7fd8a82cae4890ad6253d15084",
+          "version": "f2ffdd8f9604923790d36f3027f62471b1edf6734df0a8bf02877e6f2ac0eec0"
+        }
+      ],
+      "id": "entry:d6ef54a98f949c891b1fb5b2",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "af19084ffb61b1bf38239c20099cedc6d6a98af0325e47027b3f5dbd0b9ef99e",
+        "environment_overrides": {},
+        "job": "provenance-paper",
+        "job_if": "needs.selection.outputs.provenance == 'true'",
+        "line": 226,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "evas/validation/checker_calibration",
+        "step": "Paper contracts, observable criteria and table provenance",
+        "step_if": null,
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "cf59dc39bc4854671b41307545685a65f7321df4b5ec5a5b71ed7d917d5779ce",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "evas/validation/checker_calibration",
+      "status": "active",
+      "version": "b3f2ad85253a13330122db6cd16d3b139d5d7f056a70a5210611fcb0775c9b7a",
+      "workflow_sha256": "c1289f9d76dfeabf105ed9558224bcdaa91038c947b6f7b1d69509ecd42adc74"
+    },
+    {
+      "actual_receipt": {
         "id": "source:4fcbc74d816c31d36154c6c7",
         "sha256": "cc9b68e1872d604f1bd8d2c14054a82b6ef7b98f3c00e9bf34833d2a727d496b",
         "version": "1eef993ac717f41f43cb7dd4c2a4edcddaed276b02694a4eb9c805bd8c33ade7"
@@ -7450,6 +10558,107 @@
       "status": "active",
       "version": "ea9de875f753bdddf4661f54166303f4392bb19dea240fe16a0d099bb66920a2",
       "workflow_sha256": "37456de701eea3dc7943ea1be778994dfd55fc40ce7b3fcc9985c7972310859c"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:89f3a57d19ff0e7d14ca2ba2",
+        "sha256": "7f9db919a797b1f3f9377271224807ec68e7cc6e2d75e3076c8c82b7732f8637",
+        "version": "0120c2be3878a1a17d2dc169c5c213c33d4e951be665cb23abfda3a8258c7491"
+      },
+      "ci_entrypoint_ids": [
+        "65b464b6e2265303e74318fca5500161e9d83f76dcd4176b11aca41ec7626d68"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s evas/validation/support -p 'test_*.py' -v",
+      "dependencies": [
+        {
+          "id": "source:89f3a57d19ff0e7d14ca2ba2",
+          "sha256": "7f9db919a797b1f3f9377271224807ec68e7cc6e2d75e3076c8c82b7732f8637",
+          "version": "0120c2be3878a1a17d2dc169c5c213c33d4e951be665cb23abfda3a8258c7491"
+        }
+      ],
+      "id": "entry:dfa987160cfab3e6ac7207dc",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test_*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "65b464b6e2265303e74318fca5500161e9d83f76dcd4176b11aca41ec7626d68",
+        "environment_overrides": {},
+        "job": "provenance-paper",
+        "job_if": "needs.selection.outputs.provenance == 'true'",
+        "line": 238,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test_*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "evas/validation/support",
+        "step": "Paper contracts, observable criteria and table provenance",
+        "step_if": null,
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "560e49b5f7c793573d204a3c1b195e646f04e946b0b26f7895c16eda9b77f162",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "evas/validation/support",
+      "status": "active",
+      "version": "5a317ce37c1746e2f890507b5456bc029fd58bf0da435c7eace69eaed0420763",
+      "workflow_sha256": "fa6d43b7b339d932a950b0cf099d646236dd5266d17252597f6d5b22b7cb0f14"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:f8e8393119251c89bef9b08b",
+        "sha256": "becfadef4b30427946bdca7f38168dfc7477750aaa4dcbf8efd236506070c94e",
+        "version": "a2a962a1e40db71a7428f9a9fc5e70215c7679b3cb1dd9665f36e4de8d00ed54"
+      },
+      "ci_entrypoint_ids": [
+        "5da2efce811d71d57cd1f23e455497c5d7d06219610e9d448c4b54d934ca78d0"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s scripts/tests -p test_independent_ci.py -v",
+      "dependencies": [
+        {
+          "id": "source:f8e8393119251c89bef9b08b",
+          "sha256": "becfadef4b30427946bdca7f38168dfc7477750aaa4dcbf8efd236506070c94e",
+          "version": "a2a962a1e40db71a7428f9a9fc5e70215c7679b3cb1dd9665f36e4de8d00ed54"
+        }
+      ],
+      "id": "entry:dfb0aabd58a81d8daaca59bf",
+      "kind": "entrypoint",
+      "namespace": "maintenance",
+      "pattern": "test_independent_ci.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [],
+        "entry_id": "5da2efce811d71d57cd1f23e455497c5d7d06219610e9d448c4b54d934ca78d0",
+        "environment_overrides": {
+          "CI_BASE": "${{ steps.changes.outputs.base }}",
+          "CI_HEAD": "${{ steps.changes.outputs.head }}"
+        },
+        "job": "selection",
+        "job_if": null,
+        "line": 72,
+        "mode": "declared-ci-literal",
+        "namespace": "maintenance",
+        "pattern": "test_independent_ci.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "scripts/tests",
+        "step": "Check CI routing and changed-line whitespace",
+        "step_if": null,
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "ddec14cb9c79308538ec468ffd9aa395afe7bac27baa89596d7410471d91dab1",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "scripts/tests",
+      "status": "active",
+      "version": "1de6d93777609fa73128634ee270c4ce21ad3187e15bec69ce713d5f91791d50",
+      "workflow_sha256": "fa6d43b7b339d932a950b0cf099d646236dd5266d17252597f6d5b22b7cb0f14"
     },
     {
       "actual_receipt": {
@@ -8362,6 +11571,38 @@
       "dependencies": [
         {
           "id": "source:dd8b4eb4612b272f0eb05592",
+          "sha256": "4dfdae5a715daf0e83f1cb40bdfc7cd45222bdcb84dab7a22e062cd6c82e00c1",
+          "version": "6363af9172e623f12169cf5a27a49a8ece1460c0330e2c038970aa3ce3fda11e"
+        }
+      ],
+      "id": "entry:f0df6da6a340ee8656bf7a13",
+      "kind": "entrypoint",
+      "listing_profile": "linux-x86_64-regression-opt1-v1",
+      "listing_source": {
+        "id": "source:dd8b4eb4612b272f0eb05592",
+        "sha256": "4dfdae5a715daf0e83f1cb40bdfc7cd45222bdcb84dab7a22e062cd6c82e00c1",
+        "version": "6363af9172e623f12169cf5a27a49a8ece1460c0330e2c038970aa3ce3fda11e"
+      },
+      "namespace": "rust-tests",
+      "observer_sha256": "f1ade74617fa171c5048246986d52e772b0913ffce28713af6e2fa4af5904892",
+      "provenance_scope": "actual native listing, original observer; not upgraded to later helper execution",
+      "rust_target": {
+        "name": "transport",
+        "package": "evas-ir",
+        "target_kind": [
+          "test"
+        ],
+        "version": "0.1.0"
+      },
+      "schema_version": 1,
+      "status": "active",
+      "version": "0f04745a8145a141b878efd4bc6cc58b1d19dbeaaa9567aa93d5dc7a4fd72195"
+    },
+    {
+      "collector": "binary-listing",
+      "dependencies": [
+        {
+          "id": "source:dd8b4eb4612b272f0eb05592",
           "sha256": "87ba2d3e6f130f00a1c3554eb7a617fdba6e3131ae20f8810ac29a08598b37b7",
           "version": "2aa395b1df7c684a4a24a92a024540ce85174d8defc93d7f9a3b46620ebae2a1"
         }
@@ -8591,6 +11832,107 @@
     },
     {
       "actual_receipt": {
+        "id": "source:71dee92e85b97f8c71c55c97",
+        "sha256": "3a4f047b24d1935b011deed84e1e29411926bd0a9a88029b0d7c206a419d3340",
+        "version": "fc93c60d28f5c077a2caeaa5a3f63c3082982fe84987f05dd8d8126c26458fe3"
+      },
+      "ci_entrypoint_ids": [
+        "37dd5a37c58ae5d063c4474fe585e251a09ff1cc8322f284b569ec19aa51b27d"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s experiments/backends/evidence -v",
+      "dependencies": [
+        {
+          "id": "source:71dee92e85b97f8c71c55c97",
+          "sha256": "3a4f047b24d1935b011deed84e1e29411926bd0a9a88029b0d7c206a419d3340",
+          "version": "fc93c60d28f5c077a2caeaa5a3f63c3082982fe84987f05dd8d8126c26458fe3"
+        }
+      ],
+      "id": "entry:f6651f9e7d474efac1be1e5b",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "37dd5a37c58ae5d063c4474fe585e251a09ff1cc8322f284b569ec19aa51b27d",
+        "environment_overrides": {},
+        "job": "static-checks",
+        "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+        "line": 199,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "experiments/backends/evidence",
+        "step": "Independent mathematics and checker calibration (no simulator)",
+        "step_if": "needs.selection.outputs.calibration == 'true'",
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "11c78d051d99e6c365d5b6be00b0d623ad9e46d33560cc7cda1f7f1426109956",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "experiments/backends/evidence",
+      "status": "active",
+      "version": "3a8dd68bc7989d99c75fcb79f7cf1a1f119ff021980dbc94908a4fdf2ed0f036",
+      "workflow_sha256": "c1289f9d76dfeabf105ed9558224bcdaa91038c947b6f7b1d69509ecd42adc74"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:8ef9cd644c7e731d92956350",
+        "sha256": "40ab1000ca926bbc865929c8d894ec2ae83529fb92a1c79972445a2048b1da20",
+        "version": "735ce16930cee71f1b840b8339dbeeefc29901237ea003849c51bb9b472123a3"
+      },
+      "ci_entrypoint_ids": [
+        "eff4b2fca783db93715c2329b254a2d3fbb2619803b49e770fd3b073e107cb8c"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s scripts/tests -p test_regression_runner.py -v",
+      "dependencies": [
+        {
+          "id": "source:8ef9cd644c7e731d92956350",
+          "sha256": "40ab1000ca926bbc865929c8d894ec2ae83529fb92a1c79972445a2048b1da20",
+          "version": "735ce16930cee71f1b840b8339dbeeefc29901237ea003849c51bb9b472123a3"
+        }
+      ],
+      "id": "entry:f779985f7e6690a8b710cea3",
+      "kind": "entrypoint",
+      "namespace": "maintenance",
+      "pattern": "test_regression_runner.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [],
+        "entry_id": "eff4b2fca783db93715c2329b254a2d3fbb2619803b49e770fd3b073e107cb8c",
+        "environment_overrides": {
+          "CI_BASE": "${{ steps.changes.outputs.base }}",
+          "CI_HEAD": "${{ steps.changes.outputs.head }}"
+        },
+        "job": "selection",
+        "job_if": null,
+        "line": 69,
+        "mode": "declared-ci-literal",
+        "namespace": "maintenance",
+        "pattern": "test_regression_runner.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "scripts/tests",
+        "step": "Check CI routing and changed-line whitespace",
+        "step_if": null,
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "c38f6d4ae18980cdfaa9f6cc574fde85e2cb93bc24909ccb503b0c2d0ad6464b",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "scripts/tests",
+      "status": "active",
+      "version": "2a0d9cc3ad142c02a6860c2d26fba2b88cc2b2def51e3ba1294129707ea911e6",
+      "workflow_sha256": "c1289f9d76dfeabf105ed9558224bcdaa91038c947b6f7b1d69509ecd42adc74"
+    },
+    {
+      "actual_receipt": {
         "id": "source:931c22cbc8bf74c6d6b5c148",
         "sha256": "cdc132ec87876d20ad9ffc81f134c4c799793320144d81c78d193ead920253f9",
         "version": "f786095c3896b36c412dbf9c018e93cc1d2d10b1b8bfded7135d7bcd7f7d574c"
@@ -8638,6 +11980,415 @@
       "status": "active",
       "version": "2e29abc533cb42130036ab98fcc1b7b94c1179af6206369f085e2f47c4c55163",
       "workflow_sha256": "75da6ea8a3f0e7baa90b99388833ae2d757da66754b1d1dea3a8113d1fd1fa3b"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:7bdb8cb61732b1750116aec0",
+        "sha256": "d08b14b64cbaf2e477090c9a563e00addb71954b74cd1c4ba8b9458c268e5275",
+        "version": "d12be08d1365f765400aa7b75b04fc0e49f819893e60ee0f973ea857b2da3bb3"
+      },
+      "ci_entrypoint_ids": [
+        "b263e35df95ee47e3808df3f6684be6a31d559cad75cc25c6785333e34e50dda"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s experiments/backends/paper -p 'test_*.py' -v",
+      "dependencies": [
+        {
+          "id": "source:7bdb8cb61732b1750116aec0",
+          "sha256": "d08b14b64cbaf2e477090c9a563e00addb71954b74cd1c4ba8b9458c268e5275",
+          "version": "d12be08d1365f765400aa7b75b04fc0e49f819893e60ee0f973ea857b2da3bb3"
+        }
+      ],
+      "id": "entry:f8a0e9efacb2931f3b7a1ad2",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test_*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "b263e35df95ee47e3808df3f6684be6a31d559cad75cc25c6785333e34e50dda",
+        "environment_overrides": {},
+        "job": "provenance-paper",
+        "job_if": "needs.selection.outputs.provenance == 'true'",
+        "line": 236,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test_*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "experiments/backends/paper",
+        "step": "Paper contracts, observable criteria and table provenance",
+        "step_if": null,
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "011e4fcb9cef41108b0ce535a7fe033f35a525652f7e89b6897b20f362ae8f49",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "experiments/backends/paper",
+      "status": "active",
+      "version": "05a63da85c2be316090bb8e65a3ddbe07bc6f26e316233e3e7215655c4e751b8",
+      "workflow_sha256": "fa6d43b7b339d932a950b0cf099d646236dd5266d17252597f6d5b22b7cb0f14"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:cde1aad82fb6eb0502cd980d",
+        "sha256": "4b65f1705cd780c4380d171833c2c4ec4e2aadae226a374de004337781ea6b0e",
+        "version": "eafbee3b8a3d485015959278312b9e2605d5340e4de64e525146f57e3491fe8e"
+      },
+      "ci_entrypoint_ids": [
+        "7b1157f622cd3c8a5bab38f36ed997381e4d359c2146786279cbb8d23793a565"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s experiments/backends/comparison -p 'test_*.py' -v",
+      "dependencies": [
+        {
+          "id": "source:cde1aad82fb6eb0502cd980d",
+          "sha256": "4b65f1705cd780c4380d171833c2c4ec4e2aadae226a374de004337781ea6b0e",
+          "version": "eafbee3b8a3d485015959278312b9e2605d5340e4de64e525146f57e3491fe8e"
+        }
+      ],
+      "id": "entry:fb06299e04608fba4a9fe9ff",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test_*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "7b1157f622cd3c8a5bab38f36ed997381e4d359c2146786279cbb8d23793a565",
+        "environment_overrides": {},
+        "job": "provenance-paper",
+        "job_if": "needs.selection.outputs.provenance == 'true'",
+        "line": 237,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test_*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "experiments/backends/comparison",
+        "step": "Paper contracts, observable criteria and table provenance",
+        "step_if": null,
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "c4e05852b2861aac618c4459eaa5a0b915e37f584aaad01300d571076e9bdaca",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "experiments/backends/comparison",
+      "status": "active",
+      "version": "917ca49cc5b8d59fc5505e5ca6191aa442579c9c16694d6b6cfca2321a2b3700",
+      "workflow_sha256": "fa6d43b7b339d932a950b0cf099d646236dd5266d17252597f6d5b22b7cb0f14"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:d3212b784165304ca63ed252",
+        "sha256": "af6a7b32bddc0806786c07494a56bb6f52762329eed23f32f3d0d7907f5431d5",
+        "version": "0cb1e38fa194b351649816f6384456c0d074e6a9bd2fd0101bfa5012896db12c"
+      },
+      "ci_entrypoint_ids": [
+        "a373b8ed90367c742d0099f01328a09070d4347d79a933798bb036d59144a90d"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s scripts/tests -v",
+      "dependencies": [
+        {
+          "id": "source:d3212b784165304ca63ed252",
+          "sha256": "af6a7b32bddc0806786c07494a56bb6f52762329eed23f32f3d0d7907f5431d5",
+          "version": "0cb1e38fa194b351649816f6384456c0d074e6a9bd2fd0101bfa5012896db12c"
+        }
+      ],
+      "id": "entry:fb2ae7ac6d365d8ef551bf41",
+      "kind": "entrypoint",
+      "namespace": "maintenance",
+      "pattern": "test*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "a373b8ed90367c742d0099f01328a09070d4347d79a933798bb036d59144a90d",
+        "environment_overrides": {
+          "GIT_FIXTURE_RETAIN_DIR": "runs/git-fixture-isolation"
+        },
+        "job": "static-checks",
+        "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+        "line": 185,
+        "mode": "declared-ci-literal",
+        "namespace": "maintenance",
+        "pattern": "test*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "scripts/tests",
+        "step": "Traceability and frozen validation identities",
+        "step_if": "needs.selection.outputs.maintenance == 'true'",
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "cf90f1adec386aed8c7d28ed6d0f181ded2a3e0f0859f04a8aadf1816b3a94c7",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "scripts/tests",
+      "status": "active",
+      "version": "531a0dfb5f9071f6f75a37aa5f71ab9c51f7e59cc431bcf63101ea0be56998f5",
+      "workflow_sha256": "fa6d43b7b339d932a950b0cf099d646236dd5266d17252597f6d5b22b7cb0f14"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:d3212b784165304ca63ed252",
+        "sha256": "d5fd3ec34f7c0aaeb86d3fc25ae234bcc205185dd80a2145616d091d00f7a25c",
+        "version": "887ac052f946b62fe3527f4fff2eb09c9613d95bd92604cfb72d74601e9bef39"
+      },
+      "ci_entrypoint_ids": [
+        "a373b8ed90367c742d0099f01328a09070d4347d79a933798bb036d59144a90d"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s scripts/tests -v",
+      "dependencies": [
+        {
+          "id": "source:d3212b784165304ca63ed252",
+          "sha256": "d5fd3ec34f7c0aaeb86d3fc25ae234bcc205185dd80a2145616d091d00f7a25c",
+          "version": "887ac052f946b62fe3527f4fff2eb09c9613d95bd92604cfb72d74601e9bef39"
+        }
+      ],
+      "id": "entry:fb2ae7ac6d365d8ef551bf41",
+      "kind": "entrypoint",
+      "namespace": "maintenance",
+      "pattern": "test*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "a373b8ed90367c742d0099f01328a09070d4347d79a933798bb036d59144a90d",
+        "environment_overrides": {
+          "GIT_FIXTURE_RETAIN_DIR": "runs/git-fixture-isolation"
+        },
+        "job": "static-checks",
+        "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+        "line": 185,
+        "mode": "declared-ci-literal",
+        "namespace": "maintenance",
+        "pattern": "test*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "scripts/tests",
+        "step": "Traceability and frozen validation identities",
+        "step_if": "needs.selection.outputs.maintenance == 'true'",
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "dde4e18888f41d81f1c2b9159ec24944b4cb6e10f609923b721fe36ab38ff754",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "scripts/tests",
+      "status": "active",
+      "version": "cb953737f7fd0f53dad140fb93878f5dd2f6770f34754ad84f3b89fa3e6a3f42",
+      "workflow_sha256": "fa6d43b7b339d932a950b0cf099d646236dd5266d17252597f6d5b22b7cb0f14"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:d3212b784165304ca63ed252",
+        "sha256": "37c7800d8dd07bbaa3f68a7e5c3d7d166aa88f781f3add6b3d6a8e9207445744",
+        "version": "46b0305c13a0fedb4ee66452d467c32a2e6f1def42def7ea030dcd4823b80200"
+      },
+      "ci_entrypoint_ids": [
+        "a373b8ed90367c742d0099f01328a09070d4347d79a933798bb036d59144a90d"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s scripts/tests -v",
+      "dependencies": [
+        {
+          "id": "source:d3212b784165304ca63ed252",
+          "sha256": "37c7800d8dd07bbaa3f68a7e5c3d7d166aa88f781f3add6b3d6a8e9207445744",
+          "version": "46b0305c13a0fedb4ee66452d467c32a2e6f1def42def7ea030dcd4823b80200"
+        }
+      ],
+      "id": "entry:fb2ae7ac6d365d8ef551bf41",
+      "kind": "entrypoint",
+      "namespace": "maintenance",
+      "pattern": "test*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "a373b8ed90367c742d0099f01328a09070d4347d79a933798bb036d59144a90d",
+        "environment_overrides": {
+          "GIT_FIXTURE_RETAIN_DIR": "runs/git-fixture-isolation"
+        },
+        "job": "static-checks",
+        "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+        "line": 185,
+        "mode": "declared-ci-literal",
+        "namespace": "maintenance",
+        "pattern": "test*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "scripts/tests",
+        "step": "Traceability and frozen validation identities",
+        "step_if": "needs.selection.outputs.maintenance == 'true'",
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "3d30eedfe3bde7cb226a92a171384cfb959da057a0ccce33cb3b1c7eb98b19e2",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "scripts/tests",
+      "status": "active",
+      "version": "ee5792dda938057c47bb6b6b1e7bf2c7f0cbcb232eda06f1a5066e68edab8575",
+      "workflow_sha256": "fa6d43b7b339d932a950b0cf099d646236dd5266d17252597f6d5b22b7cb0f14"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:2e7831e0c5fc71c9c813c2ea",
+        "sha256": "a4f8f0d5d9b059c4ebb28610f659329720b00706362b3b7acb9e1410c7b8d9a5",
+        "version": "854d36961311eac90b18361f312a81bc708c6c6d97aaed11f65c5e20d49bef58"
+      },
+      "ci_entrypoint_ids": [
+        "7e3cd534f9f42eddb13e0f318b3dd7fdf94b7b370900437b5d05de16e54f25cf"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s scripts/tests -p test_evas_check_policy.py -v",
+      "dependencies": [
+        {
+          "id": "source:2e7831e0c5fc71c9c813c2ea",
+          "sha256": "a4f8f0d5d9b059c4ebb28610f659329720b00706362b3b7acb9e1410c7b8d9a5",
+          "version": "854d36961311eac90b18361f312a81bc708c6c6d97aaed11f65c5e20d49bef58"
+        }
+      ],
+      "id": "entry:fb99158b76d16b1115508bea",
+      "kind": "entrypoint",
+      "namespace": "maintenance",
+      "pattern": "test_evas_check_policy.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [],
+        "entry_id": "7e3cd534f9f42eddb13e0f318b3dd7fdf94b7b370900437b5d05de16e54f25cf",
+        "environment_overrides": {
+          "CI_BASE": "${{ steps.changes.outputs.base }}",
+          "CI_HEAD": "${{ steps.changes.outputs.head }}"
+        },
+        "job": "selection",
+        "job_if": null,
+        "line": 66,
+        "mode": "declared-ci-literal",
+        "namespace": "maintenance",
+        "pattern": "test_evas_check_policy.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "scripts/tests",
+        "step": "Check CI routing and changed-line whitespace",
+        "step_if": null,
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "be2fb70bfeb33efb206b7a3271276065a4ae198f67c2f36194babdf5bf552a08",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "scripts/tests",
+      "status": "active",
+      "version": "a7bd88273367ab32e91f355d75c3e95323c3d95cacd427df422d7b0ba2d10cc1",
+      "workflow_sha256": "c1289f9d76dfeabf105ed9558224bcdaa91038c947b6f7b1d69509ecd42adc74"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:0ea6f847b9117ae097c61262",
+        "sha256": "ffcd2022a34ba2bf1a5020b1dbc8256e89710ba65f6e4766797c695fb0429d7e",
+        "version": "d209587e07840ce145df87e9a8bef7dcbe74278684078380a0b247cf545a0a4c"
+      },
+      "ci_entrypoint_ids": [
+        "0c74d64296609b862276813dcca8d227eaf03c2139b8aa59093a0fa27e3915ba"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s evas/capabilities -p 'test_*.py' -v",
+      "dependencies": [
+        {
+          "id": "source:0ea6f847b9117ae097c61262",
+          "sha256": "ffcd2022a34ba2bf1a5020b1dbc8256e89710ba65f6e4766797c695fb0429d7e",
+          "version": "d209587e07840ce145df87e9a8bef7dcbe74278684078380a0b247cf545a0a4c"
+        }
+      ],
+      "id": "entry:fd085baae054b16203dbff7e",
+      "kind": "entrypoint",
+      "namespace": "maintenance",
+      "pattern": "test_*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "0c74d64296609b862276813dcca8d227eaf03c2139b8aa59093a0fa27e3915ba",
+        "environment_overrides": {
+          "GIT_FIXTURE_RETAIN_DIR": "runs/git-fixture-isolation"
+        },
+        "job": "static-checks",
+        "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+        "line": 182,
+        "mode": "declared-ci-literal",
+        "namespace": "maintenance",
+        "pattern": "test_*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "evas/capabilities",
+        "step": "Traceability and frozen validation identities",
+        "step_if": "needs.selection.outputs.maintenance == 'true'",
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "24c77d2c369e2e8e1a9b57bf81e69f956b921d1f694566b36d09e97117103914",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "evas/capabilities",
+      "status": "active",
+      "version": "9720c3c56663ad380fefca5080e1f3e47453a5d6fcae3be7b9a003260242a966",
+      "workflow_sha256": "c1289f9d76dfeabf105ed9558224bcdaa91038c947b6f7b1d69509ecd42adc74"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:c274b1e1de31347e14f9a775",
+        "sha256": "dec205864f1748bad7986800174d7d6a4fa6050fd5f97a5d9d544e201e8c8584",
+        "version": "df115b9bd164078e1c44e2a4b981c300aa8a5374e5ec81fdefe583c45034bf13"
+      },
+      "ci_entrypoint_ids": [
+        "5c496c3a9361eb01ead547eb6756f290fee874a2650574afe85f6ad66a363d54"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s experiments/backends/implicit-event-restart -p 'test_check.py' -v",
+      "dependencies": [
+        {
+          "id": "source:c274b1e1de31347e14f9a775",
+          "sha256": "dec205864f1748bad7986800174d7d6a4fa6050fd5f97a5d9d544e201e8c8584",
+          "version": "df115b9bd164078e1c44e2a4b981c300aa8a5374e5ec81fdefe583c45034bf13"
+        }
+      ],
+      "id": "entry:fd17dfdefb5996d3749c563d",
+      "kind": "entrypoint",
+      "namespace": "validation",
+      "pattern": "test_check.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12"
+        ],
+        "entry_id": "5c496c3a9361eb01ead547eb6756f290fee874a2650574afe85f6ad66a363d54",
+        "environment_overrides": {},
+        "job": "static-checks",
+        "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+        "line": 207,
+        "mode": "declared-ci-literal",
+        "namespace": "validation",
+        "pattern": "test_check.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "experiments/backends/implicit-event-restart",
+        "step": "Independent mathematics and checker calibration (no simulator)",
+        "step_if": "needs.selection.outputs.calibration == 'true'",
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "f5577273a0ee0b1a2445fdf4127eed4fe7aa2c2c964c68a01d01d56ae77328fe",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "experiments/backends/implicit-event-restart",
+      "status": "active",
+      "version": "54bdd083a4fd38823f0953e199832954ba708e3bfbe5ff5a41616e2165db336a",
+      "workflow_sha256": "c1289f9d76dfeabf105ed9558224bcdaa91038c947b6f7b1d69509ecd42adc74"
     }
   ],
   "schema_version": 1

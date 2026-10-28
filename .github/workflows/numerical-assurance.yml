@@ -22,6 +22,14 @@ on:
 permissions:
   contents: read
 
+# One fixed Rust toolchain for every job that builds or records stable Rust. rustup applies it
+# to plain cargo and rustc, and to the scripts that record the toolchain; change it only for a
+# deliberate upgrade. A reusable workflow does not inherit this env: selection exports the value
+# as an output and package passes it to package-install.yml as an input, so no copy exists.
+# Exception: fuzz-smoke installs and names the nightly channel, which cargo-fuzz requires.
+env:
+  RUSTUP_TOOLCHAIN: '1.99.1'
+
 concurrency:
   group: numerical-assurance-${{ github.event_name }}-${{ github.event.pull_request.number || github.run_id }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
@@ -45,6 +53,7 @@ jobs:
       modules: ${{ steps.changes.outputs.modules }}
       base: ${{ steps.changes.outputs.base }}
       head: ${{ steps.changes.outputs.head }}
+      rust_toolchain: ${{ env.RUSTUP_TOOLCHAIN }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
@@ -82,7 +91,7 @@ jobs:
         with:
           python-version: '3.12'
       - run: python -m pip install ruff==0.14.1
-      - run: rustup toolchain install stable --profile minimal --component clippy --component rustfmt
+      - run: rustup toolchain install "$RUSTUP_TOOLCHAIN" --profile minimal --component clippy --component rustfmt
         if: needs.selection.outputs.regression == 'true' || needs.selection.outputs.focused == 'true'
       - uses: ./.github/actions/rust-cache
         if: needs.selection.outputs.regression == 'true' || needs.selection.outputs.focused == 'true'
@@ -98,7 +107,7 @@ jobs:
           status=0
           python3 -B scripts/evas_check_policy.py --early-checks --plan runs/ci-plan.json --report runs/early-integration.json || status=$?
           if [ "$status" = 2 ]; then
-            cargo +stable build --locked --manifest-path evas/rust_core/Cargo.toml
+            cargo build --locked --manifest-path evas/rust_core/Cargo.toml
             python3 -B scripts/evas_check_policy.py --early-checks --plan runs/ci-plan.json --kernel evas/rust_core/target/debug/evas-kernel --report runs/early-integration.json
           elif [ "$status" != 0 ]; then
             exit "$status"
@@ -109,8 +118,8 @@ jobs:
           PYTHONPATH: evas/src
           CI_MODULES: ${{ needs.selection.outputs.modules }}
         run: |
-          cargo +stable build --locked --manifest-path evas/rust_core/Cargo.toml
-          cargo +stable test --locked --workspace --manifest-path evas/rust_core/Cargo.toml
+          cargo build --locked --manifest-path evas/rust_core/Cargo.toml
+          cargo test --locked --workspace --manifest-path evas/rust_core/Cargo.toml
           python3 - <<'PYTHON'
           import json, os, subprocess, sys
           modules = json.loads(os.environ['CI_MODULES'])
@@ -257,7 +266,7 @@ jobs:
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: '3.12'
-      - run: rustup toolchain install stable --profile minimal --component clippy --component rustfmt
+      - run: rustup toolchain install "$RUSTUP_TOOLCHAIN" --profile minimal --component clippy --component rustfmt
       - uses: ./.github/actions/rust-cache
         with:
           lane: regression-opt1
@@ -267,7 +276,7 @@ jobs:
         env:
           PYTHONPATH: evas/src
         run: |
-          cargo +stable build --locked --release --manifest-path evas/rust_core/Cargo.toml
+          cargo build --locked --release --manifest-path evas/rust_core/Cargo.toml
           python3 -B scripts/check_source_kernel.py --kernel evas/rust_core/target/release/evas-kernel --report runs/source-kernel.json
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: success() && needs.selection.outputs.package != 'true'
@@ -277,13 +286,13 @@ jobs:
           if-no-files-found: error
           retention-days: 14
       - name: Full Rust regression, including interval properties
-        run: cargo +stable test --locked --workspace --manifest-path evas/rust_core/Cargo.toml
+        run: cargo test --locked --workspace --manifest-path evas/rust_core/Cargo.toml
       - name: Collect actual owned Rust binary listing
         if: always()
         run: |
           mkdir -p runs
           set +e
-          cargo +stable test --locked --workspace --no-run --message-format=json --manifest-path evas/rust_core/Cargo.toml > runs/rust-test-build.jsonl 2> runs/rust-test-build.stderr.txt
+          cargo test --locked --workspace --no-run --message-format=json --manifest-path evas/rust_core/Cargo.toml > runs/rust-test-build.jsonl 2> runs/rust-test-build.stderr.txt
           build_exit=$?
           set -e
           python3 -B scripts/capabilities/discover_rust.py --repo . --build-messages runs/rust-test-build.jsonl --build-exit "$build_exit" --report runs/rust-test-listing.json --raw-directory runs/rust-test-listing --require-catalog evas/capabilities/data --listing-profile linux-x86_64-regression-opt1-v1 --source-repository vaevas=.
@@ -322,7 +331,7 @@ jobs:
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: '3.12'
-      - run: rustup toolchain install stable --profile minimal --component clippy --component rustfmt
+      - run: rustup toolchain install "$RUSTUP_TOOLCHAIN" --profile minimal --component clippy --component rustfmt
       - uses: ./.github/actions/rust-cache
         with:
           lane: regression-opt1
@@ -330,7 +339,7 @@ jobs:
       - name: Build the kernel used by Python regressions
         run: |
           mkdir -p runs/regression-build
-          cargo +stable build --locked --manifest-path evas/rust_core/Cargo.toml > runs/regression-build/stdout.txt 2> runs/regression-build/stderr.txt
+          cargo build --locked --manifest-path evas/rust_core/Cargo.toml > runs/regression-build/stdout.txt 2> runs/regression-build/stderr.txt
           cp evas/rust_core/target/debug/evas-kernel runs/regression-build/evas-kernel
       - name: Identify complete regression inputs and actual toolchain
         id: evidence
@@ -636,12 +645,12 @@ jobs:
         with:
           python-version: '3.12'
       - run: sudo apt-get update && sudo apt-get install -y ngspice
-      - run: rustup update stable --no-self-update
+      - run: rustup toolchain install "$RUSTUP_TOOLCHAIN" --profile minimal
       - uses: ./.github/actions/rust-cache
         with:
           lane: ngspice
           targets: evas/rust_core/target
-      - run: cargo +stable build --locked --manifest-path evas/rust_core/Cargo.toml
+      - run: cargo build --locked --manifest-path evas/rust_core/Cargo.toml
       - run: python3 -B -m unittest discover -s evas/validation/differential -v
       - run: >-
           python3 -B evas/validation/differential/ngspice_compare.py
@@ -706,6 +715,8 @@ jobs:
     needs: [selection, fast-checks]
     if: needs.selection.outputs.package == 'true'
     uses: ./.github/workflows/package-install.yml
+    with:
+      rust_toolchain: ${{ needs.selection.outputs.rust_toolchain }}
   benchmark:
     needs: [selection, fast-checks]
     if: needs.selection.outputs.benchmark == 'true'

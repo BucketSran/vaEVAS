@@ -28,7 +28,13 @@ def target(binary):
         raise ValueError('unknown Rust target identity')
     return canonical(value)
 
-def checked(receipt):
+# CI now fixes RUSTUP_TOOLCHAIN, so a current observation names neither channel nor version on the command line.
+TOOLCHAIN_ARGV = {'rustc': ['rustc', '-vV'], 'cargo': ['cargo', '--version']}
+# Receipts observed before that fix named the stable channel. Only a receipt read back from a bound
+# immutable source may still use it; a current observation or a new registration may not.
+HISTORICAL_TOOLCHAIN_ARGV = {'rustc': ['rustc', '+stable', '-vV'], 'cargo': ['cargo', '+stable', '--version']}
+
+def checked(receipt, *, historical=False):
     if (type(receipt.get('schema_version')) is not int or receipt.get('schema_version') != 1 or receipt.get('observation_kind') != 'rust-test-binary-listing'
             or receipt.get('complete') is not True or receipt.get('errors') != []
             or receipt.get('listing_only') is not True
@@ -45,9 +51,10 @@ def checked(receipt):
     sha(receipt['observer']['sha256'])
     if receipt['build']['exit'] != 0:raise ValueError('failed Rust build')
     sha(receipt['build']['sha256'])
-    for name, argv in [('rustc',['rustc','+stable','-vV']), ('cargo',['cargo','+stable','--version'])]:
+    for name, argv in TOOLCHAIN_ARGV.items():
         tool = receipt['toolchain'][name]
-        if tool['argv'] != argv or tool['returncode'] != 0 or not tool['stdout'].strip():
+        allowed = [argv, HISTORICAL_TOOLCHAIN_ARGV[name]] if historical else [argv]
+        if tool['argv'] not in allowed or tool['returncode'] != 0 or not tool['stdout'].strip():
             raise ValueError('missing actual Rust toolchain identity')
         if hashlib.sha256(tool['stdout'].encode()).hexdigest() != tool['stdout_sha256']:
             raise ValueError('Rust tool identity output hash mismatch')
@@ -142,7 +149,7 @@ def reconcile(catalog, receipt, profile):
             if source.get('status') != 'active' or source.get('availability') != 'published-archive' or source.get('locator',{}).get('kind') != 'git-object':
                 raise ValueError('Rust require needs a published immutable original receipt')
             expected_receipt=json.loads(catalog.registry.read_source(source))
-            expected=checked(expected_receipt)
+            expected=checked(expected_receipt,historical=True)
             if set(expected) != set(actual):raise ValueError('original receipt owned-target set differs')
             expected_identity,actual_identity=profile_identity(expected_receipt),profile_identity(receipt)
             if expected_identity != actual_identity:

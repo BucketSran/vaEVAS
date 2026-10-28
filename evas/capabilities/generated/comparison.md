@@ -1,5 +1,11 @@
 # 能力比较表
 
+历史视图身份：`historical-comparison-import-f210ebd5`。
+原输入：`evas/docs/COMPARISON.md`。
+原判据范围：Historical transcription; not qualification for current main。
+这些成绩留在该历史身份下。当前要求分母只计登记中的当前要求。
+当前逐要求四后端事实见 [support.md](support.md) 与 [support-facts.json](support-facts.json)。
+
 由 `evas/capabilities/data/` 生成。已比较的成绩转录自
 [四后端支持表前五节](../../docs/COMPARISON.md#支持矩阵)，不改写该文的历史说明。
 没有四后端成绩的节点标为等待跑，不填通过或失败。

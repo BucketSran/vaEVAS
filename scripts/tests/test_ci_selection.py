@@ -17,6 +17,22 @@ spec.loader.exec_module(ci)
 
 
 class RoutingTests(unittest.TestCase):
+    def test_catalog_generator_selects_maintenance_without_exempting_neighbors(self):
+        exact = 'scripts/capabilities/generate_catalog.py'
+        self.assertEqual(ci.classify([exact]), ci.flags('maintenance'))
+        for path in ('scripts/capabilities/discover_methods.py',
+                     'scripts/capabilities/observe_assets.py',
+                     'scripts/capabilities/collect_ci_inventory.py',
+                     'scripts/capabilities/new_helper.py',
+                     'experiments/new_backend/test.py',
+                     'scripts/new_tool.py'):
+            with self.subTest(path=path):
+                self.assertEqual(ci.classify([path]), ci.flags(*ci.CHECKS))
+        before = "MAINTENANCE_FILES = {'scripts/traceability.py'}\n"
+        after = ("MAINTENANCE_FILES = {'scripts/traceability.py', "
+                 "'scripts/capabilities/generate_catalog.py'}\n")
+        self.assertFalse(ci.maintenance_registration_only(before, after))
+
     def test_comparison_worker_migration_routes_actual_consumers(self):
         for path in ('experiments/backends/comparison/runner.py',
                      'experiments/backends/comparison/freeze.py',
@@ -434,6 +450,16 @@ class GateTests(unittest.TestCase):
             needs[job] = {'result': result, 'outputs': {
                 child: result for child in ci.CHILD_RESULTS.get(job, ())}}
         return needs
+
+    def test_maintenance_still_requires_inventory_and_static_checks(self):
+        needs = self.results('maintenance')
+        self.assertEqual(ci.gate_errors(needs), [])
+        self.assertIn('catalog-inventory', ci.ALWAYS_REQUIRED_JOBS)
+        for job in ('catalog-inventory', 'static-checks'):
+            with self.subTest(job=job):
+                skipped = self.results('maintenance')
+                skipped[job]['result'] = 'skipped'
+                self.assertTrue(any(job in error for error in ci.gate_errors(skipped)))
 
     def test_intentional_skips_are_allowed_but_selected_skips_are_not(self):
         self.assertEqual(ci.gate_errors(self.results()), [])

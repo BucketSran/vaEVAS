@@ -2,6 +2,9 @@
 
 比较范围固定为每个行名所链接的模型与配置，四个后端使用相同用例和验收要求。
 结果来自不同版本，**不代表当前 main 的一次全量验收，也不覆盖所有合法写法**。
+当前逐要求的四后端事实由登记生成，见 [support.md](../capabilities/generated/support.md) 与 [support-facts.json](../capabilities/generated/support-facts.json)。
+本页保持历史转录身份 `historical-comparison-import-f210ebd5`。原输入是本页，原判据范围是历史转录。
+表中的原数字和链接仍按各行模型与配置检索。当前要求分母只计登记中的当前要求。
 前五节列固定 Q 用例；[第六节](#engineering-status)列工程请求的交付与缺口，两者分别验收。
 
 <a id="table-design"></a>

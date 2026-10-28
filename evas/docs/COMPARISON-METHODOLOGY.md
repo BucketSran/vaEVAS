@@ -767,6 +767,7 @@ EVAS 查询也须有明确来源、返回对应物理阶段，原电压、事件
 ## 5. 怎样阅读结果与未完成范围
 
 完整结果只在[支持对比表](COMPARISON.md#支持矩阵)维护，本文不另建一份支持清单。
+该表保持历史转录身份。当前要求事实由登记生成，见 [support.md](../capabilities/generated/support.md)。
 
 <a id="reference-and-boundaries"></a>
 
