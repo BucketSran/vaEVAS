@@ -5,7 +5,7 @@ adopted: true
 provisional: false
 adopted 只表示这是当前默认支持视图，不是新的项目决定，也不授予任何资格。
 
-current_requirements: 4
+current_requirements: 6
 source_index_items: 12880
 source_index_is_requirement_coverage: false
 规范源索引不是要求覆盖率。
@@ -44,6 +44,7 @@ readiness gaps are registry navigation, not a qualification verdict
 就绪缺口：reference:IEEE-1364-2005@1: pending
 就绪缺口：requirement:$itor@1: pending
 就绪缺口：requirement:$itor@1: review missing
+关联案例：none
 
 | 后端 | 工具链 | 执行 | 完整性 | 数值 | 资格 | 证据 |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -82,6 +83,7 @@ readiness gaps are registry navigation, not a qualification verdict
 就绪缺口：reference:IEEE-1364-2005@1: pending
 就绪缺口：requirement:$rtoi@1: pending
 就绪缺口：requirement:$rtoi@1: review missing
+关联案例：none
 
 | 后端 | 工具链 | 执行 | 完整性 | 数值 | 资格 | 证据 |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -116,6 +118,7 @@ readiness gaps are registry navigation, not a qualification verdict
 原文 observables：["expm1(x)", "$expm1(x)"]
 就绪缺口：requirement:expm1@1: pending
 就绪缺口：requirement:expm1@1: review missing
+关联案例：none
 
 | 后端 | 工具链 | 执行 | 完整性 | 数值 | 资格 | 证据 |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -150,6 +153,89 @@ readiness gaps are registry navigation, not a qualification verdict
 原文 observables：["ln1p(x)", "$ln1p(x)"]
 就绪缺口：requirement:ln1p@1: pending
 就绪缺口：requirement:ln1p@1: review missing
+关联案例：none
+
+| 后端 | 工具链 | 执行 | 完整性 | 数值 | 资格 | 证据 |
+| --- | --- | --- | --- | --- | --- | --- |
+| Spectre | unknown | unknown | unknown | unknown | unknown | unknown |
+| ngspice + OpenVAF-R | unknown | unknown | unknown | unknown | unknown | unknown |
+| Gnucap + modelgen-verilog | unknown | unknown | unknown | unknown | unknown | unknown |
+| EVAS | unknown | unknown | unknown | unknown | unknown | unknown |
+
+
+### requirement:output-point-limit@1
+
+sha256：`00d3051aa4a78b171494a6844a0f4ee376c470046539af3cecf47ee096d1d9f2`
+语言配置字段：evas-va-2.4-plus-2023-v1
+语言配置：`evas-va-2.4-plus-2023-v1` version 1，基础 2.4，选入 7780, 7920
+范围：EVAS transient request and SCS adapter contract (capability batch 2A); voltage-domain analog context; implementation resource limit, not a Verilog-A language rule
+要求级支持：not_conferred
+覆盖充分性：pending
+coverage sufficiency is not defined for this requirement
+readiness gaps are registry navigation, not a qualification verdict
+引用：`lrm-2.4` version 1 sha256 afdb66b8baec11cb63e0572346862434fb6652faf3849a402c96bb02f03f13cf kind source bound True path unknown origin https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf
+引用：`lrm-2023` version 1 sha256 86b19cb490fab45c0d8dbc077a3412a3dffdd4a553741ac196c825a0cbae3194 kind source bound True path unknown origin https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2023.pdf
+引用：`source:language-profile` version 1 sha256 96bad1a55d3da59d733ad376d4659e3ff6b821c9a0e5ab41ed6353e794453599 kind source bound True path evas/capabilities/data/language-profile.json origin evas/capabilities/data/language-profile.json
+引用：`source:target-scope` version 1 sha256 bbc16ec9f813042a44b714014359fef63bbf28e2c43a113f4aa5868bcd0264cc kind source bound True path evas/capabilities/data/target-scope.json origin evas/capabilities/data/target-scope.json
+引用：`source:request-limits-contract` version 1 sha256 19c2ad66145a8f38133227db1872e32246ab9a90ac1f0e92157def324ddf4ef6 kind source bound True path evas/docs/reference/proof-work-limit.md origin evas/docs/reference/proof-work-limit.md
+原文 gap："Requirement card for capability batch 2A. Tests are linked through case:output-point-limit-python and case:output-point-limit-rust; review, calibration and execution evidence are pending and the links confer no support."
+原文 status："pending"
+原文 review："pending"
+原文 source_locations：[]
+原文 required_boundaries：["999999, 1000000 and 1000001 points", "floor(stop/maxstep) from limit - 2 to limit + 1", "100000 and 100001 rows", "pulse corners 4*periods + 2 around the limit"]
+原文 budget："Exact for counts (integer equality) and messages (pattern match). Values on the 120001-row stateless-gain grid are within 1e-12 V (input) and 3e-12 V (output) of the closed form, compared with Fractions. The dynamic RC check holds every one of its 120001 rows to the request's own accuracy: |y - (1 - exp(-t))| <= absolute_V + relative*|y| with exp in 50-digit Decimal, where absolute_V = 1e-12 V and relative = 1e-10 are the SCS defaults (the deck has no options line) echoed in effective_controls; the certified voltage_bounds_V contain 1 - exp(-t) and their half-width is within the same tolerance. Discovery does not collect that check: CI runs it by name in the rust-regression job on every regression selection, with or without package, on a release kernel through scripts/run_explicit_checks.py, which fails unless it ran exactly once and passed, and the CI inventory records the step as a CI by-name check entry. A local run of that step is recorded in evas/capabilities/observations/capability-batch1-20261028/pr-evidence/rc-check-release.json in the capability batch 1 construction archive, sha256 e86536dbfb230d46195e61b18d1cdfba8f73620c43fd6cf395b6503c3f526c3f."
+原文 normative_basis："No clause of LRM 2.4 or LRM 2023 limits the number of transient output or forced time points. MAX_OUTPUT_POINTS = 1000000 is an EVAS implementation budget recorded in evas/docs/reference/proof-work-limit.md and referenced by evas/docs/reference/strobe.md."
+原文 related_source_locations：[{"clause": "8.3.2", "editions": ["2.4", "2023"], "relation": "Time points are the simulator's choice (\"The simulator controls the interval between the time points\"); the LRM fixes no count.", "title": "Transient analysis"}, {"clause": "9.17.2", "editions": ["2.4", "2023"], "relation": "A model may bound the step and so raise the number of time points; the limit does not change that semantics.", "title": "$bound_step task"}, {"clause": "5.10.3.3", "editions": ["2.4", "2023"], "relation": "Timer events add time points; forced strobe points are an EVAS request control, not an LRM construct.", "title": "timer function"}]
+原文 target_scope_applicability：{"analysis": "transient requests and SCS transient decks", "included_groups": ["voltage-relations", "analog-state-events", "language-for-voltage-models"], "statement": "Applies to every voltage-domain transient request and SCS deck EVAS admits and changes only admission by point count. It admits no construct and no model outside the target: general-current-kcl, mixed-digital-ams, noise-ac-pss-rf, general-multistability and vpi stay excluded, and fine-grained clause membership stays pending.", "target_scope": "evas-voltage-domain-v1"}
+原文 independent_answers：[{"derivation": "Output grid {k*maxstep < stop} U {stop}; the floor is computed with Fractions of the binary64 stop and maxstep.", "expected": "admitted while floor(stop/maxstep) + 2 <= 1000000; floor + 1 rows for an exact ratio", "observable": "SCS grid rows"}, {"derivation": "Points start + delay + k*period <= end, counted with exact rationals.", "expected": "floor((end - start - delay)/period) + 1", "observable": "periodic strobe count"}, {"derivation": "Explicit points on odd multiples of 2^-21 never meet periodic points on multiples of 2^-20, so the union size is the sum.", "expected": "size of the set union", "observable": "combined strobe count"}, {"derivation": "Four corners per period (rise start and end, fall start and end) plus the first and last points, from the pulse definition.", "expected": "4*periods + 2", "observable": "pulse corners"}, {"derivation": "The grid {0, .25, .5, .75, 1} contains no odd sixteenth or odd thirty-second, so the counts add.", "expected": "5 grid rows plus the distinct odd-sixteenth corners or odd-thirty-second points", "observable": "rows with source corners and saved rows"}, {"derivation": "Stateless gain driven by a PWL triangle: exact piecewise-linear arithmetic with Fractions on the 2^-20 grid.", "expected": "u is the triangle ramp and y = 3u", "observable": "large-grid values"}, {"derivation": "V(y) <+ idt(V(u) - V(y), 0) with V(u) = 1 V gives y' = 1 - y and y(0) = 0; exp is evaluated with 50-digit Decimal, without the kernel.", "expected": "y(t) = 1 - exp(-t); at stop = 120000*2^-20 s, y = 0.1081353699645114710...", "observable": "dynamic RC rows above 100000"}]
+原文 allowed_behavior：["One limit of 1000000 points at the eight Python checkpoints (SCS grid, rows after including source corners, saved rows with forced points, pulse corners, explicit, periodic and combined strobe tables, response strobe_evidence.times) and at the kernel's strobetimes count; the Python and Rust constants are equal.", "A count within the limit is admitted; one more is rejected and the message names the limit in force, for example \"output point budget (1000000) exceeded\".", "The SCS grid is admitted while floor(stop/maxstep) + 2 <= limit; an exactly divisible stop/maxstep needs only floor + 1 rows, so admission is conservative by one row.", "Counts above the former 100000 boundary are admitted; unrelated budgets that share the number 100000 (netlist tokens, integer invariants, native audit) are unchanged.", "The limit changes admission only; admitted requests compute the same results as before."]
+原文 conditions：["cap - 1, cap and cap + 1 at every checkpoint", "former 100000 boundary", "conservative grid bound", "message names the enforced limit", "Python and Rust constants agree", "end to end above 100000 rows"]
+原文 observables：["admission or rejection and its message at each checkpoint", "number of output, saved and forced rows", "values on a 120001-row grid", "Rust: strobetimes count accepted or rejected by Trajectory"]
+就绪缺口：requirement:output-point-limit@1: pending
+就绪缺口：requirement:output-point-limit@1: review missing
+关联案例：`case:output-point-limit-python`@1 sha256 7b2e4045f528e890f93f45ba48146529295a65e5f16b4111668d8a987630ed2f 状态 pending 审核 pending 测试 {"explicit-check": 1, "python-regression": 18}；测试关联只作导航，不授予要求级支持
+关联案例：`case:output-point-limit-rust`@1 sha256 64ea5141b3cf99cab8b57fbc84250c51c61601a180d1ca5d1c65dbc3bbfba0bb 状态 pending 审核 pending 测试 {"rust-tests": 3}；测试关联只作导航，不授予要求级支持
+
+| 后端 | 工具链 | 执行 | 完整性 | 数值 | 资格 | 证据 |
+| --- | --- | --- | --- | --- | --- | --- |
+| Spectre | unknown | unknown | unknown | unknown | unknown | unknown |
+| ngspice + OpenVAF-R | unknown | unknown | unknown | unknown | unknown | unknown |
+| Gnucap + modelgen-verilog | unknown | unknown | unknown | unknown | unknown | unknown |
+| EVAS | unknown | unknown | unknown | unknown | unknown | unknown |
+
+
+### requirement:proof-work-limit@1
+
+sha256：`91770f4bcf7e9c49875e0e21bd6ca389ad6619706025625363c82672d300038b`
+语言配置字段：evas-va-2.4-plus-2023-v1
+语言配置：`evas-va-2.4-plus-2023-v1` version 1，基础 2.4，选入 7780, 7920
+范围：EVAS transient request contract (capability batch 1A); voltage-domain analog context; implementation resource limit, not a Verilog-A language rule
+要求级支持：not_conferred
+覆盖充分性：pending
+coverage sufficiency is not defined for this requirement
+readiness gaps are registry navigation, not a qualification verdict
+引用：`lrm-2.4` version 1 sha256 afdb66b8baec11cb63e0572346862434fb6652faf3849a402c96bb02f03f13cf kind source bound True path unknown origin https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf
+引用：`lrm-2023` version 1 sha256 86b19cb490fab45c0d8dbc077a3412a3dffdd4a553741ac196c825a0cbae3194 kind source bound True path unknown origin https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2023.pdf
+引用：`source:language-profile` version 1 sha256 96bad1a55d3da59d733ad376d4659e3ff6b821c9a0e5ab41ed6353e794453599 kind source bound True path evas/capabilities/data/language-profile.json origin evas/capabilities/data/language-profile.json
+引用：`source:target-scope` version 1 sha256 bbc16ec9f813042a44b714014359fef63bbf28e2c43a113f4aa5868bcd0264cc kind source bound True path evas/capabilities/data/target-scope.json origin evas/capabilities/data/target-scope.json
+引用：`source:request-limits-contract` version 1 sha256 19c2ad66145a8f38133227db1872e32246ab9a90ac1f0e92157def324ddf4ef6 kind source bound True path evas/docs/reference/proof-work-limit.md origin evas/docs/reference/proof-work-limit.md
+原文 gap："Requirement card for capability batch 1A. Tests are linked through case:proof-work-limit-python and case:proof-work-limit-rust; review, calibration and execution evidence are pending and the links confer no support."
+原文 status："pending"
+原文 review："pending"
+原文 source_locations：[]
+原文 required_boundaries：["N = 1", "N = 10000000000000", "N = 0 and N = 10000000000001", "2e12 written as a JSON float", "an integer beyond u64", "unset versus explicit 1000000000", "default exhaustion versus completion at 1e10 for one 3000-row request"]
+原文 budget："Exact for every control fact: echo, error kind, limit in the message, ledger slots and request bytes compare by equality, and the C8 comparison requires the echoed default as the integer 1000000000 before removing it. Raising the limit changes no numerical result: unset and explicit default give byte-identical responses; simulate_scs at 2e12 saves data equal to the default run; as one-time PR evidence and not a CI test, the default response through a kernel built from main d6b7543f equals the previous kernel's after removing only the echo key (receipt evas/capabilities/observations/capability-batch1-20261028/pr-evidence/main-kernel-checks.json in the capability batch 1 construction archive, sha256 721cd514ba1087b5f177424ad76ba0825212f31f724419c3d8b2968653749a08). Completed rows of the slew request are within the request's own tolerance absolute_V + relative*|y| read from effective_controls, which must equal the requested 1e-12 V and 0; rows are compared with Fractions. Exhaustion depends on the request bytes, because the ledger charges serialized program text: the two end-to-end tests name their source proof_limit.va, so the checkout path never enters their requests. Measured total work is 891444759 for 1000 rows (108555241 below 1e9, 841444759 above 5e7) and 2669543465 for 3000 rows (1669543465 above 1e9, 7330456535 below 1e10); each extra character of the source name adds 11061 and 33061 work, so the tightest margin, 1000 rows under 1e9, allows 9814 more characters. No universal tolerance is introduced."
+原文 normative_basis："No clause of LRM 2.4 or LRM 2023 defines a proof-work budget. The limit is an EVAS request contract and implementation budget recorded in evas/docs/reference/proof-work-limit.md; it is neither a correctness criterion nor a performance promise."
+原文 related_source_locations：[{"clause": "8.3.2", "editions": ["2.4", "2023"], "relation": "The LRM leaves the numerical method and its effort to the simulator (\"There are a number of different approaches to solving this problem numerically\"); it sets no work budget.", "title": "Transient analysis"}, {"clause": "4.5.8", "editions": ["2.4", "2023"], "relation": "EVAS charges the ledger while certifying transition() source plans; the operator semantics do not depend on the limit.", "title": "Transition filter"}, {"clause": "4.5.9", "editions": ["2.4", "2023"], "relation": "The end-to-end answers use slew(); the limit decides only whether certification finishes.", "title": "Slew filter"}, {"clause": "5.10.3", "editions": ["2.4", "2023"], "relation": "Event certification inside a transient request draws on the same ledger.", "title": "Monitored events"}]
+原文 target_scope_applicability：{"analysis": "transient requests only; the static solve path keeps its fixed default ledger and has no request field", "included_groups": ["voltage-relations", "analog-state-events", "language-for-voltage-models"], "statement": "Applies to every transient request EVAS admits in the voltage-domain target. It admits no construct and no model outside the target: general-current-kcl, mixed-digital-ams, noise-ac-pss-rf, general-multistability and vpi stay excluded, and fine-grained clause membership stays pending.", "target_scope": "evas-voltage-domain-v1"}
+原文 independent_answers：[{"derivation": "Literals of the designed contract written in the tests, not read from the constants under test.", "expected": "1000000000 and 10000000000000", "observable": "default and hard bound"}, {"derivation": "Literal slots of the unchanged default ledger; only slot 2 takes N.", "expected": "[128, 8192, N]", "observable": "ledger slots"}, {"derivation": "Request contract in evas/docs/reference/proof-work-limit.md; rejected shapes are written as raw JSON text so Python cannot normalize 2e12 or true.", "expected": "accepted exactly when the value is a JSON integer in [1, 1e13]", "observable": "accepted and rejected values"}, {"derivation": "u ramps from 0 to 1 on [0, 1]; the selected target becomes 1 once u > 0.5, i.e. after t = 1/2; slew(target, 1, -2) rises at 1 V/s. Evaluated with fractions.Fraction without the kernel.", "expected": "y(t) = min(1, max(0, t - 1/2)) on [0, 2]", "observable": "slew end-to-end rows"}, {"derivation": "Differential reference: the same request unset and with the explicit default (collected tests), and, as one-time PR evidence and not a CI test, through a kernel built from main d6b7543f before the field existed (receipt evas/capabilities/observations/capability-batch1-20261028/pr-evidence/main-kernel-checks.json in the capability batch 1 construction archive, sha256 721cd514ba1087b5f177424ad76ba0825212f31f724419c3d8b2968653749a08).", "expected": "identical response bytes apart from the echo", "observable": "the limit is not a numerical input"}, {"derivation": "The C8 kernel predates the field; for an unset request the contract echoes the designed default literal, so that key is the only mapped difference.", "expected": "the schema-33 response equals the C8 response plus effective_controls.proof_work_limit = 1000000000, an integer", "observable": "C8 comparison of a default request"}, {"derivation": "The transient request section is closed to unknown fields (evas/docs/reference/proof-work-limit.md, compatibility), which is what makes a kernel without proof_work_limit reject it.", "expected": "invalid_request naming the field", "observable": "unknown transient field"}]
+原文 allowed_behavior：["Unset: the request ledger is [128, 8192, 1000000000], the request bytes are those of the previous release (the field is not sent) and the response echoes effective_controls.proof_work_limit = 1000000000.", "Set to an integer N with 1 <= N <= 10000000000000: N is the work slot of every source-transition proof ledger the request builds, with one exception. Slots 0 and 1, the sharing between consumers and the no-refund rule for failed reservations are unchanged, and each ledger is sticky. A consumer shares a bound owner's ledger (source context, procedure, analytic sources) and otherwise builds its own from the same N, so one request can hold several: measured, the slew and RC requests hold the events ledger [128, 8192, N] and the operator-plan ledger [8192, 8192, N], and an analytic-source request holds the request ledger and the events ledger, both [128, 8192, N]. The exception is the transition-input form audit (operators.rs, transition_input): each call builds a fresh default ledger [128, 8192, 1000000000] that does not take N. The kernel admits at most 100000 IR values with container depth 96, which bounds one audit at about 6.9e6 work (measured at most 540847), so that ledger never binds.", "Every other value (0, above 1e13, negative, any float including 2e12 and 2000000000000.0, bool, string, null, an integer beyond u64) is invalid_inputs in the kernel; the Python API raises ValueError before sending; the CLI accepts decimal digits only, and only for transient and simulate.", "Exhaustion reports step_budget with the limit in force (\"exceeds N\").", "The limit is request metadata, not part of the serialized config identity: a request that completes under two limits is charged the same work and returns the same values.", "A kernel without the field rejects it as invalid_request (fail closed); request_protocol_version stays null. This was checked once against a kernel built from main d6b7543f before the field existed, as one-time PR evidence and not a CI test (receipt evas/capabilities/observations/capability-batch1-20261028/pr-evidence/main-kernel-checks.json in the capability batch 1 construction archive, sha256 721cd514ba1087b5f177424ad76ba0825212f31f724419c3d8b2968653749a08). Under CI, test_kernel_rejects_an_unknown_transient_field_by_name keeps the same rule for any unknown transient field."]
+原文 conditions：["default and explicit default", "range boundaries", "invalid value shapes", "natural exhaustion and completion under a larger limit", "sticky ledger without refunds", "echo and response validation", "Python, CLI and SCS surfaces"]
+原文 observables：["observation_evidence.effective_controls.proof_work_limit", "error kind and message: invalid_inputs, step_budget (\"exceeds N\"), invalid_request", "transient rows and node voltages", "serialized request and response bytes", "Rust: ledger slots, serialized config identity bytes and the work they are charged"]
+就绪缺口：requirement:proof-work-limit@1: pending
+就绪缺口：requirement:proof-work-limit@1: review missing
+关联案例：`case:proof-work-limit-python`@1 sha256 fc4e2923b21d9226b243fa64cfba5cfe928438be9c32e2de09c5ffe4d533277a 状态 pending 审核 pending 测试 {"explicit-check": 2, "python-regression": 24}；测试关联只作导航，不授予要求级支持
+关联案例：`case:proof-work-limit-rust`@1 sha256 b22202e60da33621fe2731b600624d1e0ad2de32db9662df0b0609f53fe1bc5e 状态 pending 审核 pending 测试 {"rust-tests": 12}；测试关联只作导航，不授予要求级支持
 
 | 后端 | 工具链 | 执行 | 完整性 | 数值 | 资格 | 证据 |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -1011,15 +1097,15 @@ counts_as_current_support: false
 
 ## 例外
 
-exception: coverage_sufficiency_pending 4
+exception: coverage_sufficiency_pending 6
 exception: historical_unjoined 1
-exception: toolchain_unknown 16
+exception: toolchain_unknown 24
 exception: unbound_qualification 1
 exception-detail: {"count": 78, "kind": "historical_unjoined", "reason": "historical nodes do not name a current requirement and are not joined"}
 
 ## 分类
 
-classifications: {"backend_execution_cells": {"unknown": 16}, "exception_counts": {"coverage_sufficiency_pending": 4, "historical_unjoined": 1, "toolchain_unknown": 16, "unbound_qualification": 1}, "historical_node_status": {"compared": 57, "waiting": 21}, "qualification_records_current_qualified": {"false": 1}, "record_execution_states": {"recorded": 1}, "requirement_status": {"pending": 4}}
+classifications: {"backend_execution_cells": {"unknown": 24}, "exception_counts": {"coverage_sufficiency_pending": 6, "historical_unjoined": 1, "toolchain_unknown": 24, "unbound_qualification": 1}, "historical_node_status": {"compared": 57, "waiting": 21}, "qualification_records_current_qualified": {"false": 1}, "record_execution_states": {"recorded": 1}, "requirement_status": {"pending": 6}}
 
 ## 本视图不做的事
 

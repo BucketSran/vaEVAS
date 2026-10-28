@@ -23,6 +23,12 @@ EVAS 目标配置：`evas-voltage-domain-v1`，目标域 3 项，明确目标外
 | --- | --- | ---: |
 | `analysis:sef-calibration-pr1@1` | analysis | 19 |
 | `calibration:sef@1` | calibration | 6 |
+| `case:output-point-limit-python@1` | case | 9 |
+| `case:output-point-limit-rust@1` | case | 9 |
+| `case:proof-work-limit-python@1` | case | 9 |
+| `case:proof-work-limit-rust@1` | case | 9 |
+| `checker:output-point-limit@1` | checker | 4 |
+| `checker:proof-work-limit@1` | checker | 4 |
 | `checker:sef@1` | checker | 10 |
 | `example:existing-positive@1` | case | 14 |
 | `example:internal-budget@1` | internal-contract | 3 |
@@ -33,6 +39,8 @@ EVAS 目标配置：`evas-voltage-domain-v1`，目标域 3 项，明确目标外
 | `requirement:$rtoi@1` | requirement | 4 |
 | `requirement:expm1@1` | requirement | 2 |
 | `requirement:ln1p@1` | requirement | 2 |
+| `requirement:output-point-limit@1` | requirement | 2 |
+| `requirement:proof-work-limit@1` | requirement | 2 |
 | `review:sef-calibration-pr1@1` | review | 23 |
 
 资格缺口来自固定版本的依赖、审核和来源检查，不把历史运行通过转授为当前支持。
