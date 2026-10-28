@@ -1,0 +1,158 @@
+{
+  "paths": [
+    "evas/capabilities/data/asset-index.json",
+    "evas/capabilities/data/catalog-sources.json",
+    "evas/capabilities/data/entrypoint-index.json",
+    "evas/capabilities/data/historical-index-00.json",
+    "evas/capabilities/data/historical-index-01.json",
+    "evas/capabilities/data/historical-index-02.json",
+    "evas/capabilities/data/historical-index-03.json",
+    "evas/capabilities/data/historical-index-04.json",
+    "evas/capabilities/data/historical-index-05.json",
+    "evas/capabilities/data/historical-index-06.json",
+    "evas/capabilities/data/historical-index-07.json",
+    "evas/capabilities/data/historical-index-08.json",
+    "evas/capabilities/data/historical-index-09.json",
+    "evas/capabilities/data/historical-index-10.json",
+    "evas/capabilities/data/historical-index-11.json",
+    "evas/capabilities/data/historical-index-12.json",
+    "evas/capabilities/data/historical-index-13.json",
+    "evas/capabilities/data/historical-index-14.json",
+    "evas/capabilities/data/historical-index-15.json",
+    "evas/capabilities/data/method-index-00.json",
+    "evas/capabilities/data/method-index-01.json",
+    "evas/capabilities/data/method-index-02.json",
+    "evas/capabilities/data/method-index-03.json",
+    "evas/capabilities/data/method-index-04.json",
+    "evas/capabilities/data/method-index-05.json",
+    "evas/capabilities/data/method-index-06.json",
+    "evas/capabilities/data/method-index-07.json",
+    "evas/capabilities/data/method-index-08.json",
+    "evas/capabilities/data/method-index-09.json",
+    "evas/capabilities/data/method-index-10.json",
+    "evas/capabilities/data/method-index-11.json",
+    "evas/capabilities/data/method-index-12.json",
+    "evas/capabilities/data/method-index-13.json",
+    "evas/capabilities/data/method-index-14.json",
+    "evas/capabilities/data/method-index-15.json",
+    "evas/capabilities/data/registry.json"
+  ],
+  "old_versions_retained": 86921,
+  "retention": {
+    "main": {
+      "revision": "bf2ec4105a17af2bf73f2802c828c5f76a6236b5",
+      "objects": 77812,
+      "missing": 0,
+      "rewritten": 0
+    },
+    "pr273_r2": {
+      "revision": "9ea5de9f1a76c039cd8707f1a6db06ecf1829310",
+      "objects": 66525,
+      "missing": 0,
+      "rewritten": 0
+    },
+    "pr273_r1": {
+      "revision": "6bfa35ea22cee6e2bbc1819164571364fd6938da",
+      "objects": 65910,
+      "missing": 0,
+      "rewritten": 0
+    },
+    "main_before_split": {
+      "revision": "02dee32b2c9b25f166cbd77f8a895953e004f288",
+      "objects": 57416,
+      "missing": 0,
+      "rewritten": 0
+    }
+  },
+  "new_object_versions": 8583,
+  "deterministic_double_generation": true,
+  "version_lists": {
+    "ids": 12762,
+    "problems": 0,
+    "rule": "each id keeps every previous version and gains at most one new version, which is current"
+  },
+  "objects": {
+    "assets": 4260,
+    "entrypoints": 36,
+    "history": 3260,
+    "methods": 4840,
+    "sources": 39
+  },
+  "namespace_counts": {
+    "calibration": {
+      "entrypoints": 0,
+      "generated": 0,
+      "methods": 0
+    },
+    "maintenance": {
+      "entrypoints": 7,
+      "generated": 0,
+      "methods": 734
+    },
+    "python-regression": {
+      "entrypoints": 1,
+      "generated": 12,
+      "methods": 3257
+    },
+    "rust-tests": {
+      "entrypoints": 5,
+      "generated": 0,
+      "methods": 0
+    },
+    "validation": {
+      "entrypoints": 23,
+      "generated": 22,
+      "methods": 849
+    }
+  },
+  "data_file_sizes": {
+    "annex-c-policy.json": 10304,
+    "asset-index.json": 19952938,
+    "boundary-audit.json": 256727,
+    "catalog-sources.json": 1252506,
+    "dispositions.json": 3119826,
+    "entrypoint-index.json": 695980,
+    "historical-comparison.json": 37425,
+    "historical-index-00.json": 3154745,
+    "historical-index-01.json": 3880085,
+    "historical-index-02.json": 4127768,
+    "historical-index-03.json": 3974663,
+    "historical-index-04.json": 3879190,
+    "historical-index-05.json": 4270534,
+    "historical-index-06.json": 3793954,
+    "historical-index-07.json": 3565216,
+    "historical-index-08.json": 4194534,
+    "historical-index-09.json": 3717132,
+    "historical-index-10.json": 3698854,
+    "historical-index-11.json": 3746138,
+    "historical-index-12.json": 3753907,
+    "historical-index-13.json": 3898465,
+    "historical-index-14.json": 4422700,
+    "historical-index-15.json": 3650608,
+    "language-profile.json": 1959,
+    "method-index-00.json": 8632317,
+    "method-index-01.json": 8138510,
+    "method-index-02.json": 9517814,
+    "method-index-03.json": 8844026,
+    "method-index-04.json": 8209232,
+    "method-index-05.json": 9098687,
+    "method-index-06.json": 8143816,
+    "method-index-07.json": 7987554,
+    "method-index-08.json": 7459392,
+    "method-index-09.json": 8410753,
+    "method-index-10.json": 8278390,
+    "method-index-11.json": 8272453,
+    "method-index-12.json": 7744275,
+    "method-index-13.json": 9093721,
+    "method-index-14.json": 8188310,
+    "method-index-15.json": 8829057,
+    "registry.json": 1371046,
+    "source-inventory.json": 5879814,
+    "target-scope.json": 1806
+  },
+  "largest_data_file": [
+    "asset-index.json",
+    19952938
+  ],
+  "scientific_qualification": false
+}
