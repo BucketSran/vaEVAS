@@ -20,6 +20,9 @@ HELPER = Path(__file__).resolve().parents[1] / 'capabilities/discover_rust.py'
 MAIN_WORKFLOW = '.github/workflows/numerical-assurance.yml'
 CACHE_ACTION = '.github/actions/rust-cache/action.yml'
 FUZZ_JOB = 'fuzz-smoke'
+# The one nightly spelling cargo-fuzz may run on. jobs.fuzz-smoke of the main workflow names it in exactly four places
+# (install, cargo +, cargo + again, the cache action's toolchain input); an undated nightly or another date is refused.
+FUZZ_NIGHTLY = 'nightly-2026-10-27'
 # GitHub runs workflows named *.yml or *.yaml and composite actions defined in action.yml or action.yaml.
 WORKFLOW_SUFFIXES = ('.yml', '.yaml')
 ACTION_NAMES = ('action.yml', 'action.yaml')
@@ -1039,7 +1042,7 @@ class _CiScan:
         selection = _normal(selection)
         if selection in AUTHORITATIVE or (selection == '${{ inputs.toolchain }}' and self.name == CACHE_ACTION):
             return True
-        return selection == 'nightly' and self.fuzz and kind in ('rustup-install', 'cargo-plus', 'with-toolchain')
+        return selection == FUZZ_NIGHTLY and self.fuzz and kind in ('rustup-install', 'cargo-plus', 'with-toolchain')
 
     def check_key(self, key, value, trail, owner, step, shell=None):
         """Apply the key-specific rules; True when the value was fully judged here."""
@@ -1465,7 +1468,7 @@ class _CiScan:
 
     def pick(self, word, kind, trail, what):
         if self.allowed(word.value, kind):
-            if _normal(word.value) == 'nightly':
+            if _normal(word.value) == FUZZ_NIGHTLY:
                 self.approved.add(id(word))
             return
         self.report(trail, f'{what} selects {_plain(word.value)!r}')
@@ -1477,7 +1480,7 @@ class _CiScan:
         if first.value.startswith('+'):
             selection = _Word(first.value[1:], first.value[1:], first.expands, first.quoted)
             if self.allowed(selection.value, 'cargo-plus' if base == 'cargo' and exact else 'tool-plus'):
-                if _normal(selection.value) == 'nightly':
+                if _normal(selection.value) == FUZZ_NIGHTLY:
                     self.approved.add(id(first))
                 return
             self.report(trail, f'{base} selects {_plain(selection.value)!r}')
@@ -1554,7 +1557,7 @@ class _CiScan:
         else:
             if kind == 'install' and not positionals:
                 self.report(trail, 'rustup toolchain install names no toolchain')
-            # nightly is excused only for a lone `rustup [toolchain] install nightly`; every other argument is judged alone.
+            # The fixed nightly is excused only for a lone `rustup [toolchain] install`; every other argument is judged alone.
             lone = exact and kind == 'install' and len(positionals) == 1
             picks.extend((word, 'rustup-install' if lone else 'rustup-' + subcommand) for word in positionals)
         self.finish_rustup(picks, trail)
@@ -1621,9 +1624,9 @@ def toolchain_selection_violations(texts, root_files=()):
     first (jobs, steps, env, with, uses and scalars); each run script is then read as shell words, with
     quotes, paths, line continuations and GitHub expressions resolved. A selection is allowed only as an
     authoritative reference (${RUSTUP_TOOLCHAIN}, the reusable input, the selection output, the workflow
-    env), as the one pinned literal under the top-level env, or as nightly where jobs.fuzz-smoke of the
-    main workflow installs it through `rustup toolchain install nightly`, `cargo +nightly` or the
-    `toolchain: nightly` input of the cache action. Every selection is judged on its own, so one allowed
+    env), as the one pinned literal under the top-level env, or as FUZZ_NIGHTLY (a dated nightly, never the bare
+    channel or another date) where jobs.fuzz-smoke of the main workflow installs it through
+    `rustup toolchain install`, `cargo +` or the `toolchain:` input of the cache action. Every selection is judged on its own, so one allowed
     command does not excuse another on the same line. Anything else that selects a toolchain, and
     anything this reader cannot parse or classify, is reported. root_files lists repo files named like
     rust-toolchain, which also select a toolchain.
@@ -1650,8 +1653,11 @@ def toolchain_files(root):
     return sorted(found)
 
 
-SELECTION_VALUES = ('nightly', 'stable', '1.99.0')
-# The only spellings through which fuzz-smoke may name nightly (the ones the real job uses, plus the same
+# The fixed nightly, the bare channel and the neighbouring dates must each be refused outside fuzz-smoke's three commands;
+# inside them only FUZZ_NIGHTLY is accepted.
+OTHER_NIGHTLIES = tuple(value for value in ('nightly-2026-10-26', 'nightly-2026-10-28') if value != FUZZ_NIGHTLY)
+SELECTION_VALUES = (FUZZ_NIGHTLY, 'nightly', *OTHER_NIGHTLIES, 'stable', '1.99.0')
+# The only spellings through which fuzz-smoke may name FUZZ_NIGHTLY (the ones the real job uses, plus the same
 # command with its argument quoted or written as a quoted YAML scalar). Every other spelling is refused.
 FUZZ_NIGHTLY_FORMS = ('rustup-toolchain-install', 'rustup-install-alias', 'rustup-in-block-scalar', 'cargo-plus',
                       'cargo-plus-in-block-scalar', 'cargo-quoted-selector', 'cargo-quoted-yaml',
@@ -1820,7 +1826,7 @@ def selection_variant_cases(texts):
                 lines = texts[path].split('\n')
                 index = anchored(path, job, steps_anchor)
                 changed = '\n'.join(lines[:index + 1] + build(indent, value) + lines[index + 1:])
-                fuzz_nightly = (location == 'job-steps-fuzz-smoke' and value == 'nightly'
+                fuzz_nightly = (location == 'job-steps-fuzz-smoke' and value == FUZZ_NIGHTLY
                                 and form in FUZZ_NIGHTLY_FORMS)
                 add(form, location, value, dict(texts, **{path: changed}), expect_reject=not fuzz_nightly)
             # A brand-new workflow and a brand-new composite action.
@@ -1906,28 +1912,34 @@ def selection_variant_cases(texts):
             add(form, location, 'authoritative', dict(texts, **{path: changed}), expect_reject=False)
     fuzz_lines = texts[main].split('\n')
     index = anchored(main, '  fuzz-smoke:', '    steps:')
-    for form, build in {'fuzz-cargo-plus-nightly': lambda i, v: [f'{i}- run: cargo +nightly --version'],
-                        'fuzz-install-nightly': lambda i, v: [f'{i}- run: rustup toolchain install nightly --profile minimal'],
+    for form, build in {'fuzz-cargo-plus-nightly': lambda i, v: [f'{i}- run: cargo +{v} --version'],
+                        'fuzz-install-nightly': lambda i, v: [f'{i}- run: rustup toolchain install {v} --profile minimal'],
                         'fuzz-cache-toolchain-nightly': lambda i, v: [f'{i}- uses: ./.github/actions/rust-cache', f'{i}  with:',
-                                                                      f'{i}    toolchain: nightly', f'{i}    lane: fuzz']}.items():
-        changed = '\n'.join(fuzz_lines[:index + 1] + build('      ', 'nightly') + fuzz_lines[index + 1:])
-        add(form, 'job-steps-fuzz-smoke', 'nightly', dict(texts, **{main: changed}), expect_reject=False)
+                                                                      f'{i}    toolchain: {v}', f'{i}    lane: fuzz']}.items():
+        for value in (FUZZ_NIGHTLY, 'nightly', *OTHER_NIGHTLIES):
+            changed = '\n'.join(fuzz_lines[:index + 1] + build('      ', value) + fuzz_lines[index + 1:])
+            add(form, 'job-steps-fuzz-smoke', value, dict(texts, **{main: changed}), expect_reject=value != FUZZ_NIGHTLY)
     # A quoted job name is a distinct job: it never extends the fuzz-smoke exception to the jobs that follow.
     for spelling in ('  "review-other-job":', "  'review-other-job':", '  review-other-job:'):
         for value in ('nightly', 'stable'):
             job = f'{spelling}\n    runs-on: ubuntu-latest\n    steps:\n      - run: cargo +{value} test\n\n  package:\n'
             add('job-after-fuzz-smoke', 'quoted-job-key', value, dict(texts, **{main: texts[main].replace('  package:\n', job, 1)}))
     for name in ('fuzz-smoke-extra', '"fuzz-smoke-extra"', "'fuzz-smoke2'"):
-        job = f'  {name}:\n    runs-on: ubuntu-latest\n    steps:\n      - run: cargo +nightly test\n\n  package:\n'
-        add('job-named-like-fuzz-smoke', 'similar-job-key', 'nightly', dict(texts, **{main: texts[main].replace('  package:\n', job, 1)}))
-    add('fuzz-smoke-in-another-file', 'new-workflow', 'nightly', dict(texts, **{'.github/workflows/other.yml': '\n'.join(
-        ['name: n', 'on: push', 'jobs:', '  fuzz-smoke:', '    runs-on: ubuntu-latest', '    steps:', '      - run: cargo +nightly test']) + '\n'}))
-    add('fuzz-smoke-quoted-key-is-the-same-job', 'quoted-fuzz-job', 'nightly', dict(texts, **{main: texts[main].replace(
+        for value in (FUZZ_NIGHTLY, 'nightly'):
+            job = f'  {name}:\n    runs-on: ubuntu-latest\n    steps:\n      - run: cargo +{value} test\n\n  package:\n'
+            add('job-named-like-fuzz-smoke', 'similar-job-key', value, dict(texts, **{main: texts[main].replace('  package:\n', job, 1)}))
+    for value in (FUZZ_NIGHTLY, 'nightly'):
+        add('fuzz-smoke-in-another-file', 'new-workflow', value, dict(texts, **{'.github/workflows/other.yml': '\n'.join(
+            ['name: n', 'on: push', 'jobs:', '  fuzz-smoke:', '    runs-on: ubuntu-latest', '    steps:', f'      - run: cargo +{value} test']) + '\n'}))
+    add('fuzz-smoke-quoted-key-is-the-same-job', 'quoted-fuzz-job', FUZZ_NIGHTLY, dict(texts, **{main: texts[main].replace(
         '  fuzz-smoke:\n', '  "fuzz-smoke":\n', 1)}), expect_reject=False)
     # Every selection is judged alone: the excused command does not excuse another one in the same script or line.
-    for second in ('"cargo" +1.98.0 test', 'cargo +1.98.0 test', '/opt/rust/bin/cargo +stable test', 'rustup update stable',
-                   'rustup toolchain install nightly stable', 'rustc +beta -vV'):
-        for template in ('cargo +nightly test; {}', 'cargo +nightly test && {}', '{} || cargo +nightly test', 'echo ok | {}'):
+    seconds = ('"cargo" +1.98.0 test', 'cargo +1.98.0 test', '/opt/rust/bin/cargo +stable test', 'rustup update stable',
+               f'rustup toolchain install {FUZZ_NIGHTLY} stable', 'rustc +beta -vV', 'cargo +nightly test',
+               *(f'cargo +{other} test' for other in OTHER_NIGHTLIES), f'rustup toolchain install {FUZZ_NIGHTLY} nightly',
+               'rustup toolchain install nightly')
+    for second in seconds:
+        for template in (f'cargo +{FUZZ_NIGHTLY} test; {{}}', f'cargo +{FUZZ_NIGHTLY} test && {{}}', f'{{}} || cargo +{FUZZ_NIGHTLY} test', 'echo ok | {}'):
             command = template.format(second)
             lines = texts[main].split('\n')
             index = anchored(main, '  fuzz-smoke:', '    steps:')
@@ -2381,15 +2393,26 @@ class RustListingTests(unittest.TestCase):
             if path!=main:
                 with self.subTest(literal=path.name):
                     self.assertNotRegex(path.read_text(),r'RUSTUP_TOOLCHAIN:\s*[\'"]?[0-9]')
-        # Allowed exception: fuzz-smoke installs and names nightly, which cargo-fuzz requires.
+        # Allowed exception: fuzz-smoke installs and names the one fixed nightly, which cargo-fuzz requires.
         for path in ci:
             installs=re.findall(r'rustup toolchain install (\S+)',path.read_text())
             with self.subTest(installs=path.name):
-                self.assertTrue(all(name=='"$RUSTUP_TOOLCHAIN"' or (path==main and name=='nightly') for name in installs),installs)
-        self.assertEqual(re.findall(r'rustup toolchain install (\S+)',text).count('nightly'),1)
+                self.assertTrue(all(name=='"$RUSTUP_TOOLCHAIN"' or (path==main and name==FUZZ_NIGHTLY) for name in installs),installs)
+        self.assertEqual(re.findall(r'rustup toolchain install (\S+)',text).count(FUZZ_NIGHTLY),1)
         fuzz=re.search(r'^  fuzz-smoke:\n(.*?)(?=^  package:)',text,re.M|re.S).group(1)
-        self.assertIn('rustup toolchain install nightly',fuzz)
-        self.assertEqual(re.findall(r'\bcargo (?!\+nightly)\S+',fuzz),[])
+        self.assertIn('rustup toolchain install '+FUZZ_NIGHTLY,fuzz)
+        self.assertEqual(re.findall(r'\bcargo (?!\+'+re.escape(FUZZ_NIGHTLY)+r'\s)\S+',fuzz),[])
+        # The fixed nightly is named in exactly four places of fuzz-smoke and every one of them is that spelling;
+        # no other CI line (comments aside) names a nightly at all.
+        def code(block):return '\n'.join(line for line in block.splitlines() if not line.lstrip().startswith('#'))
+        self.assertEqual(re.findall(r'nightly[^\s"\']*',code(fuzz)),[FUZZ_NIGHTLY]*4)
+        self.assertEqual(re.findall(r'rustup toolchain install (\S+)',fuzz),[FUZZ_NIGHTLY])
+        self.assertEqual(re.findall(r'\bcargo \+(\S+)',fuzz),[FUZZ_NIGHTLY]*2)
+        self.assertEqual(re.findall(r'(?m)^\s+toolchain: (\S+)$',fuzz),[FUZZ_NIGHTLY])
+        for path in ci:
+            rest=code(text.replace(fuzz,'')) if path==main else code(path.read_text())
+            with self.subTest(nightly_outside_fuzz_smoke=path.name):
+                self.assertNotIn('nightly',rest)
         # Every toolchain selection anywhere in CI is an authoritative reference; see test_toolchain_selection_is_a_whitelist.
 
     def test_toolchain_selection_is_a_whitelist(self):
@@ -2861,15 +2884,23 @@ class CiShellReaderTests(unittest.TestCase):
                     self.assertEqual(bool(found), '1.98.0' in script)
 
     def test_nightly_is_excused_only_for_the_exact_command_of_jobs_fuzz_smoke(self):
-        excused = ['cargo +nightly test', 'cargo "+nightly" test', 'rustup toolchain install nightly --profile minimal',
-                   'rustup install nightly', 'cargo +nightly test; cargo +nightly fuzz run x', 'if x; then cargo +nightly test; fi',
-                   'echo go | cargo +nightly test', 'v=$(cargo +nightly --version)']
-        refused = ['cargo +nightly test; "cargo" +1.98.0 test', 'cargo +nightly test; cargo +stable test',
-                   'rustup toolchain install nightly stable', 'rustup toolchain install "$RUSTUP_TOOLCHAIN" nightly',
-                   'rustup default nightly', 'rustup update nightly', 'rustup run nightly cargo test', 'rustc +nightly -vV',
-                   'rustup component add clippy --toolchain nightly', '"cargo" +nightly test', '/opt/rust/bin/cargo +nightly test',
-                   'cargo \\\n +nightly test', 'env cargo +nightly test', 'bash -c "cargo +nightly test"', 'X=1 cargo +nightly test',
-                   'cargo +nightly\\\ntest', 'echo nightly']
+        n = FUZZ_NIGHTLY
+        excused = [f'cargo +{n} test', f'cargo "+{n}" test', f'rustup toolchain install {n} --profile minimal',
+                   f'rustup install {n}', f'cargo +{n} test; cargo +{n} fuzz run x', f'if x; then cargo +{n} test; fi',
+                   f'echo go | cargo +{n} test', f'v=$(cargo +{n} --version)']
+        # Forms that are refused for the fixed nightly as for any other spelling.
+        refused_for_any = ['cargo +{n} test; "cargo" +1.98.0 test', 'cargo +{n} test; cargo +stable test',
+                           'rustup toolchain install {n} stable', 'rustup toolchain install "$RUSTUP_TOOLCHAIN" {n}',
+                           'rustup default {n}', 'rustup update {n}', 'rustup run {n} cargo test', 'rustc +{n} -vV',
+                           'rustup component add clippy --toolchain {n}', '"cargo" +{n} test', '/opt/rust/bin/cargo +{n} test',
+                           'cargo \\\n +{n} test', 'env cargo +{n} test', 'bash -c "cargo +{n} test"', 'X=1 cargo +{n} test',
+                           'cargo +{n}\\\ntest', 'echo {n}']
+        refused_for_other_spellings = [script.replace(n, other) for other in ('nightly', *OTHER_NIGHTLIES) for script in excused]
+        refused_for_other_spellings += ['cargo +{n} test; cargo +{o} test', 'rustup toolchain install {n} {o}',
+                                        'rustup toolchain install {n} nightly', 'cargo +{n} test; cargo +nightly test']
+        refused = [script.format(n=value, o=OTHER_NIGHTLIES[0]) for script in refused_for_any
+                   for value in (n, 'nightly', *OTHER_NIGHTLIES)]
+        refused += [script.format(n=n, o=OTHER_NIGHTLIES[0]) if '{' in script else script for script in refused_for_other_spellings]
         for job, name, accepted in (('fuzz-smoke', MAIN_WORKFLOW, True), ('fuzz-smoke', '.github/workflows/other.yml', False),
                                     ('fuzz-smoke2', MAIN_WORKFLOW, False), ('regression', MAIN_WORKFLOW, False)):
             for script in excused:
@@ -2878,7 +2909,7 @@ class CiShellReaderTests(unittest.TestCase):
             for script in refused:
                 with self.subTest(job=job, file=name, script=script, refused=True):
                     self.assertTrue(self.violations(script, job=job, name=name))
-        folded = self.violations('cargo\n+nightly test', job='fuzz-smoke', style='>')
+        folded = self.violations(f'cargo\n+{n} test', job='fuzz-smoke', style='>')
         self.assertTrue(folded, 'a folded scalar hides where the command breaks, so it carries no exception')
 
 

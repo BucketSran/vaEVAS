@@ -26,7 +26,8 @@ permissions:
 # to plain cargo and rustc, and to the scripts that record the toolchain; change it only for a
 # deliberate upgrade. A reusable workflow does not inherit this env: selection exports the value
 # as an output and package passes it to package-install.yml as an input, so no copy exists.
-# Exception: fuzz-smoke installs and names the nightly channel, which cargo-fuzz requires.
+# Exception: fuzz-smoke installs and names one fixed dated nightly, which cargo-fuzz requires; its spelling is
+# FUZZ_NIGHTLY in scripts/tests/test_discover_rust.py, and a different date means changing both together.
 env:
   RUSTUP_TOOLCHAIN: '1.99.1'
 
