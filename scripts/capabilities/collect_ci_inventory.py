@@ -29,6 +29,7 @@ MATH_SCRIPTS = {'evas/validation/check_design_math.py', 'evas/validation/check_t
                 'evas/validation/check_dynamics_math.py', 'evas/validation/check_event_conditions_math.py'}
 KNOWN_ENV_EXPRESSIONS = {'${{ steps.changes.outputs.base }}': 'CI_INVENTORY_BASE',
                          '${{ steps.changes.outputs.head }}': 'CI_INVENTORY_HEAD'}
+PYTHON_RELEASE = re.compile(r'([0-9]+)\.([0-9]+)(?:\.[0-9]+)?')
 BOOTSTRAP = ('import os,runpy,sys; '
              'sys.path[0]=os.getcwd(); '
              'tool=sys.argv[1]; sys.argv=sys.argv[1:]; '
@@ -254,7 +255,9 @@ def error_details(error):
 def child(root, entry, timeout):
     tool = Path(root) / 'scripts/capabilities/discover_methods.py'
     declared = entry['declared_python_versions']
-    if declared and (len(declared) != 1 or declared[0] != str(sys.version_info.major) + '.' + str(sys.version_info.minor)):
+    actual = str(sys.version_info.major) + '.' + str(sys.version_info.minor)
+    release = PYTHON_RELEASE.fullmatch(declared[0]) if len(declared) == 1 else None
+    if declared and (release is None or release[1] + '.' + release[2] != actual):
         raise ValueError('inventory interpreter does not match unique declared phase Python major/minor')
     environment = os.environ.copy()
     # python -m at repository cwd places the cwd on sys.path[0]. The wrapper

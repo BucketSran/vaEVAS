@@ -6,6 +6,7 @@ import importlib.util
 import json
 import os
 from pathlib import Path
+import sys
 import tempfile
 import types
 import unittest
@@ -428,6 +429,23 @@ setattr(Main,'test_generated',factory())
         self.assertFalse(receipt['complete'])
         self.assertEqual(receipt['transport']['stdout'], proc.stdout)
         self.assertEqual(receipt['transport']['stderr'], proc.stderr)
+
+    def test_patch_pinned_workflow_python_matches_by_major_minor(self):
+        current = '%d.%d' % sys.version_info[:2]
+        proc = types.SimpleNamespace(returncode=2, stdout='fixture non-JSON stream\n', stderr='')
+        for declared in ([current], [current + '.99']):
+            entry = dict(start='scripts/tests', pattern='test*.py', namespace='maintenance',
+                         environment_overrides={}, declared_python_versions=declared)
+            with patch.object(inventory.subprocess, 'run', return_value=proc):
+                self.assertFalse(inventory.child(self.root, entry, 1)['complete'])
+        other_minor = '%d.%d.1' % (sys.version_info[0], sys.version_info[1] + 1)
+        for declared in ([other_minor], [current, current], [current + '.not-a-version'], [current + '.'],
+                         [current + '.15.extra'], [str(sys.version_info[0])], [current + 'x']):
+            entry = dict(start='scripts/tests', pattern='test*.py', namespace='maintenance',
+                         environment_overrides={}, declared_python_versions=declared)
+            with patch.object(inventory.subprocess, 'run') as run, self.assertRaisesRegex(ValueError, 'major/minor'):
+                inventory.child(self.root, entry, 1)
+            run.assert_not_called()
 
 
 class RequiredGateTests(unittest.TestCase):

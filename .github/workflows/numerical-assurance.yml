@@ -26,7 +26,8 @@ permissions:
 # to plain cargo and rustc, and to the scripts that record the toolchain; change it only for a
 # deliberate upgrade. A reusable workflow does not inherit this env: selection exports the value
 # as an output and package passes it to package-install.yml as an input, so no copy exists.
-# Exception: fuzz-smoke installs and names the nightly channel, which cargo-fuzz requires.
+# Exception: fuzz-smoke installs and names one fixed dated nightly, which cargo-fuzz requires; its spelling is
+# FUZZ_NIGHTLY in scripts/tests/test_discover_rust.py, and a different date means changing both together.
 env:
   RUSTUP_TOOLCHAIN: '1.99.1'
 
@@ -36,7 +37,7 @@ concurrency:
 
 jobs:
   selection:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     outputs:
       maintenance: ${{ steps.changes.outputs.maintenance }}
@@ -76,7 +77,7 @@ jobs:
           fi
   fast-checks:
     needs: selection
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     env:
       PYTHONPATH: evas/src
@@ -89,7 +90,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
-          python-version: '3.12'
+          python-version: '3.12.15'
       - run: python -m pip install ruff==0.14.1
       - run: rustup toolchain install "$RUSTUP_TOOLCHAIN" --profile minimal --component clippy --component rustfmt
         if: needs.selection.outputs.regression == 'true' || needs.selection.outputs.focused == 'true'
@@ -140,7 +141,7 @@ jobs:
   catalog-inventory:
     needs: [selection, fast-checks]
     if: always() && needs.selection.result == 'success' && needs.fast-checks.result == 'success'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
@@ -148,7 +149,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
-          python-version: '3.12'
+          python-version: '3.12.15'
       - name: Observe declared Python entries and tracked asset facts
         env:
           CI_INVENTORY_BASE: ${{ needs.selection.outputs.base }}
@@ -164,7 +165,7 @@ jobs:
   static-checks:
     needs: [selection, fast-checks]
     if: needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -173,7 +174,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
-          python-version: '3.12'
+          python-version: '3.12.15'
       - name: Traceability and frozen validation identities
         if: needs.selection.outputs.maintenance == 'true'
         env:
@@ -213,7 +214,7 @@ jobs:
   provenance-paper:
     needs: [selection, fast-checks]
     if: needs.selection.outputs.provenance == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -221,7 +222,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
-          python-version: '3.12'
+          python-version: '3.12.15'
       - name: Paper contracts, observable criteria and table provenance
         run: |
           python3 -B evas/validation/paper/check_design.py
@@ -239,7 +240,7 @@ jobs:
   provenance-support:
     needs: [selection, fast-checks]
     if: needs.selection.outputs.provenance == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -247,13 +248,13 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
-          python-version: '3.12'
+          python-version: '3.12.15'
       - name: Backend support checker tests
         run: python3 -B -m unittest discover -s experiments/backends/support -p 'test_*.py' -v
   rust-regression:
     needs: [selection, fast-checks]
     if: needs.selection.outputs.regression == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     env:
       CARGO_PROFILE_DEV_OPT_LEVEL: '1'
@@ -265,7 +266,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
-          python-version: '3.12'
+          python-version: '3.12.15'
       - run: rustup toolchain install "$RUSTUP_TOOLCHAIN" --profile minimal --component clippy --component rustfmt
       - uses: ./.github/actions/rust-cache
         with:
@@ -314,7 +315,7 @@ jobs:
         shard: [0, 1, 2, 3]
     needs: [selection, fast-checks]
     if: needs.selection.outputs.regression == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     env:
       # Retain runtime checks while avoiding unoptimized interval arithmetic.
       PYTHONPATH: evas/src
@@ -330,7 +331,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
-          python-version: '3.12'
+          python-version: '3.12.15'
       - run: rustup toolchain install "$RUSTUP_TOOLCHAIN" --profile minimal --component clippy --component rustfmt
       - uses: ./.github/actions/rust-cache
         with:
@@ -396,7 +397,8 @@ jobs:
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: python-regression-shard-${{ matrix.shard }}
+          # The attempt number lets coverage pick the newest upload of a rerun shard; artifact IDs do not follow time.
+          name: python-regression-shard-${{ matrix.shard }}-attempt-${{ github.run_attempt }}
           path: |
             runs/regression-evidence
             runs/regression-identity.json
@@ -406,17 +408,63 @@ jobs:
   regression-coverage:
     needs: [selection, regression]
     if: always() && needs.selection.outputs.regression == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
-          python-version: '3.12'
+          python-version: '3.12.15'
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
         with:
           pattern: python-regression-shard-*
           path: runs/shards
+      - name: Select the newest attempt of each regression shard
+        run: |
+          python3 - <<'PYTHON'
+          from pathlib import Path
+          import hashlib, json, os, re, sys
+          current = int(os.environ['GITHUB_RUN_ATTEMPT'])
+          pattern = re.compile(r'python-regression-shard-([0-3])-attempt-([1-9][0-9]*)', re.ASCII)
+          errors, found = [], {}
+          base = Path('runs/shards')
+          for entry in sorted(base.iterdir()) if base.is_dir() else []:
+              match = pattern.fullmatch(entry.name)
+              if not match or entry.is_symlink() or not entry.is_dir():
+                  errors.append('unexpected entry in runs/shards: ' + entry.name)
+                  continue
+              shard, attempt = map(int, match.groups())
+              reports = sorted(entry.rglob('report.json'))
+              if len(reports) != 1:
+                  errors.append(entry.name + ': expected exactly one report.json, found ' + str(len(reports)))
+              elif attempt > current:
+                  errors.append(entry.name + ': attempt ' + str(attempt) + ' is newer than this run attempt ' + str(current))
+              else:
+                  found.setdefault(shard, {})[attempt] = (entry.name, reports[0])
+          errors += ['shard ' + str(shard) + ': no valid artifact' for shard in range(4) if shard not in found]
+          selected, superseded = [], []
+          for shard in sorted(found) if not errors else []:
+              attempts = found[shard]
+              for attempt in sorted(attempts):
+                  name, report = attempts[attempt]
+                  if attempt == max(attempts):
+                      selected.append(dict(shard=shard, attempt=attempt, artifact=name, report=report.as_posix(),
+                                           report_sha256=hashlib.sha256(report.read_bytes()).hexdigest()))
+                  else:
+                      superseded.append(dict(shard=shard, attempt=attempt, artifact=name))
+          receipt = dict(valid=not errors, run_attempt=current, selected=selected, superseded=superseded, errors=errors)
+          Path('runs').mkdir(exist_ok=True)
+          Path('runs/regression-shard-selection.json').write_text(json.dumps(receipt, indent=2) + '\n')
+          lines = ['## Regression shard artifacts', '', 'Run attempt ' + str(current), '',
+                   '| shard | attempt | artifact | use |', '| --- | --- | --- | --- |']
+          lines += ['| %d | %d | %s | merged |' % (item['shard'], item['attempt'], item['artifact']) for item in selected]
+          lines += ['| %d | %d | %s | superseded |' % (item['shard'], item['attempt'], item['artifact']) for item in superseded]
+          lines += ['- ' + error for error in errors]
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as stream:
+              stream.write('\n'.join(lines) + '\n')
+          print('\n'.join(errors), file=sys.stderr)
+          sys.exit(1 if errors else 0)
+          PYTHON
       - name: Verify complete raw coverage
         run: |
           python3 - <<'PYTHON'
@@ -424,8 +472,9 @@ jobs:
           import json, os, subprocess, sys
           sys.path.insert(0, 'scripts')
           from regression_gate import validate_report
-          reports = sorted(Path('runs/shards').rglob('report.json'))
-          assert len(reports) == 4, 'all four regression reports are required'
+          selection = json.loads(Path('runs/regression-shard-selection.json').read_text())
+          assert selection['valid'] and [item['shard'] for item in selection['selected']] == [0, 1, 2, 3], 'all four regression reports are required'
+          reports = [Path(item['report']) for item in selection['selected']]
           result = subprocess.run([sys.executable, '-B', 'scripts/run_regression.py', '--merge',
                                    *map(str, reports), '--report', 'runs/python-regression.json'])
           report = json.loads(Path('runs/python-regression.json').read_text())
@@ -449,12 +498,13 @@ jobs:
           path: |
             runs/python-regression.json
             runs/regression-collection.json
+            runs/regression-shard-selection.json
           if-no-files-found: error
           retention-days: 14
   regression-admission:
     needs: [selection, regression-coverage]
     if: always() && needs.selection.outputs.regression == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
@@ -462,7 +512,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
-          python-version: '3.12'
+          python-version: '3.12.15'
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
         with:
           name: python-regression-timings
@@ -637,14 +687,14 @@ jobs:
   properties-and-ngspice:
     needs: [selection, fast-checks]
     if: needs.selection.outputs.differential == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
-          python-version: '3.12'
-      - run: sudo apt-get update && sudo apt-get install -y ngspice
+          python-version: '3.12.15'
+      - run: sudo apt-get update && sudo apt-get install -y ngspice=42+ds-3build1
       - run: rustup toolchain install "$RUSTUP_TOOLCHAIN" --profile minimal
       - uses: ./.github/actions/rust-cache
         with:
@@ -666,7 +716,7 @@ jobs:
   fuzz-smoke:
     needs: [selection, fast-checks]
     if: needs.selection.outputs.fuzz == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     strategy:
       fail-fast: false
@@ -678,11 +728,11 @@ jobs:
             max_len: 24
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-      - run: rustup toolchain install nightly --profile minimal
+      - run: rustup toolchain install nightly-2026-10-27 --profile minimal
       - uses: ./.github/actions/rust-cache
         id: rust-cache
         with:
-          toolchain: nightly
+          toolchain: nightly-2026-10-27
           lane: fuzz
           targets: evas/rust_core/fuzz/target
       - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
@@ -692,7 +742,7 @@ jobs:
           key: cargo-fuzz-v1-${{ runner.os }}-${{ runner.arch }}-0.13.2-${{ steps.rust-cache.outputs.compiler }}
       - name: Install cargo-fuzz when absent from cache
         if: steps.fuzz-cli.outputs.cache-hit != 'true'
-        run: cargo +nightly install cargo-fuzz --version 0.13.2 --locked --root "$HOME/.local/share/evas-ci/cargo-fuzz"
+        run: cargo +nightly-2026-10-27 install cargo-fuzz --version 0.13.2 --locked --root "$HOME/.local/share/evas-ci/cargo-fuzz"
       - name: Put cargo-fuzz on PATH
         run: echo "$HOME/.local/share/evas-ci/cargo-fuzz/bin" >> "$GITHUB_PATH"
       - working-directory: evas/rust_core
@@ -703,7 +753,7 @@ jobs:
           fi
           fuzz_seconds=45
           if [ "$GITHUB_EVENT_NAME" = schedule ]; then fuzz_seconds=300; fi
-          cargo +nightly fuzz run "${{ matrix.target }}" -- -max_total_time="$fuzz_seconds" -max_len="${{ matrix.max_len }}"
+          cargo +nightly-2026-10-27 fuzz run "${{ matrix.target }}" -- -max_total_time="$fuzz_seconds" -max_len="${{ matrix.max_len }}"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: failure()
         with:
@@ -725,7 +775,7 @@ jobs:
     name: ${{ needs.selection.outputs.mode == 'iteration' && 'iteration-result' || 'ci-result' }}
     needs: [selection, fast-checks, catalog-inventory, static-checks, provenance-paper, provenance-support, regression, rust-regression, regression-coverage, regression-admission, properties-and-ngspice, fuzz-smoke, package, benchmark]
     if: always()
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
