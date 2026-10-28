@@ -4,6 +4,7 @@ These controls do not add requirements to the real registry and do not confer
 scientific qualification.
 """
 import copy
+import itertools
 import json
 import re
 import unittest
@@ -142,7 +143,8 @@ def evas_records(projected, name='fixture-requirement'):
 
 MARKDOWN_VARIANT_KINDS = (
     'status-view_status', 'status-adopted', 'status-provisional', 'qualification-record', 'toolchain',
-    'contract-field', 'reference', 'delete-line', 'indent-line', 'heading-level', 'reorder-allowed')
+    'contract-field', 'reference', 'delete-line', 'indent-line', 'heading-level', 'reorder-allowed',
+    'blank-reallocation')
 
 
 def _first_difference_for(facts, text):
@@ -154,8 +156,9 @@ def markdown_variant_cases(facts, text, *, full=True):
 
     Fact lines of each kind (the three status keys, qualification record, toolchain, contract field and
     reference lines) are inserted at every structural position, indented 0-3 spaces, as the same value and
-    as a contradictory value. Any generated line deleted, indented or re-levelled must be rejected; the two
-    allowed reorderings must be accepted. full=False trims the position and indent grid for a large text.
+    as a contradictory value. Any generated line deleted, indented or re-levelled must be rejected, and so
+    must a blank line moved or added inside a record run unless a legal block reordering carries it; the
+    two allowed reorderings must be accepted. full=False trims the position and indent grid for a large text.
     """
     lines = text.split('\n')
     first = lambda prefix: next(line for line in lines if line.startswith(prefix))
@@ -234,6 +237,22 @@ def markdown_variant_cases(facts, text, *, full=True):
             tail = part[ends[-1]:]
             rebuilt = part[:starts[0]] + [x for block in reversed(blocks) for x in block] + tail
             add('reorder-allowed', f'record-order requirement {number}', lines[:a] + rebuilt + lines[b:], False)
+            if tail == ['']:
+                # A block may also take its own separator along: the blocks are then the same units.
+                carried = blocks[-1] + [''] + [x for block in reversed(blocks[:-1]) for x in block]
+                add('reorder-allowed', f'record-order with carried separator requirement {number}',
+                    lines[:a] + part[:starts[0]] + carried + lines[b:], False)
+                # Blank lines are compared as text: with the block order unchanged a separator moves nowhere.
+                for split in starts[1:]:
+                    add('blank-reallocation', f'requirement {number} separator moved to record at {split}',
+                        lines[:a] + part[:split] + [''] + part[split:-1] + lines[b:])
+                    add('blank-reallocation', f'requirement {number} separator added at record at {split}',
+                        lines[:a] + part[:split] + [''] + part[split:] + lines[b:])
+                if len(starts) >= 3:
+                    # Reordered, but the separator now follows a block that never owned it.
+                    wrong = [x for block in reversed(blocks[:-1]) for x in block] + [''] + blocks[-1]
+                    add('blank-reallocation', f'requirement {number} reordered, separator after another block',
+                        lines[:a] + part[:starts[0]] + wrong + lines[b:])
     return cases
 
 
@@ -818,6 +837,48 @@ class SupportViewFixtures(unittest.TestCase):
         self.assertTrue(all(done == count for count, done in total.values()), total)
         for kind in MARKDOWN_VARIANT_KINDS:
             self.assertGreater(total[kind][0], 0, kind)
+
+    def test_blank_lines_in_a_record_run_move_only_with_the_block_that_owns_them(self):
+        """Four records, every order, the one separator after every position: a separator stays where the
+        generated view has it, or travels with the block that owns it, and nowhere else."""
+        facts = document(independent_registry())
+        records = requirement(facts, 'fixture-requirement')['backends']['ngspice']['records']
+        for number in (3, 4):
+            extra = copy.deepcopy(records[0])
+            extra['qualification']['id'] = f'extra-record-{number}'
+            records.append(extra)
+        text = markdown(facts)
+        self.assertEqual(audit_markdown(facts, text), [])
+        lines = text.split('\n')
+        first = next(i for i, line in enumerate(lines) if line.startswith('资格记录：'))
+        end = next(i for i in range(first, len(lines)) if lines[i] == '')
+        starts = [i for i in range(first, end) if lines[i].startswith('资格记录：')]
+        blocks = [lines[a:b] for a, b in zip(starts, starts[1:] + [end])]
+        self.assertEqual(len(blocks), 4)
+        counts = {True: 0, False: 0}
+        for order in itertools.permutations(range(len(blocks))):
+            for slot in range(len(blocks)):
+                rebuilt = []
+                for position, index in enumerate(order):
+                    rebuilt.extend(blocks[index])
+                    if position == slot:
+                        rebuilt.append('')
+                changed = lines[:first] + rebuilt + lines[end + 1:]
+                if changed == lines:
+                    continue
+                legal = slot == len(blocks) - 1 or order[slot] == len(blocks) - 1
+                counts[legal] += 1
+                self.assertEqual(not audit_markdown(facts, '\n'.join(changed)), legal, (order, slot))
+        # 23 orders keep the separator last; 3 slots x 6 orders carry it with the block that owned it.
+        self.assertEqual(counts, {True: 23 + 18, False: 95 - 41})
+        # With the order unchanged, any other blank placement differs: moved, doubled, dropped or whitespace-only.
+        for slot in range(len(blocks) - 1):
+            moved = lines[:first] + [x for position, block in enumerate(blocks) for x in block + ([''] if position == slot else [])] + lines[end + 1:]
+            doubled = lines[:end] + ['', ''] + lines[end + 1:]
+            spaced = lines[:end] + [' '] + lines[end + 1:]
+            for changed in (moved, doubled, spaced):
+                self.assertTrue(audit_markdown(facts, '\n'.join(changed)))
+        self.assertTrue(audit_markdown(facts, '\n'.join(lines[:end] + lines[end + 1:])))
 
     def test_difference_report_names_the_first_changed_line(self):
         projected = document(independent_registry())

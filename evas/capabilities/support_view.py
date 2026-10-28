@@ -1061,44 +1061,64 @@ _BLOCK_STOP = ('资格记录：', '未归属后端：', '历史引用身份：')
 
 
 def _record_blocks(lines, index):
-    """Record blocks starting at lines[index], the blank lines they consume, and the index after them.
+    """Record units starting at lines[index] as (block, blank lines after it), and the index after them.
 
-    A block runs to the next record or stop line or blank line. Blank lines that follow a block belong
-    to the run, so moving a block takes its separator along; only their count is compared.
+    A block runs to the next record or stop line or blank line. The blank lines that follow a block
+    are kept with it, so a unit says exactly where each separator sits.
     """
-    blocks, blanks = [], 0
+    units = []
     while index < len(lines) and lines[index].startswith(_BLOCK_START):
         end = index + 1
         if lines[index].startswith('未归属后端：') and end < len(lines) and lines[end].startswith('资格记录：'):
             end += 1
         while end < len(lines) and lines[end] != '' and not lines[end].startswith(_BLOCK_STOP):
             end += 1
-        blocks.append(lines[index:end])
+        block = tuple(lines[index:end])
         index = end
+        blanks = 0
         while index < len(lines) and lines[index] == '':
             blanks += 1
             index += 1
-    return blocks, blanks, index
+        units.append((block, blanks))
+    return units, index
 
 
-def _with_sorted_record_runs(section):
-    """One requirement section with each run of record blocks in a stable order."""
-    result, index = [], 0
+def _section_items(section):
+    """A requirement section as lines, with each run of record blocks as one tuple of units."""
+    items, index = [], 0
     while index < len(section):
-        blocks, blanks, after = _record_blocks(section, index)
-        if blocks:
-            for block in sorted(blocks):
-                result.extend(block)
-            result.extend([''] * blanks)
+        units, after = _record_blocks(section, index)
+        if units:
+            items.append(tuple(units))
             index = after
         else:
-            result.append(section[index])
+            items.append(section[index])
             index += 1
-    return result
+    return items
 
 
-def _canonical_lines(text):
-    """Lines of text in the one order the audit treats as equivalent.
+def _item_lines(item):
+    if isinstance(item, str):
+        return [item]
+    return [line for block, blanks in sorted(item) for line in (*block, *[''] * blanks)]
+
+
+def _same_run(expected, actual):
+    """Whether two runs of record units differ only by a legal reordering of the record blocks.
+
+    Reordering the blocks may carry each block's own separator along (equal sets of units) or leave
+    the separators in their places (equal blocks, equal separator sequence). With the block order
+    unchanged both readings demand identical units, so a separator can only move as a side effect of
+    moving a block, never by itself.
+    """
+    if sorted(expected) == sorted(actual):
+        return True
+    return (sorted(block for block, _ in expected) == sorted(block for block, _ in actual)
+            and [blanks for _, blanks in expected] == [blanks for _, blanks in actual])
+
+
+def _canonical_view(text):
+    """(lines before the sections, [items of each requirement section sorted by heading], lines after).
 
     Exactly two reorderings are allowed: the ### requirement sections under ## 当前要求, and the
     qualification record blocks inside one requirement section. Everything else stays where it is.
@@ -1108,15 +1128,32 @@ def _canonical_lines(text):
     try:
         start = lines.index('## 当前要求')
     except ValueError:
-        return lines
+        return lines, [], []
     end = next((index for index in range(start + 1, len(lines)) if lines[index].startswith('## ')), len(lines))
     region = lines[start + 1:end]
     heads = [index for index, line in enumerate(region) if line.startswith('### ')]
-    sections = [region[head:(heads[position + 1] if position + 1 < len(heads) else len(region))]
+    sections = [_section_items(region[head:(heads[position + 1] if position + 1 < len(heads) else len(region))])
                 for position, head in enumerate(heads)]
-    sections = sorted(_with_sorted_record_runs(section) for section in sections)
-    flat = [line for section in sections for line in section]
-    return lines[:start + 1] + region[:heads[0] if heads else len(region)] + flat + lines[end:]
+    sections.sort(key=lambda items: [line for item in items for line in _item_lines(item)])
+    return lines[:start + 1] + region[:heads[0] if heads else len(region)], sections, lines[end:]
+
+
+def _same_view(expected, actual):
+    if expected[0] != actual[0] or expected[2] != actual[2] or len(expected[1]) != len(actual[1]):
+        return False
+    for want, have in zip(expected[1], actual[1]):
+        if len(want) != len(have):
+            return False
+        for left, right in zip(want, have):
+            same = _same_run(left, right) if isinstance(left, tuple) and isinstance(right, tuple) else left == right
+            if not same:
+                return False
+    return True
+
+
+def _canonical_lines(view):
+    """Flat lines of a canonical view, record blocks carrying their separators, for the first difference."""
+    return view[0] + [line for items in view[1] for item in items for line in _item_lines(item)] + view[2]
 
 
 def _first_difference(expected, actual):
@@ -1137,9 +1174,10 @@ def audit_markdown(document, text):
     markdown(document) is the one authority; the checks below only give specific messages.
     """
     errors = _audit_markdown_parts(document, text)
-    difference = _first_difference(_canonical_lines(markdown(document)), _canonical_lines(text))
-    if difference:
-        errors.append(difference)
+    expected, actual = _canonical_view(markdown(document)), _canonical_view(text)
+    if not _same_view(expected, actual):
+        errors.append(_first_difference(_canonical_lines(expected), _canonical_lines(actual))
+                      or 'markdown differs from the generated view in the placement of blank lines between records')
     return errors
 
 
