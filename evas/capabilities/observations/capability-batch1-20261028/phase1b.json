@@ -1,0 +1,40 @@
+{
+  "head": "5888e9fad23601021e70edce16ec41fafc6e6c6b",
+  "tree": "68a717b72bccd819dbd24e7ac06907ebebe8fccb",
+  "parent": "d2eaaa6aca20164ac6aa741b0685c9abc67de686",
+  "paths": [
+    "evas/docs/development/TRACEABILITY.md"
+  ],
+  "checks": [
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "scripts/traceability.py",
+        "--catalog-data",
+        "evas/capabilities/data"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-20261028/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-20261028/phase1b-traceability-generate.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-28T09:14:28.579681+00:00",
+      "finished_at_utc": "2026-10-28T09:15:28.991031+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "scripts/ci_lint.py",
+        "--plan",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-20261028/phase1b-plan.json"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-20261028/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-20261028/phase1b-ci-lint.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-28T09:15:32.482366+00:00",
+      "finished_at_utc": "2026-10-28T09:17:18.271432+00:00"
+    }
+  ],
+  "reason": "rust-regression needs fast-checks; fast-checks failed on the stale traceability matrix (CI 40661593642)",
+  "scientific_qualification": false
+}

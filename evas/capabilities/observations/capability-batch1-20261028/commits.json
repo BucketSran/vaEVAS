@@ -1,0 +1,265 @@
+{
+  "base": "d6b7543fc815aaa584c886108691b6f2c01eb220",
+  "prev": "5888e9fad23601021e70edce16ec41fafc6e6c6b",
+  "prev_tree": "68a717b72bccd819dbd24e7ac06907ebebe8fccb",
+  "phase1_receipts": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-20261028/commits.json",
+  "phase1b_receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-20261028/phase1b.json",
+  "patch": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-r2-fixes-opus-20261028/source.patch",
+  "patch_sha256": "0338cc29182f950d58c27e9c9a0f4148b8d6c7e5b43559e64ac79bb60fd56fc1",
+  "series": [
+    {
+      "patch": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-r2-fixes-opus-20261028/series/0001-Require-the-echoed-default-limit-in-every-schema-33-.patch",
+      "patch_sha256": "d9268cee5cd8fa2ebd96f4019b1699468924d78b2942d5d6ffd7060483748d18",
+      "commit": "750a62fcd31e283161e9437062bf1b3160bed61d",
+      "tree": "02a26870ce715a021146af035a3277cbad9cd882",
+      "paths": [
+        "evas/tests/history_migration_contract.py",
+        "evas/tests/test_proof_work_limit.py"
+      ],
+      "message": "Require the echoed default limit in every schema-33 C8 comparison\n\nresponse_body accepted a schema-33 response whose effective_controls lacked\nproof_work_limit. Every schema-33 response with controls must now carry it as\nthe integer 1e9 before it is removed (standard-line sign-off SL-SO-20261028-002).\nA collected test runs the helper on a real response and on missing, other and\nfloat echoes, so CI keeps the C8 comparison criteria strict."
+    },
+    {
+      "patch": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-r2-fixes-opus-20261028/series/0002-Keep-the-kernel-fail-closed-rule-for-unknown-transie.patch",
+      "patch_sha256": "9204a8522ed279e61d47a53ea87f438b583b972afc3c0e85ccc59444ab8a58dc",
+      "commit": "72ee80db860ba064f84fbc86fff2758f791153ae",
+      "tree": "a5fcefb54ab82de3c67a531942ca23618d46a78f",
+      "paths": [
+        "evas/tests/test_proof_work_limit.py"
+      ],
+      "message": "Keep the kernel fail-closed rule for unknown transient fields under CI\n\nThe two main-kernel comparisons are one-time acceptance evidence for the change\nthat added proof_work_limit (SL-SO-20261028-003). A collected test now asserts\nthat the current kernel rejects an unknown transient field as invalid_request\nand names it, so deny_unknown_fields stays under CI for the next field."
+    },
+    {
+      "patch": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-r2-fixes-opus-20261028/series/0003-Hold-the-slew-end-to-end-rows-to-the-request-toleran.patch",
+      "patch_sha256": "5b9d1b97378cf2f6bfb6a3a7b2886a9c7792905d3d55595763cacb2b994e3c80",
+      "commit": "51e084fc4aeec1613a0eb4059624a68ac77743c3",
+      "tree": "13ce5b6a00be647bbe3a276f8009c38d0be8d1d5",
+      "paths": [
+        "evas/tests/test_proof_work_limit.py"
+      ],
+      "message": "Hold the slew end-to-end rows to the request tolerance\n\nThe 3000-row slew rows were compared with a 1e-11 V bound, ten times the\nrequested absolute tolerance. They are now compared with absolute_V +\nrelative*|y| from the echoed controls, which must equal the request (1e-12 V, 0)."
+    },
+    {
+      "patch": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-r2-fixes-opus-20261028/series/0004-Hold-every-RC-row-above-100000-rows-to-the-request-t.patch",
+      "patch_sha256": "104836ad516723731835b4c976802379fa5379bfcd1ae3617356fd82d236ced3",
+      "commit": "8d36e5ee27317a1418cdfd4f9e65bc50a3f0b1f1",
+      "tree": "253e74016fdb8a2c6b06719efc6711e82cad647f",
+      "paths": [
+        "evas/tests/test_output_point_limit.py"
+      ],
+      "message": "Hold every RC row above 100000 rows to the request tolerance and certificate\n\ncheck_rc_step_response_over_a_hundred_thousand_rows sampled every 997th row\nagainst 1e-9 V, about 85 times the declared accuracy. Every one of the 120001\nrows is now within absolute_V + relative*|y| of 1 - exp(-t) (SCS defaults 1e-12\nand 1e-10, echoed), the certified bounds contain the closed form with half-width\nwithin the same tolerance, and the check requires EVAS_TEST_KERNEL\n(SL-SO-20261028-004)."
+    },
+    {
+      "patch": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-r2-fixes-opus-20261028/series/0005-Run-the-dynamic-RC-check-by-name-in-CI-and-record-it.patch",
+      "patch_sha256": "487f5f17736fc0d1b10bb67f0b4168ead33ed3647af1455a435e45eadd5fc425",
+      "commit": "d778f4cccb8e85fd858f755e6467865b4722d3a7",
+      "tree": "9b1aa5351a7b238b7d818ee8c3027e92339c5643",
+      "paths": [
+        ".github/workflows/numerical-assurance.yml",
+        "evas/capabilities/README.md",
+        "scripts/capabilities/collect_ci_inventory.py",
+        "scripts/run_explicit_checks.py",
+        "scripts/tests/test_ci_inventory.py",
+        "scripts/tests/test_explicit_checks.py"
+      ],
+      "message": "Run the dynamic RC check by name in CI and record it in the CI inventory\n\nrust-regression builds its own release kernel and runs the check through\nscripts/run_explicit_checks.py on every regression selection, with or without\npackage. The runner refuses a check that is unregistered, renamed or deleted or\nwhose prerequisite is unset, and fails unless the check ran exactly once and\npassed; it writes a receipt. collect_ci_inventory records such steps as CI\nby-name check entries and locates them statically (SL-SO-20261028-004)."
+    },
+    {
+      "patch": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-r2-fixes-opus-20261028/series/0006-State-which-proof-work-ledgers-take-the-request-limi.patch",
+      "patch_sha256": "105babd504525882b5728e3c5a11e7af385b24f5e2b48c66bf26a74eaf27fce5",
+      "commit": "f5a5da6966c7cf8ab79d19ba10e7074fa0934ab3",
+      "tree": "df473e28ac402c2a119f72368a567078ebf8caf2",
+      "paths": [
+        "evas/docs/reference/proof-work-limit.md"
+      ],
+      "message": "State which proof-work ledgers take the request limit\n\nA request can hold several ledgers: consumers share a bound owner's ledger and\notherwise build one from the same limit. The transition-input form audit keeps\na fresh 1e9 ledger per call, which the admitted program size bounds far below."
+    },
+    {
+      "patch": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-r2-fixes-opus-20261028/series/0007-List-the-two-new-1A-tests-in-the-batch-1-link-invent.patch",
+      "patch_sha256": "24bda8e75ac3b99c54d6271628aa0cd2e982f2e09145da7fa5614ab5de6f621a",
+      "commit": "222cc33ad6bfab51d62bcbbbc2b700896156b867",
+      "tree": "ed7f16388cf57292324e5fa880c4883aadc038d5",
+      "paths": [
+        "evas/capabilities/test_requirement_links.py"
+      ],
+      "message": "List the two new 1A tests in the batch-1 link inventory"
+    },
+    {
+      "patch": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-r2-fixes-opus-20261028/series/0008-Update-the-batch-1-requirement-cards-for-the-r2-fixe.patch",
+      "patch_sha256": "2f21cc5b302f2db0aa355609380e20a2cfba5dcf6040385f6b5d3df9115267b5",
+      "commit": "54c40bf246c0dfff029348563710a7b764906f5b",
+      "tree": "cb713761f109f7564970b508863aef7b6fdbba2b",
+      "paths": [
+        "evas/capabilities/data/registry.json"
+      ],
+      "message": "Update the batch-1 requirement cards for the r2 fixes\n\nrequirement:proof-work-limit: which ledgers take the request limit (the\ntransition-input form audit keeps a bounded 1e9 ledger), the main-kernel\ncomparisons as one-time PR evidence with their archived receipt, the C8 echo\nmapping, the unknown-field rule under CI, the slew rows held to the request\ntolerance and the measured work margins of both exhaustion tests.\nrequirement:output-point-limit: the dynamic RC rows held to the request tolerance\nand certificate, run by name in CI, with the archived local receipt. Cases list\nthe two new collected tests; every reference is recomputed; versions stay 1."
+    }
+  ],
+  "checks": [
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "scripts/diagnostic_inventory.py",
+        "--write"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/diagnostic-inventory-write.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-28T13:41:54.893795+00:00",
+      "finished_at_utc": "2026-10-28T13:41:59.503287+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "scripts/diagnostic_inventory.py",
+        "--check"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/diagnostic-inventory-check.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-28T13:41:59.520955+00:00",
+      "finished_at_utc": "2026-10-28T13:42:02.078830+00:00"
+    }
+  ],
+  "head": "54c40bf246c0dfff029348563710a7b764906f5b",
+  "tree": "cb713761f109f7564970b508863aef7b6fdbba2b",
+  "r2_paths": [
+    ".github/workflows/numerical-assurance.yml",
+    "evas/capabilities/README.md",
+    "evas/capabilities/data/registry.json",
+    "evas/capabilities/test_requirement_links.py",
+    "evas/docs/reference/proof-work-limit.md",
+    "evas/tests/history_migration_contract.py",
+    "evas/tests/test_output_point_limit.py",
+    "evas/tests/test_proof_work_limit.py",
+    "scripts/capabilities/collect_ci_inventory.py",
+    "scripts/run_explicit_checks.py",
+    "scripts/tests/test_ci_inventory.py",
+    "scripts/tests/test_explicit_checks.py"
+  ],
+  "r2_criteria": [
+    "evas/tests/history_migration_contract.py",
+    "evas/tests/test_output_point_limit.py",
+    "evas/tests/test_proof_work_limit.py"
+  ],
+  "r2_dut": [],
+  "r2_rust_inputs": [],
+  "complete_paths": [
+    ".github/workflows/numerical-assurance.yml",
+    "evas/README.md",
+    "evas/capabilities/README.md",
+    "evas/capabilities/data/registry.json",
+    "evas/capabilities/requirement_links.py",
+    "evas/capabilities/support_view.py",
+    "evas/capabilities/test_requirement_links.py",
+    "evas/docs/development/TRACEABILITY.md",
+    "evas/docs/development/diagnostic-inventory.json",
+    "evas/docs/math/events.md",
+    "evas/docs/math/operators.md",
+    "evas/docs/reference/observation-evidence.md",
+    "evas/docs/reference/proof-work-limit.md",
+    "evas/docs/reference/strobe.md",
+    "evas/rust_core/ir/src/lib.rs",
+    "evas/rust_core/src/continuous.rs",
+    "evas/rust_core/src/continuous_history.rs",
+    "evas/rust_core/src/continuous_select_cache_tests.rs",
+    "evas/rust_core/src/dc_projection.rs",
+    "evas/rust_core/src/direct_derivative.rs",
+    "evas/rust_core/src/event_floor.rs",
+    "evas/rust_core/src/event_time_provenance.rs",
+    "evas/rust_core/src/events.rs",
+    "evas/rust_core/src/forcing_graph.rs",
+    "evas/rust_core/src/held_integer_target.rs",
+    "evas/rust_core/src/history_calendar_typed_target_tests.rs",
+    "evas/rust_core/src/idtmod.rs",
+    "evas/rust_core/src/implicit_dynamics.rs",
+    "evas/rust_core/src/input_clamp.rs",
+    "evas/rust_core/src/nonlinear_dynamics.rs",
+    "evas/rust_core/src/observation.rs",
+    "evas/rust_core/src/operators.rs",
+    "evas/rust_core/src/pwl.rs",
+    "evas/rust_core/src/real_expression.rs",
+    "evas/rust_core/src/schedule.rs",
+    "evas/rust_core/src/source_math.rs",
+    "evas/rust_core/src/source_selected_slew_tests.rs",
+    "evas/rust_core/src/transient.rs",
+    "evas/rust_core/src/transient_condition_tests.rs",
+    "evas/rust_core/src/transient_dc_held_ramp_tests.rs",
+    "evas/rust_core/src/transient_event_acceptance.rs",
+    "evas/rust_core/src/transient_event_control_tests.rs",
+    "evas/rust_core/src/transient_idt_tests.rs",
+    "evas/rust_core/src/transient_initialization.rs",
+    "evas/rust_core/src/transient_integer_round_tests.rs",
+    "evas/rust_core/src/transient_lifecycle_tests.rs",
+    "evas/rust_core/src/transient_native_floor_tests.rs",
+    "evas/rust_core/src/transient_passive_tests.rs",
+    "evas/rust_core/src/transient_point_lineage_tests.rs",
+    "evas/rust_core/src/transient_rational_transition_tests.rs",
+    "evas/rust_core/src/transient_root_refinement.rs",
+    "evas/rust_core/src/transient_root_window_tests.rs",
+    "evas/rust_core/src/transient_source_floor_tests.rs",
+    "evas/rust_core/src/transient_source_predicate_tests.rs",
+    "evas/rust_core/src/transient_time_proof_tests.rs",
+    "evas/rust_core/src/transient_timer_boundary_tests.rs",
+    "evas/rust_core/src/transient_window_tests.rs",
+    "evas/rust_core/src/transition_history_target.rs",
+    "evas/rust_core/src/transition_source_epoch_guard.rs",
+    "evas/rust_core/src/transition_source_plan.rs",
+    "evas/rust_core/src/transition_source_state.rs",
+    "evas/src/evas/__main__.py",
+    "evas/src/evas/limits.py",
+    "evas/src/evas/protocol.py",
+    "evas/src/evas/runtime.py",
+    "evas/src/evas/scs.py",
+    "evas/src/evas/scs_sources.py",
+    "evas/src/evas/strobe.py",
+    "evas/tests/history_migration_contract.py",
+    "evas/tests/test_observation_evidence.py",
+    "evas/tests/test_output_point_limit.py",
+    "evas/tests/test_proof_work_limit.py",
+    "scripts/capabilities/collect_ci_inventory.py",
+    "scripts/run_explicit_checks.py",
+    "scripts/tests/test_ci_inventory.py",
+    "scripts/tests/test_explicit_checks.py"
+  ],
+  "criteria_changes": [
+    "evas/tests/history_migration_contract.py",
+    "evas/tests/test_observation_evidence.py",
+    "evas/tests/test_output_point_limit.py",
+    "evas/tests/test_proof_work_limit.py"
+  ],
+  "dut_changes": 54,
+  "collector_changes": [],
+  "files": {
+    ".github/workflows/numerical-assurance.yml": "e06aad50a8dea048ae4bae6cc6076d47e1675ce057e1d15212579fcc6bd9e04c",
+    "evas/capabilities/README.md": "5ae2a64245c838249d12892d12891078c96830ddf7de500d2582a57aef41989e",
+    "evas/capabilities/data/registry.json": "eda1e6f64c28ae846a9fe6285be45761af0873e3288eeb320e57413daa7c1d5d",
+    "evas/capabilities/test_requirement_links.py": "11d9af37943a39b627624a1a8c50f88949bf56d7b5e2e7927d46858d275fe19d",
+    "evas/docs/reference/proof-work-limit.md": "f6939eda0e06f4050777ca5d7b91fe215773f269dd95ab5e30e1356a59dec1cf",
+    "evas/tests/history_migration_contract.py": "375c6b0c21645db03565c17bbbbe73fe3c0bba4fab1de625299d52a8c80aa5f4",
+    "evas/tests/test_output_point_limit.py": "9c59429d38ebff1ab316ff0c9a6a6fdf71d15276c17b271cbff0540dcaf8b6fd",
+    "evas/tests/test_proof_work_limit.py": "8e80011f1bed00495c939a006bea67ecbedfcd75a61a5cab64b17bbed9453afd",
+    "scripts/capabilities/collect_ci_inventory.py": "74a83e11f7d72b328cba54e11eb328a0718c70c851594aa552c863a997de5bfe",
+    "scripts/run_explicit_checks.py": "a0ee7e7f70143fecf2bd804afcc373e65392a5de5f0313e13b090ef674789953",
+    "scripts/tests/test_ci_inventory.py": "8ac8bbc4103b2e9ca59173c777d821e588ad01d0007051a2417a10c3da1619f5",
+    "scripts/tests/test_explicit_checks.py": "3c7627d20266c18398743f08b2526c6def0b5b2726dae28357575dc08701a76a"
+  },
+  "before": {
+    "head": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+    "index_sha256": "a2e18b66fd9b3e29093343793d45781c11a717c05c35103d4e9b1da8eec87d71",
+    "shared_config_sha256": "de2b08ef3ba66e96be8b70c87346ff4a96f905e1272934ddd86c218dba501ea8",
+    "shared_config_status": "equal-accepted-reference",
+    "old_candidates": 20
+  },
+  "after": {
+    "head": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+    "index_sha256": "a2e18b66fd9b3e29093343793d45781c11a717c05c35103d4e9b1da8eec87d71",
+    "shared_config_sha256": "de2b08ef3ba66e96be8b70c87346ff4a96f905e1272934ddd86c218dba501ea8",
+    "shared_config_status": "equal-accepted-reference",
+    "old_candidates": 20
+  },
+  "scientific_execution": false,
+  "scientific_qualification": false,
+  "executed_by": "tclaude/claude-opus-5-5"
+}

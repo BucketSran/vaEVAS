@@ -1,0 +1,114 @@
+{
+ "check": "test_output_point_limit.LargeGridEndToEnd.check_rc_step_response_over_a_hundred_thousand_rows",
+ "command": [
+  "cargo build --locked --release --manifest-path evas/rust_core/Cargo.toml",
+  "python3 -B scripts/run_explicit_checks.py --start evas/tests --require-env EVAS_TEST_KERNEL --check test_output_point_limit.LargeGridEndToEnd.check_rc_step_response_over_a_hundred_thousand_rows --report runs/explicit-checks.json"
+ ],
+ "end_utc": "2026-10-28T11:19:25Z",
+ "environment": {
+  "EVAS_TEST_KERNEL": "evas/rust_core/target/release/evas-kernel",
+  "PYTHONPATH": "evas/src"
+ },
+ "evidence": "local run of the CI step \"Dynamic RC check above 100000 rows, by name on the release kernel\" before CI has run it (the check itself runs in CI on every regression selection)",
+ "frozen_tree": {
+  "description": "PR #282 head 5888e9fad23601021e70edce16ec41fafc6e6c6b plus the capability batch 1 r2 fixes, before the card commit (cards do not touch these trees)",
+  "git_tree_ids": {
+   "evas/rust_core": "3e01e2a200cb61a1623a839477ad61bb873791ec",
+   "evas/src": "28fb02e12349469b8026b3da9dce3daca5385fc2",
+   "evas/tests": "74f81772414fae4764c38b57af9cbb2266307735",
+   "scripts": "ab6932c46c5e56973c56d04fbae92d3f64b1288b"
+  },
+  "module_sha256": {
+   "evas/tests/test_affine.py": "d0f7a2df8c81139e3eaaeba7699827843163080e7c5ce0d39d9ce123558a2e9e",
+   "evas/tests/test_output_point_limit.py": "9c59429d38ebff1ab316ff0c9a6a6fdf71d15276c17b271cbff0540dcaf8b6fd",
+   "evas/tests/test_proof_work_limit.py": "8e80011f1bed00495c939a006bea67ecbedfcd75a61a5cab64b17bbed9453afd",
+   "scripts/run_explicit_checks.py": "a0ee7e7f70143fecf2bd804afcc373e65392a5de5f0313e13b090ef674789953"
+  },
+  "unchanged_from_5888e9fa": {
+   "evas/rust_core": true,
+   "evas/src": true,
+   "evas/tests": false
+  }
+ },
+ "host": {
+  "machine": "arm64",
+  "platform": "macOS-26.3.2-arm64-arm-64bit-Mach-O",
+  "python": "3.12.13 (lint venv; CI pins 3.12.15)",
+  "rust_note": "local rustc 1.99.0; CI pins 1.99.1"
+ },
+ "measured": {
+  "bounds_present": true,
+  "closed_form_outside_bounds": 0,
+  "effective_controls": {
+   "absolute_V": 1e-12,
+   "max_step_applied": true,
+   "max_step_s": 9.5367431640625e-07,
+   "proof_work_limit": 2000000000000,
+   "relative": 1e-10,
+   "stop_s": 0.11444091796875
+  },
+  "exact_stop": "0.108135369964511471003896444312504860720821783397122632387786",
+  "first_outside": [],
+  "max_abs_error": 1.3626209572353784e-17,
+  "max_abs_error_at": [
+   77101,
+   0.07352924346923828
+  ],
+  "max_half_width_at": [
+   67684,
+   0.06454849243164062
+  ],
+  "max_half_width_ratio": 6.69875797248852e-06,
+  "max_ratio_at": [
+   67698,
+   0.06456184387207031
+  ],
+  "max_ratio_to_declared": 1.8258916236999776e-06,
+  "rows": 120001,
+  "rows_with_bounds": 120001,
+  "saved_equals_transient_times": true,
+  "stop": 0.11444091796875,
+  "tolerance_at_stop": 1.1813536996451148e-11,
+  "y_stop": 0.10813536996451148
+ },
+ "measured_note": "all-row error and certificate measurement of the same 120001-row deck on the same release kernel binary (probes/rc_error.py, earlier run)",
+ "pr_kernel": {
+  "built_from": "git archive of the frozen tree above, cargo build --locked --offline",
+  "profile": "release",
+  "sha256": "b2b671bf4ecc07683218136ed4fa8c657c897fb73b09a3fb0df6d8d9a673e2ca",
+  "toolchain": [
+   "rustc 1.99.0 (b940084d7 2026-09-28)",
+   "binary: rustc",
+   "commit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4",
+   "commit-date: 2026-09-28",
+   "host: aarch64-apple-darwin",
+   "release: 1.99.0",
+   "LLVM version: 23.1.1"
+  ]
+ },
+ "raw_log": {
+  "file": "rc-check-release.log",
+  "sha256": "022c4541f44d697e77b9eefba599e2599bf4c4b89461bdc957895ac57cfe60fb"
+ },
+ "results": [
+  {
+   "executed": 1,
+   "id": "test_output_point_limit.LargeGridEndToEnd.check_rc_step_response_over_a_hundred_thousand_rows",
+   "module_sha256": "9c59429d38ebff1ab316ff0c9a6a6fdf71d15276c17b271cbff0540dcaf8b6fd",
+   "outcome": "ok",
+   "registered_by": [
+    "case:output-point-limit-python@1"
+   ],
+   "seconds": 115.358
+  }
+ ],
+ "returncode": 0,
+ "runner_report": {
+  "file": "rc-check-release.runner.json",
+  "sha256": "bd3c25559be757420d56981e9d910385c03a9245b9e2ce6e643d1760a3723dcc"
+ },
+ "schema_version": 1,
+ "signoff": "SL-SO-20261028-004",
+ "start_utc": "2026-10-28T11:17:28Z",
+ "success": true
+}

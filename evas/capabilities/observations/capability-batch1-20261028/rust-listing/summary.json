@@ -1,0 +1,24 @@
+{
+  "run": 40663661365,
+  "head": "5888e9fad23601021e70edce16ec41fafc6e6c6b",
+  "job": 122734321825,
+  "conclusion": "failure",
+  "artifact": {
+    "id": 12805132820,
+    "digest": "sha256:1ccd418a36d7bdd50b54fb9d338b50e3eca0e98dd8bcfcd65313fe52728d5de9"
+  },
+  "complete": true,
+  "errors": [],
+  "toolchain": {
+    "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+    "cargo": "cargo 1.99.1 (5f94df478 2026-08-27)"
+  },
+  "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+  "tests_discovered": 917,
+  "reconciliation": {
+    "reconciled": false,
+    "errors": [
+      "Rust source/toolchain/profile drift"
+    ]
+  }
+}

@@ -1,0 +1,40 @@
+{
+ "checks": [
+  {
+   "executed": 1,
+   "id": "test_proof_work_limit.ProofWorkLimitKernel.check_kernel_without_the_field_rejects_it_explicitly",
+   "line": 226,
+   "module": "evas/tests/test_proof_work_limit.py",
+   "module_sha256": "8e80011f1bed00495c939a006bea67ecbedfcd75a61a5cab64b17bbed9453afd",
+   "outcome": "ok",
+   "problems": [],
+   "registered_by": [
+    "case:proof-work-limit-python@1"
+   ],
+   "seconds": 0.397
+  },
+  {
+   "executed": 1,
+   "id": "test_proof_work_limit.ProofWorkLimitKernel.check_default_request_response_equals_main_except_the_echoed_default",
+   "line": 233,
+   "module": "evas/tests/test_proof_work_limit.py",
+   "module_sha256": "8e80011f1bed00495c939a006bea67ecbedfcd75a61a5cab64b17bbed9453afd",
+   "outcome": "ok",
+   "problems": [],
+   "registered_by": [
+    "case:proof-work-limit-python@1"
+   ],
+   "seconds": 0.484
+  }
+ ],
+ "producer": "scripts/run_explicit_checks.py",
+ "python": "3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]",
+ "refused": [],
+ "required_environment": {
+  "EVAS_TEST_KERNEL": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-r2-fixes-opus-20261028/export/tests-frozen/evas/rust_core/target/release/evas-kernel",
+  "EVAS_TEST_MAIN_KERNEL": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/cross-body-tau-defect-20261028/target/release/evas-kernel"
+ },
+ "schema_version": 1,
+ "start": "evas/tests",
+ "success": true
+}

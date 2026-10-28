@@ -1,0 +1,26 @@
+{
+ "checks": [
+  {
+   "executed": 1,
+   "id": "test_output_point_limit.LargeGridEndToEnd.check_rc_step_response_over_a_hundred_thousand_rows",
+   "line": 343,
+   "module": "evas/tests/test_output_point_limit.py",
+   "module_sha256": "9c59429d38ebff1ab316ff0c9a6a6fdf71d15276c17b271cbff0540dcaf8b6fd",
+   "outcome": "ok",
+   "problems": [],
+   "registered_by": [
+    "case:output-point-limit-python@1"
+   ],
+   "seconds": 115.358
+  }
+ ],
+ "producer": "scripts/run_explicit_checks.py",
+ "python": "3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]",
+ "refused": [],
+ "required_environment": {
+  "EVAS_TEST_KERNEL": "evas/rust_core/target/release/evas-kernel"
+ },
+ "schema_version": 1,
+ "start": "evas/tests",
+ "success": true
+}

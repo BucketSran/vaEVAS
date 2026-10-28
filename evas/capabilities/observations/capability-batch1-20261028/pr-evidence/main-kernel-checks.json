@@ -1,0 +1,146 @@
+{
+ "checks": [
+  "test_proof_work_limit.ProofWorkLimitKernel.check_kernel_without_the_field_rejects_it_explicitly",
+  "test_proof_work_limit.ProofWorkLimitKernel.check_default_request_response_equals_main_except_the_echoed_default"
+ ],
+ "evidence": "one-time PR evidence for capability batch 1 (PR #282), not a CI test",
+ "frozen_tree": {
+  "description": "PR #282 head 5888e9fad23601021e70edce16ec41fafc6e6c6b plus the capability batch 1 r2 fixes, before the card commit (cards do not touch these trees)",
+  "git_tree_ids": {
+   "evas/rust_core": "3e01e2a200cb61a1623a839477ad61bb873791ec",
+   "evas/src": "28fb02e12349469b8026b3da9dce3daca5385fc2",
+   "evas/tests": "74f81772414fae4764c38b57af9cbb2266307735",
+   "scripts": "ab6932c46c5e56973c56d04fbae92d3f64b1288b"
+  },
+  "module_sha256": {
+   "evas/tests/test_affine.py": "d0f7a2df8c81139e3eaaeba7699827843163080e7c5ce0d39d9ce123558a2e9e",
+   "evas/tests/test_output_point_limit.py": "9c59429d38ebff1ab316ff0c9a6a6fdf71d15276c17b271cbff0540dcaf8b6fd",
+   "evas/tests/test_proof_work_limit.py": "8e80011f1bed00495c939a006bea67ecbedfcd75a61a5cab64b17bbed9453afd",
+   "scripts/run_explicit_checks.py": "a0ee7e7f70143fecf2bd804afcc373e65392a5de5f0313e13b090ef674789953"
+  },
+  "unchanged_from_5888e9fa": {
+   "evas/rust_core": true,
+   "evas/src": true,
+   "evas/tests": false
+  }
+ },
+ "host": {
+  "machine": "arm64",
+  "platform": "macOS-26.3.2-arm64-arm-64bit-Mach-O",
+  "python": "3.12.13 (lint venv; CI pins 3.12.15)",
+  "rust_note": "local rustc 1.99.0; CI pins 1.99.1"
+ },
+ "main_kernel": {
+  "built_from": "git archive d6b7543fc815aaa584c886108691b6f2c01eb220 evas/src evas/rust_core",
+  "executed_only": true,
+  "profile": "release",
+  "sha256": "061c9c8e008e60864ab1606df962ef85965112290241df834aa3af808214d62b",
+  "source_check": "327 files of evas/src and evas/rust_core compared blob by blob with d6b7543f: 0 differ, 0 missing, 0 extra"
+ },
+ "pr_kernels": {
+  "built_from": "git archive of the frozen tree above, cargo build --locked --offline",
+  "debug": {
+   "profile": "dev with CARGO_PROFILE_DEV_OPT_LEVEL=1, debug assertions and overflow checks (CI)",
+   "sha256": "2757c00f515896adc4e329b1d074023b8a0a29253a3024211fa75b6c884eeaaa"
+  },
+  "release": {
+   "profile": "release",
+   "sha256": "b2b671bf4ecc07683218136ed4fa8c657c897fb73b09a3fb0df6d8d9a673e2ca"
+  },
+  "toolchain": [
+   "rustc 1.99.0 (b940084d7 2026-09-28)",
+   "binary: rustc",
+   "commit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4",
+   "commit-date: 2026-09-28",
+   "host: aarch64-apple-darwin",
+   "release: 1.99.0",
+   "LLVM version: 23.1.1"
+  ]
+ },
+ "runs": [
+  {
+   "command": "python3 -B scripts/run_explicit_checks.py --start evas/tests --require-env EVAS_TEST_MAIN_KERNEL --require-env EVAS_TEST_KERNEL --check <each check> --report <runner report>",
+   "end_utc": "2026-10-28T11:17:05Z",
+   "environment": {
+    "EVAS_TEST_KERNEL": "pr_kernels.release",
+    "EVAS_TEST_MAIN_KERNEL": "main_kernel",
+    "PYTHONPATH": "evas/src of the frozen tree"
+   },
+   "pr_kernel": "release",
+   "raw_log": {
+    "file": "main-kernel-checks.log",
+    "sha256": "b9a1562c2afe82f8a0c91cffde6ed0af8df7cef42f0d65a6ca2db189aaaea34c"
+   },
+   "results": [
+    {
+     "executed": 1,
+     "id": "test_proof_work_limit.ProofWorkLimitKernel.check_kernel_without_the_field_rejects_it_explicitly",
+     "module_sha256": "8e80011f1bed00495c939a006bea67ecbedfcd75a61a5cab64b17bbed9453afd",
+     "outcome": "ok",
+     "registered_by": [
+      "case:proof-work-limit-python@1"
+     ]
+    },
+    {
+     "executed": 1,
+     "id": "test_proof_work_limit.ProofWorkLimitKernel.check_default_request_response_equals_main_except_the_echoed_default",
+     "module_sha256": "8e80011f1bed00495c939a006bea67ecbedfcd75a61a5cab64b17bbed9453afd",
+     "outcome": "ok",
+     "registered_by": [
+      "case:proof-work-limit-python@1"
+     ]
+    }
+   ],
+   "returncode": 0,
+   "runner_report": {
+    "file": "main-kernel-checks.runner.json",
+    "sha256": "2b331856c5d123add210d313467338edc788ae1696ec94f2c61b639e0eb94c0e"
+   },
+   "start_utc": "2026-10-28T11:17:03Z",
+   "success": true
+  },
+  {
+   "command": "python3 -B scripts/run_explicit_checks.py --start evas/tests --require-env EVAS_TEST_MAIN_KERNEL --require-env EVAS_TEST_KERNEL --check <each check> --report <runner report>",
+   "end_utc": "2026-10-28T11:17:14Z",
+   "environment": {
+    "EVAS_TEST_KERNEL": "pr_kernels.debug",
+    "EVAS_TEST_MAIN_KERNEL": "main_kernel",
+    "PYTHONPATH": "evas/src of the frozen tree"
+   },
+   "pr_kernel": "debug",
+   "raw_log": {
+    "file": "main-kernel-checks-debug.log",
+    "sha256": "cc55873c8815a6839b6001ad29a4e6cecef690823f177325dab960f891ea1416"
+   },
+   "results": [
+    {
+     "executed": 1,
+     "id": "test_proof_work_limit.ProofWorkLimitKernel.check_kernel_without_the_field_rejects_it_explicitly",
+     "module_sha256": "8e80011f1bed00495c939a006bea67ecbedfcd75a61a5cab64b17bbed9453afd",
+     "outcome": "ok",
+     "registered_by": [
+      "case:proof-work-limit-python@1"
+     ]
+    },
+    {
+     "executed": 1,
+     "id": "test_proof_work_limit.ProofWorkLimitKernel.check_default_request_response_equals_main_except_the_echoed_default",
+     "module_sha256": "8e80011f1bed00495c939a006bea67ecbedfcd75a61a5cab64b17bbed9453afd",
+     "outcome": "ok",
+     "registered_by": [
+      "case:proof-work-limit-python@1"
+     ]
+    }
+   ],
+   "returncode": 0,
+   "runner_report": {
+    "file": "main-kernel-checks-debug.runner.json",
+    "sha256": "462687bca4461490fe22e9143becaf9faf58d6eac01b45e83458404997bfa43f"
+   },
+   "start_utc": "2026-10-28T11:17:13Z",
+   "success": true
+  }
+ ],
+ "schema_version": 1,
+ "signoff": "SL-SO-20261028-003"
+}
