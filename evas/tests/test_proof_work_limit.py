@@ -28,7 +28,10 @@ from test_affine import KERNEL, instance, model
 
 # A kernel built from main before this field existed (old-kernel contract). The two
 # check_ methods that need it are explicit: discovery does not collect them, so CI
-# records no skip. Run one by name with EVAS_TEST_MAIN_KERNEL set, for example
+# records no skip. They are one-time acceptance evidence for the change that added
+# the field (once it is merged, main has the field), not CI tests; the collected
+# test_kernel_rejects_an_unknown_transient_field_by_name keeps the fail-closed rule
+# under CI. Run one by name with EVAS_TEST_MAIN_KERNEL set, for example
 #   python3 -B -m unittest test_proof_work_limit.ProofWorkLimitKernel.check_kernel_without_the_field_rejects_it_explicitly
 MAIN_KERNEL = os.environ.get('EVAS_TEST_MAIN_KERNEL')
 
@@ -200,6 +203,14 @@ class ProofWorkLimitKernel(unittest.TestCase):
                 error = json.loads(result.stderr)
                 self.assertEqual(error['kind'], 'invalid_inputs')
                 self.assertIn('proof_work_limit', error['message'])
+
+    def test_kernel_rejects_an_unknown_transient_field_by_name(self):
+        # A kernel without a field rejects it rather than ignoring it (fail closed).
+        # This keeps that rule under CI for the next transient field as well.
+        with self.assertRaises(KernelError) as caught:
+            _invoke(self.raw({'unknown_limit': 1}), KERNEL)
+        self.assertEqual(caught.exception.detail['kind'], 'invalid_request')
+        self.assertIn('unknown_limit', caught.exception.detail['message'])
 
     def test_kernel_accepts_the_exact_boundaries(self):
         for value in (1, 10**13):
