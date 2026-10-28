@@ -11,21 +11,34 @@ selected ones by name through this runner, for example
 Before anything is imported, every named check must be <module>.<Class>.check_<name>
 defined in <start>/<module>.py and listed in the checks of a current case in
 evas/capabilities/data/registry.json, and every --require-env variable must be set
-and nonempty; otherwise nothing runs and the exit status is 2. Each check then runs
-through unittest and must execute exactly once under its own id, without skip,
-expected failure or unexpected success, and pass; otherwise the exit status is 1.
-The receipt names every check, its outcome and how many times it ran.
-scripts/capabilities/collect_ci_inventory.py records each workflow invocation as a
-CI by-name check entry and applies the same static rules.
+and nonempty; otherwise nothing runs and the exit status is 2.
+
+Each check then runs by name through unittest in its own Python process, so nothing
+in the checked module can end this runner. Import, load and run are separate phases;
+one that ends early (SystemExit with any status, KeyboardInterrupt or any other
+BaseException, or a process that dies without a result, for example through os._exit)
+is recorded as not_completed. A check passes only when it ran exactly once under its
+own id, without skip, expected failure or unexpected success, and passed; otherwise
+the exit status is 1.
+
+The receipt is always written. It names every check with its executed count, outcome
+and module SHA-256, and records the SHA-256 of every --require-env value that names a
+file (the kernels), read before and after the run; a file that changes fails the run.
+scripts/verify_explicit_checks.py checks the receipt in a separate CI step, and
+scripts/capabilities/collect_ci_inventory.py records each workflow invocation as a CI
+by-name check entry and applies the same static rules.
 """
 import argparse
 import ast
 import hashlib
+import importlib
 import json
 import os
 from pathlib import Path, PurePosixPath
 import re
+import subprocess
 import sys
+import tempfile
 import time
 import unittest
 
@@ -81,12 +94,26 @@ def registered(root):
     return found
 
 
+def environment_files(names):
+    """{name: {value, sha256}}: the SHA-256 of each value that names a regular file, else None."""
+    found = {}
+    for name in names:
+        value = os.environ.get(name)
+        digest = None
+        if value and Path(value).is_file():
+            digest = hashlib.sha256(Path(value).read_bytes()).hexdigest()
+        found[name] = {'value': value, 'sha256': digest}
+    return found
+
+
 class Recorder(unittest.TextTestResult):
     """Counts every start of every test id and keeps each outcome."""
+    last = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.started, self.outcomes = {}, {}
+        Recorder.last = self
 
     def startTest(self, test):
         super().startTest(test)
@@ -125,30 +152,72 @@ class Recorder(unittest.TextTestResult):
             self._keep(test, 'FAIL' if issubclass(err[0], test.failureException) else 'ERROR')
 
 
-def execute(check):
-    """Run one check by name; (executed count, outcome, details)."""
-    suite = unittest.defaultTestLoader.loadTestsFromName(check)
-    runner = unittest.TextTestRunner(stream=sys.stderr, verbosity=2, resultclass=Recorder)
-    result = runner.run(suite)
-    executed = result.started.get(check, 0)
-    outcomes = [x for values in result.outcomes.values() for x in values]
-    others = sorted(set(result.started) - {check})
+def child(check, start, result_path):
+    """Run one check in this process and always try to write what happened to result_path."""
+    module_name, rest = check.split('.', 1)
+    record = {'phase': 'import', 'ended_early': None, 'import_error': None, 'started': {}, 'outcomes': {},
+              'tests_run': 0, 'successful': False}
+    sys.path.insert(0, str(ROOT / start))
+    try:
+        try:
+            module = importlib.import_module(module_name)
+        except Exception as error:
+            # An ordinary import failure is a check error, as unittest reports it.
+            record['import_error'] = f'{type(error).__name__}: {error}'
+        else:
+            record['phase'] = 'load'
+            suite = unittest.defaultTestLoader.loadTestsFromName(rest, module)
+            record['phase'] = 'run'
+            result = unittest.TextTestRunner(stream=sys.stderr, verbosity=2, resultclass=Recorder).run(suite)
+            record['phase'] = 'finished'
+            record['successful'] = result.wasSuccessful()
+    except BaseException as error:  # SystemExit with any status, KeyboardInterrupt, ...: never a pass
+        record['ended_early'] = f"{record['phase']}: {type(error).__name__}({', '.join(map(repr, error.args))})"
+    finally:
+        if Recorder.last is not None:
+            record.update(started=Recorder.last.started, outcomes=Recorder.last.outcomes,
+                          tests_run=Recorder.last.testsRun)
+        Path(result_path).write_text(json.dumps(record))
+    return 0
+
+
+def execute(check, start):
+    """Run one check in its own process; (executed count, outcome, problems, process exit code)."""
+    with tempfile.TemporaryDirectory(prefix='explicit-check-') as temp:
+        path = Path(temp) / 'result.json'
+        proc = subprocess.run([sys.executable, '-B', str(Path(__file__).resolve()), '--child', check, start, str(path)])
+        try:
+            record = json.loads(path.read_text())
+        except (OSError, ValueError):
+            record = None
+    if record is None:
+        return 0, 'not_completed', [f'the check process exited with code {proc.returncode} without a result '
+                                    '(for example os._exit or a signal)'], proc.returncode
+    executed = record['started'].get(check, 0)
+    if record['ended_early'] or proc.returncode != 0:
+        reason = record['ended_early'] or f'the check process exited with code {proc.returncode}'
+        return executed, 'not_completed', ['not completed: ' + reason], proc.returncode
+    if record['import_error']:
+        return 0, 'ERROR', ['import: ' + record['import_error']], proc.returncode
+    outcomes = [x for values in record['outcomes'].values() for x in values]
+    others = sorted(set(record['started']) - {check})
     problems = []
-    if executed != 1 or others or result.testsRun != 1:
-        problems.append(f'expected exactly one run of {check}; ran {result.testsRun} test(s), '
+    if executed != 1 or others or record['tests_run'] != 1:
+        problems.append(f"expected exactly one run of {check}; ran {record['tests_run']} test(s), "
                         f'{executed} of them this check, others {others}')
-    bad = [x for x in outcomes if x != 'ok']
-    if bad or result.outcomes.get(check) != ['ok'] or not result.wasSuccessful():
-        problems.append('outcomes ' + json.dumps(result.outcomes, sort_keys=True))
-    if problems:
-        outcome = next((x for x in ('FAIL', 'ERROR', 'skipped', 'expected_failure', 'unexpected_success')
-                        if x in outcomes), 'not_run_once')
-    else:
-        outcome = 'ok'
-    return executed, outcome, problems
+    if [x for x in outcomes if x != 'ok'] or record['outcomes'].get(check) != ['ok'] or not record['successful']:
+        problems.append('outcomes ' + json.dumps(record['outcomes'], sort_keys=True))
+    if not problems:
+        return executed, 'ok', [], proc.returncode
+    outcome = next((x for x in ('FAIL', 'ERROR', 'skipped', 'expected_failure', 'unexpected_success')
+                    if x in outcomes), 'not_run_once')
+    return executed, outcome, problems, proc.returncode
 
 
 def main(argv=None):
+    argv = sys.argv[1:] if argv is None else argv
+    if argv[:1] == ['--child']:
+        return child(*argv[1:4])
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('--start', required=True, help='test directory placed first on sys.path, as discover -s does')
     parser.add_argument('--check', action='append', required=True, help='<module>.<Class>.check_<name>')
@@ -160,51 +229,64 @@ def main(argv=None):
     except ValueError as error:
         parser.error(str(error))
     refused, rows = [], []
-    for name in args.require_env:
-        if not ENV_NAME.fullmatch(name):
-            refused.append(f'prerequisite name {name!r} is not an environment variable name')
-        elif not os.environ.get(name):
-            refused.append(f'prerequisite {name} is not set')
-    try:
-        known = registered(ROOT)
-    except (OSError, ValueError, AttributeError, TypeError) as error:
-        known = {}
-        refused.append(f'registry {REGISTRY} unreadable: {error}')
-    seen = set()
-    for check in args.check:
-        module, line, problem = locate(ROOT, start, check)
-        row = dict(id=check, module=module, line=line, module_sha256=None, registered_by=[],
-                   executed=0, outcome='not_run', seconds=None, problems=[])
-        if check in seen:
-            problem = f'{check} is named more than once'
-        seen.add(check)
-        if problem is None:
-            row['module_sha256'] = hashlib.sha256((ROOT / module).read_bytes()).hexdigest()
-            row['registered_by'] = known.get((module, check), [])
-            if not row['registered_by']:
-                problem = f'{check} is not registered in the checks of a current case ({REGISTRY})'
-        if problem is not None:
-            refused.append(problem)
-            row['problems'].append(problem)
-        rows.append(row)
     receipt = dict(schema_version=1, producer='scripts/run_explicit_checks.py', start=start,
                    required_environment={name: os.environ.get(name) for name in args.require_env},
-                   python=sys.version, checks=rows, refused=refused, success=False)
-    if not refused:
-        sys.path.insert(0, str(ROOT / start))
-        for row in rows:
-            started = time.monotonic()
-            row['executed'], row['outcome'], row['problems'] = execute(row['id'])
-            row['seconds'] = round(time.monotonic() - started, 3)
-        receipt['success'] = all(row['outcome'] == 'ok' and row['executed'] == 1 for row in rows)
-    target = Path(report)
-    target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text(json.dumps(receipt, indent=1, sort_keys=True) + '\n')
+                   environment_files={}, python=sys.version, checks=rows, refused=refused, success=False)
+    try:
+        for name in args.require_env:
+            if not ENV_NAME.fullmatch(name):
+                refused.append(f'prerequisite name {name!r} is not an environment variable name')
+            elif not os.environ.get(name):
+                refused.append(f'prerequisite {name} is not set')
+        try:
+            known = registered(ROOT)
+        except (OSError, ValueError, AttributeError, TypeError) as error:
+            known = {}
+            refused.append(f'registry {REGISTRY} unreadable: {error}')
+        seen = set()
+        for check in args.check:
+            module, line, problem = locate(ROOT, start, check)
+            row = dict(id=check, module=module, line=line, module_sha256=None, registered_by=[], executed=0,
+                       outcome='not_run', seconds=None, process_returncode=None, environment_sha256={}, problems=[])
+            if check in seen:
+                problem = f'{check} is named more than once'
+            seen.add(check)
+            if problem is None:
+                row['module_sha256'] = hashlib.sha256((ROOT / module).read_bytes()).hexdigest()
+                row['registered_by'] = known.get((module, check), [])
+                if not row['registered_by']:
+                    problem = f'{check} is not registered in the checks of a current case ({REGISTRY})'
+            if problem is not None:
+                refused.append(problem)
+                row['problems'].append(problem)
+            rows.append(row)
+        if not refused:
+            before = environment_files(args.require_env)
+            receipt['environment_files'] = before
+            digests = {name: item['sha256'] for name, item in before.items() if item['sha256']}
+            for row in rows:
+                started = time.monotonic()
+                row['executed'], row['outcome'], row['problems'], row['process_returncode'] = execute(row['id'], start)
+                row['seconds'] = round(time.monotonic() - started, 3)
+                row['environment_sha256'] = dict(digests)
+            after = environment_files(args.require_env)
+            changed = [name for name in args.require_env if after[name] != before[name]]
+            for name in changed:
+                for row in rows:
+                    row['problems'].append(f'{name} changed during the run: {before[name]} -> {after[name]}')
+            receipt['success'] = not changed and all(row['outcome'] == 'ok' and row['executed'] == 1 for row in rows)
+    finally:
+        target = Path(report)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(json.dumps(receipt, indent=1, sort_keys=True) + '\n')
     for row in rows:
         times = 'time' if row['executed'] == 1 else 'times'
         print(f"explicit check {row['id']}: executed {row['executed']} {times}, outcome {row['outcome']}"
               + (f", {row['seconds']} s" if row['seconds'] is not None else '')
               + (f"; {'; '.join(row['problems'])}" if row['problems'] else ''), flush=True)
+    for name, item in receipt['environment_files'].items():
+        if item['sha256']:
+            print(f"{name} sha256 {item['sha256']}", flush=True)
     for problem in refused:
         print('refused: ' + problem, flush=True)
     passed = sum(row['outcome'] == 'ok' and row['executed'] == 1 for row in rows)

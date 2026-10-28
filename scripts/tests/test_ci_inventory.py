@@ -268,6 +268,30 @@ class ParserTests(unittest.TestCase):
         checks = [c for o in registry['objects'] if o.get('kind') == 'case' for c in o.get('checks', [])]
         self.assertIn({'module': 'evas/tests/test_output_point_limit.py', 'runtime_id': RC_CHECK}, checks)
 
+    def test_a_missing_or_incomplete_rc_receipt_fails_the_rust_regression_job(self):
+        # The runner records every early end, but a separate step reads only its receipt, so a
+        # runner that ends with status 0 and no complete receipt still fails the job.
+        raw = (ROOT / inventory.WORKFLOW).read_bytes()
+        parsed = inventory.parse_workflow(raw)
+        entry, = parsed['explicit_check_entries']
+        job = raw.decode().split('\n  rust-regression:\n')[1].split('\n  regression:\n')[0]
+        steps = job.split('\n      - ')
+        index = next(i for i, step in enumerate(steps) if step.startswith('name: ' + entry['step'] + '\n'))
+        verify = steps[index + 1]
+        self.assertTrue(verify.startswith('name: Require a complete receipt for the dynamic RC check\n'), verify)
+        self.assertNotIn('if:', verify)
+        command = ('python3 -B scripts/verify_explicit_checks.py --report ' + entry['report'] + ' --check ' + RC_CHECK
+                   + ' --require-file-env EVAS_TEST_KERNEL')
+        self.assertEqual(verify.split('\n')[1], '        run: ' + command)
+        script, = [e for e in parsed['script_entries'] if e['source'] == 'scripts/verify_explicit_checks.py']
+        self.assertEqual((script['job'], script['step_if'], script['command']), ('rust-regression', None, command))
+        upload = steps[index + 2]
+        self.assertIn('name: explicit-checks\n', upload)
+        self.assertIn('if: always()\n', upload)
+        self.assertIn('path: ' + entry['report'] + '\n', upload)
+        self.assertIn('if-no-files-found: error\n', upload)
+        self.assertNotIn('if-no-files-found: warn', job)
+
     def test_capability_discovery_and_namespace_patch_are_present(self):
         value = inventory.parse_workflow((ROOT / inventory.WORKFLOW).read_bytes())
         entry = next(e for e in value['entries'] if e['start'] == 'evas/capabilities')

@@ -300,12 +300,14 @@ jobs:
         run: |
           cargo build --locked --release --manifest-path evas/rust_core/Cargo.toml
           python3 -B scripts/run_explicit_checks.py --start evas/tests --require-env EVAS_TEST_KERNEL --check test_output_point_limit.LargeGridEndToEnd.check_rc_step_response_over_a_hundred_thousand_rows --report runs/explicit-checks.json
+      - name: Require a complete receipt for the dynamic RC check
+        run: python3 -B scripts/verify_explicit_checks.py --report runs/explicit-checks.json --check test_output_point_limit.LargeGridEndToEnd.check_rc_step_response_over_a_hundred_thousand_rows --require-file-env EVAS_TEST_KERNEL
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:
           name: explicit-checks
           path: runs/explicit-checks.json
-          if-no-files-found: warn
+          if-no-files-found: error
           retention-days: 14
       - name: Collect actual owned Rust binary listing
         if: always()

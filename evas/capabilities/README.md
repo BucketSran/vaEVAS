@@ -90,8 +90,12 @@ python3 -B -m unittest discover -s evas/capabilities -p 'test_*.py' -v
 - `checks` 列出需要外部内核、因此不被发现的 `check_` 方法（`module`、`runtime_id`），核对按登记模块的源码定位它们；
   名字以 `test` 开头的方法会被发现，不能放在这里。按名运行，例如 `python3 -B -m unittest <module>.<Class>.<check_name>`。
   CI 要运行的检查由 workflow 步骤经 `scripts/run_explicit_checks.py` 按名执行：只接受登记在当前案例 `checks` 里、
-  源码中存在的 `check_` 方法，声明的前提环境变量缺失、方法改名或删除、跳过、执行次数不是恰好一次或未通过时都失败，
-  并写出回执；`collect_ci_inventory.py` 把这类步骤记为“CI 按名执行的检查”入口，按同样规则静态定位。
+  源码中存在的 `check_` 方法，声明的前提环境变量缺失、方法改名或删除、跳过、执行次数不是恰好一次或未通过时都失败。
+  每个检查在单独的进程里运行，导入、加载、执行任一阶段提前结束（任何退出码的 SystemExit、KeyboardInterrupt 等，
+  或进程没有留下结果就退出，例如 `os._exit`）都记为未完成并失败。回执总会写出，记录方法 id、执行次数、结果、
+  模块 SHA-256 和前提变量所指文件（内核）的 SHA-256；下一步用 `scripts/verify_explicit_checks.py` 只读回执，
+  回执缺失或没有显示每个检查恰好执行 1 次且结果 ok 时 job 失败。`collect_ci_inventory.py` 把这类步骤记为
+  “CI 按名执行的检查”入口，按同样规则静态定位。
 - `dependencies` 还须含一个当前的 checker。旧样例的单个 `method` 字符串仍按 unittest id 核对。
 
 测试定位不绑定方法对象版本。方法对象的版本是整个对象的内容哈希，每次重生成都可能换版本；
