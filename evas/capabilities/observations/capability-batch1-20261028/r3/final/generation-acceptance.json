@@ -1,0 +1,216 @@
+{
+  "paths": [
+    "evas/capabilities/data/asset-index.json",
+    "evas/capabilities/data/catalog-sources.json",
+    "evas/capabilities/data/entrypoint-index.json",
+    "evas/capabilities/data/historical-index-00.json",
+    "evas/capabilities/data/historical-index-01.json",
+    "evas/capabilities/data/historical-index-02.json",
+    "evas/capabilities/data/historical-index-03.json",
+    "evas/capabilities/data/historical-index-04.json",
+    "evas/capabilities/data/historical-index-05.json",
+    "evas/capabilities/data/historical-index-06.json",
+    "evas/capabilities/data/historical-index-07.json",
+    "evas/capabilities/data/historical-index-08.json",
+    "evas/capabilities/data/historical-index-09.json",
+    "evas/capabilities/data/historical-index-10.json",
+    "evas/capabilities/data/historical-index-11.json",
+    "evas/capabilities/data/historical-index-12.json",
+    "evas/capabilities/data/historical-index-13.json",
+    "evas/capabilities/data/historical-index-14.json",
+    "evas/capabilities/data/historical-index-15.json",
+    "evas/capabilities/data/method-index-00.json",
+    "evas/capabilities/data/method-index-01.json",
+    "evas/capabilities/data/method-index-02.json",
+    "evas/capabilities/data/method-index-03.json",
+    "evas/capabilities/data/method-index-04.json",
+    "evas/capabilities/data/method-index-05.json",
+    "evas/capabilities/data/method-index-06.json",
+    "evas/capabilities/data/method-index-07.json",
+    "evas/capabilities/data/method-index-08.json",
+    "evas/capabilities/data/method-index-09.json",
+    "evas/capabilities/data/method-index-10.json",
+    "evas/capabilities/data/method-index-11.json",
+    "evas/capabilities/data/method-index-12.json",
+    "evas/capabilities/data/method-index-13.json",
+    "evas/capabilities/data/method-index-14.json",
+    "evas/capabilities/data/method-index-15.json",
+    "evas/capabilities/data/registry.json"
+  ],
+  "old_versions_retained": 105120,
+  "retention": {
+    "main": {
+      "revision": "d6b7543fc815aaa584c886108691b6f2c01eb220",
+      "objects": 96179,
+      "missing": 0,
+      "rewritten": 0,
+      "rewritten_rule": null
+    },
+    "main_before_pr273": {
+      "revision": "bf2ec4105a17af2bf73f2802c828c5f76a6236b5",
+      "objects": 77812,
+      "missing": 0,
+      "rewritten": 0,
+      "rewritten_rule": null
+    },
+    "main_before_split": {
+      "revision": "02dee32b2c9b25f166cbd77f8a895953e004f288",
+      "objects": 57416,
+      "missing": 0,
+      "rewritten": 0,
+      "rewritten_rule": null
+    },
+    "pr282_r2_published": {
+      "revision": "eb26e5b12e1ec6b36024e972d1211aec4e288ab3",
+      "objects": 105120,
+      "missing": 0,
+      "rewritten": 9,
+      "rewritten_rule": "PR-only hand-written objects edited in place by the round 3 card commit"
+    }
+  },
+  "pr_only_hand_written_objects_rewritten": [
+    [
+      "case:output-point-limit-python",
+      "1"
+    ],
+    [
+      "case:output-point-limit-rust",
+      "1"
+    ],
+    [
+      "case:proof-work-limit-python",
+      "1"
+    ],
+    [
+      "case:proof-work-limit-rust",
+      "1"
+    ],
+    [
+      "checker:proof-work-limit",
+      "1"
+    ],
+    [
+      "requirement:output-point-limit",
+      "1"
+    ],
+    [
+      "requirement:proof-work-limit",
+      "1"
+    ],
+    [
+      "source:proof-work-limit-tests",
+      "1"
+    ],
+    [
+      "source:request-limits-contract",
+      "1"
+    ]
+  ],
+  "rewrite_rule": "hand-written (normative) registry objects of this PR, absent from main, edited in place at version 1 by the round 3 card commit; round 2 did the same on the phase 1 head; generated objects keep every previous version",
+  "generation_attempt": "attempt 1 outputs reused: both generations completed and are byte-identical; attempt 1 stopped only in its own strict acceptance (prepare_cap1_r3.attempt1-generate-strict-retention.py, generate.stderr)",
+  "new_object_versions": 8665,
+  "new_object_versions_by_kind": {
+    "source": 5,
+    "asset": 473,
+    "method": 4948,
+    "entrypoint": 31,
+    "historical-audit-record": 3206,
+    "historical-finding": 2
+  },
+  "deterministic_double_generation": true,
+  "hand_written_registry_objects_unchanged": 36,
+  "version_lists": {
+    "ids": 12897,
+    "problems": 0,
+    "rule": "each id keeps every previous version and gains at most one new version, which is current"
+  },
+  "objects": {
+    "assets": 4268,
+    "entrypoints": 36,
+    "history": 3260,
+    "methods": 4948,
+    "sources": 39
+  },
+  "namespace_counts": {
+    "calibration": {
+      "entrypoints": 0,
+      "generated": 0,
+      "methods": 0
+    },
+    "maintenance": {
+      "entrypoints": 7,
+      "generated": 0,
+      "methods": 798
+    },
+    "python-regression": {
+      "entrypoints": 1,
+      "generated": 12,
+      "methods": 3301
+    },
+    "rust-tests": {
+      "entrypoints": 5,
+      "generated": 0,
+      "methods": 0
+    },
+    "validation": {
+      "entrypoints": 23,
+      "generated": 22,
+      "methods": 849
+    }
+  },
+  "data_file_sizes": {
+    "annex-c-policy.json": 10304,
+    "asset-index.json": 23375803,
+    "boundary-audit.json": 256727,
+    "catalog-sources.json": 2359148,
+    "dispositions.json": 3119826,
+    "entrypoint-index.json": 846558,
+    "historical-comparison.json": 37425,
+    "historical-index-00.json": 3783771,
+    "historical-index-01.json": 4640802,
+    "historical-index-02.json": 4947582,
+    "historical-index-03.json": 4763855,
+    "historical-index-04.json": 4653106,
+    "historical-index-05.json": 5118911,
+    "historical-index-06.json": 4548914,
+    "historical-index-07.json": 4278246,
+    "historical-index-08.json": 5029610,
+    "historical-index-09.json": 4452908,
+    "historical-index-10.json": 4429097,
+    "historical-index-11.json": 4487727,
+    "historical-index-12.json": 4495141,
+    "historical-index-13.json": 4676245,
+    "historical-index-14.json": 5295772,
+    "historical-index-15.json": 4373091,
+    "language-profile.json": 1959,
+    "method-index-00.json": 10345085,
+    "method-index-01.json": 9767870,
+    "method-index-02.json": 11415060,
+    "method-index-03.json": 10566911,
+    "method-index-04.json": 9853934,
+    "method-index-05.json": 10847620,
+    "method-index-06.json": 9742061,
+    "method-index-07.json": 9590860,
+    "method-index-08.json": 8919533,
+    "method-index-09.json": 10020803,
+    "method-index-10.json": 9895142,
+    "method-index-11.json": 9866783,
+    "method-index-12.json": 9252597,
+    "method-index-13.json": 10863813,
+    "method-index-14.json": 9809861,
+    "method-index-15.json": 10532305,
+    "registry.json": 1428736,
+    "source-inventory.json": 5879814,
+    "target-scope.json": 1806
+  },
+  "largest_data_file": [
+    "asset-index.json",
+    23375803
+  ],
+  "d1_threshold": {
+    "rule": "coordinator 2026-10-28: schedule D1 when any catalog part exceeds 35 MB",
+    "bytes": 35000000,
+    "reached": false
+  },
+  "scientific_qualification": false
+}
