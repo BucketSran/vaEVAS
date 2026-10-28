@@ -1,0 +1,31 @@
+{
+  "recorded_at_utc": "2026-10-28T03:54:36.468636+00:00",
+  "author": "primary mcp:90cdf183-ff98-4a99-8913-5020e3397b08 (tclaude/claude-opus-5-5)",
+  "reason": "coordinator condition 2 for folding the coverage fix into PR273: tests must cover the incident (artifact IDs not in time order; a superseded attempt on a different image), fail before the fix and pass after, and the merged runtime_profile must equal the selected shards",
+  "gap_found": "worker tests covered ID/time order and selection, but no superseded shard carried a different runtime_profile and no test compared the merged runtime_profile",
+  "patch": {
+    "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/incident-test.patch",
+    "sha256": "473c6249b6ca563a209fc7722e4f88345161f57be7918bf3f6295987e03db295",
+    "file": "scripts/tests/test_regression_shard_selection.py",
+    "base_blob_from": "e8da1f77"
+  },
+  "test": "ShardSelectionTests.test_a_superseded_shard_from_another_image_is_never_merged",
+  "green": {
+    "tree": "e8da1f77 + patch",
+    "result": "Ran 13 tests OK",
+    "log": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/green-run.txt",
+    "log_sha256": "c983800f66bc98da45d5e1b2e105f5a82a74986f235c9f1a9e8887f9b5735a68"
+  },
+  "red": {
+    "tree": "d47f92ad (pin fixes, before the coverage commit 668994c3) + the same test file",
+    "new_test": "FAILED (errors=1): the selection step does not exist",
+    "whole_file": "FAILED (failures=1, errors=24)",
+    "logs": [
+      "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/red-run-new-test.txt",
+      "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/red-run-all.txt"
+    ]
+  },
+  "incident_mechanism_asserted": "old layout (one name per shard, the higher-ID superseded upload from the new image kept) -> run_regression.py --merge exits nonzero with \"incompatible shard metadata\" and writes no report",
+  "ci_observation": "PR273 r3 CI 40626768640: artifacts named python-regression-shard-N-attempt-1, selection receipt valid, merged runtime_profile equal to each shard (pr273-ci/ci-40626768640)",
+  "integration": "pending: added as a follow-up commit on PR273 after the r3 review returns (together with any review fixes), then catalog regeneration and CI"
+}

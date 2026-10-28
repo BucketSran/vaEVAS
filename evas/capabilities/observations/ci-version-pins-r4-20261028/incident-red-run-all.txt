@@ -1,0 +1,419 @@
+EEEEEEEEEEEEEEEEEEEEEEEFE
+======================================================================
+ERROR: test_a_legally_named_symlink_or_plain_file_is_not_an_artifact (test_regression_shard_selection.ShardSelectionTests.test_a_legally_named_symlink_or_plain_file_is_not_an_artifact)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 205, in test_a_legally_named_symlink_or_plain_file_is_not_an_artifact
+    self.refused(artifact(2, 2))
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 64, in refused
+    result, receipt, summary = self.select(run_attempt)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 56, in select
+    result = subprocess.run(['bash', '-e', '-c', self.run_body('regression-coverage', STEP)],
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_admission.py", line 40, in run_body
+    start=next(i for i,line in enumerate(lines) if line.startswith('      - name: '+step))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+StopIteration
+
+======================================================================
+ERROR: test_a_loose_file_among_the_artifacts_fails (test_regression_shard_selection.ShardSelectionTests.test_a_loose_file_among_the_artifacts_fails)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 197, in test_a_loose_file_among_the_artifacts_fails
+    self.refused('stray.json')
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 64, in refused
+    result, receipt, summary = self.select(run_attempt)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 56, in select
+    result = subprocess.run(['bash', '-e', '-c', self.run_body('regression-coverage', STEP)],
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_admission.py", line 40, in run_body
+    start=next(i for i,line in enumerate(lines) if line.startswith('      - name: '+step))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+StopIteration
+
+======================================================================
+ERROR: test_a_missing_shard_fails (test_regression_shard_selection.ShardSelectionTests.test_a_missing_shard_fails)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 172, in test_a_missing_shard_fails
+    self.refused('shard 3')
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 64, in refused
+    result, receipt, summary = self.select(run_attempt)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 56, in select
+    result = subprocess.run(['bash', '-e', '-c', self.run_body('regression-coverage', STEP)],
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_admission.py", line 40, in run_body
+    start=next(i for i,line in enumerate(lines) if line.startswith('      - name: '+step))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+StopIteration
+
+======================================================================
+ERROR: test_a_rerun_of_one_shard_replaces_only_that_shard (test_regression_shard_selection.ShardSelectionTests.test_a_rerun_of_one_shard_replaces_only_that_shard)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 90, in test_a_rerun_of_one_shard_replaces_only_that_shard
+    result, receipt, summary = self.select(3)
+                               ^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 56, in select
+    result = subprocess.run(['bash', '-e', '-c', self.run_body('regression-coverage', STEP)],
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_admission.py", line 40, in run_body
+    start=next(i for i,line in enumerate(lines) if line.startswith('      - name: '+step))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+StopIteration
+
+======================================================================
+ERROR: test_a_shard_without_any_valid_name_is_missing (test_regression_shard_selection.ShardSelectionTests.test_a_shard_without_any_valid_name_is_missing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 179, in test_a_shard_without_any_valid_name_is_missing
+    self.refused('shard 3')
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 64, in refused
+    result, receipt, summary = self.select(run_attempt)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 56, in select
+    result = subprocess.run(['bash', '-e', '-c', self.run_body('regression-coverage', STEP)],
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_admission.py", line 40, in run_body
+    start=next(i for i,line in enumerate(lines) if line.startswith('      - name: '+step))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+StopIteration
+
+======================================================================
+ERROR: test_a_superseded_shard_from_another_image_is_never_merged (test_regression_shard_selection.ShardSelectionTests.test_a_superseded_shard_from_another_image_is_never_merged)
+Run 40602342818: shard 2 ran on the new image, its rerun on the old one, and both uploads stayed in the run.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 147, in test_a_superseded_shard_from_another_image_is_never_merged
+    result = subprocess.run(['bash', '-e', '-c', self.run_body('regression-coverage', step)],
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_admission.py", line 40, in run_body
+    start=next(i for i,line in enumerate(lines) if line.startswith('      - name: '+step))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+StopIteration
+
+======================================================================
+ERROR: test_an_artifact_without_a_report_fails (test_regression_shard_selection.ShardSelectionTests.test_an_artifact_without_a_report_fails)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 218, in test_an_artifact_without_a_report_fails
+    self.refused(artifact(3, 2))
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 64, in refused
+    result, receipt, summary = self.select(run_attempt)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 56, in select
+    result = subprocess.run(['bash', '-e', '-c', self.run_body('regression-coverage', STEP)],
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_admission.py", line 40, in run_body
+    start=next(i for i,line in enumerate(lines) if line.startswith('      - name: '+step))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+StopIteration
+
+======================================================================
+ERROR: test_an_attempt_newer_than_this_run_fails (test_regression_shard_selection.ShardSelectionTests.test_an_attempt_newer_than_this_run_fails)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 222, in test_an_attempt_newer_than_this_run_fails
+    self.refused(artifact(2, 5), run_attempt=4)
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 64, in refused
+    result, receipt, summary = self.select(run_attempt)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 56, in select
+    result = subprocess.run(['bash', '-e', '-c', self.run_body('regression-coverage', STEP)],
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_admission.py", line 40, in run_body
+    start=next(i for i,line in enumerate(lines) if line.startswith('      - name: '+step))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+StopIteration
+
+======================================================================
+ERROR: test_attempt_number_decides_not_directory_age_or_name_order (test_regression_shard_selection.ShardSelectionTests.test_attempt_number_decides_not_directory_age_or_name_order)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 107, in test_attempt_number_decides_not_directory_age_or_name_order
+    result, receipt, _summary = self.select(10)
+                                ^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 56, in select
+    result = subprocess.run(['bash', '-e', '-c', self.run_body('regression-coverage', STEP)],
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_admission.py", line 40, in run_body
+    start=next(i for i,line in enumerate(lines) if line.startswith('      - name: '+step))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+StopIteration
+
+======================================================================
+ERROR: test_each_shard_has_one_attempt (test_regression_shard_selection.ShardSelectionTests.test_each_shard_has_one_attempt)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 74, in test_each_shard_has_one_attempt
+    result, receipt, summary = self.select(1)
+                               ^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 56, in select
+    result = subprocess.run(['bash', '-e', '-c', self.run_body('regression-coverage', STEP)],
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_admission.py", line 40, in run_body
+    start=next(i for i,line in enumerate(lines) if line.startswith('      - name: '+step))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+StopIteration
+
+======================================================================
+ERROR: test_illegal_artifact_names_fail_even_beside_a_complete_set (test_regression_shard_selection.ShardSelectionTests.test_illegal_artifact_names_fail_even_beside_a_complete_set) (name='python-regression-shard-3')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 192, in test_illegal_artifact_names_fail_even_beside_a_complete_set
+    self.refused(name)
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 64, in refused
+    result, receipt, summary = self.select(run_attempt)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 56, in select
+    result = subprocess.run(['bash', '-e', '-c', self.run_body('regression-coverage', STEP)],
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_admission.py", line 40, in run_body
+    start=next(i for i,line in enumerate(lines) if line.startswith('      - name: '+step))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+StopIteration
+
+======================================================================
+ERROR: test_illegal_artifact_names_fail_even_beside_a_complete_set (test_regression_shard_selection.ShardSelectionTests.test_illegal_artifact_names_fail_even_beside_a_complete_set) (name='python-regression-shard-4-attempt-1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 192, in test_illegal_artifact_names_fail_even_beside_a_complete_set
+    self.refused(name)
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 64, in refused
+    result, receipt, summary = self.select(run_attempt)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 56, in select
+    result = subprocess.run(['bash', '-e', '-c', self.run_body('regression-coverage', STEP)],
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_admission.py", line 40, in run_body
+    start=next(i for i,line in enumerate(lines) if line.startswith('      - name: '+step))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+StopIteration
+
+======================================================================
+ERROR: test_illegal_artifact_names_fail_even_beside_a_complete_set (test_regression_shard_selection.ShardSelectionTests.test_illegal_artifact_names_fail_even_beside_a_complete_set) (name='python-regression-shard--1-attempt-1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 192, in test_illegal_artifact_names_fail_even_beside_a_complete_set
+    self.refused(name)
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 64, in refused
+    result, receipt, summary = self.select(run_attempt)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 56, in select
+    result = subprocess.run(['bash', '-e', '-c', self.run_body('regression-coverage', STEP)],
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_admission.py", line 40, in run_body
+    start=next(i for i,line in enumerate(lines) if line.startswith('      - name: '+step))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+StopIteration
+
+======================================================================
+ERROR: test_illegal_artifact_names_fail_even_beside_a_complete_set (test_regression_shard_selection.ShardSelectionTests.test_illegal_artifact_names_fail_even_beside_a_complete_set) (name='python-regression-shard-1-attempt-0')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 192, in test_illegal_artifact_names_fail_even_beside_a_complete_set
+    self.refused(name)
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 64, in refused
+    result, receipt, summary = self.select(run_attempt)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 56, in select
+    result = subprocess.run(['bash', '-e', '-c', self.run_body('regression-coverage', STEP)],
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_admission.py", line 40, in run_body
+    start=next(i for i,line in enumerate(lines) if line.startswith('      - name: '+step))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+StopIteration
+
+======================================================================
+ERROR: test_illegal_artifact_names_fail_even_beside_a_complete_set (test_regression_shard_selection.ShardSelectionTests.test_illegal_artifact_names_fail_even_beside_a_complete_set) (name='python-regression-shard-1-attempt-01')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 192, in test_illegal_artifact_names_fail_even_beside_a_complete_set
+    self.refused(name)
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 64, in refused
+    result, receipt, summary = self.select(run_attempt)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 56, in select
+    result = subprocess.run(['bash', '-e', '-c', self.run_body('regression-coverage', STEP)],
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_admission.py", line 40, in run_body
+    start=next(i for i,line in enumerate(lines) if line.startswith('      - name: '+step))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+StopIteration
+
+======================================================================
+ERROR: test_illegal_artifact_names_fail_even_beside_a_complete_set (test_regression_shard_selection.ShardSelectionTests.test_illegal_artifact_names_fail_even_beside_a_complete_set) (name='python-regression-shard-1-attempt-x')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 192, in test_illegal_artifact_names_fail_even_beside_a_complete_set
+    self.refused(name)
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 64, in refused
+    result, receipt, summary = self.select(run_attempt)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 56, in select
+    result = subprocess.run(['bash', '-e', '-c', self.run_body('regression-coverage', STEP)],
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_admission.py", line 40, in run_body
+    start=next(i for i,line in enumerate(lines) if line.startswith('      - name: '+step))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+StopIteration
+
+======================================================================
+ERROR: test_illegal_artifact_names_fail_even_beside_a_complete_set (test_regression_shard_selection.ShardSelectionTests.test_illegal_artifact_names_fail_even_beside_a_complete_set) (name='python-regression-shard-1-attempt-2-extra')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 192, in test_illegal_artifact_names_fail_even_beside_a_complete_set
+    self.refused(name)
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 64, in refused
+    result, receipt, summary = self.select(run_attempt)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 56, in select
+    result = subprocess.run(['bash', '-e', '-c', self.run_body('regression-coverage', STEP)],
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_admission.py", line 40, in run_body
+    start=next(i for i,line in enumerate(lines) if line.startswith('      - name: '+step))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+StopIteration
+
+======================================================================
+ERROR: test_illegal_artifact_names_fail_even_beside_a_complete_set (test_regression_shard_selection.ShardSelectionTests.test_illegal_artifact_names_fail_even_beside_a_complete_set) (name='python-regression-shard-01-attempt-1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 192, in test_illegal_artifact_names_fail_even_beside_a_complete_set
+    self.refused(name)
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 64, in refused
+    result, receipt, summary = self.select(run_attempt)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 56, in select
+    result = subprocess.run(['bash', '-e', '-c', self.run_body('regression-coverage', STEP)],
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_admission.py", line 40, in run_body
+    start=next(i for i,line in enumerate(lines) if line.startswith('      - name: '+step))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+StopIteration
+
+======================================================================
+ERROR: test_illegal_artifact_names_fail_even_beside_a_complete_set (test_regression_shard_selection.ShardSelectionTests.test_illegal_artifact_names_fail_even_beside_a_complete_set) (name='Python-Regression-Shard-1-attempt-9')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 192, in test_illegal_artifact_names_fail_even_beside_a_complete_set
+    self.refused(name)
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 64, in refused
+    result, receipt, summary = self.select(run_attempt)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 56, in select
+    result = subprocess.run(['bash', '-e', '-c', self.run_body('regression-coverage', STEP)],
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_admission.py", line 40, in run_body
+    start=next(i for i,line in enumerate(lines) if line.startswith('      - name: '+step))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+StopIteration
+
+======================================================================
+ERROR: test_illegal_artifact_names_fail_even_beside_a_complete_set (test_regression_shard_selection.ShardSelectionTests.test_illegal_artifact_names_fail_even_beside_a_complete_set) (name='python-regression-shard-1-attempt-')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 192, in test_illegal_artifact_names_fail_even_beside_a_complete_set
+    self.refused(name)
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 64, in refused
+    result, receipt, summary = self.select(run_attempt)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 56, in select
+    result = subprocess.run(['bash', '-e', '-c', self.run_body('regression-coverage', STEP)],
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_admission.py", line 40, in run_body
+    start=next(i for i,line in enumerate(lines) if line.startswith('      - name: '+step))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+StopIteration
+
+======================================================================
+ERROR: test_illegal_artifact_names_fail_even_beside_a_complete_set (test_regression_shard_selection.ShardSelectionTests.test_illegal_artifact_names_fail_even_beside_a_complete_set) (name='python-regression-shard-1-attempt-٢')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 192, in test_illegal_artifact_names_fail_even_beside_a_complete_set
+    self.refused(name)
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 64, in refused
+    result, receipt, summary = self.select(run_attempt)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 56, in select
+    result = subprocess.run(['bash', '-e', '-c', self.run_body('regression-coverage', STEP)],
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_admission.py", line 40, in run_body
+    start=next(i for i,line in enumerate(lines) if line.startswith('      - name: '+step))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+StopIteration
+
+======================================================================
+ERROR: test_illegal_artifact_names_fail_even_beside_a_complete_set (test_regression_shard_selection.ShardSelectionTests.test_illegal_artifact_names_fail_even_beside_a_complete_set) (name='python-regression-shard-10-attempt-1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 192, in test_illegal_artifact_names_fail_even_beside_a_complete_set
+    self.refused(name)
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 64, in refused
+    result, receipt, summary = self.select(run_attempt)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 56, in select
+    result = subprocess.run(['bash', '-e', '-c', self.run_body('regression-coverage', STEP)],
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_admission.py", line 40, in run_body
+    start=next(i for i,line in enumerate(lines) if line.startswith('      - name: '+step))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+StopIteration
+
+======================================================================
+ERROR: test_illegal_artifact_names_fail_even_beside_a_complete_set (test_regression_shard_selection.ShardSelectionTests.test_illegal_artifact_names_fail_even_beside_a_complete_set) (name='python-regression-shard-1_attempt-1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 192, in test_illegal_artifact_names_fail_even_beside_a_complete_set
+    self.refused(name)
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 64, in refused
+    result, receipt, summary = self.select(run_attempt)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 56, in select
+    result = subprocess.run(['bash', '-e', '-c', self.run_body('regression-coverage', STEP)],
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_admission.py", line 40, in run_body
+    start=next(i for i,line in enumerate(lines) if line.startswith('      - name: '+step))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+StopIteration
+
+======================================================================
+ERROR: test_two_reports_in_one_artifact_fail (test_regression_shard_selection.ShardSelectionTests.test_two_reports_in_one_artifact_fail)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 213, in test_two_reports_in_one_artifact_fail
+    self.refused(artifact(1, 1))
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 64, in refused
+    result, receipt, summary = self.select(run_attempt)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 56, in select
+    result = subprocess.run(['bash', '-e', '-c', self.run_body('regression-coverage', STEP)],
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_admission.py", line 40, in run_body
+    start=next(i for i,line in enumerate(lines) if line.startswith('      - name: '+step))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+StopIteration
+
+======================================================================
+FAIL: test_the_artifact_name_carries_the_attempt_and_nothing_else_names_the_old_one (test_regression_shard_selection.ShardSelectionTests.test_the_artifact_name_carries_the_attempt_and_nothing_else_names_the_old_one)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 226, in test_the_artifact_name_carries_the_attempt_and_nothing_else_names_the_old_one
+    self.assertEqual(re.findall(r'(?m)^          name: (python-regression-shard-.*)$', regression), [UPLOAD_NAME])
+AssertionError: Lists differ: ['pyt[13 chars]n-shard-${{ matrix.shard }}'] != ['pyt[13 chars]n-shard-${{ matrix.shard }}-attempt-${{ github.run_attempt }}']
+
+First differing element 0:
+'python-regression-shard-${{ matrix.shard }}'
+'python-regression-shard-${{ matrix.shard }}-attempt-${{ github.run_attempt }}'
+
+- ['python-regression-shard-${{ matrix.shard }}']
++ ['python-regression-shard-${{ matrix.shard }}-attempt-${{ github.run_attempt '
++  '}}']
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.100s
+
+FAILED (failures=1, errors=24)

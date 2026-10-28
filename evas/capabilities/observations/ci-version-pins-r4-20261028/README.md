@@ -1,0 +1,3 @@
+# CI version pins r4
+
+The test commit on r3 (e8da1f77) adds the reproduction of the CI 40602342818 incident to the shard selection tests: shard 2 ran on a new runner image, its rerun on the old one, and both uploads stayed in the run. The new step selects the rerun, the merged runtime profile equals each selected shard, and the old single-name layout makes the merge refuse the mixed shards. The same commit makes the attempt-name self-scan compare resolved paths (review r3, STD-R3-01). The catalog is regenerated from r3's catalog. Criteria, collector and DUT are unchanged. Scientific qualification is false.

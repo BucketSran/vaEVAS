@@ -1,0 +1,112 @@
+{
+  "prepared_at_utc": "2026-10-28T04:21:55.615880+00:00",
+  "parent": "e8da1f77cd59a6f50c2e9556b9830ade09285b20",
+  "parent_tree": "59eaeacaaafa4183b8d636f7c95c10e854b22495",
+  "base": "bf2ec4105a17af2bf73f2802c828c5f76a6236b5",
+  "incident_patch": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/incident-test.patch",
+  "incident_patch_sha256": "473c6249b6ca563a209fc7722e4f88345161f57be7918bf3f6295987e03db295",
+  "p3_fix": {
+    "finding": "STD-R3-01",
+    "old": "and path != Path(__file__):",
+    "new": "and path != Path(__file__).resolve():",
+    "file": "scripts/tests/test_regression_shard_selection.py"
+  },
+  "focused_runs": [
+    {
+      "name": "p3-red-physical.txt",
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4/source/scripts/tests",
+        "-p",
+        "test_regression_shard_selection.py",
+        "-v"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4/source",
+      "returncode": 0,
+      "log": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4/p3-red-physical.txt",
+      "log_sha256": "5322dfc8b27fc0b7c845fe829c333f4f8a2ea355c7b09403734f05da7bb40ed0"
+    },
+    {
+      "name": "p3-red-logical.txt",
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4/source/scripts/tests",
+        "-p",
+        "test_regression_shard_selection.py",
+        "-v"
+      ],
+      "cwd": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4/source",
+      "returncode": 1,
+      "log": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4/p3-red-logical.txt",
+      "log_sha256": "66ab1950c0d7526b5e55b61bcdad03822f52d16f78125c20378a43ba47152033"
+    },
+    {
+      "name": "p3-green-physical.txt",
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4/source/scripts/tests",
+        "-p",
+        "test_regression_shard_selection.py",
+        "-v"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4/source",
+      "returncode": 0,
+      "log": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4/p3-green-physical.txt",
+      "log_sha256": "75d432f87806633dc77dd17b3e6e8b109e7ebd46e70bd7ae654dc9ebed95ffee"
+    },
+    {
+      "name": "p3-green-logical.txt",
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4/source/scripts/tests",
+        "-p",
+        "test_regression_shard_selection.py",
+        "-v"
+      ],
+      "cwd": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4/source",
+      "returncode": 0,
+      "log": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4/p3-green-logical.txt",
+      "log_sha256": "3e5036a506c3fc7fb8a1e39734e0e58709109deaa75dbdc671eca609b35fd0a9"
+    }
+  ],
+  "changed": [
+    "scripts/tests/test_regression_shard_selection.py"
+  ],
+  "test_sha256": "78dde278f278956cbd6a28e5dc56c97218a88475e3a447acf0ba2bb74e83d692",
+  "before": {
+    "head": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+    "index_sha256": "a2e18b66fd9b3e29093343793d45781c11a717c05c35103d4e9b1da8eec87d71",
+    "shared_config_sha256": "de2b08ef3ba66e96be8b70c87346ff4a96f905e1272934ddd86c218dba501ea8",
+    "shared_config_status": "equal-accepted-reference",
+    "old_candidates": 20
+  },
+  "after": {
+    "head": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+    "index_sha256": "a2e18b66fd9b3e29093343793d45781c11a717c05c35103d4e9b1da8eec87d71",
+    "shared_config_sha256": "de2b08ef3ba66e96be8b70c87346ff4a96f905e1272934ddd86c218dba501ea8",
+    "shared_config_status": "equal-accepted-reference",
+    "old_candidates": 20
+  },
+  "scientific_execution": false,
+  "executed_by": "tclaude/claude-opus-5-5"
+}

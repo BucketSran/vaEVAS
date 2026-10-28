@@ -1,0 +1,38 @@
+COMMAND ['/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python', '-B', '-m', 'unittest', 'discover', '-s', '/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4/source/scripts/tests', '-p', 'test_regression_shard_selection.py', '-v']
+CWD /Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4/source
+test_a_legally_named_symlink_or_plain_file_is_not_an_artifact (test_regression_shard_selection.ShardSelectionTests.test_a_legally_named_symlink_or_plain_file_is_not_an_artifact) ... ok
+test_a_loose_file_among_the_artifacts_fails (test_regression_shard_selection.ShardSelectionTests.test_a_loose_file_among_the_artifacts_fails) ... ok
+test_a_missing_shard_fails (test_regression_shard_selection.ShardSelectionTests.test_a_missing_shard_fails) ... ok
+test_a_rerun_of_one_shard_replaces_only_that_shard (test_regression_shard_selection.ShardSelectionTests.test_a_rerun_of_one_shard_replaces_only_that_shard) ... ok
+test_a_shard_without_any_valid_name_is_missing (test_regression_shard_selection.ShardSelectionTests.test_a_shard_without_any_valid_name_is_missing) ... ok
+test_a_superseded_shard_from_another_image_is_never_merged (test_regression_shard_selection.ShardSelectionTests.test_a_superseded_shard_from_another_image_is_never_merged)
+Run 40602342818: shard 2 ran on the new image, its rerun on the old one, and both uploads stayed in the run. ... ok
+test_an_artifact_without_a_report_fails (test_regression_shard_selection.ShardSelectionTests.test_an_artifact_without_a_report_fails) ... ok
+test_an_attempt_newer_than_this_run_fails (test_regression_shard_selection.ShardSelectionTests.test_an_attempt_newer_than_this_run_fails) ... ok
+test_attempt_number_decides_not_directory_age_or_name_order (test_regression_shard_selection.ShardSelectionTests.test_attempt_number_decides_not_directory_age_or_name_order) ... ok
+test_each_shard_has_one_attempt (test_regression_shard_selection.ShardSelectionTests.test_each_shard_has_one_attempt) ... ok
+test_illegal_artifact_names_fail_even_beside_a_complete_set (test_regression_shard_selection.ShardSelectionTests.test_illegal_artifact_names_fail_even_beside_a_complete_set) ... ok
+test_the_artifact_name_carries_the_attempt_and_nothing_else_names_the_old_one (test_regression_shard_selection.ShardSelectionTests.test_the_artifact_name_carries_the_attempt_and_nothing_else_names_the_old_one) ... FAIL
+test_two_reports_in_one_artifact_fail (test_regression_shard_selection.ShardSelectionTests.test_two_reports_in_one_artifact_fail) ... ok
+
+======================================================================
+FAIL: test_the_artifact_name_carries_the_attempt_and_nothing_else_names_the_old_one (test_regression_shard_selection.ShardSelectionTests.test_the_artifact_name_carries_the_attempt_and_nothing_else_names_the_old_one)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4/source/scripts/tests/test_regression_shard_selection.py", line 240, in test_the_artifact_name_carries_the_attempt_and_nothing_else_names_the_old_one
+    self.assertEqual(users, [])
+AssertionError: Lists differ: ['scripts/tests/test_regression_shard_selection.py'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'scripts/tests/test_regression_shard_selection.py'
+
+- ['scripts/tests/test_regression_shard_selection.py']
++ []
+
+----------------------------------------------------------------------
+Ran 13 tests in 1.530s
+
+FAILED (failures=1)
+
+returncode=1

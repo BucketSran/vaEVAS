@@ -1,0 +1,20 @@
+test_a_superseded_shard_from_another_image_is_never_merged (test_regression_shard_selection.ShardSelectionTests.test_a_superseded_shard_from_another_image_is_never_merged)
+Run 40602342818: shard 2 ran on the new image, its rerun on the old one, and both uploads stayed in the run. ... ERROR
+
+======================================================================
+ERROR: test_a_superseded_shard_from_another_image_is_never_merged (test_regression_shard_selection.ShardSelectionTests.test_a_superseded_shard_from_another_image_is_never_merged)
+Run 40602342818: shard 2 ran on the new image, its rerun on the old one, and both uploads stayed in the run.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_shard_selection.py", line 147, in test_a_superseded_shard_from_another_image_is_never_merged
+    result = subprocess.run(['bash', '-e', '-c', self.run_body('regression-coverage', step)],
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r4-incident-test/tree-d47f92ad/scripts/tests/test_regression_admission.py", line 40, in run_body
+    start=next(i for i,line in enumerate(lines) if line.startswith('      - name: '+step))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+StopIteration
+
+----------------------------------------------------------------------
+Ran 1 test in 0.012s
+
+FAILED (errors=1)
