@@ -13092,7 +13092,7 @@
       "kind": "source",
       "origin": "evas/docs/reference/proof-work-limit.md",
       "path": "evas/docs/reference/proof-work-limit.md",
-      "sha256": "e2fdc645bf8da6f75c6cb257ba4561706c0d221aa791232022ab5c6ab8018c2f",
+      "sha256": "f6939eda0e06f4050777ca5d7b91fe215773f269dd95ab5e30e1356a59dec1cf",
       "status": "active",
       "version": "1"
     },
@@ -13101,7 +13101,7 @@
       "kind": "source",
       "origin": "evas/tests/test_proof_work_limit.py",
       "path": "evas/tests/test_proof_work_limit.py",
-      "sha256": "853a673f0b2ec7ee5f356528123336d95aceff253820ced8b6305844077f3e2e",
+      "sha256": "8e80011f1bed00495c939a006bea67ecbedfcd75a61a5cab64b17bbed9453afd",
       "status": "active",
       "version": "1"
     },
@@ -13110,20 +13110,20 @@
       "kind": "source",
       "origin": "evas/tests/test_output_point_limit.py",
       "path": "evas/tests/test_output_point_limit.py",
-      "sha256": "6ea23b04679534f54aa369bf5bbadb7437af1f04f141d65062c5d3a26aed2948",
+      "sha256": "9c59429d38ebff1ab316ff0c9a6a6fdf71d15276c17b271cbff0540dcaf8b6fd",
       "status": "active",
       "version": "1"
     },
     {
       "allowed_behavior": [
         "Unset: the request ledger is [128, 8192, 1000000000], the request bytes are those of the previous release (the field is not sent) and the response echoes effective_controls.proof_work_limit = 1000000000.",
-        "Set to an integer N with 1 <= N <= 10000000000000: the ledger is [128, 8192, N]; slots 0 and 1, the one sticky ledger per request and the no-refund rule for failed reservations are unchanged.",
+        "Set to an integer N with 1 <= N <= 10000000000000: N is the work slot of every source-transition proof ledger the request builds, with one exception. Slots 0 and 1, the sharing between consumers and the no-refund rule for failed reservations are unchanged, and each ledger is sticky. A consumer shares a bound owner's ledger (source context, procedure, analytic sources) and otherwise builds its own from the same N, so one request can hold several: measured, the slew and RC requests hold the events ledger [128, 8192, N] and the operator-plan ledger [8192, 8192, N], and an analytic-source request holds the request ledger and the events ledger, both [128, 8192, N]. The exception is the transition-input form audit (operators.rs, transition_input): each call builds a fresh default ledger [128, 8192, 1000000000] that does not take N. The kernel admits at most 100000 IR values with container depth 96, which bounds one audit at about 6.9e6 work (measured at most 540847), so that ledger never binds.",
         "Every other value (0, above 1e13, negative, any float including 2e12 and 2000000000000.0, bool, string, null, an integer beyond u64) is invalid_inputs in the kernel; the Python API raises ValueError before sending; the CLI accepts decimal digits only, and only for transient and simulate.",
         "Exhaustion reports step_budget with the limit in force (\"exceeds N\").",
         "The limit is request metadata, not part of the serialized config identity: a request that completes under two limits is charged the same work and returns the same values.",
-        "A kernel without the field rejects it as invalid_request (fail closed); request_protocol_version stays null."
+        "A kernel without the field rejects it as invalid_request (fail closed); request_protocol_version stays null. This was checked once against a kernel built from main d6b7543f before the field existed, as one-time PR evidence and not a CI test (receipt evas/capabilities/observations/capability-batch1-20261028/pr-evidence/main-kernel-checks.json in the capability batch 1 construction archive, sha256 721cd514ba1087b5f177424ad76ba0825212f31f724419c3d8b2968653749a08). Under CI, test_kernel_rejects_an_unknown_transient_field_by_name keeps the same rule for any unknown transient field."
       ],
-      "budget": "Exact for every control fact: echo, error kind, limit in the message, ledger slots and request bytes compare by equality. Raising the limit changes no numerical result: unset and explicit default give byte-identical responses; simulate_scs at 2e12 saves data equal to the default run; the explicit check against a kernel built from main finds the default response equal to the previous kernel's after removing only the echo key. Completed rows of the slew request (tolerances absolute 1e-12 V, relative 0) are within 1e-11 V of the closed form, compared with Fractions. No universal tolerance is introduced.",
+      "budget": "Exact for every control fact: echo, error kind, limit in the message, ledger slots and request bytes compare by equality, and the C8 comparison requires the echoed default as the integer 1000000000 before removing it. Raising the limit changes no numerical result: unset and explicit default give byte-identical responses; simulate_scs at 2e12 saves data equal to the default run; as one-time PR evidence and not a CI test, the default response through a kernel built from main d6b7543f equals the previous kernel's after removing only the echo key (receipt evas/capabilities/observations/capability-batch1-20261028/pr-evidence/main-kernel-checks.json in the capability batch 1 construction archive, sha256 721cd514ba1087b5f177424ad76ba0825212f31f724419c3d8b2968653749a08). Completed rows of the slew request are within the request's own tolerance absolute_V + relative*|y| read from effective_controls, which must equal the requested 1e-12 V and 0; rows are compared with Fractions. Exhaustion depends on the request bytes, because the ledger charges serialized program text: the two end-to-end tests name their source proof_limit.va, so the checkout path never enters their requests. Measured total work is 891444759 for 1000 rows (108555241 below 1e9, 841444759 above 5e7) and 2669543465 for 3000 rows (1669543465 above 1e9, 7330456535 below 1e10); each extra character of the source name adds 11061 and 33061 work, so the tightest margin, 1000 rows under 1e9, allows 9814 more characters. No universal tolerance is introduced.",
       "conditions": [
         "default and explicit default",
         "range boundaries",
@@ -13156,7 +13156,7 @@
         },
         {
           "id": "source:request-limits-contract",
-          "sha256": "60652977314327f8b38fbd14c40ac76c09c5995ffd5f26c53eee29a2ed4a6796",
+          "sha256": "19c2ad66145a8f38133227db1872e32246ab9a90ac1f0e92157def324ddf4ef6",
           "version": "1"
         }
       ],
@@ -13184,9 +13184,19 @@
           "observable": "slew end-to-end rows"
         },
         {
-          "derivation": "Differential reference: the same request unset, with the explicit default, and (explicit check, not collected by CI) through the kernel built from main before the field existed.",
+          "derivation": "Differential reference: the same request unset and with the explicit default (collected tests), and, as one-time PR evidence and not a CI test, through a kernel built from main d6b7543f before the field existed (receipt evas/capabilities/observations/capability-batch1-20261028/pr-evidence/main-kernel-checks.json in the capability batch 1 construction archive, sha256 721cd514ba1087b5f177424ad76ba0825212f31f724419c3d8b2968653749a08).",
           "expected": "identical response bytes apart from the echo",
           "observable": "the limit is not a numerical input"
+        },
+        {
+          "derivation": "The C8 kernel predates the field; for an unset request the contract echoes the designed default literal, so that key is the only mapped difference.",
+          "expected": "the schema-33 response equals the C8 response plus effective_controls.proof_work_limit = 1000000000, an integer",
+          "observable": "C8 comparison of a default request"
+        },
+        {
+          "derivation": "The transient request section is closed to unknown fields (evas/docs/reference/proof-work-limit.md, compatibility), which is what makes a kernel without proof_work_limit reject it.",
+          "expected": "invalid_request naming the field",
+          "observable": "unknown transient field"
         }
       ],
       "kind": "requirement",
@@ -13270,7 +13280,7 @@
         "Counts above the former 100000 boundary are admitted; unrelated budgets that share the number 100000 (netlist tokens, integer invariants, native audit) are unchanged.",
         "The limit changes admission only; admitted requests compute the same results as before."
       ],
-      "budget": "Exact for counts (integer equality) and messages (pattern match). Values on the 120001-row stateless-gain grid are within 1e-12 V (input) and 3e-12 V (output) of the closed form, compared with Fractions; the explicit dynamic RC check (release kernel, not collected by CI) is within 1e-9 V of 1 - exp(-t) evaluated with 50-digit Decimal.",
+      "budget": "Exact for counts (integer equality) and messages (pattern match). Values on the 120001-row stateless-gain grid are within 1e-12 V (input) and 3e-12 V (output) of the closed form, compared with Fractions. The dynamic RC check holds every one of its 120001 rows to the request's own accuracy: |y - (1 - exp(-t))| <= absolute_V + relative*|y| with exp in 50-digit Decimal, where absolute_V = 1e-12 V and relative = 1e-10 are the SCS defaults (the deck has no options line) echoed in effective_controls; the certified voltage_bounds_V contain 1 - exp(-t) and their half-width is within the same tolerance. Discovery does not collect that check: CI runs it by name in the rust-regression job on every regression selection, with or without package, on a release kernel through scripts/run_explicit_checks.py, which fails unless it ran exactly once and passed, and the CI inventory records the step as a CI by-name check entry. A local run of that step is recorded in evas/capabilities/observations/capability-batch1-20261028/pr-evidence/rc-check-release.json in the capability batch 1 construction archive, sha256 e86536dbfb230d46195e61b18d1cdfba8f73620c43fd6cf395b6503c3f526c3f.",
       "conditions": [
         "cap - 1, cap and cap + 1 at every checkpoint",
         "former 100000 boundary",
@@ -13302,7 +13312,7 @@
         },
         {
           "id": "source:request-limits-contract",
-          "sha256": "60652977314327f8b38fbd14c40ac76c09c5995ffd5f26c53eee29a2ed4a6796",
+          "sha256": "19c2ad66145a8f38133227db1872e32246ab9a90ac1f0e92157def324ddf4ef6",
           "version": "1"
         }
       ],
@@ -13338,6 +13348,11 @@
           "derivation": "Stateless gain driven by a PWL triangle: exact piecewise-linear arithmetic with Fractions on the 2^-20 grid.",
           "expected": "u is the triangle ramp and y = 3u",
           "observable": "large-grid values"
+        },
+        {
+          "derivation": "V(y) <+ idt(V(u) - V(y), 0) with V(u) = 1 V gives y' = 1 - y and y(0) = 0; exp is evaluated with 50-digit Decimal, without the kernel.",
+          "expected": "y(t) = 1 - exp(-t); at stop = 120000*2^-20 s, y = 0.1081353699645114710...",
+          "observable": "dynamic RC rows above 100000"
         }
       ],
       "kind": "requirement",
@@ -13404,7 +13419,7 @@
       "dependencies": [
         {
           "id": "source:proof-work-limit-tests",
-          "sha256": "e2d7c963ddcab89e2f88e78fe417c02a7a9de1bc08bcda0532739533f913373e",
+          "sha256": "b7e0f36ab92fed2ec9d861031bc13af453f3c173aea1983e760cd9acefdf62b7",
           "version": "1"
         }
       ],
@@ -13420,7 +13435,7 @@
       "dependencies": [
         {
           "id": "source:output-point-limit-tests",
-          "sha256": "baed4df45e254eef44bc2fe9542e86315ba8bb198ef133c7f634278245ec8923",
+          "sha256": "cfcbc6d25f2e281a77dc6c8e777cbacc9240f909682fa120c66aecd295b7c9fe",
           "version": "1"
         }
       ],
@@ -13446,12 +13461,12 @@
       "dependencies": [
         {
           "id": "requirement:proof-work-limit",
-          "sha256": "8e5ecd74b64165d2f5a57d4edc8ab3488b850b942786fd48274f99ee7be8c763",
+          "sha256": "91770f4bcf7e9c49875e0e21bd6ca389ad6619706025625363c82672d300038b",
           "version": "1"
         },
         {
           "id": "checker:proof-work-limit",
-          "sha256": "34b315eda3f25cb337e925f785e3d17cede34268eae5fa9012087f0f48e85f33",
+          "sha256": "51ccbd67fa23eb146ed8d2f2a626b752f336d7f682a75cff9add2fd386b7451f",
           "version": "1"
         },
         {
@@ -13466,7 +13481,7 @@
       "requirements": [
         {
           "id": "requirement:proof-work-limit",
-          "sha256": "8e5ecd74b64165d2f5a57d4edc8ab3488b850b942786fd48274f99ee7be8c763",
+          "sha256": "91770f4bcf7e9c49875e0e21bd6ca389ad6619706025625363c82672d300038b",
           "version": "1"
         }
       ],
@@ -13533,7 +13548,17 @@
         {
           "module": "evas/tests/test_proof_work_limit.py",
           "namespace": "python-regression",
+          "runtime_id": "test_proof_work_limit.ProofWorkLimitKernel.test_kernel_rejects_an_unknown_transient_field_by_name"
+        },
+        {
+          "module": "evas/tests/test_proof_work_limit.py",
+          "namespace": "python-regression",
           "runtime_id": "test_proof_work_limit.ProofWorkLimitKernel.test_kernel_rejects_every_invalid_shape_as_invalid_inputs"
+        },
+        {
+          "module": "evas/tests/test_proof_work_limit.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_proof_work_limit.ProofWorkLimitProtocol.test_c8_comparison_requires_the_echoed_default_before_removing_it"
         },
         {
           "module": "evas/tests/test_proof_work_limit.py",
@@ -13597,12 +13622,12 @@
       "dependencies": [
         {
           "id": "requirement:proof-work-limit",
-          "sha256": "8e5ecd74b64165d2f5a57d4edc8ab3488b850b942786fd48274f99ee7be8c763",
+          "sha256": "91770f4bcf7e9c49875e0e21bd6ca389ad6619706025625363c82672d300038b",
           "version": "1"
         },
         {
           "id": "checker:proof-work-limit",
-          "sha256": "34b315eda3f25cb337e925f785e3d17cede34268eae5fa9012087f0f48e85f33",
+          "sha256": "51ccbd67fa23eb146ed8d2f2a626b752f336d7f682a75cff9add2fd386b7451f",
           "version": "1"
         },
         {
@@ -13617,7 +13642,7 @@
       "requirements": [
         {
           "id": "requirement:proof-work-limit",
-          "sha256": "8e5ecd74b64165d2f5a57d4edc8ab3488b850b942786fd48274f99ee7be8c763",
+          "sha256": "91770f4bcf7e9c49875e0e21bd6ca389ad6619706025625363c82672d300038b",
           "version": "1"
         }
       ],
@@ -13745,12 +13770,12 @@
       "dependencies": [
         {
           "id": "requirement:output-point-limit",
-          "sha256": "b151f4a4d8d03dd62b52106d7faa7835ccd6f4827364a6e1bb6dd69abcf13b41",
+          "sha256": "00d3051aa4a78b171494a6844a0f4ee376c470046539af3cecf47ee096d1d9f2",
           "version": "1"
         },
         {
           "id": "checker:output-point-limit",
-          "sha256": "962c250ec0faefabe3c19f50678dfbb670521f62475621a083f1486be7e4cbcc",
+          "sha256": "512accc9cb705f0f58a3b87f28f8b43558a914304b4aaadbb9778a53a2a4a4b2",
           "version": "1"
         },
         {
@@ -13765,7 +13790,7 @@
       "requirements": [
         {
           "id": "requirement:output-point-limit",
-          "sha256": "b151f4a4d8d03dd62b52106d7faa7835ccd6f4827364a6e1bb6dd69abcf13b41",
+          "sha256": "00d3051aa4a78b171494a6844a0f4ee376c470046539af3cecf47ee096d1d9f2",
           "version": "1"
         }
       ],
@@ -13876,12 +13901,12 @@
       "dependencies": [
         {
           "id": "requirement:output-point-limit",
-          "sha256": "b151f4a4d8d03dd62b52106d7faa7835ccd6f4827364a6e1bb6dd69abcf13b41",
+          "sha256": "00d3051aa4a78b171494a6844a0f4ee376c470046539af3cecf47ee096d1d9f2",
           "version": "1"
         },
         {
           "id": "checker:output-point-limit",
-          "sha256": "962c250ec0faefabe3c19f50678dfbb670521f62475621a083f1486be7e4cbcc",
+          "sha256": "512accc9cb705f0f58a3b87f28f8b43558a914304b4aaadbb9778a53a2a4a4b2",
           "version": "1"
         },
         {
@@ -13896,7 +13921,7 @@
       "requirements": [
         {
           "id": "requirement:output-point-limit",
-          "sha256": "b151f4a4d8d03dd62b52106d7faa7835ccd6f4827364a6e1bb6dd69abcf13b41",
+          "sha256": "00d3051aa4a78b171494a6844a0f4ee376c470046539af3cecf47ee096d1d9f2",
           "version": "1"
         }
       ],
