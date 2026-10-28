@@ -1,0 +1,33 @@
+{
+  "commit": "c6e86c6d1dfb0e171cdf8ff5e564ad3aad6a9087",
+  "tree": "e80c2f073ff9ba07aa6808a9f74d029eb387ab14",
+  "parent": "fa5556de20de4fecbf9db4e3630cd5d6754b07c2",
+  "paths": [
+    "evas/capabilities/support_view.py",
+    "evas/capabilities/test_support_view.py",
+    "scripts/tests/test_discover_rust.py"
+  ],
+  "after_sha256": {
+    "evas/capabilities/support_view.py": "8259c85614cf4f7c36d48dd2d619bd4013c492a3d59f7cc5f1a972e8f4a0b623",
+    "evas/capabilities/test_support_view.py": "e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0",
+    "scripts/tests/test_discover_rust.py": "cdca3ca27dcd7728ee30760cd1dfc02e1734b7ad43535b909569a6722cd70772"
+  },
+  "patch": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/r6-p3-fixes-sonnet-20261028/source.patch",
+  "patch_sha256": "c1f05171aff02b4c8d941b37e10da92d9f7b926d99176073b880c087e4b6e71e",
+  "acceptance": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/r6-p3-verification-20261028/p3-acceptance.json",
+  "before": {
+    "head": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+    "index_sha256": "a2e18b66fd9b3e29093343793d45781c11a717c05c35103d4e9b1da8eec87d71",
+    "shared_config_sha256": "de2b08ef3ba66e96be8b70c87346ff4a96f905e1272934ddd86c218dba501ea8",
+    "shared_config_status": "equal-accepted-reference",
+    "old_candidates": 20
+  },
+  "after": {
+    "head": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+    "index_sha256": "a2e18b66fd9b3e29093343793d45781c11a717c05c35103d4e9b1da8eec87d71",
+    "shared_config_sha256": "de2b08ef3ba66e96be8b70c87346ff4a96f905e1272934ddd86c218dba501ea8",
+    "shared_config_status": "equal-accepted-reference",
+    "old_candidates": 20
+  },
+  "scientific_qualification": false
+}
