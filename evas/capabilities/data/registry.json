@@ -4311,6 +4311,7 @@
     "asset:ffca9221c26b1669fd5b866d": "191d92a8360c85ab812f3efa06b84d2d0123f8a509b6a46ab398a8e65ab97920",
     "asset:fff06209fd2b3a26bf45eb6c": "5f4d002b51570a38488c27d70a4fe3ab24936486055e1e04a143fdd23bef7c39",
     "calibration:sef": "1",
+    "case:bound-step-request-invariance-python": "1",
     "case:cross-event-body-right-limit-python": "1",
     "case:cross-event-body-right-limit-rust": "1",
     "case:event-observer-math-isolation-python": "1",
@@ -4320,6 +4321,7 @@
     "case:output-point-limit-rust": "1",
     "case:proof-work-limit-python": "1",
     "case:proof-work-limit-rust": "1",
+    "checker:bound-step-request-invariance": "1",
     "checker:cross-event-body-right-limit": "1",
     "checker:event-observer-math-isolation": "1",
     "checker:idt-reset-argument-procedure-frame": "1",
@@ -12602,6 +12604,7 @@
     "reference:IEEE-754-1985": "1",
     "requirement:$itor": "1",
     "requirement:$rtoi": "1",
+    "requirement:bound-step-request-invariance": "2",
     "requirement:cross-event-body-right-limit": "2",
     "requirement:event-observer-math-isolation": "3",
     "requirement:expm1": "1",
@@ -12641,6 +12644,7 @@
     "source:a3284a9ec67acebef49ba896": "ec3fa1d2368e71c4863149f030cc1dac89953089fc3d3d06b8d7f65c02b3c78a",
     "source:b11c8ec0ef444c1039a37323": "2acb6f65ba0ab57d5c791d3b98e44ca53e5ced1a485f3e764e1c05c18c500090",
     "source:bc47264731c409c85f3a5abd": "e3d68a7527ea9baa80e8247a3c22e5b4a0536604a7fb15106b67c28d18e44e3e",
+    "source:bound-step-request-invariance-tests": "1",
     "source:canonical-tests": "1",
     "source:cross-body-right-limit-cases-tests": "1",
     "source:cross-right-limit-tests": "1",
@@ -16711,6 +16715,485 @@
           "package": "evas-kernel",
           "target": "evas_kernel",
           "target_kind": "lib"
+        }
+      ],
+      "version": "1"
+    },
+    {
+      "id": "source:bound-step-request-invariance-tests",
+      "kind": "source",
+      "origin": "evas/tests/test_bound_step_request_invariance.py",
+      "path": "evas/tests/test_bound_step_request_invariance.py",
+      "sha256": "3a55ad72db6126989518b97d385aed92dc783be15691723299dbb1b7f58a3d44",
+      "status": "active",
+      "version": "1"
+    },
+    {
+      "allowed_behavior": {
+        "implementation_choice": [
+          {
+            "basis": "推断",
+            "text": "Evaluate the request on the statements it depends on (its value and activation slice), on the box of the current accepted time point (left/right limits at PWL corners), not by executing every procedural condition over the whole accepted-step box; or split the accepted step at the predicate roots before evaluating (window_roots in continuous_select.rs exists)."
+          },
+          {
+            "basis": "来源事实 (review r1 B2-ST-03)",
+            "text": "Conservative application when the activation may be true stays allowed. Refusals stay allowed for an uncertifiable request value, numeric-domain errors, unsupported paths, precision limits and resource budgets (step budget, proof work). Only the NF-12b refusal is forbidden: refusing because an unrelated procedural predicate straddles its threshold over the accepted-step box."
+          }
+        ],
+        "lrm_mandated": [
+          {
+            "basis": "静态阅读",
+            "text": "Use the request only to cap the next step; the solution of the program with and without the request is the same mathematical object."
+          }
+        ],
+        "must_not": [
+          {
+            "basis": "来源事实",
+            "text": "Refuse a program because an unrelated procedural condition straddles its threshold over the accepted-step box used for the bound-step evaluation (procedure_plan.rs next_bound_time 1119-1141 -> condition 445-477, error at 467)."
+          }
+        ]
+      },
+      "batch": 2,
+      "benchmark_commit": "c485de860c6005f451133e8cdc05fe923da29206",
+      "blocked_slots": [
+        12
+      ],
+      "budget": {
+        "basis": "静态阅读",
+        "pair_equality": "the two waveforms must agree within the sum of their certified bands; the exact integral is rational, so each is also compared with it directly",
+        "voltage": "EVAS certified-path contract (docs/math/solving.md): |v - v_exact| <= vabstol + reltol*|v| at every returned point, using the bench settings (EVAS defaults vabstol=1e-12 V, reltol=1e-10 when the netlist sets none)."
+      },
+      "candidate_impact": {
+        "basis": "推断",
+        "candidates": "candidate_common_form: idt + $bound_step + input-driven if is the usual OTA/filter style (prep §4.3)",
+        "slot12": "contract model uses $bound_step; slot 12 also needs family D"
+      },
+      "card_source": {
+        "note": "standards-line card v2; incremental review batch2-cards-r2 passed",
+        "path": "runs/standard-line-20261028/cards/batch-2/bound-step-request-invariance.json",
+        "review": "pending",
+        "sha256": "4cf70d104650f48e15836e362aeaf4c0c4179756f34156b2f7f4908f0397714d",
+        "status": "draft",
+        "version": "2"
+      },
+      "conditions": [
+        "constant request (0.25n, 1u)",
+        "PWL ramp crossing the predicate threshold off the output grid",
+        "request inside a branch (conditional activation)",
+        "request value depending on an input (dynamic)"
+      ],
+      "constructs": [
+        {
+          "basis": "来源事实",
+          "diagnostic": {
+            "code": "kernel.event_condition",
+            "message": "procedure condition is not certified over its complete source-position enclosure at dut.va:8:2 (X)",
+            "reached_by": "Benchmark probes s12 it2/it3 (t=0, 0 records)"
+          },
+          "evidence": "runs/t3-harbor30-20261027/issue270-resolution/evas-probe/items.json NF-12; runs/t3-harbor30-20261027/issue270-resolution/round3-facts/nf-options.md §3.23",
+          "file": "benchmark/material/draftbench/batches/v3-01/tasks/v3-ota-continuous/solution/dut.va:8-9,17",
+          "role": "reference solution (the original program also has family-D gaps)",
+          "slot": 12,
+          "task": "v3-ota-continuous",
+          "text": "if(target<low) target=low; ... if(V(enable)<0.75) ...; V(q)<+idt(rate,0); $bound_step(0.25n);"
+        },
+        {
+          "basis": "来源事实",
+          "diagnostic": {
+            "code": "kernel.event_condition",
+            "message": "same, at dut.va:8:2 (X)",
+            "reached_by": "prep b1 run: t8 completed 5610 rows in 13.1 s; t14 failed; off-grid ramp (t11b) and $bound_step(1u) (t11c) also fail; constant predicate (t22) and algebraic programs (t18/t20) pass"
+          },
+          "evidence": "grill-vams-2023/capability-batch2-prep-sonnet-20261028/logs/repro/nf12_t8_enable_branch_idt.b1.stdout, nf12_t14_t8_plus_boundstep.b1.stdout; REPORT.md §4.3",
+          "file": "grill-vams-2023/capability-batch2-prep-sonnet-20261028/repro/nf12_t8_enable_branch_idt and nf12_t14_t8_plus_boundstep",
+          "role": "repro",
+          "slot": 12,
+          "task": "minimal pair (prep worker)",
+          "text": "t8: target=0.75+gain*(V(vin)-0.75); if(V(enable)<0.75) target=0; V(q)<+idt(target/tau,0); | t14: t8 + $bound_step(0.25n);"
+        }
+      ],
+      "dependencies": [
+        {
+          "id": "lrm-2.4",
+          "sha256": "afdb66b8baec11cb63e0572346862434fb6652faf3849a402c96bb02f03f13cf",
+          "version": "1"
+        },
+        {
+          "id": "lrm-2023",
+          "sha256": "86b19cb490fab45c0d8dbc077a3412a3dffdd4a553741ac196c825a0cbae3194",
+          "version": "1"
+        },
+        {
+          "id": "source:language-profile",
+          "sha256": "96bad1a55d3da59d733ad376d4659e3ff6b821c9a0e5ab41ed6353e794453599",
+          "version": "1"
+        },
+        {
+          "id": "source:target-scope",
+          "sha256": "bbc16ec9f813042a44b714014359fef63bbf28e2c43a113f4aa5868bcd0264cc",
+          "version": "1"
+        }
+      ],
+      "drafted_by": "claude-opus-5-5 (requirement-card worker, 2026-10-28)",
+      "evas_source_commit": "bf2ec4105a17af2bf73f2802c828c5f76a6236b5",
+      "existing_tests": [
+        {
+          "basis": "静态阅读",
+          "checks_card_observables": false,
+          "covers": "conditional request semantics",
+          "file": "evas/tests/test_bound_step.py",
+          "method": "BoundStepContracts.test_conditional_bound_releases_on_next_accepted_evaluation"
+        },
+        {
+          "basis": "静态阅读",
+          "checks_card_observables": false,
+          "covers": "inactive branch request not evaluated",
+          "file": "evas/tests/test_bound_step.py",
+          "method": "BoundStepContracts.test_inactive_outer_condition_skips_inner_numeric_request"
+        },
+        {
+          "basis": "静态阅读",
+          "checks_card_observables": "partially (no admission-parity pair)",
+          "covers": "requests cap integration segments",
+          "file": "evas/tests/test_bound_step.py",
+          "method": "BoundStepContracts.test_bound_caps_actual_nonlinear_integration_segments"
+        },
+        {
+          "basis": "静态阅读",
+          "checks_card_observables": false,
+          "covers": "step-sequence assertions that may move with the fix (prep §4.3 risk)",
+          "file": "evas/tests/test_implicit_step_bounds.py",
+          "method": "ImplicitStepBounds.test_dynamic_voltage_bound_is_applied_to_internal_accepted_mesh"
+        }
+      ],
+      "family": "C (prep §3.1)",
+      "gap": "procedure_plan.rs next_bound_time (1119-1141) executes the whole procedure on the accepted solution's certified_voltage_bounds; a straddling input predicate then fails in condition (445-477). Tests are linked through case:bound-step-request-invariance-python; calibration and execution evidence are pending and the links confer no support.",
+      "id": "requirement:bound-step-request-invariance",
+      "implementation": "batch 2 (implement)",
+      "independent_answers": [
+        {
+          "answer_file": "answers/b2_revised.json",
+          "answer_sha256": "e7bfbf266fd3e470cb34fdd175222de11a9b3bd97de8476e8cc0fb353326c53a",
+          "basis": "已执行验证",
+          "bench": "repro nf12_t8/t14 tb.scs (heldout-0 PWL of v3-ota-continuous), stop 1.4 us, maxstep 250p",
+          "enable_crossings_s": [
+            "21/2000000000",
+            "1701/2000000000",
+            "1901/2000000000"
+          ],
+          "method": "exact rational integration of the piecewise-affine integrand (trapezoid exact on affine pieces; split at enable crossings)",
+          "model": "target=0.75+0.98*(V(vin)-0.75); if(V(enable)<0.75) target=0; V(q)<+idt(target/20n,0); [t14: + $bound_step(0.25n)]",
+          "script": "scripts/b2_revised.py",
+          "script_sha256": "a62e6982173b1e99dc7191fd582da495b9c19be9c5f12f0563f06580c6e7d485",
+          "test": "t8_t14_exact_integral",
+          "values": {
+            "1/10000000": {
+              "decimal": "3.474493125000000e+00",
+              "exact": "5559189/1600000"
+            },
+            "1/100000000": {
+              "decimal": "0.000000000000000e+00",
+              "exact": "0"
+            },
+            "1/2500000": {
+              "decimal": "1.453486312500000e+01",
+              "exact": "23255781/1600000"
+            },
+            "1/5000000": {
+              "decimal": "7.356793125000000e+00",
+              "exact": "11770869/1600000"
+            },
+            "11/1000000000": {
+              "decimal": "1.924612500000000e-02",
+              "exact": "153969/8000000"
+            },
+            "17/20000000": {
+              "decimal": "3.722199812500000e+01",
+              "exact": "59555197/1600000"
+            },
+            "1701/2000000000": {
+              "decimal": "3.726615462500000e+01",
+              "exact": "298129237/8000000"
+            },
+            "19/20000000": {
+              "decimal": "3.726615462500000e+01",
+              "exact": "298129237/8000000"
+            },
+            "201/1000000000": {
+              "decimal": "7.394146125000000e+00",
+              "exact": "59153169/8000000"
+            },
+            "21/2000000000": {
+              "decimal": "0.000000000000000e+00",
+              "exact": "0"
+            },
+            "3/5000000": {
+              "decimal": "2.728349812500000e+01",
+              "exact": "43653597/1600000"
+            },
+            "7/5000000": {
+              "decimal": "5.197333812500000e+01",
+              "exact": "83157341/1600000"
+            },
+            "951/1000000000": {
+              "decimal": "3.731031112500000e+01",
+              "exact": "298482489/8000000"
+            }
+          }
+        },
+        {
+          "basis": "已执行验证",
+          "derivation": "target 0 before the enable crossing at 10.5 ns; affine on [10.5, 11] ns; constant 0.77646 after; trapezoid exact on affine pieces",
+          "script": "standard-line scripts/rev_batch2_after_r1_20261028.py (q_exact)",
+          "test": "short_bench_exact_values",
+          "values": {
+            "10ns": "0",
+            "11ns": "153969/8000000",
+            "15ns": "279261/1600000",
+            "20ns": "117969/320000"
+          }
+        }
+      ],
+      "kind": "requirement",
+      "language_profile": "evas-va-2.4-plus-2023-v1",
+      "lrm_basis": {
+        "basis": [
+          {
+            "basis": "静态阅读 (review r1 B2-ST-03)",
+            "text": "The task bounds the step and defines no new equation, so the mathematical solution is the same with or without it. The LRM does not promise that a program completes: a bound can require more steps than an implementation allows, and 9.17.2 lets the simulator substitute its minimum step."
+          },
+          {
+            "basis": "来源事实",
+            "text": "EVAS's own contract agrees: events.md says the conservative request handling 'may add small steps but does not change the physical equations or event-branch decisions; only an uncertifiable request value is refused'."
+          }
+        ],
+        "legal": true
+      },
+      "lrm_citations": {
+        "2.4": [
+          {
+            "clause": "9.17.2",
+            "pdf_page": 255,
+            "use": "the task only constrains step size"
+          },
+          {
+            "clause": "9.17.2",
+            "pdf_page": 256,
+            "use": "no effect on equations or branch decisions"
+          },
+          {
+            "clause": "9.17.2",
+            "pdf_page": 256
+          }
+        ],
+        "2023": [
+          {
+            "clause": "9.17.2",
+            "pdf_page": 259
+          },
+          {
+            "clause": "9.17.2",
+            "pdf_page": 259
+          }
+        ]
+      },
+      "observables": [
+        "on the fixed resource-sufficient short bench (heldout-0 PWL, stop=20n, maxstep=250p): t8 and t14 both complete and V(vout) equals the exact values at 10, 11, 15, 20 ns",
+        "on the step-check bench (t14 model, stop=20n, maxstep=5n): accepted_steps >= 80 = ceil(20n/0.25n) (mandatory); V(vout) equal to the same exact values",
+        "negative control: the same step-check bench with the request removed completes with far fewer accepted steps (shows the step check is discriminating)",
+        "no universal same-outcome claim across benches: resource and precision refusals remain legitimate",
+        "state at d6b7543f: the short-bench t8 completes and t14 refuses with kernel.event_condition (review r1); the full 1.4 us t8 bench hits step_budget first"
+      ],
+      "open_questions": [
+        "“accepted 盒覆盖整个已接受步”是准备 worker 由行为反推的，需实现者读构造代码确认（REPORT §8.3）。"
+      ],
+      "probe_evas_commit": "02dee32b2c9b25f166cbd77f8a895953e004f288",
+      "proposed_tests": [
+        {
+          "currently": "t8 completes, t14 refuses with event_condition (review r1, short bench)",
+          "expected": "both complete; V(vout) = {'10ns': '0', '11ns': '153969/8000000', '15ns': '279261/1600000', '20ns': '117969/320000'} exactly within the voltage budget",
+          "input": "t8 and t14 models on the short bench (stop=20n, maxstep=250p)",
+          "kind": "red-first then positive (metamorphic pair)",
+          "name": "test_bound_step_does_not_change_admission_of_idt_with_input_if",
+          "observables": [
+            "both complete",
+            "vout at listed times"
+          ]
+        },
+        {
+          "expected": "same exact integral as t8 (the request changes steps only)",
+          "input": "if(V(enable)<0.75) begin target=0; $bound_step(1n); end else $bound_step(0.25n);",
+          "kind": "positive",
+          "name": "test_bound_step_value_and_activation_switch_with_predicate",
+          "observables": [
+            "vout"
+          ]
+        },
+        {
+          "expected": "explicit refusal (existing rule)",
+          "input": "$bound_step(1/(V(u)-V(u)))",
+          "kind": "negative control",
+          "name": "test_uncertifiable_request_value_still_refuses",
+          "observables": [
+            "diagnostic"
+          ]
+        },
+        {
+          "expected": "accepted_steps >= 80 and V(vout) = {'10ns': '0', '11ns': '153969/8000000', '15ns': '279261/1600000', '20ns': '117969/320000'}; extra small steps are allowed, equal step counts with the no-request run are not required",
+          "input": "t14 model (procedural if plus idt plus $bound_step(0.25n)) on the bench with stop=20n and maxstep=5n",
+          "kind": "positive with mandatory step check",
+          "name": "test_bound_step_request_is_honoured_when_maxstep_is_larger",
+          "observables": [
+            "transient.accepted_steps",
+            "V(vout) at 10, 11, 15, 20 ns"
+          ]
+        },
+        {
+          "expected": "accepted_steps < 80, so an implementation that drops the request fails the previous test",
+          "input": "the same bench without $bound_step",
+          "kind": "negative control",
+          "name": "test_ignored_request_is_detected",
+          "observables": [
+            "transient.accepted_steps"
+          ]
+        }
+      ],
+      "required_boundaries": [
+        "predicate never crossing (t22: must stay accepted)",
+        "algebraic program without idt (t18/t20: already accepted)",
+        "threshold crossing exactly at a PWL corner"
+      ],
+      "review": "pending",
+      "review_r1_disposition": {
+        "B2_SP_04": "step-check bench with maxstep >> request, mandatory accepted_steps lower bound, negative control",
+        "B2_ST_03": "universal invariance replaced by fixed resource-sufficient positives; legitimate refusals listed; only NF-12b forbidden"
+      },
+      "revision_history": [
+        {
+          "by": "standard line (claude-opus-5-5), 2026-10-28",
+          "change": "r1 B2-ST-03, B2-SP-04: legitimate refusals kept; short-bench exact values; mandatory step-count check and negative control",
+          "from_sha256": "0d8557b7b7ef5eb8a0d8a81b437e2d6a3c6d7c544b73803a30f36500d328c0a8",
+          "from_version": "1",
+          "source": "batch-2 card review r1 (night-coordination/batch2-cards-astra-r1-20261028/review-report.json, sha256 5d972cd3...)",
+          "to_version": "2"
+        }
+      ],
+      "scope": "LRM 2.4/2023 9.17.2 $bound_step in an ordinary analog block that also contains idt() and an input-driven procedural if whose predicate crosses its threshold inside a PWL ramp. Requirement: admission and waveform are invariant under adding or removing $bound_step(h), up to the certified voltage band.",
+      "source_locations": [
+        "9.17.2"
+      ],
+      "status": "pending",
+      "title_zh": "$bound_step 只限下一步步长：加一行 $bound_step 不得改变准入与波形（NF-12b，slot 12）",
+      "version": "2",
+      "voltage_domain": {
+        "applicable": true,
+        "basis": "静态阅读",
+        "premise": "voltage-only program; the request value is a finite nonnegative constant or certified expression"
+      }
+    },
+    {
+      "dependencies": [
+        {
+          "id": "source:bound-step-request-invariance-tests",
+          "sha256": "32e49cfd02780153e30e95d858c9dfad86c7d7412fc7e4251fb9d4b9483946aa",
+          "version": "1"
+        }
+      ],
+      "gap": "The assertions are written in the bound test modules. The Rust assertions live in kernel sources and are located only through the native listing. No checker-definition, calibration or review is bound.",
+      "id": "checker:bound-step-request-invariance",
+      "kind": "checker",
+      "review": "pending",
+      "scope": "Batch 2 NF-12b: $bound_step only caps the next step: assertions and their independent answers",
+      "status": "pending",
+      "version": "1"
+    },
+    {
+      "dependencies": [
+        {
+          "id": "requirement:bound-step-request-invariance",
+          "sha256": "5e5112073733e07cd3ec0103fa3f110f5ccbc6fe6e069eade07cfb13d606e2e0",
+          "version": "2"
+        },
+        {
+          "id": "checker:bound-step-request-invariance",
+          "sha256": "7e29349e74e29f0c064c665bccf662606634a2ff5b5fc7776cab3878bf4c0ff7",
+          "version": "1"
+        },
+        {
+          "id": "source:target-scope",
+          "sha256": "bbc16ec9f813042a44b714014359fef63bbf28e2c43a113f4aa5868bcd0264cc",
+          "version": "1"
+        }
+      ],
+      "gap": "Test links for review. No case-inputs, execution, analysis or review is bound, so this case confers no support.",
+      "id": "case:bound-step-request-invariance-python",
+      "kind": "case",
+      "requirements": [
+        {
+          "id": "requirement:bound-step-request-invariance",
+          "sha256": "5e5112073733e07cd3ec0103fa3f110f5ccbc6fe6e069eade07cfb13d606e2e0",
+          "version": "2"
+        }
+      ],
+      "review": "pending",
+      "scope": "Batch 2 NF-12b: $bound_step only caps the next step (Python tests)",
+      "status": "pending",
+      "test_scope": [
+        {
+          "module": "evas/tests/test_bound_step_request_invariance.py",
+          "namespace": "python-regression"
+        }
+      ],
+      "tests": [
+        {
+          "module": "evas/tests/test_bound_step_request_invariance.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_bound_step_request_invariance.BoundStepRequest.test_bound_step_does_not_change_admission_of_idt_with_input_if"
+        },
+        {
+          "module": "evas/tests/test_bound_step_request_invariance.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_bound_step_request_invariance.BoundStepRequest.test_bound_step_request_is_honoured_when_maxstep_is_larger"
+        },
+        {
+          "module": "evas/tests/test_bound_step_request_invariance.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_bound_step_request_invariance.BoundStepRequest.test_bound_step_value_and_activation_switch_with_predicate"
+        },
+        {
+          "module": "evas/tests/test_bound_step_request_invariance.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_bound_step_request_invariance.BoundStepRequest.test_ignored_request_is_detected"
+        },
+        {
+          "module": "evas/tests/test_bound_step_request_invariance.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_bound_step_request_invariance.BoundStepRequest.test_uncertifiable_request_value_still_refuses"
+        },
+        {
+          "module": "evas/tests/test_bound_step.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_bound_step.BoundStepContracts.test_conditional_bound_releases_on_next_accepted_evaluation"
+        },
+        {
+          "module": "evas/tests/test_bound_step.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_bound_step.BoundStepContracts.test_inactive_outer_condition_skips_inner_numeric_request"
+        },
+        {
+          "module": "evas/tests/test_bound_step.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_bound_step.BoundStepContracts.test_bound_caps_actual_nonlinear_integration_segments"
+        },
+        {
+          "module": "evas/tests/test_implicit_step_bounds.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_implicit_step_bounds.ImplicitStepBounds.test_dynamic_voltage_bound_is_applied_to_internal_accepted_mesh"
+        },
+        {
+          "module": "evas/tests/test_r01_runtime_select.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_r01_runtime_select.SelectedIntegral.test_selected_rational_feedback_and_dynamic_inner_bound"
         }
       ],
       "version": "1"

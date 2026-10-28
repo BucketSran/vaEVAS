@@ -562,6 +562,9 @@ BATCH2 = {
     'requirement:idt-reset-argument-procedure-frame': dict(
         python={'evas/tests/test_idt_reset_procedure_frame.py': 6},
         rust=('canonical::tests', 3)),
+    'requirement:bound-step-request-invariance': dict(
+        python={'evas/tests/test_bound_step_request_invariance.py': 5},
+        rust=None),
 }
 
 
