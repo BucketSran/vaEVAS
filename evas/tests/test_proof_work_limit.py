@@ -269,8 +269,12 @@ class ProofWorkLimitEndToEnd(unittest.TestCase):
         y = result['nodes'].index('y')
         times = grid(n)
         self.assertEqual(len(result['solutions']), n)
+        # Each row is held to the request's own tolerance, echoed as sent (1e-12 V, 0).
+        absolute, relative = controls(result)['absolute_V'], controls(result)['relative']
+        self.assertEqual((absolute, relative), (1e-12, 0))
         for t, row in zip(times, result['solutions']):
-            self.assertLessEqual(abs(F(row['voltages'][y]) - expected(t)), F(1, 10**11), t)
+            value = F(row['voltages'][y])
+            self.assertLessEqual(abs(value - expected(t)), F(absolute) + F(relative) * abs(value), t)
 
     def test_failed_reservations_are_not_refunded_so_a_retry_cannot_launder_the_ledger(self):
         # Two independent requests share nothing, but within one request the
