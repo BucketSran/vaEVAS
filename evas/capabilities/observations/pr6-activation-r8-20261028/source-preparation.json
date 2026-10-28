@@ -1,0 +1,49 @@
+{
+  "prepared_at_utc": "2026-10-28T00:57:02.367320+00:00",
+  "base": "60b51df388721415d28660371cf35e2429cd01cd",
+  "base_tree": "ac2bd9c71ff3815d6f482bf16cdbecba3443dae9",
+  "pr6": "c6e86c6d1dfb0e171cdf8ff5e564ad3aad6a9087",
+  "pr6_published": "fa5556de20de4fecbf9db4e3630cd5d6754b07c2",
+  "old_base": "4d6ebc71efea35822a28f2861f2b0a2a6db17e59",
+  "base_input": {
+    "base": "60b51df388721415d28660371cf35e2429cd01cd",
+    "tree": "ac2bd9c71ff3815d6f482bf16cdbecba3443dae9",
+    "archive_tip": "3f5be6d44c95a9e279d2ffad926e2b858de2f92d",
+    "kind": "REAL: main after C0 #277 (9d970d47) and baseline #278 (60b51df3); same tree as the dry-run base 09292a9a"
+  },
+  "plan": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r8-20261027/source-plan.json",
+  "merge_sources": 32,
+  "three_way": [],
+  "pre_render_checks": [
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "evas/capabilities/render.py"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r8-20261027/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r8-20261027/pre-render.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-28T00:56:39.308778+00:00",
+      "finished_at_utc": "2026-10-28T00:57:02.183862+00:00"
+    }
+  ],
+  "before": {
+    "head": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+    "index_sha256": "a2e18b66fd9b3e29093343793d45781c11a717c05c35103d4e9b1da8eec87d71",
+    "shared_config_sha256": "de2b08ef3ba66e96be8b70c87346ff4a96f905e1272934ddd86c218dba501ea8",
+    "shared_config_status": "equal-accepted-reference",
+    "old_candidates": 20
+  },
+  "after": {
+    "head": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+    "index_sha256": "a2e18b66fd9b3e29093343793d45781c11a717c05c35103d4e9b1da8eec87d71",
+    "shared_config_sha256": "de2b08ef3ba66e96be8b70c87346ff4a96f905e1272934ddd86c218dba501ea8",
+    "shared_config_status": "equal-accepted-reference",
+    "old_candidates": 20
+  },
+  "published": false,
+  "scientific_execution": false,
+  "semantic_qualification": false,
+  "executed_by": "tclaude/claude-opus-5-5"
+}

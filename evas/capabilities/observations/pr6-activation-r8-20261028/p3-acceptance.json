@@ -1,0 +1,110 @@
+{
+  "at_utc": "2026-10-28T00:45:37.986289+00:00",
+  "worker_task": "node:delegated-task:command%3Amcp%3A27545977-2ca5-42b2-adf9-35ea91e9276b%3Adelegate-task%3Aevas-pr6-r6-p3-fixes-sonnet-r1-20261028",
+  "worker_model": {
+    "providerInstanceId": "tclaude",
+    "model": "claude-sonnet-5-5",
+    "options": [
+      {
+        "id": "effort",
+        "value": "high"
+      }
+    ]
+  },
+  "patch": {
+    "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr6/r6-p3-fixes-sonnet-20261028/source.patch",
+    "sha256": "c1f05171aff02b4c8d941b37e10da92d9f7b926d99176073b880c087e4b6e71e",
+    "base": "4751f9519fbc07efba94373e803c39aefe39472b",
+    "files": [
+      "evas/capabilities/support_view.py",
+      "evas/capabilities/test_support_view.py",
+      "scripts/tests/test_discover_rust.py"
+    ],
+    "cumulative": "R5 fixes (P1 79347f17) plus R6 fixes",
+    "incremental": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr6/r6-p3-fixes-sonnet-20261028/incremental.patch",
+      "sha256": "7d1483c7e14eeed9bbc7575fe5be0eadb205d43f07c3eb65e088b72aa7ec1118"
+    }
+  },
+  "applies_to_pr6_head": {
+    "head": "fa5556de20de4fecbf9db4e3630cd5d6754b07c2",
+    "files_equal_at_4751f951_and_fa5556de": true,
+    "git_apply_check": 0,
+    "after_sha256": {
+      "evas/capabilities/support_view.py": "8259c85614cf4f7c36d48dd2d619bd4013c492a3d59f7cc5f1a972e8f4a0b623",
+      "evas/capabilities/test_support_view.py": "e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0",
+      "scripts/tests/test_discover_rust.py": "cdca3ca27dcd7728ee30760cd1dfc02e1734b7ad43535b909569a6722cd70772"
+    },
+    "equals_worker_after": true
+  },
+  "scope": "only scripts/tests/test_discover_rust.py changes beyond P1; support_view.py and test_support_view.py equal P1 after-hashes",
+  "review_r6_findings": {
+    "PR6-ASTRA-R6-01": 4,
+    "PR6-ASTRA-R6-02": 1
+  },
+  "reproductions_before_after": {
+    "PR6-ASTRA-R6-01_shell_8_rows": {
+      "before": {
+        "false_accept": 4,
+        "false_reject": 0
+      },
+      "after": {
+        "false_accept": 0,
+        "false_reject": 0
+      }
+    },
+    "PR6-ASTRA-R6-02_historical_3_variants": {
+      "before": {
+        "false_accept": 1,
+        "false_reject": 0
+      },
+      "after": {
+        "false_accept": 0,
+        "false_reject": 0
+      }
+    }
+  },
+  "prior_matrices_after": "Markdown 81,370 correct; toolchain 2,053 correct (0/0); 16 reproductions match; Rust receipts 251; historical 216 detected; static 11",
+  "new_class_matrix": "selection variants 3,248: 416 wrong before -> 0 after",
+  "worker_tests_after": {
+    "evas/capabilities discover": {
+      "tests": 101,
+      "seconds": 380.899,
+      "result": "OK"
+    },
+    "test_discover_rust": {
+      "tests": 42,
+      "seconds": 109.733,
+      "result": "OK"
+    },
+    "test_rust_catalog_reconcile": {
+      "tests": 10,
+      "seconds": 29.398,
+      "result": "OK"
+    },
+    "test_ci_selection": {
+      "tests": 38,
+      "seconds": 26.105,
+      "result": "OK"
+    },
+    "test_ci_inventory": {
+      "tests": 21,
+      "seconds": 3.612,
+      "result": "OK"
+    },
+    "test_fast_feedback": {
+      "tests": 14,
+      "seconds": 3.915,
+      "result": "OK"
+    },
+    "render.py --check": {
+      "exit": 0,
+      "output": "checked 84 capability files"
+    },
+    "ruff E9,F63,F7,F82 on the changed files": {
+      "output": "All checks passed!"
+    }
+  },
+  "P3_rule": "P3-only: fixed and recorded with evidence; checked at final acceptance (no separate re-review)",
+  "scientific_qualification": false
+}

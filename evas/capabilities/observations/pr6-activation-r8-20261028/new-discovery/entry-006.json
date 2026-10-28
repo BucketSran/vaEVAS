@@ -1,0 +1,1917 @@
+{
+  "entry": {
+    "workflow": ".github/workflows/numerical-assurance.yml",
+    "line": 186,
+    "job": "static-checks",
+    "step": "Traceability and frozen validation identities",
+    "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+    "step_if": "needs.selection.outputs.maintenance == 'true'",
+    "command": "python3 -B -m unittest discover -s evas/capabilities -p 'test_*.py' -v",
+    "environment_overrides": {
+      "GIT_FIXTURE_RETAIN_DIR": "runs/git-fixture-isolation"
+    },
+    "declared_python_versions": [
+      "3.12"
+    ],
+    "start": "evas/capabilities",
+    "pattern": "test_*.py",
+    "namespace": "maintenance",
+    "collector": "unittest",
+    "mode": "declared-ci-literal",
+    "purpose": "role-not-semantic-qualification",
+    "entry_id": "b6669f1714063ac50b8b7e26a61ac8137ab7e9ca52196580037b6d64ca58d744"
+  },
+  "receipt": {
+    "collector": {
+      "definition_profile": "actual-code-or-registered-native-skip-v1",
+      "native_skip_authority": {
+        "factory_span_sha256": "a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad",
+        "profile": "registered-native-unittest-skip-v1",
+        "runtime_file_sha256": "45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987",
+        "runtime_source": "unittest/case.py",
+        "wrapper_span_sha256": "96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda"
+      },
+      "path": "scripts/capabilities/discover_methods.py",
+      "sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "source_relationship": "owned-source-root"
+    },
+    "complete": true,
+    "discovered_instances": 101,
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONPATH": null,
+      "bytecode_disabled": true,
+      "cache_tag": "cpython-312",
+      "environment_scope": "python-runtime-and-import-path-only",
+      "executable": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+      "implementation": "cpython",
+      "platform": "darwin",
+      "python_version": "3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]",
+      "sys_path_before_selected_imports": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r8-20261027/source",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python312.zip",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/lib/python3.12/site-packages"
+      ]
+    },
+    "error_count": 0,
+    "errors": [],
+    "loader_error_count": 0,
+    "methods": [
+      {
+        "definition": {
+          "line": 158,
+          "name": "test_factory_discovery_never_executes_test_body_and_import_failure_is_retained",
+          "path": "evas/capabilities/test_asset_catalog.py",
+          "sha256": "5675e85b6beed41c47b5637f5677e6413491e821a087747f70b7a965a3637876"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_asset_catalog.py",
+        "module_sha256": "fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806",
+        "runtime_id": "test_asset_catalog.ActualDiscovery.test_factory_discovery_never_executes_test_body_and_import_failure_is_retained",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 25,
+          "name": "test_part_files_join_the_existing_Registry_current_graph",
+          "path": "evas/capabilities/test_asset_catalog.py",
+          "sha256": "9ccef6d030f1a3cb1bed6ba7e995c2a13425a24d09c3623760169e4fdf5754d4"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_asset_catalog.py",
+        "module_sha256": "fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806",
+        "runtime_id": "test_asset_catalog.CatalogIntegration.test_part_files_join_the_existing_Registry_current_graph",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 274,
+          "name": "test_asset_rename_with_prior_identity_keeps_current_version",
+          "path": "evas/capabilities/test_asset_catalog.py",
+          "sha256": "eadd31578809ead67968b1f39f3bec56469f13ec2665f4c530b060ae96e7d761"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_asset_catalog.py",
+        "module_sha256": "fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806",
+        "runtime_id": "test_asset_catalog.CurrentIdentityIndex.test_asset_rename_with_prior_identity_keeps_current_version",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 263,
+          "name": "test_asset_rename_without_prior_identity_keeps_rejection_text",
+          "path": "evas/capabilities/test_asset_catalog.py",
+          "sha256": "8a1ef1b593d4277af5eff6b326bc6e0908ce1dc9cdca848b666e4d31096a16a1"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_asset_catalog.py",
+        "module_sha256": "fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806",
+        "runtime_id": "test_asset_catalog.CurrentIdentityIndex.test_asset_rename_without_prior_identity_keeps_rejection_text",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 423,
+          "name": "test_duplicate_and_unknown_identity_rejections_stay_after_the_scan",
+          "path": "evas/capabilities/test_asset_catalog.py",
+          "sha256": "47ed51c17745e303b8434c35cdcb048878001412e1ea37be3b0f7cceae681e7e"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_asset_catalog.py",
+        "module_sha256": "fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806",
+        "runtime_id": "test_asset_catalog.CurrentIdentityIndex.test_duplicate_and_unknown_identity_rejections_stay_after_the_scan",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 361,
+          "name": "test_history_on_noncurrent_asset_does_not_satisfy_current",
+          "path": "evas/capabilities/test_asset_catalog.py",
+          "sha256": "875ca5ff5f7644259a37982405d0cf48e8d8dae9311ef6808b1568c4535ef906"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_asset_catalog.py",
+        "module_sha256": "fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806",
+        "runtime_id": "test_asset_catalog.CurrentIdentityIndex.test_history_on_noncurrent_asset_does_not_satisfy_current",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 288,
+          "name": "test_method_rename_without_and_with_prior_identity",
+          "path": "evas/capabilities/test_asset_catalog.py",
+          "sha256": "93e665589b9837ecb91f0c289ee24c94518ee736444c7eefb101fea4f69e1c55"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_asset_catalog.py",
+        "module_sha256": "fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806",
+        "runtime_id": "test_asset_catalog.CurrentIdentityIndex.test_method_rename_without_and_with_prior_identity",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 377,
+          "name": "test_mismatched_history_digest_keeps_reference_rejection",
+          "path": "evas/capabilities/test_asset_catalog.py",
+          "sha256": "eca2609a09a4c6ead34a3d788adcd14ee99f524be373b8d10e4ca81a22b473d7"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_asset_catalog.py",
+        "module_sha256": "fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806",
+        "runtime_id": "test_asset_catalog.CurrentIdentityIndex.test_mismatched_history_digest_keeps_reference_rejection",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 306,
+          "name": "test_multiple_old_asset_versions_keep_every_distinct_path",
+          "path": "evas/capabilities/test_asset_catalog.py",
+          "sha256": "48062c1b0d2c86a397f8c6d8db77f8f6eb99603b41963aae5e8c0697b5c01852"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_asset_catalog.py",
+        "module_sha256": "fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806",
+        "runtime_id": "test_asset_catalog.CurrentIdentityIndex.test_multiple_old_asset_versions_keep_every_distinct_path",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 326,
+          "name": "test_multiple_old_method_versions_keep_every_distinct_runtime",
+          "path": "evas/capabilities/test_asset_catalog.py",
+          "sha256": "ebe566a3ab38db4113b88682bc57540e05b2e27be84eb38ef2632122fd44d259"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_asset_catalog.py",
+        "module_sha256": "fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806",
+        "runtime_id": "test_asset_catalog.CurrentIdentityIndex.test_multiple_old_method_versions_keep_every_distinct_runtime",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 391,
+          "name": "test_same_catalog_revalidates_after_input_changes",
+          "path": "evas/capabilities/test_asset_catalog.py",
+          "sha256": "340b001c6135f391620ae4ac8b47871114dd45c046cff72aa9984c4d68fd49ce"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_asset_catalog.py",
+        "module_sha256": "fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806",
+        "runtime_id": "test_asset_catalog.CurrentIdentityIndex.test_same_catalog_revalidates_after_input_changes",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 346,
+          "name": "test_unrelated_id_version_does_not_force_history",
+          "path": "evas/capabilities/test_asset_catalog.py",
+          "sha256": "6168cbd8df08335eb7ce76d829b57773d11e59f5d2ebd59309a0a5a436145d2c"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_asset_catalog.py",
+        "module_sha256": "fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806",
+        "runtime_id": "test_asset_catalog.CurrentIdentityIndex.test_unrelated_id_version_does_not_force_history",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 195,
+          "name": "test_archive_pending_is_explicit_and_absolute_source_paths_rejected",
+          "path": "evas/capabilities/test_asset_catalog.py",
+          "sha256": "9fbc8ef91e3f7115529e49e9024d0f2448db50ee05ae48c73f05b878cf33b64a"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_asset_catalog.py",
+        "module_sha256": "fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806",
+        "runtime_id": "test_asset_catalog.ObserverAndSourceSchemas.test_archive_pending_is_explicit_and_absolute_source_paths_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 173,
+          "name": "test_independent_observer_keeps_catalog_and_governance_paths_with_real_modes",
+          "path": "evas/capabilities/test_asset_catalog.py",
+          "sha256": "a598c8ff18226e3ee8163acd5140f002236e6e8debb7f020494bf868fa20e14a"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_asset_catalog.py",
+        "module_sha256": "fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806",
+        "runtime_id": "test_asset_catalog.ObserverAndSourceSchemas.test_independent_observer_keeps_catalog_and_governance_paths_with_real_modes",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 52,
+          "name": "test_asset_exact_and_seed_external_detection",
+          "path": "evas/capabilities/test_asset_catalog.py",
+          "sha256": "f5d92c05e7b34eb03ac8c0ece1bad6f8cae854a9c22b7efd29cdbed14ff48c1c"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_asset_catalog.py",
+        "module_sha256": "fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806",
+        "runtime_id": "test_asset_catalog.ReconcileBehaviors.test_asset_exact_and_seed_external_detection",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 103,
+          "name": "test_broken_content_bound_reference_rejected",
+          "path": "evas/capabilities/test_asset_catalog.py",
+          "sha256": "e47ced8fb1b4bda9d0a450dc61db154961c09dff5d3dd0993dbf9d72f9b7663b"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_asset_catalog.py",
+        "module_sha256": "fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806",
+        "runtime_id": "test_asset_catalog.ReconcileBehaviors.test_broken_content_bound_reference_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 70,
+          "name": "test_derived_support_paths_reject_self_hash_and_accept_external_manifest",
+          "path": "evas/capabilities/test_asset_catalog.py",
+          "sha256": "279e518db97a2aea29b6737e7203341e3f166b719ca6fb10f3ab2bf6a4f3fe3f"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_asset_catalog.py",
+        "module_sha256": "fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806",
+        "runtime_id": "test_asset_catalog.ReconcileBehaviors.test_derived_support_paths_reject_self_hash_and_accept_external_manifest",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 58,
+          "name": "test_external_manifest_avoids_self_hash_cycle",
+          "path": "evas/capabilities/test_asset_catalog.py",
+          "sha256": "0885a330b9fc2dafcbc17cf123e0b056a9eb5282f8d914dd4e221206702e82b5"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_asset_catalog.py",
+        "module_sha256": "fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806",
+        "runtime_id": "test_asset_catalog.ReconcileBehaviors.test_external_manifest_avoids_self_hash_cycle",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 128,
+          "name": "test_historical_module_mismatch_cannot_be_claimed_matched",
+          "path": "evas/capabilities/test_asset_catalog.py",
+          "sha256": "1c5b322768d1dcdc67161f9590c183b3eb3fd6eef343975ff2a40b43fd13de4e"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_asset_catalog.py",
+        "module_sha256": "fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806",
+        "runtime_id": "test_asset_catalog.ReconcileBehaviors.test_historical_module_mismatch_cannot_be_claimed_matched",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 107,
+          "name": "test_namespace_and_factory_reconcile_exact",
+          "path": "evas/capabilities/test_asset_catalog.py",
+          "sha256": "2de21d9ebad9a184a59c27b8c626c118a8b34a52ea12a908007f106696a54e08"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_asset_catalog.py",
+        "module_sha256": "fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806",
+        "runtime_id": "test_asset_catalog.ReconcileBehaviors.test_namespace_and_factory_reconcile_exact",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 118,
+          "name": "test_rename_requires_prior_version_and_preserves_identity",
+          "path": "evas/capabilities/test_asset_catalog.py",
+          "sha256": "cbf27bd7f406fbd1c3d71c037757244f60181aa789169ab6534712a61eaaa960"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_asset_catalog.py",
+        "module_sha256": "fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806",
+        "runtime_id": "test_asset_catalog.ReconcileBehaviors.test_rename_requires_prior_version_and_preserves_identity",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 140,
+          "name": "test_sources_are_data_and_pending_archives_are_unavailable",
+          "path": "evas/capabilities/test_asset_catalog.py",
+          "sha256": "0cce0310f2190b9176b183cc98de7f67c9bd7e4306908a0d4d7c64e86ccab437"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_asset_catalog.py",
+        "module_sha256": "fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806",
+        "runtime_id": "test_asset_catalog.ReconcileBehaviors.test_sources_are_data_and_pending_archives_are_unavailable",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 148,
+          "name": "test_traceability_uses_same_registry_without_qualification",
+          "path": "evas/capabilities/test_asset_catalog.py",
+          "sha256": "624856b48c79322a74c5f6c335f1fcb156942689d38d0378b842188af803d752"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_asset_catalog.py",
+        "module_sha256": "fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806",
+        "runtime_id": "test_asset_catalog.ReconcileBehaviors.test_traceability_uses_same_registry_without_qualification",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 97,
+          "name": "test_unknown_part_schema_and_second_current_rejected",
+          "path": "evas/capabilities/test_asset_catalog.py",
+          "sha256": "d6c5173af2af9ae1745722fc7fa7e47a9a82070eb3aa4582916605789964a109"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_asset_catalog.py",
+        "module_sha256": "fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806",
+        "runtime_id": "test_asset_catalog.ReconcileBehaviors.test_unknown_part_schema_and_second_current_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 226,
+          "name": "test_historical_row_scope_and_original_verdict_are_byte_bound",
+          "path": "evas/capabilities/test_asset_catalog.py",
+          "sha256": "a2f62350ed250d307d3ad47931fc829b8084ef843113f0d14c1c259c80df704c"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_asset_catalog.py",
+        "module_sha256": "fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806",
+        "runtime_id": "test_asset_catalog.SeparateRustAndHistoricalSource.test_historical_row_scope_and_original_verdict_are_byte_bound",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 209,
+          "name": "test_rust_listing_has_its_own_actual_binary_denominator",
+          "path": "evas/capabilities/test_asset_catalog.py",
+          "sha256": "a45e31673b7a809dcaed8605be49597a4ffb6876c371de5ae4fa9221a3f4149f"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_asset_catalog.py",
+        "module_sha256": "fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806",
+        "runtime_id": "test_asset_catalog.SeparateRustAndHistoricalSource.test_rust_listing_has_its_own_actual_binary_denominator",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 80,
+          "name": "test_bridge_requires_source_bound_partial_consumers_and_exact_external_path",
+          "path": "evas/capabilities/test_asset_scope.py",
+          "sha256": "0c660e6ce9537cb64e7774efcb84d997d6d1eaf80ec1f671becfa05e992c57b0"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_asset_scope.py",
+        "module_sha256": "c4728d5fd4b8a274f782bdb993240baaddf43ab1db02915ef46b071d6a024d5f",
+        "runtime_id": "test_asset_scope.AssetScopeTests.test_bridge_requires_source_bound_partial_consumers_and_exact_external_path",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 54,
+          "name": "test_catalog_cannot_register_outscope_benchmark_without_bridge",
+          "path": "evas/capabilities/test_asset_scope.py",
+          "sha256": "5d7dd0e9ed18a83f30148e701a11d730876e0f370990c817b47960a1647c975b"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_asset_scope.py",
+        "module_sha256": "c4728d5fd4b8a274f782bdb993240baaddf43ab1db02915ef46b071d6a024d5f",
+        "runtime_id": "test_asset_scope.AssetScopeTests.test_catalog_cannot_register_outscope_benchmark_without_bridge",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 103,
+          "name": "test_cli_returns_machine_readable_owner_boundary_on_success_and_unknown_rejection",
+          "path": "evas/capabilities/test_asset_scope.py",
+          "sha256": "678894eddfcdc8c52be45dcf9a21870f97353daf9ea124b9faadf9f82a1bedf0"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_asset_scope.py",
+        "module_sha256": "c4728d5fd4b8a274f782bdb993240baaddf43ab1db02915ef46b071d6a024d5f",
+        "runtime_id": "test_asset_scope.AssetScopeTests.test_cli_returns_machine_readable_owner_boundary_on_success_and_unknown_rejection",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 70,
+          "name": "test_exact_source_bound_bridge_has_separate_boundary_denominator",
+          "path": "evas/capabilities/test_asset_scope.py",
+          "sha256": "6e70ddcbc120642679174e38db0a25942ab4189a0a7784462fe2c7e1fca08193"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_asset_scope.py",
+        "module_sha256": "c4728d5fd4b8a274f782bdb993240baaddf43ab1db02915ef46b071d6a024d5f",
+        "runtime_id": "test_asset_scope.AssetScopeTests.test_exact_source_bound_bridge_has_separate_boundary_denominator",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 35,
+          "name": "test_external_benchmark_owner_is_counted_without_becoming_evas_coverage",
+          "path": "evas/capabilities/test_asset_scope.py",
+          "sha256": "eb658dedc3f5d0c773b3c9b2234660927bad19957283b1e0eaa35f59f34a3226"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_asset_scope.py",
+        "module_sha256": "c4728d5fd4b8a274f782bdb993240baaddf43ab1db02915ef46b071d6a024d5f",
+        "runtime_id": "test_asset_scope.AssetScopeTests.test_external_benchmark_owner_is_counted_without_becoming_evas_coverage",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 30,
+          "name": "test_legacy_without_scope_remains_all_tracked_strict",
+          "path": "evas/capabilities/test_asset_scope.py",
+          "sha256": "35b0ca0437f85a7bbd7aa9d5757afff240ab02c89c5f8014a585634ae491617e"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_asset_scope.py",
+        "module_sha256": "c4728d5fd4b8a274f782bdb993240baaddf43ab1db02915ef46b071d6a024d5f",
+        "runtime_id": "test_asset_scope.AssetScopeTests.test_legacy_without_scope_remains_all_tracked_strict",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 43,
+          "name": "test_new_inscope_and_root_source_are_extra_while_unknown_prefix_is_unowned",
+          "path": "evas/capabilities/test_asset_scope.py",
+          "sha256": "bbbce77e0df9a1c75c8ee4675b9adf9d32838e7b09c16dc7a341208cf07ba9d3"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_asset_scope.py",
+        "module_sha256": "c4728d5fd4b8a274f782bdb993240baaddf43ab1db02915ef46b071d6a024d5f",
+        "runtime_id": "test_asset_scope.AssetScopeTests.test_new_inscope_and_root_source_are_extra_while_unknown_prefix_is_unowned",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 98,
+          "name": "test_outscope_duplicates_and_invalid_paths_are_not_silently_dropped",
+          "path": "evas/capabilities/test_asset_scope.py",
+          "sha256": "0ae6d3797d3907919addfd0f0124d007d810ebe01d66344d6917f60331cadd7d"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_asset_scope.py",
+        "module_sha256": "c4728d5fd4b8a274f782bdb993240baaddf43ab1db02915ef46b071d6a024d5f",
+        "runtime_id": "test_asset_scope.AssetScopeTests.test_outscope_duplicates_and_invalid_paths_are_not_silently_dropped",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 93,
+          "name": "test_scope_schema_is_closed_and_versioned",
+          "path": "evas/capabilities/test_asset_scope.py",
+          "sha256": "bfbda65a3301c05e0d0bde577bb79472b7ea7716c2a36f50456892143eb540d7"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_asset_scope.py",
+        "module_sha256": "c4728d5fd4b8a274f782bdb993240baaddf43ab1db02915ef46b071d6a024d5f",
+        "runtime_id": "test_asset_scope.AssetScopeTests.test_scope_schema_is_closed_and_versioned",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 40,
+          "name": "test_copied_verdict_and_hashes_must_equal_actual_raw_fields",
+          "path": "evas/capabilities/test_history_binding.py",
+          "sha256": "4efda3bf6fde4a717d7390d67a1433d9d066094d9c224d34273c426c11ef38d3"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_history_binding.py",
+        "module_sha256": "66fdd6363fd6562b16fbd8bd0ee3ba69deb125ff57aa0db184dc3ebc303a810a",
+        "runtime_id": "test_history_binding.HistoryBindingTests.test_copied_verdict_and_hashes_must_equal_actual_raw_fields",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 115,
+          "name": "test_immutable_cache_reads_authenticated_document_once_but_rechecks_references",
+          "path": "evas/capabilities/test_history_binding.py",
+          "sha256": "71a640a3825c5b7ae0443d786e25f33cfefd4ebaf86b63a515d36525131fe547"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_history_binding.py",
+        "module_sha256": "66fdd6363fd6562b16fbd8bd0ee3ba69deb125ff57aa0db184dc3ebc303a810a",
+        "runtime_id": "test_history_binding.HistoryBindingTests.test_immutable_cache_reads_authenticated_document_once_but_rechecks_references",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 61,
+          "name": "test_immutable_document_cache_and_returned_row_copy_do_not_hide_source_mutation",
+          "path": "evas/capabilities/test_history_binding.py",
+          "sha256": "7ea18ae74939672db2ee5dd670f3226bdc37bdfc41b05a2d89da4c37b42d55cf"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_history_binding.py",
+        "module_sha256": "66fdd6363fd6562b16fbd8bd0ee3ba69deb125ff57aa0db184dc3ebc303a810a",
+        "runtime_id": "test_history_binding.HistoryBindingTests.test_immutable_document_cache_and_returned_row_copy_do_not_hide_source_mutation",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 97,
+          "name": "test_negative_finding_never_uses_consumer_strings_as_subject_or_invents_sha",
+          "path": "evas/capabilities/test_history_binding.py",
+          "sha256": "217b774d92669f85833ce495a76f16667e15ffd8594ed9ae9fbb38b35dccfeb6"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_history_binding.py",
+        "module_sha256": "66fdd6363fd6562b16fbd8bd0ee3ba69deb125ff57aa0db184dc3ebc303a810a",
+        "runtime_id": "test_history_binding.HistoryBindingTests.test_negative_finding_never_uses_consumer_strings_as_subject_or_invents_sha",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 86,
+          "name": "test_oracle_finding_eligibility_binds_exact_subject_and_preserves_module_mismatch_pending",
+          "path": "evas/capabilities/test_history_binding.py",
+          "sha256": "6a3b287ba2392eca58321a199a36ec4289d797e4d34bce98e4d6129e3c97c92b"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_history_binding.py",
+        "module_sha256": "66fdd6363fd6562b16fbd8bd0ee3ba69deb125ff57aa0db184dc3ebc303a810a",
+        "runtime_id": "test_history_binding.HistoryBindingTests.test_oracle_finding_eligibility_binds_exact_subject_and_preserves_module_mismatch_pending",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 46,
+          "name": "test_pending_raw_hash_mismatch_is_preserved_but_cannot_be_matched",
+          "path": "evas/capabilities/test_history_binding.py",
+          "sha256": "17e5de1b1805cef77f02b846178cd23543e3adc8f77cb63b950dd75a1b8a946c"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_history_binding.py",
+        "module_sha256": "66fdd6363fd6562b16fbd8bd0ee3ba69deb125ff57aa0db184dc3ebc303a810a",
+        "runtime_id": "test_history_binding.HistoryBindingTests.test_pending_raw_hash_mismatch_is_preserved_but_cannot_be_matched",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 54,
+          "name": "test_pointer_rejects_negative_aliases_bad_escapes_and_array_bounds",
+          "path": "evas/capabilities/test_history_binding.py",
+          "sha256": "f310806d9e37f12616294a118b0e14de645a7c8f8bb2983b02fc0467b5124466"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_history_binding.py",
+        "module_sha256": "66fdd6363fd6562b16fbd8bd0ee3ba69deb125ff57aa0db184dc3ebc303a810a",
+        "runtime_id": "test_history_binding.HistoryBindingTests.test_pointer_rejects_negative_aliases_bad_escapes_and_array_bounds",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 106,
+          "name": "test_raw_finding_module_match_cannot_be_upgraded_to_method_match",
+          "path": "evas/capabilities/test_history_binding.py",
+          "sha256": "b8f537aeb3a55eb53657462de3d4760cb421d159aac5c1609cd4c008d6c514cf"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_history_binding.py",
+        "module_sha256": "66fdd6363fd6562b16fbd8bd0ee3ba69deb125ff57aa0db184dc3ebc303a810a",
+        "runtime_id": "test_history_binding.HistoryBindingTests.test_raw_finding_module_match_cannot_be_upgraded_to_method_match",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 69,
+          "name": "test_repository_relative_source_is_rehashed_after_every_read",
+          "path": "evas/capabilities/test_history_binding.py",
+          "sha256": "cea74297211db565860299d6e7827e34be9d8247536d85d11afac649c23d6cd2"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_history_binding.py",
+        "module_sha256": "66fdd6363fd6562b16fbd8bd0ee3ba69deb125ff57aa0db184dc3ebc303a810a",
+        "runtime_id": "test_history_binding.HistoryBindingTests.test_repository_relative_source_is_rehashed_after_every_read",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 34,
+          "name": "test_wrong_row_pointer_and_rehashed_row_cannot_borrow_another_method_identity",
+          "path": "evas/capabilities/test_history_binding.py",
+          "sha256": "5ca91a39aa208b2534d162471b36f502015c043fe4b6e947425681d864b4a718"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_history_binding.py",
+        "module_sha256": "66fdd6363fd6562b16fbd8bd0ee3ba69deb125ff57aa0db184dc3ebc303a810a",
+        "runtime_id": "test_history_binding.HistoryBindingTests.test_wrong_row_pointer_and_rehashed_row_cannot_borrow_another_method_identity",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 27,
+          "name": "test_compared_rows_quote_the_published_table",
+          "path": "evas/capabilities/test_registry.py",
+          "sha256": "d8a520a401b9c5f622fc9d26f33da425899605ce4f3331c12df5abff7ac90c4a"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_registry.py",
+        "module_sha256": "35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039",
+        "runtime_id": "test_registry.CapabilityRegistry.test_compared_rows_quote_the_published_table",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 60,
+          "name": "test_generated_files_match_the_catalog",
+          "path": "evas/capabilities/test_registry.py",
+          "sha256": "ff715a2d3e29ee93393c22276ab168cf46bd1909f151b3e02ef6ab44a055a52d"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_registry.py",
+        "module_sha256": "35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039",
+        "runtime_id": "test_registry.CapabilityRegistry.test_generated_files_match_the_catalog",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 17,
+          "name": "test_nodes_are_unique_and_use_known_chapters",
+          "path": "evas/capabilities/test_registry.py",
+          "sha256": "b232d53aa1112cd2570ddaf135196f0149b5e733b6b473dfe406325c1b513f3f"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_registry.py",
+        "module_sha256": "35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039",
+        "runtime_id": "test_registry.CapabilityRegistry.test_nodes_are_unique_and_use_known_chapters",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 45,
+          "name": "test_views_follow_the_registry",
+          "path": "evas/capabilities/test_registry.py",
+          "sha256": "f014d5a0179bd851bcc1984995a59991f573afc464dc22f31a50acab034ee22f"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_registry.py",
+        "module_sha256": "35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039",
+        "runtime_id": "test_registry.CapabilityRegistry.test_views_follow_the_registry",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 38,
+          "name": "test_waiting_rows_are_not_given_a_result",
+          "path": "evas/capabilities/test_registry.py",
+          "sha256": "3201de99ed951ce0baca86a14b43fca56646214a0f674df6b2d338e398f3eb7a"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_registry.py",
+        "module_sha256": "35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039",
+        "runtime_id": "test_registry.CapabilityRegistry.test_waiting_rows_are_not_given_a_result",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 78,
+          "name": "test_change_index_retains_blank_and_unselected_rows",
+          "path": "evas/capabilities/test_registry.py",
+          "sha256": "5371baf43c00ccae021c44a128f55a81673d544b0c1d981e01ff5164945921fb"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_registry.py",
+        "module_sha256": "35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039",
+        "runtime_id": "test_registry.MaintainedSourceIndex.test_change_index_retains_blank_and_unselected_rows",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 85,
+          "name": "test_deleting_an_actual_table_row_mapping_exposes_the_missing_source",
+          "path": "evas/capabilities/test_registry.py",
+          "sha256": "187722a233e2706a4b28efb28083bd86553f372e93c7bd811ae770209ea14ff4"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_registry.py",
+        "module_sha256": "35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039",
+        "runtime_id": "test_registry.MaintainedSourceIndex.test_deleting_an_actual_table_row_mapping_exposes_the_missing_source",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 92,
+          "name": "test_registered_examples_do_not_acquire_support_from_old_success",
+          "path": "evas/capabilities/test_registry.py",
+          "sha256": "bf195f24c32d0c583133d503981b22e2928ebb9961941a9813ec1e26ddc92183"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_registry.py",
+        "module_sha256": "35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039",
+        "runtime_id": "test_registry.MaintainedSourceIndex.test_registered_examples_do_not_acquire_support_from_old_success",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 70,
+          "name": "test_selected_atoms_and_unselected_neighbors_have_separate_effective_sources",
+          "path": "evas/capabilities/test_registry.py",
+          "sha256": "39a85d80722e272ed63d228b5b4470fc2f52fa3c04a3a2bc427464141727eea8"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_registry.py",
+        "module_sha256": "35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039",
+        "runtime_id": "test_registry.MaintainedSourceIndex.test_selected_atoms_and_unselected_neighbors_have_separate_effective_sources",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 304,
+          "name": "test_analysis_cannot_substitute_the_case_checker",
+          "path": "evas/capabilities/test_registry.py",
+          "sha256": "e24bad8ad999f51bfbdb12a38e80fadd794f98c98f9d24fd7692f25432ad3766"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_registry.py",
+        "module_sha256": "35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039",
+        "runtime_id": "test_registry.VersionedRegistryTests.test_analysis_cannot_substitute_the_case_checker",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 286,
+          "name": "test_approval_for_another_execution_cannot_qualify",
+          "path": "evas/capabilities/test_registry.py",
+          "sha256": "130cb482fa8a6c10877a78d2a567629d8c0fbde7d585f1ce2c66947f30bbeb6b"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_registry.py",
+        "module_sha256": "35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039",
+        "runtime_id": "test_registry.VersionedRegistryTests.test_approval_for_another_execution_cannot_qualify",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 365,
+          "name": "test_broadening_review_fields_without_new_receipt_cannot_grant_scope",
+          "path": "evas/capabilities/test_registry.py",
+          "sha256": "43cc8f8f9b83d287814a30292882381c0373dc4dbe1056465c97782b491d8e17"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_registry.py",
+        "module_sha256": "35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039",
+        "runtime_id": "test_registry.VersionedRegistryTests.test_broadening_review_fields_without_new_receipt_cannot_grant_scope",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 342,
+          "name": "test_calibration_raw_receipt_cannot_be_missing_or_relabelled",
+          "path": "evas/capabilities/test_registry.py",
+          "sha256": "8da6d36f316d1ae631b82ea5590231415ff0c41d2aedf38f96963f6d309a00bb"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_registry.py",
+        "module_sha256": "35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039",
+        "runtime_id": "test_registry.VersionedRegistryTests.test_calibration_raw_receipt_cannot_be_missing_or_relabelled",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 205,
+          "name": "test_deleting_disposition_exposes_external_inventory_gap",
+          "path": "evas/capabilities/test_registry.py",
+          "sha256": "82f54e3ed47aa89c088c086b4793cb5649ec58e6fd3e46fb37fe86157949b495"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_registry.py",
+        "module_sha256": "35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039",
+        "runtime_id": "test_registry.VersionedRegistryTests.test_deleting_disposition_exposes_external_inventory_gap",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 435,
+          "name": "test_dependency_cycles_are_rejected",
+          "path": "evas/capabilities/test_registry.py",
+          "sha256": "c25e05829e5dcd64c86efeb92e697d061c0c07402d640af31926bd9bb6f10365"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_registry.py",
+        "module_sha256": "35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039",
+        "runtime_id": "test_registry.VersionedRegistryTests.test_dependency_cycles_are_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 298,
+          "name": "test_duplicate_versions_are_rejected",
+          "path": "evas/capabilities/test_registry.py",
+          "sha256": "07ce4066f39f124a7acfa01ceb539c3d153c1e8f8140cbd27a1f2a0dabcaa4a8"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_registry.py",
+        "module_sha256": "35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039",
+        "runtime_id": "test_registry.VersionedRegistryTests.test_duplicate_versions_are_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 274,
+          "name": "test_execution_success_alone_cannot_qualify_a_case",
+          "path": "evas/capabilities/test_registry.py",
+          "sha256": "13a5f3610554423bbdb05e9ab04e0450d263aa8afa55723bd91532e34f4948c3"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_registry.py",
+        "module_sha256": "35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039",
+        "runtime_id": "test_registry.VersionedRegistryTests.test_execution_success_alone_cannot_qualify_a_case",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 280,
+          "name": "test_incomplete_execution_cannot_qualify",
+          "path": "evas/capabilities/test_registry.py",
+          "sha256": "58f055886a39f0acdcf93bed1b8fadd5c7f9ca94a1ce62e70bd62ed5c5d12d6b"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_registry.py",
+        "module_sha256": "35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039",
+        "runtime_id": "test_registry.VersionedRegistryTests.test_incomplete_execution_cannot_qualify",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 442,
+          "name": "test_incomplete_negative_controls_do_not_qualify",
+          "path": "evas/capabilities/test_registry.py",
+          "sha256": "ab79b9cf357d4c85aa290385a9139947c61c928b2ccf7fa6b5220a2d561e1f63"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_registry.py",
+        "module_sha256": "35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039",
+        "runtime_id": "test_registry.VersionedRegistryTests.test_incomplete_negative_controls_do_not_qualify",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 228,
+          "name": "test_missing_source_or_calibration_cannot_qualify",
+          "path": "evas/capabilities/test_registry.py",
+          "sha256": "2bf711a0f68dd801facc1a6f6cf1768af25323bce5a6d896927e016845f7fe8f"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_registry.py",
+        "module_sha256": "35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039",
+        "runtime_id": "test_registry.VersionedRegistryTests.test_missing_source_or_calibration_cannot_qualify",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 322,
+          "name": "test_named_controls_without_execution_and_raw_approval_cannot_calibrate",
+          "path": "evas/capabilities/test_registry.py",
+          "sha256": "cbfeff0755ca4b8caecf41adb8ae9bf61a32c5101386ace93ccce9d5c29e8a94"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_registry.py",
+        "module_sha256": "35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039",
+        "runtime_id": "test_registry.VersionedRegistryTests.test_named_controls_without_execution_and_raw_approval_cannot_calibrate",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 383,
+          "name": "test_new_checker_analysis_reuses_the_original_execution_on_unchanged_inputs",
+          "path": "evas/capabilities/test_registry.py",
+          "sha256": "a3c8ba165366f24a444c19a28c90856a9be4d7af5edef226f93e079062d469dd"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_registry.py",
+        "module_sha256": "35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039",
+        "runtime_id": "test_registry.VersionedRegistryTests.test_new_checker_analysis_reuses_the_original_execution_on_unchanged_inputs",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 244,
+          "name": "test_new_checker_version_invalidates_old_qualifications_but_keeps_history",
+          "path": "evas/capabilities/test_registry.py",
+          "sha256": "57012dfd40de9bccd7f9318290ffeea4935efd8f46a67c96fcd5085e01967f7a"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_registry.py",
+        "module_sha256": "35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039",
+        "runtime_id": "test_registry.VersionedRegistryTests.test_new_checker_version_invalidates_old_qualifications_but_keeps_history",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 376,
+          "name": "test_provenance_or_case_readiness_is_not_a_qualification",
+          "path": "evas/capabilities/test_registry.py",
+          "sha256": "4d20666ca5b2596d966a86a7528b5e494ed2dc2dd4a9074fea68c3268c45b0a8"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_registry.py",
+        "module_sha256": "35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039",
+        "runtime_id": "test_registry.VersionedRegistryTests.test_provenance_or_case_readiness_is_not_a_qualification",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 336,
+          "name": "test_qualification_backend_and_requirements_must_match_review",
+          "path": "evas/capabilities/test_registry.py",
+          "sha256": "476fba493aa31cbc84fa8e277721f0d3904f00bb0aff3b15e04a4cd131cf8f51"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_registry.py",
+        "module_sha256": "35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039",
+        "runtime_id": "test_registry.VersionedRegistryTests.test_qualification_backend_and_requirements_must_match_review",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 331,
+          "name": "test_qualification_cannot_expand_the_reviewed_scope",
+          "path": "evas/capabilities/test_registry.py",
+          "sha256": "7211cdcdb49fd6d59cd7aa53fa0bc7d73045babde11208219bb937f4127a694e"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_registry.py",
+        "module_sha256": "35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039",
+        "runtime_id": "test_registry.VersionedRegistryTests.test_qualification_cannot_expand_the_reviewed_scope",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 396,
+          "name": "test_reanalysis_cannot_swap_inputs_case_or_the_raw_execution_identity",
+          "path": "evas/capabilities/test_registry.py",
+          "sha256": "92295ef6dc4716375be6e9c6b35de3f4856734dccce5b1121417f7739eb80ef7"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_registry.py",
+        "module_sha256": "35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039",
+        "runtime_id": "test_registry.VersionedRegistryTests.test_reanalysis_cannot_swap_inputs_case_or_the_raw_execution_identity",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 357,
+          "name": "test_rebinding_changed_definition_cannot_reuse_old_calibration_receipts",
+          "path": "evas/capabilities/test_registry.py",
+          "sha256": "ea22596cd4d996f05ba877a55c9b63e62796bad4a72721161f3d75871d138d78"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_registry.py",
+        "module_sha256": "35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039",
+        "runtime_id": "test_registry.VersionedRegistryTests.test_rebinding_changed_definition_cannot_reuse_old_calibration_receipts",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 211,
+          "name": "test_removing_source_and_mapping_cannot_shrink_the_external_denominator",
+          "path": "evas/capabilities/test_registry.py",
+          "sha256": "1af2487b0fd715b6374ba3b06c29d94a2a2d320b4bf79ac66e62574d36e9a5db"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_registry.py",
+        "module_sha256": "35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039",
+        "runtime_id": "test_registry.VersionedRegistryTests.test_removing_source_and_mapping_cannot_shrink_the_external_denominator",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 236,
+          "name": "test_revoked_checker_invalidates_both_consumers",
+          "path": "evas/capabilities/test_registry.py",
+          "sha256": "bd92085011baea1762babe87a772ac2a7e545d5b74114f854fbd80169930f862"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_registry.py",
+        "module_sha256": "35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039",
+        "runtime_id": "test_registry.VersionedRegistryTests.test_revoked_checker_invalidates_both_consumers",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 255,
+          "name": "test_same_version_content_drift_is_detected",
+          "path": "evas/capabilities/test_registry.py",
+          "sha256": "3bf14d48ebf656da5adf59dcc4a1c678248ddd86f58d6edcf535fda2ce86aece"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_registry.py",
+        "module_sha256": "35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039",
+        "runtime_id": "test_registry.VersionedRegistryTests.test_same_version_content_drift_is_detected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 260,
+          "name": "test_source_bytes_change_invalidates_consumers_without_metadata_edit",
+          "path": "evas/capabilities/test_registry.py",
+          "sha256": "c300c50b235e2e1490690bfd496141301ece3c188a233bbf32e8caf27bd3ec3e"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_registry.py",
+        "module_sha256": "35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039",
+        "runtime_id": "test_registry.VersionedRegistryTests.test_source_bytes_change_invalidates_consumers_without_metadata_edit",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 219,
+          "name": "test_unselected_change_does_not_replace_base_expectation",
+          "path": "evas/capabilities/test_registry.py",
+          "sha256": "2fba41621aecb7abe4ee77aa794a25fc6d747b7b3c0423aeb73701108cc2d424"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_registry.py",
+        "module_sha256": "35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039",
+        "runtime_id": "test_registry.VersionedRegistryTests.test_unselected_change_does_not_replace_base_expectation",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 589,
+          "name": "test_adoption_labels_confer_no_support",
+          "path": "evas/capabilities/test_support_view.py",
+          "sha256": "5d16bd50d26a45f735e7ad5bfdde398a42563dcf6560845e928f12676dcb9fbc"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_support_view.py",
+        "module_sha256": "e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0",
+        "runtime_id": "test_support_view.SupportViewFixtures.test_adoption_labels_confer_no_support",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 538,
+          "name": "test_analysis_content_mismatch_does_not_borrow_outcome",
+          "path": "evas/capabilities/test_support_view.py",
+          "sha256": "c9f3d69822d1c442d804b73b4156d96ec0b44f6c78b4fe18efac481e7097b93e"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_support_view.py",
+        "module_sha256": "e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0",
+        "runtime_id": "test_support_view.SupportViewFixtures.test_analysis_content_mismatch_does_not_borrow_outcome",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 841,
+          "name": "test_blank_lines_in_a_record_run_move_only_with_the_block_that_owns_them",
+          "path": "evas/capabilities/test_support_view.py",
+          "sha256": "b81b3b9ac28db4ccd1ea19a0682e0441f79e5f0754571ea804701fd635e2139d"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_support_view.py",
+        "module_sha256": "e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0",
+        "runtime_id": "test_support_view.SupportViewFixtures.test_blank_lines_in_a_record_run_move_only_with_the_block_that_owns_them",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 624,
+          "name": "test_contract_fields_are_displayed_or_unknown",
+          "path": "evas/capabilities/test_support_view.py",
+          "sha256": "9b24f858b73fc8a71764f3a8a9f178500f6a46a8c8c011159cfd0b6d81be9ad1"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_support_view.py",
+        "module_sha256": "e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0",
+        "runtime_id": "test_support_view.SupportViewFixtures.test_contract_fields_are_displayed_or_unknown",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 883,
+          "name": "test_difference_report_names_the_first_changed_line",
+          "path": "evas/capabilities/test_support_view.py",
+          "sha256": "16b45e20533ce956ba01ee4610eeb65cdcac7b64a2aaeec7eadd44e5b0dd4898"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_support_view.py",
+        "module_sha256": "e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0",
+        "runtime_id": "test_support_view.SupportViewFixtures.test_difference_report_names_the_first_changed_line",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 421,
+          "name": "test_distinct_states_are_not_collapsed",
+          "path": "evas/capabilities/test_support_view.py",
+          "sha256": "8df9a4ca81185faf0e9689aa308c06ce9a6e42aaa11cd745de9e4761a5e6abbb"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_support_view.py",
+        "module_sha256": "e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0",
+        "runtime_id": "test_support_view.SupportViewFixtures.test_distinct_states_are_not_collapsed",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 697,
+          "name": "test_duplicate_contract_line_must_remain_in_each_requirement",
+          "path": "evas/capabilities/test_support_view.py",
+          "sha256": "fc79424d31264fe505b7fae4a26dd8b912803dc819330c239ab74db7f67f8a22"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_support_view.py",
+        "module_sha256": "e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0",
+        "runtime_id": "test_support_view.SupportViewFixtures.test_duplicate_contract_line_must_remain_in_each_requirement",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 497,
+          "name": "test_execution_content_mismatch_does_not_borrow_current_observation",
+          "path": "evas/capabilities/test_support_view.py",
+          "sha256": "fbf4e4aac93606be0fb970a01d6d584eef32e616027a481e7df2bfb8bc1a3b76"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_support_view.py",
+        "module_sha256": "e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0",
+        "runtime_id": "test_support_view.SupportViewFixtures.test_execution_content_mismatch_does_not_borrow_current_observation",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 309,
+          "name": "test_execution_pass_with_pending_qualification_stays_split",
+          "path": "evas/capabilities/test_support_view.py",
+          "sha256": "b78aff826d10e5974140a0aa1c9ae455a5f33062d384a32dc33ca891afca4855"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_support_view.py",
+        "module_sha256": "e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0",
+        "runtime_id": "test_support_view.SupportViewFixtures.test_execution_pass_with_pending_qualification_stays_split",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 282,
+          "name": "test_historical_pass_does_not_enter_current_denominator",
+          "path": "evas/capabilities/test_support_view.py",
+          "sha256": "f4db8ca6683153c5db3d7edda17ba5b7e1e3d466c70ffddc66d7cf4065a5deb5"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_support_view.py",
+        "module_sha256": "e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0",
+        "runtime_id": "test_support_view.SupportViewFixtures.test_historical_pass_does_not_enter_current_denominator",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 809,
+          "name": "test_markdown_is_accepted_only_as_the_generated_view_up_to_two_reorderings",
+          "path": "evas/capabilities/test_support_view.py",
+          "sha256": "c0c9991dda064083476bd8c1e9658f8022f12e0002ca4e490f2a28971d2d29d6"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_support_view.py",
+        "module_sha256": "e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0",
+        "runtime_id": "test_support_view.SupportViewFixtures.test_markdown_is_accepted_only_as_the_generated_view_up_to_two_reorderings",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 731,
+          "name": "test_markdown_status_requires_view_status_and_provisional",
+          "path": "evas/capabilities/test_support_view.py",
+          "sha256": "22c74c2e6af2645b1c8a3fcb94b2f970a2a64b74100e54bbbff8b73c722a8dbe"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_support_view.py",
+        "module_sha256": "e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0",
+        "runtime_id": "test_support_view.SupportViewFixtures.test_markdown_status_requires_view_status_and_provisional",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 390,
+          "name": "test_missing_toolchain_and_aliases_are_not_filled",
+          "path": "evas/capabilities/test_support_view.py",
+          "sha256": "af5e325934f4a4976bf73d287f0d6498d405c88bb55100b2a1abc45ea4a153cc"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_support_view.py",
+        "module_sha256": "e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0",
+        "runtime_id": "test_support_view.SupportViewFixtures.test_missing_toolchain_and_aliases_are_not_filled",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 610,
+          "name": "test_multi_source_toolchain_versions_are_listed",
+          "path": "evas/capabilities/test_support_view.py",
+          "sha256": "6b481596e3280415789e9ae18a68be837fed17d9575d19c9993a82fe0e98324b"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_support_view.py",
+        "module_sha256": "e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0",
+        "runtime_id": "test_support_view.SupportViewFixtures.test_multi_source_toolchain_versions_are_listed",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 637,
+          "name": "test_one_registration_change_reaches_default_json_and_markdown",
+          "path": "evas/capabilities/test_support_view.py",
+          "sha256": "e681493855441cb9dfa64323ea5e464167736bca41f93443233d5dd39187d438"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_support_view.py",
+        "module_sha256": "e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0",
+        "runtime_id": "test_support_view.SupportViewFixtures.test_one_registration_change_reaches_default_json_and_markdown",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 440,
+          "name": "test_preview_writes_both_views_and_render_delegates",
+          "path": "evas/capabilities/test_support_view.py",
+          "sha256": "a42810a6301b148f71d64e860d9ed7bf429b9f072f6794a1d7690f104daff276"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_support_view.py",
+        "module_sha256": "e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0",
+        "runtime_id": "test_support_view.SupportViewFixtures.test_preview_writes_both_views_and_render_delegates",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 749,
+          "name": "test_records_stay_with_their_requirement_and_header_status_is_unique",
+          "path": "evas/capabilities/test_support_view.py",
+          "sha256": "1cdcfe5dbe3eb7f4dd3d0e0afd7442f290bc345fdb14135556bf8ecc3fa974f7"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_support_view.py",
+        "module_sha256": "e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0",
+        "runtime_id": "test_support_view.SupportViewFixtures.test_records_stay_with_their_requirement_and_header_status_is_unique",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 471,
+          "name": "test_requirement_content_mismatch_stays_off_the_current_requirement",
+          "path": "evas/capabilities/test_support_view.py",
+          "sha256": "050c16a2ee6a5dbf8dc5139c4c86c567cb5ac2bbe70d68deda3c3cbfc728db93"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_support_view.py",
+        "module_sha256": "e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0",
+        "runtime_id": "test_support_view.SupportViewFixtures.test_requirement_content_mismatch_stays_off_the_current_requirement",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 260,
+          "name": "test_requirement_without_evidence_has_unknown_backend_facts",
+          "path": "evas/capabilities/test_support_view.py",
+          "sha256": "af40bd6ea81992319a87ae008c94d6613a78e73d76130c96688c07bcdc4ef5eb"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_support_view.py",
+        "module_sha256": "e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0",
+        "runtime_id": "test_support_view.SupportViewFixtures.test_requirement_without_evidence_has_unknown_backend_facts",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 564,
+          "name": "test_review_content_mismatch_does_not_borrow_evidence",
+          "path": "evas/capabilities/test_support_view.py",
+          "sha256": "9a6b3da4c8fff90c03ee48d272205d729a1463bac7537801d358533d374031ed"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_support_view.py",
+        "module_sha256": "e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0",
+        "runtime_id": "test_support_view.SupportViewFixtures.test_review_content_mismatch_does_not_borrow_evidence",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 336,
+          "name": "test_revoked_dependency_changes_json_and_markdown",
+          "path": "evas/capabilities/test_support_view.py",
+          "sha256": "cd57b1bb9a707594f3c31d11d72bee5ed53b09878aeccf337717387d83940d6b"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_support_view.py",
+        "module_sha256": "e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0",
+        "runtime_id": "test_support_view.SupportViewFixtures.test_revoked_dependency_changes_json_and_markdown",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 366,
+          "name": "test_superseded_version_remains_locatable_without_current_support",
+          "path": "evas/capabilities/test_support_view.py",
+          "sha256": "aaf2a6b1171dcd11caf5fb46c092fe9da2215d116e064d138f5a6ce6fd296cb2"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_support_view.py",
+        "module_sha256": "e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0",
+        "runtime_id": "test_support_view.SupportViewFixtures.test_superseded_version_remains_locatable_without_current_support",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 711,
+          "name": "test_toolchain_source_is_not_covered_by_another_record",
+          "path": "evas/capabilities/test_support_view.py",
+          "sha256": "216f36c586a2ba4ef4110d1a2dc0ae88c1af8160bc00057a0dcc09858251d166"
+        },
+        "generated": false,
+        "module_path": "evas/capabilities/test_support_view.py",
+        "module_sha256": "e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0",
+        "runtime_id": "test_support_view.SupportViewFixtures.test_toolchain_source_is_not_covered_by_another_record",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      }
+    ],
+    "namespace": "maintenance",
+    "schema_version": 1,
+    "skipped_declarations": 0,
+    "unresolved_instances": [],
+    "transport": {
+      "argv": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-c",
+        "import os,runpy,sys; sys.path[0]=os.getcwd(); tool=sys.argv[1]; sys.argv=sys.argv[1:]; runpy.run_path(tool,run_name=\"__main__\")",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r8-20261027/source/scripts/capabilities/discover_methods.py",
+        "--worker",
+        "--root",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r8-20261027/source",
+        "--start",
+        "evas/capabilities",
+        "--pattern",
+        "test_*.py",
+        "--namespace",
+        "maintenance"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r8-20261027/source",
+      "returncode": 0,
+      "stdout": "{\"collector\": {\"definition_profile\": \"actual-code-or-registered-native-skip-v1\", \"native_skip_authority\": {\"factory_span_sha256\": \"a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad\", \"profile\": \"registered-native-unittest-skip-v1\", \"runtime_file_sha256\": \"45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987\", \"runtime_source\": \"unittest/case.py\", \"wrapper_span_sha256\": \"96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda\"}, \"path\": \"scripts/capabilities/discover_methods.py\", \"sha256\": \"aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17\", \"source_relationship\": \"owned-source-root\"}, \"complete\": true, \"discovered_instances\": 101, \"environment\": {\"PYTHONDONTWRITEBYTECODE\": \"1\", \"PYTHONPATH\": null, \"bytecode_disabled\": true, \"cache_tag\": \"cpython-312\", \"environment_scope\": \"python-runtime-and-import-path-only\", \"executable\": \"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python\", \"implementation\": \"cpython\", \"platform\": \"darwin\", \"python_version\": \"3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"sys_path_before_selected_imports\": [\"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r8-20261027/source\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python312.zip\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload\", \"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/lib/python3.12/site-packages\"]}, \"error_count\": 0, \"errors\": [], \"loader_error_count\": 0, \"methods\": [{\"definition\": {\"line\": 158, \"name\": \"test_factory_discovery_never_executes_test_body_and_import_failure_is_retained\", \"path\": \"evas/capabilities/test_asset_catalog.py\", \"sha256\": \"5675e85b6beed41c47b5637f5677e6413491e821a087747f70b7a965a3637876\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_asset_catalog.py\", \"module_sha256\": \"fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806\", \"runtime_id\": \"test_asset_catalog.ActualDiscovery.test_factory_discovery_never_executes_test_body_and_import_failure_is_retained\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 25, \"name\": \"test_part_files_join_the_existing_Registry_current_graph\", \"path\": \"evas/capabilities/test_asset_catalog.py\", \"sha256\": \"9ccef6d030f1a3cb1bed6ba7e995c2a13425a24d09c3623760169e4fdf5754d4\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_asset_catalog.py\", \"module_sha256\": \"fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806\", \"runtime_id\": \"test_asset_catalog.CatalogIntegration.test_part_files_join_the_existing_Registry_current_graph\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 274, \"name\": \"test_asset_rename_with_prior_identity_keeps_current_version\", \"path\": \"evas/capabilities/test_asset_catalog.py\", \"sha256\": \"eadd31578809ead67968b1f39f3bec56469f13ec2665f4c530b060ae96e7d761\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_asset_catalog.py\", \"module_sha256\": \"fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806\", \"runtime_id\": \"test_asset_catalog.CurrentIdentityIndex.test_asset_rename_with_prior_identity_keeps_current_version\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 263, \"name\": \"test_asset_rename_without_prior_identity_keeps_rejection_text\", \"path\": \"evas/capabilities/test_asset_catalog.py\", \"sha256\": \"8a1ef1b593d4277af5eff6b326bc6e0908ce1dc9cdca848b666e4d31096a16a1\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_asset_catalog.py\", \"module_sha256\": \"fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806\", \"runtime_id\": \"test_asset_catalog.CurrentIdentityIndex.test_asset_rename_without_prior_identity_keeps_rejection_text\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 423, \"name\": \"test_duplicate_and_unknown_identity_rejections_stay_after_the_scan\", \"path\": \"evas/capabilities/test_asset_catalog.py\", \"sha256\": \"47ed51c17745e303b8434c35cdcb048878001412e1ea37be3b0f7cceae681e7e\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_asset_catalog.py\", \"module_sha256\": \"fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806\", \"runtime_id\": \"test_asset_catalog.CurrentIdentityIndex.test_duplicate_and_unknown_identity_rejections_stay_after_the_scan\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 361, \"name\": \"test_history_on_noncurrent_asset_does_not_satisfy_current\", \"path\": \"evas/capabilities/test_asset_catalog.py\", \"sha256\": \"875ca5ff5f7644259a37982405d0cf48e8d8dae9311ef6808b1568c4535ef906\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_asset_catalog.py\", \"module_sha256\": \"fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806\", \"runtime_id\": \"test_asset_catalog.CurrentIdentityIndex.test_history_on_noncurrent_asset_does_not_satisfy_current\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 288, \"name\": \"test_method_rename_without_and_with_prior_identity\", \"path\": \"evas/capabilities/test_asset_catalog.py\", \"sha256\": \"93e665589b9837ecb91f0c289ee24c94518ee736444c7eefb101fea4f69e1c55\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_asset_catalog.py\", \"module_sha256\": \"fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806\", \"runtime_id\": \"test_asset_catalog.CurrentIdentityIndex.test_method_rename_without_and_with_prior_identity\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 377, \"name\": \"test_mismatched_history_digest_keeps_reference_rejection\", \"path\": \"evas/capabilities/test_asset_catalog.py\", \"sha256\": \"eca2609a09a4c6ead34a3d788adcd14ee99f524be373b8d10e4ca81a22b473d7\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_asset_catalog.py\", \"module_sha256\": \"fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806\", \"runtime_id\": \"test_asset_catalog.CurrentIdentityIndex.test_mismatched_history_digest_keeps_reference_rejection\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 306, \"name\": \"test_multiple_old_asset_versions_keep_every_distinct_path\", \"path\": \"evas/capabilities/test_asset_catalog.py\", \"sha256\": \"48062c1b0d2c86a397f8c6d8db77f8f6eb99603b41963aae5e8c0697b5c01852\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_asset_catalog.py\", \"module_sha256\": \"fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806\", \"runtime_id\": \"test_asset_catalog.CurrentIdentityIndex.test_multiple_old_asset_versions_keep_every_distinct_path\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 326, \"name\": \"test_multiple_old_method_versions_keep_every_distinct_runtime\", \"path\": \"evas/capabilities/test_asset_catalog.py\", \"sha256\": \"ebe566a3ab38db4113b88682bc57540e05b2e27be84eb38ef2632122fd44d259\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_asset_catalog.py\", \"module_sha256\": \"fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806\", \"runtime_id\": \"test_asset_catalog.CurrentIdentityIndex.test_multiple_old_method_versions_keep_every_distinct_runtime\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 391, \"name\": \"test_same_catalog_revalidates_after_input_changes\", \"path\": \"evas/capabilities/test_asset_catalog.py\", \"sha256\": \"340b001c6135f391620ae4ac8b47871114dd45c046cff72aa9984c4d68fd49ce\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_asset_catalog.py\", \"module_sha256\": \"fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806\", \"runtime_id\": \"test_asset_catalog.CurrentIdentityIndex.test_same_catalog_revalidates_after_input_changes\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 346, \"name\": \"test_unrelated_id_version_does_not_force_history\", \"path\": \"evas/capabilities/test_asset_catalog.py\", \"sha256\": \"6168cbd8df08335eb7ce76d829b57773d11e59f5d2ebd59309a0a5a436145d2c\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_asset_catalog.py\", \"module_sha256\": \"fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806\", \"runtime_id\": \"test_asset_catalog.CurrentIdentityIndex.test_unrelated_id_version_does_not_force_history\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 195, \"name\": \"test_archive_pending_is_explicit_and_absolute_source_paths_rejected\", \"path\": \"evas/capabilities/test_asset_catalog.py\", \"sha256\": \"9fbc8ef91e3f7115529e49e9024d0f2448db50ee05ae48c73f05b878cf33b64a\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_asset_catalog.py\", \"module_sha256\": \"fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806\", \"runtime_id\": \"test_asset_catalog.ObserverAndSourceSchemas.test_archive_pending_is_explicit_and_absolute_source_paths_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 173, \"name\": \"test_independent_observer_keeps_catalog_and_governance_paths_with_real_modes\", \"path\": \"evas/capabilities/test_asset_catalog.py\", \"sha256\": \"a598c8ff18226e3ee8163acd5140f002236e6e8debb7f020494bf868fa20e14a\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_asset_catalog.py\", \"module_sha256\": \"fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806\", \"runtime_id\": \"test_asset_catalog.ObserverAndSourceSchemas.test_independent_observer_keeps_catalog_and_governance_paths_with_real_modes\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 52, \"name\": \"test_asset_exact_and_seed_external_detection\", \"path\": \"evas/capabilities/test_asset_catalog.py\", \"sha256\": \"f5d92c05e7b34eb03ac8c0ece1bad6f8cae854a9c22b7efd29cdbed14ff48c1c\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_asset_catalog.py\", \"module_sha256\": \"fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806\", \"runtime_id\": \"test_asset_catalog.ReconcileBehaviors.test_asset_exact_and_seed_external_detection\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 103, \"name\": \"test_broken_content_bound_reference_rejected\", \"path\": \"evas/capabilities/test_asset_catalog.py\", \"sha256\": \"e47ced8fb1b4bda9d0a450dc61db154961c09dff5d3dd0993dbf9d72f9b7663b\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_asset_catalog.py\", \"module_sha256\": \"fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806\", \"runtime_id\": \"test_asset_catalog.ReconcileBehaviors.test_broken_content_bound_reference_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 70, \"name\": \"test_derived_support_paths_reject_self_hash_and_accept_external_manifest\", \"path\": \"evas/capabilities/test_asset_catalog.py\", \"sha256\": \"279e518db97a2aea29b6737e7203341e3f166b719ca6fb10f3ab2bf6a4f3fe3f\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_asset_catalog.py\", \"module_sha256\": \"fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806\", \"runtime_id\": \"test_asset_catalog.ReconcileBehaviors.test_derived_support_paths_reject_self_hash_and_accept_external_manifest\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 58, \"name\": \"test_external_manifest_avoids_self_hash_cycle\", \"path\": \"evas/capabilities/test_asset_catalog.py\", \"sha256\": \"0885a330b9fc2dafcbc17cf123e0b056a9eb5282f8d914dd4e221206702e82b5\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_asset_catalog.py\", \"module_sha256\": \"fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806\", \"runtime_id\": \"test_asset_catalog.ReconcileBehaviors.test_external_manifest_avoids_self_hash_cycle\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 128, \"name\": \"test_historical_module_mismatch_cannot_be_claimed_matched\", \"path\": \"evas/capabilities/test_asset_catalog.py\", \"sha256\": \"1c5b322768d1dcdc67161f9590c183b3eb3fd6eef343975ff2a40b43fd13de4e\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_asset_catalog.py\", \"module_sha256\": \"fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806\", \"runtime_id\": \"test_asset_catalog.ReconcileBehaviors.test_historical_module_mismatch_cannot_be_claimed_matched\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 107, \"name\": \"test_namespace_and_factory_reconcile_exact\", \"path\": \"evas/capabilities/test_asset_catalog.py\", \"sha256\": \"2de21d9ebad9a184a59c27b8c626c118a8b34a52ea12a908007f106696a54e08\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_asset_catalog.py\", \"module_sha256\": \"fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806\", \"runtime_id\": \"test_asset_catalog.ReconcileBehaviors.test_namespace_and_factory_reconcile_exact\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 118, \"name\": \"test_rename_requires_prior_version_and_preserves_identity\", \"path\": \"evas/capabilities/test_asset_catalog.py\", \"sha256\": \"cbf27bd7f406fbd1c3d71c037757244f60181aa789169ab6534712a61eaaa960\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_asset_catalog.py\", \"module_sha256\": \"fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806\", \"runtime_id\": \"test_asset_catalog.ReconcileBehaviors.test_rename_requires_prior_version_and_preserves_identity\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 140, \"name\": \"test_sources_are_data_and_pending_archives_are_unavailable\", \"path\": \"evas/capabilities/test_asset_catalog.py\", \"sha256\": \"0cce0310f2190b9176b183cc98de7f67c9bd7e4306908a0d4d7c64e86ccab437\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_asset_catalog.py\", \"module_sha256\": \"fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806\", \"runtime_id\": \"test_asset_catalog.ReconcileBehaviors.test_sources_are_data_and_pending_archives_are_unavailable\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 148, \"name\": \"test_traceability_uses_same_registry_without_qualification\", \"path\": \"evas/capabilities/test_asset_catalog.py\", \"sha256\": \"624856b48c79322a74c5f6c335f1fcb156942689d38d0378b842188af803d752\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_asset_catalog.py\", \"module_sha256\": \"fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806\", \"runtime_id\": \"test_asset_catalog.ReconcileBehaviors.test_traceability_uses_same_registry_without_qualification\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 97, \"name\": \"test_unknown_part_schema_and_second_current_rejected\", \"path\": \"evas/capabilities/test_asset_catalog.py\", \"sha256\": \"d6c5173af2af9ae1745722fc7fa7e47a9a82070eb3aa4582916605789964a109\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_asset_catalog.py\", \"module_sha256\": \"fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806\", \"runtime_id\": \"test_asset_catalog.ReconcileBehaviors.test_unknown_part_schema_and_second_current_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 226, \"name\": \"test_historical_row_scope_and_original_verdict_are_byte_bound\", \"path\": \"evas/capabilities/test_asset_catalog.py\", \"sha256\": \"a2f62350ed250d307d3ad47931fc829b8084ef843113f0d14c1c259c80df704c\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_asset_catalog.py\", \"module_sha256\": \"fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806\", \"runtime_id\": \"test_asset_catalog.SeparateRustAndHistoricalSource.test_historical_row_scope_and_original_verdict_are_byte_bound\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 209, \"name\": \"test_rust_listing_has_its_own_actual_binary_denominator\", \"path\": \"evas/capabilities/test_asset_catalog.py\", \"sha256\": \"a45e31673b7a809dcaed8605be49597a4ffb6876c371de5ae4fa9221a3f4149f\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_asset_catalog.py\", \"module_sha256\": \"fa72ff1e4a9a3072db45b0839301371923eb7c4c812ecfec687a4cdf727d4806\", \"runtime_id\": \"test_asset_catalog.SeparateRustAndHistoricalSource.test_rust_listing_has_its_own_actual_binary_denominator\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 80, \"name\": \"test_bridge_requires_source_bound_partial_consumers_and_exact_external_path\", \"path\": \"evas/capabilities/test_asset_scope.py\", \"sha256\": \"0c660e6ce9537cb64e7774efcb84d997d6d1eaf80ec1f671becfa05e992c57b0\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_asset_scope.py\", \"module_sha256\": \"c4728d5fd4b8a274f782bdb993240baaddf43ab1db02915ef46b071d6a024d5f\", \"runtime_id\": \"test_asset_scope.AssetScopeTests.test_bridge_requires_source_bound_partial_consumers_and_exact_external_path\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 54, \"name\": \"test_catalog_cannot_register_outscope_benchmark_without_bridge\", \"path\": \"evas/capabilities/test_asset_scope.py\", \"sha256\": \"5d7dd0e9ed18a83f30148e701a11d730876e0f370990c817b47960a1647c975b\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_asset_scope.py\", \"module_sha256\": \"c4728d5fd4b8a274f782bdb993240baaddf43ab1db02915ef46b071d6a024d5f\", \"runtime_id\": \"test_asset_scope.AssetScopeTests.test_catalog_cannot_register_outscope_benchmark_without_bridge\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 103, \"name\": \"test_cli_returns_machine_readable_owner_boundary_on_success_and_unknown_rejection\", \"path\": \"evas/capabilities/test_asset_scope.py\", \"sha256\": \"678894eddfcdc8c52be45dcf9a21870f97353daf9ea124b9faadf9f82a1bedf0\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_asset_scope.py\", \"module_sha256\": \"c4728d5fd4b8a274f782bdb993240baaddf43ab1db02915ef46b071d6a024d5f\", \"runtime_id\": \"test_asset_scope.AssetScopeTests.test_cli_returns_machine_readable_owner_boundary_on_success_and_unknown_rejection\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 70, \"name\": \"test_exact_source_bound_bridge_has_separate_boundary_denominator\", \"path\": \"evas/capabilities/test_asset_scope.py\", \"sha256\": \"6e70ddcbc120642679174e38db0a25942ab4189a0a7784462fe2c7e1fca08193\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_asset_scope.py\", \"module_sha256\": \"c4728d5fd4b8a274f782bdb993240baaddf43ab1db02915ef46b071d6a024d5f\", \"runtime_id\": \"test_asset_scope.AssetScopeTests.test_exact_source_bound_bridge_has_separate_boundary_denominator\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 35, \"name\": \"test_external_benchmark_owner_is_counted_without_becoming_evas_coverage\", \"path\": \"evas/capabilities/test_asset_scope.py\", \"sha256\": \"eb658dedc3f5d0c773b3c9b2234660927bad19957283b1e0eaa35f59f34a3226\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_asset_scope.py\", \"module_sha256\": \"c4728d5fd4b8a274f782bdb993240baaddf43ab1db02915ef46b071d6a024d5f\", \"runtime_id\": \"test_asset_scope.AssetScopeTests.test_external_benchmark_owner_is_counted_without_becoming_evas_coverage\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 30, \"name\": \"test_legacy_without_scope_remains_all_tracked_strict\", \"path\": \"evas/capabilities/test_asset_scope.py\", \"sha256\": \"35b0ca0437f85a7bbd7aa9d5757afff240ab02c89c5f8014a585634ae491617e\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_asset_scope.py\", \"module_sha256\": \"c4728d5fd4b8a274f782bdb993240baaddf43ab1db02915ef46b071d6a024d5f\", \"runtime_id\": \"test_asset_scope.AssetScopeTests.test_legacy_without_scope_remains_all_tracked_strict\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 43, \"name\": \"test_new_inscope_and_root_source_are_extra_while_unknown_prefix_is_unowned\", \"path\": \"evas/capabilities/test_asset_scope.py\", \"sha256\": \"bbbce77e0df9a1c75c8ee4675b9adf9d32838e7b09c16dc7a341208cf07ba9d3\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_asset_scope.py\", \"module_sha256\": \"c4728d5fd4b8a274f782bdb993240baaddf43ab1db02915ef46b071d6a024d5f\", \"runtime_id\": \"test_asset_scope.AssetScopeTests.test_new_inscope_and_root_source_are_extra_while_unknown_prefix_is_unowned\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 98, \"name\": \"test_outscope_duplicates_and_invalid_paths_are_not_silently_dropped\", \"path\": \"evas/capabilities/test_asset_scope.py\", \"sha256\": \"0ae6d3797d3907919addfd0f0124d007d810ebe01d66344d6917f60331cadd7d\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_asset_scope.py\", \"module_sha256\": \"c4728d5fd4b8a274f782bdb993240baaddf43ab1db02915ef46b071d6a024d5f\", \"runtime_id\": \"test_asset_scope.AssetScopeTests.test_outscope_duplicates_and_invalid_paths_are_not_silently_dropped\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 93, \"name\": \"test_scope_schema_is_closed_and_versioned\", \"path\": \"evas/capabilities/test_asset_scope.py\", \"sha256\": \"bfbda65a3301c05e0d0bde577bb79472b7ea7716c2a36f50456892143eb540d7\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_asset_scope.py\", \"module_sha256\": \"c4728d5fd4b8a274f782bdb993240baaddf43ab1db02915ef46b071d6a024d5f\", \"runtime_id\": \"test_asset_scope.AssetScopeTests.test_scope_schema_is_closed_and_versioned\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 40, \"name\": \"test_copied_verdict_and_hashes_must_equal_actual_raw_fields\", \"path\": \"evas/capabilities/test_history_binding.py\", \"sha256\": \"4efda3bf6fde4a717d7390d67a1433d9d066094d9c224d34273c426c11ef38d3\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_history_binding.py\", \"module_sha256\": \"66fdd6363fd6562b16fbd8bd0ee3ba69deb125ff57aa0db184dc3ebc303a810a\", \"runtime_id\": \"test_history_binding.HistoryBindingTests.test_copied_verdict_and_hashes_must_equal_actual_raw_fields\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 115, \"name\": \"test_immutable_cache_reads_authenticated_document_once_but_rechecks_references\", \"path\": \"evas/capabilities/test_history_binding.py\", \"sha256\": \"71a640a3825c5b7ae0443d786e25f33cfefd4ebaf86b63a515d36525131fe547\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_history_binding.py\", \"module_sha256\": \"66fdd6363fd6562b16fbd8bd0ee3ba69deb125ff57aa0db184dc3ebc303a810a\", \"runtime_id\": \"test_history_binding.HistoryBindingTests.test_immutable_cache_reads_authenticated_document_once_but_rechecks_references\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 61, \"name\": \"test_immutable_document_cache_and_returned_row_copy_do_not_hide_source_mutation\", \"path\": \"evas/capabilities/test_history_binding.py\", \"sha256\": \"7ea18ae74939672db2ee5dd670f3226bdc37bdfc41b05a2d89da4c37b42d55cf\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_history_binding.py\", \"module_sha256\": \"66fdd6363fd6562b16fbd8bd0ee3ba69deb125ff57aa0db184dc3ebc303a810a\", \"runtime_id\": \"test_history_binding.HistoryBindingTests.test_immutable_document_cache_and_returned_row_copy_do_not_hide_source_mutation\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 97, \"name\": \"test_negative_finding_never_uses_consumer_strings_as_subject_or_invents_sha\", \"path\": \"evas/capabilities/test_history_binding.py\", \"sha256\": \"217b774d92669f85833ce495a76f16667e15ffd8594ed9ae9fbb38b35dccfeb6\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_history_binding.py\", \"module_sha256\": \"66fdd6363fd6562b16fbd8bd0ee3ba69deb125ff57aa0db184dc3ebc303a810a\", \"runtime_id\": \"test_history_binding.HistoryBindingTests.test_negative_finding_never_uses_consumer_strings_as_subject_or_invents_sha\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 86, \"name\": \"test_oracle_finding_eligibility_binds_exact_subject_and_preserves_module_mismatch_pending\", \"path\": \"evas/capabilities/test_history_binding.py\", \"sha256\": \"6a3b287ba2392eca58321a199a36ec4289d797e4d34bce98e4d6129e3c97c92b\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_history_binding.py\", \"module_sha256\": \"66fdd6363fd6562b16fbd8bd0ee3ba69deb125ff57aa0db184dc3ebc303a810a\", \"runtime_id\": \"test_history_binding.HistoryBindingTests.test_oracle_finding_eligibility_binds_exact_subject_and_preserves_module_mismatch_pending\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 46, \"name\": \"test_pending_raw_hash_mismatch_is_preserved_but_cannot_be_matched\", \"path\": \"evas/capabilities/test_history_binding.py\", \"sha256\": \"17e5de1b1805cef77f02b846178cd23543e3adc8f77cb63b950dd75a1b8a946c\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_history_binding.py\", \"module_sha256\": \"66fdd6363fd6562b16fbd8bd0ee3ba69deb125ff57aa0db184dc3ebc303a810a\", \"runtime_id\": \"test_history_binding.HistoryBindingTests.test_pending_raw_hash_mismatch_is_preserved_but_cannot_be_matched\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 54, \"name\": \"test_pointer_rejects_negative_aliases_bad_escapes_and_array_bounds\", \"path\": \"evas/capabilities/test_history_binding.py\", \"sha256\": \"f310806d9e37f12616294a118b0e14de645a7c8f8bb2983b02fc0467b5124466\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_history_binding.py\", \"module_sha256\": \"66fdd6363fd6562b16fbd8bd0ee3ba69deb125ff57aa0db184dc3ebc303a810a\", \"runtime_id\": \"test_history_binding.HistoryBindingTests.test_pointer_rejects_negative_aliases_bad_escapes_and_array_bounds\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 106, \"name\": \"test_raw_finding_module_match_cannot_be_upgraded_to_method_match\", \"path\": \"evas/capabilities/test_history_binding.py\", \"sha256\": \"b8f537aeb3a55eb53657462de3d4760cb421d159aac5c1609cd4c008d6c514cf\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_history_binding.py\", \"module_sha256\": \"66fdd6363fd6562b16fbd8bd0ee3ba69deb125ff57aa0db184dc3ebc303a810a\", \"runtime_id\": \"test_history_binding.HistoryBindingTests.test_raw_finding_module_match_cannot_be_upgraded_to_method_match\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 69, \"name\": \"test_repository_relative_source_is_rehashed_after_every_read\", \"path\": \"evas/capabilities/test_history_binding.py\", \"sha256\": \"cea74297211db565860299d6e7827e34be9d8247536d85d11afac649c23d6cd2\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_history_binding.py\", \"module_sha256\": \"66fdd6363fd6562b16fbd8bd0ee3ba69deb125ff57aa0db184dc3ebc303a810a\", \"runtime_id\": \"test_history_binding.HistoryBindingTests.test_repository_relative_source_is_rehashed_after_every_read\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 34, \"name\": \"test_wrong_row_pointer_and_rehashed_row_cannot_borrow_another_method_identity\", \"path\": \"evas/capabilities/test_history_binding.py\", \"sha256\": \"5ca91a39aa208b2534d162471b36f502015c043fe4b6e947425681d864b4a718\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_history_binding.py\", \"module_sha256\": \"66fdd6363fd6562b16fbd8bd0ee3ba69deb125ff57aa0db184dc3ebc303a810a\", \"runtime_id\": \"test_history_binding.HistoryBindingTests.test_wrong_row_pointer_and_rehashed_row_cannot_borrow_another_method_identity\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 27, \"name\": \"test_compared_rows_quote_the_published_table\", \"path\": \"evas/capabilities/test_registry.py\", \"sha256\": \"d8a520a401b9c5f622fc9d26f33da425899605ce4f3331c12df5abff7ac90c4a\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_registry.py\", \"module_sha256\": \"35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039\", \"runtime_id\": \"test_registry.CapabilityRegistry.test_compared_rows_quote_the_published_table\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 60, \"name\": \"test_generated_files_match_the_catalog\", \"path\": \"evas/capabilities/test_registry.py\", \"sha256\": \"ff715a2d3e29ee93393c22276ab168cf46bd1909f151b3e02ef6ab44a055a52d\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_registry.py\", \"module_sha256\": \"35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039\", \"runtime_id\": \"test_registry.CapabilityRegistry.test_generated_files_match_the_catalog\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 17, \"name\": \"test_nodes_are_unique_and_use_known_chapters\", \"path\": \"evas/capabilities/test_registry.py\", \"sha256\": \"b232d53aa1112cd2570ddaf135196f0149b5e733b6b473dfe406325c1b513f3f\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_registry.py\", \"module_sha256\": \"35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039\", \"runtime_id\": \"test_registry.CapabilityRegistry.test_nodes_are_unique_and_use_known_chapters\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 45, \"name\": \"test_views_follow_the_registry\", \"path\": \"evas/capabilities/test_registry.py\", \"sha256\": \"f014d5a0179bd851bcc1984995a59991f573afc464dc22f31a50acab034ee22f\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_registry.py\", \"module_sha256\": \"35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039\", \"runtime_id\": \"test_registry.CapabilityRegistry.test_views_follow_the_registry\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 38, \"name\": \"test_waiting_rows_are_not_given_a_result\", \"path\": \"evas/capabilities/test_registry.py\", \"sha256\": \"3201de99ed951ce0baca86a14b43fca56646214a0f674df6b2d338e398f3eb7a\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_registry.py\", \"module_sha256\": \"35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039\", \"runtime_id\": \"test_registry.CapabilityRegistry.test_waiting_rows_are_not_given_a_result\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 78, \"name\": \"test_change_index_retains_blank_and_unselected_rows\", \"path\": \"evas/capabilities/test_registry.py\", \"sha256\": \"5371baf43c00ccae021c44a128f55a81673d544b0c1d981e01ff5164945921fb\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_registry.py\", \"module_sha256\": \"35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039\", \"runtime_id\": \"test_registry.MaintainedSourceIndex.test_change_index_retains_blank_and_unselected_rows\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 85, \"name\": \"test_deleting_an_actual_table_row_mapping_exposes_the_missing_source\", \"path\": \"evas/capabilities/test_registry.py\", \"sha256\": \"187722a233e2706a4b28efb28083bd86553f372e93c7bd811ae770209ea14ff4\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_registry.py\", \"module_sha256\": \"35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039\", \"runtime_id\": \"test_registry.MaintainedSourceIndex.test_deleting_an_actual_table_row_mapping_exposes_the_missing_source\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 92, \"name\": \"test_registered_examples_do_not_acquire_support_from_old_success\", \"path\": \"evas/capabilities/test_registry.py\", \"sha256\": \"bf195f24c32d0c583133d503981b22e2928ebb9961941a9813ec1e26ddc92183\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_registry.py\", \"module_sha256\": \"35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039\", \"runtime_id\": \"test_registry.MaintainedSourceIndex.test_registered_examples_do_not_acquire_support_from_old_success\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 70, \"name\": \"test_selected_atoms_and_unselected_neighbors_have_separate_effective_sources\", \"path\": \"evas/capabilities/test_registry.py\", \"sha256\": \"39a85d80722e272ed63d228b5b4470fc2f52fa3c04a3a2bc427464141727eea8\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_registry.py\", \"module_sha256\": \"35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039\", \"runtime_id\": \"test_registry.MaintainedSourceIndex.test_selected_atoms_and_unselected_neighbors_have_separate_effective_sources\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 304, \"name\": \"test_analysis_cannot_substitute_the_case_checker\", \"path\": \"evas/capabilities/test_registry.py\", \"sha256\": \"e24bad8ad999f51bfbdb12a38e80fadd794f98c98f9d24fd7692f25432ad3766\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_registry.py\", \"module_sha256\": \"35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039\", \"runtime_id\": \"test_registry.VersionedRegistryTests.test_analysis_cannot_substitute_the_case_checker\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 286, \"name\": \"test_approval_for_another_execution_cannot_qualify\", \"path\": \"evas/capabilities/test_registry.py\", \"sha256\": \"130cb482fa8a6c10877a78d2a567629d8c0fbde7d585f1ce2c66947f30bbeb6b\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_registry.py\", \"module_sha256\": \"35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039\", \"runtime_id\": \"test_registry.VersionedRegistryTests.test_approval_for_another_execution_cannot_qualify\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 365, \"name\": \"test_broadening_review_fields_without_new_receipt_cannot_grant_scope\", \"path\": \"evas/capabilities/test_registry.py\", \"sha256\": \"43cc8f8f9b83d287814a30292882381c0373dc4dbe1056465c97782b491d8e17\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_registry.py\", \"module_sha256\": \"35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039\", \"runtime_id\": \"test_registry.VersionedRegistryTests.test_broadening_review_fields_without_new_receipt_cannot_grant_scope\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 342, \"name\": \"test_calibration_raw_receipt_cannot_be_missing_or_relabelled\", \"path\": \"evas/capabilities/test_registry.py\", \"sha256\": \"8da6d36f316d1ae631b82ea5590231415ff0c41d2aedf38f96963f6d309a00bb\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_registry.py\", \"module_sha256\": \"35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039\", \"runtime_id\": \"test_registry.VersionedRegistryTests.test_calibration_raw_receipt_cannot_be_missing_or_relabelled\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 205, \"name\": \"test_deleting_disposition_exposes_external_inventory_gap\", \"path\": \"evas/capabilities/test_registry.py\", \"sha256\": \"82f54e3ed47aa89c088c086b4793cb5649ec58e6fd3e46fb37fe86157949b495\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_registry.py\", \"module_sha256\": \"35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039\", \"runtime_id\": \"test_registry.VersionedRegistryTests.test_deleting_disposition_exposes_external_inventory_gap\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 435, \"name\": \"test_dependency_cycles_are_rejected\", \"path\": \"evas/capabilities/test_registry.py\", \"sha256\": \"c25e05829e5dcd64c86efeb92e697d061c0c07402d640af31926bd9bb6f10365\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_registry.py\", \"module_sha256\": \"35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039\", \"runtime_id\": \"test_registry.VersionedRegistryTests.test_dependency_cycles_are_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 298, \"name\": \"test_duplicate_versions_are_rejected\", \"path\": \"evas/capabilities/test_registry.py\", \"sha256\": \"07ce4066f39f124a7acfa01ceb539c3d153c1e8f8140cbd27a1f2a0dabcaa4a8\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_registry.py\", \"module_sha256\": \"35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039\", \"runtime_id\": \"test_registry.VersionedRegistryTests.test_duplicate_versions_are_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 274, \"name\": \"test_execution_success_alone_cannot_qualify_a_case\", \"path\": \"evas/capabilities/test_registry.py\", \"sha256\": \"13a5f3610554423bbdb05e9ab04e0450d263aa8afa55723bd91532e34f4948c3\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_registry.py\", \"module_sha256\": \"35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039\", \"runtime_id\": \"test_registry.VersionedRegistryTests.test_execution_success_alone_cannot_qualify_a_case\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 280, \"name\": \"test_incomplete_execution_cannot_qualify\", \"path\": \"evas/capabilities/test_registry.py\", \"sha256\": \"58f055886a39f0acdcf93bed1b8fadd5c7f9ca94a1ce62e70bd62ed5c5d12d6b\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_registry.py\", \"module_sha256\": \"35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039\", \"runtime_id\": \"test_registry.VersionedRegistryTests.test_incomplete_execution_cannot_qualify\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 442, \"name\": \"test_incomplete_negative_controls_do_not_qualify\", \"path\": \"evas/capabilities/test_registry.py\", \"sha256\": \"ab79b9cf357d4c85aa290385a9139947c61c928b2ccf7fa6b5220a2d561e1f63\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_registry.py\", \"module_sha256\": \"35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039\", \"runtime_id\": \"test_registry.VersionedRegistryTests.test_incomplete_negative_controls_do_not_qualify\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 228, \"name\": \"test_missing_source_or_calibration_cannot_qualify\", \"path\": \"evas/capabilities/test_registry.py\", \"sha256\": \"2bf711a0f68dd801facc1a6f6cf1768af25323bce5a6d896927e016845f7fe8f\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_registry.py\", \"module_sha256\": \"35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039\", \"runtime_id\": \"test_registry.VersionedRegistryTests.test_missing_source_or_calibration_cannot_qualify\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 322, \"name\": \"test_named_controls_without_execution_and_raw_approval_cannot_calibrate\", \"path\": \"evas/capabilities/test_registry.py\", \"sha256\": \"cbfeff0755ca4b8caecf41adb8ae9bf61a32c5101386ace93ccce9d5c29e8a94\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_registry.py\", \"module_sha256\": \"35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039\", \"runtime_id\": \"test_registry.VersionedRegistryTests.test_named_controls_without_execution_and_raw_approval_cannot_calibrate\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 383, \"name\": \"test_new_checker_analysis_reuses_the_original_execution_on_unchanged_inputs\", \"path\": \"evas/capabilities/test_registry.py\", \"sha256\": \"a3c8ba165366f24a444c19a28c90856a9be4d7af5edef226f93e079062d469dd\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_registry.py\", \"module_sha256\": \"35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039\", \"runtime_id\": \"test_registry.VersionedRegistryTests.test_new_checker_analysis_reuses_the_original_execution_on_unchanged_inputs\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 244, \"name\": \"test_new_checker_version_invalidates_old_qualifications_but_keeps_history\", \"path\": \"evas/capabilities/test_registry.py\", \"sha256\": \"57012dfd40de9bccd7f9318290ffeea4935efd8f46a67c96fcd5085e01967f7a\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_registry.py\", \"module_sha256\": \"35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039\", \"runtime_id\": \"test_registry.VersionedRegistryTests.test_new_checker_version_invalidates_old_qualifications_but_keeps_history\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 376, \"name\": \"test_provenance_or_case_readiness_is_not_a_qualification\", \"path\": \"evas/capabilities/test_registry.py\", \"sha256\": \"4d20666ca5b2596d966a86a7528b5e494ed2dc2dd4a9074fea68c3268c45b0a8\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_registry.py\", \"module_sha256\": \"35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039\", \"runtime_id\": \"test_registry.VersionedRegistryTests.test_provenance_or_case_readiness_is_not_a_qualification\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 336, \"name\": \"test_qualification_backend_and_requirements_must_match_review\", \"path\": \"evas/capabilities/test_registry.py\", \"sha256\": \"476fba493aa31cbc84fa8e277721f0d3904f00bb0aff3b15e04a4cd131cf8f51\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_registry.py\", \"module_sha256\": \"35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039\", \"runtime_id\": \"test_registry.VersionedRegistryTests.test_qualification_backend_and_requirements_must_match_review\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 331, \"name\": \"test_qualification_cannot_expand_the_reviewed_scope\", \"path\": \"evas/capabilities/test_registry.py\", \"sha256\": \"7211cdcdb49fd6d59cd7aa53fa0bc7d73045babde11208219bb937f4127a694e\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_registry.py\", \"module_sha256\": \"35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039\", \"runtime_id\": \"test_registry.VersionedRegistryTests.test_qualification_cannot_expand_the_reviewed_scope\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 396, \"name\": \"test_reanalysis_cannot_swap_inputs_case_or_the_raw_execution_identity\", \"path\": \"evas/capabilities/test_registry.py\", \"sha256\": \"92295ef6dc4716375be6e9c6b35de3f4856734dccce5b1121417f7739eb80ef7\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_registry.py\", \"module_sha256\": \"35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039\", \"runtime_id\": \"test_registry.VersionedRegistryTests.test_reanalysis_cannot_swap_inputs_case_or_the_raw_execution_identity\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 357, \"name\": \"test_rebinding_changed_definition_cannot_reuse_old_calibration_receipts\", \"path\": \"evas/capabilities/test_registry.py\", \"sha256\": \"ea22596cd4d996f05ba877a55c9b63e62796bad4a72721161f3d75871d138d78\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_registry.py\", \"module_sha256\": \"35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039\", \"runtime_id\": \"test_registry.VersionedRegistryTests.test_rebinding_changed_definition_cannot_reuse_old_calibration_receipts\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 211, \"name\": \"test_removing_source_and_mapping_cannot_shrink_the_external_denominator\", \"path\": \"evas/capabilities/test_registry.py\", \"sha256\": \"1af2487b0fd715b6374ba3b06c29d94a2a2d320b4bf79ac66e62574d36e9a5db\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_registry.py\", \"module_sha256\": \"35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039\", \"runtime_id\": \"test_registry.VersionedRegistryTests.test_removing_source_and_mapping_cannot_shrink_the_external_denominator\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 236, \"name\": \"test_revoked_checker_invalidates_both_consumers\", \"path\": \"evas/capabilities/test_registry.py\", \"sha256\": \"bd92085011baea1762babe87a772ac2a7e545d5b74114f854fbd80169930f862\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_registry.py\", \"module_sha256\": \"35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039\", \"runtime_id\": \"test_registry.VersionedRegistryTests.test_revoked_checker_invalidates_both_consumers\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 255, \"name\": \"test_same_version_content_drift_is_detected\", \"path\": \"evas/capabilities/test_registry.py\", \"sha256\": \"3bf14d48ebf656da5adf59dcc4a1c678248ddd86f58d6edcf535fda2ce86aece\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_registry.py\", \"module_sha256\": \"35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039\", \"runtime_id\": \"test_registry.VersionedRegistryTests.test_same_version_content_drift_is_detected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 260, \"name\": \"test_source_bytes_change_invalidates_consumers_without_metadata_edit\", \"path\": \"evas/capabilities/test_registry.py\", \"sha256\": \"c300c50b235e2e1490690bfd496141301ece3c188a233bbf32e8caf27bd3ec3e\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_registry.py\", \"module_sha256\": \"35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039\", \"runtime_id\": \"test_registry.VersionedRegistryTests.test_source_bytes_change_invalidates_consumers_without_metadata_edit\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 219, \"name\": \"test_unselected_change_does_not_replace_base_expectation\", \"path\": \"evas/capabilities/test_registry.py\", \"sha256\": \"2fba41621aecb7abe4ee77aa794a25fc6d747b7b3c0423aeb73701108cc2d424\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_registry.py\", \"module_sha256\": \"35368e0056c3c4b6e563d511afa4854afcba5df738c4331f8b0c188c1adff039\", \"runtime_id\": \"test_registry.VersionedRegistryTests.test_unselected_change_does_not_replace_base_expectation\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 589, \"name\": \"test_adoption_labels_confer_no_support\", \"path\": \"evas/capabilities/test_support_view.py\", \"sha256\": \"5d16bd50d26a45f735e7ad5bfdde398a42563dcf6560845e928f12676dcb9fbc\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_support_view.py\", \"module_sha256\": \"e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0\", \"runtime_id\": \"test_support_view.SupportViewFixtures.test_adoption_labels_confer_no_support\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 538, \"name\": \"test_analysis_content_mismatch_does_not_borrow_outcome\", \"path\": \"evas/capabilities/test_support_view.py\", \"sha256\": \"c9f3d69822d1c442d804b73b4156d96ec0b44f6c78b4fe18efac481e7097b93e\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_support_view.py\", \"module_sha256\": \"e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0\", \"runtime_id\": \"test_support_view.SupportViewFixtures.test_analysis_content_mismatch_does_not_borrow_outcome\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 841, \"name\": \"test_blank_lines_in_a_record_run_move_only_with_the_block_that_owns_them\", \"path\": \"evas/capabilities/test_support_view.py\", \"sha256\": \"b81b3b9ac28db4ccd1ea19a0682e0441f79e5f0754571ea804701fd635e2139d\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_support_view.py\", \"module_sha256\": \"e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0\", \"runtime_id\": \"test_support_view.SupportViewFixtures.test_blank_lines_in_a_record_run_move_only_with_the_block_that_owns_them\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 624, \"name\": \"test_contract_fields_are_displayed_or_unknown\", \"path\": \"evas/capabilities/test_support_view.py\", \"sha256\": \"9b24f858b73fc8a71764f3a8a9f178500f6a46a8c8c011159cfd0b6d81be9ad1\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_support_view.py\", \"module_sha256\": \"e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0\", \"runtime_id\": \"test_support_view.SupportViewFixtures.test_contract_fields_are_displayed_or_unknown\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 883, \"name\": \"test_difference_report_names_the_first_changed_line\", \"path\": \"evas/capabilities/test_support_view.py\", \"sha256\": \"16b45e20533ce956ba01ee4610eeb65cdcac7b64a2aaeec7eadd44e5b0dd4898\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_support_view.py\", \"module_sha256\": \"e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0\", \"runtime_id\": \"test_support_view.SupportViewFixtures.test_difference_report_names_the_first_changed_line\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 421, \"name\": \"test_distinct_states_are_not_collapsed\", \"path\": \"evas/capabilities/test_support_view.py\", \"sha256\": \"8df9a4ca81185faf0e9689aa308c06ce9a6e42aaa11cd745de9e4761a5e6abbb\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_support_view.py\", \"module_sha256\": \"e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0\", \"runtime_id\": \"test_support_view.SupportViewFixtures.test_distinct_states_are_not_collapsed\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 697, \"name\": \"test_duplicate_contract_line_must_remain_in_each_requirement\", \"path\": \"evas/capabilities/test_support_view.py\", \"sha256\": \"fc79424d31264fe505b7fae4a26dd8b912803dc819330c239ab74db7f67f8a22\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_support_view.py\", \"module_sha256\": \"e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0\", \"runtime_id\": \"test_support_view.SupportViewFixtures.test_duplicate_contract_line_must_remain_in_each_requirement\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 497, \"name\": \"test_execution_content_mismatch_does_not_borrow_current_observation\", \"path\": \"evas/capabilities/test_support_view.py\", \"sha256\": \"fbf4e4aac93606be0fb970a01d6d584eef32e616027a481e7df2bfb8bc1a3b76\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_support_view.py\", \"module_sha256\": \"e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0\", \"runtime_id\": \"test_support_view.SupportViewFixtures.test_execution_content_mismatch_does_not_borrow_current_observation\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 309, \"name\": \"test_execution_pass_with_pending_qualification_stays_split\", \"path\": \"evas/capabilities/test_support_view.py\", \"sha256\": \"b78aff826d10e5974140a0aa1c9ae455a5f33062d384a32dc33ca891afca4855\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_support_view.py\", \"module_sha256\": \"e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0\", \"runtime_id\": \"test_support_view.SupportViewFixtures.test_execution_pass_with_pending_qualification_stays_split\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 282, \"name\": \"test_historical_pass_does_not_enter_current_denominator\", \"path\": \"evas/capabilities/test_support_view.py\", \"sha256\": \"f4db8ca6683153c5db3d7edda17ba5b7e1e3d466c70ffddc66d7cf4065a5deb5\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_support_view.py\", \"module_sha256\": \"e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0\", \"runtime_id\": \"test_support_view.SupportViewFixtures.test_historical_pass_does_not_enter_current_denominator\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 809, \"name\": \"test_markdown_is_accepted_only_as_the_generated_view_up_to_two_reorderings\", \"path\": \"evas/capabilities/test_support_view.py\", \"sha256\": \"c0c9991dda064083476bd8c1e9658f8022f12e0002ca4e490f2a28971d2d29d6\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_support_view.py\", \"module_sha256\": \"e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0\", \"runtime_id\": \"test_support_view.SupportViewFixtures.test_markdown_is_accepted_only_as_the_generated_view_up_to_two_reorderings\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 731, \"name\": \"test_markdown_status_requires_view_status_and_provisional\", \"path\": \"evas/capabilities/test_support_view.py\", \"sha256\": \"22c74c2e6af2645b1c8a3fcb94b2f970a2a64b74100e54bbbff8b73c722a8dbe\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_support_view.py\", \"module_sha256\": \"e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0\", \"runtime_id\": \"test_support_view.SupportViewFixtures.test_markdown_status_requires_view_status_and_provisional\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 390, \"name\": \"test_missing_toolchain_and_aliases_are_not_filled\", \"path\": \"evas/capabilities/test_support_view.py\", \"sha256\": \"af5e325934f4a4976bf73d287f0d6498d405c88bb55100b2a1abc45ea4a153cc\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_support_view.py\", \"module_sha256\": \"e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0\", \"runtime_id\": \"test_support_view.SupportViewFixtures.test_missing_toolchain_and_aliases_are_not_filled\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 610, \"name\": \"test_multi_source_toolchain_versions_are_listed\", \"path\": \"evas/capabilities/test_support_view.py\", \"sha256\": \"6b481596e3280415789e9ae18a68be837fed17d9575d19c9993a82fe0e98324b\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_support_view.py\", \"module_sha256\": \"e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0\", \"runtime_id\": \"test_support_view.SupportViewFixtures.test_multi_source_toolchain_versions_are_listed\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 637, \"name\": \"test_one_registration_change_reaches_default_json_and_markdown\", \"path\": \"evas/capabilities/test_support_view.py\", \"sha256\": \"e681493855441cb9dfa64323ea5e464167736bca41f93443233d5dd39187d438\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_support_view.py\", \"module_sha256\": \"e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0\", \"runtime_id\": \"test_support_view.SupportViewFixtures.test_one_registration_change_reaches_default_json_and_markdown\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 440, \"name\": \"test_preview_writes_both_views_and_render_delegates\", \"path\": \"evas/capabilities/test_support_view.py\", \"sha256\": \"a42810a6301b148f71d64e860d9ed7bf429b9f072f6794a1d7690f104daff276\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_support_view.py\", \"module_sha256\": \"e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0\", \"runtime_id\": \"test_support_view.SupportViewFixtures.test_preview_writes_both_views_and_render_delegates\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 749, \"name\": \"test_records_stay_with_their_requirement_and_header_status_is_unique\", \"path\": \"evas/capabilities/test_support_view.py\", \"sha256\": \"1cdcfe5dbe3eb7f4dd3d0e0afd7442f290bc345fdb14135556bf8ecc3fa974f7\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_support_view.py\", \"module_sha256\": \"e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0\", \"runtime_id\": \"test_support_view.SupportViewFixtures.test_records_stay_with_their_requirement_and_header_status_is_unique\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 471, \"name\": \"test_requirement_content_mismatch_stays_off_the_current_requirement\", \"path\": \"evas/capabilities/test_support_view.py\", \"sha256\": \"050c16a2ee6a5dbf8dc5139c4c86c567cb5ac2bbe70d68deda3c3cbfc728db93\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_support_view.py\", \"module_sha256\": \"e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0\", \"runtime_id\": \"test_support_view.SupportViewFixtures.test_requirement_content_mismatch_stays_off_the_current_requirement\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 260, \"name\": \"test_requirement_without_evidence_has_unknown_backend_facts\", \"path\": \"evas/capabilities/test_support_view.py\", \"sha256\": \"af40bd6ea81992319a87ae008c94d6613a78e73d76130c96688c07bcdc4ef5eb\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_support_view.py\", \"module_sha256\": \"e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0\", \"runtime_id\": \"test_support_view.SupportViewFixtures.test_requirement_without_evidence_has_unknown_backend_facts\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 564, \"name\": \"test_review_content_mismatch_does_not_borrow_evidence\", \"path\": \"evas/capabilities/test_support_view.py\", \"sha256\": \"9a6b3da4c8fff90c03ee48d272205d729a1463bac7537801d358533d374031ed\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_support_view.py\", \"module_sha256\": \"e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0\", \"runtime_id\": \"test_support_view.SupportViewFixtures.test_review_content_mismatch_does_not_borrow_evidence\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 336, \"name\": \"test_revoked_dependency_changes_json_and_markdown\", \"path\": \"evas/capabilities/test_support_view.py\", \"sha256\": \"cd57b1bb9a707594f3c31d11d72bee5ed53b09878aeccf337717387d83940d6b\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_support_view.py\", \"module_sha256\": \"e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0\", \"runtime_id\": \"test_support_view.SupportViewFixtures.test_revoked_dependency_changes_json_and_markdown\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 366, \"name\": \"test_superseded_version_remains_locatable_without_current_support\", \"path\": \"evas/capabilities/test_support_view.py\", \"sha256\": \"aaf2a6b1171dcd11caf5fb46c092fe9da2215d116e064d138f5a6ce6fd296cb2\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_support_view.py\", \"module_sha256\": \"e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0\", \"runtime_id\": \"test_support_view.SupportViewFixtures.test_superseded_version_remains_locatable_without_current_support\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 711, \"name\": \"test_toolchain_source_is_not_covered_by_another_record\", \"path\": \"evas/capabilities/test_support_view.py\", \"sha256\": \"216f36c586a2ba4ef4110d1a2dc0ae88c1af8160bc00057a0dcc09858251d166\"}, \"generated\": false, \"module_path\": \"evas/capabilities/test_support_view.py\", \"module_sha256\": \"e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0\", \"runtime_id\": \"test_support_view.SupportViewFixtures.test_toolchain_source_is_not_covered_by_another_record\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}], \"namespace\": \"maintenance\", \"schema_version\": 1, \"skipped_declarations\": 0, \"unresolved_instances\": []}\n",
+      "stderr": "",
+      "environment_overrides": {
+        "GIT_FIXTURE_RETAIN_DIR": "runs/git-fixture-isolation"
+      },
+      "actual_resolved_overrides": {
+        "GIT_FIXTURE_RETAIN_DIR": "runs/git-fixture-isolation"
+      },
+      "collection_profile": "inventory-child runtime; not original phase execution/skip results",
+      "original_python_equivalence": "major-minor-declared-only",
+      "sys_path_contract": "repository-cwd first, then literal phase PYTHONPATH; TestLoader adds start directory"
+    }
+  }
+}
