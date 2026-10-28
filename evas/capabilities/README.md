@@ -89,6 +89,9 @@ python3 -B -m unittest discover -s evas/capabilities -p 'test_*.py' -v
 - `test_scope` 列出能力测试容器：Python 模块，或 Rust 的 `module_path`。容器中每个当前测试都必须由某个案例关联。
 - `checks` 列出需要外部内核、因此不被发现的 `check_` 方法（`module`、`runtime_id`），核对按登记模块的源码定位它们；
   名字以 `test` 开头的方法会被发现，不能放在这里。按名运行，例如 `python3 -B -m unittest <module>.<Class>.<check_name>`。
+  CI 要运行的检查由 workflow 步骤经 `scripts/run_explicit_checks.py` 按名执行：只接受登记在当前案例 `checks` 里、
+  源码中存在的 `check_` 方法，声明的前提环境变量缺失、方法改名或删除、跳过、执行次数不是恰好一次或未通过时都失败，
+  并写出回执；`collect_ci_inventory.py` 把这类步骤记为“CI 按名执行的检查”入口，按同样规则静态定位。
 - `dependencies` 还须含一个当前的 checker。旧样例的单个 `method` 字符串仍按 unittest id 核对。
 
 测试定位不绑定方法对象版本。方法对象的版本是整个对象的内容哈希，每次重生成都可能换版本；

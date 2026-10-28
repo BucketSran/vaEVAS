@@ -288,6 +288,25 @@ jobs:
           retention-days: 14
       - name: Full Rust regression, including interval properties
         run: cargo test --locked --workspace --manifest-path evas/rust_core/Cargo.toml
+      # Discovery never collects check_ methods. This one is the only check of the dynamic path above
+      # the former 100000-row boundary, so it runs by name on every regression selection, whether or not
+      # package is selected: the step builds its own release kernel (a no-op after the source-delivery
+      # build) under this job's Rust cache, and scripts/run_explicit_checks.py fails on a renamed check,
+      # a missing prerequisite, a skip or anything but exactly one passing run.
+      - name: Dynamic RC check above 100000 rows, by name on the release kernel
+        env:
+          PYTHONPATH: evas/src
+          EVAS_TEST_KERNEL: evas/rust_core/target/release/evas-kernel
+        run: |
+          cargo build --locked --release --manifest-path evas/rust_core/Cargo.toml
+          python3 -B scripts/run_explicit_checks.py --start evas/tests --require-env EVAS_TEST_KERNEL --check test_output_point_limit.LargeGridEndToEnd.check_rc_step_response_over_a_hundred_thousand_rows --report runs/explicit-checks.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: explicit-checks
+          path: runs/explicit-checks.json
+          if-no-files-found: warn
+          retention-days: 14
       - name: Collect actual owned Rust binary listing
         if: always()
         run: |
