@@ -1,0 +1,377 @@
+{
+  "base": "d6b7543fc815aaa584c886108691b6f2c01eb220",
+  "candidate": "eb26e5b12e1ec6b36024e972d1211aec4e288ab3",
+  "tree": "236590e69aae9ffce66bbe4f1577928aa8c56738",
+  "paths_vs_base": 114,
+  "checks": [
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "scripts/ci_lint.py",
+        "--plan",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/maintenance-plan.json"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/maintenance-fast-checks.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-28T14:27:59.571982+00:00",
+      "finished_at_utc": "2026-10-28T14:31:50.079658+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "evas/capabilities/render.py",
+        "--check"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/capability-views.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-28T14:31:50.093385+00:00",
+      "finished_at_utc": "2026-10-28T14:34:07.577505+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "evas/capabilities",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/capability-tests.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-28T14:34:07.691390+00:00",
+      "finished_at_utc": "2026-10-28T14:52:16.207082+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "evas/capabilities/requirement_links.py"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/requirement-links.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-28T14:52:16.370378+00:00",
+      "finished_at_utc": "2026-10-28T14:54:56.804318+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "scripts/traceability.py",
+        "--check",
+        "--catalog-data",
+        "evas/capabilities/data"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/traceability-check.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-28T14:54:56.944490+00:00",
+      "finished_at_utc": "2026-10-28T14:57:51.996125+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "scripts/diagnostic_inventory.py",
+        "--check"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/diagnostic-inventory-check-final.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-28T14:57:52.003042+00:00",
+      "finished_at_utc": "2026-10-28T14:57:57.570984+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/tests",
+        "-p",
+        "test_catalog_derived_outputs.py",
+        "-v"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/affected-test_catalog_derived_outputs.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-28T14:57:57.590428+00:00",
+      "finished_at_utc": "2026-10-28T14:57:58.177582+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/tests",
+        "-p",
+        "test_catalog_part_split.py",
+        "-v"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/affected-test_catalog_part_split.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-28T14:57:58.177975+00:00",
+      "finished_at_utc": "2026-10-28T14:57:58.524812+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/tests",
+        "-p",
+        "test_catalog_history_selection.py",
+        "-v"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/affected-test_catalog_history_selection.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-28T14:57:58.525097+00:00",
+      "finished_at_utc": "2026-10-28T14:59:59.909732+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/tests",
+        "-p",
+        "test_traceability.py",
+        "-v"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/affected-test_traceability.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-28T14:59:59.917228+00:00",
+      "finished_at_utc": "2026-10-28T15:00:04.712808+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/tests",
+        "-p",
+        "test_rust_catalog_reconcile.py",
+        "-v"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/affected-test_rust_catalog_reconcile.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-28T15:00:04.712944+00:00",
+      "finished_at_utc": "2026-10-28T15:01:10.001993+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/tests",
+        "-p",
+        "test_ci_inventory.py",
+        "-v"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/affected-test_ci_inventory.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-28T15:01:10.007204+00:00",
+      "finished_at_utc": "2026-10-28T15:01:20.163266+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/tests",
+        "-p",
+        "test_ci_selection.py",
+        "-v"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/affected-test_ci_selection.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-28T15:01:20.163445+00:00",
+      "finished_at_utc": "2026-10-28T15:02:26.442838+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/tests",
+        "-p",
+        "test_ci_pins.py",
+        "-v"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/affected-test_ci_pins.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-28T15:02:26.459701+00:00",
+      "finished_at_utc": "2026-10-28T15:02:26.726102+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/tests",
+        "-p",
+        "test_discover_rust.py",
+        "-v"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/affected-test_discover_rust.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-28T15:02:26.726295+00:00",
+      "finished_at_utc": "2026-10-28T15:05:54.631747+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/tests",
+        "-p",
+        "test_regression_shard_selection.py",
+        "-v"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/affected-test_regression_shard_selection.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-28T15:05:54.684297+00:00",
+      "finished_at_utc": "2026-10-28T15:05:58.222509+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/tests",
+        "-p",
+        "test_regression_admission.py",
+        "-v"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/affected-test_regression_admission.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-28T15:05:58.222615+00:00",
+      "finished_at_utc": "2026-10-28T15:06:14.827379+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/tests",
+        "-p",
+        "test_context_registration.py",
+        "-v"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/affected-test_context_registration.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-28T15:06:14.829307+00:00",
+      "finished_at_utc": "2026-10-28T15:06:18.433700+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/tests",
+        "-p",
+        "test_regression_gate.py",
+        "-v"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/affected-test_regression_gate.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-28T15:06:18.433902+00:00",
+      "finished_at_utc": "2026-10-28T15:06:21.722178+00:00"
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/tests",
+        "-p",
+        "test_explicit_checks.py",
+        "-v"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/affected-test_explicit_checks.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-28T15:06:21.722374+00:00",
+      "finished_at_utc": "2026-10-28T15:06:25.086460+00:00"
+    },
+    {
+      "command": [
+        "/usr/bin/git",
+        "--git-dir=/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/source/.git",
+        "--work-tree=/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/source",
+        "diff",
+        "--check",
+        "d6b7543fc815aaa584c886108691b6f2c01eb220"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-pr-r2-20261028/diff-check.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-28T15:06:25.088070+00:00",
+      "finished_at_utc": "2026-10-28T15:07:32.961877+00:00"
+    }
+  ],
+  "scientific_execution": false,
+  "scientific_qualification": false
+}
