@@ -1,0 +1,489 @@
+{
+  "entry": {
+    "workflow": ".github/workflows/numerical-assurance.yml",
+    "line": 231,
+    "job": "provenance-paper",
+    "step": "Paper contracts, observable criteria and table provenance",
+    "job_if": "needs.selection.outputs.provenance == 'true'",
+    "step_if": null,
+    "command": "python3 -B -m unittest discover -s evas/validation/checker_calibration -v",
+    "environment_overrides": {},
+    "declared_python_versions": [
+      "3.12.15"
+    ],
+    "start": "evas/validation/checker_calibration",
+    "pattern": "test*.py",
+    "namespace": "validation",
+    "collector": "unittest",
+    "mode": "declared-ci-literal",
+    "purpose": "role-not-semantic-qualification",
+    "entry_id": "2607e7d03229e22fa9b76954f37fec8073e821e2fa7560ecaa326c5d23992d40"
+  },
+  "receipt": {
+    "collector": {
+      "definition_profile": "actual-code-or-registered-native-skip-v1",
+      "native_skip_authority": {
+        "factory_span_sha256": "a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad",
+        "profile": "registered-native-unittest-skip-v1",
+        "runtime_file_sha256": "45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987",
+        "runtime_source": "unittest/case.py",
+        "wrapper_span_sha256": "96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda"
+      },
+      "path": "scripts/capabilities/discover_methods.py",
+      "sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "source_relationship": "owned-source-root"
+    },
+    "complete": true,
+    "discovered_instances": 22,
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONPATH": null,
+      "bytecode_disabled": true,
+      "cache_tag": "cpython-312",
+      "environment_scope": "python-runtime-and-import-path-only",
+      "executable": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+      "implementation": "cpython",
+      "platform": "darwin",
+      "python_version": "3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]",
+      "sys_path_before_selected_imports": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r3/source",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python312.zip",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/lib/python3.12/site-packages"
+      ]
+    },
+    "error_count": 0,
+    "errors": [],
+    "loader_error_count": 0,
+    "methods": [
+      {
+        "definition": {
+          "line": 231,
+          "name": "test_bound_step_0_drop_initial",
+          "path": "evas/validation/checker_calibration/test_detector_controls.py",
+          "sha256": "cb9e47869b568893284ca01128d0809426e4b19634c11eca1118d93a71960288"
+        },
+        "generated": true,
+        "module_path": "evas/validation/checker_calibration/test_detector_controls.py",
+        "module_sha256": "2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661",
+        "runtime_id": "test_detector_controls.DetectorControls.test_bound_step_0_drop_initial",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 231,
+          "name": "test_bound_step_0_identity",
+          "path": "evas/validation/checker_calibration/test_detector_controls.py",
+          "sha256": "cb9e47869b568893284ca01128d0809426e4b19634c11eca1118d93a71960288"
+        },
+        "generated": true,
+        "module_path": "evas/validation/checker_calibration/test_detector_controls.py",
+        "module_sha256": "2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661",
+        "runtime_id": "test_detector_controls.DetectorControls.test_bound_step_0_identity",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 231,
+          "name": "test_bound_step_0_wrong_voltage",
+          "path": "evas/validation/checker_calibration/test_detector_controls.py",
+          "sha256": "cb9e47869b568893284ca01128d0809426e4b19634c11eca1118d93a71960288"
+        },
+        "generated": true,
+        "module_path": "evas/validation/checker_calibration/test_detector_controls.py",
+        "module_sha256": "2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661",
+        "runtime_id": "test_detector_controls.DetectorControls.test_bound_step_0_wrong_voltage",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 231,
+          "name": "test_bound_step_1_identity",
+          "path": "evas/validation/checker_calibration/test_detector_controls.py",
+          "sha256": "cb9e47869b568893284ca01128d0809426e4b19634c11eca1118d93a71960288"
+        },
+        "generated": true,
+        "module_path": "evas/validation/checker_calibration/test_detector_controls.py",
+        "module_sha256": "2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661",
+        "runtime_id": "test_detector_controls.DetectorControls.test_bound_step_1_identity",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 231,
+          "name": "test_bound_step_1_wrong_times",
+          "path": "evas/validation/checker_calibration/test_detector_controls.py",
+          "sha256": "cb9e47869b568893284ca01128d0809426e4b19634c11eca1118d93a71960288"
+        },
+        "generated": true,
+        "module_path": "evas/validation/checker_calibration/test_detector_controls.py",
+        "module_sha256": "2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661",
+        "runtime_id": "test_detector_controls.DetectorControls.test_bound_step_1_wrong_times",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 231,
+          "name": "test_bound_step_1_wrong_voltage",
+          "path": "evas/validation/checker_calibration/test_detector_controls.py",
+          "sha256": "cb9e47869b568893284ca01128d0809426e4b19634c11eca1118d93a71960288"
+        },
+        "generated": true,
+        "module_path": "evas/validation/checker_calibration/test_detector_controls.py",
+        "module_sha256": "2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661",
+        "runtime_id": "test_detector_controls.DetectorControls.test_bound_step_1_wrong_voltage",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 248,
+          "name": "test_deferred_exact_mutant",
+          "path": "evas/validation/checker_calibration/test_detector_controls.py",
+          "sha256": "7f7a8d4418a4058ad7624de48290a96fb72669745cf4ef654ef71bef03d8202b"
+        },
+        "generated": true,
+        "module_path": "evas/validation/checker_calibration/test_detector_controls.py",
+        "module_sha256": "2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661",
+        "runtime_id": "test_detector_controls.DetectorControls.test_deferred_exact_mutant",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 245,
+          "name": "test_deferred_original",
+          "path": "evas/validation/checker_calibration/test_detector_controls.py",
+          "sha256": "157ec9059b5ac50ad08842f92a74d299c90477b8b89847e1ac325ae97f4e7e5e"
+        },
+        "generated": true,
+        "module_path": "evas/validation/checker_calibration/test_detector_controls.py",
+        "module_sha256": "2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661",
+        "runtime_id": "test_detector_controls.DetectorControls.test_deferred_original",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 225,
+          "name": "test_source_math_0_correct",
+          "path": "evas/validation/checker_calibration/test_detector_controls.py",
+          "sha256": "d3459b03a8ec11bb06419bf0294b25ee17dab1abb5ff20f35e6b96c5b3661869"
+        },
+        "generated": true,
+        "module_path": "evas/validation/checker_calibration/test_detector_controls.py",
+        "module_sha256": "2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661",
+        "runtime_id": "test_detector_controls.DetectorControls.test_source_math_0_correct",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 225,
+          "name": "test_source_math_0_correct_wide",
+          "path": "evas/validation/checker_calibration/test_detector_controls.py",
+          "sha256": "d3459b03a8ec11bb06419bf0294b25ee17dab1abb5ff20f35e6b96c5b3661869"
+        },
+        "generated": true,
+        "module_path": "evas/validation/checker_calibration/test_detector_controls.py",
+        "module_sha256": "2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661",
+        "runtime_id": "test_detector_controls.DetectorControls.test_source_math_0_correct_wide",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 225,
+          "name": "test_source_math_0_lower_over",
+          "path": "evas/validation/checker_calibration/test_detector_controls.py",
+          "sha256": "d3459b03a8ec11bb06419bf0294b25ee17dab1abb5ff20f35e6b96c5b3661869"
+        },
+        "generated": true,
+        "module_path": "evas/validation/checker_calibration/test_detector_controls.py",
+        "module_sha256": "2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661",
+        "runtime_id": "test_detector_controls.DetectorControls.test_source_math_0_lower_over",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 225,
+          "name": "test_source_math_0_lower_within",
+          "path": "evas/validation/checker_calibration/test_detector_controls.py",
+          "sha256": "d3459b03a8ec11bb06419bf0294b25ee17dab1abb5ff20f35e6b96c5b3661869"
+        },
+        "generated": true,
+        "module_path": "evas/validation/checker_calibration/test_detector_controls.py",
+        "module_sha256": "2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661",
+        "runtime_id": "test_detector_controls.DetectorControls.test_source_math_0_lower_within",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 225,
+          "name": "test_source_math_0_upper_over",
+          "path": "evas/validation/checker_calibration/test_detector_controls.py",
+          "sha256": "d3459b03a8ec11bb06419bf0294b25ee17dab1abb5ff20f35e6b96c5b3661869"
+        },
+        "generated": true,
+        "module_path": "evas/validation/checker_calibration/test_detector_controls.py",
+        "module_sha256": "2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661",
+        "runtime_id": "test_detector_controls.DetectorControls.test_source_math_0_upper_over",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 225,
+          "name": "test_source_math_0_upper_within",
+          "path": "evas/validation/checker_calibration/test_detector_controls.py",
+          "sha256": "d3459b03a8ec11bb06419bf0294b25ee17dab1abb5ff20f35e6b96c5b3661869"
+        },
+        "generated": true,
+        "module_path": "evas/validation/checker_calibration/test_detector_controls.py",
+        "module_sha256": "2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661",
+        "runtime_id": "test_detector_controls.DetectorControls.test_source_math_0_upper_within",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 225,
+          "name": "test_source_math_0_wrong_wide",
+          "path": "evas/validation/checker_calibration/test_detector_controls.py",
+          "sha256": "d3459b03a8ec11bb06419bf0294b25ee17dab1abb5ff20f35e6b96c5b3661869"
+        },
+        "generated": true,
+        "module_path": "evas/validation/checker_calibration/test_detector_controls.py",
+        "module_sha256": "2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661",
+        "runtime_id": "test_detector_controls.DetectorControls.test_source_math_0_wrong_wide",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 225,
+          "name": "test_source_math_1_correct",
+          "path": "evas/validation/checker_calibration/test_detector_controls.py",
+          "sha256": "d3459b03a8ec11bb06419bf0294b25ee17dab1abb5ff20f35e6b96c5b3661869"
+        },
+        "generated": true,
+        "module_path": "evas/validation/checker_calibration/test_detector_controls.py",
+        "module_sha256": "2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661",
+        "runtime_id": "test_detector_controls.DetectorControls.test_source_math_1_correct",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 225,
+          "name": "test_source_math_1_correct_wide",
+          "path": "evas/validation/checker_calibration/test_detector_controls.py",
+          "sha256": "d3459b03a8ec11bb06419bf0294b25ee17dab1abb5ff20f35e6b96c5b3661869"
+        },
+        "generated": true,
+        "module_path": "evas/validation/checker_calibration/test_detector_controls.py",
+        "module_sha256": "2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661",
+        "runtime_id": "test_detector_controls.DetectorControls.test_source_math_1_correct_wide",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 225,
+          "name": "test_source_math_1_lower_over",
+          "path": "evas/validation/checker_calibration/test_detector_controls.py",
+          "sha256": "d3459b03a8ec11bb06419bf0294b25ee17dab1abb5ff20f35e6b96c5b3661869"
+        },
+        "generated": true,
+        "module_path": "evas/validation/checker_calibration/test_detector_controls.py",
+        "module_sha256": "2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661",
+        "runtime_id": "test_detector_controls.DetectorControls.test_source_math_1_lower_over",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 225,
+          "name": "test_source_math_1_lower_within",
+          "path": "evas/validation/checker_calibration/test_detector_controls.py",
+          "sha256": "d3459b03a8ec11bb06419bf0294b25ee17dab1abb5ff20f35e6b96c5b3661869"
+        },
+        "generated": true,
+        "module_path": "evas/validation/checker_calibration/test_detector_controls.py",
+        "module_sha256": "2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661",
+        "runtime_id": "test_detector_controls.DetectorControls.test_source_math_1_lower_within",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 225,
+          "name": "test_source_math_1_upper_over",
+          "path": "evas/validation/checker_calibration/test_detector_controls.py",
+          "sha256": "d3459b03a8ec11bb06419bf0294b25ee17dab1abb5ff20f35e6b96c5b3661869"
+        },
+        "generated": true,
+        "module_path": "evas/validation/checker_calibration/test_detector_controls.py",
+        "module_sha256": "2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661",
+        "runtime_id": "test_detector_controls.DetectorControls.test_source_math_1_upper_over",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 225,
+          "name": "test_source_math_1_upper_within",
+          "path": "evas/validation/checker_calibration/test_detector_controls.py",
+          "sha256": "d3459b03a8ec11bb06419bf0294b25ee17dab1abb5ff20f35e6b96c5b3661869"
+        },
+        "generated": true,
+        "module_path": "evas/validation/checker_calibration/test_detector_controls.py",
+        "module_sha256": "2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661",
+        "runtime_id": "test_detector_controls.DetectorControls.test_source_math_1_upper_within",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 225,
+          "name": "test_source_math_1_wrong_wide",
+          "path": "evas/validation/checker_calibration/test_detector_controls.py",
+          "sha256": "d3459b03a8ec11bb06419bf0294b25ee17dab1abb5ff20f35e6b96c5b3661869"
+        },
+        "generated": true,
+        "module_path": "evas/validation/checker_calibration/test_detector_controls.py",
+        "module_sha256": "2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661",
+        "runtime_id": "test_detector_controls.DetectorControls.test_source_math_1_wrong_wide",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      }
+    ],
+    "namespace": "validation",
+    "schema_version": 1,
+    "skipped_declarations": 0,
+    "unresolved_instances": [],
+    "transport": {
+      "argv": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-c",
+        "import os,runpy,sys; sys.path[0]=os.getcwd(); tool=sys.argv[1]; sys.argv=sys.argv[1:]; runpy.run_path(tool,run_name=\"__main__\")",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r3/source/scripts/capabilities/discover_methods.py",
+        "--worker",
+        "--root",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r3/source",
+        "--start",
+        "evas/validation/checker_calibration",
+        "--pattern",
+        "test*.py",
+        "--namespace",
+        "validation"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r3/source",
+      "returncode": 0,
+      "stdout": "{\"collector\": {\"definition_profile\": \"actual-code-or-registered-native-skip-v1\", \"native_skip_authority\": {\"factory_span_sha256\": \"a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad\", \"profile\": \"registered-native-unittest-skip-v1\", \"runtime_file_sha256\": \"45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987\", \"runtime_source\": \"unittest/case.py\", \"wrapper_span_sha256\": \"96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda\"}, \"path\": \"scripts/capabilities/discover_methods.py\", \"sha256\": \"aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17\", \"source_relationship\": \"owned-source-root\"}, \"complete\": true, \"discovered_instances\": 22, \"environment\": {\"PYTHONDONTWRITEBYTECODE\": \"1\", \"PYTHONPATH\": null, \"bytecode_disabled\": true, \"cache_tag\": \"cpython-312\", \"environment_scope\": \"python-runtime-and-import-path-only\", \"executable\": \"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python\", \"implementation\": \"cpython\", \"platform\": \"darwin\", \"python_version\": \"3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"sys_path_before_selected_imports\": [\"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r3/source\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python312.zip\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload\", \"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/lib/python3.12/site-packages\"]}, \"error_count\": 0, \"errors\": [], \"loader_error_count\": 0, \"methods\": [{\"definition\": {\"line\": 231, \"name\": \"test_bound_step_0_drop_initial\", \"path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"sha256\": \"cb9e47869b568893284ca01128d0809426e4b19634c11eca1118d93a71960288\"}, \"generated\": true, \"module_path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"module_sha256\": \"2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661\", \"runtime_id\": \"test_detector_controls.DetectorControls.test_bound_step_0_drop_initial\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 231, \"name\": \"test_bound_step_0_identity\", \"path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"sha256\": \"cb9e47869b568893284ca01128d0809426e4b19634c11eca1118d93a71960288\"}, \"generated\": true, \"module_path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"module_sha256\": \"2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661\", \"runtime_id\": \"test_detector_controls.DetectorControls.test_bound_step_0_identity\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 231, \"name\": \"test_bound_step_0_wrong_voltage\", \"path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"sha256\": \"cb9e47869b568893284ca01128d0809426e4b19634c11eca1118d93a71960288\"}, \"generated\": true, \"module_path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"module_sha256\": \"2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661\", \"runtime_id\": \"test_detector_controls.DetectorControls.test_bound_step_0_wrong_voltage\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 231, \"name\": \"test_bound_step_1_identity\", \"path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"sha256\": \"cb9e47869b568893284ca01128d0809426e4b19634c11eca1118d93a71960288\"}, \"generated\": true, \"module_path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"module_sha256\": \"2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661\", \"runtime_id\": \"test_detector_controls.DetectorControls.test_bound_step_1_identity\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 231, \"name\": \"test_bound_step_1_wrong_times\", \"path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"sha256\": \"cb9e47869b568893284ca01128d0809426e4b19634c11eca1118d93a71960288\"}, \"generated\": true, \"module_path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"module_sha256\": \"2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661\", \"runtime_id\": \"test_detector_controls.DetectorControls.test_bound_step_1_wrong_times\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 231, \"name\": \"test_bound_step_1_wrong_voltage\", \"path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"sha256\": \"cb9e47869b568893284ca01128d0809426e4b19634c11eca1118d93a71960288\"}, \"generated\": true, \"module_path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"module_sha256\": \"2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661\", \"runtime_id\": \"test_detector_controls.DetectorControls.test_bound_step_1_wrong_voltage\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 248, \"name\": \"test_deferred_exact_mutant\", \"path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"sha256\": \"7f7a8d4418a4058ad7624de48290a96fb72669745cf4ef654ef71bef03d8202b\"}, \"generated\": true, \"module_path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"module_sha256\": \"2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661\", \"runtime_id\": \"test_detector_controls.DetectorControls.test_deferred_exact_mutant\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 245, \"name\": \"test_deferred_original\", \"path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"sha256\": \"157ec9059b5ac50ad08842f92a74d299c90477b8b89847e1ac325ae97f4e7e5e\"}, \"generated\": true, \"module_path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"module_sha256\": \"2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661\", \"runtime_id\": \"test_detector_controls.DetectorControls.test_deferred_original\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 225, \"name\": \"test_source_math_0_correct\", \"path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"sha256\": \"d3459b03a8ec11bb06419bf0294b25ee17dab1abb5ff20f35e6b96c5b3661869\"}, \"generated\": true, \"module_path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"module_sha256\": \"2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661\", \"runtime_id\": \"test_detector_controls.DetectorControls.test_source_math_0_correct\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 225, \"name\": \"test_source_math_0_correct_wide\", \"path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"sha256\": \"d3459b03a8ec11bb06419bf0294b25ee17dab1abb5ff20f35e6b96c5b3661869\"}, \"generated\": true, \"module_path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"module_sha256\": \"2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661\", \"runtime_id\": \"test_detector_controls.DetectorControls.test_source_math_0_correct_wide\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 225, \"name\": \"test_source_math_0_lower_over\", \"path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"sha256\": \"d3459b03a8ec11bb06419bf0294b25ee17dab1abb5ff20f35e6b96c5b3661869\"}, \"generated\": true, \"module_path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"module_sha256\": \"2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661\", \"runtime_id\": \"test_detector_controls.DetectorControls.test_source_math_0_lower_over\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 225, \"name\": \"test_source_math_0_lower_within\", \"path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"sha256\": \"d3459b03a8ec11bb06419bf0294b25ee17dab1abb5ff20f35e6b96c5b3661869\"}, \"generated\": true, \"module_path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"module_sha256\": \"2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661\", \"runtime_id\": \"test_detector_controls.DetectorControls.test_source_math_0_lower_within\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 225, \"name\": \"test_source_math_0_upper_over\", \"path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"sha256\": \"d3459b03a8ec11bb06419bf0294b25ee17dab1abb5ff20f35e6b96c5b3661869\"}, \"generated\": true, \"module_path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"module_sha256\": \"2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661\", \"runtime_id\": \"test_detector_controls.DetectorControls.test_source_math_0_upper_over\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 225, \"name\": \"test_source_math_0_upper_within\", \"path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"sha256\": \"d3459b03a8ec11bb06419bf0294b25ee17dab1abb5ff20f35e6b96c5b3661869\"}, \"generated\": true, \"module_path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"module_sha256\": \"2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661\", \"runtime_id\": \"test_detector_controls.DetectorControls.test_source_math_0_upper_within\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 225, \"name\": \"test_source_math_0_wrong_wide\", \"path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"sha256\": \"d3459b03a8ec11bb06419bf0294b25ee17dab1abb5ff20f35e6b96c5b3661869\"}, \"generated\": true, \"module_path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"module_sha256\": \"2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661\", \"runtime_id\": \"test_detector_controls.DetectorControls.test_source_math_0_wrong_wide\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 225, \"name\": \"test_source_math_1_correct\", \"path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"sha256\": \"d3459b03a8ec11bb06419bf0294b25ee17dab1abb5ff20f35e6b96c5b3661869\"}, \"generated\": true, \"module_path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"module_sha256\": \"2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661\", \"runtime_id\": \"test_detector_controls.DetectorControls.test_source_math_1_correct\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 225, \"name\": \"test_source_math_1_correct_wide\", \"path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"sha256\": \"d3459b03a8ec11bb06419bf0294b25ee17dab1abb5ff20f35e6b96c5b3661869\"}, \"generated\": true, \"module_path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"module_sha256\": \"2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661\", \"runtime_id\": \"test_detector_controls.DetectorControls.test_source_math_1_correct_wide\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 225, \"name\": \"test_source_math_1_lower_over\", \"path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"sha256\": \"d3459b03a8ec11bb06419bf0294b25ee17dab1abb5ff20f35e6b96c5b3661869\"}, \"generated\": true, \"module_path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"module_sha256\": \"2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661\", \"runtime_id\": \"test_detector_controls.DetectorControls.test_source_math_1_lower_over\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 225, \"name\": \"test_source_math_1_lower_within\", \"path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"sha256\": \"d3459b03a8ec11bb06419bf0294b25ee17dab1abb5ff20f35e6b96c5b3661869\"}, \"generated\": true, \"module_path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"module_sha256\": \"2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661\", \"runtime_id\": \"test_detector_controls.DetectorControls.test_source_math_1_lower_within\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 225, \"name\": \"test_source_math_1_upper_over\", \"path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"sha256\": \"d3459b03a8ec11bb06419bf0294b25ee17dab1abb5ff20f35e6b96c5b3661869\"}, \"generated\": true, \"module_path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"module_sha256\": \"2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661\", \"runtime_id\": \"test_detector_controls.DetectorControls.test_source_math_1_upper_over\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 225, \"name\": \"test_source_math_1_upper_within\", \"path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"sha256\": \"d3459b03a8ec11bb06419bf0294b25ee17dab1abb5ff20f35e6b96c5b3661869\"}, \"generated\": true, \"module_path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"module_sha256\": \"2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661\", \"runtime_id\": \"test_detector_controls.DetectorControls.test_source_math_1_upper_within\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 225, \"name\": \"test_source_math_1_wrong_wide\", \"path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"sha256\": \"d3459b03a8ec11bb06419bf0294b25ee17dab1abb5ff20f35e6b96c5b3661869\"}, \"generated\": true, \"module_path\": \"evas/validation/checker_calibration/test_detector_controls.py\", \"module_sha256\": \"2e18c4ad4bb045ec8434f8ebe9078510524448ba23d04811cb5c8fd2f4316661\", \"runtime_id\": \"test_detector_controls.DetectorControls.test_source_math_1_wrong_wide\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}], \"namespace\": \"validation\", \"schema_version\": 1, \"skipped_declarations\": 0, \"unresolved_instances\": []}\n",
+      "stderr": "",
+      "environment_overrides": {},
+      "actual_resolved_overrides": {},
+      "collection_profile": "inventory-child runtime; not original phase execution/skip results",
+      "original_python_equivalence": "major-minor-declared-only",
+      "sys_path_contract": "repository-cwd first, then literal phase PYTHONPATH; TestLoader adds start directory"
+    }
+  }
+}

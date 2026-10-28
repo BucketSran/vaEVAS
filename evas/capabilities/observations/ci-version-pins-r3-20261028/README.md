@@ -1,0 +1,3 @@
+# CI version pins r3
+
+The merge commit joins PR273 r2 (9ea5de9f) with main after PR6 and its context registration (bf2ec410). PR273-only source paths keep the r2 bytes, main-only paths keep main, and numerical-assurance.yml keeps both sides of its three conflict blocks. The fixes commit closes review findings STD-01 and STD-R2-01 and adapts the pins to PR6: the pin test reads quoted, flow and matrix YAML forms and fails on unknown ones; Rust pins are checked in the PR6 input form; fuzz-smoke pins one dated nightly; and regression-coverage merges the latest attempt of each shard. The catalog is regenerated from the union of both parents. Criteria, collector and DUT are unchanged. Scientific qualification is false.

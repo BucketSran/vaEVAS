@@ -1,0 +1,46 @@
+diff --git a/.github/workflows/package-install.yml b/.github/workflows/package-install.yml
+index 907b8ee5..23fe7da9 100644
+--- a/.github/workflows/package-install.yml
++++ b/.github/workflows/package-install.yml
+@@ -9,6 +9,10 @@ on:
+ permissions:
+   contents: read
+ 
++# Fixed Rust toolchain for the sdist build, which uses it through rustup.
++env:
++  RUSTUP_TOOLCHAIN: '1.99.1'
++
+ jobs:
+   install:
+     outputs:
+@@ -19,10 +23,10 @@ jobs:
+         include:
+           - runner: ubuntu-24.04
+             arch: x86_64
+-            python: '3.10'
++            python: '3.10.22'
+           - runner: macos-14
+             arch: arm64
+-            python: '3.12'
++            python: '3.12.10'
+     runs-on: ${{ matrix.runner }}
+     timeout-minutes: 20
+     steps:
+@@ -32,7 +36,7 @@ jobs:
+           python-version: ${{ matrix.python }}
+           cache: pip
+           cache-dependency-path: evas/pyproject.toml
+-      - run: rustup toolchain install stable --profile minimal
++      - run: rustup toolchain install "$RUSTUP_TOOLCHAIN" --profile minimal
+       - uses: ./.github/actions/rust-cache
+         with:
+           # Cache downloads only. The sdist must build its own fresh executable.
+@@ -41,7 +45,7 @@ jobs:
+         env:
+           EXPECTED_ARCH: ${{ matrix.arch }}
+         run: python -c "import os,platform; assert platform.machine() == os.environ['EXPECTED_ARCH'], platform.machine()"
+-      - run: python -m pip install build
++      - run: python -m pip install build==1.6.1
+       - name: Build sdist, then build native wheel from that archive
+         run: |
+           python -m build --sdist --outdir runs/package-dist evas

@@ -1,0 +1,784 @@
+{
+  "entry": {
+    "workflow": ".github/workflows/numerical-assurance.yml",
+    "line": 69,
+    "job": "selection",
+    "step": "Check CI routing and changed-line whitespace",
+    "job_if": null,
+    "step_if": null,
+    "command": "python3 -B -m unittest discover -s scripts/tests -p test_ci_selection.py -v",
+    "environment_overrides": {
+      "CI_BASE": "${{ steps.changes.outputs.base }}",
+      "CI_HEAD": "${{ steps.changes.outputs.head }}"
+    },
+    "declared_python_versions": [],
+    "start": "scripts/tests",
+    "pattern": "test_ci_selection.py",
+    "namespace": "maintenance",
+    "collector": "unittest",
+    "mode": "declared-ci-literal",
+    "purpose": "role-not-semantic-qualification",
+    "entry_id": "a367ca9e54e073397d0c48dfe78e4519af43987064252a7121e1cf4f6d26e575"
+  },
+  "receipt": {
+    "collector": {
+      "definition_profile": "actual-code-or-registered-native-skip-v1",
+      "native_skip_authority": {
+        "factory_span_sha256": "a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad",
+        "profile": "registered-native-unittest-skip-v1",
+        "runtime_file_sha256": "45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987",
+        "runtime_source": "unittest/case.py",
+        "wrapper_span_sha256": "96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda"
+      },
+      "path": "scripts/capabilities/discover_methods.py",
+      "sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "source_relationship": "owned-source-root"
+    },
+    "complete": true,
+    "discovered_instances": 38,
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONPATH": null,
+      "bytecode_disabled": true,
+      "cache_tag": "cpython-312",
+      "environment_scope": "python-runtime-and-import-path-only",
+      "executable": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+      "implementation": "cpython",
+      "platform": "darwin",
+      "python_version": "3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]",
+      "sys_path_before_selected_imports": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r3/source",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python312.zip",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/lib/python3.12/site-packages"
+      ]
+    },
+    "error_count": 0,
+    "errors": [],
+    "loader_error_count": 0,
+    "methods": [
+      {
+        "definition": {
+          "line": 501,
+          "name": "test_cli_gate_returns_nonzero_for_failed_selected_check",
+          "path": "scripts/tests/test_ci_selection.py",
+          "sha256": "4628171009e31bd23aa90409622744b9124df2c07d14c828fa93cf2f918449c9"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_ci_selection.py",
+        "module_sha256": "08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720",
+        "runtime_id": "test_ci_selection.GateTests.test_cli_gate_returns_nonzero_for_failed_selected_check",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 474,
+          "name": "test_failure_cancellation_missing_jobs_or_unexpected_execution_failures_are_rejected",
+          "path": "scripts/tests/test_ci_selection.py",
+          "sha256": "145852180d84b8509a3dda1449e9422ad2aa52e347f7463e42cb1bf23a4726c5"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_ci_selection.py",
+        "module_sha256": "08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720",
+        "runtime_id": "test_ci_selection.GateTests.test_failure_cancellation_missing_jobs_or_unexpected_execution_failures_are_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 464,
+          "name": "test_intentional_skips_are_allowed_but_selected_skips_are_not",
+          "path": "scripts/tests/test_ci_selection.py",
+          "sha256": "63e8b28eab78a94342a865422e9def58aac65f12daec730c18895873a4f0dbaa"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_ci_selection.py",
+        "module_sha256": "08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720",
+        "runtime_id": "test_ci_selection.GateTests.test_intentional_skips_are_allowed_but_selected_skips_are_not",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 454,
+          "name": "test_maintenance_still_requires_inventory_and_static_checks",
+          "path": "scripts/tests/test_ci_selection.py",
+          "sha256": "1fd304e4e706061e5a23e47c4cfae8e82ebb3b17a21ed5511d91b2482cfbf84e"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_ci_selection.py",
+        "module_sha256": "08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720",
+        "runtime_id": "test_ci_selection.GateTests.test_maintenance_still_requires_inventory_and_static_checks",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 485,
+          "name": "test_missing_or_invalid_selector_output_is_rejected",
+          "path": "scripts/tests/test_ci_selection.py",
+          "sha256": "10dc072fc05345c737f14cb1d19a719668a6cfba6da7cc4054145b3d6d55c4b2"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_ci_selection.py",
+        "module_sha256": "08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720",
+        "runtime_id": "test_ci_selection.GateTests.test_missing_or_invalid_selector_output_is_rejected",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 492,
+          "name": "test_reusable_workflow_success_cannot_hide_skipped_or_failed_child_jobs",
+          "path": "scripts/tests/test_ci_selection.py",
+          "sha256": "d8017ad3d16eaec613b1db19b97c1b8b6495d7ecd0e42f2a11b045c18d6f52f9"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_ci_selection.py",
+        "module_sha256": "08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720",
+        "runtime_id": "test_ci_selection.GateTests.test_reusable_workflow_success_cannot_hide_skipped_or_failed_child_jobs",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 355,
+          "name": "test_cli_emits_github_boolean_outputs",
+          "path": "scripts/tests/test_ci_selection.py",
+          "sha256": "22099b227333753d18f041087758e71bef18a65baf4656e3d5a192732f212530"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_ci_selection.py",
+        "module_sha256": "08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720",
+        "runtime_id": "test_ci_selection.GitChangeTests.test_cli_emits_github_boolean_outputs",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 370,
+          "name": "test_compact_cli_saves_complete_evidence_and_preserves_job_outputs",
+          "path": "scripts/tests/test_ci_selection.py",
+          "sha256": "79ab33655ffb8455225182aca71ce3001d260a36139d429ec6097a67e4ec3d0f"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_ci_selection.py",
+        "module_sha256": "08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720",
+        "runtime_id": "test_ci_selection.GitChangeTests.test_compact_cli_saves_complete_evidence_and_preserves_job_outputs",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 325,
+          "name": "test_deleted_source_still_runs_regression_and_install",
+          "path": "scripts/tests/test_ci_selection.py",
+          "sha256": "93255ff7c729bce4f4683f1ae0f9ec407a14ab2e4695a6c3a9f320cff8b382ad"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_ci_selection.py",
+        "module_sha256": "08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720",
+        "runtime_id": "test_ci_selection.GitChangeTests.test_deleted_source_still_runs_regression_and_install",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 274,
+          "name": "test_fixture_ignores_host_signing_and_hooks",
+          "path": "scripts/tests/test_ci_selection.py",
+          "sha256": "307708afde6be9e64d909d3cb8bd0327fcf07c14f635be0199ebce253fb1adc4"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_ci_selection.py",
+        "module_sha256": "08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720",
+        "runtime_id": "test_ci_selection.GitChangeTests.test_fixture_ignores_host_signing_and_hooks",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 346,
+          "name": "test_missing_history_initial_push_and_manual_run_cannot_skip_checks",
+          "path": "scripts/tests/test_ci_selection.py",
+          "sha256": "fefe0ac7206af839b0e475c0707131ccf6ad77814497e6867d9f6d40fb7a576c"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_ci_selection.py",
+        "module_sha256": "08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720",
+        "runtime_id": "test_ci_selection.GitChangeTests.test_missing_history_initial_push_and_manual_run_cannot_skip_checks",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 304,
+          "name": "test_pr_uses_merge_base_and_excludes_base_branch_only_changes",
+          "path": "scripts/tests/test_ci_selection.py",
+          "sha256": "41431debb5e0e12e250a930231d488243fb69b5bd14ba01900fb1f6755c82d38"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_ci_selection.py",
+        "module_sha256": "08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720",
+        "runtime_id": "test_ci_selection.GitChangeTests.test_pr_uses_merge_base_and_excludes_base_branch_only_changes",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 411,
+          "name": "test_progress_block_exemption_does_not_cover_table_contract_or_file_removal",
+          "path": "scripts/tests/test_ci_selection.py",
+          "sha256": "494208dc10bdf4517a511c00d919e36af253483eb2a92b8b3351f78e82279ee5"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_ci_selection.py",
+        "module_sha256": "08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720",
+        "runtime_id": "test_ci_selection.GitChangeTests.test_progress_block_exemption_does_not_cover_table_contract_or_file_removal",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 317,
+          "name": "test_push_includes_deletion_and_rename_destination",
+          "path": "scripts/tests/test_ci_selection.py",
+          "sha256": "b219bcadfdf5f37691783eab7600c9de8eba617101eb2e762753df5b78e07228"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_ci_selection.py",
+        "module_sha256": "08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720",
+        "runtime_id": "test_ci_selection.GitChangeTests.test_push_includes_deletion_and_rename_destination",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 334,
+          "name": "test_receipt_rename_to_unknown_input_keeps_regression",
+          "path": "scripts/tests/test_ci_selection.py",
+          "sha256": "5ad0f16e76a572906bbac986549830c03805ca609b3fd85f8152b5edf5da4871"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_ci_selection.py",
+        "module_sha256": "08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720",
+        "runtime_id": "test_ci_selection.GitChangeTests.test_receipt_rename_to_unknown_input_keeps_regression",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 385,
+          "name": "test_registration_exemption_preserves_semantics_and_unknown_inputs",
+          "path": "scripts/tests/test_ci_selection.py",
+          "sha256": "db6e0769829965caa262eb72605af6cb41f93bea5ec94971fbe139f7dd55f4a8"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_ci_selection.py",
+        "module_sha256": "08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720",
+        "runtime_id": "test_ci_selection.GitChangeTests.test_registration_exemption_preserves_semantics_and_unknown_inputs",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 149,
+          "name": "test_backend_checkers_keep_calibration_without_kernel_regression",
+          "path": "scripts/tests/test_ci_selection.py",
+          "sha256": "3f8bd21d45cfb1cd3d990c2f0f7de01973775a63510300784b9de230337d228b"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_ci_selection.py",
+        "module_sha256": "08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720",
+        "runtime_id": "test_ci_selection.RoutingTests.test_backend_checkers_keep_calibration_without_kernel_regression",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 206,
+          "name": "test_benchmark_sources_and_format_checks_keep_their_ci_consumer",
+          "path": "scripts/tests/test_ci_selection.py",
+          "sha256": "19c5a9b107ebde35bb77b001133ffa32e6ffdf238a460973545c9411aa832a07"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_ci_selection.py",
+        "module_sha256": "08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720",
+        "runtime_id": "test_ci_selection.RoutingTests.test_benchmark_sources_and_format_checks_keep_their_ci_consumer",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 91,
+          "name": "test_capability_catalog_stays_on_maintenance",
+          "path": "scripts/tests/test_ci_selection.py",
+          "sha256": "32f3f23df6e2a37e45193e14f84222d47b5a2c3966cd0bdfb4521e01c149d713"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_ci_selection.py",
+        "module_sha256": "08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720",
+        "runtime_id": "test_ci_selection.RoutingTests.test_capability_catalog_stays_on_maintenance",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 20,
+          "name": "test_catalog_generator_selects_maintenance_without_exempting_neighbors",
+          "path": "scripts/tests/test_ci_selection.py",
+          "sha256": "4db717985d357b7820939ccfa1db33096f1495a6bab57af3532c86df930d158c"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_ci_selection.py",
+        "module_sha256": "08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720",
+        "runtime_id": "test_ci_selection.RoutingTests.test_catalog_generator_selects_maintenance_without_exempting_neighbors",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 36,
+          "name": "test_comparison_worker_migration_routes_actual_consumers",
+          "path": "scripts/tests/test_ci_selection.py",
+          "sha256": "ba2462c10aa188b201a585d48ae88490a12e842b4a237da215575ffdbfca1b81"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_ci_selection.py",
+        "module_sha256": "08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720",
+        "runtime_id": "test_ci_selection.RoutingTests.test_comparison_worker_migration_routes_actual_consumers",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 44,
+          "name": "test_continuation_controls_only_select_maintenance",
+          "path": "scripts/tests/test_ci_selection.py",
+          "sha256": "f0805d08bf7cb64cc175511e527e41dd031fdc9fc29044078e2e4467528182ee"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_ci_selection.py",
+        "module_sha256": "08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720",
+        "runtime_id": "test_ci_selection.RoutingTests.test_continuation_controls_only_select_maintenance",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 60,
+          "name": "test_development_records_only_select_maintenance",
+          "path": "scripts/tests/test_ci_selection.py",
+          "sha256": "9bcea3002d475eb0440d1f5fb666bf27d6e6a4fd4603925b1cb4a97b82e620fb"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_ci_selection.py",
+        "module_sha256": "08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720",
+        "runtime_id": "test_ci_selection.RoutingTests.test_development_records_only_select_maintenance",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 121,
+          "name": "test_development_tests_keep_regression_and_source_identity",
+          "path": "scripts/tests/test_ci_selection.py",
+          "sha256": "980508605f10f95a0a7f22255f5c8609c1c26b696a562cfd4812c30c6700fa4f"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_ci_selection.py",
+        "module_sha256": "08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720",
+        "runtime_id": "test_ci_selection.RoutingTests.test_development_tests_keep_regression_and_source_identity",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 80,
+          "name": "test_documentation_uses_its_own_contract",
+          "path": "scripts/tests/test_ci_selection.py",
+          "sha256": "2f15a9a24d7032fef71fdf275131f13304686185d27dfd2705982215ce463237"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_ci_selection.py",
+        "module_sha256": "08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720",
+        "runtime_id": "test_ci_selection.RoutingTests.test_documentation_uses_its_own_contract",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 71,
+          "name": "test_five_layer_documentation_change_keeps_only_related_static_checks",
+          "path": "scripts/tests/test_ci_selection.py",
+          "sha256": "029c099fa32b91556a3732e76c105a1bb842eac4468d178b6b0a8532eb569011"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_ci_selection.py",
+        "module_sha256": "08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720",
+        "runtime_id": "test_ci_selection.RoutingTests.test_five_layer_documentation_change_keeps_only_related_static_checks",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 138,
+          "name": "test_fixtures_keep_regression_without_unrelated_fuzz_or_install",
+          "path": "scripts/tests/test_ci_selection.py",
+          "sha256": "d7493bb1a310e98874ccf56fcb2f14ff92b963e820c68261a692fd40198dde5d"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_ci_selection.py",
+        "module_sha256": "08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720",
+        "runtime_id": "test_ci_selection.RoutingTests.test_fixtures_keep_regression_without_unrelated_fuzz_or_install",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 174,
+          "name": "test_maintenance_and_install_checks_are_separate",
+          "path": "scripts/tests/test_ci_selection.py",
+          "sha256": "8c84d2278739e5a2dfb2a998369b6c6e69de19073f6779a7d2e2d0489dc93fec"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_ci_selection.py",
+        "module_sha256": "08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720",
+        "runtime_id": "test_ci_selection.RoutingTests.test_maintenance_and_install_checks_are_separate",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 218,
+          "name": "test_mixed_change_runs_the_union_of_checks",
+          "path": "scripts/tests/test_ci_selection.py",
+          "sha256": "2971aea7331f082d2387aa3284f952d0fefce720b2fb8955f98268e1b4db8822"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_ci_selection.py",
+        "module_sha256": "08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720",
+        "runtime_id": "test_ci_selection.RoutingTests.test_mixed_change_runs_the_union_of_checks",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 132,
+          "name": "test_narrow_routes_do_not_apply_to_other_fixture_or_build_inputs",
+          "path": "scripts/tests/test_ci_selection.py",
+          "sha256": "74a24c6757c1667fad4f610ea99b25218f90d56ab1178fe11e98dcf27c0af995"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_ci_selection.py",
+        "module_sha256": "08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720",
+        "runtime_id": "test_ci_selection.RoutingTests.test_narrow_routes_do_not_apply_to_other_fixture_or_build_inputs",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 67,
+          "name": "test_plain_prose_only_needs_selection_and_whitespace",
+          "path": "scripts/tests/test_ci_selection.py",
+          "sha256": "77fb2483320d97654e64a75570d4e981ef47a98cbdfb0a712ac3260f4ef3fc68"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_ci_selection.py",
+        "module_sha256": "08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720",
+        "runtime_id": "test_ci_selection.RoutingTests.test_plain_prose_only_needs_selection_and_whitespace",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 108,
+          "name": "test_production_and_build_changes_keep_all_evas_checks",
+          "path": "scripts/tests/test_ci_selection.py",
+          "sha256": "0d5aa755f6b805ff3ebf918a8ed5fbd8ce031ed090ea2b5085eac57dbab345e4"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_ci_selection.py",
+        "module_sha256": "08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720",
+        "runtime_id": "test_ci_selection.RoutingTests.test_production_and_build_changes_keep_all_evas_checks",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 157,
+          "name": "test_registered_historical_receipt_keeps_static_checks",
+          "path": "scripts/tests/test_ci_selection.py",
+          "sha256": "07ced818834864396a2cd144d4089cb5292457026b666b0e9aa9b2d144e5a141"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_ci_selection.py",
+        "module_sha256": "08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720",
+        "runtime_id": "test_ci_selection.RoutingTests.test_registered_historical_receipt_keeps_static_checks",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 115,
+          "name": "test_rust_implementation_keeps_producer_identity_but_not_checker_calibration",
+          "path": "scripts/tests/test_ci_selection.py",
+          "sha256": "9df74bc94f48ead7668e7a577011d4aae766b8de483bb7ab20caa83baef55041"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_ci_selection.py",
+        "module_sha256": "08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720",
+        "runtime_id": "test_ci_selection.RoutingTests.test_rust_implementation_keeps_producer_identity_but_not_checker_calibration",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 232,
+          "name": "test_shared_dvs2_scientific_sources_keep_their_public_regression",
+          "path": "scripts/tests/test_ci_selection.py",
+          "sha256": "8202770ff7802aa8ed2c825f4b23d26640aa52f6a6d868e94f16881e7848e2d3"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_ci_selection.py",
+        "module_sha256": "08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720",
+        "runtime_id": "test_ci_selection.RoutingTests.test_shared_dvs2_scientific_sources_keep_their_public_regression",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 185,
+          "name": "test_shared_smoke_inputs_and_required_sdist_seed_keep_their_consumers",
+          "path": "scripts/tests/test_ci_selection.py",
+          "sha256": "fb10d9a81dfc73f9661d13d75de90fc3ccc1fb9849e6a9f11869535d1a3b321a"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_ci_selection.py",
+        "module_sha256": "08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720",
+        "runtime_id": "test_ci_selection.RoutingTests.test_shared_smoke_inputs_and_required_sdist_seed_keep_their_consumers",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 195,
+          "name": "test_task_instructions_are_a_benchmark_input_even_when_markdown",
+          "path": "scripts/tests/test_ci_selection.py",
+          "sha256": "f55a95e453ce5bb0cf871d41149ac790899bc19cb94b6e1957f6e2aa8744dbe5"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_ci_selection.py",
+        "module_sha256": "08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720",
+        "runtime_id": "test_ci_selection.RoutingTests.test_task_instructions_are_a_benchmark_input_even_when_markdown",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 224,
+          "name": "test_workflow_selector_or_unrecognized_code_runs_every_check",
+          "path": "scripts/tests/test_ci_selection.py",
+          "sha256": "b6946b3a0c7a7eca291ff99595994163a277ecd65af6745b18fa28608cab5a1d"
+        },
+        "generated": false,
+        "module_path": "scripts/tests/test_ci_selection.py",
+        "module_sha256": "08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720",
+        "runtime_id": "test_ci_selection.RoutingTests.test_workflow_selector_or_unrecognized_code_runs_every_check",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      }
+    ],
+    "namespace": "maintenance",
+    "schema_version": 1,
+    "skipped_declarations": 0,
+    "unresolved_instances": [],
+    "transport": {
+      "argv": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-c",
+        "import os,runpy,sys; sys.path[0]=os.getcwd(); tool=sys.argv[1]; sys.argv=sys.argv[1:]; runpy.run_path(tool,run_name=\"__main__\")",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r3/source/scripts/capabilities/discover_methods.py",
+        "--worker",
+        "--root",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r3/source",
+        "--start",
+        "scripts/tests",
+        "--pattern",
+        "test_ci_selection.py",
+        "--namespace",
+        "maintenance"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r3/source",
+      "returncode": 0,
+      "stdout": "{\"collector\": {\"definition_profile\": \"actual-code-or-registered-native-skip-v1\", \"native_skip_authority\": {\"factory_span_sha256\": \"a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad\", \"profile\": \"registered-native-unittest-skip-v1\", \"runtime_file_sha256\": \"45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987\", \"runtime_source\": \"unittest/case.py\", \"wrapper_span_sha256\": \"96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda\"}, \"path\": \"scripts/capabilities/discover_methods.py\", \"sha256\": \"aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17\", \"source_relationship\": \"owned-source-root\"}, \"complete\": true, \"discovered_instances\": 38, \"environment\": {\"PYTHONDONTWRITEBYTECODE\": \"1\", \"PYTHONPATH\": null, \"bytecode_disabled\": true, \"cache_tag\": \"cpython-312\", \"environment_scope\": \"python-runtime-and-import-path-only\", \"executable\": \"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python\", \"implementation\": \"cpython\", \"platform\": \"darwin\", \"python_version\": \"3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"sys_path_before_selected_imports\": [\"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r3/source\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python312.zip\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload\", \"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/lib/python3.12/site-packages\"]}, \"error_count\": 0, \"errors\": [], \"loader_error_count\": 0, \"methods\": [{\"definition\": {\"line\": 501, \"name\": \"test_cli_gate_returns_nonzero_for_failed_selected_check\", \"path\": \"scripts/tests/test_ci_selection.py\", \"sha256\": \"4628171009e31bd23aa90409622744b9124df2c07d14c828fa93cf2f918449c9\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_ci_selection.py\", \"module_sha256\": \"08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720\", \"runtime_id\": \"test_ci_selection.GateTests.test_cli_gate_returns_nonzero_for_failed_selected_check\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 474, \"name\": \"test_failure_cancellation_missing_jobs_or_unexpected_execution_failures_are_rejected\", \"path\": \"scripts/tests/test_ci_selection.py\", \"sha256\": \"145852180d84b8509a3dda1449e9422ad2aa52e347f7463e42cb1bf23a4726c5\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_ci_selection.py\", \"module_sha256\": \"08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720\", \"runtime_id\": \"test_ci_selection.GateTests.test_failure_cancellation_missing_jobs_or_unexpected_execution_failures_are_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 464, \"name\": \"test_intentional_skips_are_allowed_but_selected_skips_are_not\", \"path\": \"scripts/tests/test_ci_selection.py\", \"sha256\": \"63e8b28eab78a94342a865422e9def58aac65f12daec730c18895873a4f0dbaa\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_ci_selection.py\", \"module_sha256\": \"08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720\", \"runtime_id\": \"test_ci_selection.GateTests.test_intentional_skips_are_allowed_but_selected_skips_are_not\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 454, \"name\": \"test_maintenance_still_requires_inventory_and_static_checks\", \"path\": \"scripts/tests/test_ci_selection.py\", \"sha256\": \"1fd304e4e706061e5a23e47c4cfae8e82ebb3b17a21ed5511d91b2482cfbf84e\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_ci_selection.py\", \"module_sha256\": \"08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720\", \"runtime_id\": \"test_ci_selection.GateTests.test_maintenance_still_requires_inventory_and_static_checks\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 485, \"name\": \"test_missing_or_invalid_selector_output_is_rejected\", \"path\": \"scripts/tests/test_ci_selection.py\", \"sha256\": \"10dc072fc05345c737f14cb1d19a719668a6cfba6da7cc4054145b3d6d55c4b2\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_ci_selection.py\", \"module_sha256\": \"08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720\", \"runtime_id\": \"test_ci_selection.GateTests.test_missing_or_invalid_selector_output_is_rejected\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 492, \"name\": \"test_reusable_workflow_success_cannot_hide_skipped_or_failed_child_jobs\", \"path\": \"scripts/tests/test_ci_selection.py\", \"sha256\": \"d8017ad3d16eaec613b1db19b97c1b8b6495d7ecd0e42f2a11b045c18d6f52f9\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_ci_selection.py\", \"module_sha256\": \"08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720\", \"runtime_id\": \"test_ci_selection.GateTests.test_reusable_workflow_success_cannot_hide_skipped_or_failed_child_jobs\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 355, \"name\": \"test_cli_emits_github_boolean_outputs\", \"path\": \"scripts/tests/test_ci_selection.py\", \"sha256\": \"22099b227333753d18f041087758e71bef18a65baf4656e3d5a192732f212530\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_ci_selection.py\", \"module_sha256\": \"08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720\", \"runtime_id\": \"test_ci_selection.GitChangeTests.test_cli_emits_github_boolean_outputs\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 370, \"name\": \"test_compact_cli_saves_complete_evidence_and_preserves_job_outputs\", \"path\": \"scripts/tests/test_ci_selection.py\", \"sha256\": \"79ab33655ffb8455225182aca71ce3001d260a36139d429ec6097a67e4ec3d0f\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_ci_selection.py\", \"module_sha256\": \"08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720\", \"runtime_id\": \"test_ci_selection.GitChangeTests.test_compact_cli_saves_complete_evidence_and_preserves_job_outputs\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 325, \"name\": \"test_deleted_source_still_runs_regression_and_install\", \"path\": \"scripts/tests/test_ci_selection.py\", \"sha256\": \"93255ff7c729bce4f4683f1ae0f9ec407a14ab2e4695a6c3a9f320cff8b382ad\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_ci_selection.py\", \"module_sha256\": \"08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720\", \"runtime_id\": \"test_ci_selection.GitChangeTests.test_deleted_source_still_runs_regression_and_install\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 274, \"name\": \"test_fixture_ignores_host_signing_and_hooks\", \"path\": \"scripts/tests/test_ci_selection.py\", \"sha256\": \"307708afde6be9e64d909d3cb8bd0327fcf07c14f635be0199ebce253fb1adc4\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_ci_selection.py\", \"module_sha256\": \"08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720\", \"runtime_id\": \"test_ci_selection.GitChangeTests.test_fixture_ignores_host_signing_and_hooks\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 346, \"name\": \"test_missing_history_initial_push_and_manual_run_cannot_skip_checks\", \"path\": \"scripts/tests/test_ci_selection.py\", \"sha256\": \"fefe0ac7206af839b0e475c0707131ccf6ad77814497e6867d9f6d40fb7a576c\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_ci_selection.py\", \"module_sha256\": \"08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720\", \"runtime_id\": \"test_ci_selection.GitChangeTests.test_missing_history_initial_push_and_manual_run_cannot_skip_checks\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 304, \"name\": \"test_pr_uses_merge_base_and_excludes_base_branch_only_changes\", \"path\": \"scripts/tests/test_ci_selection.py\", \"sha256\": \"41431debb5e0e12e250a930231d488243fb69b5bd14ba01900fb1f6755c82d38\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_ci_selection.py\", \"module_sha256\": \"08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720\", \"runtime_id\": \"test_ci_selection.GitChangeTests.test_pr_uses_merge_base_and_excludes_base_branch_only_changes\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 411, \"name\": \"test_progress_block_exemption_does_not_cover_table_contract_or_file_removal\", \"path\": \"scripts/tests/test_ci_selection.py\", \"sha256\": \"494208dc10bdf4517a511c00d919e36af253483eb2a92b8b3351f78e82279ee5\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_ci_selection.py\", \"module_sha256\": \"08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720\", \"runtime_id\": \"test_ci_selection.GitChangeTests.test_progress_block_exemption_does_not_cover_table_contract_or_file_removal\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 317, \"name\": \"test_push_includes_deletion_and_rename_destination\", \"path\": \"scripts/tests/test_ci_selection.py\", \"sha256\": \"b219bcadfdf5f37691783eab7600c9de8eba617101eb2e762753df5b78e07228\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_ci_selection.py\", \"module_sha256\": \"08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720\", \"runtime_id\": \"test_ci_selection.GitChangeTests.test_push_includes_deletion_and_rename_destination\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 334, \"name\": \"test_receipt_rename_to_unknown_input_keeps_regression\", \"path\": \"scripts/tests/test_ci_selection.py\", \"sha256\": \"5ad0f16e76a572906bbac986549830c03805ca609b3fd85f8152b5edf5da4871\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_ci_selection.py\", \"module_sha256\": \"08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720\", \"runtime_id\": \"test_ci_selection.GitChangeTests.test_receipt_rename_to_unknown_input_keeps_regression\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 385, \"name\": \"test_registration_exemption_preserves_semantics_and_unknown_inputs\", \"path\": \"scripts/tests/test_ci_selection.py\", \"sha256\": \"db6e0769829965caa262eb72605af6cb41f93bea5ec94971fbe139f7dd55f4a8\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_ci_selection.py\", \"module_sha256\": \"08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720\", \"runtime_id\": \"test_ci_selection.GitChangeTests.test_registration_exemption_preserves_semantics_and_unknown_inputs\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 149, \"name\": \"test_backend_checkers_keep_calibration_without_kernel_regression\", \"path\": \"scripts/tests/test_ci_selection.py\", \"sha256\": \"3f8bd21d45cfb1cd3d990c2f0f7de01973775a63510300784b9de230337d228b\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_ci_selection.py\", \"module_sha256\": \"08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720\", \"runtime_id\": \"test_ci_selection.RoutingTests.test_backend_checkers_keep_calibration_without_kernel_regression\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 206, \"name\": \"test_benchmark_sources_and_format_checks_keep_their_ci_consumer\", \"path\": \"scripts/tests/test_ci_selection.py\", \"sha256\": \"19c5a9b107ebde35bb77b001133ffa32e6ffdf238a460973545c9411aa832a07\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_ci_selection.py\", \"module_sha256\": \"08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720\", \"runtime_id\": \"test_ci_selection.RoutingTests.test_benchmark_sources_and_format_checks_keep_their_ci_consumer\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 91, \"name\": \"test_capability_catalog_stays_on_maintenance\", \"path\": \"scripts/tests/test_ci_selection.py\", \"sha256\": \"32f3f23df6e2a37e45193e14f84222d47b5a2c3966cd0bdfb4521e01c149d713\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_ci_selection.py\", \"module_sha256\": \"08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720\", \"runtime_id\": \"test_ci_selection.RoutingTests.test_capability_catalog_stays_on_maintenance\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 20, \"name\": \"test_catalog_generator_selects_maintenance_without_exempting_neighbors\", \"path\": \"scripts/tests/test_ci_selection.py\", \"sha256\": \"4db717985d357b7820939ccfa1db33096f1495a6bab57af3532c86df930d158c\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_ci_selection.py\", \"module_sha256\": \"08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720\", \"runtime_id\": \"test_ci_selection.RoutingTests.test_catalog_generator_selects_maintenance_without_exempting_neighbors\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 36, \"name\": \"test_comparison_worker_migration_routes_actual_consumers\", \"path\": \"scripts/tests/test_ci_selection.py\", \"sha256\": \"ba2462c10aa188b201a585d48ae88490a12e842b4a237da215575ffdbfca1b81\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_ci_selection.py\", \"module_sha256\": \"08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720\", \"runtime_id\": \"test_ci_selection.RoutingTests.test_comparison_worker_migration_routes_actual_consumers\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 44, \"name\": \"test_continuation_controls_only_select_maintenance\", \"path\": \"scripts/tests/test_ci_selection.py\", \"sha256\": \"f0805d08bf7cb64cc175511e527e41dd031fdc9fc29044078e2e4467528182ee\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_ci_selection.py\", \"module_sha256\": \"08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720\", \"runtime_id\": \"test_ci_selection.RoutingTests.test_continuation_controls_only_select_maintenance\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 60, \"name\": \"test_development_records_only_select_maintenance\", \"path\": \"scripts/tests/test_ci_selection.py\", \"sha256\": \"9bcea3002d475eb0440d1f5fb666bf27d6e6a4fd4603925b1cb4a97b82e620fb\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_ci_selection.py\", \"module_sha256\": \"08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720\", \"runtime_id\": \"test_ci_selection.RoutingTests.test_development_records_only_select_maintenance\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 121, \"name\": \"test_development_tests_keep_regression_and_source_identity\", \"path\": \"scripts/tests/test_ci_selection.py\", \"sha256\": \"980508605f10f95a0a7f22255f5c8609c1c26b696a562cfd4812c30c6700fa4f\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_ci_selection.py\", \"module_sha256\": \"08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720\", \"runtime_id\": \"test_ci_selection.RoutingTests.test_development_tests_keep_regression_and_source_identity\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 80, \"name\": \"test_documentation_uses_its_own_contract\", \"path\": \"scripts/tests/test_ci_selection.py\", \"sha256\": \"2f15a9a24d7032fef71fdf275131f13304686185d27dfd2705982215ce463237\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_ci_selection.py\", \"module_sha256\": \"08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720\", \"runtime_id\": \"test_ci_selection.RoutingTests.test_documentation_uses_its_own_contract\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 71, \"name\": \"test_five_layer_documentation_change_keeps_only_related_static_checks\", \"path\": \"scripts/tests/test_ci_selection.py\", \"sha256\": \"029c099fa32b91556a3732e76c105a1bb842eac4468d178b6b0a8532eb569011\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_ci_selection.py\", \"module_sha256\": \"08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720\", \"runtime_id\": \"test_ci_selection.RoutingTests.test_five_layer_documentation_change_keeps_only_related_static_checks\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 138, \"name\": \"test_fixtures_keep_regression_without_unrelated_fuzz_or_install\", \"path\": \"scripts/tests/test_ci_selection.py\", \"sha256\": \"d7493bb1a310e98874ccf56fcb2f14ff92b963e820c68261a692fd40198dde5d\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_ci_selection.py\", \"module_sha256\": \"08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720\", \"runtime_id\": \"test_ci_selection.RoutingTests.test_fixtures_keep_regression_without_unrelated_fuzz_or_install\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 174, \"name\": \"test_maintenance_and_install_checks_are_separate\", \"path\": \"scripts/tests/test_ci_selection.py\", \"sha256\": \"8c84d2278739e5a2dfb2a998369b6c6e69de19073f6779a7d2e2d0489dc93fec\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_ci_selection.py\", \"module_sha256\": \"08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720\", \"runtime_id\": \"test_ci_selection.RoutingTests.test_maintenance_and_install_checks_are_separate\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 218, \"name\": \"test_mixed_change_runs_the_union_of_checks\", \"path\": \"scripts/tests/test_ci_selection.py\", \"sha256\": \"2971aea7331f082d2387aa3284f952d0fefce720b2fb8955f98268e1b4db8822\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_ci_selection.py\", \"module_sha256\": \"08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720\", \"runtime_id\": \"test_ci_selection.RoutingTests.test_mixed_change_runs_the_union_of_checks\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 132, \"name\": \"test_narrow_routes_do_not_apply_to_other_fixture_or_build_inputs\", \"path\": \"scripts/tests/test_ci_selection.py\", \"sha256\": \"74a24c6757c1667fad4f610ea99b25218f90d56ab1178fe11e98dcf27c0af995\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_ci_selection.py\", \"module_sha256\": \"08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720\", \"runtime_id\": \"test_ci_selection.RoutingTests.test_narrow_routes_do_not_apply_to_other_fixture_or_build_inputs\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 67, \"name\": \"test_plain_prose_only_needs_selection_and_whitespace\", \"path\": \"scripts/tests/test_ci_selection.py\", \"sha256\": \"77fb2483320d97654e64a75570d4e981ef47a98cbdfb0a712ac3260f4ef3fc68\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_ci_selection.py\", \"module_sha256\": \"08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720\", \"runtime_id\": \"test_ci_selection.RoutingTests.test_plain_prose_only_needs_selection_and_whitespace\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 108, \"name\": \"test_production_and_build_changes_keep_all_evas_checks\", \"path\": \"scripts/tests/test_ci_selection.py\", \"sha256\": \"0d5aa755f6b805ff3ebf918a8ed5fbd8ce031ed090ea2b5085eac57dbab345e4\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_ci_selection.py\", \"module_sha256\": \"08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720\", \"runtime_id\": \"test_ci_selection.RoutingTests.test_production_and_build_changes_keep_all_evas_checks\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 157, \"name\": \"test_registered_historical_receipt_keeps_static_checks\", \"path\": \"scripts/tests/test_ci_selection.py\", \"sha256\": \"07ced818834864396a2cd144d4089cb5292457026b666b0e9aa9b2d144e5a141\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_ci_selection.py\", \"module_sha256\": \"08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720\", \"runtime_id\": \"test_ci_selection.RoutingTests.test_registered_historical_receipt_keeps_static_checks\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 115, \"name\": \"test_rust_implementation_keeps_producer_identity_but_not_checker_calibration\", \"path\": \"scripts/tests/test_ci_selection.py\", \"sha256\": \"9df74bc94f48ead7668e7a577011d4aae766b8de483bb7ab20caa83baef55041\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_ci_selection.py\", \"module_sha256\": \"08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720\", \"runtime_id\": \"test_ci_selection.RoutingTests.test_rust_implementation_keeps_producer_identity_but_not_checker_calibration\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 232, \"name\": \"test_shared_dvs2_scientific_sources_keep_their_public_regression\", \"path\": \"scripts/tests/test_ci_selection.py\", \"sha256\": \"8202770ff7802aa8ed2c825f4b23d26640aa52f6a6d868e94f16881e7848e2d3\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_ci_selection.py\", \"module_sha256\": \"08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720\", \"runtime_id\": \"test_ci_selection.RoutingTests.test_shared_dvs2_scientific_sources_keep_their_public_regression\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 185, \"name\": \"test_shared_smoke_inputs_and_required_sdist_seed_keep_their_consumers\", \"path\": \"scripts/tests/test_ci_selection.py\", \"sha256\": \"fb10d9a81dfc73f9661d13d75de90fc3ccc1fb9849e6a9f11869535d1a3b321a\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_ci_selection.py\", \"module_sha256\": \"08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720\", \"runtime_id\": \"test_ci_selection.RoutingTests.test_shared_smoke_inputs_and_required_sdist_seed_keep_their_consumers\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 195, \"name\": \"test_task_instructions_are_a_benchmark_input_even_when_markdown\", \"path\": \"scripts/tests/test_ci_selection.py\", \"sha256\": \"f55a95e453ce5bb0cf871d41149ac790899bc19cb94b6e1957f6e2aa8744dbe5\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_ci_selection.py\", \"module_sha256\": \"08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720\", \"runtime_id\": \"test_ci_selection.RoutingTests.test_task_instructions_are_a_benchmark_input_even_when_markdown\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 224, \"name\": \"test_workflow_selector_or_unrecognized_code_runs_every_check\", \"path\": \"scripts/tests/test_ci_selection.py\", \"sha256\": \"b6946b3a0c7a7eca291ff99595994163a277ecd65af6745b18fa28608cab5a1d\"}, \"generated\": false, \"module_path\": \"scripts/tests/test_ci_selection.py\", \"module_sha256\": \"08f3c2975daa29f353622edb5c7361633ddd91b0cc8a919f360784f164d0c720\", \"runtime_id\": \"test_ci_selection.RoutingTests.test_workflow_selector_or_unrecognized_code_runs_every_check\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}], \"namespace\": \"maintenance\", \"schema_version\": 1, \"skipped_declarations\": 0, \"unresolved_instances\": []}\n",
+      "stderr": "",
+      "environment_overrides": {
+        "CI_BASE": "${{ steps.changes.outputs.base }}",
+        "CI_HEAD": "${{ steps.changes.outputs.head }}"
+      },
+      "actual_resolved_overrides": {
+        "CI_BASE": "bf2ec4105a17af2bf73f2802c828c5f76a6236b5",
+        "CI_HEAD": "668994c35b0af9cf7c4d03c6a74e034f2846cc6c"
+      },
+      "collection_profile": "inventory-child runtime; not original phase execution/skip results",
+      "original_python_equivalence": "unpinned-runner-python3-unproven",
+      "sys_path_contract": "repository-cwd first, then literal phase PYTHONPATH; TestLoader adds start directory"
+    }
+  }
+}

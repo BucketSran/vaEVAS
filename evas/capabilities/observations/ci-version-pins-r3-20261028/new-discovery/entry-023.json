@@ -1,0 +1,381 @@
+{
+  "entry": {
+    "workflow": ".github/workflows/numerical-assurance.yml",
+    "line": 235,
+    "job": "provenance-paper",
+    "step": "Paper contracts, observable criteria and table provenance",
+    "job_if": "needs.selection.outputs.provenance == 'true'",
+    "step_if": null,
+    "command": "python3 -B -m unittest discover -s evas/validation/paper -p 'test_precision_v2.py' -v",
+    "environment_overrides": {},
+    "declared_python_versions": [
+      "3.12.15"
+    ],
+    "start": "evas/validation/paper",
+    "pattern": "test_precision_v2.py",
+    "namespace": "validation",
+    "collector": "unittest",
+    "mode": "declared-ci-literal",
+    "purpose": "role-not-semantic-qualification",
+    "entry_id": "58d1d7c95933f0d71583a033bbec372a5c696a9304407dff693351a2b98dfcee"
+  },
+  "receipt": {
+    "collector": {
+      "definition_profile": "actual-code-or-registered-native-skip-v1",
+      "native_skip_authority": {
+        "factory_span_sha256": "a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad",
+        "profile": "registered-native-unittest-skip-v1",
+        "runtime_file_sha256": "45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987",
+        "runtime_source": "unittest/case.py",
+        "wrapper_span_sha256": "96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda"
+      },
+      "path": "scripts/capabilities/discover_methods.py",
+      "sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "source_relationship": "owned-source-root"
+    },
+    "complete": true,
+    "discovered_instances": 16,
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONPATH": null,
+      "bytecode_disabled": true,
+      "cache_tag": "cpython-312",
+      "environment_scope": "python-runtime-and-import-path-only",
+      "executable": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+      "implementation": "cpython",
+      "platform": "darwin",
+      "python_version": "3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]",
+      "sys_path_before_selected_imports": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r3/source",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python312.zip",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12",
+        "/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/lib/python3.12/site-packages"
+      ]
+    },
+    "error_count": 0,
+    "errors": [],
+    "loader_error_count": 0,
+    "methods": [
+      {
+        "definition": {
+          "line": 196,
+          "name": "test_filter_initial_state_does_not_reset_at_corner",
+          "path": "evas/validation/paper/test_precision_v2.py",
+          "sha256": "3aacdc78187157add7fddfb477062ddf04b16254d53843eedf9f72f3545fb200"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_v2.py",
+        "module_sha256": "89dc596bad7245b965f58606c8a51c56d2fe461d724c88b98dd0f4a05b648e36",
+        "runtime_id": "test_precision_v2.IndependentReferences.test_filter_initial_state_does_not_reset_at_corner",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 186,
+          "name": "test_filter_known_constant_ramp_and_nonzero",
+          "path": "evas/validation/paper/test_precision_v2.py",
+          "sha256": "343507077e1f20880c1ada53feb4ff055f699143dc7451fd982a41b0864ddde3"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_v2.py",
+        "module_sha256": "89dc596bad7245b965f58606c8a51c56d2fe461d724c88b98dd0f4a05b648e36",
+        "runtime_id": "test_precision_v2.IndependentReferences.test_filter_known_constant_ramp_and_nonzero",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 182,
+          "name": "test_pwl_exact_corners_and_interior_extremum",
+          "path": "evas/validation/paper/test_precision_v2.py",
+          "sha256": "9c3de28c9d24cebcae8a8e74b1cd794226c8232a467f1abe3ded1f9f6bddcf70"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_v2.py",
+        "module_sha256": "89dc596bad7245b965f58606c8a51c56d2fe461d724c88b98dd0f4a05b648e36",
+        "runtime_id": "test_precision_v2.IndependentReferences.test_pwl_exact_corners_and_interior_extremum",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 81,
+          "name": "test_all_holding_stages_and_stale_value",
+          "path": "evas/validation/paper/test_precision_v2.py",
+          "sha256": "a84770d7a7aeca4e6dccdba0f618fa8d6447ad5e984ce163cfcaf7d19369e9ff"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_v2.py",
+        "module_sha256": "89dc596bad7245b965f58606c8a51c56d2fe461d724c88b98dd0f4a05b648e36",
+        "runtime_id": "test_precision_v2.TierCalibration.test_all_holding_stages_and_stale_value",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 105,
+          "name": "test_bounds_never_negative_and_threshold_overlap",
+          "path": "evas/validation/paper/test_precision_v2.py",
+          "sha256": "9fc07295f905c32acfac7ccfe6d1d43535009587f7bf8a13f517688fdc973a60"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_v2.py",
+        "module_sha256": "89dc596bad7245b965f58606c8a51c56d2fe461d724c88b98dd0f4a05b648e36",
+        "runtime_id": "test_precision_v2.TierCalibration.test_bounds_never_negative_and_threshold_overlap",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 66,
+          "name": "test_confirmed_outside_window_and_missing_event",
+          "path": "evas/validation/paper/test_precision_v2.py",
+          "sha256": "32f4dce3909765dc8490bb65f225001013e796143c1b184fd972bba8fd866e29"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_v2.py",
+        "module_sha256": "89dc596bad7245b965f58606c8a51c56d2fe461d724c88b98dd0f4a05b648e36",
+        "runtime_id": "test_precision_v2.TierCalibration.test_confirmed_outside_window_and_missing_event",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 118,
+          "name": "test_cross_positive_early_and_expression_tolerance",
+          "path": "evas/validation/paper/test_precision_v2.py",
+          "sha256": "c28ac838e941d426ec41466794b698600842696eac432d13d5b572021bd27a24"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_v2.py",
+        "module_sha256": "89dc596bad7245b965f58606c8a51c56d2fe461d724c88b98dd0f4a05b648e36",
+        "runtime_id": "test_precision_v2.TierCalibration.test_cross_positive_early_and_expression_tolerance",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 125,
+          "name": "test_exact_timer_boundary_needs_bound_independent_evidence",
+          "path": "evas/validation/paper/test_precision_v2.py",
+          "sha256": "3e194106b2e997c88d88b3bb42399121febbe048fdcb7f88f438284615ed9fa5"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_v2.py",
+        "module_sha256": "89dc596bad7245b965f58606c8a51c56d2fe461d724c88b98dd0f4a05b648e36",
+        "runtime_id": "test_precision_v2.TierCalibration.test_exact_timer_boundary_needs_bound_independent_evidence",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 148,
+          "name": "test_first_order_grades_independent_closed_form_trajectories",
+          "path": "evas/validation/paper/test_precision_v2.py",
+          "sha256": "18ab3cd387f05c996b913f59e8c182764ef8363b485f59ed9e7d4b75b9adf7fe"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_v2.py",
+        "module_sha256": "89dc596bad7245b965f58606c8a51c56d2fe461d724c88b98dd0f4a05b648e36",
+        "runtime_id": "test_precision_v2.TierCalibration.test_first_order_grades_independent_closed_form_trajectories",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 74,
+          "name": "test_initial_hold_drift_includes_both_extrema",
+          "path": "evas/validation/paper/test_precision_v2.py",
+          "sha256": "6afa8c932b7a34d8f2ee7a63d63215cf0b31148ca5d1264f02193e1b7736515f"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_v2.py",
+        "module_sha256": "89dc596bad7245b965f58606c8a51c56d2fe461d724c88b98dd0f4a05b648e36",
+        "runtime_id": "test_precision_v2.TierCalibration.test_initial_hold_drift_includes_both_extrema",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 99,
+          "name": "test_missing_boundaries_including_legal_window_ends",
+          "path": "evas/validation/paper/test_precision_v2.py",
+          "sha256": "6c79a45effdea2d0cf6454f3037b99e3199b2aaa606403ae418c6e8bdb2d2318"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_v2.py",
+        "module_sha256": "89dc596bad7245b965f58606c8a51c56d2fe461d724c88b98dd0f4a05b648e36",
+        "runtime_id": "test_precision_v2.TierCalibration.test_missing_boundaries_including_legal_window_ends",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 111,
+          "name": "test_plan_preserves_critical_identity_and_does_not_change_models",
+          "path": "evas/validation/paper/test_precision_v2.py",
+          "sha256": "2ae26e71f41bba55edc90ebcc6040efa5e89afe494d97f6f43bdaf797708d303"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_v2.py",
+        "module_sha256": "89dc596bad7245b965f58606c8a51c56d2fe461d724c88b98dd0f4a05b648e36",
+        "runtime_id": "test_precision_v2.TierCalibration.test_plan_preserves_critical_identity_and_does_not_change_models",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 170,
+          "name": "test_reference_and_export_uncertainty_cannot_qualify",
+          "path": "evas/validation/paper/test_precision_v2.py",
+          "sha256": "008b7cad2cd453342550e94fb84e535ce96caa0c159ee865f012a14cd94223bf"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_v2.py",
+        "module_sha256": "89dc596bad7245b965f58606c8a51c56d2fe461d724c88b98dd0f4a05b648e36",
+        "runtime_id": "test_precision_v2.TierCalibration.test_reference_and_export_uncertainty_cannot_qualify",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 91,
+          "name": "test_tiers_share_reference_and_do_not_hide_input_error",
+          "path": "evas/validation/paper/test_precision_v2.py",
+          "sha256": "81f9342b8e621374833cbc4999128145338550c6a418e80f7b3710694559eba0"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_v2.py",
+        "module_sha256": "89dc596bad7245b965f58606c8a51c56d2fe461d724c88b98dd0f4a05b648e36",
+        "runtime_id": "test_precision_v2.TierCalibration.test_tiers_share_reference_and_do_not_hide_input_error",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 53,
+          "name": "test_valid_timer_all_tiers",
+          "path": "evas/validation/paper/test_precision_v2.py",
+          "sha256": "12e3429b120814bc57c8d0ce77c89dbe8692ebd0a8d05e6953e3b6abcaa28d56"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_v2.py",
+        "module_sha256": "89dc596bad7245b965f58606c8a51c56d2fe461d724c88b98dd0f4a05b648e36",
+        "runtime_id": "test_precision_v2.TierCalibration.test_valid_timer_all_tiers",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      },
+      {
+        "definition": {
+          "line": 58,
+          "name": "test_window_partial_overlap_is_not_a_pass",
+          "path": "evas/validation/paper/test_precision_v2.py",
+          "sha256": "671e80a52e0a42e57f0199bc7fb8a23f9b15ecd0460ecaa9b10f5f1886832dc4"
+        },
+        "generated": false,
+        "module_path": "evas/validation/paper/test_precision_v2.py",
+        "module_sha256": "89dc596bad7245b965f58606c8a51c56d2fe461d724c88b98dd0f4a05b648e36",
+        "runtime_id": "test_precision_v2.TierCalibration.test_window_partial_overlap_is_not_a_pass",
+        "skip_declaration": {
+          "class": false,
+          "declared": false,
+          "method": false,
+          "reason": null
+        }
+      }
+    ],
+    "namespace": "validation",
+    "schema_version": 1,
+    "skipped_declarations": 0,
+    "unresolved_instances": [],
+    "transport": {
+      "argv": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "-c",
+        "import os,runpy,sys; sys.path[0]=os.getcwd(); tool=sys.argv[1]; sys.argv=sys.argv[1:]; runpy.run_path(tool,run_name=\"__main__\")",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r3/source/scripts/capabilities/discover_methods.py",
+        "--worker",
+        "--root",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r3/source",
+        "--start",
+        "evas/validation/paper",
+        "--pattern",
+        "test_precision_v2.py",
+        "--namespace",
+        "validation"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r3/source",
+      "returncode": 0,
+      "stdout": "{\"collector\": {\"definition_profile\": \"actual-code-or-registered-native-skip-v1\", \"native_skip_authority\": {\"factory_span_sha256\": \"a8a38743c62a79442232d5a1aa2b473cfcf4bd78e25a31ae24416b263a9282ad\", \"profile\": \"registered-native-unittest-skip-v1\", \"runtime_file_sha256\": \"45bac6d80a4fc3a0dea8340a80681e30b263f017b4a5002cb8f489a632e0f987\", \"runtime_source\": \"unittest/case.py\", \"wrapper_span_sha256\": \"96a67394af72aa42654ea59458713be8db89163c608cf8f6f56780362c853cda\"}, \"path\": \"scripts/capabilities/discover_methods.py\", \"sha256\": \"aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17\", \"source_relationship\": \"owned-source-root\"}, \"complete\": true, \"discovered_instances\": 16, \"environment\": {\"PYTHONDONTWRITEBYTECODE\": \"1\", \"PYTHONPATH\": null, \"bytecode_disabled\": true, \"cache_tag\": \"cpython-312\", \"environment_scope\": \"python-runtime-and-import-path-only\", \"executable\": \"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python\", \"implementation\": \"cpython\", \"platform\": \"darwin\", \"python_version\": \"3.12.13 (main, Mar  3 2026, 12:39:30) [Clang 21.0.0 (clang-2100.0.123.102)]\", \"sys_path_before_selected_imports\": [\"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/ci-pins-a-20261027/r3/source\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python312.zip\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12\", \"/opt/homebrew/Cellar/python@3.12/3.12.13_2/Frameworks/Python.framework/Versions/3.12/lib/python3.12/lib-dynload\", \"/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/lib/python3.12/site-packages\"]}, \"error_count\": 0, \"errors\": [], \"loader_error_count\": 0, \"methods\": [{\"definition\": {\"line\": 196, \"name\": \"test_filter_initial_state_does_not_reset_at_corner\", \"path\": \"evas/validation/paper/test_precision_v2.py\", \"sha256\": \"3aacdc78187157add7fddfb477062ddf04b16254d53843eedf9f72f3545fb200\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_v2.py\", \"module_sha256\": \"89dc596bad7245b965f58606c8a51c56d2fe461d724c88b98dd0f4a05b648e36\", \"runtime_id\": \"test_precision_v2.IndependentReferences.test_filter_initial_state_does_not_reset_at_corner\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 186, \"name\": \"test_filter_known_constant_ramp_and_nonzero\", \"path\": \"evas/validation/paper/test_precision_v2.py\", \"sha256\": \"343507077e1f20880c1ada53feb4ff055f699143dc7451fd982a41b0864ddde3\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_v2.py\", \"module_sha256\": \"89dc596bad7245b965f58606c8a51c56d2fe461d724c88b98dd0f4a05b648e36\", \"runtime_id\": \"test_precision_v2.IndependentReferences.test_filter_known_constant_ramp_and_nonzero\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 182, \"name\": \"test_pwl_exact_corners_and_interior_extremum\", \"path\": \"evas/validation/paper/test_precision_v2.py\", \"sha256\": \"9c3de28c9d24cebcae8a8e74b1cd794226c8232a467f1abe3ded1f9f6bddcf70\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_v2.py\", \"module_sha256\": \"89dc596bad7245b965f58606c8a51c56d2fe461d724c88b98dd0f4a05b648e36\", \"runtime_id\": \"test_precision_v2.IndependentReferences.test_pwl_exact_corners_and_interior_extremum\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 81, \"name\": \"test_all_holding_stages_and_stale_value\", \"path\": \"evas/validation/paper/test_precision_v2.py\", \"sha256\": \"a84770d7a7aeca4e6dccdba0f618fa8d6447ad5e984ce163cfcaf7d19369e9ff\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_v2.py\", \"module_sha256\": \"89dc596bad7245b965f58606c8a51c56d2fe461d724c88b98dd0f4a05b648e36\", \"runtime_id\": \"test_precision_v2.TierCalibration.test_all_holding_stages_and_stale_value\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 105, \"name\": \"test_bounds_never_negative_and_threshold_overlap\", \"path\": \"evas/validation/paper/test_precision_v2.py\", \"sha256\": \"9fc07295f905c32acfac7ccfe6d1d43535009587f7bf8a13f517688fdc973a60\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_v2.py\", \"module_sha256\": \"89dc596bad7245b965f58606c8a51c56d2fe461d724c88b98dd0f4a05b648e36\", \"runtime_id\": \"test_precision_v2.TierCalibration.test_bounds_never_negative_and_threshold_overlap\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 66, \"name\": \"test_confirmed_outside_window_and_missing_event\", \"path\": \"evas/validation/paper/test_precision_v2.py\", \"sha256\": \"32f4dce3909765dc8490bb65f225001013e796143c1b184fd972bba8fd866e29\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_v2.py\", \"module_sha256\": \"89dc596bad7245b965f58606c8a51c56d2fe461d724c88b98dd0f4a05b648e36\", \"runtime_id\": \"test_precision_v2.TierCalibration.test_confirmed_outside_window_and_missing_event\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 118, \"name\": \"test_cross_positive_early_and_expression_tolerance\", \"path\": \"evas/validation/paper/test_precision_v2.py\", \"sha256\": \"c28ac838e941d426ec41466794b698600842696eac432d13d5b572021bd27a24\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_v2.py\", \"module_sha256\": \"89dc596bad7245b965f58606c8a51c56d2fe461d724c88b98dd0f4a05b648e36\", \"runtime_id\": \"test_precision_v2.TierCalibration.test_cross_positive_early_and_expression_tolerance\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 125, \"name\": \"test_exact_timer_boundary_needs_bound_independent_evidence\", \"path\": \"evas/validation/paper/test_precision_v2.py\", \"sha256\": \"3e194106b2e997c88d88b3bb42399121febbe048fdcb7f88f438284615ed9fa5\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_v2.py\", \"module_sha256\": \"89dc596bad7245b965f58606c8a51c56d2fe461d724c88b98dd0f4a05b648e36\", \"runtime_id\": \"test_precision_v2.TierCalibration.test_exact_timer_boundary_needs_bound_independent_evidence\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 148, \"name\": \"test_first_order_grades_independent_closed_form_trajectories\", \"path\": \"evas/validation/paper/test_precision_v2.py\", \"sha256\": \"18ab3cd387f05c996b913f59e8c182764ef8363b485f59ed9e7d4b75b9adf7fe\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_v2.py\", \"module_sha256\": \"89dc596bad7245b965f58606c8a51c56d2fe461d724c88b98dd0f4a05b648e36\", \"runtime_id\": \"test_precision_v2.TierCalibration.test_first_order_grades_independent_closed_form_trajectories\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 74, \"name\": \"test_initial_hold_drift_includes_both_extrema\", \"path\": \"evas/validation/paper/test_precision_v2.py\", \"sha256\": \"6afa8c932b7a34d8f2ee7a63d63215cf0b31148ca5d1264f02193e1b7736515f\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_v2.py\", \"module_sha256\": \"89dc596bad7245b965f58606c8a51c56d2fe461d724c88b98dd0f4a05b648e36\", \"runtime_id\": \"test_precision_v2.TierCalibration.test_initial_hold_drift_includes_both_extrema\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 99, \"name\": \"test_missing_boundaries_including_legal_window_ends\", \"path\": \"evas/validation/paper/test_precision_v2.py\", \"sha256\": \"6c79a45effdea2d0cf6454f3037b99e3199b2aaa606403ae418c6e8bdb2d2318\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_v2.py\", \"module_sha256\": \"89dc596bad7245b965f58606c8a51c56d2fe461d724c88b98dd0f4a05b648e36\", \"runtime_id\": \"test_precision_v2.TierCalibration.test_missing_boundaries_including_legal_window_ends\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 111, \"name\": \"test_plan_preserves_critical_identity_and_does_not_change_models\", \"path\": \"evas/validation/paper/test_precision_v2.py\", \"sha256\": \"2ae26e71f41bba55edc90ebcc6040efa5e89afe494d97f6f43bdaf797708d303\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_v2.py\", \"module_sha256\": \"89dc596bad7245b965f58606c8a51c56d2fe461d724c88b98dd0f4a05b648e36\", \"runtime_id\": \"test_precision_v2.TierCalibration.test_plan_preserves_critical_identity_and_does_not_change_models\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 170, \"name\": \"test_reference_and_export_uncertainty_cannot_qualify\", \"path\": \"evas/validation/paper/test_precision_v2.py\", \"sha256\": \"008b7cad2cd453342550e94fb84e535ce96caa0c159ee865f012a14cd94223bf\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_v2.py\", \"module_sha256\": \"89dc596bad7245b965f58606c8a51c56d2fe461d724c88b98dd0f4a05b648e36\", \"runtime_id\": \"test_precision_v2.TierCalibration.test_reference_and_export_uncertainty_cannot_qualify\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 91, \"name\": \"test_tiers_share_reference_and_do_not_hide_input_error\", \"path\": \"evas/validation/paper/test_precision_v2.py\", \"sha256\": \"81f9342b8e621374833cbc4999128145338550c6a418e80f7b3710694559eba0\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_v2.py\", \"module_sha256\": \"89dc596bad7245b965f58606c8a51c56d2fe461d724c88b98dd0f4a05b648e36\", \"runtime_id\": \"test_precision_v2.TierCalibration.test_tiers_share_reference_and_do_not_hide_input_error\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 53, \"name\": \"test_valid_timer_all_tiers\", \"path\": \"evas/validation/paper/test_precision_v2.py\", \"sha256\": \"12e3429b120814bc57c8d0ce77c89dbe8692ebd0a8d05e6953e3b6abcaa28d56\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_v2.py\", \"module_sha256\": \"89dc596bad7245b965f58606c8a51c56d2fe461d724c88b98dd0f4a05b648e36\", \"runtime_id\": \"test_precision_v2.TierCalibration.test_valid_timer_all_tiers\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}, {\"definition\": {\"line\": 58, \"name\": \"test_window_partial_overlap_is_not_a_pass\", \"path\": \"evas/validation/paper/test_precision_v2.py\", \"sha256\": \"671e80a52e0a42e57f0199bc7fb8a23f9b15ecd0460ecaa9b10f5f1886832dc4\"}, \"generated\": false, \"module_path\": \"evas/validation/paper/test_precision_v2.py\", \"module_sha256\": \"89dc596bad7245b965f58606c8a51c56d2fe461d724c88b98dd0f4a05b648e36\", \"runtime_id\": \"test_precision_v2.TierCalibration.test_window_partial_overlap_is_not_a_pass\", \"skip_declaration\": {\"class\": false, \"declared\": false, \"method\": false, \"reason\": null}}], \"namespace\": \"validation\", \"schema_version\": 1, \"skipped_declarations\": 0, \"unresolved_instances\": []}\n",
+      "stderr": "",
+      "environment_overrides": {},
+      "actual_resolved_overrides": {},
+      "collection_profile": "inventory-child runtime; not original phase execution/skip results",
+      "original_python_equivalence": "major-minor-declared-only",
+      "sys_path_contract": "repository-cwd first, then literal phase PYTHONPATH; TestLoader adds start directory"
+    }
+  }
+}

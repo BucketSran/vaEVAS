@@ -1,0 +1,564 @@
+{
+  "accepted_at_utc": "2026-10-28T03:02:57.952655+00:00",
+  "worker_task": "node:delegated-task:command%3Amcp%3A27545977-2ca5-42b2-adf9-35ea91e9276b%3Adelegate-task%3Aevas-pr273-r3-source-sonnet-r1-20261028",
+  "worker_model": {
+    "providerInstanceId": "tclaude",
+    "model": "claude-sonnet-5-5",
+    "options": [
+      {
+        "id": "effort",
+        "value": "high"
+      }
+    ]
+  },
+  "files": {
+    "merge-resolution.patch": "8530011802bda5deb7d4c0ad415b0139e4d9938529e05122d33d57f93601d49b",
+    "fixes.patch": "0f517b450e12cb2c53744e5517bae036994b50f1466a17076477951085d89709",
+    "source.patch": "246d7e1baa105e87afe1fd41a8a83f7d5859e5ae5195f1450284fd7dab54c426",
+    "result.json": "538054a435e07169f236a6b9cc2c56167397d222ac39ca32e5345bd251e8aeeb",
+    "REPORT.md": "4ccbd63fe918eb36fb7f46dff4a09ed1b7ca5a50316f034f0ae424935deb7024"
+  },
+  "primary_checks": [
+    "merge-resolution.patch applies to bf2ec410 (resolution-review/tree)",
+    "numerical-assurance.yml: 3 merge-file conflict blocks, the resolution drops lines only inside them",
+    "package-install.yml: clean merge minus the PR273 top-level RUSTUP_TOOLCHAIN literal (PR6 workflow_call input kept)",
+    "build stage source re-verifies both shapes; fixes stage splits pins and coverage into two commits and checks the result equals source.patch"
+  ],
+  "worker_claims": {
+    "std01": {
+      "cases": 30,
+      "pr273_r2_original_unexpected_accepts": [
+        "quoted-matrix-python-key",
+        "quoted-matrix-runner-key",
+        "quoted-runs-on-key",
+        "flow-matrix-row",
+        "rust-job-env-override",
+        "rust-build-step-env-override",
+        "quoted-ngspice-run-with-decoy",
+        "quoted-build-run-with-decoy"
+      ],
+      "pr273_r2_with_accepted_std01_patch_unexpected_accepts": [
+        "rust-job-env-override",
+        "rust-build-step-env-override"
+      ],
+      "merged_tree_pr273_original_pin_unexpected_rejects": [
+        "original",
+        "fixed-double-quote-value",
+        "fixed-bare-value",
+        "fixed-inline-comment"
+      ],
+      "final_pin_test_alone_unexpected_accepts": [
+        "nightly-floating",
+        "rustup-stable",
+        "rust-env-global-floating",
+        "rust-job-env-override",
+        "rust-build-step-env-override"
+      ],
+      "final_pin_plus_pr6_rust_guard_unexpected_accepts": [],
+      "final_pin_plus_pr6_rust_guard_unexpected_rejects": [],
+      "rows": [
+        {
+          "name": "original",
+          "expected": "accept",
+          "retargeted": false,
+          "original_pin": "reject",
+          "pr273_r2_original_pin": "accept",
+          "pr273_r2_std01_pin": "accept",
+          "final_pin": "accept",
+          "final_rust_guard": "accept",
+          "final": "accept"
+        },
+        {
+          "name": "double-minor",
+          "expected": "reject",
+          "retargeted": false,
+          "original_pin": "reject",
+          "pr273_r2_original_pin": "reject",
+          "pr273_r2_std01_pin": "reject",
+          "final_pin": "reject",
+          "final_rust_guard": "accept",
+          "final": "reject"
+        },
+        {
+          "name": "double-major",
+          "expected": "reject",
+          "retargeted": false,
+          "original_pin": "reject",
+          "pr273_r2_original_pin": "reject",
+          "pr273_r2_std01_pin": "reject",
+          "final_pin": "reject",
+          "final_rust_guard": "accept",
+          "final": "reject"
+        },
+        {
+          "name": "bare-minor",
+          "expected": "reject",
+          "retargeted": false,
+          "original_pin": "reject",
+          "pr273_r2_original_pin": "reject",
+          "pr273_r2_std01_pin": "reject",
+          "final_pin": "reject",
+          "final_rust_guard": "accept",
+          "final": "reject"
+        },
+        {
+          "name": "single-minor",
+          "expected": "reject",
+          "retargeted": false,
+          "original_pin": "reject",
+          "pr273_r2_original_pin": "reject",
+          "pr273_r2_std01_pin": "reject",
+          "final_pin": "reject",
+          "final_rust_guard": "accept",
+          "final": "reject"
+        },
+        {
+          "name": "matrix-python-minor",
+          "expected": "reject",
+          "retargeted": false,
+          "original_pin": "reject",
+          "pr273_r2_original_pin": "reject",
+          "pr273_r2_std01_pin": "reject",
+          "final_pin": "reject",
+          "final_rust_guard": "accept",
+          "final": "reject"
+        },
+        {
+          "name": "matrix-runner-latest",
+          "expected": "reject",
+          "retargeted": false,
+          "original_pin": "reject",
+          "pr273_r2_original_pin": "reject",
+          "pr273_r2_std01_pin": "reject",
+          "final_pin": "reject",
+          "final_rust_guard": "accept",
+          "final": "reject"
+        },
+        {
+          "name": "direct-runner-latest",
+          "expected": "reject",
+          "retargeted": false,
+          "original_pin": "reject",
+          "pr273_r2_original_pin": "reject",
+          "pr273_r2_std01_pin": "reject",
+          "final_pin": "reject",
+          "final_rust_guard": "accept",
+          "final": "reject"
+        },
+        {
+          "name": "other-matrix-key",
+          "expected": "reject",
+          "retargeted": false,
+          "original_pin": "reject",
+          "pr273_r2_original_pin": "reject",
+          "pr273_r2_std01_pin": "reject",
+          "final_pin": "reject",
+          "final_rust_guard": "accept",
+          "final": "reject"
+        },
+        {
+          "name": "python-version-file",
+          "expected": "reject",
+          "retargeted": false,
+          "original_pin": "reject",
+          "pr273_r2_original_pin": "reject",
+          "pr273_r2_std01_pin": "reject",
+          "final_pin": "reject",
+          "final_rust_guard": "accept",
+          "final": "reject"
+        },
+        {
+          "name": "setup-without-version",
+          "expected": "reject",
+          "retargeted": false,
+          "original_pin": "reject",
+          "pr273_r2_original_pin": "reject",
+          "pr273_r2_std01_pin": "reject",
+          "final_pin": "reject",
+          "final_rust_guard": "accept",
+          "final": "reject"
+        },
+        {
+          "name": "ngspice-comment",
+          "expected": "reject",
+          "retargeted": false,
+          "original_pin": "reject",
+          "pr273_r2_original_pin": "reject",
+          "pr273_r2_std01_pin": "reject",
+          "final_pin": "reject",
+          "final_rust_guard": "accept",
+          "final": "reject"
+        },
+        {
+          "name": "ngspice-comment-line",
+          "expected": "reject",
+          "retargeted": false,
+          "original_pin": "reject",
+          "pr273_r2_original_pin": "reject",
+          "pr273_r2_std01_pin": "reject",
+          "final_pin": "reject",
+          "final_rust_guard": "accept",
+          "final": "reject"
+        },
+        {
+          "name": "build-comment",
+          "expected": "reject",
+          "retargeted": false,
+          "original_pin": "reject",
+          "pr273_r2_original_pin": "reject",
+          "pr273_r2_std01_pin": "reject",
+          "final_pin": "reject",
+          "final_rust_guard": "accept",
+          "final": "reject"
+        },
+        {
+          "name": "nightly-floating",
+          "expected": "reject",
+          "retargeted": false,
+          "original_pin": "reject",
+          "pr273_r2_original_pin": "reject",
+          "pr273_r2_std01_pin": "reject",
+          "final_pin": "accept",
+          "final_rust_guard": "reject",
+          "final": "reject"
+        },
+        {
+          "name": "rustup-stable",
+          "expected": "reject",
+          "retargeted": false,
+          "original_pin": "reject",
+          "pr273_r2_original_pin": "reject",
+          "pr273_r2_std01_pin": "reject",
+          "final_pin": "accept",
+          "final_rust_guard": "reject",
+          "final": "reject"
+        },
+        {
+          "name": "rust-env-global-floating",
+          "expected": "reject",
+          "retargeted": true,
+          "original_pin": "reject",
+          "pr273_r2_original_pin": "reject",
+          "pr273_r2_std01_pin": "reject",
+          "final_pin": "accept",
+          "final_rust_guard": "reject",
+          "final": "reject"
+        },
+        {
+          "name": "fixed-double-quote-value",
+          "expected": "accept",
+          "retargeted": false,
+          "original_pin": "reject",
+          "pr273_r2_original_pin": "accept",
+          "pr273_r2_std01_pin": "accept",
+          "final_pin": "accept",
+          "final_rust_guard": "accept",
+          "final": "accept"
+        },
+        {
+          "name": "fixed-bare-value",
+          "expected": "accept",
+          "retargeted": false,
+          "original_pin": "reject",
+          "pr273_r2_original_pin": "accept",
+          "pr273_r2_std01_pin": "accept",
+          "final_pin": "accept",
+          "final_rust_guard": "accept",
+          "final": "accept"
+        },
+        {
+          "name": "fixed-inline-comment",
+          "expected": "accept",
+          "retargeted": false,
+          "original_pin": "reject",
+          "pr273_r2_original_pin": "accept",
+          "pr273_r2_std01_pin": "accept",
+          "final_pin": "accept",
+          "final_rust_guard": "accept",
+          "final": "accept"
+        },
+        {
+          "name": "quoted-matrix-python-key",
+          "expected": "reject",
+          "retargeted": false,
+          "original_pin": "reject",
+          "pr273_r2_original_pin": "accept",
+          "pr273_r2_std01_pin": "reject",
+          "final_pin": "reject",
+          "final_rust_guard": "accept",
+          "final": "reject"
+        },
+        {
+          "name": "quoted-matrix-runner-key",
+          "expected": "reject",
+          "retargeted": false,
+          "original_pin": "reject",
+          "pr273_r2_original_pin": "accept",
+          "pr273_r2_std01_pin": "reject",
+          "final_pin": "reject",
+          "final_rust_guard": "accept",
+          "final": "reject"
+        },
+        {
+          "name": "quoted-runs-on-key",
+          "expected": "reject",
+          "retargeted": false,
+          "original_pin": "reject",
+          "pr273_r2_original_pin": "accept",
+          "pr273_r2_std01_pin": "reject",
+          "final_pin": "reject",
+          "final_rust_guard": "accept",
+          "final": "reject"
+        },
+        {
+          "name": "flow-setup-step",
+          "expected": "reject",
+          "retargeted": false,
+          "original_pin": "reject",
+          "pr273_r2_original_pin": "reject",
+          "pr273_r2_std01_pin": "reject",
+          "final_pin": "reject",
+          "final_rust_guard": "accept",
+          "final": "reject"
+        },
+        {
+          "name": "flow-matrix-row",
+          "expected": "reject",
+          "retargeted": false,
+          "original_pin": "reject",
+          "pr273_r2_original_pin": "accept",
+          "pr273_r2_std01_pin": "reject",
+          "final_pin": "reject",
+          "final_rust_guard": "accept",
+          "final": "reject"
+        },
+        {
+          "name": "rust-job-env-override",
+          "expected": "reject",
+          "retargeted": true,
+          "original_pin": "reject",
+          "pr273_r2_original_pin": "accept",
+          "pr273_r2_std01_pin": "accept",
+          "final_pin": "accept",
+          "final_rust_guard": "reject",
+          "final": "reject"
+        },
+        {
+          "name": "rust-build-step-env-override",
+          "expected": "reject",
+          "retargeted": false,
+          "original_pin": "reject",
+          "pr273_r2_original_pin": "accept",
+          "pr273_r2_std01_pin": "accept",
+          "final_pin": "accept",
+          "final_rust_guard": "reject",
+          "final": "reject"
+        },
+        {
+          "name": "quoted-ngspice-run-with-decoy",
+          "expected": "reject",
+          "retargeted": false,
+          "original_pin": "reject",
+          "pr273_r2_original_pin": "accept",
+          "pr273_r2_std01_pin": "reject",
+          "final_pin": "reject",
+          "final_rust_guard": "accept",
+          "final": "reject"
+        },
+        {
+          "name": "quoted-build-run-with-decoy",
+          "expected": "reject",
+          "retargeted": false,
+          "original_pin": "reject",
+          "pr273_r2_original_pin": "accept",
+          "pr273_r2_std01_pin": "reject",
+          "final_pin": "reject",
+          "final_rust_guard": "accept",
+          "final": "reject"
+        },
+        {
+          "name": "ngspice-shell-concatenation",
+          "expected": "reject",
+          "retargeted": false,
+          "original_pin": "reject",
+          "pr273_r2_original_pin": "reject",
+          "pr273_r2_std01_pin": "reject",
+          "final_pin": "reject",
+          "final_rust_guard": "accept",
+          "final": "reject"
+        }
+      ]
+    },
+    "rust_division": {
+      "test_ci_pins": "runner labels, Python patch releases, ngspice, build tool only",
+      "test_discover_rust": "all Rust toolchain selection (fixed pin, whitelist, reusable input, fuzz-smoke nightly)"
+    },
+    "nightly": {
+      "constant": "FUZZ_NIGHTLY = nightly-2026-10-27 (test_discover_rust.py)",
+      "matrix_cases_after": 6329,
+      "matrix_expect_reject_after": 6144,
+      "matrix_expect_accept_after": 185,
+      "matrix_before_cases": 3248,
+      "new_guard_wrong": 0,
+      "by_class": {
+        "bare-nightly/in-fuzz-smoke/other-forms": {
+          "total": 93,
+          "expect_reject": 93,
+          "after_correct": 93,
+          "before_correct": 93,
+          "before_wrong": 0
+        },
+        "bare-nightly/in-fuzz-smoke/the-three-commands": {
+          "total": 21,
+          "expect_reject": 21,
+          "after_correct": 21,
+          "before_correct": 0,
+          "before_wrong": 21
+        },
+        "bare-nightly/outside-fuzz-smoke/other-forms": {
+          "total": 761,
+          "expect_reject": 761,
+          "after_correct": 761,
+          "before_correct": 761,
+          "before_wrong": 0
+        },
+        "bare-nightly/outside-fuzz-smoke/the-three-commands": {
+          "total": 144,
+          "expect_reject": 144,
+          "after_correct": 144,
+          "before_correct": 144,
+          "before_wrong": 0
+        },
+        "fixed-dated/in-fuzz-smoke/other-forms": {
+          "total": 93,
+          "expect_reject": 93,
+          "after_correct": 93,
+          "before_not_applicable_new_control": 93
+        },
+        "fixed-dated/in-fuzz-smoke/the-three-commands": {
+          "total": 21,
+          "expect_reject": 0,
+          "after_correct": 21,
+          "before_not_applicable_new_control": 21
+        },
+        "fixed-dated/outside-fuzz-smoke/other-forms": {
+          "total": 761,
+          "expect_reject": 761,
+          "after_correct": 761,
+          "before_not_applicable_new_control": 761
+        },
+        "fixed-dated/outside-fuzz-smoke/the-three-commands": {
+          "total": 144,
+          "expect_reject": 144,
+          "after_correct": 144,
+          "before_not_applicable_new_control": 144
+        },
+        "fuzz-smoke-in-another-file:fixed": {
+          "total": 1,
+          "expect_reject": 1,
+          "after_correct": 1,
+          "before_not_applicable_new_control": 1
+        },
+        "fuzz-smoke-in-another-file:other": {
+          "total": 1,
+          "expect_reject": 1,
+          "after_correct": 1,
+          "before_correct": 1,
+          "before_wrong": 0
+        },
+        "fuzz-smoke-quoted-key-is-the-same-job:fixed": {
+          "total": 1,
+          "expect_reject": 0,
+          "after_correct": 1,
+          "before_not_applicable_new_control": 1
+        },
+        "job-after-fuzz-smoke:other": {
+          "total": 6,
+          "expect_reject": 6,
+          "after_correct": 6,
+          "before_correct": 6,
+          "before_wrong": 0
+        },
+        "job-named-like-fuzz-smoke:fixed": {
+          "total": 3,
+          "expect_reject": 3,
+          "after_correct": 3,
+          "before_not_applicable_new_control": 3
+        },
+        "job-named-like-fuzz-smoke:other": {
+          "total": 3,
+          "expect_reject": 3,
+          "after_correct": 3,
+          "before_correct": 3,
+          "before_wrong": 0
+        },
+        "mixed-selections-on-one-line": {
+          "total": 44,
+          "expect_reject": 44,
+          "after_correct": 44,
+          "before_not_applicable_new_control": 39,
+          "before_correct": 5,
+          "before_wrong": 0
+        },
+        "other-date/in-fuzz-smoke/other-forms": {
+          "total": 186,
+          "expect_reject": 186,
+          "after_correct": 186,
+          "before_not_applicable_new_control": 186
+        },
+        "other-date/in-fuzz-smoke/the-three-commands": {
+          "total": 42,
+          "expect_reject": 42,
+          "after_correct": 42,
+          "before_not_applicable_new_control": 42
+        },
+        "other-date/outside-fuzz-smoke/other-forms": {
+          "total": 1522,
+          "expect_reject": 1522,
+          "after_correct": 1522,
+          "before_not_applicable_new_control": 1522
+        },
+        "other-date/outside-fuzz-smoke/the-three-commands": {
+          "total": 288,
+          "expect_reject": 288,
+          "after_correct": 288,
+          "before_not_applicable_new_control": 288
+        }
+      },
+      "expectation_changes_vs_bf2ec410": {
+        "count": 21,
+        "detail": "bare nightly inside fuzz-smoke: accept -> reject (18 FUZZ_NIGHTLY_FORMS + 3 fuzz-* controls)"
+      },
+      "mutants_of_the_exception": {
+        "total": 9,
+        "caught": 9,
+        "escaped": [],
+        "control_passes": true
+      }
+    },
+    "coverage_selection": {
+      "tests_red_before_change": "FAILED (failures=1, errors=22)",
+      "tests_after": {
+        "exit": 0,
+        "finished": "2026-10-28T02:51:38Z",
+        "ran": 12,
+        "seconds": 1.211
+      },
+      "admission_after": {
+        "exit": 0,
+        "finished": "2026-10-28T02:51:37Z",
+        "ran": 7,
+        "seconds": 8.722
+      },
+      "mutants": {
+        "total": 17,
+        "caught": 17,
+        "escaped": [],
+        "control_passes": true,
+        "first_attempt": "results/mutants-shard-selection.attempt1.json (16/17, symlink-and-file-allowed escaped)"
+      }
+    }
+  },
+  "forbidden_paths_identical_to_main": true,
+  "scientific_qualification": false
+}

@@ -1,0 +1,20 @@
+{
+  "base": "bf2ec4105a17af2bf73f2802c828c5f76a6236b5",
+  "pr_head": "9ea5de9f1a76c039cd8707f1a6db06ecf1829310",
+  "commit": "657b3ef084aa0601609a24d45c69a17416871742",
+  "tree": "f88f1f79c8f706147e624fc258d34da3dec6ffb2",
+  "parents": [
+    "9ea5de9f1a76c039cd8707f1a6db06ecf1829310",
+    "bf2ec4105a17af2bf73f2802c828c5f76a6236b5"
+  ],
+  "paths": [
+    ".github/workflows/benchmark-evidence.yml",
+    ".github/workflows/numerical-assurance.yml",
+    ".github/workflows/package-install.yml",
+    "scripts/capabilities/collect_ci_inventory.py",
+    "scripts/tests/test_ci_inventory.py",
+    "scripts/tests/test_ci_pins.py"
+  ],
+  "non_force_successor_of_PR273": true,
+  "scientific_qualification": false
+}
