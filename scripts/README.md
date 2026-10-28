@@ -425,11 +425,12 @@ PYTHONPATH=evas/src python3 -B scripts/run_regression.py --report runs/python-re
 `regression` 使用 Cargo 开发配置的 `opt-level=1`，明确保留 `debug-assertions=true`
 和 `overflow-checks=true`，缓存单独使用 `regression-opt1`。这减少未优化代码的执行成本，
 不改变模型、精度参数或误差门槛。配置含义见 [Cargo profiles](https://doc.rust-lang.org/cargo/reference/profiles.html)。
-需要复现 CI 构建时，在 Cargo 命令前设置对应环境变量：
+需要复现 CI 构建时，在 Cargo 命令前设置对应环境变量。CI 用 workflow 顶部的 `RUSTUP_TOOLCHAIN`
+固定 Rust 版本（当前 1.99.1），rustup 据此解析不带 `+toolchain` 的 cargo、rustc 和记录工具链的脚本：
 
 ```sh
-CARGO_PROFILE_DEV_OPT_LEVEL=1 CARGO_PROFILE_DEV_DEBUG_ASSERTIONS=true CARGO_PROFILE_DEV_OVERFLOW_CHECKS=true \
-  cargo +stable build --locked --manifest-path evas/rust_core/Cargo.toml
+RUSTUP_TOOLCHAIN=1.99.1 CARGO_PROFILE_DEV_OPT_LEVEL=1 CARGO_PROFILE_DEV_DEBUG_ASSERTIONS=true \
+  CARGO_PROFILE_DEV_OVERFLOW_CHECKS=true cargo build --locked --manifest-path evas/rust_core/Cargo.toml
 ```
 
 数值拒绝测试必须核对预期的错误类型。`kernel_timeout`、进程启动失败或协议错误

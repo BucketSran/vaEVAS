@@ -225,6 +225,10 @@ def classify(paths):
         elif path.startswith('evas/'):
             # Unfamiliar package/build inputs must not bypass installation.
             selected.update(CHECKS[:-1])
+        elif path == 'scripts/capabilities/generate_catalog.py':
+            # scripts/tests catalog fixtures and evas/capabilities generation
+            # checks both run in maintenance. Inventory stays unconditional.
+            selected.add('maintenance')
         else:
             # Unknown scripts/experiments may introduce a shared dependency.
             return flags(*CHECKS)

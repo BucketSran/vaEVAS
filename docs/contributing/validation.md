@@ -4,6 +4,17 @@ For behavior changes, read the test rules below and select checks with the ownin
 component skill. Read candidate capture or migration rules only when that work applies.
 See [CONTRIBUTING](../../CONTRIBUTING.md) for the contribution workflow.
 
+## Current requirement view
+
+Current four-backend requirement facts are generated from the capability registration by
+`evas/capabilities/render.py`. The JSON and Markdown views are
+`evas/capabilities/generated/support-facts.json` and `support.md`.
+`evas/docs/COMPARISON.md` keeps historical score identity `historical-comparison-import-f210ebd5`.
+Its compared and waiting rows stay retrievable. The current requirement denominator counts
+only current registration requirements.
+Check selection stays in `scripts/ci_selection.py` and `scripts/evas_check_policy.py`.
+This page does not add a gate those selectors do not already express.
+
 ## Behavior-first tests
 
 <a id="behavior-first-tests"></a>

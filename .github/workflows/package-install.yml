@@ -2,6 +2,11 @@ name: Installed EVAS package
 
 on:
   workflow_call:
+    inputs:
+      rust_toolchain:
+        description: Rust toolchain installed and used for the sdist and wheel builds; passed by the caller
+        type: string
+        required: true
     outputs:
       install_result:
         value: ${{ jobs.install.outputs.result }}
@@ -9,12 +14,10 @@ on:
 permissions:
   contents: read
 
-# Fixed Rust toolchain for the sdist build, which uses it through rustup.
-env:
-  RUSTUP_TOOLCHAIN: '1.99.1'
-
 jobs:
   install:
+    env:
+      RUSTUP_TOOLCHAIN: ${{ inputs.rust_toolchain }}
     outputs:
       result: ${{ steps.verified.outputs.result }}
     strategy:

@@ -67,6 +67,33 @@ class ReconcileBehaviors(unittest.TestCase):
         asset['content']={'algorithm':'sha256','value':'a'*64};self.part('assets',asset)
         with self.assertRaises(RegistryError): self.reg()
 
+    def test_derived_support_paths_reject_self_hash_and_accept_external_manifest(self):
+        for path in ('evas/capabilities/generated/support-facts.json','evas/capabilities/generated/support.md'):
+            with self.subTest(path=path):
+                asset=copy.deepcopy(self.objects[2])
+                asset['current_path']=path
+                asset['role']={'status':'confirmed','value':'derived','reason':'exact generated support view'}
+                asset['content']={'algorithm':'sha256','value':'a'*64}
+                self.part('assets',asset)
+                method=copy.deepcopy(self.objects[3])
+                method['definition']=dict(method['definition'],path=path)
+                method['module']=reference(asset);method['dependencies']=[reference(asset)]
+                self.part('methods',method)
+                with self.assertRaises(RegistryError): self.reg()
+                asset['content']={'algorithm':'external-input-manifest','scope':'actual-execution-inputs','producer':'capabilities.observe-assets-v1'}
+                self.part('assets',asset)
+                method['module']=reference(asset);method['dependencies']=[reference(asset)]
+                self.part('methods',method)
+                row={'path':path,'sha256':'d'*64,'git_mode':'100644','actual_mode':420}
+                catalog=self.reg().catalog()
+                with self.assertRaises(ValueError): catalog.reconcile_assets([row])
+                self.assertTrue(catalog.reconcile_assets([row],external_manifest={path:row}))
+                current=catalog.current('asset')[0]
+                self.assertEqual(current['content']['algorithm'],'external-input-manifest')
+                self.assertNotIn('value',current['content'])
+                self.assertNotEqual(current.get('version'),row['sha256'])
+                self.assertFalse(self.reg().qualified(asset['id']))
+
     def test_unknown_part_schema_and_second_current_rejected(self):
         for update in ({'schema_version':2},{'current':{}},{'kind':'qualifications'}):
             value={'schema_version':1,'kind':'assets','objects':[self.objects[2]]};value.update(update)

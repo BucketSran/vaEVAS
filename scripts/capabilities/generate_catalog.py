@@ -10,9 +10,37 @@ import re
 import shutil
 import subprocess
 
-PARTS={'catalog-sources.json':'sources','asset-index.json':'assets','method-index.json':'methods','entrypoint-index.json':'entrypoints','historical-index.json':'history'}
+PART_COUNT=16
+RETIRED_MONOLITHS={'historical-index.json','method-index.json'}
+KIND_FOR={'sources':{'source'},'assets':{'asset'},'methods':{'method'},'entrypoints':{'entrypoint'},'history':{'historical-audit-record','historical-finding'}}
+OBJECT_PART_KIND={kind:part for part,kinds in KIND_FOR.items() for kind in kinds}
 GOVERNANCE={'evas/validation/baselines/regression-v1.json','evas/validation/baselines/regression-v1.review.json'}
 PREFIXES=['.agents/','.github/','docs/','evas/','experiments/','scripts/']
+
+def part_slot(object_id,count=PART_COUNT):
+ """Stable slot: big-endian integer of the first 8 sha256 bytes of the utf-8 id, modulo count."""
+ return int.from_bytes(hashlib.sha256(object_id.encode('utf-8')).digest()[:8],'big')%count
+
+def ordered_parts(count=PART_COUNT):
+ rows=[('catalog-sources.json','sources'),('asset-index.json','assets')]
+ rows+=[('method-index-%02d.json'%index,'methods') for index in range(count)]
+ rows.append(('entrypoint-index.json','entrypoints'))
+ rows+=[('historical-index-%02d.json'%index,'history') for index in range(count)]
+ return rows
+
+PARTS=dict(ordered_parts())
+
+def part_file(kind,object_id,count=PART_COUNT):
+ if kind=='methods':return 'method-index-%02d.json'%part_slot(object_id,count)
+ if kind=='history':return 'historical-index-%02d.json'%part_slot(object_id,count)
+ return next(name for name,value in ordered_parts(count) if value==kind)
+
+def partition_objects(objects,count=PART_COUNT):
+ """One id keeps every version in one part. Empty parts stay in the fixed file set."""
+ buckets={name:[] for name,_kind in ordered_parts(count)}
+ for obj in objects:
+  buckets[part_file(OBJECT_PART_KIND[obj['kind']],obj['id'],count)].append(obj)
+ return {name:sorted(rows,key=lambda obj:(obj['id'],obj['version'])) for name,rows in buckets.items()}
 
 def canonical(value):return hashlib.sha256(json.dumps(value,ensure_ascii=False,sort_keys=True,separators=(',',':')).encode()).hexdigest()
 def file_sha(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
@@ -24,6 +52,16 @@ def sid(kind,key):return kind+':'+hashlib.sha256(key.encode()).hexdigest()[:24]
 def write(path,value):path.parent.mkdir(parents=True,exist_ok=True);path.write_text(json.dumps(value,ensure_ascii=False,sort_keys=True,indent=2)+'\n')
 def owned(module,path):
  spec=importlib.util.spec_from_file_location(module,path);value=importlib.util.module_from_spec(spec);spec.loader.exec_module(value);return value
+
+def read_rust_listing(root,item):
+ """Read one registered actual Rust listing. A new registration meets the strict current rules whether or not
+ its source is published yet; the historical +stable allowance exists only for a receipt read back from a bound source."""
+ path=Path(item['receipt_file']);raw=json.loads(path.read_text());profile=item['profile']
+ if not isinstance(profile,str) or not profile or raw.get('schema_version')!=1 or not raw.get('complete') or raw.get('errors') or raw.get('observation_kind')!='rust-test-binary-listing':raise ValueError('incomplete/unknown actual Rust listing')
+ listing=owned('catalog_generation_rust_listing',root/'evas/capabilities/rust_listing.py')
+ try:listing.checked(raw)
+ except (KeyError,TypeError,IndexError,AttributeError) as error:raise ValueError('incomplete or unknown actual Rust listing structure: '+str(error)) from error
+ return path,raw,profile
 
 def source(logical,path,locator=None):
  rawsha=file_sha(path)
@@ -74,6 +112,39 @@ def select_finding_method(history,document,row,runtime_id,current,previous_objec
    except ValueError:continue
    return method
  raise ValueError('finding original subject identity unavailable; explicit unbound migration required: '+runtime_id)
+
+DERIVED_EXACT_PATHS={
+ 'evas/capabilities/registry.json',
+ 'evas/capabilities/generated/comparison.md',
+ 'evas/capabilities/generated/paper.md',
+ 'evas/capabilities/generated/normative.md',
+ 'evas/capabilities/generated/support-facts.json',
+ 'evas/capabilities/generated/support.md',
+ 'evas/docs/development/TRACEABILITY.md'}
+
+def generated_output_paths(legacy):
+ """Exact derived outputs plus historical node pages. Support views join this set; they are not a second registry."""
+ if not isinstance(legacy,dict) or not isinstance(legacy.get('nodes'),list):raise ValueError('historical comparison nodes required for derived node pages')
+ generated=set(DERIVED_EXACT_PATHS)
+ generated.update('evas/capabilities/'+n['id']+'/README.md' for n in legacy['nodes'])
+ return generated
+
+def external_asset_identity(path,generated,metadata_paths):
+ """External manifest for generated, catalog metadata, or governance paths. Ordinary sources stay hashed."""
+ if path in metadata_paths:role='catalog-meta'
+ elif path in generated:role='derived'
+ elif path in GOVERNANCE:role='governance'
+ else:return None
+ return role,{'algorithm':'external-input-manifest','scope':'actual-execution-inputs','producer':'capabilities.observe-assets-v1'}
+
+def retain_generated_object(merged,migrations,current,previous_current,obj):
+ """Keep every prior id/version and point current at the regenerated object."""
+ key=(obj['id'],obj['version'])
+ if key in merged and merged[key]!=obj:raise ValueError('conflicting reused object version')
+ merged[key]=obj
+ prior=previous_current.get(obj['id'])
+ if prior and prior['version']!=obj['version']:migrations.append({'id':obj['id'],'previous':ref(prior),'current':ref(obj),'reason':'version-bound regenerated content; previous object retained'})
+ current[obj['id']]=obj['version']
 
 def entry_inputs(config):
  result=[]
@@ -160,8 +231,7 @@ def build(config,out):
     'native_skip_wrapper':row.get('native_skip_wrapper'),'execution_status':'not-executed-by-discovery'})
  rust_records=[]
  for item in config.get('rust_listings',[]):
-  path=Path(item['receipt_file']);raw=json.loads(path.read_text());profile=item['profile']
-  if not isinstance(profile,str) or not profile or raw.get('schema_version')!=1 or not raw.get('complete') or raw.get('errors') or raw.get('observation_kind')!='rust-test-binary-listing':raise ValueError('incomplete/unknown actual Rust listing')
+  path,raw,profile=read_rust_listing(root,item)
   logical='actual-rust-listing:'+profile
   src=source(logical,path,item.get('source_locator'));sources.append(src)
   actual_files={r['path']:r for r in raw['source']['files']}
@@ -189,9 +259,8 @@ def build(config,out):
   policy['bridges'].append(record);bridge_by_path[path]=(proof,chosen)
   include.append(path)
  metadata_paths={'evas/capabilities/data/registry.json',*('evas/capabilities/data/'+name for name in PARTS)}
- generated={'evas/capabilities/registry.json','evas/capabilities/generated/comparison.md','evas/capabilities/generated/paper.md','evas/capabilities/generated/normative.md','evas/docs/development/TRACEABILITY.md'}
  legacy=json.loads((root/'evas/capabilities/data/historical-comparison.json').read_text())
- generated.update('evas/capabilities/'+n['id']+'/README.md' for n in legacy['nodes'])
+ generated=generated_output_paths(legacy)
  readiness={}
  readiness_source=None
  if config.get('readiness_file'):
@@ -212,11 +281,12 @@ def build(config,out):
   prior_path=path if path in prior_assets else moves.get('assets',{}).get(path,path)
   previous_asset=prior_assets.get(prior_path)
   if prior_path!=path and previous_asset is None:raise ValueError('asset move lacks previous identity')
-  external=path in metadata_paths or path in generated or path in GOVERNANCE
-  role='catalog-meta' if path in metadata_paths else 'derived' if path in generated else 'governance' if path in GOVERNANCE else 'cross-component-source-read' if bridge else 'conservative-rust-tree-identity-input' if owner and all(e['collector']=='binary-listing' for e in owner.values()) else 'actual-unittest-owner' if owner else None
+  identity=external_asset_identity(path,generated,metadata_paths)
+  external=identity is not None
+  role=identity[0] if external else 'cross-component-source-read' if bridge else 'conservative-rust-tree-identity-input' if owner and all(e['collector']=='binary-listing' for e in owner.values()) else 'actual-unittest-owner' if owner else None
   a={'schema_version':1,'id':previous_asset['id'] if previous_asset else readiness.get(path,{}).get('id',sid('asset',path)),'version':'1' if external else row['sha256'],
     'kind':'asset','status':'active','namespace':'EVAS-assets','current_path':path,
-    'content':{'algorithm':'external-input-manifest','scope':'actual-execution-inputs','producer':'capabilities.observe-assets-v1'} if external else {'algorithm':'sha256','value':row['sha256']},
+    'content':identity[1] if external else {'algorithm':'sha256','value':row['sha256']},
     'role':{'status':'confirmed' if role else 'pending','value':role,'reason':'exact Registry/producer/governance path' if external else 'exact source-bound external read; partial consumers only' if bridge else 'conservative native source-tree identity; not compiler read or runtime closure' if role=='conservative-rust-tree-identity-input' else 'actual TestLoader owner module; no semantic qualification' if owner else 'responsibility awaits source review; path does not infer semantics'},
     'consumers':[ref(ep) for ep in sorted(owner.values(),key=lambda e:e['id'])],
     'consumer_status':'partial' if owner else 'pending','location_history':[],
@@ -321,13 +391,7 @@ def build(config,out):
  oldobjects=base['objects'];merged={(o['id'],o['version']):o for o in [*previous_objects,*oldobjects]}
  migrations=[]
  for objects in values.values():
-  for obj in objects:
-   key=(obj['id'],obj['version'])
-   if key in merged and merged[key]!=obj:raise ValueError('conflicting reused object version')
-   merged[key]=obj
-   prior=previous_current.get(obj['id'])
-   if prior and prior['version']!=obj['version']:migrations.append({'id':obj['id'],'previous':ref(prior),'current':ref(obj),'reason':'version-bound regenerated content; previous object retained'})
-   base['current'][obj['id']]=obj['version']
+  for obj in objects:retain_generated_object(merged,migrations,base['current'],previous_current,obj)
  base['_catalog_metadata_paths']=sorted(metadata_paths)
  actual=copy.deepcopy(base);actual['objects']=list(merged.values())
  reg=api.Registry(actual,root=root,repositories={'vaevas':archive,**config.get('source_repositories',{})});catalog=reg.catalog()
@@ -356,12 +420,12 @@ def build(config,out):
   asset_report=error.report
   if asset_report['extra'] or asset_report['unknown'] or asset_report['drift'] or asset_report['external_identity_missing'] or set(asset_report['missing']) != (metadata_paths-observed.keys()):raise
  # Keep all preexisting normative files unchanged. No raw history/discovery payloads go into main parts.
- for path in (root/'evas/capabilities/data').glob('*.json'):data_dir.mkdir(parents=True,exist_ok=True);shutil.copyfile(path,data_dir/path.name)
- kind_for={'sources':{'source'},'assets':{'asset'},'methods':{'method'},'entrypoints':{'entrypoint'},'history':{'historical-audit-record','historical-finding'}}
+ for path in (root/'evas/capabilities/data').glob('*.json'):
+  if path.name not in RETIRED_MONOLITHS:data_dir.mkdir(parents=True,exist_ok=True);shutil.copyfile(path,data_dir/path.name)
  base_keys={(o['id'],o['version']) for o in oldobjects}
- for name,kind in PARTS.items():
-  objects=[obj for key,obj in merged.items() if key not in base_keys and obj['kind'] in kind_for[kind]]
-  write(data_dir/name,{'schema_version':1,'kind':kind,'objects':sorted(objects,key=lambda o:(o['id'],o['version']))})
+ fresh=[obj for key,obj in merged.items() if key not in base_keys and obj['kind'] in OBJECT_PART_KIND]
+ for name,objects in partition_objects(fresh).items():
+  write(data_dir/name,{'schema_version':1,'kind':PARTS[name],'objects':objects})
  for key in ('inventory','dispositions','inventory_identity','target_scope','language_profile','_catalog_metadata_paths'):base.pop(key,None)
  write(data_dir/'registry.json',base)
  write(out/'guards-transition.json',{'schema_version':1,'facts':guardfacts,'legacy_node_ids':[n['id'] for n in legacy['nodes']],

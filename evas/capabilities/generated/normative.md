@@ -1,6 +1,7 @@
 # 规范登记状态
 
 由 `evas/capabilities/data/` 生成。规范索引、目标范围、资格和历史成绩分别记录。
+当前逐要求四后端事实见 [support.md](support.md) 与 [support-facts.json](support-facts.json)。
 
 语言配置：`evas-va-2.4-plus-2023-v1`。基础为 LRM 2.4，选入变化为 7780, 7920。
 
