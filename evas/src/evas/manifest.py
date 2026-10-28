@@ -2,6 +2,8 @@
 import json
 import math
 
+from .limits import MAX_PROOF_WORK_LIMIT
+
 MANIFEST_FIELDS = {'models', 'instances', 'driven', 'samples', 'tolerances', 'transient'}
 INSTANCE_FIELDS = {'name', 'module', 'connections', 'parameters'}
 
@@ -62,6 +64,12 @@ def parse_manifest(text):
     for field in ('tolerances', 'transient'):
         if field in manifest and not isinstance(manifest[field], dict):
             raise ValueError(f'{field} must be an object')
+    # A present limit is a set limit: JSON null is not "unset" here (omit the field for the
+    # default), unlike None in the Python API, so nothing is sent with a silent default.
+    limit = manifest.get('transient', {}).get('proof_work_limit', 1)
+    if type(limit) is not int or not 1 <= limit <= MAX_PROOF_WORK_LIMIT:
+        raise ValueError(f'transient.proof_work_limit must be an integer between 1 and {MAX_PROOF_WORK_LIMIT} '
+                         f'when present (omit it for the default), not {json.dumps(limit)[:40]}')
     for field in ('driven', 'samples'):
         if field in manifest and not isinstance(manifest[field], list):
             raise ValueError(f'{field} must be an array')

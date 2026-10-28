@@ -368,6 +368,49 @@ class ProofWorkLimitSurfaces(unittest.TestCase):
         self.assertEqual(child.returncode, 2)
         self.assertIn('proof_work_limit', json.loads(child.stderr)['message'])
 
+    def manifest_text(self, limit=None):
+        """A transient manifest; limit is raw JSON text for transient.proof_work_limit, None omits it."""
+        transient = dict(sources={'u': [[0, 0], [1, 1]]}, output_times=[0, 1], stop=1, max_step=1)
+        if limit is not None:
+            transient['proof_work_limit'] = '__LIMIT__'
+        manifest = dict(models=['m.va'], transient=transient,
+                        instances=[dict(name='DUT', module='m', connections=dict(u='u', y='y', r='0'),
+                                        parameters=dict(gain=3))])
+        return json.dumps(manifest).replace('"__LIMIT__"', limit or '""')
+
+    def cli_without_kernel(self, text):
+        # The kernel path does not exist: a request that gets past the manifest fails as kernel_process.
+        (self.root / 'manifest.json').write_text(text)
+        child = subprocess.run([sys.executable, '-m', 'evas', 'transient', str(self.root / 'manifest.json'),
+                                '--kernel', str(self.root / 'no-kernel')], text=True, capture_output=True)
+        return child, json.loads(child.stderr)
+
+    def test_cli_manifest_null_limit_is_rejected_before_any_kernel_runs(self):
+        # A manifest field that is present is a set value: null is not "unset" there (omit
+        # the field for the default), and nothing is sent to a kernel.
+        for text in ('null', 'true', '1.5', '2e12', '2000000000000.0', '"5"', '0', '-1',
+                     '10000000000001', '[1]', '{}'):
+            with self.subTest(value=text):
+                child, report = self.cli_without_kernel(self.manifest_text(text))
+                self.assertEqual(child.returncode, 2, child.stdout)
+                self.assertEqual(child.stdout, '')
+                self.assertEqual((report['kind'], report['code']), ('compile_error', 'manifest_input'))
+                self.assertIn('transient.proof_work_limit', report['message'])
+        from evas.manifest import parse_manifest
+        with self.assertRaisesRegex(ValueError, r'transient\.proof_work_limit'):
+            parse_manifest(self.manifest_text('null'))
+
+    def test_cli_manifest_without_the_limit_or_with_an_integer_reaches_the_kernel(self):
+        # Controls: a missing field is unset and an integer in range is accepted; both pass
+        # the manifest and fail only at the missing kernel.
+        for text in (None, '1', '10000000000000'):
+            with self.subTest(value=text):
+                child, report = self.cli_without_kernel(self.manifest_text(text))
+                self.assertEqual(child.returncode, 2, child.stdout)
+                self.assertEqual(report['kind'], 'kernel_process')
+        from evas.manifest import parse_manifest
+        self.assertNotIn('proof_work_limit', parse_manifest(self.manifest_text())['transient'])
+
     def test_cli_flag_is_only_for_transient_and_simulate(self):
         for action in ('compile', 'solve', 'lint'):
             with self.subTest(action=action):

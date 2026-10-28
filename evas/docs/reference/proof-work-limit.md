@@ -17,13 +17,14 @@
 | --- | --- |
 | 缺省 | `1_000_000_000`（`DEFAULT_PROOF_WORK_LIMIT`）；缺省时请求与以前逐字节相同，不发送该字段 |
 | 硬上界 | `10_000_000_000_000`（`MAX_PROOF_WORK_LIMIT`，1e13）。这是防止误写的实现预算护栏，不是正确性判据，也不是性能承诺：一个工作量单位不等于固定时间，约在 0.4–1.2 ns 到数 ns 之间随模型变化 |
-| 合法值 | 整数且 `1 <= 值 <= 1e13`。非正、超界、布尔、浮点（含 `2e12`、`2000000000000.0`）、字符串、`null`、超出 u64 的整数一律是 `invalid_inputs`；Python 端同样拒绝，被拒请求不发送 |
+| 合法值 | 整数且 `1 <= 值 <= 1e13`。其他值按收到它的那一层拒绝：内核请求里，非正、超界、布尔、浮点（含 `2e12`、`2000000000000.0`）、字符串、JSON `null`、超出 u64 的整数一律是 `invalid_inputs`；CLI 清单里只要写了 `transient.proof_work_limit` 就必须是范围内的整数，`null` 和其他形态在发送前拒绝，诊断点名该字段；Python API 里 `None` 就是缺省、表示未设置（不发送该字段，请求字节与以前相同），其他非整数或超界值在发送前报 `ValueError` |
 | 回显 | 响应 `observation_evidence.effective_controls.proof_work_limit` 总是回显实际生效的上限，包括缺省的 `1000000000` |
 
 使用方式：
 
-- Python：`runtime.transient(..., proof_work_limit=N)` 和 `scs.simulate_scs(path, proof_work_limit=N)`。
+- Python：`runtime.transient(..., proof_work_limit=N)` 和 `scs.simulate_scs(path, proof_work_limit=N)`；`proof_work_limit=None`（缺省）表示未设置。
 - CLI：`python -m evas simulate TB.scs --proof-work-limit N`；`transient` 也接受，且清单里同时写了该字段时拒绝。`N` 只能是十进制数字（拒绝 `1e9`、`+5`、`1.5`）。其他动作不接受该选项。
+- CLI 清单：`transient.proof_work_limit` 省略即缺省；写了就必须是 `1..1e13` 的整数。清单里的 `null` 不等于未设置，与其他非法值一样在读取清单时拒绝（`manifest_input`），不会静默改用缺省。
 
 账本按序列化请求字节收费，所以同一模型的总工作量不是纯函数：源文件的绝对路径出现在 IR 的来源字段里，
 路径每多一个字符，在已测的四个用例里总量增加约 1.4e5（slot 19）到 1.0e7（slot 1）单位。
