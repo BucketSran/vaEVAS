@@ -205,11 +205,13 @@ pub(crate) fn affine(
         has_variables: false,
     };
     match expr {
+        Expression::RealLocal { binding } => {
+            return Err(crate::real_expression::unbound_local(*binding, program))
+        }
         Expression::RealCall { .. }
         | Expression::UnsupportedSystemCall { .. }
         | Expression::RealBinary { .. }
-        | Expression::RealBoundary { .. }
-        | Expression::RealLocal { .. } => {
+        | Expression::RealBoundary { .. } => {
             return affine(&crate::real_expression::materialized(expr)?, program, owner)
         }
         Expression::Forcing { .. } => {
@@ -2899,6 +2901,9 @@ impl EventModel {
             &self.actions,
             &groups,
             &assembled,
+            // Construction already bound the owner of a program with
+            // procedures; any other program leaves its lazy owner to the caller.
+            (!self.program.procedures.is_empty()).then(|| crate::real_expression::work(self)),
         )
     }
 

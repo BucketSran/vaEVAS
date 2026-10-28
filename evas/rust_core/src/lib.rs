@@ -4,6 +4,7 @@ mod affine_bounds;
 mod analog;
 mod assembly;
 mod batch;
+mod canonical;
 mod causal_event;
 mod causal_voltage;
 mod continuous;
@@ -91,6 +92,7 @@ pub fn run_with_threads(mut request: Request, static_threads: usize) -> Result<R
     ir::check_schema_version(u64::from(request.program.schema_version))?;
     event_control::validate(&request.program)?;
     step_bounds::Bounds::new(&request.program)?;
+    canonical::request_program(&mut request.program);
     if let Some(config) = &request.transient {
         if let Some(errors) = &config.pwl_errors_v {
             if errors.len() != request.driven.len()

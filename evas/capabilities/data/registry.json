@@ -4314,12 +4314,15 @@
     "case:cross-event-body-right-limit-python": "1",
     "case:cross-event-body-right-limit-rust": "1",
     "case:event-observer-math-isolation-python": "1",
+    "case:idt-reset-argument-procedure-frame-python": "1",
+    "case:idt-reset-argument-procedure-frame-rust": "1",
     "case:output-point-limit-python": "1",
     "case:output-point-limit-rust": "1",
     "case:proof-work-limit-python": "1",
     "case:proof-work-limit-rust": "1",
     "checker:cross-event-body-right-limit": "1",
     "checker:event-observer-math-isolation": "1",
+    "checker:idt-reset-argument-procedure-frame": "1",
     "checker:output-point-limit": "1",
     "checker:proof-work-limit": "1",
     "checker:sef": "1",
@@ -12602,6 +12605,7 @@
     "requirement:cross-event-body-right-limit": "2",
     "requirement:event-observer-math-isolation": "3",
     "requirement:expm1": "1",
+    "requirement:idt-reset-argument-procedure-frame": "6",
     "requirement:ln1p": "1",
     "requirement:output-point-limit": "1",
     "requirement:proof-work-limit": "1",
@@ -12637,6 +12641,7 @@
     "source:a3284a9ec67acebef49ba896": "ec3fa1d2368e71c4863149f030cc1dac89953089fc3d3d06b8d7f65c02b3c78a",
     "source:b11c8ec0ef444c1039a37323": "2acb6f65ba0ab57d5c791d3b98e44ca53e5ced1a485f3e764e1c05c18c500090",
     "source:bc47264731c409c85f3a5abd": "e3d68a7527ea9baa80e8247a3c22e5b4a0536604a7fb15106b67c28d18e44e3e",
+    "source:canonical-tests": "1",
     "source:cross-body-right-limit-cases-tests": "1",
     "source:cross-right-limit-tests": "1",
     "source:d0ec5fdcd6f1114d29315761": "0d8e4ecc3b6de40533bd1c30bfa5ce8a6fe40d5ae410f684ceb2296187f5285c",
@@ -12650,6 +12655,7 @@
     "source:fadaf31296d206f593b63c1f": "959c91b8a51892a1029a5b57b663bf5745169906d96339b319f86550b40ca3d8",
     "source:group-math-sampled-domain-tests": "1",
     "source:guards-ast-transition": "aade79717ece6bfb3b2df9002769952e29119c873dc15ca5241c853af4d2b1a0",
+    "source:idt-reset-procedure-frame-tests": "1",
     "source:internal-budget": "1",
     "source:language-profile": "1",
     "source:negative-control": "1",
@@ -15973,6 +15979,738 @@
           "module": "evas/tests/test_source_floor_event.py",
           "namespace": "python-regression",
           "runtime_id": "test_source_floor_event.SourceFloorEvent.test_certified_bin_controls_source_order_branch_and_display"
+        }
+      ],
+      "version": "1"
+    },
+    {
+      "id": "source:idt-reset-procedure-frame-tests",
+      "kind": "source",
+      "origin": "evas/tests/test_idt_reset_procedure_frame.py",
+      "path": "evas/tests/test_idt_reset_procedure_frame.py",
+      "sha256": "8259451a3707c5635d3746ebc8205f5d12d6d04edd02fb885ba3590490d8f5c7",
+      "status": "active",
+      "version": "1"
+    },
+    {
+      "id": "source:canonical-tests",
+      "kind": "source",
+      "origin": "evas/rust_core/src/canonical_tests.rs",
+      "path": "evas/rust_core/src/canonical_tests.rs",
+      "sha256": "50e2b67ec00c7411b87919464c0f4021681e3703418a4652bef7ffacfa7f0b08",
+      "status": "active",
+      "version": "1"
+    },
+    {
+      "allowed_behavior": {
+        "equivalence_property": {
+          "basis": "LRM 4.5.4 Table 4-18 (assert never nonzero -> integrate from t0 with ic); review r2 B2-R2-H1-01",
+          "text": "For programs EVAS supports, adding or removing a constant-zero third idt argument does not change the outcome: either both complete with equal values and certificates, or both stop with the same refusal kind for the same cause. Legitimate refusals (resource budgets such as step_budget, precision, numeric domain, unsupported paths) stay allowed for both members; invalid_ir never is. This is a property, not a must_run requirement."
+        },
+        "implementation_choice": [
+          {
+            "basis": "来源事实 (review r1 B2-SP-03)",
+            "text": "Evaluate the procedural integrand in its procedure frame on the reset-capable idt path. A named typed refusal (for example unsupported_operator naming the integrand) is allowed only for programs outside the must_run set below; it is never a substitute for running the must_run programs."
+          }
+        ],
+        "lrm_mandated": [
+          {
+            "basis": "静态阅读",
+            "text": "idt(x, ic, 0) equals idt(x, ic) at every time; with a state assert, hold ic while nonzero and integrate from the release instant."
+          }
+        ],
+        "must_not": [
+          {
+            "basis": "来源事实",
+            "text": "Return kernel.invalid_ir for IR produced by compile_sources (Q9:B: internal errors are behaviour defects)."
+          },
+          {
+            "basis": "来源事实 (review r1 B2-SP-03)",
+            "text": "Replace invalid_ir by another refusal for a must_run program."
+          }
+        ],
+        "must_run": [
+          {
+            "bench": {
+              "max_step": "1e-06",
+              "origin": "review r1 repro specs r1b_h1_zero.spec.json (d8b1ddf0...) and r1b_h1_state.spec.json (5aef25ef...)",
+              "output_times": [
+                "0",
+                "1e-06",
+                "2e-06",
+                "3e-06",
+                "4e-06",
+                "5e-06"
+              ],
+              "sources": {
+                "c": [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    "5e-06",
+                    1
+                  ]
+                ]
+              },
+              "stop": "5e-06"
+            },
+            "certificate": "voltage_bounds_V contain the exact values, half-width within vabstol+reltol*|v|",
+            "expected": {
+              "V(y)": [
+                "0",
+                "11/10",
+                "11/5",
+                "33/10",
+                "22/5",
+                "11/2"
+              ],
+              "times": [
+                "0",
+                "1e-06",
+                "2e-06",
+                "3e-06",
+                "4e-06",
+                "5e-06"
+              ]
+            },
+            "program": "r3n2 zero assert: module m(c,y); real freq,acc; integer a; analog begin freq=1e6+1e5*V(c); if(freq<1e6) freq=1e6; if(freq>70e6) freq=70e6; acc=idt(freq,0,0); V(y)<+acc; end"
+          },
+          {
+            "bench": {
+              "max_step": "1e-06",
+              "origin": "review r1 repro specs r1b_h1_zero.spec.json (d8b1ddf0...) and r1b_h1_state.spec.json (5aef25ef...)",
+              "output_times": [
+                "0",
+                "1e-06",
+                "2e-06",
+                "3e-06",
+                "4e-06",
+                "5e-06"
+              ],
+              "sources": {
+                "c": [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    "5e-06",
+                    1
+                  ]
+                ]
+              },
+              "stop": "5e-06"
+            },
+            "certificate": "as above",
+            "expected": {
+              "V(y)": [
+                "0",
+                "0",
+                "0",
+                "0",
+                "11/10",
+                "11/5"
+              ],
+              "times": [
+                "0",
+                "1e-06",
+                "2e-06",
+                "3e-06",
+                "4e-06",
+                "5e-06"
+              ]
+            },
+            "program": "r3n2 state assert: module m(c,y); real freq,acc; integer a; analog begin @(initial_step) a=1; @(timer(3u)) a=0; freq=1e6+1e5*V(c); if(freq<1e6) freq=1e6; if(freq>70e6) freq=70e6; acc=idt(freq,0,a); V(y)<+acc; end"
+          },
+          {
+            "bench": {
+              "max_step": "1e-06",
+              "origin": "review r1 repro specs r1b_h1_zero.spec.json (d8b1ddf0...) and r1b_h1_state.spec.json (5aef25ef...)",
+              "output_times": [
+                "0",
+                "1e-06",
+                "2e-06",
+                "3e-06",
+                "4e-06",
+                "5e-06"
+              ],
+              "sources": {
+                "c": [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    "5e-06",
+                    1
+                  ]
+                ]
+              },
+              "stop": "5e-06"
+            },
+            "expected": {
+              "V(y) of each": [
+                "0",
+                "11/10",
+                "11/5",
+                "33/10",
+                "22/5",
+                "11/2"
+              ],
+              "both complete": true,
+              "values and certificates": "identical"
+            },
+            "program": "r3n2 pair: the zero-assert program above and the same program with acc=idt(freq,0)"
+          }
+        ]
+      },
+      "batch": "orig-5",
+      "benchmark_commit": "c485de860c6005f451133e8cdc05fe923da29206",
+      "blocked_slots": [
+        18,
+        20,
+        26
+      ],
+      "budget": {
+        "basis": "静态阅读",
+        "voltage": "EVAS certified-path contract: |v - v_exact| <= vabstol + reltol*|v| at every returned point; event times within the certified root window; integer and branch results exact."
+      },
+      "candidate_impact": {
+        "basis": "来源事实",
+        "kind": "blocks every reset-preserving Benchmark rewrite of #270 item 6; also a second-batch fixed comparator (all candidates of v2-test-hysteresis)",
+        "source": "runs/t3-harbor30-20261027/issue270-resolution/round3-assignment.json outside_items R3-N2; grill-vams-2023/benchmark-mainline-20261028/issues/issue-276-comment-0.md"
+      },
+      "card_source": {
+        "note": "standards-line card v6; incremental review batch2-cards-r4 passed",
+        "path": "runs/standard-line-20261028/cards/batch-orig-5/idt-reset-argument-procedure-frame.json",
+        "review": "pending",
+        "sha256": "b8e861454454f8a51b70c02105258f22ea4ff0c516bac1d5c8cb9a0695b08f30",
+        "status": "draft",
+        "version": "6"
+      },
+      "conditions": [
+        "assert constant 0",
+        "assert = held state written by events",
+        "procedural integrand with if-clamps",
+        "with and without $bound_step and events (prep and round3 diagnostics: all invalid_ir)"
+      ],
+      "constructs": [
+        {
+          "basis": "来源事实",
+          "diagnostic": {
+            "code": "kernel.invalid_ir",
+            "message": "unbound real value requires its procedure frame",
+            "reached_by": "R11-1 and controls r4-diag:base18/B/iir-const-reset-only (idt(freq,0,0), no event)",
+            "where": "no location"
+          },
+          "evidence": "runs/t3-harbor30-20261027/issue270-resolution/round3-facts/rewrite-checks.md rows R11-1 (lines 82-93)",
+          "file": "benchmark/material/draftbench/batches/v2-01/tasks/v2-integrate-case0007-adpll-fine-tdc/environment/public/healthy.va:8-10",
+          "role": "Benchmark rewrite R11-1 of fixed healthy_dco (front end accepted)",
+          "slot": 18,
+          "task": "v2-integrate-case0007-adpll-fine-tdc",
+          "text": "freq=20e6+1e6*V(coarse)+250e3*V(fine); if(freq<1e6)freq=1e6; ...; phase=idt(freq,0,<reset>);"
+        },
+        {
+          "basis": "来源事实",
+          "diagnostic": {
+            "code": "kernel.invalid_ir",
+            "message": "same",
+            "reached_by": "R12-1 and r4-diag:base20/B/iir-const-reset-only"
+          },
+          "evidence": "runs/t3-harbor30-20261027/issue270-resolution/round3-facts/rewrite-checks.md rows R12-1 (lines 94-99)",
+          "file": "benchmark/material/draftbench/batches/v3-01/tasks/v3-calibration-fractional-pll/environment/public/healthy.va:13",
+          "role": "Benchmark rewrite R12-1 (fixed DCO)",
+          "slot": 20,
+          "task": "v3-calibration-fractional-pll",
+          "text": "phase=idt(freq,0,<reset>);"
+        },
+        {
+          "basis": "来源事实",
+          "diagnostic": {
+            "code": "kernel.invalid_ir",
+            "message": "same",
+            "reached_by": "R26-1 after sqrt neutralized; control reset constant 0 also invalid_ir"
+          },
+          "evidence": "runs/t3-harbor30-20261027/issue270-resolution/round3-facts/rewrite-checks.md rows R26-1 (lines 128-133)",
+          "file": "benchmark/material/draftbench/batches/v3-01/tasks/v3-filter-sweep-measurement/solution/dut.va:17-20",
+          "role": "Benchmark rewrite R26-1 (reference)",
+          "slot": 26,
+          "task": "v3-filter-sweep-measurement",
+          "text": "V(ai) <+ idt(V(drive)*sin(theta)*active,0,!active);"
+        },
+        {
+          "basis": "来源事实",
+          "diagnostic": {
+            "code": "kernel.invalid_ir",
+            "message": "unbound real value requires its procedure frame",
+            "where": "no location; stage c before t=0 (3 private + 3 public cases)"
+          },
+          "evidence": "grill-vams-2023/benchmark-mainline-20261028/issues/issue-276-comment-0.md (second batch)",
+          "file": "benchmark/material/draftbench/batches/v2-01/tasks/v2-test-hysteresis/environment/public/dut/support_cmp.va:19-30",
+          "role": "fixed_support support_hysteretic_comparator (no idt)",
+          "slot": null,
+          "task": "v2-test-hysteresis (second batch)",
+          "text": "upper_th = offset + 0.5 * vhys; lower_th = offset - 0.5 * vhys; ... @(cross(V(inp, inm) - upper_th, +1)) state = 1;"
+        },
+        {
+          "basis": "推断",
+          "role": "root hypothesis",
+          "slot": null,
+          "task": "static reading of the kernel",
+          "text": "real_expression::constant() resolves Affine/RealBoundary/RealBinary only; materialized(RealLocal) therefore always fails. events.rs:207-214 (event expressions) and affine_bounds.rs:95 (node maps) call it, so a RealLocal in a cross expression or in an idt operator input on the reset path yields invalid_ir."
+        }
+      ],
+      "dependencies": [
+        {
+          "id": "lrm-2.4",
+          "sha256": "afdb66b8baec11cb63e0572346862434fb6652faf3849a402c96bb02f03f13cf",
+          "version": "1"
+        },
+        {
+          "id": "lrm-2023",
+          "sha256": "86b19cb490fab45c0d8dbc077a3412a3dffdd4a553741ac196c825a0cbae3194",
+          "version": "1"
+        },
+        {
+          "id": "source:language-profile",
+          "sha256": "96bad1a55d3da59d733ad376d4659e3ff6b821c9a0e5ab41ed6353e794453599",
+          "version": "1"
+        },
+        {
+          "id": "source:target-scope",
+          "sha256": "bbc16ec9f813042a44b714014359fef63bbf28e2c43a113f4aa5868bcd0264cc",
+          "version": "1"
+        }
+      ],
+      "drafted_by": "claude-opus-5-5 (requirement-card worker, 2026-10-28)",
+      "eh_facts": [
+        {
+          "basis": "来源事实",
+          "evidence": "grill-vams-2023/capability-families-eh-sonnet-20261028/REPORT.md §2.12",
+          "text": "Paired repro: f=2*V(u); V(y)<+idt(f,0,0) gives kernel.invalid_ir while the same program without the reset argument passes (h6_const0_realvar vs h6_noreset_realvar); result stored in a real local (h6n_reset_result_via_reallocal) also fails; full inlining passes."
+        },
+        {
+          "basis": "来源事实",
+          "evidence": "grill-vams-2023/capability-families-eh-sonnet-20261028/REPORT.md §2.12",
+          "text": "Without any reset argument, an idt result stored in a real local and fed to tanh (h19_tanh_only) is also invalid_ir: the trigger surface is wider than reset."
+        },
+        {
+          "basis": "来源事实",
+          "evidence": "grill-vams-2023/capability-families-eh-sonnet-20261028/REPORT.md §2.12",
+          "text": "Real files: slot 18 fixed healthy_dco with the R11 rewrite and slot 26 with R26+R28 give the same invalid_ir."
+        },
+        {
+          "basis": "来源事实",
+          "evidence": "grill-vams-2023/capability-families-eh-sonnet-20261028/REPORT.md §2.12",
+          "text": "Location (inferred by E-H): the reset path goes through legacy Operators; direct_points (operators.rs:310-341) calls affine_bounds::affine on the unresolved input at :341."
+        }
+      ],
+      "eh_integration": {
+        "note": "executed evidence of another worker (cited, not re-run in W)",
+        "source": "grill-vams-2023/capability-families-eh-sonnet-20261028/REPORT.md",
+        "source_sha256": "10158e107eddf1535f03544cd5a2b2cb2d29c66dcf72b961d4766b610560e609"
+      },
+      "evas_source_commit": "bf2ec4105a17af2bf73f2802c828c5f76a6236b5",
+      "existing_tests": [
+        {
+          "basis": "静态阅读",
+          "checks_card_observables": "pattern (no procedural integrand)",
+          "covers": "state reset with an affine input integrand (V(u,r))",
+          "file": "evas/tests/test_idt.py",
+          "method": "IdtContracts.test_level_reset_holds_ic_and_releases_from_reset_time"
+        },
+        {
+          "basis": "静态阅读",
+          "checks_card_observables": false,
+          "covers": "reset expression structure",
+          "file": "evas/tests/test_idt.py",
+          "method": "IdtContracts.test_reset_expression_is_certified_from_original_structure"
+        },
+        {
+          "basis": "静态阅读",
+          "checks_card_observables": "principle",
+          "covers": "invalid_ir only for corrupted raw IR (real_local binding 999)",
+          "file": "evas/tests/test_procedure_runtime.py",
+          "method": "ProcedureRuntime.test_inactive_numeric_domain_and_invalid_references_are_distinct"
+        }
+      ],
+      "family": "H (prep §3.1; defect note under #270 item 6)",
+      "gap": "real_expression.rs:45-51 materialized() returns invalid_ir for procedure-bound reals (constant() has no RealLocal case); callers include operators.rs:1265 (reset_terms), affine_bounds.rs:95, events.rs:213, display.rs:139. Tests are linked through case:idt-reset-argument-procedure-frame-python and case:idt-reset-argument-procedure-frame-rust; calibration and execution evidence are pending and the links confer no support.",
+      "id": "requirement:idt-reset-argument-procedure-frame",
+      "implementation": "pending batch assignment (controller: after E-H quantification)",
+      "independent_answers": [
+        {
+          "answer_file": "answers/b5_events.json",
+          "answer_sha256": "6426889cada15f1526c27feeb40992a92a6415dedfdc6dd0ab5d279595096c76",
+          "basis": "已执行验证",
+          "model": "freq=1e6+1e5*V(c) (procedural, with if-clamps to [1e6,70e6]); y=idt(freq,0,a); V(y_out)<+y; c=1 V dc",
+          "recheck": "review r1 recomputed 11/10, 11/5 (no reset) and 11/10, 11/5 after release at 3 us; 2a790344 completes and matches, d6b7543f returns invalid_ir",
+          "script": "scripts/b5_events.py",
+          "script_sha256": "cd63c61704c5de9192160adfae9e6bb7470bfd0fb68f701f82557c1c1fa2a9d9",
+          "test": "r3n2_minimal",
+          "values": {
+            "a=0 (constant)": {
+              "y(1us)": "11/10",
+              "y(2us)": "11/5"
+            },
+            "a=q (q=1 on [0,3us) via events, 0 after)": {
+              "y(2us)": "0",
+              "y(4us)": "11/10",
+              "y(5us)": "11/5"
+            },
+            "equivalence": "idt(x,ic,0) must equal idt(x,ic) at every time (assert never nonzero -> integrate from t0 with ic)"
+          }
+        }
+      ],
+      "kind": "requirement",
+      "language_profile": "evas-va-2.4-plus-2023-v1",
+      "lrm_basis": {
+        "basis": [
+          {
+            "basis": "静态阅读",
+            "text": "Procedural real integrands and constant or state asserts are legal; the internal error is not an LRM outcome."
+          },
+          {
+            "basis": "来源事实",
+            "text": "errors.py:14 maps invalid_ir to invalid_input with the hint 'Recompile the original source and check IR node ownership and references' - wrong for compiler-produced IR."
+          }
+        ],
+        "legal": true
+      },
+      "lrm_citations": {
+        "2.4": [
+          {
+            "clause": "4.5.4 Table 4-18",
+            "pdf_page": 81,
+            "use": "idt(x, ic, 0): assert never nonzero, so the result equals idt(x, ic)"
+          }
+        ],
+        "2023": [
+          {
+            "clause": "4.5.4",
+            "pdf_page": 80
+          }
+        ]
+      },
+      "observables": [
+        "integral output",
+        "absence of kernel.invalid_ir for compiler-produced IR",
+        "values and voltage_bounds_V of the must_run programs (the box contains the exact value, half-width within the budget)",
+        "downstream DCO edges (slots 18, 20) and sweep reports (slot 26) on the original Benchmark files once their rewrites are returned (integration, not acceptance)"
+      ],
+      "open_questions": [
+        "与 requirement:idt-assert-from-input-or-time-comparison（第6项）同排期？本卡是它所有正例的前置。"
+      ],
+      "probe_evas_commit": "02dee32b2c9b25f166cbd77f8a895953e004f288",
+      "proposed_tests": [
+        {
+          "currently": "kernel.invalid_ir (fact for the slot 18/20/26 controls)",
+          "expected": {
+            "V(y)": [
+              "0",
+              "11/10",
+              "11/5",
+              "33/10",
+              "22/5",
+              "11/2"
+            ]
+          },
+          "input": "the must_run zero-assert program and the plain pair on the review bench (c=1 V, 0..5 us, max_step 1 us)",
+          "kind": "red-first",
+          "name": "test_idt_with_constant_zero_assert_equals_plain_idt",
+          "observables": [
+            "V(y) at 0, 1, 2, 3, 4, 5 us",
+            "voltage_bounds_V",
+            "completion (no refusal)"
+          ]
+        },
+        {
+          "expected": {
+            "V(y)": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "11/10",
+              "11/5"
+            ]
+          },
+          "input": "the must_run state-assert program on the same bench",
+          "kind": "red-first",
+          "name": "test_idt_state_assert_with_procedural_integrand",
+          "observables": [
+            "V(y) at 0, 1, 2, 3, 4, 5 us",
+            "voltage_bounds_V",
+            "completion (no refusal)"
+          ]
+        },
+        {
+          "currently": "kernel.invalid_ir (inferred from v2-test-hysteresis)",
+          "expected": "n=1 from 50 ps (crossing of 0.05 V)",
+          "input": "parameter vh=0.1; th=0.5*vh; @(cross(V(u)-th,+1)) n=n+1; V(y)<+n; u ramp 0 -> 1 V over 1 ns",
+          "kind": "red-first",
+          "name": "test_procedural_real_threshold_in_cross"
+        },
+        {
+          "expected": "run or typed refusal; never invalid_ir",
+          "input": "the three Benchmark rewrites (R11-1, R12-1, R26-1 probe forms) and the hysteresis comparator",
+          "kind": "regression guard",
+          "name": "test_compiled_programs_never_return_invalid_ir"
+        },
+        {
+          "expected": "per pair the same outcome: completed members give equal values and certificates, refused members the same refusal kind for the same cause; kernel.invalid_ir never",
+          "input": "(1) the must_run r3n2 pair on the review bench: both complete; (2) the same two programs with sources={\"c\": [[0, 1], [1, 1]]} (constant 1 V covering the stop), API output_times=[0, 1], stop=1 s, max_step=1e-7 s (review r2 counterexample: ceil(1/1e-7) = 10,000,000 steps, above the 1,000,000-step limit): both complete or both stop with step_budget",
+          "kind": "metamorphic property over listed pairs: one that must complete and one that may stop on the step budget",
+          "name": "test_adding_constant_zero_assert_never_changes_computability"
+        }
+      ],
+      "required_boundaries": [
+        "assert released exactly at t0"
+      ],
+      "review": "pending",
+      "review_r1_disposition": {
+        "B2_SP_03": "must_run set with values and certificates; typed refusal only outside it; invalid_ir floor kept"
+      },
+      "review_r2_disposition": {
+        "B2_R2_H1_01": "must_run item 3 replaced by an enumerated resource-sufficient pair; the general statement moved to equivalence_property with legitimate refusals kept; benches pinned"
+      },
+      "review_r3_disposition": {
+        "B2_R3_H1_01": "second pair now names a constant PWL source that covers stop=1 s, so the pair reaches the step budget instead of invalid_inputs",
+        "B2_R3_H1_02": "test kind reworded; the second pair is the step-budget pair, not a resource-sufficient one"
+      },
+      "revision_history": [
+        {
+          "by": "standard line (claude-opus-5-5), 2026-10-28",
+          "change": "r1 B2-SP-03: must_run programs with values and certificates; typed refusal only outside the set",
+          "from_sha256": "67e3e323c7e0042b6ceb16cc34ddeff7dc6d887f2b7a0c5f3a450a32446998a5",
+          "from_version": "2",
+          "source": "batch-2 card review r1 (night-coordination/batch2-cards-astra-r1-20261028/review-report.json, sha256 5d972cd3...)",
+          "to_version": "3"
+        },
+        {
+          "by": "standard line (claude-opus-5-5), 2026-10-28",
+          "change": "r2 B2-R2-H1-01: must_run narrowed to enumerated resource-sufficient programs; equivalence as a property",
+          "from_sha256": "00b936a14f5c7e7fd658a3d7eb42c3367d32a64c5459e0309b127b800ca290d5",
+          "from_version": "3",
+          "source": "batch-2 card review r2 (reviews/batch2-cards-r2/review.json, sha256 ce57fdff...)",
+          "to_version": "4"
+        },
+        {
+          "by": "standard line (claude-opus-5-5), 2026-10-28",
+          "change": "test fields made consistent with the narrowed must_run: six-time observables; property test lists its pairs incl. the r2 resource counterexample",
+          "from_sha256": "558736df9532831c736dae4a2e838f42c9b2564cf143db37c1298404a57ee6b4",
+          "from_version": "4",
+          "source": "self-check after r2 B2-R2-H1-01 fix",
+          "to_version": "5"
+        },
+        {
+          "by": "standard line (claude-opus-5-5), 2026-10-28",
+          "change": "r3 B2-R3-H1-01 (P2) source covering stop for the step-budget pair; B2-R3-H1-02 (P3) test kind wording",
+          "from_sha256": "ea8e9c619b61be0531377de52b6ba41292d9a3b66d5d3a43d5d51ec8398dc06a",
+          "from_version": "5",
+          "source": "batch-2 card review r3 (reviews/batch2-cards-r3/review.json, sha256 dbd49719...)",
+          "to_version": "6"
+        }
+      ],
+      "scope": "Front-end-accepted programs where a procedure-bound real (RealLocal: freq computed with clamps; upper_th = offset + 0.5*vhys) reaches a kernel consumer that only accepts closed expressions: the integrand of idt(expr, ic, assert) with an assert argument (slots 18, 20, 26 rewrites) or a cross expression (second-batch hysteresis comparator). The kernel returns kernel.invalid_ir 'unbound real value requires its procedure frame' instead of running or giving a typed refusal.",
+      "source_locations": [
+        "4.5.4 Table 4-18",
+        "4.5.4"
+      ],
+      "status": "pending",
+      "title_zh": "过程 real 进入带 assert 的 idt（即使常数 0）或事件表达式时内核报 kernel.invalid_ir（R3-N2，缺陷；第二批滞回测量同文）",
+      "version": "6",
+      "voltage_domain": {
+        "applicable": true,
+        "basis": "静态阅读",
+        "premise": "integrand is a procedural function of driven inputs (no feedback)"
+      }
+    },
+    {
+      "dependencies": [
+        {
+          "id": "source:idt-reset-procedure-frame-tests",
+          "sha256": "cae9903a1ad5d284a4887b9eff213a9b2ac3a2dd42e16b23b0283179c9af6047",
+          "version": "1"
+        },
+        {
+          "id": "source:canonical-tests",
+          "sha256": "1537184fd3bd33996fd0c276097aa481c6f2495117a53fa81d97cea893a19c62",
+          "version": "1"
+        }
+      ],
+      "gap": "The assertions are written in the bound test modules. The Rust assertions live in kernel sources and are located only through the native listing. No checker-definition, calibration or review is bound.",
+      "id": "checker:idt-reset-argument-procedure-frame",
+      "kind": "checker",
+      "review": "pending",
+      "scope": "Batch 2 H1 (#270 R3-N2): procedure-bound reals in idt asserts and cross thresholds: assertions and their independent answers",
+      "status": "pending",
+      "version": "1"
+    },
+    {
+      "dependencies": [
+        {
+          "id": "requirement:idt-reset-argument-procedure-frame",
+          "sha256": "f441c8458b9f15ee52c0061b18d02a836eb75a79352a173240eeca76b2a7c29c",
+          "version": "6"
+        },
+        {
+          "id": "checker:idt-reset-argument-procedure-frame",
+          "sha256": "7089a0bcdbf0dc22eb124beb3e769dd78b1b187e521cf47d9f6cc1cb3cec5875",
+          "version": "1"
+        },
+        {
+          "id": "source:target-scope",
+          "sha256": "bbc16ec9f813042a44b714014359fef63bbf28e2c43a113f4aa5868bcd0264cc",
+          "version": "1"
+        }
+      ],
+      "gap": "Test links for review. No case-inputs, execution, analysis or review is bound, so this case confers no support.",
+      "id": "case:idt-reset-argument-procedure-frame-python",
+      "kind": "case",
+      "requirements": [
+        {
+          "id": "requirement:idt-reset-argument-procedure-frame",
+          "sha256": "f441c8458b9f15ee52c0061b18d02a836eb75a79352a173240eeca76b2a7c29c",
+          "version": "6"
+        }
+      ],
+      "review": "pending",
+      "scope": "Batch 2 H1 (#270 R3-N2): procedure-bound reals in idt asserts and cross thresholds (Python tests)",
+      "status": "pending",
+      "test_scope": [
+        {
+          "module": "evas/tests/test_idt_reset_procedure_frame.py",
+          "namespace": "python-regression"
+        }
+      ],
+      "tests": [
+        {
+          "module": "evas/tests/test_idt_reset_procedure_frame.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_idt_reset_procedure_frame.MustRun.test_constant_zero_assert_runs_and_equals_plain_idt"
+        },
+        {
+          "module": "evas/tests/test_idt_reset_procedure_frame.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_idt_reset_procedure_frame.MustRun.test_state_assert_with_procedural_integrand"
+        },
+        {
+          "module": "evas/tests/test_idt_reset_procedure_frame.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_idt_reset_procedure_frame.NeverInvalidIr.test_compiled_programs_never_return_invalid_ir"
+        },
+        {
+          "module": "evas/tests/test_idt_reset_procedure_frame.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_idt_reset_procedure_frame.ProceduralThresholds.test_hysteresis_comparator_thresholds"
+        },
+        {
+          "module": "evas/tests/test_idt_reset_procedure_frame.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_idt_reset_procedure_frame.ProceduralThresholds.test_procedural_real_threshold_in_cross"
+        },
+        {
+          "module": "evas/tests/test_idt_reset_procedure_frame.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_idt_reset_procedure_frame.ZeroAssertEquivalence.test_step_budget_pair_has_one_outcome"
+        },
+        {
+          "module": "evas/tests/test_idt.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_idt.IdtContracts.test_level_reset_holds_ic_and_releases_from_reset_time"
+        },
+        {
+          "module": "evas/tests/test_idt.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_idt.IdtContracts.test_reset_expression_is_certified_from_original_structure"
+        },
+        {
+          "module": "evas/tests/test_procedure_runtime.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_procedure_runtime.ProcedureRuntime.test_inactive_numeric_domain_and_invalid_references_are_distinct"
+        },
+        {
+          "module": "evas/tests/test_frontend_closure.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_frontend_closure.ConstantEventAliases.test_parameter_aliases_drive_initial_and_cross_with_instance_overrides"
+        },
+        {
+          "module": "evas/tests/test_held_alias_probe.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_held_alias_probe.HeldAliasProbe.test_public_ring_real_clock_alias_complete_transport_and_numeric_outputs"
+        },
+        {
+          "module": "evas/tests/test_loop_histories.py",
+          "namespace": "python-regression",
+          "runtime_id": "test_loop_histories.LoopHistories.test_array_receivers_do_not_define_operator_identity"
+        }
+      ],
+      "version": "1"
+    },
+    {
+      "dependencies": [
+        {
+          "id": "requirement:idt-reset-argument-procedure-frame",
+          "sha256": "f441c8458b9f15ee52c0061b18d02a836eb75a79352a173240eeca76b2a7c29c",
+          "version": "6"
+        },
+        {
+          "id": "checker:idt-reset-argument-procedure-frame",
+          "sha256": "7089a0bcdbf0dc22eb124beb3e769dd78b1b187e521cf47d9f6cc1cb3cec5875",
+          "version": "1"
+        },
+        {
+          "id": "source:target-scope",
+          "sha256": "bbc16ec9f813042a44b714014359fef63bbf28e2c43a113f4aa5868bcd0264cc",
+          "version": "1"
+        }
+      ],
+      "gap": "Test links for review. No case-inputs, execution, analysis or review is bound, so this case confers no support.",
+      "id": "case:idt-reset-argument-procedure-frame-rust",
+      "kind": "case",
+      "requirements": [
+        {
+          "id": "requirement:idt-reset-argument-procedure-frame",
+          "sha256": "f441c8458b9f15ee52c0061b18d02a836eb75a79352a173240eeca76b2a7c29c",
+          "version": "6"
+        }
+      ],
+      "review": "pending",
+      "scope": "Batch 2 H1 (#270 R3-N2): procedure-bound reals in idt asserts and cross thresholds (kernel unit tests)",
+      "status": "pending",
+      "test_scope": [
+        {
+          "module_path": "canonical::tests",
+          "namespace": "rust-tests",
+          "package": "evas-kernel",
+          "target": "evas_kernel",
+          "target_kind": "lib"
+        }
+      ],
+      "tests": [
+        {
+          "local_id": "canonical::tests::constant_alias_before_the_gate_becomes_its_binary64_literal",
+          "namespace": "rust-tests",
+          "package": "evas-kernel",
+          "target": "evas_kernel",
+          "target_kind": "lib"
+        },
+        {
+          "local_id": "canonical::tests::later_conditional_or_repeated_bindings_stay_procedure_bound",
+          "namespace": "rust-tests",
+          "package": "evas-kernel",
+          "target": "evas_kernel",
+          "target_kind": "lib"
+        },
+        {
+          "local_id": "canonical::tests::only_a_closed_constant_zero_assert_is_dropped",
+          "namespace": "rust-tests",
+          "package": "evas-kernel",
+          "target": "evas_kernel",
+          "target_kind": "lib"
         }
       ],
       "version": "1"

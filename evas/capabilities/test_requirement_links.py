@@ -559,6 +559,9 @@ BATCH2 = {
         python={'evas/tests/test_group_math_sampled_domain.py': 10,
                 'evas/tests/test_event_observer_math_display.py': 2},
         rust=None),
+    'requirement:idt-reset-argument-procedure-frame': dict(
+        python={'evas/tests/test_idt_reset_procedure_frame.py': 6},
+        rust=('canonical::tests', 3)),
 }
 
 
