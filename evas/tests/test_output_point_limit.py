@@ -13,10 +13,11 @@ so cap-1, cap and cap+1 are all exercised on the same code path.
 """
 GUARDS = ["DEV:scs-input", "DYNAMICS"]
 
-from decimal import Decimal, getcontext
+from decimal import Decimal, localcontext
 from fractions import Fraction as F
 import json
 import math
+import os
 from pathlib import Path
 import re
 import resource
@@ -287,11 +288,11 @@ class LargeGridEndToEnd(unittest.TestCase):
     The default test is a stateless gain y = 3*u driven by a triangle PWL, whose
     closed form is exact piecewise-linear arithmetic (Fractions). A first-order
     RC (y' = 1 - y from 0, y(t) = 1 - exp(-t), Decimal at 50 digits) is the
-    dynamic variant; it needs the proof work limit raised and, with the debug
-    kernel, minutes, so it is an explicit check that discovery does not collect
-    (CI records no skip). Run it by name with EVAS_TEST_KERNEL naming a release
-    kernel:
-      python3 -B -m unittest test_output_point_limit.LargeGridEndToEnd.check_rc_step_response_over_a_hundred_thousand_rows
+    dynamic variant; it needs the proof work limit raised and a release kernel
+    (with the debug kernel it takes minutes), so it is an explicit check that
+    discovery does not collect (CI records no skip). CI runs it by name in the
+    rust-regression job through scripts/run_explicit_checks.py; locally:
+      EVAS_TEST_KERNEL=<release kernel> python3 -B -m unittest test_output_point_limit.LargeGridEndToEnd.check_rc_step_response_over_a_hundred_thousand_rows
     """
     ROWS = 120_000
     TIMEOUT = 900
@@ -340,15 +341,31 @@ class LargeGridEndToEnd(unittest.TestCase):
                 load_scs(root / 'tb.scs')
 
     def check_rc_step_response_over_a_hundred_thousand_rows(self):
+        self.assertTrue(os.environ.get('EVAS_TEST_KERNEL'), 'EVAS_TEST_KERNEL must name a release kernel')
         result, stop = self.run_deck('V(y,r)<+idt(V(u,r)-V(y,r),0);', 'Vin (u 0) vsource dc=1',
                                      proof_work_limit=2_000_000_000_000)
         times, values = result['saved']['times'], result['saved']['values']
         self.assertEqual(len(times), self.ROWS + 1)
-        getcontext().prec = 50
-        worst = 0.0
-        for t, (y, _) in list(zip(times, values))[::997] + [(times[-1], values[-1])]:
-            worst = max(worst, abs(float(Decimal(y) - (1 - (-Decimal(t)).exp()))))
-        self.assertLess(worst, 1e-9)
+        self.assertEqual(result['transient']['times'], times)
+        # Every row is held to the request's own accuracy. The deck has no options
+        # line, so the SCS defaults vabstol 1e-12 and reltol 1e-10 apply and are echoed.
+        evidence = result['observation_evidence']
+        controls = evidence['effective_controls']
+        self.assertEqual((controls['absolute_V'], controls['relative']), (1e-12, 1e-10))
+        absolute, relative = Decimal(controls['absolute_V']), Decimal(controls['relative'])
+        y = result['nodes'].index('y')
+        bounds = evidence['voltage_bounds_V']
+        self.assertEqual(len(bounds), len(times))
+        with localcontext() as context:
+            context.prec = 50
+            for t, (value, _), box in zip(times, values, bounds):
+                exact = 1 - (-Decimal(t)).exp()
+                value, lo, hi = Decimal(value), Decimal(box[y][0]), Decimal(box[y][1])
+                self.assertLessEqual(abs(value - exact), absolute + relative * abs(value), t)
+                # The certificate encloses the closed form within the same tolerance.
+                self.assertTrue(lo <= exact <= hi, (t, 'certified bounds exclude 1 - exp(-t)'))
+                self.assertLessEqual((hi - lo) / 2, absolute + relative * max(abs(lo), abs(hi)),
+                                     (t, 'certificate width'))
 
 
 if __name__ == '__main__':
