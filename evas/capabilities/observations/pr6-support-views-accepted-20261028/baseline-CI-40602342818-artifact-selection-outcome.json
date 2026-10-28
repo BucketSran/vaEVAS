@@ -1,0 +1,41 @@
+{
+  "recorded_at_utc": "2026-10-28T00:01:37.334629+00:00",
+  "coordinator_decision": "A (delete only what must be deleted), applied after attempt 4",
+  "outcome": "no deletion: attempt 4 shard 2 ran on the E1 runtime profile and its artifact 12780722279 has the highest shard-2 ID, so coverage selected it; run 40602342818 attempt 4 concluded success",
+  "plan": {
+    "attempt": 4,
+    "conclusion": "success",
+    "decisions": [
+      {
+        "shard": 0,
+        "artifacts": 1,
+        "max_e1_id": 12778789676,
+        "delete": [],
+        "selected_after_deletion": 12778789676
+      },
+      {
+        "shard": 1,
+        "artifacts": 1,
+        "max_e1_id": 12778874763,
+        "delete": [],
+        "selected_after_deletion": 12778874763
+      },
+      {
+        "shard": 2,
+        "artifacts": 4,
+        "max_e1_id": 12780722279,
+        "delete": [],
+        "selected_after_deletion": 12780722279
+      },
+      {
+        "shard": 3,
+        "artifacts": 1,
+        "max_e1_id": 12778404957,
+        "delete": [],
+        "selected_after_deletion": 12778404957
+      }
+    ]
+  },
+  "plan_stdout": "baseline-pr/ci-40602342818/delete-plan.stdout",
+  "deleted": []
+}

@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "kind": "PR6 E1 acceptance (decision B)",
+  "accepted_by_coordinator": "mcp:817e5bc9-e4a9-43db-9486-6418b59b909e, message received after 2026-10-27T21:35Z (E1 accepted; verified both receipts and node copy 20261027T213354Z)",
+  "recorded_at_utc": "2026-10-27T21:39:58.199121+00:00",
+  "recorded_by": "mcp:90cdf183-ff98-4a99-8913-5020e3397b08",
+  "e1": {
+    "run": 40584762318,
+    "attempt": 1,
+    "event": "pull_request",
+    "pr": 269,
+    "head": "fa5556de20de4fecbf9db4e3630cd5d6754b07c2",
+    "tree": "470ad588ddeb848b7c05d3f23656a96f085f8bfd",
+    "base": "4d6ebc71efea35822a28f2861f2b0a2a6db17e59",
+    "merged_report_sha256": "35d74e62f8933cb10c8f8298f5a65389fa56b1cd6faadb4f8a09108f14d3fa75",
+    "jobs": "19 success; regression-admission failed with exactly: expected exactly one matching trusted baseline context; ci-result failed as aggregate"
+  },
+  "pool": {
+    "pool": "old",
+    "runner_log_header_version_all_four_shards": "20261012.334.1",
+    "context_runtime_profile": {
+      "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+      "ImageVersion": "20261023.334.3"
+    },
+    "same_pool_attempts": "attempt 1, no reruns",
+    "evidence": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r7-20261027/ci-40584762318/rerun-log.json",
+    "evidence_sha256": "981c34d8bb70ecdae7fa7c2fa8fb965089f30fd1fe11c3be363e42880e2fb218"
+  },
+  "runtime_profile_vs_matched_context": {
+    "difference": "none: runtime_profile is equal as JSON to every trusted context (raw structural diff, no (T) tolerance applied); no host field differs",
+    "differing_paths_vs_each_of_4_contexts": [
+      "/collector_sha256",
+      "/criteria_id"
+    ]
+  },
+  "condition1": {
+    "holds": true,
+    "evidence": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr6/e1-precheck-20261027/context-diff-40584762318.json",
+    "evidence_sha256": "13c6128d06b744a0b24a81739cd082aa070d4ebb80fb11dbc91bb2584e3d55f8"
+  },
+  "condition2": {
+    "holds": true,
+    "matched_trusted_context_index": 3,
+    "conditions_old_new": [
+      7737,
+      7737
+    ],
+    "lost": 0,
+    "added": 0,
+    "outcome_changed": 0,
+    "signature_changed": 0,
+    "id_lists_equal": {
+      "discovered_test_ids": true,
+      "selected_test_ids": true,
+      "setup_skipped_test_ids": true
+    },
+    "evidence": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr6/e1-precheck-20261027/e1-observations-40584762318.json",
+    "evidence_sha256": "e82b865f6c7ac30f2c5218e65a522871bf027036ab97a304d8f70e46af2044cf"
+  },
+  "counting_basis": {
+    "acceptance_basis": "the 7737 conditions compared one by one, and the report top-level raw unittest counters, which count subTest-level failures and errors",
+    "raw_counters_e1_equal_matched": {
+      "tests_run": 3257,
+      "failures": 597,
+      "errors": 296,
+      "skipped": 0,
+      "expected_failures": 3,
+      "unexpected_successes": 0
+    },
+    "not_used": "method-level outcome tallies quoted in earlier records (2617 passed, 423 failed, 214 error, 3 expected_failure; one outcome per method, sum 3257) are a different basis; do not compare them with the raw counters above"
+  },
+  "decision_B_consequences": {
+    "baseline_pr_ci": "all four regression shards must also land on the old pool (E1 environment must equal the registration run environment, regression_context_registration.py 143-144 and 388-390)",
+    "rerun_rule": "rerun a shard that is not on the old pool, one per completed attempt (each rerun redraws all four shards); limit 8 reruns; at the limit report to the coordinator and re-take E1 from a run of the same PR6 head with all four shards on the new pool",
+    "time": "coordinator: keep E1 -> baseline PR CI as short as possible; prepare the baseline PR during the C0 review and publish immediately after C0 merges"
+  },
+  "scientific_qualification": false
+}

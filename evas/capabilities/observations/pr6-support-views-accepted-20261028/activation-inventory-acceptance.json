@@ -1,0 +1,52 @@
+{
+  "candidate": "64fc1d395a1a457e25b4ea2ef246463cfa2aa375",
+  "tree": "a089a91def27a37686fc3cc98c3b53bf315fa3bb",
+  "checks": [
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "scripts/capabilities/collect_ci_inventory.py",
+        "--root",
+        ".",
+        "--output",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r8-20261027/catalog-inventory-local",
+        "--require-catalog",
+        "--registry-data",
+        "evas/capabilities/data"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r8-20261027/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r8-20261027/inventory-local.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-28T01:29:10.587619+00:00",
+      "finished_at_utc": "2026-10-28T01:32:23.168210+00:00"
+    }
+  ],
+  "summary": {
+    "success": true,
+    "reconciled": true,
+    "construction_complete": true,
+    "mode": "require-catalog",
+    "entry_count": 31,
+    "denominators": {
+      "maintenance": {
+        "generated_count": 0,
+        "instance_count": 813,
+        "unique_method_count": 717
+      },
+      "python-regression": {
+        "generated_count": 12,
+        "instance_count": 3257,
+        "unique_method_count": 3257
+      },
+      "validation": {
+        "generated_count": 22,
+        "instance_count": 849,
+        "unique_method_count": 849
+      }
+    }
+  },
+  "command_matches_CI_step": "python3 -B scripts/capabilities/collect_ci_inventory.py --root . --output runs/catalog-inventory --require-catalog --registry-data evas/capabilities/data",
+  "scientific_execution": false,
+  "scientific_qualification": false
+}

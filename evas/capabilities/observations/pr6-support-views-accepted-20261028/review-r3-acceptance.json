@@ -1,0 +1,55 @@
+{
+  "recorded_at_utc": "2026-10-27T15:54:58.499619+00:00",
+  "review": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr6-rebuild-astra-r3-20261027/review-report.json",
+  "candidate": "5455ae7b006488902476bba045e9e2971102d8f5",
+  "reviewer": {
+    "providerInstanceId": "tcodex",
+    "model": "gpt-6-astra",
+    "options": {
+      "reasoningEffort": "max",
+      "serviceTier": "default"
+    },
+    "started_at_utc": "2026-10-27T14:58:19Z",
+    "completed_at_utc": "2026-10-27T15:45:19.523604+00:00"
+  },
+  "verdict": "not passed: 5 P2; cannot enter E1/C0; R2 original 16 variants closed",
+  "findings": {
+    "PR6-ASTRA-R3-01": {
+      "accepted": true,
+      "verification": "executed: audit_markdown on 5455ae7b export accepted move/duplicate/toolchain variants",
+      "evidence": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr6/r3-findings-verification-20261027/markdown-repro.json"
+    },
+    "PR6-ASTRA-R3-02": {
+      "accepted": true,
+      "verification": "executed: both contradictory duplicate view_status variants accepted",
+      "evidence": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr6/r3-findings-verification-20261027/markdown-repro.json"
+    },
+    "PR6-ASTRA-R3-03": {
+      "accepted": true,
+      "verification": "static: rust_listing.checked() accepts both argv forms for every receipt and reconcile() applies it to the actual receipt"
+    },
+    "PR6-ASTRA-R3-04": {
+      "accepted": true,
+      "verification": "static: package-install.yml is workflow_call only (sole caller numerical-assurance.yml:713), runs rustup toolchain install stable, no RUSTUP_TOOLCHAIN; comment claims one fixed toolchain for every job"
+    },
+    "PR6-ASTRA-R3-05": {
+      "accepted": true,
+      "verification": "executed: (kind,id,version) union of 5 catalog files; c76cb65f objects missing in 5455ae7b = 808 (methods 750, assets 50, sources 4, entrypoints 4), rewritten 0; main 02dee32b missing 0",
+      "evidence": [
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr6/r3-findings-verification-20261027/retention-c76cb65f-in-5455ae7b.json",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr6/r3-findings-verification-20261027/retention-02dee32b-in-5455ae7b.json"
+      ]
+    }
+  },
+  "order_only_variants_accepted": [
+    "record-order-only",
+    "requirement-order-only"
+  ],
+  "fix_plan": {
+    "R3-01/R3-02": "worker cursor/grok-4.7 high fastMode=false -> support_view.py + test_support_view.py patch",
+    "R3-03/R3-04": "worker tclaude/claude-sonnet-5-5 high -> rust_listing.py, workflows, pin tests patch",
+    "R3-05": "primary: rebuild r5 with a (kind,id,version) union of main 02dee32b and PR6 parent c76cb65f catalog objects before generation, reject same key different bytes, check retention against both parents",
+    "then": "r5 candidate (fix commits + derived refresh) -> publish -> CI (new E1 source run) with local checks in parallel -> incremental tcodex Astra r4 on 5455ae7b..r5"
+  },
+  "E1_consequence": "head changes, so CI 40524845780 is no longer the final-head E1 source; E1 needs the r5 CI; a new-pool run triggers the e1_note stop-and-report condition"
+}

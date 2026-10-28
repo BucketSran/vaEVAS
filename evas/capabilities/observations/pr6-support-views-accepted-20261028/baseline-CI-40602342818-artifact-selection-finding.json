@@ -1,0 +1,72 @@
+{
+  "recorded_at_utc": "2026-10-27T23:56:36.321480+00:00",
+  "run": 40602342818,
+  "finding": "attempt 3 shard 2 ran on the E1 image (20261023.334.3), but the coverage job downloaded shard-2 artifact 12780576020 (attempt 2, image 20261026.354.1): with several same-name artifacts, the download step keeps the highest artifact ID, and IDs are not ordered by creation time (12779632650 created 23:50:12 < 12780576020 created 23:44:51)",
+  "coverage_log": "coverage-attempt3.log lines 225-294: incompatible shard metadata",
+  "header_to_image": {
+    "20261012.334.1": "20261023.334.3 / Linux-6.17.0-1022 (E1 image)",
+    "20261025.353.1": "20261026.354.1 / Linux-7.0.0-1017"
+  },
+  "shard_artifacts": [
+    {
+      "id": 12778789676,
+      "name": "python-regression-shard-0",
+      "created_at": "2026-10-27T23:33:19Z",
+      "bytes": 24502216,
+      "zip_sha256": "e7a3c954f758c417a72ee51b405f2234a3385fde0707620956864a6bea679e48",
+      "shard_index": 0,
+      "ImageVersion": "20261023.334.3",
+      "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39"
+    },
+    {
+      "id": 12778874763,
+      "name": "python-regression-shard-1",
+      "created_at": "2026-10-27T23:34:27Z",
+      "bytes": 24604658,
+      "zip_sha256": "a61e1319b74aeebe0dab926f80031dea9e64599bf544765a12340e954891f87f",
+      "shard_index": 1,
+      "ImageVersion": "20261023.334.3",
+      "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39"
+    },
+    {
+      "id": 12779283095,
+      "name": "python-regression-shard-2",
+      "created_at": "2026-10-27T23:34:58Z",
+      "bytes": 24368312,
+      "zip_sha256": "726f0dc5dacee321c6459460330e620b207c49aef2bc12a5de752ac3f740793f",
+      "shard_index": 2,
+      "ImageVersion": "20261026.354.1",
+      "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39"
+    },
+    {
+      "id": 12780576020,
+      "name": "python-regression-shard-2",
+      "created_at": "2026-10-27T23:44:51Z",
+      "bytes": 24368202,
+      "zip_sha256": "02c562a6725995d0028e617d73c0f86ceebaa2bde434088c20db8ddee2ec43ff",
+      "shard_index": 2,
+      "ImageVersion": "20261026.354.1",
+      "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39"
+    },
+    {
+      "id": 12779632650,
+      "name": "python-regression-shard-2",
+      "created_at": "2026-10-27T23:50:12Z",
+      "bytes": 24368170,
+      "zip_sha256": "3d33b2edbdb84afe964ca32f03ade572df6277744d57650259fef55a2d2d07d9",
+      "shard_index": 2,
+      "ImageVersion": "20261023.334.3",
+      "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39"
+    },
+    {
+      "id": 12778404957,
+      "name": "python-regression-shard-3",
+      "created_at": "2026-10-27T23:33:54Z",
+      "bytes": 27095660,
+      "zip_sha256": "b72a7343b66bd1c76635837e6ca9d735a022f1167707a203356f3a3dde832fd7",
+      "shard_index": 3,
+      "ImageVersion": "20261023.334.3",
+      "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "recorded_at_utc": "2026-10-27T22:40:20.420416+00:00",
+  "corrects": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr6/e1-precheck-20261027/e1-acceptance.json",
+  "field": "decision_B_consequences.rerun_rule",
+  "was": "each rerun redraws all four shards",
+  "correct": "rerunning one shard job redraws only that shard; the other shards keep their runner and results",
+  "evidence": "run 40544673525 attempts 1-3: shards 1-3 keep start 16:53:14Z and their completion times in attempts 2 and 3; only shard 0 restarts (17:05:25Z, 17:10:52Z)",
+  "effect": "the baseline PR loop reruns each non-old shard individually; with an old-pool share p, each such shard needs about 1/p reruns. The limit stays 8 reruns.",
+  "pool_observation": "C0 CI 40594586171 attempt 1 (22:2xZ): shards 0 and 2 on 20261025.353.1 (new), 1 and 3 on 20261012.334.1 (old); the new image share is rising"
+}

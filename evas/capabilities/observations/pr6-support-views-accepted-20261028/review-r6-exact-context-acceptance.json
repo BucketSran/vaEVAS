@@ -1,0 +1,105 @@
+{
+  "accepted_at_utc": "2026-10-27T23:26:02.510644+00:00",
+  "accepted_by": "mcp:90cdf183-ff98-4a99-8913-5020e3397b08",
+  "candidate": "6e3801a2dc54771b831ba68ed0ae752287149a7d",
+  "tree": "3c46f1ffdff19e8213942ac9af24c3b6195e7ae0",
+  "pr": 277,
+  "review_report": {
+    "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr6-exact-context-astra-r6-20261027/review-report.json",
+    "sha256": "d7fca9410b13610f0fe2f3bf4f6b1bbc71a9ba3f5a0ba70c47fd186414dd3af3"
+  },
+  "summary": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr6-exact-context-astra-r6-20261027/summary.txt",
+  "reviewer": {
+    "providerInstanceId": "tcodex",
+    "model": "gpt-6-astra",
+    "options": [
+      {
+        "id": "reasoningEffort",
+        "value": "max"
+      },
+      {
+        "id": "serviceTier",
+        "value": "priority"
+      }
+    ],
+    "catalog_evidence": "runtime/actual.json",
+    "full_catalog": "runtime/orchestrator-capabilities.json",
+    "local_tools": "runtime/local-tools.json",
+    "matches_requested": true,
+    "dispatch_time": null,
+    "queue_duration": null,
+    "start_basis": "首个实际 clock 回执，不虚构派发/排队时间"
+  },
+  "time": {
+    "started_at_utc": "2026-10-27T22:46:57+00:00",
+    "finished_at_utc": "2026-10-27T23:24:53.905511+00:00",
+    "elapsed_observed_seconds": 2276.906,
+    "started_at_Asia_Shanghai": "2026-10-28T06:46:57+08:00",
+    "finished_at_Asia_Shanghai": "2026-10-28T07:24:53.905511+08:00",
+    "report_written_at_utc": "2026-10-27T23:23:52.518569+00:00"
+  },
+  "priority_counts": {
+    "P0": 0,
+    "P1": 0,
+    "P2": 0,
+    "P3": 2
+  },
+  "blocking_findings": [],
+  "exact_governance_accepted": true,
+  "exact_bytes": {
+    "entry.json": {
+      "sha256": "79e67cb073c36b976c40d76f509980aba09295a7879b019d362eaf019aeb660d",
+      "canonical_sha256": "4ae199f17a6cc24901601a667babc40e66b4546b5d3cc814d1643963dac7e566"
+    },
+    "authority.json": {
+      "sha256": "72d3e7bc49ed3da11d0843851ea13262759349f24eb916ece99ce3bafb089cb6",
+      "canonical_sha256": "68bfa2aedb803d8607c6e589b0fd679eb302234b46a20dabaed75f9b095ebf5c"
+    },
+    "review.json": {
+      "sha256": "f72d3c725db7edf85007d1e0b2086e93e8f911c39a69d0f47ca99cc0061c880c",
+      "canonical_sha256": null
+    },
+    "bundle-pointer.json": {
+      "sha256": "66c0cb64cbab4c12fcf227ef4549717882b7cbab10213b13e0192a18237f0f9e",
+      "canonical_sha256": null
+    },
+    "baseline-append.json": {
+      "sha256": "6b1a58754c81b938d036ad71a2a42ef75c06a4da2972d325fb5508e183b5b343",
+      "canonical_sha256": null
+    }
+  },
+  "c0_ci_accepted_by_primary": {
+    "run": 40594586171,
+    "attempt": 7,
+    "conclusion": "success",
+    "jobs": "21/21 success",
+    "pool": "all four shards old (20261012.334.1)",
+    "pr_state": "MERGEABLE CLEAN",
+    "note": "the reviewer did not verify CI (by brief); the primary verified it before merging"
+  },
+  "p3_findings_for_pr6": [
+    {
+      "id": "PR6-ASTRA-R6-02",
+      "priority": "P3",
+      "file": "scripts/tests/test_discover_rust.py",
+      "line": 1590,
+      "title": "R5-05 仍遗漏传入模块上的 checked 赋值别名"
+    },
+    {
+      "id": "PR6-ASTRA-R6-01",
+      "priority": "P3",
+      "file": "scripts/tests/test_discover_rust.py",
+      "line": 685,
+      "title": "R5-03 的受限 shell 解析仍静默放行未识别工具链选择"
+    }
+  ],
+  "p3_handling": "P3-only: the primary fixes them on PR6 before activation and records the evidence; no separate re-review; checked at final acceptance",
+  "prior_P3_status": {
+    "R5-01": "closed",
+    "R5-02": "closed",
+    "R5-03": "partially-closed",
+    "R5-04": "closed-original-exception-scoping-defect",
+    "R5-05": "partially-closed"
+  },
+  "scientific_qualification": false
+}

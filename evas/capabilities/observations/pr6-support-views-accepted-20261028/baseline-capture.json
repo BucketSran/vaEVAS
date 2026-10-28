@@ -1,0 +1,28 @@
+{
+  "at_utc": "2026-10-27T23:27:48.022726+00:00",
+  "base": "9d970d47c18decd54d66609f222acfecdf35a5ef",
+  "head": "b1730f91ef26a9670d0fbe077248fd1d590c46bf",
+  "tree": "ac2bd9c71ff3815d6f482bf16cdbecba3443dae9",
+  "paths": [
+    "evas/validation/baselines/regression-v1.json"
+  ],
+  "baseline_file_sha256": "6b1a58754c81b938d036ad71a2a42ef75c06a4da2972d325fb5508e183b5b343",
+  "baseline_bytes": 50578629,
+  "baseline_blob": "7fb1a117a7b12e0f382cb8026f59d4ed29fb727a",
+  "contexts_before": 4,
+  "contexts_after": 5,
+  "coordinator_checks": {
+    "1_one_path": true,
+    "2_old_contexts_canonically_equal_in_order": true,
+    "3_fifth_context_equals_new_entry_canonical_sha256": true,
+    "4_two_write_paths_and_repeat_byte_identical": true
+  },
+  "canonical_digests": {
+    "old_baseline_canonical_sha256": "bcc18beb8a0b89454f686f73016d0b777f609072542f73c528f3b85c4ba29dd4",
+    "new_entry_canonical_sha256": "4ae199f17a6cc24901601a667babc40e66b4546b5d3cc814d1643963dac7e566"
+  },
+  "same_tree_as_staged": true,
+  "stage_receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/context-registration-20261027/baseline-pr/stage-receipt.json",
+  "published": false,
+  "semantic_qualification": false
+}

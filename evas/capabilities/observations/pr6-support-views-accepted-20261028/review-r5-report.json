@@ -1,0 +1,1468 @@
+{
+  "schema_version": 1,
+  "review_kind": "增量独立 Astra 审核；同轮覆盖 Standards 与 Spec；只读审查",
+  "round": 5,
+  "review_status": "completed-with-five-nonblocking-P3-findings",
+  "conclusion": "R4-01、R4-02、R4-03闭合；R4-04原直接反例闭合，整类仅部分闭合。新增5个P3（Standards 1、Spec 4），没有P1/P2；满足“无未决阻断发现”，但不满足“两类完全封闭”，不是无发现通过。当前严格收据入口、实际工具链接线未发现回退。",
+  "no_unresolved_blocking_findings": true,
+  "all_findings_closed": false,
+  "both_requested_classes_closed": false,
+  "blocking_definition": "沿用R4-04和外层README的P3处理政策：当前固定候选无科学或工具链实际漂移，审计精确性／未来守卫缺口为P3；主控仍须修正并留下核对证据。不能把此字段解读为可立即合入、已完成E1或可忽略P3。",
+  "can_enter_E1_C0": false,
+  "can_enter_E1_C0_reason": "本地r6超过单文件推送上限且尚无本head同池CI/E1。将#274合入后的新main集成到PR6、核对源码等价及P3修正，再取新固定head的同池CI；本轮独审本身没有P1/P2阻断。",
+  "fixed_scope": {
+    "pr": "https://github.com/BucketSran/vaEVAS/pull/269",
+    "base_main": "02dee32b2c9b25f166cbd77f8a895953e004f288",
+    "prior_review_head": "340ef10e723c3fd06058f4d33ffa7dd07a9a3646",
+    "prior_review_tree": "a5ab5fbc15ab805156404a9be8320ba72c6ba683",
+    "source_head": "4751f9519fbc07efba94373e803c39aefe39472b",
+    "source_tree": "78223a138e3e1fd894e5c883f306a4b6f48da393",
+    "candidate_head": "23f81e68d10e3b4d3a6c324bba2b8d7ff58a6397",
+    "candidate_tree": "158011767f849d84c6edba5a1a3393f39c9b4687",
+    "comparison": "340ef10e723c3fd06058f4d33ffa7dd07a9a3646 → 4751f9519fbc07efba94373e803c39aefe39472b",
+    "source_paths": [
+      "evas/capabilities/support_view.py",
+      "evas/capabilities/test_support_view.py",
+      "scripts/capabilities/generate_catalog.py",
+      "scripts/tests/test_discover_rust.py",
+      "scripts/tests/test_rust_catalog_reconcile.py"
+    ],
+    "source_export": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r6-20261027/source",
+    "source_patch_sha256": "24d9655886b8ff28a5fd9d3896dd72f0b9eb8b57ffb6c5dac5385c4bf5178ce7",
+    "source_patch_matches_export_and_commit": true,
+    "construction_archive": "5329442b3db87a902b7fa3beb71b1fb3715d5aea",
+    "excluded_derived_paths": [
+      "evas/capabilities/data/asset-index.json",
+      "evas/capabilities/data/catalog-sources.json",
+      "evas/capabilities/data/entrypoint-index.json",
+      "evas/capabilities/data/method-index.json",
+      "evas/capabilities/data/registry.json",
+      "evas/docs/development/TRACEABILITY.md"
+    ],
+    "derived_scope": "仅实测method-index.json体积；未重审或批准r6派生数据发布。",
+    "excluded_real_head": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+    "excluded_real_candidates": "18 tracked + 2 untracked旧科学候选，全部保留。",
+    "additional_merge_boundary": {
+      "pr": "https://github.com/BucketSran/vaEVAS/pull/274",
+      "head": "5fe590c0c573c7296b30f38245f769ff2f71ab8a",
+      "file": "scripts/capabilities/generate_catalog.py",
+      "scope": "本简报要求的合并边界；不替代#274独审。"
+    }
+  },
+  "brief": {
+    "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r6-20261027/review-r5-brief.txt",
+    "bytes": 11273,
+    "sha256": "d77a2d7bef46a67b4a30fa08032dce3e84d0efc4191933ca34903d0c8650f905",
+    "read_in_full_before_review": true,
+    "sha256_verified": true,
+    "prior_brief_hashes_verified": {
+      "R4": "6e8857e293f4ffe26f60bead99772a14c15d20d18727e48262c8510a3340096b",
+      "R3": "fb90a01e693f111fd68611184d9bc766c169b70f7346748fe684fb672b49e1e7"
+    }
+  },
+  "runtime": {
+    "provider_instance_id": "tcodex",
+    "model": "gpt-6-astra",
+    "options": {
+      "reasoningEffort": "max",
+      "serviceTier": "priority"
+    },
+    "actual_options_verified_by": "orchestrator_capabilities.inheritedProviderInstanceId/inheritedModel/inheritedOptions",
+    "model_descriptor_default_is_not_actual_setting": true,
+    "evidence": "runtime/session.json",
+    "no_delegation": true,
+    "no_top_level_thread_created": true,
+    "no_project_worktree_created": true,
+    "skills_used": [
+      "vaevas-review-pr",
+      "evas-validate"
+    ],
+    "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
+    "executable": "/opt/homebrew/opt/python@3.14/bin/python3.14"
+  },
+  "time": {
+    "started_at_utc": "2026-10-27T19:58:26+00:00",
+    "finished_at_utc": "2026-10-27T20:45:31.144849+00:00",
+    "started_at_local": "2026-10-28T03:58:26+08:00",
+    "finished_at_local": "2026-10-28T04:45:31.144849+08:00",
+    "local_timezone": "Asia/Shanghai",
+    "elapsed_seconds": 2825.145,
+    "start_basis": "首次clock读数，完整brief已在此前立即读完；不冒称工具未提供的排队/派发时间。"
+  },
+  "standards_findings": [
+    {
+      "id": "PR6-ASTRA-R5-05",
+      "category": "Standards",
+      "priority": "P3",
+      "status": "open",
+      "title": "historical 唯一调用守卫未追踪正常别名和 partial",
+      "revision": "4751f9519fbc07efba94373e803c39aefe39472b",
+      "file": "scripts/tests/test_discover_rust.py",
+      "line": 307,
+      "line_end": 318,
+      "related_prior_findings": [
+        "PR6-ASTRA-R3-03",
+        "PR6-ASTRA-R4-03"
+      ],
+      "trigger": "在 scripts/review_new_reader.py 写 from rust_listing import checked as verify；read_new(receipt) 调用 verify(receipt,historical=True)。赋值别名或 functools.partial(rl.checked,historical=True)也会遗漏；experiments/benchmark目录整体不扫描。",
+      "actual_behavior": "historical_checked_calls只识别最终函数名checked。加入上述别名文件后，实际test_historical_toolchain_allowance_has_one_call_site仍通过，而该新reader接受+stable新收据。11项静态边界控制中6项检出、5项漏检；当前真实源码仍仅一处checked(expected_receipt,historical=True)。",
+      "impact": "不能兑现“无论怎么拼写都发现第二处历史兼容”的守卫声明，后续调用方可能重新打开R3-03/R4-03；没有当前生产调用方绕过，故P3。受审新read_rust_listing的严格校验有效，R4-03不重开。",
+      "minimum_fix": "约束历史兼容能力只经专用内部接口进入，或解析导入/赋值别名并禁止带historical的partial、转发与未识别引用；明确守卫拥有的目录并覆盖生产入口。保留别名调用的实际守卫负控制。",
+      "evidence": [
+        "runtime/final-independent-checks.json",
+        "runtime/final_independent_checks.py",
+        "runtime/rust-receipt-controls.json",
+        "runtime/rust-receipts/static/import-alias/scripts/reader.py",
+        "runtime/rust-receipts/static/partial/scripts/reader.py"
+      ],
+      "blocking_for_E1_C0_by_itself": false,
+      "attribution": "归因于340ef10e→4751f951的新审计／守卫；不重审未受影响范围，不把合成变体当作当前CI已漂移。",
+      "reproduction": {
+        "script": "runtime/final_independent_checks.py",
+        "writes_only_under": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr6-r6-astra-r5-20261027",
+        "requires_compiler_or_backend": false,
+        "source_revision": "4751f9519fbc07efba94373e803c39aefe39472b"
+      }
+    }
+  ],
+  "spec_findings": [
+    {
+      "id": "PR6-ASTRA-R5-01",
+      "category": "Spec",
+      "priority": "P3",
+      "status": "open",
+      "title": "空行归一化接受了两种重排之外的编辑",
+      "revision": "4751f9519fbc07efba94373e803c39aefe39472b",
+      "file": "evas/capabilities/support_view.py",
+      "line": 1076,
+      "line_end": 1092,
+      "related_prior_findings": [
+        "PR6-ASTRA-R4-01",
+        "PR6-ASTRA-R4-02"
+      ],
+      "trigger": "默认或预览 fixture 的两条资格记录保持原顺序；把最后一条记录后的唯一空行移到两条记录之间。示例原第136行空行移到第103行前，未移动任何资格记录正文。",
+      "actual_behavior": "audit_markdown 返回 []。_record_blocks 只累加空行数量，_with_sorted_record_runs 把所有空行移到整组末尾，因此该变化被抹平。独立主矩阵6个负控制误放；30个补充空白控制又复现2次（与主矩阵重叠，不叠加独立缺陷数）。",
+      "impact": "违反本轮“仅允许要求小节及记录块重排，其余位置和空白差异均拒绝”的精确合同。会改变 Markdown 段落分隔；目前没有观察到事实值、要求归属、当前资格或真实 support.md 被错误放行，故 P3。",
+      "minimum_fix": "把空白迁移限定为实际合法块重排的副作用，不把全部分隔空行仅压成一个计数；记录顺序没有变化时须逐位比对空白。保留原两种重排正控制，并覆盖仅迁移分隔符、记录顺序不变的负控制。",
+      "evidence": [
+        "runtime/markdown-matrix.json",
+        "runtime/markdown-matrix/fixture-current--blank-move-135-to-102.md",
+        "runtime/markdown-matrix/fixture-current-baseline.md",
+        "runtime/markdown_matrix.py",
+        "runtime/final-independent-checks.json"
+      ],
+      "blocking_for_E1_C0_by_itself": false,
+      "attribution": "归因于340ef10e→4751f951的新审计／守卫；不重审未受影响范围，不把合成变体当作当前CI已漂移。",
+      "reproduction": {
+        "script": "runtime/markdown_matrix.py",
+        "writes_only_under": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr6-r6-astra-r5-20261027",
+        "requires_compiler_or_backend": false,
+        "source_revision": "4751f9519fbc07efba94373e803c39aefe39472b"
+      }
+    },
+    {
+      "id": "PR6-ASTRA-R5-02",
+      "category": "Spec",
+      "priority": "P3",
+      "status": "open",
+      "title": "枚举须包含 .yaml workflow 与 action.yaml",
+      "revision": "4751f9519fbc07efba94373e803c39aefe39472b",
+      "file": "scripts/tests/test_discover_rust.py",
+      "line": 554,
+      "line_end": 560,
+      "related_prior_findings": [
+        "PR6-ASTRA-R4-04"
+      ],
+      "trigger": "新增 .github/workflows/review-probe.yaml，普通 probe 作业运行 cargo +nightly test；或在已有作业调用 .github/actions/review-probe，其中 composite 定义在 action.yaml 并运行同一命令。",
+      "actual_behavior": "3个实际方法 test_ci_uses_one_fixed_rust_toolchain、test_toolchain_selection_is_a_whitelist、test_reusable_workflows_take_the_fixed_toolchain_from_their_caller 全部通过。新文件未进入 .glob(\"*.yml\") / .glob(\"**/action.yml\")；2,053项矩阵中400个 .yaml 注入全部漏检。两种最终复现均可由独立 YAML 解析器正常解析。",
+      "impact": "合法 CI 文件可在 fuzz-smoke 之外选 nightly，而整套守卫不报错；当前提交仅有3个 .yml workflow 和1个 action.yml，实际接线未漂移。这是本轮新增守卫的覆盖缺口，延续原 R4-04 的 P3 分级。",
+      "minimum_fix": "统一枚举两种 workflow 扩展名及两种 action 文件名；复用该集合到固定值、白名单和 reusable 接线守卫，并增加实际路径枚举的负控制。",
+      "evidence": [
+        "runtime/toolchain-reproductions.json",
+        "runtime/toolchain-reproductions/workflow-yaml-extension/.github/workflows/review-probe.yaml",
+        "runtime/toolchain-reproductions/composite-yaml-extension/.github/actions/review-probe/action.yaml",
+        "runtime/toolchain-matrix.json",
+        "runtime/reference-github-workflow-syntax-readable.txt"
+      ],
+      "blocking_for_E1_C0_by_itself": false,
+      "related_locations": [
+        {
+          "file": "scripts/tests/test_discover_rust.py",
+          "line": 526
+        },
+        {
+          "file": "scripts/tests/test_discover_rust.py",
+          "line": 596
+        }
+      ],
+      "attribution": "归因于340ef10e→4751f951的新审计／守卫；不重审未受影响范围，不把合成变体当作当前CI已漂移。",
+      "reproduction": {
+        "script": "runtime/toolchain_reproductions.py",
+        "writes_only_under": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr6-r6-astra-r5-20261027",
+        "requires_compiler_or_backend": false,
+        "source_revision": "4751f9519fbc07efba94373e803c39aefe39472b"
+      }
+    },
+    {
+      "id": "PR6-ASTRA-R5-03",
+      "category": "Spec",
+      "priority": "P3",
+      "status": "open",
+      "title": "逐行匹配遗漏常见 YAML／shell 选择并误拒权威引用",
+      "revision": "4751f9519fbc07efba94373e803c39aefe39472b",
+      "file": "scripts/tests/test_discover_rust.py",
+      "line": 103,
+      "line_end": 138,
+      "related_prior_findings": [
+        "PR6-ASTRA-R4-04"
+      ],
+      "trigger": "普通 rust-regression 步骤使用 env: {RUSTUP_TOOLCHAIN: \"1.98.0\"}，或带引号的 \"RUSTUP_TOOLCHAIN\" 键；其他同类形式包括 with 行内映射、flow uses、\"cargo\" +1.98.0、${CARGO_HOME}/bin/cargo +1.98.0、shell续行、YAML > 折叠、rustup update 1.98.0，以及 rustup toolchain install \"$RUSTUP_TOOLCHAIN\" 1.98.0。",
+      "actual_behavior": "这些数值选择不含 nightly/stable/beta 兜底关键字，白名单返回 []，保留所有原接线后3个实际守卫方法仍通过。反向控制 cargo +${{ env.RUSTUP_TOOLCHAIN }} test 在有效表达式上下文中被误判为选择 \"${{\"。YAML解析和仅名为cargo的Python stub分别验证了输入结构及实际 argv/环境传递。",
+      "impact": "“未识别形式也失败”不成立，常规语法即可越过单一工具链约束；并且权威引用的等价写法会产生误拒。当前仓库实际选用的形式通过，未观察到当前工具链漂移，故 P3。rustup update/多值install单独证明安装选择遗漏，不将它们误称为覆盖RUSTUP_TOOLCHAIN的有效执行选择。",
+      "minimum_fix": "先解析 YAML 的 jobs/steps/env/with/uses 与标量，再对展开前的 run 做受限 shell 词法处理：保留 GitHub 表达式整体、识别引号/路径/续行，遍历 rustup 每个toolchain实参；无法分析的可选择语句显式失败。对正反两个方向保留输入矩阵，勿仅增加channel关键词。",
+      "evidence": [
+        "runtime/toolchain-matrix.json",
+        "runtime/toolchain-matrix/cases.jsonl",
+        "runtime/toolchain-matrix/yaml-syntax.json",
+        "runtime/toolchain-reproductions.json",
+        "runtime/toolchain-reproductions/step-flow-env/.github/workflows/numerical-assurance.yml",
+        "runtime/toolchain-reproductions/step-shell-continuation/.github/workflows/numerical-assurance.yml",
+        "runtime/toolchain-reproductions/authoritative-expression-rejected/.github/workflows/numerical-assurance.yml",
+        "runtime/reference-rustup-overrides-readable.txt",
+        "runtime/reference-rustup-cli.txt"
+      ],
+      "blocking_for_E1_C0_by_itself": false,
+      "related_locations": [
+        {
+          "file": "scripts/tests/test_discover_rust.py",
+          "line": 26
+        },
+        {
+          "file": "scripts/tests/test_discover_rust.py",
+          "line": 67
+        },
+        {
+          "file": "scripts/tests/test_discover_rust.py",
+          "line": 92
+        }
+      ],
+      "attribution": "归因于340ef10e→4751f951的新审计／守卫；不重审未受影响范围，不把合成变体当作当前CI已漂移。",
+      "reproduction": {
+        "script": "runtime/toolchain_reproductions.py",
+        "writes_only_under": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr6-r6-astra-r5-20261027",
+        "requires_compiler_or_backend": false,
+        "source_revision": "4751f9519fbc07efba94373e803c39aefe39472b"
+      }
+    },
+    {
+      "id": "PR6-ASTRA-R5-04",
+      "category": "Spec",
+      "priority": "P3",
+      "status": "open",
+      "title": "nightly 例外不能由文本区间或整行标记传播",
+      "revision": "4751f9519fbc07efba94373e803c39aefe39472b",
+      "file": "scripts/tests/test_discover_rust.py",
+      "line": 49,
+      "line_end": 53,
+      "related_prior_findings": [
+        "PR6-ASTRA-R4-04"
+      ],
+      "trigger": "在 fuzz-smoke 与 package 之间新增合法 YAML 作业 \"review-other-job\":，其步骤 cargo +nightly test；单引号作业键同样成立。另在 fuzz步骤同一行写 cargo +nightly test; \"cargo\" +1.98.0 test。",
+      "actual_behavior": "带引号的作业名无法匹配 [A-Za-z0-9_-]+，fuzz范围延伸到后续package，从而把另一作业的nightly当例外；同一行approved_nightly也会掩盖未分类的第二个选择。两类最终复现的3个实际守卫方法全通过。",
+      "impact": "原直接越界cargo +nightly已拦截，但合法作业命名仍能把例外扩大到其他作业，故R4-04只能部分关闭。当前实际YAML不使用这些形式，无现存工具链漂移证据，P3。",
+      "minimum_fix": "例外按解析后的文件、jobs.fuzz-smoke和单个命令/with值确定；独立判断每个选择，不能以一行出现合法nightly就豁免该行其他channel或版本。",
+      "evidence": [
+        "runtime/toolchain-reproductions.json",
+        "runtime/toolchain-reproductions/quoted-job-after-fuzz/.github/workflows/numerical-assurance.yml",
+        "runtime/toolchain-reproductions/quoted-job-after-fuzz-parsed-yaml.json",
+        "runtime/toolchain-reproductions/nightly-and-second-pin-one-line/.github/workflows/numerical-assurance.yml",
+        "runtime/toolchain-matrix.json"
+      ],
+      "blocking_for_E1_C0_by_itself": false,
+      "related_locations": [
+        {
+          "file": "scripts/tests/test_discover_rust.py",
+          "line": 98
+        },
+        {
+          "file": "scripts/tests/test_discover_rust.py",
+          "line": 138
+        }
+      ],
+      "attribution": "归因于340ef10e→4751f951的新审计／守卫；不重审未受影响范围，不把合成变体当作当前CI已漂移。",
+      "reproduction": {
+        "script": "runtime/toolchain_reproductions.py",
+        "writes_only_under": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr6-r6-astra-r5-20261027",
+        "requires_compiler_or_backend": false,
+        "source_revision": "4751f9519fbc07efba94373e803c39aefe39472b"
+      }
+    }
+  ],
+  "findings_count": 5,
+  "priority_counts": {
+    "P0": 0,
+    "P1": 0,
+    "P2": 0,
+    "P3": 5
+  },
+  "counting_policy": "按可独立修复的根因计5项，不按变体数量计缺陷；矩阵计数保留误放、误拒、正控制和负控制分母。历史重放及补充复现与主矩阵可能重叠，不相加当成独立样本。",
+  "R4_closure": [
+    {
+      "id": "PR6-ASTRA-R4-01",
+      "status": "closed",
+      "closed": true,
+      "basis": "顶层布局、剩余记录计数与生成文本比较共同拒绝重复未绑定小节、首要求前和历史/其他小节的资格或工具链记录；第4轮26个原负输入逐一核验哈希并全部拒绝。新增空行精确性P3不重开原事实归属漏洞。",
+      "evidence": [
+        "runtime/final-independent-checks.json",
+        "runtime/markdown-matrix.json"
+      ]
+    },
+    {
+      "id": "PR6-ASTRA-R4-02",
+      "status": "closed",
+      "closed": true,
+      "basis": "_header_status_fields处理前导空白/引用/列表标记，完整生成文本比较还拒绝其他改写。默认/预览、三个状态键、0–3及4/8空格、tab/Unicode空白等控制均拒绝。",
+      "evidence": [
+        "runtime/markdown-matrix.json",
+        "runtime/final-independent-checks.json"
+      ]
+    },
+    {
+      "id": "PR6-ASTRA-R4-03",
+      "status": "closed",
+      "closed": true,
+      "basis": "read_rust_listing在每个rust_listings循环第一条语句中无条件调用checked默认严格模式，早于source创建和发布判断；已发布/未发布和actual读取负控制均拒绝。真实CI收据的5个入口、904项listing经原不可变archive正式reconcile通过。",
+      "evidence": [
+        "runtime/rust-receipt-controls.json",
+        "runtime/merge-274.json"
+      ]
+    },
+    {
+      "id": "PR6-ASTRA-R4-04",
+      "status": "partially-closed",
+      "closed": false,
+      "original_reproduction_closed": true,
+      "basis": "原rust-regression直接cargo +nightly控制由新增白名单拒绝；但.yaml枚举、带引号job边界和其他选择语法仍有漏检，因此“fuzz-smoke之外全部禁止nightly”的整类目标未完成。P3修正随本轮覆盖，未另派审。",
+      "remaining_findings": [
+        "PR6-ASTRA-R5-02",
+        "PR6-ASTRA-R5-03",
+        "PR6-ASTRA-R5-04"
+      ],
+      "evidence": [
+        "runtime/toolchain-reproductions.json",
+        "runtime/toolchain-matrix.json"
+      ]
+    }
+  ],
+  "class_assessment": {
+    "markdown_audit": {
+      "closed": false,
+      "fact_and_ownership_holes_closed_in_tested_space": true,
+      "exact_two_reorderings_only_closed": false,
+      "remaining": [
+        "PR6-ASTRA-R5-01"
+      ],
+      "matrix": {
+        "subjects": {
+          "fixture-current": {
+            "requirements": 2,
+            "unbound_records": 0,
+            "qualification_record_count": 2,
+            "json_audit_errors": []
+          },
+          "fixture-preview": {
+            "requirements": 2,
+            "unbound_records": 0,
+            "qualification_record_count": 2,
+            "json_audit_errors": []
+          },
+          "rich-projection": {
+            "requirements": 2,
+            "unbound_records": 1,
+            "qualification_record_count": 6,
+            "json_audit_errors": "projection-only synthetic fixture"
+          },
+          "real-current": {
+            "requirements": 4,
+            "unbound_records": 1,
+            "qualification_record_count": 1,
+            "json_audit_errors": []
+          },
+          "real-preview": {
+            "requirements": 4,
+            "unbound_records": 1,
+            "qualification_record_count": 1,
+            "json_audit_errors": [
+              "projection adoption labels inconsistent"
+            ]
+          }
+        },
+        "per_subject": {
+          "fixture-current": {
+            "total": 7831,
+            "rejected": 7827,
+            "accepted": 4,
+            "expected_reject": 7828,
+            "correct": 7830
+          },
+          "fixture-preview": {
+            "total": 7831,
+            "rejected": 7827,
+            "accepted": 4,
+            "expected_reject": 7828,
+            "correct": 7830
+          },
+          "rich-projection": {
+            "total": 21356,
+            "rejected": 21231,
+            "accepted": 125,
+            "expected_reject": 21235,
+            "correct": 21352
+          },
+          "real-current": {
+            "total": 22176,
+            "rejected": 22152,
+            "accepted": 24,
+            "expected_reject": 22152,
+            "correct": 22176
+          },
+          "real-preview": {
+            "total": 22176,
+            "rejected": 22152,
+            "accepted": 24,
+            "expected_reject": 22152,
+            "correct": 22176
+          }
+        },
+        "total": 81370,
+        "correct": 81364,
+        "expected_reject": 81195,
+        "rejected": 81189,
+        "false_accept": 6,
+        "expected_accept": 175,
+        "accepted_positive": 175,
+        "false_reject": 0,
+        "allowed_reorder_permutations": 170,
+        "allowed_reorders_accepted": 170,
+        "normal_baselines": 5
+      },
+      "coverage": "头部/当前前言/每要求首中末/未绑定/历史/例外/分类/限制/额外同名异名小节/文末；三状态键、资格记录、工具链、合同、引用、表格；0/1/2/3/4/8空格、tab、引用/列表、NBSP、ZWSP、BOM、CR、Unicode换行；同值/冲突/删除/迁移/缩进/尾空白/标题层级/结尾换行；小要求集合及最多5记录的全部排列。",
+      "supplemental_whitespace": {
+        "total": 30,
+        "rejected": 28,
+        "false_accept": 2,
+        "note": "与主矩阵同根因且有重叠，不合并分母。"
+      },
+      "remaining_risk_1": {
+        "acceptable": true,
+        "judgment": "在职责边界清楚时可以接受：audit_markdown验证给定Markdown是否忠实于已审核投影，不能同时作为markdown()的独立科学oracle。渲染器本轮未改；默认/预览标志、独立fixture的编译器和模拟器值、not_conferred、JSON audit及身份匹配的100项capability测试支持该边界。不得用此审计证明渲染器本身无错或授予科学资格。"
+      },
+      "evidence": [
+        "runtime/markdown-matrix.json",
+        "runtime/markdown-matrix/cases.jsonl",
+        "runtime/final-independent-checks.json"
+      ]
+    },
+    "rust_receipts_and_toolchains": {
+      "closed": false,
+      "current_new_receipt_paths_closed": true,
+      "future_historical_call_guard_closed": false,
+      "ci_selection_whitelist_closed": false,
+      "remaining": [
+        "PR6-ASTRA-R5-02",
+        "PR6-ASTRA-R5-03",
+        "PR6-ASTRA-R5-04",
+        "PR6-ASTRA-R5-05"
+      ],
+      "receipt_matrix": {
+        "total": 251,
+        "correct": 251,
+        "negative_rejected": 235,
+        "negative_total": 235,
+        "positive_accepted": 16,
+        "positive_total": 16,
+        "routes": {
+          "strict": {
+            "total": 56,
+            "correct": 56,
+            "rejected": 54,
+            "expected_reject": 54
+          },
+          "registry-reconcile-real-archive": {
+            "total": 1,
+            "correct": 1,
+            "rejected": 0,
+            "expected_reject": 0
+          },
+          "historical": {
+            "total": 1,
+            "correct": 1,
+            "rejected": 0,
+            "expected_reject": 0
+          },
+          "registry-actual": {
+            "total": 54,
+            "correct": 54,
+            "rejected": 53,
+            "expected_reject": 53
+          },
+          "generator-pending": {
+            "total": 54,
+            "correct": 54,
+            "rejected": 53,
+            "expected_reject": 53
+          },
+          "generator-published": {
+            "total": 54,
+            "correct": 54,
+            "rejected": 53,
+            "expected_reject": 53
+          },
+          "historical-mode": {
+            "total": 26,
+            "correct": 26,
+            "rejected": 18,
+            "expected_reject": 18
+          },
+          "registry-bound-expected": {
+            "total": 5,
+            "correct": 5,
+            "rejected": 4,
+            "expected_reject": 4
+          }
+        }
+      },
+      "historical_static_guard": {
+        "actual_calls": [
+          [
+            "evas/capabilities/rust_listing.py",
+            "reconcile",
+            [
+              "True"
+            ]
+          ]
+        ],
+        "total_controls": 11,
+        "detected": 6,
+        "missed": 5,
+        "alias_actual_guard_reproduction": {
+          "injected_source": "from rust_listing import checked as verify\ndef read_new(receipt):\n    return verify(receipt, historical=True)\n",
+          "actual_guard_passed": true,
+          "guard_error": null,
+          "new_alias_reader_accepts_stable": true,
+          "recognized_calls": [
+            [
+              "evas/capabilities/rust_listing.py",
+              "reconcile",
+              [
+                "True"
+              ]
+            ]
+          ],
+          "note": "hypothetical new caller; current production callers remain strict",
+          "fixture_restored": true
+        }
+      },
+      "selection_matrix": {
+        "total": 2053,
+        "correct": 1472,
+        "negative_total": 2035,
+        "negative_rejected": 1462,
+        "false_accept": 573,
+        "positive_total": 18,
+        "positive_accepted": 10,
+        "false_reject": 8,
+        "all_rejected_including_false_rejects": 1470,
+        "counts_by_class": {
+          "selection-cargo-plus": {
+            "total": 30,
+            "correct": 30,
+            "rejected": 29,
+            "expected_reject": 29
+          },
+          "enumeration-yml": {
+            "total": 400,
+            "correct": 360,
+            "rejected": 360,
+            "expected_reject": 400
+          },
+          "enumeration-yaml": {
+            "total": 400,
+            "correct": 0,
+            "rejected": 0,
+            "expected_reject": 400
+          },
+          "selection-cargo-quoted-name": {
+            "total": 30,
+            "correct": 24,
+            "rejected": 24,
+            "expected_reject": 30
+          },
+          "selection-cargo-quoted-selector": {
+            "total": 30,
+            "correct": 30,
+            "rejected": 29,
+            "expected_reject": 29
+          },
+          "selection-cargo-env-path": {
+            "total": 30,
+            "correct": 24,
+            "rejected": 24,
+            "expected_reject": 30
+          },
+          "selection-cargo-absolute-path": {
+            "total": 30,
+            "correct": 24,
+            "rejected": 24,
+            "expected_reject": 30
+          },
+          "selection-cargo-relative-path": {
+            "total": 30,
+            "correct": 24,
+            "rejected": 24,
+            "expected_reject": 30
+          },
+          "selection-cargo-backslash-newline": {
+            "total": 30,
+            "correct": 24,
+            "rejected": 24,
+            "expected_reject": 30
+          },
+          "selection-cargo-folded-block": {
+            "total": 30,
+            "correct": 24,
+            "rejected": 24,
+            "expected_reject": 30
+          },
+          "selection-cargo-quoted-yaml": {
+            "total": 30,
+            "correct": 30,
+            "rejected": 29,
+            "expected_reject": 29
+          },
+          "selection-rustc-plus": {
+            "total": 30,
+            "correct": 30,
+            "rejected": 30,
+            "expected_reject": 30
+          },
+          "selection-rustc-quoted-name": {
+            "total": 30,
+            "correct": 24,
+            "rejected": 24,
+            "expected_reject": 30
+          },
+          "selection-rustc-absolute-path": {
+            "total": 30,
+            "correct": 24,
+            "rejected": 24,
+            "expected_reject": 30
+          },
+          "selection-rustdoc-plus": {
+            "total": 30,
+            "correct": 30,
+            "rejected": 30,
+            "expected_reject": 30
+          },
+          "selection-rustfmt-plus": {
+            "total": 30,
+            "correct": 30,
+            "rejected": 30,
+            "expected_reject": 30
+          },
+          "selection-rustup-install": {
+            "total": 30,
+            "correct": 30,
+            "rejected": 29,
+            "expected_reject": 29
+          },
+          "selection-rustup-install-alias": {
+            "total": 30,
+            "correct": 30,
+            "rejected": 29,
+            "expected_reject": 29
+          },
+          "selection-rustup-update": {
+            "total": 30,
+            "correct": 24,
+            "rejected": 24,
+            "expected_reject": 30
+          },
+          "selection-rustup-default": {
+            "total": 30,
+            "correct": 30,
+            "rejected": 30,
+            "expected_reject": 30
+          },
+          "selection-rustup-override": {
+            "total": 30,
+            "correct": 30,
+            "rejected": 30,
+            "expected_reject": 30
+          },
+          "selection-rustup-override-path": {
+            "total": 30,
+            "correct": 30,
+            "rejected": 30,
+            "expected_reject": 30
+          },
+          "selection-rustup-run": {
+            "total": 30,
+            "correct": 30,
+            "rejected": 30,
+            "expected_reject": 30
+          },
+          "selection-rustup-component-flag": {
+            "total": 30,
+            "correct": 30,
+            "rejected": 30,
+            "expected_reject": 30
+          },
+          "selection-rustup-target-equals": {
+            "total": 30,
+            "correct": 30,
+            "rejected": 30,
+            "expected_reject": 30
+          },
+          "selection-rustup-multiple-installs": {
+            "total": 30,
+            "correct": 24,
+            "rejected": 24,
+            "expected_reject": 30
+          },
+          "selection-rustup-multiple-updates": {
+            "total": 30,
+            "correct": 24,
+            "rejected": 24,
+            "expected_reject": 30
+          },
+          "selection-rustup-absolute-path": {
+            "total": 30,
+            "correct": 24,
+            "rejected": 24,
+            "expected_reject": 30
+          },
+          "selection-rustup-quoted-name": {
+            "total": 30,
+            "correct": 24,
+            "rejected": 24,
+            "expected_reject": 30
+          },
+          "selection-with-block": {
+            "total": 30,
+            "correct": 30,
+            "rejected": 29,
+            "expected_reject": 29
+          },
+          "selection-with-flow": {
+            "total": 30,
+            "correct": 23,
+            "rejected": 24,
+            "expected_reject": 29
+          },
+          "selection-with-quoted-key": {
+            "total": 30,
+            "correct": 23,
+            "rejected": 24,
+            "expected_reject": 29
+          },
+          "selection-env-block": {
+            "total": 30,
+            "correct": 30,
+            "rejected": 30,
+            "expected_reject": 30
+          },
+          "selection-env-flow": {
+            "total": 30,
+            "correct": 24,
+            "rejected": 24,
+            "expected_reject": 30
+          },
+          "selection-env-single-quoted-key": {
+            "total": 30,
+            "correct": 24,
+            "rejected": 24,
+            "expected_reject": 30
+          },
+          "selection-env-double-quoted-key": {
+            "total": 30,
+            "correct": 24,
+            "rejected": 24,
+            "expected_reject": 30
+          },
+          "selection-shell-assignment": {
+            "total": 30,
+            "correct": 30,
+            "rejected": 30,
+            "expected_reject": 30
+          },
+          "selection-shell-export": {
+            "total": 30,
+            "correct": 30,
+            "rejected": 30,
+            "expected_reject": 30
+          },
+          "selection-shell-env-argument": {
+            "total": 30,
+            "correct": 30,
+            "rejected": 30,
+            "expected_reject": 30
+          },
+          "selection-action-dtolnay": {
+            "total": 30,
+            "correct": 30,
+            "rejected": 30,
+            "expected_reject": 30
+          },
+          "selection-action-flow-mapping": {
+            "total": 30,
+            "correct": 24,
+            "rejected": 24,
+            "expected_reject": 30
+          },
+          "selection-action-quoted-key": {
+            "total": 30,
+            "correct": 24,
+            "rejected": 24,
+            "expected_reject": 30
+          },
+          "env-level": {
+            "total": 30,
+            "correct": 24,
+            "rejected": 24,
+            "expected_reject": 30
+          },
+          "fuzz-region": {
+            "total": 2,
+            "correct": 0,
+            "rejected": 0,
+            "expected_reject": 2
+          },
+          "mixed-selection": {
+            "total": 4,
+            "correct": 0,
+            "rejected": 0,
+            "expected_reject": 4
+          },
+          "reference-positive": {
+            "total": 10,
+            "correct": 4,
+            "rejected": 6,
+            "expected_reject": 0
+          },
+          "toolchain-file": {
+            "total": 4,
+            "correct": 4,
+            "rejected": 4,
+            "expected_reject": 4
+          },
+          "unrecognised-selection": {
+            "total": 3,
+            "correct": 2,
+            "rejected": 2,
+            "expected_reject": 3
+          }
+        },
+        "yaml_syntax": {
+          "parser": "Ruby 2.6.10 Psych/YAML",
+          "unique_documents": 1649,
+          "invalid": []
+        },
+        "validity_limits": "逐份YAML语法解析通过；未上传GitHub运行。最终16个实际守卫样本均为合法YAML并在三项实际测试方法执行，辅助shell用Python stub证明argv和env。矩阵其他新composite中未知action依赖及权限/网络不构成实际CI执行证明。"
+      },
+      "actual_guard_reproductions": {
+        "total": 16,
+        "correct": 2,
+        "false_accept": 13,
+        "false_reject": 1,
+        "baseline_passed": true,
+        "R4_original_direct_nightly_rejected": true,
+        "yaml_invalid": 0,
+        "methods": [
+          "test_ci_uses_one_fixed_rust_toolchain",
+          "test_toolchain_selection_is_a_whitelist",
+          "test_reusable_workflows_take_the_fixed_toolchain_from_their_caller"
+        ]
+      },
+      "toolchain_files": {
+        "synthetic_actual_files": 4,
+        "detected": 4,
+        "baseline_files_found": []
+      },
+      "remaining_risk_2": {
+        "acceptable_as_class_closure": false,
+        "judgment": "不能以“只是逐行文本分析”接受为已封闭。已复现的主要缺口是普通YAML映射/引号、合法文件扩展名、shell引用/续行和job边界，不是仅外部脚本或动态生成的极端情况。当前固定CI文本可凭人工核对与接线控制继续，但整类守卫须修正，且不得宣称未识别形式一律拒绝。"
+      },
+      "evidence": [
+        "runtime/rust-receipt-controls.json",
+        "runtime/toolchain-matrix.json",
+        "runtime/toolchain-reproductions.json",
+        "runtime/toolchain-file-controls.json",
+        "runtime/final-independent-checks.json"
+      ]
+    }
+  },
+  "prior_behavior_preservation": {
+    "R2_markdown": {
+      "original_negative_total": 16,
+      "rejected": 16,
+      "original_input_hashes_verified": true
+    },
+    "R3_markdown": {
+      "original_negative_total": 7,
+      "rejected": 7,
+      "additional_R3_related_negative": 24,
+      "note": "24项来自R4重放集合，含原7项及同类输入，不额外相加。"
+    },
+    "R4_markdown": {
+      "brief_named_original_negative_total": 26,
+      "rejected": 26,
+      "order_only_positives": 2,
+      "positives_accepted": 2,
+      "extra_real_preview_input_rejected": true
+    },
+    "R3_03": {
+      "current_new_receipts_strict": true,
+      "bound_historical_stable_preserved": true,
+      "nightly_and_version_both_modes_refused": true
+    },
+    "R3_04": {
+      "package_wiring_unchanged": true,
+      "three_actual_guard_baseline_methods_passed": true,
+      "pin_defined_once": true,
+      "package_required_input_without_default": true,
+      "selection_output_to_package_with_preserved": true
+    },
+    "R3_05": "catalog保留等既有已接受范围本轮不重审；仅核对源码增量/派生路径和体积，遵循简报范围。",
+    "evidence": [
+      "runtime/final-independent-checks.json",
+      "runtime/markdown-matrix.json",
+      "runtime/rust-receipt-controls.json",
+      "runtime/scope-preservation.json"
+    ]
+  },
+  "accepted_content_preservation": {
+    "criteria_unchanged": true,
+    "collector_unchanged": true,
+    "language_profile_unchanged": true,
+    "workflow_unchanged": true,
+    "regression_environment_definitions_unchanged": true,
+    "DUT_source_unchanged": true,
+    "proof": "所有criteria目录、EVAS源码和.github子树在BASE/SOURCE/HEAD的Git tree相同；collector/selection/pin相关文件blob相同。已读取的34个相关源码/视图文件与r6对象一致。",
+    "criteria_id": "7d70e5b5ab69abf428a2ab06d47999ec6aa9193e1f038d5248c1c92f2f5f8400",
+    "collector_sha256": "fb887b59bb92063d784dd7cb56d39ec1ec6cb5e7ef9265ab0bd39b9089fe6dc5",
+    "evidence": [
+      "runtime/scope-preservation.json",
+      "runtime/reviewed-source-identity.json",
+      "runtime/endpoints.json"
+    ]
+  },
+  "merge_with_PR274": {
+    "fixed_pr274_head": "5fe590c0c573c7296b30f38245f769ff2f71ab8a",
+    "comparison_base": "02dee32b2c9b25f166cbd77f8a895953e004f288",
+    "synthetic_three_way_merge_returncode": 0,
+    "conflict_on_checked_versions": false,
+    "r6_reader_preserved": true,
+    "all_four_partition_helpers_preserved": true,
+    "merged_reader_controls_passed": 4,
+    "partition_synthetic_files": 35,
+    "partition_synthetic_objects_preserved": true,
+    "risk": "本轮read_rust_listing的早期严格校验与#274的part写出正交；此固定三方版本自动合并未冲突。未来实际集成必须保留早期reader及PARTS分片相关逻辑，不能整文件择一；真实新main/head不同或手工解决的部分仍需简报指定的小范围增量审核。",
+    "not_proven": "未生成或发布#274合入后完整catalog，未证明将来PR6新head全体对象等价或新part体积；本地merged-generator.py是控制件，不是提交。",
+    "evidence": [
+      "runtime/merge-274.json",
+      "runtime/merge-274/merged-generator.py"
+    ]
+  },
+  "checks": [
+    {
+      "name": "简报与端点",
+      "execution": "本轮新执行",
+      "result": "指定11273字节与SHA256匹配；父链/树/5文件补丁和固定导出匹配；diff --check通过。",
+      "evidence": [
+        "runtime/endpoints.json"
+      ]
+    },
+    {
+      "name": "独立Markdown矩阵",
+      "execution": "本轮新合成",
+      "total": 81370,
+      "correct": 81364,
+      "result": "6个空行负输入误放，其余判对。",
+      "evidence": [
+        "runtime/markdown-matrix.json"
+      ]
+    },
+    {
+      "name": "历史原输入与独立补充",
+      "execution": "本轮重新分析原字节并补充控制",
+      "result": "R2 16/16、R3原7/7、R4指定26/26均拒绝；170种允许重排通过。",
+      "evidence": [
+        "runtime/final-independent-checks.json",
+        "runtime/markdown-matrix.json"
+      ]
+    },
+    {
+      "name": "Rust读取路由",
+      "execution": "本轮新控制与只读真实工件",
+      "total": 251,
+      "correct": 251,
+      "result": "生成器pending/published、实际/历史读取全部符合预期。",
+      "evidence": [
+        "runtime/rust-receipt-controls.json"
+      ]
+    },
+    {
+      "name": "Rust选择与调用守卫",
+      "execution": "本轮独立矩阵+实际测试方法",
+      "result": "2053项中573误放、8误拒；最终16项真实守卫方法样本中13误放、1误拒；别名historical新caller实际守卫漏检。",
+      "evidence": [
+        "runtime/toolchain-matrix.json",
+        "runtime/toolchain-reproductions.json",
+        "runtime/final-independent-checks.json"
+      ]
+    },
+    {
+      "name": "本地预检收据",
+      "execution": "身份匹配复用；未重复执行",
+      "checks": 18,
+      "tests_in_recorded_unittest_runs": 337,
+      "result": "18个返回码全0，含100项capability、14项discover_rust、10项rust_catalog_reconcile及其他维护定向项；不是337项科学回归。",
+      "evidence": [
+        "runtime/local-evidence-audit.json"
+      ]
+    },
+    {
+      "name": "范围、合并和体积",
+      "execution": "本轮新Git/AST/JSON控制",
+      "result": "受约束的目录/接线源码不变；#274生成器三方合并通过；method-index体积105831203字节。",
+      "evidence": [
+        "runtime/scope-preservation.json",
+        "runtime/merge-274.json"
+      ]
+    },
+    {
+      "name": "前后守卫和workspace检查",
+      "execution": "本轮新执行",
+      "result": "工作区检查start/handoff均14处、0错误；真实HEAD/index/20候选/共享config和S6私有Git关键文件无变化。",
+      "evidence": [
+        "runtime/guard-before.json",
+        "runtime/guard-after.json",
+        "runtime/guard-after-comparison.json",
+        "runtime/workspaces-start.json",
+        "runtime/workspaces-handoff.json"
+      ]
+    }
+  ],
+  "worker_evidence": {
+    "status": "作为证据核对，未采纳其整类封闭结论",
+    "reported_markdown_cases": 7998,
+    "reported_markdown_wrong_after": 0,
+    "reported_toolchain_cases": 643,
+    "reported_toolchain_wrong": 0,
+    "interpretation": "这些固定集合判对与本轮发现不矛盾；原集合未覆盖本轮反例。独立矩阵、原反例和实际守卫的结果优先。",
+    "paths": [
+      "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr6/r4-fixes-sonnet-20261027/result.json",
+      "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr6/r4-fixes-sonnet-20261027/REPORT.md",
+      "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr6/r4-findings-verification-20261027/r6-fixes-acceptance.json"
+    ]
+  },
+  "CI": {
+    "verified": false,
+    "watched": false,
+    "polled": false,
+    "waited": false,
+    "candidate_published": false,
+    "local_precheck_replacement": true,
+    "local_precheck_identity": "23f81e68d10e3b4d3a6c324bba2b8d7ff58a6397",
+    "local_precheck_all_passed": true,
+    "catalog_size": {
+      "before": 104023609,
+      "after": 105831203,
+      "delta": 1807594,
+      "over_100_MiB": 973603,
+      "derived_review_scope": "size measurement only; not production publication approval"
+    },
+    "pending": "新PR6 head集成#274合入后的main及重生成、源码等价/必要增量审查、同池CI与E1。",
+    "delivery_linkage_observation": "交付登记核对的T3最后已知状态为#269 open、#274 merged；未watch/poll，不据此扩大固定审核范围或声称已验收后继head。",
+    "E1_conditions": "保留Rust固定B与已接受E1政策：rustc/cargo字符串逐字节符合可信context，除已接受criteria/collector与T政策字段外不得漂移；观察分母和每方法/条件不得丢失或改写，实际E1与登记作业同池。此次未执行或等待。"
+  },
+  "scientific_qualification": false,
+  "scientific_boundary": "未运行实际compiler/kernel/DUT/backend/SSH/Spectre/Harbor或完整科学回归；Rust相关命令仅Python stub/synthetic listing或只读工件。337项是复用维护检查，904是历史native listing分母，不是本轮科学通过数。",
+  "guard": {
+    "before": {
+      "observed_at": "2026-10-27T20:00:33.638302+00:00",
+      "head": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+      "index_sha256": "a2e18b66fd9b3e29093343793d45781c11a717c05c35103d4e9b1da8eec87d71",
+      "status": " M evas/tests/test_analog_conditions.py\n M evas/tests/test_constant_initial_power.py\n M evas/tests/test_diagnostics.py\n M evas/tests/test_idt.py\n M evas/tests/test_independent_driver_condition.py\n M evas/tests/test_initial_ordinary_alias.py\n M evas/tests/test_native_integer_events.py\n M evas/tests/test_ordinary_event_prefix.py\n M evas/tests/test_ordinary_integer_event_prefix.py\n M evas/tests/test_passive_events.py\n M evas/tests/test_r01_event_arrays.py\n M evas/tests/test_r01_event_conditions.py\n M evas/tests/test_rational_predicate_closure.py\n M evas/tests/test_refinement.py\n M evas/tests/test_root_recovery.py\n M evas/tests/test_source_floor_event.py\n M evas/tests/test_source_math.py\n M evas/tests/test_source_polynomial_guards.py\n?? evas/tests/raw_solution_contract.py\n?? evas/tests/test_audited_response_contracts.py\n",
+      "candidates": [
+        {
+          "status": " M",
+          "path": "evas/tests/test_analog_conditions.py",
+          "bytes": 27215,
+          "sha256": "230c3fd16cfe84b0d0198619fd1d9d4efd3b593295ebdd1109549b2933712adf"
+        },
+        {
+          "status": " M",
+          "path": "evas/tests/test_constant_initial_power.py",
+          "bytes": 14262,
+          "sha256": "359c4a4048c7eaa9d4da73eaeba4dcb80a228d2deb8fbaa31afd5c8731921369"
+        },
+        {
+          "status": " M",
+          "path": "evas/tests/test_diagnostics.py",
+          "bytes": 10051,
+          "sha256": "c97ed2e4897eeb14515a9c45214e62b371fefa8c931492de5d3fc40b3ebc0acf"
+        },
+        {
+          "status": " M",
+          "path": "evas/tests/test_idt.py",
+          "bytes": 22296,
+          "sha256": "579fd1729188885cb86f34ff7c696ebb0032d3f5aaa10c8ce8bc8f7fd4f902f9"
+        },
+        {
+          "status": " M",
+          "path": "evas/tests/test_independent_driver_condition.py",
+          "bytes": 3334,
+          "sha256": "1e449bb7b8eacf7abf6680857340084acc24b1df90626725b8f41fe929e20205"
+        },
+        {
+          "status": " M",
+          "path": "evas/tests/test_initial_ordinary_alias.py",
+          "bytes": 18064,
+          "sha256": "c26b69a060538157c275676b0d8ac7dc61054099669f5cf64ccc182205588d6d"
+        },
+        {
+          "status": " M",
+          "path": "evas/tests/test_native_integer_events.py",
+          "bytes": 7338,
+          "sha256": "0b8b4eeeae223c3893c160550469572081ed1b2fc417b328e5596cf205258df7"
+        },
+        {
+          "status": " M",
+          "path": "evas/tests/test_ordinary_event_prefix.py",
+          "bytes": 9275,
+          "sha256": "c67342dcb28194029ad296c5bad7749267e9d608369631899adb986fc7ec1464"
+        },
+        {
+          "status": " M",
+          "path": "evas/tests/test_ordinary_integer_event_prefix.py",
+          "bytes": 7519,
+          "sha256": "aa2a090c32b614f14da6cf045e054d61392df2e320a4bb4df9bb00265600dddb"
+        },
+        {
+          "status": " M",
+          "path": "evas/tests/test_passive_events.py",
+          "bytes": 8120,
+          "sha256": "3781d23a61398427f2bb7b4a0cf3b363babbae43c1c62adfc1874e6acc9402ae"
+        },
+        {
+          "status": " M",
+          "path": "evas/tests/test_r01_event_arrays.py",
+          "bytes": 20174,
+          "sha256": "81a135bb3a0b8267fb862421fc20f5a88b68b8cb24506a242fc152b72594f3fc"
+        },
+        {
+          "status": " M",
+          "path": "evas/tests/test_r01_event_conditions.py",
+          "bytes": 3592,
+          "sha256": "0d855cbc4c98e25e9272c5ac10a1624ef14ecfd65168ef122a68b79d868ba96c"
+        },
+        {
+          "status": " M",
+          "path": "evas/tests/test_rational_predicate_closure.py",
+          "bytes": 6923,
+          "sha256": "ec07237b7602c528d2c808c250d73f9480e7e15b2a6d059cd9314381ecf7f1e0"
+        },
+        {
+          "status": " M",
+          "path": "evas/tests/test_refinement.py",
+          "bytes": 2988,
+          "sha256": "d18e105fe7b31dc575754d7f3bfd67779659025245b0e6eb00252ebbd6677e8a"
+        },
+        {
+          "status": " M",
+          "path": "evas/tests/test_root_recovery.py",
+          "bytes": 12460,
+          "sha256": "393bdb5070bd0f9c09919f6943d120556021c8bf54a4ba7c521a87c28327e9c5"
+        },
+        {
+          "status": " M",
+          "path": "evas/tests/test_source_floor_event.py",
+          "bytes": 6677,
+          "sha256": "becd95ca2c6cd51f58a722a41994065c0f5b04f4e0e8384bc9f4b16245058639"
+        },
+        {
+          "status": " M",
+          "path": "evas/tests/test_source_math.py",
+          "bytes": 10194,
+          "sha256": "12b27fe5cf5d977bd1b295bdbf95c5c27a19495f6086b4a5c4b7449258f3ac22"
+        },
+        {
+          "status": " M",
+          "path": "evas/tests/test_source_polynomial_guards.py",
+          "bytes": 5019,
+          "sha256": "542ac3a7c73a3bc20f3f7e6a2aea88ff4a5b45ccee47ee04f59d1586bf75ac83"
+        },
+        {
+          "status": "??",
+          "path": "evas/tests/raw_solution_contract.py",
+          "bytes": 1016,
+          "sha256": "ffd5243e3b590f81e6e671e5761316b40c60558da2e2c81a001a118a57cf12dc"
+        },
+        {
+          "status": "??",
+          "path": "evas/tests/test_audited_response_contracts.py",
+          "bytes": 12163,
+          "sha256": "bb4ae9ff097e14f25ff61184734370819a260946f40a16a9e5c45fd38efb723f"
+        }
+      ],
+      "tracked": 18,
+      "untracked": 2,
+      "shared_config_sha256": "de2b08ef3ba66e96be8b70c87346ff4a96f905e1272934ddd86c218dba501ea8",
+      "accepted_config_sha256": "de2b08ef3ba66e96be8b70c87346ff4a96f905e1272934ddd86c218dba501ea8",
+      "shared_config_equals_accepted_except_vscode_merge_base": true,
+      "shared_config_diff": [],
+      "source_head": "23f81e68d10e3b4d3a6c324bba2b8d7ff58a6397",
+      "source_git_config_sha256": "cae33efdb02cf774435c1ff9cb16bcc1014606908530c6e1dc727615fe3e8cda",
+      "source_git_index_sha256": "652c95966b6c17735a9b5782fbe0aeecb87a0e217755a20e1e0acc2a9a9d9fb0"
+    },
+    "after": {
+      "observed_at": "2026-10-27T20:45:09.417178+00:00",
+      "head": "168a9d7a4305e7ce21d1577b4ca1dda65beae4ce",
+      "index_sha256": "a2e18b66fd9b3e29093343793d45781c11a717c05c35103d4e9b1da8eec87d71",
+      "status": " M evas/tests/test_analog_conditions.py\n M evas/tests/test_constant_initial_power.py\n M evas/tests/test_diagnostics.py\n M evas/tests/test_idt.py\n M evas/tests/test_independent_driver_condition.py\n M evas/tests/test_initial_ordinary_alias.py\n M evas/tests/test_native_integer_events.py\n M evas/tests/test_ordinary_event_prefix.py\n M evas/tests/test_ordinary_integer_event_prefix.py\n M evas/tests/test_passive_events.py\n M evas/tests/test_r01_event_arrays.py\n M evas/tests/test_r01_event_conditions.py\n M evas/tests/test_rational_predicate_closure.py\n M evas/tests/test_refinement.py\n M evas/tests/test_root_recovery.py\n M evas/tests/test_source_floor_event.py\n M evas/tests/test_source_math.py\n M evas/tests/test_source_polynomial_guards.py\n?? evas/tests/raw_solution_contract.py\n?? evas/tests/test_audited_response_contracts.py\n",
+      "candidates": [
+        {
+          "status": " M",
+          "path": "evas/tests/test_analog_conditions.py",
+          "bytes": 27215,
+          "sha256": "230c3fd16cfe84b0d0198619fd1d9d4efd3b593295ebdd1109549b2933712adf"
+        },
+        {
+          "status": " M",
+          "path": "evas/tests/test_constant_initial_power.py",
+          "bytes": 14262,
+          "sha256": "359c4a4048c7eaa9d4da73eaeba4dcb80a228d2deb8fbaa31afd5c8731921369"
+        },
+        {
+          "status": " M",
+          "path": "evas/tests/test_diagnostics.py",
+          "bytes": 10051,
+          "sha256": "c97ed2e4897eeb14515a9c45214e62b371fefa8c931492de5d3fc40b3ebc0acf"
+        },
+        {
+          "status": " M",
+          "path": "evas/tests/test_idt.py",
+          "bytes": 22296,
+          "sha256": "579fd1729188885cb86f34ff7c696ebb0032d3f5aaa10c8ce8bc8f7fd4f902f9"
+        },
+        {
+          "status": " M",
+          "path": "evas/tests/test_independent_driver_condition.py",
+          "bytes": 3334,
+          "sha256": "1e449bb7b8eacf7abf6680857340084acc24b1df90626725b8f41fe929e20205"
+        },
+        {
+          "status": " M",
+          "path": "evas/tests/test_initial_ordinary_alias.py",
+          "bytes": 18064,
+          "sha256": "c26b69a060538157c275676b0d8ac7dc61054099669f5cf64ccc182205588d6d"
+        },
+        {
+          "status": " M",
+          "path": "evas/tests/test_native_integer_events.py",
+          "bytes": 7338,
+          "sha256": "0b8b4eeeae223c3893c160550469572081ed1b2fc417b328e5596cf205258df7"
+        },
+        {
+          "status": " M",
+          "path": "evas/tests/test_ordinary_event_prefix.py",
+          "bytes": 9275,
+          "sha256": "c67342dcb28194029ad296c5bad7749267e9d608369631899adb986fc7ec1464"
+        },
+        {
+          "status": " M",
+          "path": "evas/tests/test_ordinary_integer_event_prefix.py",
+          "bytes": 7519,
+          "sha256": "aa2a090c32b614f14da6cf045e054d61392df2e320a4bb4df9bb00265600dddb"
+        },
+        {
+          "status": " M",
+          "path": "evas/tests/test_passive_events.py",
+          "bytes": 8120,
+          "sha256": "3781d23a61398427f2bb7b4a0cf3b363babbae43c1c62adfc1874e6acc9402ae"
+        },
+        {
+          "status": " M",
+          "path": "evas/tests/test_r01_event_arrays.py",
+          "bytes": 20174,
+          "sha256": "81a135bb3a0b8267fb862421fc20f5a88b68b8cb24506a242fc152b72594f3fc"
+        },
+        {
+          "status": " M",
+          "path": "evas/tests/test_r01_event_conditions.py",
+          "bytes": 3592,
+          "sha256": "0d855cbc4c98e25e9272c5ac10a1624ef14ecfd65168ef122a68b79d868ba96c"
+        },
+        {
+          "status": " M",
+          "path": "evas/tests/test_rational_predicate_closure.py",
+          "bytes": 6923,
+          "sha256": "ec07237b7602c528d2c808c250d73f9480e7e15b2a6d059cd9314381ecf7f1e0"
+        },
+        {
+          "status": " M",
+          "path": "evas/tests/test_refinement.py",
+          "bytes": 2988,
+          "sha256": "d18e105fe7b31dc575754d7f3bfd67779659025245b0e6eb00252ebbd6677e8a"
+        },
+        {
+          "status": " M",
+          "path": "evas/tests/test_root_recovery.py",
+          "bytes": 12460,
+          "sha256": "393bdb5070bd0f9c09919f6943d120556021c8bf54a4ba7c521a87c28327e9c5"
+        },
+        {
+          "status": " M",
+          "path": "evas/tests/test_source_floor_event.py",
+          "bytes": 6677,
+          "sha256": "becd95ca2c6cd51f58a722a41994065c0f5b04f4e0e8384bc9f4b16245058639"
+        },
+        {
+          "status": " M",
+          "path": "evas/tests/test_source_math.py",
+          "bytes": 10194,
+          "sha256": "12b27fe5cf5d977bd1b295bdbf95c5c27a19495f6086b4a5c4b7449258f3ac22"
+        },
+        {
+          "status": " M",
+          "path": "evas/tests/test_source_polynomial_guards.py",
+          "bytes": 5019,
+          "sha256": "542ac3a7c73a3bc20f3f7e6a2aea88ff4a5b45ccee47ee04f59d1586bf75ac83"
+        },
+        {
+          "status": "??",
+          "path": "evas/tests/raw_solution_contract.py",
+          "bytes": 1016,
+          "sha256": "ffd5243e3b590f81e6e671e5761316b40c60558da2e2c81a001a118a57cf12dc"
+        },
+        {
+          "status": "??",
+          "path": "evas/tests/test_audited_response_contracts.py",
+          "bytes": 12163,
+          "sha256": "bb4ae9ff097e14f25ff61184734370819a260946f40a16a9e5c45fd38efb723f"
+        }
+      ],
+      "tracked": 18,
+      "untracked": 2,
+      "shared_config_sha256": "de2b08ef3ba66e96be8b70c87346ff4a96f905e1272934ddd86c218dba501ea8",
+      "accepted_config_sha256": "de2b08ef3ba66e96be8b70c87346ff4a96f905e1272934ddd86c218dba501ea8",
+      "shared_config_equals_accepted_except_vscode_merge_base": true,
+      "shared_config_diff": [],
+      "source_head": "23f81e68d10e3b4d3a6c324bba2b8d7ff58a6397",
+      "source_git_config_sha256": "cae33efdb02cf774435c1ff9cb16bcc1014606908530c6e1dc727615fe3e8cda",
+      "source_git_index_sha256": "652c95966b6c17735a9b5782fbe0aeecb87a0e217755a20e1e0acc2a9a9d9fb0"
+    },
+    "unchanged": true,
+    "changes": {},
+    "shared_config_accepted_sha256": "de2b08ef3ba66e96be8b70c87346ff4a96f905e1272934ddd86c218dba501ea8",
+    "shared_config_new_vscode_lines": false,
+    "shared_config_other_changes": false,
+    "write_boundary": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr6-r6-astra-r5-20261027",
+    "no_full_export_copy": true,
+    "project_worktrees_created": 0,
+    "independent_git_fixtures": [
+      "scratch/ci-fixture",
+      "scratch/receipt-fixture",
+      "scratch/receipt-fixture-r3"
+    ],
+    "fixture_note": "第1次receipt-fixture为不完整mini Registry尝试保留；最终r3 fixture有效。所有fixture Git/common/work tree执行前验证位于R内。"
+  },
+  "limitations": [
+    "有限变体空间的穷举，不声称穷尽任意Markdown/YAML/shell程序；本轮“一次报全”按已检验语法/位置/值矩阵和5个根因完成。",
+    "当前严格收据路径和真实CI接线通过，不意味着historical静态守卫或工具链选择守卫已封闭。",
+    "Markdown规范化的单一渲染器风险可在职责边界内接受；逐行工具链扫描的常规语法漏检不可作为已封闭风险接受。",
+    "派生catalog只实测体积；#274控制只覆指定generate_catalog.py，未重审#274其余范围，也未生成实际后继候选。",
+    "本地报告和复现材料仅在R；PR6 r6未发布且CI未验，不能表述为可公开重跑或已合入。"
+  ],
+  "reviewer_attempts": [
+    {
+      "operation": "Rust矩阵初版",
+      "result": "发现quoted executable写在inline YAML时无效；改为literal block，并对最终1649份唯一YAML独立解析。首轮数据保留在runtime/attempt-1。"
+    },
+    {
+      "operation": "mini Registry控制",
+      "result": "前两次分别缺inventory字段、在预期拒绝之外提前构造pending Git source；修正审核夹具后251控制全完成。错误日志保留，不算产品失败。"
+    },
+    {
+      "operation": "资料检索",
+      "result": "web.run调用无可用返回；通过urllib只读获取GitHub/Rustup官方正文和固定rustup源码，保留原文、哈希与可读摘录。"
+    }
+  ],
+  "remaining_items": [
+    {
+      "finding": "PR6-ASTRA-R5-01",
+      "priority": "P3",
+      "action": "主控修正并在原记录保留具体核对证据，按既定P3政策处理；不由本审核实现。"
+    },
+    {
+      "finding": "PR6-ASTRA-R5-02",
+      "priority": "P3",
+      "action": "主控修正并在原记录保留具体核对证据，按既定P3政策处理；不由本审核实现。"
+    },
+    {
+      "finding": "PR6-ASTRA-R5-03",
+      "priority": "P3",
+      "action": "主控修正并在原记录保留具体核对证据，按既定P3政策处理；不由本审核实现。"
+    },
+    {
+      "finding": "PR6-ASTRA-R5-04",
+      "priority": "P3",
+      "action": "主控修正并在原记录保留具体核对证据，按既定P3政策处理；不由本审核实现。"
+    },
+    {
+      "finding": "PR6-ASTRA-R5-05",
+      "priority": "P3",
+      "action": "主控修正并在原记录保留具体核对证据，按既定P3政策处理；不由本审核实现。"
+    },
+    {
+      "action": "#274集成后保留read_rust_listing严格入口、分片逻辑与源码差异等价收据；如手工冲突影响源码，按简报追加小范围独审。"
+    },
+    {
+      "action": "新固定head的同池CI/E1、C0授权及登记，继续由原主控负责；科学资格维持false。"
+    }
+  ],
+  "primary_references": [
+    {
+      "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax",
+      "path": "runtime/reference-github-workflow-syntax.txt",
+      "bytes": 2104873,
+      "sha256": "3c258b28f8bf4b41df9dff654ba1e588357b849d9007581b55906339b6895fa8"
+    },
+    {
+      "url": "https://rust-lang.github.io/rustup/overrides.html",
+      "path": "runtime/reference-rustup-overrides.txt",
+      "bytes": 31433,
+      "sha256": "95bc57168dcfe16d2f7cf47fc2cc6509ee3686a9ac3edcf937f67cfcd1cda0c0"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/rust-lang/rustup/1.28.2/src/cli/rustup_mode.rs",
+      "path": "runtime/reference-rustup-cli.txt",
+      "bytes": 55989,
+      "sha256": "110c50bdc7effbdc4e5f6ced69eceba4b22ff5441b7fcba1efc9e53764b58d27"
+    }
+  ],
+  "delivery": {
+    "report": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr6-r6-astra-r5-20261027/review-report.json",
+    "summary": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/night-coordination/pr6-r6-astra-r5-20261027/summary.txt",
+    "all_artifacts_local_only": true,
+    "pr_linkage": "runtime/pr-linkage-final.json",
+    "no_messages_to_other_threads": true,
+    "no_review_comment_published": true,
+    "no_watch_or_poll": true,
+    "report_language": "中文",
+    "summary_output_check_returncode": 0,
+    "summary_visible_nonwhitespace_characters": 640
+  }
+}

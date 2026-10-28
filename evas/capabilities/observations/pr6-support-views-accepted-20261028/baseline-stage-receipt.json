@@ -1,0 +1,112 @@
+{
+  "staged_at_utc": "2026-10-27T22:30:51.896285+00:00",
+  "kind": "PR6 baseline PR byte check (pre-merge stage)",
+  "path": "evas/validation/baselines/regression-v1.json",
+  "trusted": {
+    "source": "main 4d6ebc71efea35822a28f2861f2b0a2a6db17e59 (the C0 does not change this path)",
+    "bytes": 89943276,
+    "sha256": "f765004c11b99673b95ddd87daabdc0c75fc6e4e3ef5b6cb2e9f31de96ae702b",
+    "contexts": 4
+  },
+  "head": {
+    "bytes": 50578629,
+    "sha256": "6b1a58754c81b938d036ad71a2a42ef75c06a4da2972d325fb5508e183b5b343",
+    "blob": "7fb1a117a7b12e0f382cb8026f59d4ed29fb727a",
+    "contexts": 5,
+    "layout": "line-per-context",
+    "below_50MiB_warning": true,
+    "below_100MiB_limit": true
+  },
+  "canonical_digests": {
+    "old_baseline_canonical_sha256": "bcc18beb8a0b89454f686f73016d0b777f609072542f73c528f3b85c4ba29dd4",
+    "new_entry_canonical_sha256": "4ae199f17a6cc24901601a667babc40e66b4546b5d3cc814d1643963dac7e566"
+  },
+  "authorization_id": "pr6-support-views-CI40584762318",
+  "c0_head": "6e3801a2dc54771b831ba68ed0ae752287149a7d",
+  "c0_tree": "3c46f1ffdff19e8213942ac9af24c3b6195e7ae0",
+  "writer": {
+    "module": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/context-registration-20261027/baseline_layout.py",
+    "sha256": "418aa2c99c757f96ad427d0d60bf5cc7bd856a7e6db317b07dc5cf996e35e5ee",
+    "function": "line_per_context",
+    "call_sites": [
+      "prepare_c0.py governance(): baseline_head = lay.line_per_context(appended)",
+      "baseline_layout.append_checks(): from_trusted, from_head and the repeated write"
+    ]
+  },
+  "coordinator_checks": {
+    "1_one_path": true,
+    "2_old_contexts_canonically_equal_in_order": true,
+    "3_fifth_context_equals_new_entry_canonical_sha256": true,
+    "4_two_write_paths_and_repeat_byte_identical": true
+  },
+  "layout_checks": {
+    "top_level_fields_unchanged": true,
+    "exactly_one_context_appended": true,
+    "old_contexts_equal_in_order": true,
+    "new_context_equals_authorized_entry": true,
+    "write_from_trusted_plus_entry_equals_head_bytes": true,
+    "rewrite_of_head_equals_head_bytes": true,
+    "repeated_write_identical": true
+  },
+  "simulated_merge": {
+    "commit": "cd3b00e3d84b9cdb4f949f9c0f7a472ef14131b6",
+    "tree": "3c46f1ffdff19e8213942ac9af24c3b6195e7ae0",
+    "parents": [
+      "4d6ebc71efea35822a28f2861f2b0a2a6db17e59",
+      "6e3801a2dc54771b831ba68ed0ae752287149a7d"
+    ],
+    "baseline_head": "09292a9a305497577343f934d5a10ee95577cad2",
+    "baseline_tree": "ac2bd9c71ff3815d6f482bf16cdbecba3443dae9",
+    "note": "local stand-in for the GitHub merge commit; the commit stage repeats the head on the actual merge"
+  },
+  "maintenance_checks": [
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "scripts/ci_lint.py",
+        "--plan",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/context-registration-20261027/baseline-pr/maintenance-plan.json"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/context-registration-20261027/baseline-pr/source",
+      "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/context-registration-20261027/baseline-pr/maintenance-fast-checks.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-27T22:28:20.461501+00:00",
+      "finished_at_utc": "2026-10-27T22:29:36.449961+00:00"
+    }
+  ],
+  "workflow": {
+    "returncode": 0,
+    "shell_sha256": "8e53584a24b86a9cc05f3e101069fcfc8eb8719483a1ef4ee8f6f1a95e15c179",
+    "shell_identical_to_reviewed_preview": true,
+    "merge_allowed": true,
+    "registration": true,
+    "added_entry_sha256": "4ae199f17a6cc24901601a667babc40e66b4546b5d3cc814d1643963dac7e566",
+    "authorization_id": "pr6-support-views-CI40584762318",
+    "raw_successful": false,
+    "semantic_qualification": false,
+    "differences": [],
+    "bundle_requested": true,
+    "bundle_materialized": true,
+    "bundle_trusted_commit": "cd3b00e3d84b9cdb4f949f9c0f7a472ef14131b6",
+    "bundle_files": 10,
+    "outputs": {
+      "regression-admission.json": "c5f0a826765339e190742169312f5f8f59959873256628fe781c32cd88fd4c77",
+      "regression-bundle-source.json": "0f79dc2a0ffd6533db7d43544086d3d9b0030c31fd95379d826ebf70e9b2d495",
+      "regression-bootstrap-source.json": "d91e36b13b9a46ca828cb99bec2c11704dfaf982ea69d5ef85a06c0d755f7a68"
+    },
+    "untracked_after_run": [],
+    "receipts": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/context-registration-20261027/baseline-pr/workflow-simulated"
+  },
+  "e1_pool": {
+    "pool": "old",
+    "runner_log_header_version": "20261012.334.1",
+    "ImageVersion": "20261023.334.3",
+    "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+    "runtime_profile_vs_matched_context": "equal (raw structural diff); only criteria_id and collector_sha256 differ",
+    "record": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/e1-precheck-20261027/e1-acceptance.json",
+    "requirement": "this PR CI must land all four regression shards on the old pool; previous_context_sha256 binds the old-pool context"
+  },
+  "scientific_execution": false,
+  "semantic_qualification": false
+}

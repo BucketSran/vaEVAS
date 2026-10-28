@@ -1,0 +1,70 @@
+{
+  "verified_at_utc": "2026-10-28T00:02:03.503623+00:00",
+  "PR": 278,
+  "run": 40602342818,
+  "attempt": 4,
+  "head": "b1730f91ef26a9670d0fbe077248fd1d590c46bf",
+  "base": "9d970d47c18decd54d66609f222acfecdf35a5ef",
+  "jobs": {
+    "selection": "success",
+    "regression (2)": "success",
+    "fuzz-smoke": "skipped",
+    "benchmark": "skipped",
+    "package": "skipped",
+    "provenance-support": "success",
+    "fast-checks": "success",
+    "catalog-inventory": "success",
+    "regression (3)": "success",
+    "properties-and-ngspice": "skipped",
+    "regression (0)": "success",
+    "provenance-paper": "success",
+    "static-checks": "success",
+    "rust-regression": "success",
+    "regression (1)": "success",
+    "regression-coverage": "success",
+    "regression-admission": "success",
+    "ci-result": "success"
+  },
+  "pool": {
+    "all_four_shards": "20261012.334.1",
+    "log": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/context-registration-20261027/baseline-pr/ci-40602342818/rerun-log.json",
+    "context_ImageVersion": "20261023.334.3",
+    "context_platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39"
+  },
+  "artifacts": {
+    "python-regression-timings": {
+      "id": 12780453642,
+      "digest": "sha256:03966cffcffebe9d673fe1978feb24f5628e39771e50b9b9c0e8813ea5604a24",
+      "created_at": "2026-10-27T23:59:37Z"
+    },
+    "python-regression-admission": {
+      "id": 12779784165,
+      "digest": "sha256:ad0dd9c18c9f69e829fa1a133e42f2e71b91fd6e5f24b1d9e520dd9034d29101",
+      "created_at": "2026-10-28T00:00:29Z"
+    }
+  },
+  "files_sha256": {
+    "python-regression-timings/python-regression.json": "f5d1952aea3b7beb8b81b84dbf24a7823baaac7d72dd29465c8f26fed7c16962",
+    "python-regression-timings/regression-collection.json": "de31b683b36f8611c3e5810966307817678e07d0108d0f5a74a7902811674cce",
+    "python-regression-admission/regression-admission.json": "46599c2be0b4ae2661298f1e615b60f110ad843fc453edbe0f0c47b4127c0c39",
+    "python-regression-admission/regression-bootstrap-source.json": "4ddd9795dae1e58ab7aca4ea16464bae29084b2e482d59bbefb6f957918f6793",
+    "python-regression-admission/regression-bundle-source.json": "5491472ee43feee5f6b2e0839b1ac940af8086ad3ad7a7620517c82f2bea7abf"
+  },
+  "checks": {
+    "merge_allowed": true,
+    "transition_registration": true,
+    "no_differences": true,
+    "added_entry_is_reviewed_entry": true,
+    "authorization_id": true,
+    "trust_from_event_base": true,
+    "trusted_baseline_bytes": true,
+    "candidate_baseline_bytes": true,
+    "registration_authority_from_trusted_base": true,
+    "raw_and_semantic_false": true,
+    "bootstrap": true,
+    "bundle": true
+  },
+  "admission_differences": [],
+  "registration_run_report_sha256": "f5d1952aea3b7beb8b81b84dbf24a7823baaac7d72dd29465c8f26fed7c16962",
+  "scientific_qualification": false
+}

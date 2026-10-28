@@ -1,0 +1,114 @@
+{
+  "at_utc": "2026-10-27T22:44:34.513138+00:00",
+  "worker_task": "node:delegated-task:command%3Amcp%3A27545977-2ca5-42b2-adf9-35ea91e9276b%3Adelegate-task%3Aevas-pr6-r5-p3-fixes-sonnet-r1-20261027",
+  "worker_model": {
+    "providerInstanceId": "tclaude",
+    "model": "claude-sonnet-5-5",
+    "options": [
+      {
+        "id": "effort",
+        "value": "high"
+      }
+    ]
+  },
+  "patch": {
+    "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/pr-review-20261025/grill-vams-2023/pr6/r5-p3-fixes-sonnet-20261027/source.patch",
+    "sha256": "79347f177a620e95d3406c75abde96a2b8e464fb426b160d41fdde8732acc4e5",
+    "base": "4751f9519fbc07efba94373e803c39aefe39472b",
+    "files": [
+      "evas/capabilities/support_view.py",
+      "evas/capabilities/test_support_view.py",
+      "scripts/tests/test_discover_rust.py"
+    ]
+  },
+  "applies_to_pr6_head": {
+    "head": "fa5556de20de4fecbf9db4e3630cd5d6754b07c2",
+    "files_equal_at_4751f951_and_fa5556de": true,
+    "git_apply_check": 0,
+    "after_sha256": {
+      "evas/capabilities/support_view.py": "8259c85614cf4f7c36d48dd2d619bd4013c492a3d59f7cc5f1a972e8f4a0b623",
+      "evas/capabilities/test_support_view.py": "e4deb6a9f9c13a25fe643a012c110664539bb062c524288f0b12924b57517de0",
+      "scripts/tests/test_discover_rust.py": "be74a9caf488400dbab74eb259d40b53507f52101680ffa42481f9ce01d75067"
+    },
+    "equals_worker_after": true
+  },
+  "scope": "only the three PR6-only files; no workflow, action, criteria, DUT, collector, language-profile or generator change; rust_listing.py unchanged (R5-05 option 2)",
+  "reviewer_matrices_before_after": {
+    "markdown_81370": {
+      "before": {
+        "false_accept": 6,
+        "false_reject": 0
+      },
+      "after": {
+        "false_accept": 0,
+        "false_reject": 0
+      }
+    },
+    "toolchain_2053": {
+      "before": {
+        "false_accept": 573,
+        "false_reject": 8
+      },
+      "after": {
+        "false_accept": 0,
+        "false_reject": 0
+      }
+    },
+    "reproductions_16": {
+      "before_mismatches": 14,
+      "after_mismatches": 0
+    },
+    "rust_receipts_251": {
+      "before_mismatches": 0,
+      "after_mismatches": 0
+    },
+    "static_boundary_11": "worker summary: 6/11 before, 11/11 after"
+  },
+  "worker_tests_after": {
+    "evas/capabilities discover": {
+      "tests": 101,
+      "seconds": 287.225,
+      "result": "OK"
+    },
+    "test_discover_rust": {
+      "tests": 33,
+      "seconds": 58.62,
+      "result": "OK"
+    },
+    "test_rust_catalog_reconcile": {
+      "tests": 10,
+      "seconds": 26.894,
+      "result": "OK"
+    },
+    "test_ci_selection": {
+      "tests": 38,
+      "seconds": 26.948,
+      "result": "OK"
+    },
+    "test_ci_inventory": {
+      "tests": 21,
+      "seconds": 4.357,
+      "result": "OK"
+    },
+    "test_fast_feedback": {
+      "tests": 14,
+      "seconds": 4.114,
+      "result": "OK"
+    },
+    "render.py --check": {
+      "exit": 0,
+      "output": "checked 84 capability files"
+    },
+    "ruff E9,F63,F7,F82 on the 3 files": {
+      "exit": 0,
+      "output": "All checks passed!"
+    },
+    "python3.9 syntax parse of the 3 files": "ok (ast.parse)"
+  },
+  "worker_process_notes": [
+    "first receipt-matrix replay (249/251, export without .git) and first toolchain replay (2,046/2,053, seven nightly spellings) outputs were overwritten; only their numbers are in REPORT.md",
+    "test_discover_rust.py grows by about 1,750 lines (restricted YAML reader, shell lexer, tests)"
+  ],
+  "primary_checks_pending": "full test rerun and catalog regeneration in the PR6 r8 build; independent check in the C0 review r6 (part D), per the coordinator",
+  "P3_rule": "P3-only round: fixed and recorded with evidence; checked in the next necessary review (C0 r6)"
+}

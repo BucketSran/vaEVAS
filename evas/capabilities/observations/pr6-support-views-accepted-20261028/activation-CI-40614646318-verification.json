@@ -1,0 +1,118 @@
+{
+  "verified_at_utc": "2026-10-28T01:38:45.716754+00:00",
+  "PR": 269,
+  "run": 40614646318,
+  "attempt": 1,
+  "head": "64fc1d395a1a457e25b4ea2ef246463cfa2aa375",
+  "base": "60b51df388721415d28660371cf35e2429cd01cd",
+  "jobs": {
+    "selection": "success",
+    "fast-checks": "success",
+    "rust-regression": "success",
+    "provenance-paper": "success",
+    "provenance-support": "success",
+    "regression (0)": "success",
+    "regression (2)": "success",
+    "fuzz-smoke (run, 24)": "success",
+    "regression (3)": "success",
+    "properties-and-ngspice": "success",
+    "catalog-inventory": "success",
+    "static-checks": "success",
+    "regression (1)": "success",
+    "fuzz-smoke (parse_request, 65536)": "success",
+    "package / install (macos-14, arm64, 3.12)": "success",
+    "benchmark / first-batch": "success",
+    "package / install (ubuntu-24.04, x86_64, 3.10)": "success",
+    "benchmark / identity": "success",
+    "regression-coverage": "success",
+    "regression-admission": "success",
+    "ci-result": "success"
+  },
+  "pool": {
+    "shards_header": "20261025.353.1",
+    "runtime_profile_equal_to_E1": false,
+    "ImageVersion": "20261026.354.1",
+    "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+    "host_runtime_difference": {
+      "trusted": {
+        "runtime_profile": {
+          "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+          "ImageVersion": "20261023.334.3"
+        },
+        "execution_toolchain": {
+          "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+          "ImageVersion": "20261023.334.3"
+        }
+      },
+      "actual": {
+        "runtime_profile": {
+          "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+          "ImageVersion": "20261026.354.1"
+        },
+        "execution_toolchain": {
+          "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+          "ImageVersion": "20261026.354.1"
+        }
+      }
+    }
+  },
+  "artifacts": {
+    "python-regression-admission": {
+      "id": 12785211092,
+      "digest": "sha256:173a5811bea084531df166431327cc0cd34c1b1701e571f1fe7ff5bfd7fc4fe7",
+      "created_at": "2026-10-28T01:31:40Z"
+    },
+    "python-regression-timings": {
+      "id": 12784124791,
+      "digest": "sha256:e54c997d6b822afc6550cdaeb7dd4f760833efc49f860ee16c5592b810e4ed37",
+      "created_at": "2026-10-28T01:30:50Z"
+    }
+  },
+  "files_sha256": {
+    "python-regression-admission/regression-admission.json": "c0e32dc575485a31ff661df0ed8c8be32b96e034cfe08173483a8933d161d5d7",
+    "python-regression-admission/regression-bootstrap-source.json": "8706098d105be98f7155fafcca0c2e76797d1832eaef77d5a048aa8f25104b02",
+    "python-regression-admission/regression-bundle-source.json": "5b1c74c45c1065aba97c2f3c1961b4ba9b0172597a32d2175e0a16dd56ca0b71",
+    "python-regression-timings/python-regression.json": "e75c71e11604fd2d84da6e3f53f226d2f23efee9060032ea9cfc2301dd4ffd1a",
+    "python-regression-timings/regression-collection.json": "de31b683b36f8611c3e5810966307817678e07d0108d0f5a74a7902811674cce"
+  },
+  "report_sha256": "e75c71e11604fd2d84da6e3f53f226d2f23efee9060032ea9cfc2301dd4ffd1a",
+  "checks": {
+    "merge_allowed": true,
+    "no_differences": true,
+    "not_a_registration": true,
+    "trust_from_event_base": true,
+    "trusted_baseline_is_main": true,
+    "context_matches_registered_entry": true,
+    "conditions_7737_equal_to_E1": true,
+    "raw_counters_equal_to_E1": true,
+    "raw_and_semantic_false": true
+  },
+  "counters_e1_vs_activation": {
+    "tests_run": [
+      3257,
+      3257
+    ],
+    "failures": [
+      597,
+      597
+    ],
+    "errors": [
+      296,
+      296
+    ],
+    "skipped": [
+      0,
+      0
+    ],
+    "expected_failures": [
+      3,
+      3
+    ],
+    "unexpected_successes": [
+      0,
+      0
+    ]
+  },
+  "counting_basis": "7737 conditions and raw subTest-level counters",
+  "scientific_qualification": false
+}
