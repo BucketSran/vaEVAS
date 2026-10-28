@@ -106,7 +106,8 @@ class AdmissionIntegrationTests(unittest.TestCase):
         coverage=self.workflow_job('regression-coverage')
         self.assertIn('runs/regression-collection.json',coverage)
         self.assertNotIn('runs/regression-admission.json',coverage)
-        for name,step in [('regression-coverage','Verify complete raw coverage'),
+        for name,step in [('regression-coverage','Select the newest attempt of each regression shard'),
+                          ('regression-coverage','Verify complete raw coverage'),
                           ('regression-admission','Compare raw observations with the trusted comparator')]:
             body=self.run_body(name,step)
             syntax=subprocess.run(['bash','-n'],input=body,text=True,capture_output=True)
@@ -131,10 +132,21 @@ class AdmissionIntegrationTests(unittest.TestCase):
                 shard.update(shard_count=4,shard_index=index,assignment=[[identity] for identity in ids],
                              selected_test_ids=[ids[index]],discovered_test_ids=ids,source_identity={},
                              input_identity='f'*64,setup_skips=[],seconds=.1)
-                path=root/'runs/shards'/str(index)/'report.json'
+                path=root/'runs/shards'/('python-regression-shard-%d-attempt-2'%index)/'regression-evidence/report.json'
                 path.parent.mkdir(parents=True)
                 path.write_text(json.dumps(shard))
-            env=git_fixture.child_env(GITHUB_STEP_SUMMARY=str(root/'summary.md'))
+            # A rerun leaves the first attempt's upload of shard 1 behind; only the newest attempt may be merged.
+            stale=root/'runs/shards/python-regression-shard-1-attempt-1/regression-evidence/report.json'
+            stale.parent.mkdir(parents=True)
+            stale.write_text(json.dumps({'stale':True}))
+            env=git_fixture.child_env(GITHUB_STEP_SUMMARY=str(root/'summary.md'),GITHUB_RUN_ATTEMPT='2')
+            selection=self.run_body('regression-coverage','Select the newest attempt of each regression shard')
+            result=subprocess.run(['bash','-e','-c',selection],cwd=root,env=env,capture_output=True,text=True)
+            self.assertEqual(result.returncode,0,result.stdout+result.stderr)
+            chosen=json.loads((root/'runs/regression-shard-selection.json').read_text())
+            self.assertEqual([item['artifact'] for item in chosen['selected']],
+                             ['python-regression-shard-%d-attempt-2'%index for index in range(4)])
+            self.assertEqual([item['artifact'] for item in chosen['superseded']],['python-regression-shard-1-attempt-1'])
             coverage=self.run_body('regression-coverage','Verify complete raw coverage')
             result=subprocess.run(['bash','-e','-c',coverage],cwd=root,env=env,capture_output=True,text=True)
             self.assertEqual(result.returncode,0,result.stdout+result.stderr)

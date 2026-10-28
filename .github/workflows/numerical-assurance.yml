@@ -397,7 +397,8 @@ jobs:
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: python-regression-shard-${{ matrix.shard }}
+          # The attempt number lets coverage pick the newest upload of a rerun shard; artifact IDs do not follow time.
+          name: python-regression-shard-${{ matrix.shard }}-attempt-${{ github.run_attempt }}
           path: |
             runs/regression-evidence
             runs/regression-identity.json
@@ -418,6 +419,52 @@ jobs:
         with:
           pattern: python-regression-shard-*
           path: runs/shards
+      - name: Select the newest attempt of each regression shard
+        run: |
+          python3 - <<'PYTHON'
+          from pathlib import Path
+          import hashlib, json, os, re, sys
+          current = int(os.environ['GITHUB_RUN_ATTEMPT'])
+          pattern = re.compile(r'python-regression-shard-([0-3])-attempt-([1-9][0-9]*)', re.ASCII)
+          errors, found = [], {}
+          base = Path('runs/shards')
+          for entry in sorted(base.iterdir()) if base.is_dir() else []:
+              match = pattern.fullmatch(entry.name)
+              if not match or entry.is_symlink() or not entry.is_dir():
+                  errors.append('unexpected entry in runs/shards: ' + entry.name)
+                  continue
+              shard, attempt = map(int, match.groups())
+              reports = sorted(entry.rglob('report.json'))
+              if len(reports) != 1:
+                  errors.append(entry.name + ': expected exactly one report.json, found ' + str(len(reports)))
+              elif attempt > current:
+                  errors.append(entry.name + ': attempt ' + str(attempt) + ' is newer than this run attempt ' + str(current))
+              else:
+                  found.setdefault(shard, {})[attempt] = (entry.name, reports[0])
+          errors += ['shard ' + str(shard) + ': no valid artifact' for shard in range(4) if shard not in found]
+          selected, superseded = [], []
+          for shard in sorted(found) if not errors else []:
+              attempts = found[shard]
+              for attempt in sorted(attempts):
+                  name, report = attempts[attempt]
+                  if attempt == max(attempts):
+                      selected.append(dict(shard=shard, attempt=attempt, artifact=name, report=report.as_posix(),
+                                           report_sha256=hashlib.sha256(report.read_bytes()).hexdigest()))
+                  else:
+                      superseded.append(dict(shard=shard, attempt=attempt, artifact=name))
+          receipt = dict(valid=not errors, run_attempt=current, selected=selected, superseded=superseded, errors=errors)
+          Path('runs').mkdir(exist_ok=True)
+          Path('runs/regression-shard-selection.json').write_text(json.dumps(receipt, indent=2) + '\n')
+          lines = ['## Regression shard artifacts', '', 'Run attempt ' + str(current), '',
+                   '| shard | attempt | artifact | use |', '| --- | --- | --- | --- |']
+          lines += ['| %d | %d | %s | merged |' % (item['shard'], item['attempt'], item['artifact']) for item in selected]
+          lines += ['| %d | %d | %s | superseded |' % (item['shard'], item['attempt'], item['artifact']) for item in superseded]
+          lines += ['- ' + error for error in errors]
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as stream:
+              stream.write('\n'.join(lines) + '\n')
+          print('\n'.join(errors), file=sys.stderr)
+          sys.exit(1 if errors else 0)
+          PYTHON
       - name: Verify complete raw coverage
         run: |
           python3 - <<'PYTHON'
@@ -425,8 +472,9 @@ jobs:
           import json, os, subprocess, sys
           sys.path.insert(0, 'scripts')
           from regression_gate import validate_report
-          reports = sorted(Path('runs/shards').rglob('report.json'))
-          assert len(reports) == 4, 'all four regression reports are required'
+          selection = json.loads(Path('runs/regression-shard-selection.json').read_text())
+          assert selection['valid'] and [item['shard'] for item in selection['selected']] == [0, 1, 2, 3], 'all four regression reports are required'
+          reports = [Path(item['report']) for item in selection['selected']]
           result = subprocess.run([sys.executable, '-B', 'scripts/run_regression.py', '--merge',
                                    *map(str, reports), '--report', 'runs/python-regression.json'])
           report = json.loads(Path('runs/python-regression.json').read_text())
@@ -450,6 +498,7 @@ jobs:
           path: |
             runs/python-regression.json
             runs/regression-collection.json
+            runs/regression-shard-selection.json
           if-no-files-found: error
           retention-days: 14
   regression-admission:
