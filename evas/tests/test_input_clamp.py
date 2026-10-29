@@ -213,7 +213,7 @@ class InputClamp(unittest.TestCase):
         p=compile_sources({'feedback.va':source},[Instance('dut','m',{'u':'u','y':'y','r':'0'},{})])
         with self.assertRaises(KernelError):transient(p,{'u':[[0,0],[1,1]]},[0,1],stop=1,max_step=.125,kernel=KERNEL)
     def test_clipped_integral_reset_and_hidden_feedback_remain_rejected(self):
-        for input_expr, reset in [('f', ',1'), ('f+0*V(y,r)', ''), ('f+idt(V(u),0)', '')]:
+        for input_expr, reset in [('f+0*V(y,r)', ''), ('f+idt(V(u),0)', '')]:
             with self.subTest(input_expr=input_expr,reset=reset):
                 source=model('f=V(u); if(f<0.25) f=0.25; else if(f>0.75) f=0.75; '
                              f'V(y,r)<+idt({input_expr},0{reset});',declarations='real f;',
@@ -221,6 +221,13 @@ class InputClamp(unittest.TestCase):
                 with self.assertRaises((CompileError,KernelError)):
                     p=compile_sources({'reject.va':source},[Instance('dut','m',{'u':'u','y':'y','r':'0'},{})])
                     transient(p,{'u':[[0,0],[1,1]]},[0,1],stop=1,max_step=.125,kernel=KERNEL)
+        # A clamped procedural integrand with a constant nonzero assert holds ic
+        # (LRM 2.4 4.5.4 Table 4-18): y=0 at 0, .5 and 1.
+        source=model('f=V(u); if(f<0.25) f=0.25; else if(f>0.75) f=0.75; '
+                     'V(y,r)<+idt(f,0,1);',declarations='real f;',directions='input u; inout y,r;')
+        p=compile_sources({'reset.va':source},[Instance('dut','m',{'u':'u','y':'y','r':'0'},{})])
+        r=transient(p,{'u':[[0,0],[1,1]]},[0,.5,1],stop=1,max_step=.125,kernel=KERNEL)
+        self.assertEqual([row['voltages'][r['nodes'].index('y')] for row in r['solutions']],[0,0,0])
 
     def test_event_composition_outside_scope_stays_rejected(self):
         source=model('@(initial_step) q=0; @(timer(0.5)) q=1; f=V(u); if(f<0.25) f=0.25; else if(f>0.75) f=0.75; V(y,r)<+idtmod(f,0,10,0)+q;',declarations='real f,q;')
