@@ -319,7 +319,7 @@ EVAS 结果只是开发证据，不是 EVAS 能力验收或校准。旧版只给
 依据是 Spectre 小探针的预读与主控 2026-10-29 的派发。改动文件改前、改后的 sha256，复现脚本、命令、退出码与结果见 p0-fix-e 处置记录（`runs/t3-p0-build-20261027/p0-fix-e/disposition.md`）。**未仿真**：本机没有 Spectre，本轮没有运行 Spectre 或模型；探针结果是 Spectre 21.1 预读（正式核收待 r5）；旧版结果是旧版开发证据（EVAS 0.8.7，legacy/EVAS 提交 6cb6fa7a），待 Spectre 复跑。
 
 1. 依据：探针 `spectre-P0probe-C109-v1` 的 Spectre 21.1 预读，**预读，正式核收待 Spectre 线 r5**。
-   - 结果包 `结果包（私有）`，sha256 `2c4e79eb7fa60d245128a653bdcb757461e84f8c0f1ba366a29be3825b833665`。suite v1.5 的 verify_return 核对：identity-verified，18 个作业 completed，证据 clean。记录在 [returns-preread-…](../../../../../../../Benchmark 的预读记录（本地 runs/ 下，未公开）)：`verify-v1.5.json`，`score/score.json` 与 [score.md](../../../../../../../Benchmark 的预读记录（本地 runs/ 下，未公开）)。
+   - 结果包 `结果包（私有）`，sha256 `2c4e79eb7fa60d245128a653bdcb757461e84f8c0f1ba366a29be3825b833665`。suite v1.5 的 verify_return 核对：identity-verified，18 个作业 completed，证据 clean。记录在 returns-preread-…（本地记录，未公开）：`verify-v1.5.json`，`score/score.json` 与 score.md（本地记录，未公开）。
    - 换入前的参考解：`vss`、`minus10mV`、`reset-from-below-vss`、`vss0p1-vss` 得码 15（合同 0），`reset-from-above-0p6` 第二次转换得 0（合同 10），checker 都判失败；`plus10mV` 得 0、通过。六例与语义甲（归档 Spectre 的到达规则）逐例一致，`XDUT.cmp` 的时间线也一致。
    - 修正版：六例都得合同码，checker 通过。
    - 平台上 `XDUT.held − XDUT.dac` 每行恰为 0；层次名照写取到；保底作业与主体作业的顶层波形逐行相同；没有 AHDL 定义域警告。
