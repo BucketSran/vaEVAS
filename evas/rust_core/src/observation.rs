@@ -45,6 +45,7 @@ pub(crate) fn evidence(
             stop_s: config.stop,
             max_step_s: config.max_step,
             max_step_applied,
+            proof_work_limit: config.effective_proof_work_limit(),
         },
         sample_origins,
         initial_settled,
@@ -52,5 +53,45 @@ pub(crate) fn evidence(
             .iter()
             .map(|s| s.certified_voltage_bounds.clone())
             .collect(),
+    }
+}
+
+#[cfg(test)]
+mod echo_tests {
+    use super::*;
+
+    fn config(limit: Option<u64>) -> TransientInputs {
+        TransientInputs {
+            analytic_sources: vec![],
+            pwl_errors_v: None,
+            strobetimes: vec![],
+            pwl: vec![],
+            output_times: vec![0.0],
+            stop: 1.0,
+            max_step: 1.0,
+            proof_work_limit: limit,
+        }
+    }
+
+    #[test]
+    fn effective_controls_echo_the_requested_and_the_default_proof_limit() {
+        for (requested, expected) in [
+            (None, 1_000_000_000u64),
+            (Some(1_000_000_000), 1_000_000_000),
+            (Some(2_000_000_000_000), 2_000_000_000_000),
+        ] {
+            let evidence = evidence(
+                &["0".to_string()],
+                &[],
+                &config(requested),
+                &Tolerances::default(),
+                vec![],
+                false,
+                None,
+            );
+            assert_eq!(evidence.effective_controls.proof_work_limit, expected);
+            let wire = serde_json::to_value(&evidence).unwrap();
+            assert_eq!(wire["effective_controls"]["proof_work_limit"], expected);
+        }
     }
 }

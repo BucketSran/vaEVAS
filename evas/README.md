@@ -253,6 +253,7 @@ API 运行已有 `Program` 不重复源码准入，但仍须满足当前 IR/内�
 ## 精度与结果解释
 
 支持独立于输出网格的 `strobetimes` 和周期 strobe 控制，见[强制求解时刻](docs/reference/strobe.md)。
+源跳变证明工作量的请求级上限（`proof_work_limit`，缺省 1e9，硬上界 1e13）和输出点数上限（1,000,000）见[请求级资源上限](docs/reference/proof-work-limit.md)。
 `solve`、`transient` 和 manifest 的 `tolerances` 接受 `vabstol`（默认 `1e-12 V`）
 与 `reltol`（默认 `1e-10`，无量纲）。这两个数字是求解/验收设置，
 不能直接解释为所有输出都具有同样的全时域精度。

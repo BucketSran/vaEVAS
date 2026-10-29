@@ -42,6 +42,7 @@ fn relocalization_fixture() -> (EventModel, Trajectory, Controller, Vec<Schedule
             output_times: vec![0., 1.],
             stop: 1.,
             max_step: 1.,
+            proof_work_limit: None,
         },
         1,
     )
@@ -420,6 +421,7 @@ pub(super) fn fixture() -> (EventModel, Trajectory, Controller, Vec<ScheduledEve
             output_times: vec![0., 1.],
             stop: 1.,
             max_step: 1.,
+            proof_work_limit: None,
         },
         1,
     )
@@ -636,6 +638,7 @@ pub(super) fn nonlinear_horizon_fixture(
             output_times: vec![0., 2.],
             stop: 2.,
             max_step: 2.,
+            proof_work_limit: None,
         },
         0,
     )
@@ -907,6 +910,7 @@ fn two_delays_accuracy_failure_discard_and_earlier_retry_preserve_frame() {
             output_times: vec![0.0, 3.0],
             stop: 3.0,
             max_step: 3.0,
+            proof_work_limit: None,
         },
         1,
     )
@@ -983,6 +987,7 @@ fn delayed_timer_root_fixture(
             output_times: vec![0., 0.31],
             stop: 0.31,
             max_step: 0.31,
+            proof_work_limit: None,
         },
         1,
     )
@@ -1551,6 +1556,7 @@ fn raw_source_held_epoch_fixture_at(
             output_times: vec![0., 1.],
             stop: 1.,
             max_step: 1.,
+            proof_work_limit: None,
         },
         1,
     )
@@ -1870,6 +1876,7 @@ fn native_integer_failed_prefix_rolls_back_and_retries_same_controller() {
             output_times: vec![0., 2.],
             stop: 2.,
             max_step: 1.,
+            proof_work_limit: None,
         },
         0,
     )
@@ -1964,6 +1971,7 @@ fn bounded_cold_transition_seed_survives_two_failed_same_controller_callbacks() 
             output_times: vec![0., 2.],
             stop: 2.,
             max_step: 1.,
+            proof_work_limit: None,
         },
         1,
     )
@@ -2110,6 +2118,7 @@ fn integer28_runtime_failures_roll_back_twice_in_same_controller() {
                 output_times: vec![0., 2.],
                 stop: 2.,
                 max_step: 1.,
+                proof_work_limit: None,
             },
             0,
         )
@@ -2212,6 +2221,7 @@ fn bits29_checked_children_fail_before_discard_and_roll_back_twice() {
                 output_times: vec![0., 2.],
                 stop: 2.,
                 max_step: 1.,
+                proof_work_limit: None,
             },
             0,
         )
@@ -2283,6 +2293,7 @@ fn held29_trajectory() -> Trajectory {
             output_times: vec![0., 2.],
             stop: 2.,
             max_step: 0.1,
+            proof_work_limit: None,
         },
         0,
     )

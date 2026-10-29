@@ -126,6 +126,109 @@ mod real_procedure_transport_tests {
     }
 }
 
+#[cfg(test)]
+mod request_resource_limit_tests {
+    use super::*;
+    use serde_json::{json, Value};
+
+    fn request(extra: Value) -> String {
+        let mut transient = json!({
+            "pwl": [], "output_times": [0.0], "stop": 1.0, "max_step": 1.0
+        });
+        if let Value::Object(fields) = extra {
+            transient.as_object_mut().unwrap().extend(fields);
+        }
+        json!({
+            "program": {"schema_version": 33, "nodes": ["0"], "contributions": []},
+            "driven": [], "samples": [], "transient": transient
+        })
+        .to_string()
+    }
+
+    #[test]
+    fn named_limits_have_the_designed_values() {
+        // Literals, not the constants under test: 1e9 default, 1e13 hard bound, 1e6 points.
+        assert_eq!(DEFAULT_PROOF_WORK_LIMIT, 1_000_000_000);
+        assert_eq!(MAX_PROOF_WORK_LIMIT, 10_000_000_000_000);
+        assert_eq!(MAX_OUTPUT_POINTS, 1_000_000);
+    }
+
+    #[test]
+    fn field_is_request_metadata_and_never_part_of_the_serialized_config() {
+        let decoded = parse_request(&request(json!({}))).unwrap();
+        let transient = decoded.transient.as_ref().unwrap();
+        assert_eq!(transient.proof_work_limit, None);
+        assert_eq!(transient.effective_proof_work_limit(), 1_000_000_000);
+        let encoded = serde_json::to_value(&decoded).unwrap();
+        assert!(!encoded["transient"]
+            .as_object()
+            .unwrap()
+            .contains_key("proof_work_limit"));
+    }
+
+    #[test]
+    fn integers_within_one_and_the_hard_bound_are_accepted_exactly() {
+        for (text, value) in [
+            ("1", 1u64),
+            ("1000000000", 1_000_000_000),
+            ("2000000000000", 2_000_000_000_000),
+            ("10000000000000", 10_000_000_000_000),
+        ] {
+            let body = request(json!({})).replace(
+                "\"stop\":1.0",
+                &format!("\"stop\":1.0,\"proof_work_limit\":{text}"),
+            );
+            let decoded = parse_request(&body).unwrap_or_else(|e| panic!("{text}: {e:?}"));
+            let transient = decoded.transient.as_ref().unwrap();
+            assert_eq!(transient.proof_work_limit, Some(value), "{text}");
+            assert_eq!(transient.effective_proof_work_limit(), value, "{text}");
+            // Not serialized: the config identity bytes do not depend on the limit.
+            let encoded = serde_json::to_value(&decoded).unwrap();
+            assert!(!encoded["transient"]
+                .as_object()
+                .unwrap()
+                .contains_key("proof_work_limit"));
+            let baseline = parse_request(&request(json!({}))).unwrap();
+            assert_eq!(
+                serde_json::to_string(&decoded.transient).unwrap(),
+                serde_json::to_string(&baseline.transient).unwrap(),
+                "{text}"
+            );
+        }
+    }
+
+    #[test]
+    fn every_other_shape_is_invalid_inputs() {
+        // Non-positive, above the bound, negative, float (even integral), bool,
+        // string, null, and an integer beyond u64 all fail closed the same way.
+        for text in [
+            "0",
+            "10000000000001",
+            "-1",
+            "2000000000000.0",
+            "2e12",
+            "1.5",
+            "true",
+            "false",
+            "\"5\"",
+            "null",
+            "18446744073709551616",
+        ] {
+            let body = request(json!({})).replace(
+                "\"stop\":1.0",
+                &format!("\"stop\":1.0,\"proof_work_limit\":{text}"),
+            );
+            let error = parse_request(&body).expect_err(text);
+            assert_eq!(error.kind, "invalid_inputs", "{text}");
+            assert!(
+                error.message.contains("proof_work_limit"),
+                "{text}: {}",
+                error.message
+            );
+        }
+    }
+}
+
 pub fn check_schema_version(version: u64) -> Result<(), Error> {
     if version != u64::from(SCHEMA_VERSION) {
         return Err(Error::new(
@@ -151,7 +254,12 @@ pub fn parse_request(input: &str) -> Result<Request, Error> {
     check_schema_version(header.program.schema_version)?;
     // Decode the original bytes so duplicate fields remain errors. The header
     // skips samples instead of storing a second copy of the full request.
-    serde_json::from_str(input).map_err(|e| Error::new("invalid_request", e.to_string()))
+    let request: Request =
+        serde_json::from_str(input).map_err(|e| Error::new("invalid_request", e.to_string()))?;
+    if let Some(transient) = &request.transient {
+        transient.validate_proof_work_limit()?;
+    }
+    Ok(request)
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -572,6 +680,8 @@ pub struct EffectiveObservationControls {
     pub stop_s: f64,
     pub max_step_s: f64,
     pub max_step_applied: bool,
+    /// Source-transition proof work limit in force, including the default.
+    pub proof_work_limit: u64,
 }
 
 #[derive(Debug, Serialize)]
@@ -949,6 +1059,104 @@ pub struct TransientInputs {
     pub output_times: Vec<f64>,
     pub stop: f64,
     pub max_step: f64,
+    /// Optional per-request source-transition proof work limit (the third slot
+    /// of the one request ledger). Absent means DEFAULT_PROOF_WORK_LIMIT. Any
+    /// value that is not an integer within 1..=MAX_PROOF_WORK_LIMIT, including
+    /// floats, booleans, strings and null, is rejected by
+    /// `validate_proof_work_limit` as `invalid_inputs`. The limit is request
+    /// metadata, never part of the physical configuration: it is not
+    /// serialized, so the config identity encodings the kernel compares and
+    /// charges for (event_floor) are the same bytes whatever the limit is.
+    #[serde(default, deserialize_with = "proof_work_limit_field", skip_serializing)]
+    pub proof_work_limit: Option<u64>,
+}
+
+/// Default source-transition proof work limit; the value every request had
+/// before the limit became requestable. Slots 0 and 1 of the ledger stay fixed.
+pub const DEFAULT_PROOF_WORK_LIMIT: u64 = 1_000_000_000;
+/// Hard upper bound of a requested proof work limit. This is an implementation
+/// budget guard against a mistyped request, not a correctness criterion and not a
+/// performance promise: the limit measures proof work units, not seconds.
+pub const MAX_PROOF_WORK_LIMIT: u64 = 10_000_000_000_000;
+/// Largest number of output rows or forced solve points one request may carry.
+/// The Python front end (`evas.limits.MAX_OUTPUT_POINTS`) enforces the same value.
+pub const MAX_OUTPUT_POINTS: usize = 1_000_000;
+
+/// Maps every JSON shape other than a non-negative integer to 0, which
+/// `validate_proof_work_limit` rejects with the same `invalid_inputs` diagnosis
+/// as an explicit 0 (a derive-level type error would be `invalid_request`).
+fn proof_work_limit_field<'de, D: serde::Deserializer<'de>>(
+    deserializer: D,
+) -> Result<Option<u64>, D::Error> {
+    struct Shape;
+    impl<'de> serde::de::Visitor<'de> for Shape {
+        type Value = Option<u64>;
+        fn expecting(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            f.write_str("a proof work limit")
+        }
+        fn visit_u64<E>(self, v: u64) -> Result<Self::Value, E> {
+            Ok(Some(v))
+        }
+        fn visit_i64<E>(self, _: i64) -> Result<Self::Value, E> {
+            Ok(Some(0))
+        }
+        fn visit_i128<E>(self, _: i128) -> Result<Self::Value, E> {
+            Ok(Some(0))
+        }
+        fn visit_u128<E>(self, _: u128) -> Result<Self::Value, E> {
+            Ok(Some(0))
+        }
+        fn visit_f64<E>(self, _: f64) -> Result<Self::Value, E> {
+            Ok(Some(0))
+        }
+        fn visit_bool<E>(self, _: bool) -> Result<Self::Value, E> {
+            Ok(Some(0))
+        }
+        fn visit_str<E>(self, _: &str) -> Result<Self::Value, E> {
+            Ok(Some(0))
+        }
+        fn visit_unit<E>(self) -> Result<Self::Value, E> {
+            Ok(Some(0))
+        }
+        fn visit_none<E>(self) -> Result<Self::Value, E> {
+            Ok(Some(0))
+        }
+        fn visit_seq<A: serde::de::SeqAccess<'de>>(
+            self,
+            mut a: A,
+        ) -> Result<Self::Value, A::Error> {
+            while a.next_element::<serde::de::IgnoredAny>()?.is_some() {}
+            Ok(Some(0))
+        }
+        fn visit_map<A: serde::de::MapAccess<'de>>(
+            self,
+            mut a: A,
+        ) -> Result<Self::Value, A::Error> {
+            while a
+                .next_entry::<serde::de::IgnoredAny, serde::de::IgnoredAny>()?
+                .is_some()
+            {}
+            Ok(Some(0))
+        }
+    }
+    deserializer.deserialize_any(Shape)
+}
+
+impl TransientInputs {
+    /// Reject a requested proof work limit outside 1..=MAX_PROOF_WORK_LIMIT.
+    pub fn validate_proof_work_limit(&self) -> Result<(), Error> {
+        match self.proof_work_limit {
+            Some(v) if v == 0 || v > MAX_PROOF_WORK_LIMIT => Err(Error::new(
+                "invalid_inputs",
+                format!("proof_work_limit must be an integer between 1 and {MAX_PROOF_WORK_LIMIT}"),
+            )),
+            _ => Ok(()),
+        }
+    }
+    /// The limit in force for the work slot of the request ledger.
+    pub fn effective_proof_work_limit(&self) -> u64 {
+        self.proof_work_limit.unwrap_or(DEFAULT_PROOF_WORK_LIMIT)
+    }
 }
 
 /// Computed forced points, independent of the saved output grid.

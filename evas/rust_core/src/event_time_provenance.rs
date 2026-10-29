@@ -457,6 +457,7 @@ mod tests {
                 strobetimes: vec![],
                 stop: 1.,
                 max_step: 1.,
+                proof_work_limit: None,
             },
             1,
         )
@@ -1087,6 +1088,7 @@ mod held_review_tests {
                 output_times: vec![0., 1.],
                 stop: 1.,
                 max_step: 0.1,
+                proof_work_limit: None,
             },
             2,
         )
@@ -1255,6 +1257,7 @@ mod held_point_tests {
                 output_times: vec![0., 0.25, 0.5, 1.],
                 stop: 1.,
                 max_step: 1.,
+                proof_work_limit: None,
             },
             1,
         )

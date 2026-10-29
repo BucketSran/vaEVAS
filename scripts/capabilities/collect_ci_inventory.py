@@ -3,6 +3,8 @@
 This is construction-only in --observe-only mode. No TestCase run/setup/body is
 called. Trusted imports execute under discover_methods' bounded audit policy.
 The YAML support is intentionally restricted to current literal run forms.
+Named explicit checks that a step runs through scripts/run_explicit_checks.py
+are recorded as CI by-name check entries and located statically, never run.
 """
 import argparse
 import ast
@@ -30,6 +32,9 @@ MATH_SCRIPTS = {'evas/validation/check_design_math.py', 'evas/validation/check_t
 KNOWN_ENV_EXPRESSIONS = {'${{ steps.changes.outputs.base }}': 'CI_INVENTORY_BASE',
                          '${{ steps.changes.outputs.head }}': 'CI_INVENTORY_HEAD'}
 PYTHON_RELEASE = re.compile(r'([0-9]+)\.([0-9]+)(?:\.[0-9]+)?')
+EXPLICIT_RUNNER = 'scripts/run_explicit_checks.py'
+CHECK_ID = re.compile(r'[A-Za-z_][A-Za-z0-9_]*\.[A-Za-z_][A-Za-z0-9_]*\.check_[A-Za-z0-9_]+')
+ENV_NAME = re.compile(r'[A-Za-z_][A-Za-z0-9_]*')
 BOOTSTRAP = ('import os,runpy,sys; '
              'sys.path[0]=os.getcwd(); '
              'tool=sys.argv[1]; sys.argv=sys.argv[1:]; '
@@ -93,10 +98,40 @@ def _unittest(command):
     return start, pattern
 
 
+def _explicit_checks(command):
+    """Only the literal runner form: literal paths, literal check ids, no shell syntax."""
+    if any(token in command for token in ('${', '$(', '`', ';', '&&', '||', '|', '\\', '>', '<', '$')):
+        raise ValueError('dynamic/control syntax in explicit check command: ' + command)
+    args = shlex.split(command, comments=True)
+    if args[:3] != ['python3', '-B', EXPLICIT_RUNNER]:
+        raise ValueError('unknown explicit check command: ' + command)
+    found = {'--start': None, '--report': None, '--check': [], '--require-env': []}
+    i = 3
+    while i < len(args):
+        option = args[i]
+        if option not in found or i + 1 == len(args):
+            raise ValueError('unsupported/incomplete explicit check option: ' + option)
+        value = args[i + 1]
+        if option in ('--start', '--report'):
+            if found[option] is not None:
+                raise ValueError('duplicate explicit check option: ' + option)
+            found[option] = relative(value)
+        else:
+            pattern = CHECK_ID if option == '--check' else ENV_NAME
+            if not pattern.fullmatch(value) or value in found[option]:
+                raise ValueError('unknown or repeated explicit check value: ' + option + ' ' + value)
+            found[option].append(value)
+        i += 2
+    if found['--start'] is None or found['--report'] is None or not found['--check']:
+        raise ValueError('explicit check command needs --start, --report and --check: ' + command)
+    return dict(start=found['--start'], report=found['--report'], checks=found['--check'],
+                required_environment=found['--require-env'])
+
+
 def parse_workflow(raw):
     """Parse job/step/run literals, preserving source lines and declaration phases."""
     lines = raw.decode('utf-8').splitlines()
-    entries, scripts, jobs = [], [], {}
+    entries, scripts, checks, jobs = [], [], [], {}
     job, step, step_if, in_jobs = None, None, None, False
     run_indent = None
     run_style, folded = None, []
@@ -178,7 +213,16 @@ def parse_workflow(raw):
                       environment_overrides=jobs[job]['env'] | env,
                       declared_python_versions=jobs[job]['python_versions'])
         # Detect unknown forms rather than silently losing a literal-looking entry.
-        if re.search(r'\bpython\S*\b.*(?:\bunittest\b|\bdiscover\b)', command):
+        if 'run_explicit_checks' in command:
+            if any(('$' in value or '`' in value) for value in origin['environment_overrides'].values()):
+                raise ValueError('dynamic environment on explicit check entry line ' + str(number))
+            entry = dict(origin, **_explicit_checks(command), kind='ci-named-explicit-check',
+                         collector='explicit-check', mode='declared-ci-named-check',
+                         purpose='check_ methods that discovery never collects, run by name in CI')
+            entry['namespace'] = namespace(entry['start'])
+            entry['entry_id'] = canonical(entry)
+            checks.append(entry)
+        elif re.search(r'\bpython\S*\b.*(?:\bunittest\b|\bdiscover\b)', command):
             start, pattern = _unittest(command)
             if any(('$' in value or '`' in value) and value not in KNOWN_ENV_EXPRESSIONS
                    for value in origin['environment_overrides'].values()):
@@ -198,7 +242,34 @@ def parse_workflow(raw):
                                     executed=False))
     return {'schema_version': 1, 'workflow_sha256': sha(raw), 'entries': entries,
             'script_entries': scripts, 'literal_entry_count': len(entries),
+            'explicit_check_entries': checks, 'explicit_check_count': len(checks),
             'scope': 'Declared literal set across phases; scheduling expressions recorded, not executed.'}
+
+
+def explicit_check_entries(root, parsed):
+    """Locate every CI by-name check statically, as the runner does before running it.
+
+    A named check that is missing from its module (renamed or deleted) or is not in
+    the checks of a current registry case fails construction. Nothing is imported.
+    """
+    entries = copy.deepcopy(parsed['explicit_check_entries'])
+    if not entries:
+        return entries
+    runner = load(Path(root) / EXPLICIT_RUNNER, 'ci_inventory_explicit_checks')
+    known = runner.registered(root)
+    for entry in entries:
+        entry['runner_sha256'] = sha((Path(root) / EXPLICIT_RUNNER).read_bytes())
+        entry['resolved'] = []
+        for check in entry['checks']:
+            module, line, problem = runner.locate(root, entry['start'], check)
+            owners = known.get((module, check), []) if problem is None else []
+            if problem is None and not owners:
+                problem = check + ' is not registered in the checks of a current case'
+            if problem is not None:
+                raise ValueError('CI named explicit check at workflow line %d: %s' % (entry['line'], problem))
+            entry['resolved'].append(dict(id=check, module=module, line=line, registered_by=owners,
+                                          module_sha256=sha((Path(root) / module).read_bytes())))
+    return entries
 
 
 def primary_entry(root, parsed):
@@ -413,6 +484,11 @@ def collect(root, output, *, mode, registry_data=None, timeout=30,
         parsed = parse_workflow(raw)
         entries = [*parsed['entries'], primary_entry(root, parsed)]
         write('entrypoints.json', parsed | {'primary': entries[-1]})
+        explicit = explicit_check_entries(root, parsed)
+        write('explicit-check-entrypoints.json', {
+            'entries': explicit, 'method_denominator': None,
+            'scope': 'CI by-name check entries: check_ methods run by name, located statically here, never run.'})
+        result['explicit_checks'] = [check for entry in explicit for check in entry['checks']]
         observed = observer or load(root / 'scripts/capabilities/observe_assets.py', 'ci_inventory_observer').observe
         streams = io.StringIO(), io.StringIO()
         with contextlib.redirect_stdout(streams[0]), contextlib.redirect_stderr(streams[1]):

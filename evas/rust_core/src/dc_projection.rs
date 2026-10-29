@@ -858,7 +858,7 @@ impl DcProjection {
                 "DC held ramp requires its original prepared source context",
             ));
         }
-        let source = ProofContext::new(p, t, driven, Work::default())?;
+        let source = ProofContext::new(p, t, driven, Work::for_trajectory(t))?;
         Self::with_source(p, source)
     }
     pub(crate) fn with_source(p: &Program, source: Arc<ProofContext>) -> Result<Arc<Self>, Error> {
@@ -1135,6 +1135,7 @@ mod tests {
                 output_times: vec![0., 2.],
                 stop: 2.,
                 max_step: 1.,
+                proof_work_limit: None,
             },
             2,
         )
@@ -1185,6 +1186,7 @@ mod tests {
                 output_times: vec![0., 16.],
                 stop: 16.,
                 max_step: 16.,
+                proof_work_limit: None,
             },
             2,
         )

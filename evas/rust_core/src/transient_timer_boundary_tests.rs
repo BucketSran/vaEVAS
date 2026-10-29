@@ -50,6 +50,7 @@ fn trajectory(bad: bool) -> Trajectory {
             output_times: vec![0., 0.0625, 1.],
             stop: 1.,
             max_step: 1.,
+            proof_work_limit: None,
         },
         1,
     )

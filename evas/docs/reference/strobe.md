@@ -25,7 +25,7 @@ manifest 将同名选项放在 `transient` 内。原有请求不新增强制点�
 周期表满足 `t_k = skipstart + strobedelay + k*strobeperiod <= skipstop`。
 EVAS 对输入 binary64 值作精确有理数运算，再将每个时刻舍入一次。
 这是 EVAS 明示的生成规则，Spectre 私有运算次序仍未知。
-显式表与周期表取并集，最多 100,000 点；舍入后周期点重合时明确拒绝。
+显式表与周期表取并集，最多 1,000,000 点（`evas.limits.MAX_OUTPUT_POINTS`，内核同值，见[请求级资源上限](proof-work-limit.md)）；舍入后周期点重合时明确拒绝。
 窗口和偏移只能与周期一起使用，显式时间表不受周期窗口裁剪。
 若窗口内没有周期点且显式表为空，展开结果为空，按普通请求执行，不生成
 `strobe_evidence`。只有非空强制表要求完整回执；空表不是执行了强制求解。

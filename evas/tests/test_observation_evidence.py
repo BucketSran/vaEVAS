@@ -19,7 +19,7 @@ class ObservationEvidence(unittest.TestCase):
         evidence=result['observation_evidence']
         self.assertEqual(evidence['schema_version'],1)
         self.assertEqual(evidence['nodes'],result['nodes'])
-        self.assertEqual(evidence['effective_controls'],dict(absolute_V=2e-7,relative=3e-6,stop_s=1,max_step_s=0.25,max_step_applied=False))
+        self.assertEqual(evidence['effective_controls'],dict(absolute_V=2e-7,relative=3e-6,stop_s=1,max_step_s=0.25,max_step_applied=False,proof_work_limit=1_000_000_000))
         self.assertEqual(evidence['sample_origins'],['stateless_working_point']*3)
         self.assertTrue(evidence['initial_settled'])
         self.assertEqual([r['voltages'][result['nodes'].index('y')] for r in result['solutions']],[0,1,2])

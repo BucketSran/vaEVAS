@@ -390,7 +390,7 @@ impl Graph {
             return Ok(None);
         }
         crate::diagnostics::counter("forcing_factory_calls", 1);
-        let work = Work::default();
+        let work = Work::for_trajectory(t);
         t.charge_source_copy(&work)?;
         let shaped_inputs = t.forcing_shaped_inputs(&work)?;
         let (bytes, native_bits) = inspect_with_bits(p, &work, &BTreeSet::new(), true)?;

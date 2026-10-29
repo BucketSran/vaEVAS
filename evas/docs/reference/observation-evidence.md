@@ -12,6 +12,7 @@
 | `nodes` | 必须与响应的 `nodes` 完全相同，绑定区间列顺序 |
 | `effective_controls.absolute_V`、`relative` | 本次求解路径实际使用的已解析、已验证电压绝对容差和相对容差 |
 | `effective_controls.stop_s`、`max_step_s` | 实际 Trajectory 配置中的终止时间和最大步长设置 |
+| `effective_controls.proof_work_limit` | 本次请求实际生效的源跳变证明工作量上限，包括缺省的 1000000000；见[请求级资源上限](proof-work-limit.md)。缺少该项的旧内核响应仍被接受，仅限请求未设置上限时 |
 | `effective_controls.max_step_applied` | 此路径是否实际把 max_step 用作推进或积分步骤的上限。事件控制器推进与隐式 Picard/Taylor 历史积分为 true；无动态的逐点工作点为 false。隐式积分候选步使用 min(0.125, max_step)，实际接受步还可由验证缩小；true 不表示每个步长都等于 max_step |
 | `sample_origins` | 与 `solutions` 和 `transient.times` 等长，逐行说明产生记录的路径 |
 | `initial_settled` | 仅在首个请求时刻是 t=0 且该路径完成初始化/求解后提供 true；缺失或 null 表示没有此项证据；false 没有定义且拒绝接收 |

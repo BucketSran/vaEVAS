@@ -469,6 +469,7 @@ mod sharing_tests {
                 output_times: vec![0., 1.],
                 stop: 1.,
                 max_step: 1.,
+                proof_work_limit: None,
             },
             1,
         )

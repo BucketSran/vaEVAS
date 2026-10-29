@@ -21,6 +21,7 @@ fn fixture() -> (EventModel, Trajectory, Controller, Vec<ScheduledEvent>) {
             output_times: vec![0., 0.75, 1.],
             stop: 1.,
             max_step: 0.125,
+            proof_work_limit: None,
         },
         1,
     )
@@ -506,6 +507,7 @@ fn long_named_zero_floor_fixture() -> (EventModel, Trajectory) {
             output_times: vec![0., 1.],
             stop: 1.,
             max_step: 0.125,
+            proof_work_limit: None,
         },
         DRIVEN,
     )

@@ -1189,6 +1189,10 @@ impl Trajectory {
     pub(crate) fn analytic_work(&self) -> Option<&crate::transition_source_plan::Work> {
         self.analytic_work.as_ref()
     }
+    /// Work-slot limit of every request ledger created for this trajectory.
+    pub(crate) fn proof_work_limit(&self) -> u64 {
+        self.config.effective_proof_work_limit()
+    }
     pub(crate) fn new_with_work(
         config: TransientInputs,
         driven_count: usize,
@@ -1197,12 +1201,13 @@ impl Trajectory {
         let invalid = || {
             Error::new("invalid_inputs", "PWL sources must start at 0, strictly increase and cover stop; output times must strictly increase within [0,stop]; stop/max_step must be positive and finite")
         };
+        config.validate_proof_work_limit()?;
         if !config.stop.is_finite()
             || config.stop <= 0.0
             || !config.max_step.is_finite()
             || config.max_step <= 0.0
             || config.pwl.len() != driven_count
-            || config.strobetimes.len() > 100_000
+            || config.strobetimes.len() > crate::ir::MAX_OUTPUT_POINTS
             || config
                 .strobetimes
                 .iter()
@@ -1950,6 +1955,7 @@ mod tests {
                 output_times: vec![0., 1.],
                 stop: 1.,
                 max_step: 1.,
+                proof_work_limit: None,
             },
             1,
         )
@@ -1976,6 +1982,7 @@ mod tests {
                 output_times: vec![0.0, 2.0],
                 stop: 2.0,
                 max_step: 1.0,
+                proof_work_limit: None,
             },
             1,
         )
@@ -2477,5 +2484,52 @@ mod history_owned_point_tests {
             assert!(work.spent() >= spent);
             spent = work.spent();
         }
+    }
+}
+
+#[cfg(test)]
+mod output_point_limit_tests {
+    use super::*;
+
+    fn inputs(strobes: usize, limit: Option<u64>) -> TransientInputs {
+        // Strictly increasing forced times inside (0, stop]: k / strobes.
+        let count = strobes as f64;
+        TransientInputs {
+            analytic_sources: vec![],
+            pwl_errors_v: None,
+            strobetimes: (1..=strobes).map(|k| k as f64 / count).collect(),
+            pwl: vec![vec![[0.0, 0.0], [1.0, 1.0]]],
+            output_times: vec![0.0, 1.0],
+            stop: 1.0,
+            max_step: 1.0,
+            proof_work_limit: limit,
+        }
+    }
+
+    #[test]
+    fn strobe_count_boundary_is_the_shared_million_point_limit() {
+        // Independent boundary: exactly 1_000_000 forced points pass, one more fails.
+        assert!(Trajectory::new(inputs(1_000_000, None), 1).is_ok());
+        let error = Trajectory::new(inputs(1_000_001, None), 1).err().unwrap();
+        assert_eq!(error.kind, "invalid_inputs");
+    }
+
+    #[test]
+    fn previous_hundred_thousand_boundary_no_longer_rejects() {
+        assert!(Trajectory::new(inputs(100_001, None), 1).is_ok());
+    }
+
+    #[test]
+    fn trajectory_rejects_an_out_of_range_proof_limit() {
+        for bad in [0u64, 10_000_000_000_001] {
+            let error = Trajectory::new(inputs(2, Some(bad)), 1).err().unwrap();
+            assert_eq!(error.kind, "invalid_inputs");
+            assert!(
+                error.message.contains("proof_work_limit"),
+                "{}",
+                error.message
+            );
+        }
+        assert!(Trajectory::new(inputs(2, Some(10_000_000_000_000)), 1).is_ok());
     }
 }

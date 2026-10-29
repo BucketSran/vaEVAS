@@ -459,6 +459,7 @@ mod tests {
                 output_times: vec![0., 3.],
                 stop: 3.,
                 max_step: 1.,
+                proof_work_limit: None,
             },
             1,
         )

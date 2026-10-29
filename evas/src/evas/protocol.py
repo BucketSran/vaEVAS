@@ -3,6 +3,7 @@ import math
 
 from .errors import KernelError
 from .ir import SCHEMA_VERSION, OrTrigger, Display, Conditional, Loop
+from .limits import DEFAULT_PROOF_WORK_LIMIT, MAX_OUTPUT_POINTS, MAX_PROOF_WORK_LIMIT
 
 
 def _invalid(message):
@@ -30,8 +31,26 @@ def _bounds(value):
     return _vector(value, 2) and value[0] <= value[1]
 
 
-def _observation_evidence(response, solutions, output_times):
+def _proof_work_limit_echo(controls, requested):
+    """The echoed limit must be the requested one, or the default when none was sent.
+
+    A kernel that predates the field omits it; that is accepted only for a request
+    that did not set a limit (such a kernel rejects the field, so it never ran one).
+    """
+    if 'proof_work_limit' not in controls:
+        if requested is not None:
+            _invalid('observation evidence omits the requested proof work limit')
+        return
+    echo = controls['proof_work_limit']
+    expected = DEFAULT_PROOF_WORK_LIMIT if requested is None else requested
+    if type(echo) is not int or not 1 <= echo <= MAX_PROOF_WORK_LIMIT or echo != expected:
+        _invalid(f'invalid observation proof work limit: expected {expected}')
+
+
+def _observation_evidence(response, solutions, output_times, proof_work_limit=None):
     if 'observation_evidence' not in response:
+        if proof_work_limit is not None:
+            _invalid('kernel did not acknowledge the requested proof work limit')
         return  # Old kernels remain supported; missing evidence stays missing.
     evidence=response['observation_evidence']
     if (output_times is None or not isinstance(evidence,dict)
@@ -45,6 +64,7 @@ def _observation_evidence(response, solutions, output_times):
             or type(controls.get('max_step_applied')) is not bool
             or output_times and output_times[-1]>controls['stop_s']):
         _invalid('invalid observation effective controls')
+    _proof_work_limit_echo(controls, proof_work_limit)
     origins=evidence.get('sample_origins')
     kinds={'stateless_working_point','accepted_controller_frame','certified_causal_frame','implicit_history_evaluation','unknown'}
     if (not isinstance(origins,list) or len(origins)!=len(solutions)
@@ -185,7 +205,8 @@ def _portability_advisories(response, program, output_times):
         operators.add(record['operator'])
 
 
-def validate_response(response, program, count, output_times=None, *, strobetimes=None):
+def validate_response(response, program, count, output_times=None, *, strobetimes=None,
+                      proof_work_limit=None):
     if (not isinstance(response, dict) or type(response.get('schema_version')) is not int
             or response['schema_version'] != SCHEMA_VERSION
             or response.get('nodes') != list(program.nodes)
@@ -202,7 +223,7 @@ def validate_response(response, program, count, output_times=None, *, strobetime
             _invalid('kernel solution must contain finite voltages and residuals with the requested shape')
         if any(not _finite(row[key]) or row[key] < 0 for key in diagnostics if key in row):
             _invalid('kernel residual/correction diagnostics must be finite and nonnegative')
-    _observation_evidence(response, solutions, output_times)
+    _observation_evidence(response, solutions, output_times, proof_work_limit)
     strobe = response.get('strobe_evidence')
     if strobetimes and strobe is None:
         _invalid('kernel did not acknowledge forced solve points')
@@ -211,7 +232,7 @@ def validate_response(response, program, count, output_times=None, *, strobetime
         kinds = {'stateless_working_point', 'accepted_controller_frame', 'implicit_history_evaluation'}
         if (output_times is None or not isinstance(strobe, dict)
                 or type(strobe.get('schema_version')) is not int or strobe['schema_version'] != 1
-                or not isinstance(points, list) or not points or len(points) > 100_000
+                or not isinstance(points, list) or not points or len(points) > MAX_OUTPUT_POINTS
                 or not _vector(points, len(points)) or any(t < 0 for t in points)
                 or any(a >= b for a,b in zip(points,points[1:]))
                 or strobetimes is not None and points != strobetimes

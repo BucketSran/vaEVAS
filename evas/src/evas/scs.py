@@ -358,7 +358,7 @@ def load_scs(path: str | Path) -> ScsTestbench:
         fail(str(exc))
     count=int(Q(stop)//Q(step))
     if count+2>POINT_BUDGET:
-        fail('output point budget (100000) exceeded; increase maxstep')
+        fail(f'output point budget ({POINT_BUDGET}) exceeded; increase maxstep')
     # A mathematical interior point can round to stop. It denotes the same
     # binary64 observation, so retain the explicit endpoint exactly once.
     times=[t for i in range(count+1) if (t:=float(i*Q(step)))<stop]+[stop]
@@ -411,7 +411,7 @@ def load_scs(path: str | Path) -> ScsTestbench:
     # a pulse or replacing a piecewise-linear segment by a different line.
     times=sorted(set(times).union(t for points in waveforms.values() for t,_ in points if 0<=t<=stop))
     if len(times)>POINT_BUDGET:
-        fail('output point budget (100000) exceeded after including source corners')
+        fail(f'output point budget ({POINT_BUDGET}) exceeded after including source corners')
     saved_times=times
     if save_policy is not None:
         if (save_policy=='strobeonly' and 'strobeperiod' in strobe
@@ -426,7 +426,7 @@ def load_scs(path: str | Path) -> ScsTestbench:
             # forced point; outside the periodic window ordinary rows remain.
             saved_times=sorted(set(regular).union(forced,[stop]))
         if len(saved_times)>POINT_BUDGET:
-            fail('saved output point budget (100000) exceeded')
+            fail(f'saved output point budget ({POINT_BUDGET}) exceeded')
     models=parse_sources(sources)
     instances=[]
     for token,nodes,name,settings in devices:
@@ -520,11 +520,11 @@ def load_scs(path: str | Path) -> ScsTestbench:
     return ScsTestbench(sources,manifest,saved,metadata)
 
 
-def simulate_scs(path: str | Path, *, kernel=None, timeout=DEFAULT_TIMEOUT):
+def simulate_scs(path: str | Path, *, kernel=None, timeout=DEFAULT_TIMEOUT, proof_work_limit=None):
     bench=load_scs(path)
     program=compile_sources(bench.sources,[Instance(**i) for i in bench.manifest['instances']],
                             external_nodes=bench.manifest['transient']['sources'])
-    result=transient(program,kernel=kernel,timeout=timeout,
+    result=transient(program,kernel=kernel,timeout=timeout,proof_work_limit=proof_work_limit,
                      **bench.manifest['transient'],**bench.manifest['tolerances'])
     saved=[n for n in bench.save if n!='time' or n in result['nodes']] or [
         n for n in result['nodes'] if n not in bench.metadata.get('internal_source_nodes',())]

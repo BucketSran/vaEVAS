@@ -2,7 +2,9 @@
 from fractions import Fraction as Q
 import math
 
-POINT_BUDGET = 100_000
+from .limits import MAX_OUTPUT_POINTS
+
+POINT_BUDGET = MAX_OUTPUT_POINTS
 
 
 def _upper_float(exact, fail):
@@ -56,7 +58,7 @@ def voltage_points(settings, stop, fail):
         fail('pulse requires delay/width >= 0, rise/fall/period > 0 and rise+width+fall <= period')
     count = max(0, int((Q(stop)-delay)//period)+1)
     if 4*count+2 > POINT_BUDGET:
-        fail('pulse point budget (100000) exceeded')
+        fail(f'pulse point budget ({POINT_BUDGET}) exceeded')
     low,high = settings['val0'],settings['val1']
     points, rounding, corners = [[0.,low]], Q(0), []
     # Match the existing bounded original-curve proof capacity. Longer pulse

@@ -11,6 +11,7 @@ from .errors import KernelError
 from .manifest import finite_float, reject_constant, unique_object
 from .protocol import validate_response
 from .kernel import select_kernel
+from .limits import MAX_PROOF_WORK_LIMIT
 from .strobe import expand
 
 DEFAULT_TIMEOUT = 300.0
@@ -35,12 +36,21 @@ def transient(program: Program, sources: dict[str, list[list[float]]],
               strobetimes=None, strobeperiod=None, strobedelay=0.0, skipstart=0.0, skipstop=None,
               kernel: str | Path | None = None, vabstol: float | None = None, reltol: float | None = None,
               absolute: float | None = None, relative: float | None = None,
+              proof_work_limit: int | None = None,
               timeout: float | None = DEFAULT_TIMEOUT) -> dict:
-    """Advance typed physical inputs in Rust; observations are post-event values."""
+    """Advance typed physical inputs in Rust; observations are post-event values.
+
+    ``proof_work_limit`` raises or lowers the kernel's source-transition proof work
+    limit for this request (an integer in 1..MAX_PROOF_WORK_LIMIT). Unset keeps the
+    default and the request unchanged; the response echoes the limit in force.
+    """
+    _proof_work_limit(proof_work_limit)
     request = dict(program=program.to_dict(), driven=list(sources), samples=[],
                    transient=dict(pwl=list(sources.values()), output_times=output_times,
                                   stop=stop, max_step=max_step),
                    tolerances=_tolerances(vabstol, reltol, absolute, relative))
+    if proof_work_limit is not None:
+        request['transient']['proof_work_limit'] = proof_work_limit
     if analytic_sources is not None:
         if not isinstance(analytic_sources,dict) or set(analytic_sources)-set(sources):
             raise ValueError('analytic_sources must map driven names to typed descriptors')
@@ -74,7 +84,14 @@ def transient(program: Program, sources: dict[str, list[list[float]]],
     if points:
         request["transient"]["strobetimes"] = points
     response = _invoke(request, kernel, timeout)
-    return validate_response(response, program, len(output_times), output_times, strobetimes=points)
+    return validate_response(response, program, len(output_times), output_times, strobetimes=points,
+                             proof_work_limit=proof_work_limit)
+
+
+def _proof_work_limit(value):
+    """Only an exact integer in range is sent; anything else never reaches the kernel."""
+    if value is not None and (type(value) is not int or not 1 <= value <= MAX_PROOF_WORK_LIMIT):
+        raise ValueError(f'proof_work_limit must be an integer between 1 and {MAX_PROOF_WORK_LIMIT}')
 
 
 def _tolerances(vabstol, reltol, absolute, relative):

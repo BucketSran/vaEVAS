@@ -1069,6 +1069,7 @@ mod tests {
                 output_times: vec![0., 0.005, 0.025, 0.03, 0.5],
                 stop: 0.5,
                 max_step: 0.5,
+                proof_work_limit: None,
             },
             1,
         )
@@ -1554,6 +1555,7 @@ mod passive_seed_review {
                 strobetimes: vec![],
                 stop: 2.5,
                 max_step: 0.25,
+                proof_work_limit: None,
             },
             0,
         )

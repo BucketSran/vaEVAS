@@ -45,6 +45,7 @@ fn fixture(good: bool) -> (EventModel, Trajectory, Controller, Vec<ScheduledEven
             output_times: vec![0., 0.125, 0.2, 0.5],
             stop: 0.6,
             max_step: 0.05,
+            proof_work_limit: None,
         },
         1,
     )

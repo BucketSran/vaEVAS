@@ -62,6 +62,7 @@ fn fixture_with_near_queries(
             strobetimes: vec![],
             stop: 34e-9,
             max_step: 0.5e-9,
+            proof_work_limit: None,
         },
         2,
     )

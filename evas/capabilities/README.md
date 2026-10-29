@@ -11,6 +11,7 @@
 | [data/dispositions.json](data/dispositions.json) | 各来源项的纳入、排除或待判定及依据 |
 | [data/registry.json](data/registry.json) | 对象的稳定 ID、版本、内容绑定及依赖；待补证保留原状态 |
 | [registry.py](registry.py) | 登记校验、版本选择及资格失效传播 |
+| [requirement_links.py](requirement_links.py) | 案例到测试的关联核对：定位当前方法和 Rust 测试、要求卡绑定、能力测试容器完整性；只作导航，不授予资格 |
 | [generated/normative.md](generated/normative.md) | 从登记生成的规范处置与资格缺口视图 |
 | [data/historical-comparison.json](data/historical-comparison.json) | 固定 `f210ebd5` 的旧成绩转录，保留历史范围，不授予当前 main 资格 |
 | [catalog.py](catalog.py) | 读取历史登记的兼容接口，不再维护 Python 成绩常量 |
@@ -61,6 +62,58 @@ python3 -B -m unittest discover -s evas/capabilities -p 'test_*.py' -v
 
 默认写入和 `--check` 使用同一次登记投影。当前要求事实写入上面两个 support 文件。
 历史比较页、节点页和 `registry.json` 的 `historical_view` 保留原输入与判据身份。
+
+## 要求卡与测试关联
+
+每项能力先写要求卡，即 `data/registry.json` 中 `kind` 为 `requirement` 的手写对象，
+新测试通过 `case` 对象挂到卡上。卡、案例及其 checker、来源都放在该文件的 `objects`，
+并在 `current` 中各占一项。`generate_catalog.py` 从源码导出的 `registry.json` 原样带上
+这些手写对象和它们的 `current` 项，只改写生成对象，所以重生成目录不会丢失或改动卡片。
+
+| 卡片字段 | 内容 |
+| --- | --- |
+| `source_locations` | 定义该要求的 LRM 条款号；空表表示没有定义它的条款 |
+| `normative_basis` | 规范依据。没有 LRM 条款的实现上限写明是 EVAS 内部合同及其文档 |
+| `related_source_locations` | 相关条款：`clause`、`title`、`editions` 和 `relation`。只写条款号与必要的短引文，不复制 LRM 正文 |
+| `target_scope_applicability` | 电压域适用性：所属 `target-scope.json` 组、适用的分析和目标外说明 |
+| `allowed_behavior`、`conditions`、`observables`、`required_boundaries` | 允许行为、必测条件、观察量及边界 |
+| `budget` | 误差预算。能精确比较的写“相等”或“逐字节相同”，不另造通用容差 |
+| `independent_answers` | 每个期望值不经 EVAS 的来源：`observable`、`expected`、`derivation` |
+
+案例用下列字段关联测试：
+
+- `requirements` 用 `id`、`version`、`sha256` 绑定当前要求卡，同一引用也须出现在 `dependencies`。
+  卡片改动后旧绑定失效，案例需要重新审核绑定。
+- `tests` 列出测试定位：Python 方法为 `namespace`、`module`、`runtime_id`；Rust 测试为
+  `namespace: rust-tests`、`package`、`target_kind`、`target`、`local_id`，按目录登记的原生 listing 解析。
+- `test_scope` 列出能力测试容器：Python 模块，或 Rust 的 `module_path`。容器中每个当前测试都必须由某个案例关联。
+- `checks` 列出需要外部内核、因此不被发现的 `check_` 方法（`module`、`runtime_id`），核对按登记模块的源码定位它们；
+  名字以 `test` 开头的方法会被发现，不能放在这里。按名运行，例如 `python3 -B -m unittest <module>.<Class>.<check_name>`。
+  CI 要运行的检查由 workflow 步骤经 `scripts/run_explicit_checks.py` 按名执行：只接受登记在当前案例 `checks` 里、
+  源码中存在的 `check_` 方法，声明的前提环境变量缺失、方法改名或删除、跳过、执行次数不是恰好一次或未通过时都失败。
+  每个检查在单独的进程里运行，导入、加载、执行任一阶段提前结束（任何退出码的 SystemExit、KeyboardInterrupt 等，
+  或进程没有留下结果就退出，例如 `os._exit`）都记为未完成并失败。回执总会写出，记录方法 id、执行次数、结果、
+  模块 SHA-256 和前提变量所指文件（内核）的 SHA-256；下一步用 `scripts/verify_explicit_checks.py` 只读回执，
+  回执缺失或没有显示每个检查恰好执行 1 次且结果 ok 时 job 失败。`collect_ci_inventory.py` 把这类步骤记为
+  “CI 按名执行的检查”入口，按同样规则静态定位。
+- `dependencies` 还须含一个当前的 checker。旧样例的单个 `method` 字符串仍按 unittest id 核对。
+
+测试定位不绑定方法对象版本。方法对象的版本是整个对象的内容哈希，每次重生成都可能换版本；
+Rust 测试只出现在原生 listing 中，没有方法对象。按稳定键定位后，改卡或改关联只改手写对象，
+不使任何生成对象换版本。核对在当前目录上执行，指向不存在的方法、Rust 测试或要求卡的关联
+都会失败：
+
+```sh
+python3 -B evas/capabilities/requirement_links.py
+python3 -B evas/capabilities/requirement_links.py --base-data OLD/evas/capabilities/data --base-root OLD --require-linked
+```
+
+第二条命令还列出相对旧目录新增、但没有任何案例关联的测试，供审核判断它们是否为能力测试。
+两份目录都从 `--root` 检出的 Git 历史读取归档的 Rust listing；旧目录的 listing 读不到时命令失败，
+不把全部 Rust 测试算作新增。
+`test_requirement_links.py` 在维护检查中执行第一条核对，并固定第 1 批测试与卡片的对应关系。
+关联只是导航：卡和案例保持 `pending`，`qualification_gaps` 与 `qualified()` 的规则不变。
+support 视图在每张卡下列出内容绑定它的当前案例及其声明测试数，并标明不授予要求级支持。
 
 ## 资产、实际方法与历史来源
 

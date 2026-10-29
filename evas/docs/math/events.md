@@ -2453,7 +2453,7 @@ integer 常量，先解释为32位无符号数，计数大于等于32时结果�
 point、range与导数均保留区间；非binary PWL根用其真实根窗包围正弦，绝不创建有理正弦证明。
 phase与导数移相超出已有有限域时拒绝，不使用PWL拟合或nominal回退。
 
-请求入口创建唯一原 Work，原 limits `[128,8192,1000000000]` 不变。
+请求入口创建唯一原 Work，原 limits `[128,8192,1000000000]` 不变（第三槽可由请求字段 `proof_work_limit` 显式设置，缺省与上界见[请求级资源上限](../reference/proof-work-limit.md)；其余槽和账本语义不变）。
 `AnalyticRequest` 私有能力在完整原program/provider/driven绑定后，只准常量初始化、
 直接仿射事件赋值、独立原PWL cross或fixed timer，以及直接held输出。resolve前后必须通过
 原binding逐字相等，不能借初始化或Graph reduction改写token。所有guard原始依赖均审核，

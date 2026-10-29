@@ -77,6 +77,19 @@ DIRECT_MATH_SCRIPTS = (
     'evas/validation/check_dynamics_math.py',
     'evas/validation/check_event_conditions_math.py',
 )
+RC_CHECK = 'test_output_point_limit.LargeGridEndToEnd.check_rc_step_response_over_a_hundred_thousand_rows'
+EXPLICIT = 'python3 -B scripts/run_explicit_checks.py'
+NAMED_STEP = b'''jobs:
+  checks:
+    steps:
+      - name: Named check
+        env:
+          PYTHONPATH: evas/src
+          KERNEL_PATH: evas/rust_core/target/release/evas-kernel
+        run: |
+          cargo build --locked --release --manifest-path evas/rust_core/Cargo.toml
+          python3 -B scripts/run_explicit_checks.py --start evas/tests --require-env KERNEL_PATH --check test_a.A.check_one --check test_a.A.check_two --report runs/explicit-checks.json
+'''
 
 
 def literal_identity(entry):
@@ -182,6 +195,103 @@ class ParserTests(unittest.TestCase):
         parsed = inventory.parse_workflow(raw.replace(b'${{ secrets.UNKNOWN }}', b'${{ steps.changes.outputs.base }}'))
         self.assertIn('${{ steps.changes.outputs.base }}', parsed['entries'][0]['environment_overrides'].values())
 
+    def test_named_explicit_checks_are_recorded_as_ci_by_name_entries(self):
+        parsed = inventory.parse_workflow(NAMED_STEP)
+        self.assertEqual(parsed['entries'], [])
+        self.assertEqual(parsed['script_entries'], [])
+        self.assertEqual(parsed['explicit_check_count'], 1)
+        entry, = parsed['explicit_check_entries']
+        self.assertEqual((entry['job'], entry['step'], entry['step_if'], entry['line']), ('checks', 'Named check', None, 10))
+        self.assertEqual((entry['kind'], entry['collector'], entry['namespace']),
+                         ('ci-named-explicit-check', 'explicit-check', 'python-regression'))
+        self.assertEqual(entry['checks'], ['test_a.A.check_one', 'test_a.A.check_two'])
+        self.assertEqual(entry['required_environment'], ['KERNEL_PATH'])
+        self.assertEqual((entry['start'], entry['report']), ('evas/tests', 'runs/explicit-checks.json'))
+        self.assertEqual(entry['environment_overrides'],
+                         {'PYTHONPATH': 'evas/src', 'KERNEL_PATH': 'evas/rust_core/target/release/evas-kernel'})
+        self.assertEqual(entry['entry_id'], inventory.canonical({k: v for k, v in entry.items() if k != 'entry_id'}))
+
+    def test_unknown_or_dynamic_explicit_check_forms_fail_instead_of_guessing(self):
+        good = EXPLICIT + ' --start evas/tests --check test_a.A.check_one --report runs/r.json'
+        self.assertEqual(len(inventory.parse_workflow(('jobs:\n  a:\n    steps:\n      - run: ' + good + '\n').encode())
+                             ['explicit_check_entries']), 1)
+        for command in (
+                EXPLICIT + ' --start evas/tests --report runs/r.json',
+                EXPLICIT + ' --check test_a.A.check_one --report runs/r.json',
+                EXPLICIT + ' --start evas/tests --check test_a.A.check_one',
+                EXPLICIT + ' --start evas/tests --check "$CHECK" --report runs/r.json',
+                good + ' && true',
+                good + ' > runs/out.txt',
+                good + ' --unknown value',
+                good + ' --start other',
+                good + ' --check test_a.A.check_one',
+                good + ' --require-env',
+                good + ' --require-env BAD-NAME',
+                EXPLICIT + ' --start evas/tests --check test_a.A.test_one --report runs/r.json',
+                EXPLICIT + ' --start evas/tests --check test_a.A --report runs/r.json',
+                EXPLICIT + ' --start ../tests --check test_a.A.check_one --report runs/r.json',
+                'python3 scripts/run_explicit_checks.py --start evas/tests --check test_a.A.check_one --report runs/r.json',
+                'python3 -B ./scripts/run_explicit_checks.py --start evas/tests --check test_a.A.check_one --report runs/r.json',
+                'python -B scripts/run_explicit_checks.py --start evas/tests --check test_a.A.check_one --report runs/r.json'):
+            with self.subTest(command=command), self.assertRaises(ValueError):
+                inventory.parse_workflow(('jobs:\n  a:\n    steps:\n      - run: ' + command + '\n').encode())
+
+    def test_dynamic_environment_on_an_explicit_check_entry_fails(self):
+        raw = NAMED_STEP.replace(b'KERNEL_PATH: evas/rust_core', b'KERNEL_PATH: ${{ secrets.X }}/evas/rust_core')
+        with self.assertRaisesRegex(ValueError, 'dynamic environment'):
+            inventory.parse_workflow(raw)
+
+    def test_rust_regression_runs_the_rc_check_by_name_in_both_package_selections(self):
+        raw = (ROOT / inventory.WORKFLOW).read_bytes()
+        parsed = inventory.parse_workflow(raw)
+        entry, = parsed['explicit_check_entries']
+        self.assertEqual((entry['job'], entry['job_if']), ('rust-regression', "needs.selection.outputs.regression == 'true'"))
+        # No step condition: the check runs whether or not the package job is selected.
+        self.assertIsNone(entry['step_if'])
+        self.assertEqual(entry['checks'], [RC_CHECK])
+        self.assertEqual((entry['start'], entry['required_environment']), ('evas/tests', ['EVAS_TEST_KERNEL']))
+        self.assertEqual(entry['environment_overrides']['EVAS_TEST_KERNEL'], 'evas/rust_core/target/release/evas-kernel')
+        self.assertEqual(entry['environment_overrides']['PYTHONPATH'], 'evas/src')
+        job = raw.decode().split('\n  rust-regression:\n')[1].split('\n  regression:\n')[0]
+        self.assertNotIn('continue-on-error', job)
+        step = job.split('      - name: ' + entry['step'] + '\n')[1].split('\n      - ')[0]
+        self.assertNotIn('if:', step)
+        # The step builds its own release kernel under the job's Rust cache, so it does
+        # not depend on the source-delivery build that is skipped when package is selected.
+        build = '          cargo build --locked --release --manifest-path evas/rust_core/Cargo.toml\n'
+        self.assertIn(build, step)
+        self.assertLess(step.index(build), step.index(EXPLICIT))
+        self.assertLess(job.index('uses: ./.github/actions/rust-cache'), job.index(entry['step']))
+        self.assertNotIn('outputs.package', step)
+        self.assertEqual(sum(e['job'] == 'rust-regression' for e in parsed['entries']), 0)
+        registry = json.loads((ROOT / 'evas/capabilities/data/registry.json').read_text())
+        checks = [c for o in registry['objects'] if o.get('kind') == 'case' for c in o.get('checks', [])]
+        self.assertIn({'module': 'evas/tests/test_output_point_limit.py', 'runtime_id': RC_CHECK}, checks)
+
+    def test_a_missing_or_incomplete_rc_receipt_fails_the_rust_regression_job(self):
+        # The runner records every early end, but a separate step reads only its receipt, so a
+        # runner that ends with status 0 and no complete receipt still fails the job.
+        raw = (ROOT / inventory.WORKFLOW).read_bytes()
+        parsed = inventory.parse_workflow(raw)
+        entry, = parsed['explicit_check_entries']
+        job = raw.decode().split('\n  rust-regression:\n')[1].split('\n  regression:\n')[0]
+        steps = job.split('\n      - ')
+        index = next(i for i, step in enumerate(steps) if step.startswith('name: ' + entry['step'] + '\n'))
+        verify = steps[index + 1]
+        self.assertTrue(verify.startswith('name: Require a complete receipt for the dynamic RC check\n'), verify)
+        self.assertNotIn('if:', verify)
+        command = ('python3 -B scripts/verify_explicit_checks.py --report ' + entry['report'] + ' --check ' + RC_CHECK
+                   + ' --require-file-env EVAS_TEST_KERNEL')
+        self.assertEqual(verify.split('\n')[1], '        run: ' + command)
+        script, = [e for e in parsed['script_entries'] if e['source'] == 'scripts/verify_explicit_checks.py']
+        self.assertEqual((script['job'], script['step_if'], script['command']), ('rust-regression', None, command))
+        upload = steps[index + 2]
+        self.assertIn('name: explicit-checks\n', upload)
+        self.assertIn('if: always()\n', upload)
+        self.assertIn('path: ' + entry['report'] + '\n', upload)
+        self.assertIn('if-no-files-found: error\n', upload)
+        self.assertNotIn('if-no-files-found: warn', job)
+
     def test_capability_discovery_and_namespace_patch_are_present(self):
         value = inventory.parse_workflow((ROOT / inventory.WORKFLOW).read_bytes())
         entry = next(e for e in value['entries'] if e['start'] == 'evas/capabilities')
@@ -262,6 +372,53 @@ setattr(Main,'test_generated',factory())
 
     def collect(self, **kwargs):
         return inventory.collect(self.root, self.base / 'receipts', observer=self.observed, **kwargs)
+
+    def named_check_fixture(self, registered=True):
+        self.write('scripts/run_explicit_checks.py', (ROOT / 'scripts/run_explicit_checks.py').read_text())
+        self.write('evas/tests/test_named.py', 'import unittest\nclass Named(unittest.TestCase):\n'
+                   '    def check_one(self): raise AssertionError("check body must never run here")\n')
+        checks = [{'module': 'evas/tests/test_named.py', 'runtime_id': 'test_named.Named.check_one'}] if registered else []
+        self.write('evas/capabilities/data/registry.json', json.dumps(
+            {'objects': [{'id': 'case:named', 'version': '1', 'kind': 'case', 'checks': checks}],
+             'current': {'case:named': '1'}}))
+        workflow = (self.root / inventory.WORKFLOW).read_text().replace('  regression:\n', '''  named:
+    steps:
+      - name: Named check
+        env:
+          FIXTURE_KERNEL: kernel
+        run: python3 -B scripts/run_explicit_checks.py --start evas/tests --require-env FIXTURE_KERNEL --check test_named.Named.check_one --report runs/explicit-checks.json
+  regression:
+''')
+        self.write(inventory.WORKFLOW, workflow)
+
+    def test_named_check_entries_are_validated_statically_and_written(self):
+        self.named_check_fixture()
+        result = self.collect(mode='observe-only')
+        self.assertTrue(result['success'], result)
+        self.assertEqual(result['explicit_checks'], ['test_named.Named.check_one'])
+        written = json.loads((self.base / 'receipts/explicit-check-entrypoints.json').read_text())
+        entry, = written['entries']
+        self.assertEqual((entry['job'], entry['kind'], entry['checks']),
+                         ('named', 'ci-named-explicit-check', ['test_named.Named.check_one']))
+        check, = entry['resolved']
+        self.assertEqual((check['module'], check['line'], check['registered_by']),
+                         ('evas/tests/test_named.py', 3, ['case:named@1']))
+        self.assertEqual(check['module_sha256'], hashlib.sha256((self.root / 'evas/tests/test_named.py').read_bytes()).hexdigest())
+        self.assertIsNone(written['method_denominator'])
+        self.assertFalse(result['scientific_execution'])
+
+    def test_a_renamed_or_unregistered_named_check_fails_construction(self):
+        for name, change in (('renamed', lambda: self.write('evas/tests/test_named.py', 'import unittest\n'
+                              'class Named(unittest.TestCase):\n    def check_two(self): pass\n')),
+                             ('deleted', lambda: (self.root / 'evas/tests/test_named.py').unlink()),
+                             ('unregistered', lambda: self.named_check_fixture(registered=False))):
+            with self.subTest(name):
+                self.named_check_fixture()
+                change()
+                result = inventory.collect(self.root, self.base / ('receipts-' + name), observer=self.observed,
+                                           mode='observe-only')
+                self.assertFalse(result['success'])
+                self.assertRegex(result['errors'][0]['message'], 'CI named explicit check')
 
     def test_independent_children_construct_only_and_keep_unique_vs_instance_counts(self):
         result = self.collect(mode='observe-only')

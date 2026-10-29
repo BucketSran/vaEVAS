@@ -79,6 +79,14 @@ def response_body(value, schema, engine):
     result = copy.deepcopy(value)
     assert result.pop('schema_version') == schema
     assert result.pop('engine') == engine
+    # The C8 baseline kernel predates the echoed request proof work limit. The
+    # candidate echoes the default 1e9 for these default requests; that single
+    # key is the only mapped difference, so every schema-33 response with
+    # controls must carry it as the integer 1e9 before it is removed.
+    controls = result.get('observation_evidence', {}).get('effective_controls')
+    if schema == 33 and controls is not None:
+        strict_equal(controls.pop('proof_work_limit', None), 1_000_000_000,
+                     '/observation_evidence/effective_controls/proof_work_limit')
     return result
 
 

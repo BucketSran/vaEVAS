@@ -15,6 +15,7 @@ fn trajectory() -> Trajectory {
             output_times: vec![0., 0.5, 1., 2.5],
             stop: 2.5,
             max_step: 0.125,
+            proof_work_limit: None,
         },
         0,
     )

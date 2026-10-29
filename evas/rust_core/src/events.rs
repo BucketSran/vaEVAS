@@ -557,6 +557,9 @@ pub(crate) struct EventModel {
     pub(crate) typed_transition_targets: BTreeSet<usize>,
     pub(crate) source_copy_items: usize,
     pub(crate) mixed_cold_work: std::sync::OnceLock<crate::transition_source_plan::Work>,
+    /// Work-slot limit for any ledger this model must create lazily (the cold
+    /// owner); taken from the request trajectory, the default without one.
+    pub(crate) proof_work_limit: u64,
     pub(crate) mixed_cold_context:
         std::sync::OnceLock<std::sync::Arc<crate::transition_source_plan::ProofContext>>,
     pub(crate) source_context: Option<std::sync::Arc<crate::transition_source_plan::ProofContext>>,
@@ -832,6 +835,9 @@ impl EventModel {
         } else {
             None
         };
+        let proof_work_limit = trajectory.map_or(crate::ir::DEFAULT_PROOF_WORK_LIMIT, |t| {
+            t.proof_work_limit()
+        });
         let real_work = if program.procedures.is_empty() {
             None
         } else {
@@ -840,7 +846,9 @@ impl EventModel {
                     .as_ref()
                     .map(|c| c.borrow_work().clone())
                     .or_else(|| trajectory.and_then(|t| t.procedure_work().cloned()))
-                    .unwrap_or_default()
+                    .unwrap_or_else(|| {
+                        crate::transition_source_plan::Work::for_limit(proof_work_limit)
+                    })
             }))
         };
         let prepared_procedures = real_work
@@ -1251,6 +1259,7 @@ impl EventModel {
             source_copy_items: admission.copy_items,
             mixed_cold_work: real_work
                 .map_or_else(std::sync::OnceLock::new, std::sync::OnceLock::from),
+            proof_work_limit,
             mixed_cold_context: std::sync::OnceLock::new(),
             source_context,
             conditions,

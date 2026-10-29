@@ -2780,6 +2780,7 @@ mod tests {
                 output_times: vec![0.0, 0.5],
                 stop: 0.5,
                 max_step: 0.5,
+                proof_work_limit: None,
             },
             0,
         )
@@ -2830,6 +2831,7 @@ mod tests {
                 output_times: vec![0.0, 0.125],
                 stop: 0.125,
                 max_step: 0.125,
+                proof_work_limit: None,
             },
             0,
         )
@@ -3032,6 +3034,7 @@ mod tests {
                 output_times: vec![0., 0.125],
                 stop: 0.125,
                 max_step: 0.125,
+                proof_work_limit: None,
             },
             1,
         )
@@ -3398,6 +3401,7 @@ mod tests {
                     output_times: vec![0., 0.125],
                     stop: 0.125,
                     max_step: 0.125,
+                    proof_work_limit: None,
                 },
                 1,
             )
@@ -3581,6 +3585,7 @@ mod tests {
                 output_times: vec![0.0, 1.0],
                 stop: 1.0,
                 max_step: 1.0,
+                proof_work_limit: None,
             },
             1,
         )

@@ -16,6 +16,18 @@ MAX_PARAMETER_DEPTH = 64
 # Leave room for the enclosing request under serde_json's depth limit of 128.
 MAX_IR_DEPTH = 96
 MAX_IR_ITEMS = 100_000
+# Rows or forced solve points one transient request may carry: the SCS output grid,
+# strobe expansion and the response check share it, and rust_core/ir defines the
+# same value (MAX_OUTPUT_POINTS) for the kernel's forced-point check. Large grids
+# and ledgers need a caller-chosen runtime timeout (DEFAULT_TIMEOUT is 300 s).
+MAX_OUTPUT_POINTS = 1_000_000
+# Source-transition proof work (the third slot of the kernel's request ledger).
+# The default is the value every request had before the limit was requestable.
+# The hard bound is an implementation-budget guard against a mistyped request,
+# not a correctness criterion and not a performance promise; it matches
+# rust_core/ir MAX_PROOF_WORK_LIMIT.
+DEFAULT_PROOF_WORK_LIMIT = 1_000_000_000
+MAX_PROOF_WORK_LIMIT = 10_000_000_000_000
 
 
 def _program_validation_marker(value):

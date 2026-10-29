@@ -3179,7 +3179,9 @@ impl Operators {
                         program,
                         trajectory,
                         driven,
-                        trajectory.procedure_work().cloned().unwrap_or_default(),
+                        trajectory.procedure_work().cloned().unwrap_or_else(|| {
+                            crate::transition_source_plan::Work::for_trajectory(trajectory)
+                        }),
                     )
                 })
                 .transpose()?
@@ -3211,7 +3213,11 @@ impl Operators {
             w.debit(2, 1)?;
             w.clone()
         } else {
-            crate::transition_source_plan::Work::limited([8192, 8192, 1_000_000_000])
+            crate::transition_source_plan::Work::limited([
+                8192,
+                8192,
+                trajectory.proof_work_limit(),
+            ])
         };
         let mut entries = Vec::new();
         let mut selected_slew_count = 0usize;
@@ -5688,6 +5694,7 @@ mod phase_operator_tests {
                 output_times: vec![0., 3.],
                 stop: 3.,
                 max_step: 3.,
+                proof_work_limit: None,
             },
             1,
         )
@@ -5740,6 +5747,7 @@ mod phase_operator_tests {
                 output_times: vec![0., 3.],
                 stop: 3.,
                 max_step: 3.,
+                proof_work_limit: None,
             },
             1,
         )
@@ -5840,6 +5848,7 @@ mod phase_operator_tests {
                 output_times: vec![0., 3.],
                 stop: 3.,
                 max_step: 3.,
+                proof_work_limit: None,
             },
             1,
         )
@@ -5900,6 +5909,7 @@ mod phase_operator_tests {
                     output_times: vec![0.0, 0.5, 2.0],
                     stop: 2.0,
                     max_step: 2.0,
+                    proof_work_limit: None,
                 },
                 1,
             )
@@ -6000,6 +6010,7 @@ mod phase_operator_tests {
                 output_times: vec![0.0, 1.0, 4.0],
                 stop: 4.0,
                 max_step: 4.0,
+                proof_work_limit: None,
             },
             1,
         )
@@ -6145,6 +6156,7 @@ mod exact_deadline_review_tests {
                 output_times: vec![0., 3e-6],
                 stop: 3e-6,
                 max_step: 3.125e-8,
+                proof_work_limit: None,
             },
             0,
         )
@@ -6247,6 +6259,7 @@ mod exact_deadline_review_tests {
                 output_times: vec![0., 2.],
                 stop: 2.,
                 max_step: 0.125,
+                proof_work_limit: None,
             },
             0,
         )
@@ -6455,6 +6468,7 @@ mod held_nested_select_audit_tests {
                 output_times: vec![0., 3.25],
                 stop: 3.25,
                 max_step: 0.01,
+                proof_work_limit: None,
             },
             0,
         )
@@ -6532,6 +6546,7 @@ mod held_nested_select_audit_tests {
                 output_times: vec![0., 4.],
                 stop: 4.,
                 max_step: 4.,
+                proof_work_limit: None,
             },
             1,
         )
@@ -6589,6 +6604,7 @@ mod deferred_deadline_proof_controls {
                 output_times: vec![0., 2.],
                 stop: 2.,
                 max_step: 0.125,
+                proof_work_limit: None,
             },
             0,
         )
@@ -6704,6 +6720,7 @@ mod independent_proven_order_controls {
                 output_times: vec![0., 1.5],
                 stop: 1.5,
                 max_step: 0.125,
+                proof_work_limit: None,
             },
             0,
         )
