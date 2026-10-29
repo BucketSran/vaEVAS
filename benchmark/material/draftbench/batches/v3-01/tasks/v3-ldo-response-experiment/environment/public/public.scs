@@ -18,7 +18,7 @@ RESR vout vcap 50m
 COUT vcap 0 1e-06
 simulator lang=spectre
 XLOAD (vout load_cmd load_current) fixed_load
-VOBSOUT (vout vout_read) vsource dc=0
+VOBSOUT (vout vout_read) vsource type=dc dc=0
 XM (vout_read line_cmd load_cmd stage done startup_peak_mv startup_offset_mv startup_recovery_us startup_status line_up_peak_mv line_up_offset_mv line_up_recovery_us line_up_status line_down_peak_mv line_down_offset_mv line_down_recovery_us line_down_status load_up_peak_mv load_up_offset_mv load_up_recovery_us load_up_status load_down_peak_mv load_down_offset_mv load_down_recovery_us load_down_status) ldo_experiment ramp_end=2.1e-05
 tran tran stop=240u maxstep=5n errpreset=conservative
 save VOBSOUT:p vout vin load_current line_cmd load_cmd stage done startup_peak_mv startup_offset_mv startup_recovery_us startup_status line_up_peak_mv line_up_offset_mv line_up_recovery_us line_up_status line_down_peak_mv line_down_offset_mv line_down_recovery_us line_down_status load_up_peak_mv load_up_offset_mv load_up_recovery_us load_up_status load_down_peak_mv load_down_offset_mv load_down_recovery_us load_down_status

@@ -16,8 +16,8 @@ VLOOP gate_drive gate 0
 RESR vout vcap 50m
 COUT vcap 0 1e-06
 simulator lang=spectre
-VOBSIN (vin vin_read) vsource dc=0
-VOBSOUT (vout vout_read) vsource dc=0
+VOBSIN (vin vin_read) vsource type=dc dc=0
+VOBSOUT (vout vout_read) vsource type=dc dc=0
 XM (vin_read vout_read t90_us overshoot_mv settle_us reached settled status done) ldo_startup_meter ramp_end=2.1e-05 window=7e-05
 tran tran stop=7.1e-05 maxstep=5n errpreset=conservative
 save VOBSIN:p VOBSOUT:p vin vout t90_us overshoot_mv settle_us reached settled status done
