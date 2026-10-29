@@ -1,0 +1,96 @@
+{
+ "task": "v3-filter-ctle",
+ "cases": [
+  "ctle-0",
+  "ctle-1",
+  "ctle-endpoints"
+ ],
+ "public_cases": [
+  {
+   "name": "ctle-0",
+   "same_as_private": "ctle-0"
+  }
+ ],
+ "checker_failure": "y more than 6 mV from the checker's RK4 state solution on the saved u at any saved row, or a complex response error y/u above 0.03*max(1,|H|) at 500 Hz, 2 kHz, 8 kHz or 16 kHz over t >= stop/2 (tests/v2_next_filter.py:55-66)",
+ "semantics": "ctle-0 uses the default parameters with zero initial states; ctle-1 overrides every parameter and both initial states. A candidate that ignores overrides or initial states is indistinguishable from the reference on ctle-0 and on the public case, which is identical to ctle-0. ctle-endpoints (first30-fix-r4) takes legal-domain endpoints fz = fp1 = 2000 Hz, fp2 = 24000 Hz, gain 0.5, x1init 0.1 and x2init -0.1, written in the instance line exactly as the instruction writes the range ends (the reference declares no `from` range). With fz = fp1 the zero cancels the first pole in H(s), while x1 still relaxes at fp1 from x1init, so the time response is not a one-pole filter; zero_normalized_to_first_pole gives y = gain*x1 there. Legacy EVAS cannot run sine sources, so the ctle-endpoints expectations come from analytic synthetic responses only and wait for Spectre.",
+ "conditions": {},
+ "candidates": [
+  {
+   "name": "hz_as_radians",
+   "group": "wrong",
+   "must_reject": [
+    "ctle-0",
+    "ctle-1",
+    "ctle-endpoints"
+   ],
+   "must_accept": [],
+   "public_must_reject": [
+    "ctle-0"
+   ],
+   "public_must_accept": [],
+   "author_synthetic_control": "model-hz_as_radians"
+  },
+  {
+   "name": "zero_initval",
+   "group": "wrong",
+   "must_reject": [
+    "ctle-1",
+    "ctle-endpoints"
+   ],
+   "must_accept": [
+    "ctle-0"
+   ],
+   "public_must_reject": [],
+   "public_must_accept": [
+    "ctle-0"
+   ],
+   "author_synthetic_control": "model-zero_initval"
+  },
+  {
+   "name": "corner_frequencies_hardcoded",
+   "group": "wrong",
+   "must_reject": [
+    "ctle-1",
+    "ctle-endpoints"
+   ],
+   "must_accept": [
+    "ctle-0"
+   ],
+   "public_must_reject": [],
+   "public_must_accept": [
+    "ctle-0"
+   ],
+   "author_synthetic_control": "model-corner_frequencies_hardcoded"
+  },
+  {
+   "name": "zero_normalized_to_first_pole",
+   "group": "wrong",
+   "must_reject": [
+    "ctle-0",
+    "ctle-1",
+    "ctle-endpoints"
+   ],
+   "must_accept": [],
+   "public_must_reject": [
+    "ctle-0"
+   ],
+   "public_must_accept": [],
+   "author_synthetic_control": "model-zero_normalized_to_first_pole"
+  },
+  {
+   "name": "alt_difference_state",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "ctle-0",
+    "ctle-1",
+    "ctle-endpoints"
+   ],
+   "public_must_reject": [],
+   "public_must_accept": [
+    "ctle-0"
+   ],
+   "author_synthetic_control": "model-alt_difference_state"
+  }
+ ]
+}

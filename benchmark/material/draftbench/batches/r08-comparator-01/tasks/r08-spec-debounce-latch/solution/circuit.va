@@ -1,0 +1,55 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module debounce_latch(sig, rst_n, out);
+    input sig, rst_n;
+    output out;
+    electrical sig, rst_n, out;
+
+    parameter real vth = 0.45 from [0.2:0.7];
+    parameter real vdd = 0.9 from [0.5:1.5];
+    parameter real stable = 12n from [2n:1u];
+    parameter real tr = 500p from [10p:1n];
+
+    integer level;      // ideal output level: 1 for vdd, 0 for 0 V
+    integer running;    // 1 while a qualification is in progress
+    real t_done;        // completion instant of the latest qualification
+
+    analog begin
+        @(initial_step) begin
+            level = 0;
+            running = 0;
+            t_done = -1.0;
+        end
+
+        // A falling decision or an asserted reset clears the output and voids the
+        // qualification in progress. Its timer instant then passes without effect.
+        @(cross(V(sig) - vth, -1)) begin
+            level = 0;
+            running = 0;
+        end
+        @(cross(V(rst_n) - vth, -1)) begin
+            level = 0;
+            running = 0;
+        end
+
+        // Only a rising decision while reset is released starts a qualification,
+        // measured from this crossing. A new t_done reschedules the timer (LRM 5.10.3.3).
+        @(cross(V(sig) - vth, +1)) begin
+            if (V(rst_n) > vth) begin
+                running = 1;
+                t_done = $abstime + stable;
+            end
+        end
+
+        // Completion. The cancel events above come first in the block, so a cancel
+        // evaluated at the completion instant wins.
+        @(timer(t_done)) begin
+            if (running && V(sig) > vth && V(rst_n) > vth)
+                level = 1;
+            running = 0;
+        end
+
+        V(out) <+ transition(level ? vdd : 0.0, 0.0, tr, tr);
+    end
+endmodule

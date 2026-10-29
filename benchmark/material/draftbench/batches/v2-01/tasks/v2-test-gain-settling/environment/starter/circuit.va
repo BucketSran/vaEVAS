@@ -1,0 +1,8 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module gain_settling_meter(vin,static_out,dynamic_out,launch,gain,gain_valid,settling_ns,settled,status);
+inout vin,static_out,dynamic_out,launch,gain,gain_valid,settling_ns,settled,status;
+electrical vin,static_out,dynamic_out,launch,gain,gain_valid,settling_ns,settled,status;
+// TODO: implement the public contract.
+endmodule

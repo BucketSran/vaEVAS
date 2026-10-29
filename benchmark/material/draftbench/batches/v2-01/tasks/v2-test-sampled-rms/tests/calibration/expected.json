@@ -1,0 +1,38 @@
+{
+ "task": "v2-test-sampled-rms",
+ "cases": [
+  "terminal-normal-reset-disable",
+  "terminal-dc-input",
+  "terminal-different-waveform",
+  "terminal-fine-grid-10ps"
+ ],
+ "checker_failure": "kind=report: a scored report value (saved point, or interpolated interval midpoint) more than its tolerance from the expected value (tests/v2_testing.py:58-74)",
+ "semantics": "F01 scoring start, user-confirmed 2026-10-28 (option A): tests/v2_testing.py pieces() (:58-74) leaves out points no more than 320 ps from an event or from the start or end of the transient, skips intervals no longer than 640 ps and scores the midpoint of every longer interval; the events are every rising clk and reset crossing through 0.45 V (:100-101, :118). The instruction states this rule and the checker is unchanged. Candidates differ from solution/ only in a report delay. A report that changes more than 320 ps before its event is acausal and exists only as the synthetic control early-report--340ps. On the 40 ps grid of the three earlier cases the last scored row before each sampling edge lies exactly 340 ps before it, so early-report--340ps is a tie at that row and passes there; diagnostic-early-report--360ps is rejected. terminal-fine-grid-10ps (f01-r2, review F01B-03) fixes the saved rows to a 10 ps strobe grid (strobeperiod=10p, strobeoutput=strobeonly) with every event on a grid point, so the row event-330 ps lies 10 ps inside the early window (event-340 ps, event-320 ps) of every report change and early-report--340ps is rejected there.",
+ "conditions": {},
+ "candidates": [
+  {
+   "name": "late_report_delay_340ps",
+   "group": "wrong",
+   "must_reject": [
+    "terminal-normal-reset-disable",
+    "terminal-dc-input",
+    "terminal-different-waveform",
+    "terminal-fine-grid-10ps"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "late-report-+340ps"
+  },
+  {
+   "name": "inwindow_report_delay_200ps",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "terminal-normal-reset-disable",
+    "terminal-dc-input",
+    "terminal-different-waveform",
+    "terminal-fine-grid-10ps"
+   ],
+   "author_synthetic_control": "inwindow-report-+200ps"
+  }
+ ]
+}

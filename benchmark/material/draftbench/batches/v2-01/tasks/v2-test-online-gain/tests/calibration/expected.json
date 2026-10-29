@@ -1,0 +1,50 @@
+{
+ "task": "v2-test-online-gain",
+ "cases": [
+  "terminal-normal",
+  "terminal-low-performance-dut",
+  "terminal-invalid-final-span"
+ ],
+ "checker_failure": "kind=report: a scored gain_out or valid value (saved point, or interpolated interval midpoint) more than 2 mV from the expected value (tests/v2_testing.py:58-74)",
+ "semantics": "F01 timing guard, user-confirmed 2026-10-28 (option A): tests/v2_testing.py pieces() leaves out points no more than 350 ps from an event or from the start or end of the transient, skips intervals no longer than 700 ps and scores the midpoint of every longer interval; the event table (gain(), lines 158-179) is every sample instant k*sample_period with k*sample_period >= start_time, including start_time itself, and every rising begin_round crossing through 0.5 V. The instruction states this rule and the checker is unchanged. Candidates differ from solution/ only in a report delay or in the comparison that admits the start sample. A report that changes more than 350 ps before its event is acausal and exists only as the synthetic control F01-early-report--370ps; the accepted pre-event margin is the synthetic control F01-inwindow-early--330ps.",
+ "conditions": {
+  "strict_start_no_margin": "not a calibration candidate since author-r2 (coordinator 2026-10-29): a backend-dependent probe that mutants.py writes to probe/, with no must_reject or must_accept entry. It is the c485de86 reference byte for byte ($abstime >= start_time, no margin), so the 20 ns sample counts only where the backend's time point for the 20 ns timer compares at or above start_time. Legacy EVAS 0.8.7 (legacy/EVAS 6cb6fa7a, development evidence): the instant compares below, the 20 ns sample is dropped and the probe fails terminal-normal and terminal-low-performance-dut and the two matching public cases (4 of 6). Spectre 21.1 (B2PC rec-02, spectre-B2PC-rec-02-v1（结果包 sha256 a629d67a6220fbb5…）, accepted 2026-10-29): the time point after 19.9 ns is 2.000000000000002e-08 s, about 2e-23 s above 20 ns, the sample counts and the probe passes all three private cases, as the reference does; the three public cases also pass (B2PC opt-01, spectre-B2PC-opt-01-v1（结果包 sha256 3e80d95b2f27000a…）, accepted 2026-10-29, observation jobs). The reference keeps the user-approved half-period margin, so it counts the 20 ns sample under both readings."
+ },
+ "candidates": [
+  {
+   "name": "late_report_delay_370ps",
+   "group": "wrong",
+   "must_reject": [
+    "terminal-normal",
+    "terminal-low-performance-dut"
+   ],
+   "must_accept": [
+    "terminal-invalid-final-span"
+   ],
+   "author_synthetic_control": "F01-late-report-+370ps"
+  },
+  {
+   "name": "inwindow_report_delay_100ps",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "terminal-normal",
+    "terminal-low-performance-dut",
+    "terminal-invalid-final-span"
+   ],
+   "author_synthetic_control": "F01-inwindow-report-+100ps"
+  },
+  {
+   "name": "skip_start_sample",
+   "group": "wrong",
+   "must_reject": [
+    "terminal-normal",
+    "terminal-low-performance-dut"
+   ],
+   "must_accept": [
+    "terminal-invalid-final-span"
+   ],
+   "author_synthetic_control": "fail-skip-start"
+  }
+ ]
+}

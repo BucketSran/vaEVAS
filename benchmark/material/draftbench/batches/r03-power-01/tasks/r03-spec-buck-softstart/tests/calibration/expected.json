@@ -1,0 +1,432 @@
+{
+ "task": "r03-spec-buck-softstart",
+ "cases": [
+  "base",
+  "vref-step-down",
+  "vss-offset",
+  "vth-tr-override",
+  "duty-endpoints"
+ ],
+ "checker_failure": "an output sample (pwm, duty_metric, soft_ref or pgood) more than atol (2 mV) from the state expected after the last sample event, at a scored point",
+ "semantics": "Verilog-A LRM 2.4: cross() 5.10.3.1 and transition() 4.5.8; the states change only in the clk event. Expectations only; every entry is pending until Spectre calibration",
+ "conditions": {
+  "late_arrival_1p3tr": "left out of both lists in base, vref-step-down, vss-offset, duty-endpoints: their sample events lie on the output grid, so the only scored row before a 1.3*tr arrival is the row exactly 1.25*tr after the event and the verdict rests on rounding; vth-tr-override places a row 127.5 ps after every event, inside (1.25*tr, 1.3*tr)"
+ },
+ "candidates": [
+  {
+   "name": "duty_up_new_soft",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "vref-step-down",
+    "vss-offset",
+    "vth-tr-override",
+    "duty-endpoints"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "duty-up-vs-new-soft"
+  },
+  {
+   "name": "duty_up_vs_vref",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "vref-step-down",
+    "vss-offset",
+    "vth-tr-override",
+    "duty-endpoints"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "duty-up-vs-vref"
+  },
+  {
+   "name": "soft_overshoot",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "vref-step-down",
+    "vss-offset",
+    "vth-tr-override",
+    "duty-endpoints"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "soft-overshoot"
+  },
+  {
+   "name": "soft_jumps_down",
+   "group": "wrong",
+   "must_reject": [
+    "vref-step-down"
+   ],
+   "must_accept": [
+    "base",
+    "vss-offset",
+    "vth-tr-override",
+    "duty-endpoints"
+   ],
+   "author_synthetic_control": "soft-jumps-down"
+  },
+  {
+   "name": "duty_step_25m",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "vref-step-down",
+    "vss-offset",
+    "vth-tr-override",
+    "duty-endpoints"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "duty-step-25mV"
+  },
+  {
+   "name": "clamp_before_update",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "vref-step-down",
+    "vss-offset",
+    "vth-tr-override",
+    "duty-endpoints"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "clamp-before-update"
+  },
+  {
+   "name": "duty_clear_to_min",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "vref-step-down",
+    "vss-offset",
+    "vth-tr-override"
+   ],
+   "must_accept": [
+    "duty-endpoints"
+   ],
+   "author_synthetic_control": "duty-clear-to-duty-min"
+  },
+  {
+   "name": "duty_metric_cleared_to_vss",
+   "group": "wrong",
+   "must_reject": [
+    "vss-offset"
+   ],
+   "must_accept": [
+    "base",
+    "vref-step-down",
+    "vth-tr-override",
+    "duty-endpoints"
+   ],
+   "author_synthetic_control": "duty-metric-cleared-to-vss"
+  },
+  {
+   "name": "pwm_old_carrier",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "vref-step-down",
+    "vss-offset",
+    "vth-tr-override",
+    "duty-endpoints"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "pwm-old-carrier"
+  },
+  {
+   "name": "pwm_old_duty",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "vref-step-down"
+   ],
+   "must_accept": [
+    "vss-offset",
+    "vth-tr-override",
+    "duty-endpoints"
+   ],
+   "author_synthetic_control": "pwm-old-duty"
+  },
+  {
+   "name": "pwm_less_or_equal",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "vref-step-down",
+    "vss-offset",
+    "vth-tr-override",
+    "duty-endpoints"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "pwm-less-or-equal"
+  },
+  {
+   "name": "pwm_duty_latched_per_cycle",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "vref-step-down",
+    "vth-tr-override",
+    "duty-endpoints"
+   ],
+   "must_accept": [
+    "vss-offset"
+   ],
+   "author_synthetic_control": "pwm-duty-fixed-per-carrier-cycle"
+  },
+  {
+   "name": "carrier_kept_across_clear",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "vref-step-down",
+    "vss-offset",
+    "duty-endpoints"
+   ],
+   "must_accept": [
+    "vth-tr-override"
+   ],
+   "author_synthetic_control": "carrier-phase-kept-across-clear"
+  },
+  {
+   "name": "pgood_count_kept_across_clear",
+   "group": "wrong",
+   "must_reject": [
+    "vss-offset",
+    "vth-tr-override"
+   ],
+   "must_accept": [
+    "base",
+    "vref-step-down",
+    "duty-endpoints"
+   ],
+   "author_synthetic_control": "pgood-count-kept-across-clear"
+  },
+  {
+   "name": "enable_ignored",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "vref-step-down",
+    "vss-offset",
+    "vth-tr-override",
+    "duty-endpoints"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "enable-ignored"
+  },
+  {
+   "name": "asynchronous_clear",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "vref-step-down",
+    "vss-offset",
+    "vth-tr-override",
+    "duty-endpoints"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "asynchronous-clear"
+  },
+  {
+   "name": "pgood_sticky",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "vref-step-down",
+    "vss-offset"
+   ],
+   "must_accept": [
+    "vth-tr-override",
+    "duty-endpoints"
+   ],
+   "author_synthetic_control": "pgood-sticky"
+  },
+  {
+   "name": "pgood_after_2",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "vref-step-down",
+    "vss-offset",
+    "vth-tr-override"
+   ],
+   "must_accept": [
+    "duty-endpoints"
+   ],
+   "author_synthetic_control": "pgood-after-2"
+  },
+  {
+   "name": "pgood_after_4",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "vref-step-down",
+    "vss-offset",
+    "vth-tr-override"
+   ],
+   "must_accept": [
+    "duty-endpoints"
+   ],
+   "author_synthetic_control": "pgood-after-4"
+  },
+  {
+   "name": "pgood_from_soft_done",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "vref-step-down",
+    "vss-offset",
+    "vth-tr-override",
+    "duty-endpoints"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "pgood-from-soft-start-done"
+  },
+  {
+   "name": "pgood_vfb_vs_soft",
+   "group": "wrong",
+   "must_reject": [
+    "vss-offset",
+    "vth-tr-override"
+   ],
+   "must_accept": [
+    "base",
+    "vref-step-down",
+    "duty-endpoints"
+   ],
+   "author_synthetic_control": "pgood-vfb-vs-soft-ref"
+  },
+  {
+   "name": "falling_edge_sample",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "vref-step-down",
+    "vss-offset",
+    "vth-tr-override",
+    "duty-endpoints"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "falling-edge-sample"
+  },
+  {
+   "name": "one_edge_latency",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "vref-step-down",
+    "vss-offset",
+    "vth-tr-override",
+    "duty-endpoints"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "one-edge-latency"
+  },
+  {
+   "name": "late_arrival_1p3tr",
+   "group": "wrong",
+   "must_reject": [
+    "vth-tr-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "late-1.3tr"
+  },
+  {
+   "name": "fixed_vth",
+   "group": "wrong",
+   "must_reject": [
+    "vth-tr-override"
+   ],
+   "must_accept": [
+    "base",
+    "vref-step-down",
+    "vss-offset",
+    "duty-endpoints"
+   ],
+   "author_synthetic_control": "fixed-vth-0.45"
+  },
+  {
+   "name": "fixed_tr",
+   "group": "wrong",
+   "must_reject": [
+    "vth-tr-override"
+   ],
+   "must_accept": [
+    "base",
+    "vref-step-down",
+    "vss-offset",
+    "duty-endpoints"
+   ],
+   "author_synthetic_control": "fixed-tr-200p"
+  },
+  {
+   "name": "endpoint_limits",
+   "group": "wrong",
+   "must_reject": [
+    "duty-endpoints"
+   ],
+   "must_accept": [
+    "base",
+    "vref-step-down",
+    "vss-offset",
+    "vth-tr-override"
+   ],
+   "author_synthetic_control": "endpoints-forbidden"
+  },
+  {
+   "name": "min_on_time_at_wrap",
+   "group": "wrong",
+   "must_reject": [
+    "duty-endpoints"
+   ],
+   "must_accept": [
+    "base",
+    "vref-step-down",
+    "vss-offset",
+    "vth-tr-override"
+   ],
+   "author_synthetic_control": "min-on-time-at-wrap"
+  },
+  {
+   "name": "forced_off_state",
+   "group": "wrong",
+   "must_reject": [
+    "duty-endpoints"
+   ],
+   "must_accept": [
+    "base",
+    "vref-step-down",
+    "vss-offset",
+    "vth-tr-override"
+   ],
+   "author_synthetic_control": "forced-off-state"
+  },
+  {
+   "name": "alt_integer_duty",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "base",
+    "vref-step-down",
+    "vss-offset",
+    "vth-tr-override",
+    "duty-endpoints"
+   ],
+   "author_synthetic_control": "ideal"
+  },
+  {
+   "name": "alt_fast_output",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "base",
+    "vref-step-down",
+    "vss-offset",
+    "vth-tr-override",
+    "duty-endpoints"
+   ],
+   "author_synthetic_control": "alt-smoothstep-transition"
+  }
+ ]
+}

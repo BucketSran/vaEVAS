@@ -1,0 +1,10 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module gain_estimator(VDD,VSS,vinp,vinn,voutp,voutn,gain_out,valid,begin_round);
+input vinp,vinn,voutp,voutn,begin_round;
+output gain_out,valid;
+inout VDD,VSS;
+electrical VDD,VSS,vinp,vinn,voutp,voutn,gain_out,valid,begin_round;
+// TODO: implement the public contract.
+endmodule

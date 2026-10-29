@@ -1,12 +1,20 @@
 schema_version = "1.4"
+artifacts = ["/app/circuit.va", "/app/uvlo.va", "/app/release.va", "/app/enable.va", "/app/downstream.va"]
 [metadata]
 name = "v2-repair-uvlo-reset-chain"
 category = "verilog-a"
 engineering_action = "diagnosis-repair"
 source_group = "original-uvlo-chain-case0009"
+circuit_route = "all-va"
+starter_kind = "existing-model"
+stage = "implementation"
+review_status = "pending"
+pending = ["grading", "runtime"]
+
 [agent]
 timeout_sec = 1200
 [verifier]
+environment_mode = "separate"
 timeout_sec = 600
 [environment]
 build_timeout_sec = 600

@@ -1,0 +1,37 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+// Sample-and-hold whose held value leaks on a fixed update grid that starts at t = 0.
+// A rising sample crossing captures vin; every leak_period the held value is
+// multiplied by decay; a rising rst crossing clears it at once.
+module leaky_hold(sample, rst, vin, vout);
+    input sample, rst, vin;
+    output vout;
+    electrical sample, rst, vin, vout;
+
+    parameter real vth = 0.45 from [0.1:0.8];
+    parameter real decay = 0.985 from [0.5:1];
+    parameter real leak_period = 1n from [0.5n:10n];
+    parameter real tr = 500p from [10p:1n];
+
+    real held;
+
+    analog begin
+        @(initial_step)
+            held = 0.0;
+
+        // Leak updates at k*leak_period; captures and resets do not move this grid.
+        @(timer(0, leak_period))
+            held = held * decay;
+
+        // Asynchronous clear. Captures stay blocked while rst is high.
+        @(cross(V(rst) - vth, +1))
+            held = 0.0;
+
+        @(cross(V(sample) - vth, +1))
+            if (V(rst) <= vth)
+                held = V(vin);
+
+        V(vout) <+ transition(held, 0, tr, tr);
+    end
+endmodule

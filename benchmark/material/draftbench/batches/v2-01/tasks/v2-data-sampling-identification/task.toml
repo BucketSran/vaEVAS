@@ -1,4 +1,5 @@
 schema_version = "1.4"
+artifacts = ["/app/circuit.va"]
 [metadata]
 name = "v2-data-sampling-identification"
 category = "verilog-a"
@@ -7,9 +8,16 @@ source_group = "jku-sampling-stage"
 context_level = "bounded-work-unit"
 data_provenance = "transistor_simulation"
 backend = "spectre"
+circuit_route = "device-circuit"
+starter_kind = "new-model"
+stage = "implementation"
+review_status = "pending"
+pending = ["grading", "runtime"]
+
 [agent]
 timeout_sec = 1800
 [verifier]
+environment_mode = "separate"
 timeout_sec = 1200
 [environment]
 build_timeout_sec = 600

@@ -13,7 +13,7 @@ idx=min(3,floor($abstime/slot)); tloc=$abstime-idx*slot;
 freq=f0; if(idx==1) freq=f1; else if(idx==2) freq=f2; else if(idx==3) freq=f3;
 amp=(idx==2)?0.0001:amplitude; theta=2*`M_PI*freq*tloc;
 V(drive) <+ amp*sin(theta);
-active=(tloc>=settle && tloc<=settle+window);
+active=(tloc>=settle && tloc<=settle+window+1e-6*window);
 V(ai) <+ idt(V(drive)*sin(theta)*active,0,!active);
 V(bi) <+ idt(V(drive)*cos(theta)*active,0,!active);
 V(ao) <+ idt(V(sense)*sin(theta)*active,0,!active);

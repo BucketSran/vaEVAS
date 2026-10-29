@@ -1,0 +1,346 @@
+{
+ "task": "r01-spec-aperture-delay",
+ "cases": [
+  "contract-base",
+  "rails-and-supplies",
+  "parameter-override",
+  "short-aperture-burst",
+  "initial-high-clock",
+  "interrupted-transitions",
+  "early-first-capture"
+ ],
+ "checker_failure": "initial_hold or hold: a hold sample more than 2 mV from every value of the accepted range; transition_bound: a transition sample outside the old and new ranges by more than 2 mV; transition_not_monotone: a reversal by more than 2 mV after c_k + tau_t; transition_direction: monotone movement away from the new accepted range",
+ "semantics": "Verilog-A LRM 2.4: cross() 5.10.3.1, above() 5.10.3.2 (fires at initialization when its expression is positive), timer() 5.10.3.3, transition() 4.5.8 (an interrupted transition keeps the slope that completes it from its origin). Expectations only; every entry is pending until Spectre calibration",
+ "conditions": {
+  "above_trigger": "rejected in initial-high-clock because above() generates an event at initialization when V(clk) - vth > 0 (LRM 2.4 5.10.3.2)",
+  "alt_delayed_clock": "accepted provided absdelay() delays clk by exactly taperture, so the delayed rising crossing is the aperture instant; legacy EVAS 0.8.7 does not support absdelay()"
+ },
+ "candidates": [
+  {
+   "name": "edge_read_delayed_output",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "rails-and-supplies",
+    "parameter-override",
+    "short-aperture-burst",
+    "initial-high-clock",
+    "interrupted-transitions",
+    "early-first-capture"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "edge_read_delayed_output"
+  },
+  {
+   "name": "edge_sample_immediate",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "rails-and-supplies",
+    "parameter-override",
+    "short-aperture-burst",
+    "initial-high-clock",
+    "interrupted-transitions",
+    "early-first-capture"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "edge_sample_immediate"
+  },
+  {
+   "name": "read_late_by_tedge",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "rails-and-supplies",
+    "parameter-override",
+    "short-aperture-burst",
+    "initial-high-clock",
+    "interrupted-transitions",
+    "early-first-capture"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "read_late_by_tedge"
+  },
+  {
+   "name": "fixed_aperture",
+   "group": "wrong",
+   "must_reject": [
+    "parameter-override",
+    "short-aperture-burst",
+    "interrupted-transitions",
+    "early-first-capture"
+   ],
+   "must_accept": [
+    "contract-base",
+    "rails-and-supplies",
+    "initial-high-clock"
+   ],
+   "author_synthetic_control": "aperture_hardcoded_200p"
+  },
+  {
+   "name": "fixed_threshold",
+   "group": "wrong",
+   "must_reject": [
+    "parameter-override"
+   ],
+   "must_accept": [
+    "contract-base",
+    "rails-and-supplies",
+    "short-aperture-burst",
+    "initial-high-clock",
+    "interrupted-transitions",
+    "early-first-capture"
+   ],
+   "author_synthetic_control": "vth_hardcoded_0p45"
+  },
+  {
+   "name": "fixed_tedge",
+   "group": "wrong",
+   "must_reject": [
+    "short-aperture-burst",
+    "early-first-capture"
+   ],
+   "must_accept": [
+    "contract-base",
+    "rails-and-supplies",
+    "parameter-override",
+    "initial-high-clock",
+    "interrupted-transitions"
+   ],
+   "author_synthetic_control": "tedge_hardcoded_50p"
+  },
+  {
+   "name": "slow_output",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "rails-and-supplies",
+    "parameter-override",
+    "short-aperture-burst",
+    "initial-high-clock",
+    "interrupted-transitions",
+    "early-first-capture"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "slow_output_2x"
+  },
+  {
+   "name": "init_zero",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "rails-and-supplies",
+    "parameter-override",
+    "short-aperture-burst",
+    "initial-high-clock",
+    "interrupted-transitions",
+    "early-first-capture"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "init_zero"
+  },
+  {
+   "name": "clamp_rails",
+   "group": "wrong",
+   "must_reject": [
+    "rails-and-supplies"
+   ],
+   "must_accept": [
+    "contract-base",
+    "parameter-override",
+    "short-aperture-burst",
+    "initial-high-clock",
+    "interrupted-transitions",
+    "early-first-capture"
+   ],
+   "author_synthetic_control": "clamp_rails"
+  },
+  {
+   "name": "vss_referenced",
+   "group": "wrong",
+   "must_reject": [
+    "rails-and-supplies"
+   ],
+   "must_accept": [
+    "contract-base",
+    "parameter-override",
+    "short-aperture-burst",
+    "initial-high-clock",
+    "interrupted-transitions",
+    "early-first-capture"
+   ],
+   "author_synthetic_control": "vss_shift"
+  },
+  {
+   "name": "both_edges",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "rails-and-supplies",
+    "parameter-override",
+    "short-aperture-burst",
+    "initial-high-clock",
+    "interrupted-transitions",
+    "early-first-capture"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "both_edges"
+  },
+  {
+   "name": "above_trigger",
+   "group": "wrong",
+   "must_reject": [
+    "initial-high-clock"
+   ],
+   "must_accept": [
+    "contract-base",
+    "rails-and-supplies",
+    "parameter-override",
+    "short-aperture-burst",
+    "interrupted-transitions",
+    "early-first-capture"
+   ],
+   "author_synthetic_control": "above_at_t0"
+  },
+  {
+   "name": "requires_clk_high",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "parameter-override",
+    "short-aperture-burst",
+    "interrupted-transitions"
+   ],
+   "must_accept": [
+    "rails-and-supplies",
+    "initial-high-clock",
+    "early-first-capture"
+   ],
+   "author_synthetic_control": "requires_clk_high"
+  },
+  {
+   "name": "periodic_timer",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "rails-and-supplies",
+    "parameter-override",
+    "short-aperture-burst",
+    "initial-high-clock",
+    "interrupted-transitions",
+    "early-first-capture"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "periodic_recapture"
+  },
+  {
+   "name": "lockout",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "parameter-override",
+    "short-aperture-burst",
+    "interrupted-transitions"
+   ],
+   "must_accept": [
+    "rails-and-supplies",
+    "initial-high-clock",
+    "early-first-capture"
+   ],
+   "author_synthetic_control": "lockout_3x"
+  },
+  {
+   "name": "continuous_track",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "rails-and-supplies",
+    "parameter-override",
+    "short-aperture-burst",
+    "initial-high-clock",
+    "interrupted-transitions",
+    "early-first-capture"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "continuous_track"
+  },
+  {
+   "name": "drop_while_moving",
+   "group": "wrong",
+   "must_reject": [
+    "interrupted-transitions"
+   ],
+   "must_accept": [
+    "contract-base",
+    "rails-and-supplies",
+    "parameter-override",
+    "short-aperture-burst",
+    "initial-high-clock",
+    "early-first-capture"
+   ],
+   "author_synthetic_control": "drop_while_moving"
+  },
+  {
+   "name": "finish_then_turn",
+   "group": "wrong",
+   "must_reject": [
+    "interrupted-transitions"
+   ],
+   "must_accept": [
+    "contract-base",
+    "rails-and-supplies",
+    "parameter-override",
+    "short-aperture-burst",
+    "initial-high-clock",
+    "early-first-capture"
+   ],
+   "author_synthetic_control": "finish_then_turn"
+  },
+  {
+   "name": "init_mid_supply",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "rails-and-supplies",
+    "parameter-override",
+    "initial-high-clock",
+    "interrupted-transitions",
+    "early-first-capture"
+   ],
+   "must_accept": [
+    "short-aperture-burst"
+   ],
+   "author_synthetic_control": "init_mid_supply"
+  },
+  {
+   "name": "alt_delayed_clock",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "contract-base",
+    "rails-and-supplies",
+    "parameter-override",
+    "short-aperture-burst",
+    "initial-high-clock",
+    "interrupted-transitions",
+    "early-first-capture"
+   ],
+   "author_synthetic_control": "contract"
+  },
+  {
+   "name": "alt_fast_output",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "contract-base",
+    "rails-and-supplies",
+    "parameter-override",
+    "short-aperture-burst",
+    "initial-high-clock",
+    "interrupted-transitions",
+    "early-first-capture"
+   ],
+   "author_synthetic_control": "fast_output_10ps"
+  }
+ ]
+}

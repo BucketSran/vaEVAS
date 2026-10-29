@@ -1,0 +1,13 @@
+simulator lang=spectre
+global 0
+
+ahdl_include "/app/circuit.va"
+
+Vvin (vin 0) vsource type=pwl wave=[0 0 135.5n 0 136.5n 0.8 305n 0.8 385n 0.3 421.5n 0.3 422.5n -0.6 457.5n -0.6 458.5n 0.3 561.5n 0.3 562.5n 0.9 705.5n 0.9 706.5n -0.9 1040n -0.9 1150n 0.5 1200n 0.5]
+Vclk (clk 0) vsource type=pulse val0=0 val1=0.9 period=30n width=14.9n delay=11.95n rise=100p fall=100p
+Vrst (rst 0) vsource type=pwl wave=[0 0 540.95n 0 541.05n 0.9 656.95n 0.9 657.05n 0 855.95n 0 856.05n 0.9 877.95n 0.9 878.05n 0 1200n 0]
+
+XDUT (vin clk rst out) dt_lowpass_sampler
+
+tran tran stop=1200n maxstep=50p strobeperiod=50p
+save vin clk rst out

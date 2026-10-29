@@ -1,11 +1,35 @@
-# 四样本在线真有效值仪表
+# Four-sample online true-RMS meter
 
-实现 `/work/dut.va`，保留以下公开接口与行为。固定 DUT 源码位于 `/work/public/dut/`，只读。不得驱动观测输入。测量不达标 DUT 时，报告正确结果仍可通过。
+Build a meter that reports the true RMS of the sampled differential input over non-overlapping four-sample windows. The fixed backend is Spectre. Candidate source runs as submitted bytes, and the syntax is that backend's Verilog-A.
 
-模块 sampled_true_rms_to_dc(vinp,vinn,clk,reset,enable,rms_out,valid)。vth=0.45V、vhigh=0.9V、tr=100ps。每个enable为高且reset为低的clk上升沿采样实际差分输入；恰好四个样本形成不重叠窗口，输出sqrt(mean(x*x))。禁用采样边沿不丢弃部分窗口，但清valid。每个完成窗口valid高一个采样间隔；下一clk上升清零valid。reset上升异步清累计、报告和valid；reset高时采样也清零。rms_out保持到下一完整窗口。误差2mV，事件后320ps允许输出过渡。
+## Spec
 
-## 公开自测与终评范围
+Use the module and port order in `/app/circuit.va`. The module is `sampled_true_rms_to_dc(vinp, vinn, clk, reset, enable, rms_out, valid)`. `vinp`, `vinn`, `clk`, `reset`, and `enable` are read-only observation inputs. Do not drive them. `rms_out` and `valid` are outputs. The measured inputs and the clock, reset, and enable signals are independent sources in each bench netlist; there is no fixed DUT model file. The instrument is what is scored: a correct report still passes when the measured signal misses its own target.
 
-两路输入各在0至0.9V内，可为直流或正弦（幅度0至0.35V、频率10至35MHz）；时钟周期4至6ns。可改变reset及enable时刻并跨越部分窗口；控制门限交点与采样沿至少隔开200ps。四样本窗口、阈值与报告单位固定。
+Declare these real parameters and defaults: `vth=0.45` V, the logic threshold; `vhigh=0.9` V, the high level of `valid`; and `tr=100 ps` from `(0:inf)`, the output transition time. The public benches instantiate the meter with `tr=80p`.
 
-固定后端为 Spectre；语法遵循该后端的 Verilog-A。源码按原字节运行。工具链故障单独诊断，不作为候选零分。公开自测实例位于 `/work/public/cases.json`，固定DUT实现位于 `/work/public/dut/`，可据此运行自己的Spectre自测。终评在提交后使用合同范围内不同的参数、事件及故障实例；终评台架和checker不进入解题材料。判定目标与数值容差以本题公开合同为准。
+Every rising `clk` edge with `enable` high and `reset` low samples the actual differential input `V(vinp) - V(vinn)`. Exactly four samples form one non-overlapping window, and the output is `sqrt(mean(x*x))` over those four samples. A sampling edge with `enable` low does not discard a partial window, but it clears `valid`. Each completed window keeps `valid` high for one sampling interval; the next rising `clk` edge clears `valid`. A rising `reset` asynchronously clears the accumulation, the report, and `valid`. A sampling edge while `reset` is high also clears them. `rms_out` holds until the next complete window. From t = 0 until the first complete window, `rms_out` and `valid` are 0 V. The error limit is 2 mV, and outputs may transition within 320 ps after an event. This 320 ps timing guard applies around these events: every rising crossing of `clk` or `reset` through 0.45 V, whether or not a sample is taken or the report changes there. These events, together with the start and the end of the transient, divide the run into intervals. An interval no longer than 640 ps is not scored. In every longer interval, each output is scored at every saved point more than 320 ps from both ends of the interval, and at the midpoint of the interval, where its value is interpolated linearly between saved points.
+
+Each of the two inputs stays within 0 V to 0.9 V and is DC or a sine wave with amplitude 0 V to 0.35 V and frequency 10 MHz to 35 MHz. The clock period is 4 ns to 6 ns. The reset and enable times may vary and may cross partial windows. Control threshold crossings are at least 200 ps away from sampling edges. In every case, public and final, no interval is exactly 640 ps long. The four-sample window, the threshold, and the report units are fixed.
+
+Public cases are in `/app/testbench/cases.json`. You can use them to run your own Spectre self-test. Final evaluation, after submission, uses different parameters, events, and fault instances inside this contract. The final-evaluation bench and checker are not part of the solving material. The acceptance targets and numerical tolerances are those of this public contract. Every required acceptance condition must pass. An executed attempt that fails scores 0, and the failure cause is recorded separately. A missing simulator, compile failure, timeout, missing waveform, or other execution or infrastructure failure is not evidence that the submitted model behavior is wrong.
+
+## Deliverable
+
+- Edit `/app/circuit.va` and implement `sampled_true_rms_to_dc` on the declared ports, including the parameters above.
+- Deliver `rms_out` and `valid`. Any implementation that meets this interface and external behavior is acceptable. A particular internal state variable or event organization is not required.
+- Do not drive the observation inputs. This restriction applies to the submitted model. You may read the public bench and run the public check.
+
+Run `python3 /app/testbench/check.py --output /app/output/public-check`. The [public testbench guide](/app/testbench/README.md) documents the Spectre dependency, case selection, timeouts, output layout, and diagnostic exit codes. Public feedback is not the final task score.
+
+This is an implementation task, not a repository-audit task.
+Work in /app and modify only the declared deliverable; do not edit public development benches, model libraries, or external fixtures.
+Make one bounded inspection pass over this instruction, the declared deliverable, supplied starter material, and public development benches.
+As the task solver, create a runnable candidate in the file named in the Deliverable section before beginning detailed exploration, and keep that file updated as you work.
+If your working time expires, the evaluator copies that file exactly as it exists at that moment and runs the verifier on it.
+If the file is missing or empty, the result is zero reward.
+Temporary files are not submitted.
+
+If a concrete model, tool, or execution problem appears, investigate it as needed before continuing.
+Iterate by editing the declared deliverable and using public development benches to diagnose observed behavior.
+Do not repeatedly enumerate files, reread unchanged references, or retry unchanged discovery commands instead of editing and simulating.

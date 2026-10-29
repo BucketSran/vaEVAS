@@ -1,0 +1,79 @@
+{
+ "task": "v2-test-offset-search",
+ "cases": [
+  "terminal-normal-positive",
+  "terminal-normal-negative",
+  "terminal-response-timeout"
+ ],
+ "checker_failure": "kind=report: a scored report value (saved point, or interpolated interval midpoint) more than its tolerance from the expected value (tests/v2_testing.py:58-74); kind=initial_request or request_not_response_driven: a rising request crossing more than 80 ps from 1.01 ns or from the preceding response plus gap (tests/v2_testing.py:216-217, 252-253)",
+ "semantics": "F01 timing guard, user-confirmed 2026-10-28 (option A): tests/v2_testing.py pieces() leaves out points no more than 80 ps from an event or from the start or end of the transient, skips intervals no longer than 160 ps and scores the midpoint of every longer interval; the event table is t = 0, every rising request crossing, every response and every timeout instant. The instruction states this rule and the checker is unchanged. Candidates differ from solution/ only in a report delay, in the request delay, or in the request schedule. A report that changes more than 80 ps before its event is acausal and exists only as the synthetic control early-report--100ps.",
+ "conditions": {},
+ "candidates": [
+  {
+   "name": "late_report_delay_100ps",
+   "group": "wrong",
+   "must_reject": [
+    "terminal-normal-positive",
+    "terminal-normal-negative",
+    "terminal-response-timeout"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "late-report-+100ps"
+  },
+  {
+   "name": "inwindow_report_delay_50ps",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "terminal-normal-positive",
+    "terminal-normal-negative",
+    "terminal-response-timeout"
+   ],
+   "author_synthetic_control": "inwindow-report-+50ps"
+  },
+  {
+   "name": "late_request_delay_100ps",
+   "group": "wrong",
+   "must_reject": [
+    "terminal-normal-positive",
+    "terminal-normal-negative",
+    "terminal-response-timeout"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "late-request-+100ps"
+  },
+  {
+   "name": "early_request_100ps",
+   "group": "wrong",
+   "must_reject": [
+    "terminal-normal-positive",
+    "terminal-normal-negative",
+    "terminal-response-timeout"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "early-request--100ps"
+  },
+  {
+   "name": "inwindow_request_delay_50ps",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "terminal-normal-positive",
+    "terminal-normal-negative",
+    "terminal-response-timeout"
+   ],
+   "author_synthetic_control": "inwindow-request-+50ps"
+  },
+  {
+   "name": "inwindow_early_request_50ps",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "terminal-normal-positive",
+    "terminal-normal-negative",
+    "terminal-response-timeout"
+   ],
+   "author_synthetic_control": "inwindow-early-request--50ps"
+  }
+ ]
+}

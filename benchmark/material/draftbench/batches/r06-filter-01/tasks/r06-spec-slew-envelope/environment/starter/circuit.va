@@ -1,0 +1,9 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module slew_envelope_tracker(vin,clk,mode,rst,out,metric);
+input vin,clk,mode,rst;
+output out,metric;
+electrical vin,clk,mode,rst,out,metric;
+// TODO: implement the public contract.
+endmodule

@@ -1,13 +1,44 @@
-# 从真实采样级数据建立动态 Verilog-A 模型
+# Model a sampling stage from transistor-circuit observations
 
-在 `/work/output/dut.va` 实现模块 `sampling_model(vin, clock, vhold)`。三个端口均为 electrical，vin 和 clock 是输入，vhold 是输出。你获得的是 JKU/Manuel Moser 的 SKY130 晶体管采样级 ngspice 表征，训练真值不是行为模型生成的。
+Build a free-running voltage-domain Verilog-A model of the supplied SKY130 sampling-stage observations. Predict complete output trajectories for new input and clock histories.
 
-模型要预测给定新输入和时钟下的完整输出波形。clock 低于 0.9 V 时跟踪，高于 0.9 V 时保持。源电路含传输门、补偿dummy、时钟反相器和2.44 pF保持电容，固定1.8 V、25°C、tt。你不需要复制晶体管电路，可以选择适合的数据模型，但必须保留有限采集和前拍状态。例如前拍输出为0.2 V时，短时间跟踪1.6 V后，输出通常仍未到1.6 V。
+## Spec
 
-`/work/public/data/*.csv` 给出完整独立记录，列为 `time_s,vin_V,clock_V,vhold_V`，单位是秒和伏。`experiments.json` 给出输入与时钟的PWL节点、初始输入、采集和保持窗口。PWL节点之间线性插值；观察网格在平静段压缩为2 ns，采集和变化附近仍为50 ps，全部PWL节点单列在experiments.json。CSV输出只作观测，禁止将输出数据反馈给模型。每条实验独立开始，t=0时clock=0，初始输出等于初始vin；随后30 ns的可见跟踪历史属于该实验。固定数据包不提供原电路查询，你可以反复仿真自己的候选。
+Use the module and ordered electrical interface in the starter. `vin` and `clock` are inputs; `vhold` is the predicted output. The source circuit is the JKU / Manuel Moser sampling stage simulated with ngspice. These observations are transistor simulations, not measured silicon or a behavioral model.
 
-训练集有32条实验，自测集有2条。最终保留4条完整新实验，没有随机拆散相邻时间点。预测范围是vin 0.2–1.6 V、0/1.8 V时钟、20 ps激励边沿、0.8–6 ns跟踪、20–30 ns附近保持，以及输入在跟踪开始前3 ns至开始后1 ns改变。每条实验4–6拍，包含未在训练中出现的中间输入值、时长、前拍和相位组合。初始值在0.2–1.6 V范围内，并在激励中完整提供。
+The circuit tracks when `clock < 0.9 V` and holds when `clock > 0.9 V`. Its transmission gate, dummy compensation, clock inverter and 2.44 pF holding capacitor operate at fixed 1.8 V, 25 degrees C and the tt corner. You may choose the model's internal structure, but it must retain finite acquisition and the preceding output state. A short acquisition need not reach the new input.
 
-所有最终实验各自必须满足：每段采集的电压RMS误差不超过25 mV；采集结束后约0.35 ns的采样误差不超过50 mV；每段保持的最大绝对误差不超过50 mV。沿后最初0.3–0.4 ns不评分，精确的评分窗口由实验定义。保持指标检验保留的电压状态，首轮不要求单独辨识长时间泄漏、pedestal或feedthrough。禁止按预测波形重新对齐时间，也不能以长平静区稀释短采集错误。
+The read-only `testbench/data/*.csv` records have columns `time_s,vin_V,clock_V,vhold_V`, in seconds and volts. `testbench/experiments.json` provides the exact input and clock PWL knots, initial input and acquisition/hold windows. Reconstruct stimuli by linear interpolation between their knots. Quiet observation regions are compressed to a 2 ns grid; acquisition and transition regions retain 50 ps observations. All stimulus knots are separately recorded. Output observations are fitting targets; never feed the observed output back into the running model.
 
-评分在固定Spectre后端运行原样VA源码，独立对比留出晶体管数据。这是用ngspice来源数据拟合并在Spectre执行VA的任务；重验候选不需要PDK，重新生成真值需要固定SKY130库和ngspice 47。初始化、单位、端口和模块名须遵守以上合同。允许任何后端接受的合法Verilog-A，不限制实现语法。
+Each experiment starts independently with `clock=0` and output equal to the initial `vin`. The following 30 ns of visible tracking history belongs to that experiment. The fixed data package does not provide online queries to the source circuit. You may repeatedly simulate your own candidate.
+
+There are 32 complete training experiments and two public self-tests. Four whole new experiments are held out; adjacent samples are not randomly split between training and evaluation. The prediction domain is `vin=0.2..1.6 V`, a 0/1.8 V clock, 20 ps stimulus edges, tracking durations of 0.8..6 ns and holding intervals around 20..30 ns. Input changes occur from 3 ns before to 1 ns after acquisition begins. Each record contains four to six cycles, including new combinations of intermediate inputs, durations, prior cycles and phase. Initial inputs are within 0.2..1.6 V and are fully supplied in each stimulus.
+
+Each evaluated experiment must satisfy every applicable window:
+- acquisition RMS voltage error at most 25 mV;
+- sample error, at the experiment-defined time approximately 0.35 ns after acquisition ends, at most 50 mV;
+- maximum absolute error within each hold window at most 50 mV.
+
+The first 0.3..0.4 ns following the relevant edge is excluded as specified by each experiment's exact windows. Hold accuracy concerns the retained state; separate identification of long-term leakage, pedestal and feedthrough is outside this task. Do not realign predicted waveforms in time or dilute short acquisition errors with long quiet regions.
+
+The candidate runs unchanged on the fixed Spectre backend and is compared independently with the source-circuit observations. Rechecking a candidate does not require the PDK. Regenerating the source observations would require the fixed SKY130 library and ngspice 47, and is not part of the task. All required checks must pass for score 1. A failed executed attempt scores 0 with its cause reported separately; an execution failure is not evidence of a semantic model error.
+
+## Deliverable
+
+- Edit `/app/circuit.va` and implement the starter's `sampling_model` interface without changing its module name, port names or order.
+- Deliver a model that predicts new input and clock histories without output feedback or replaying recorded output trajectories. Any internal model and legal Verilog-A accepted by the declared backend may be used if they satisfy this contract.
+- Keep the supplied observations, stimuli and diagnostic code unchanged. Only the declared VA file is collected.
+
+Run `python3 testbench/check.py --output /app/output/public-check` from `/app` for the public self-tests. Read [the public testbench instructions](testbench/README.md) for backend setup, diagnostic outputs and observation-window details.
+
+This is an implementation task, not a repository-audit task.
+Work in /app and modify only the declared deliverable; do not edit public development benches, model libraries, or external fixtures.
+Make one bounded inspection pass over this instruction, the declared deliverable, supplied starter material, and public development benches.
+As the task solver, create a runnable candidate in the file named in the Deliverable section before beginning detailed exploration, and keep that file updated as you work.
+If your working time expires, the evaluator copies that file exactly as it exists at that moment and runs the verifier on it.
+If the file is missing or empty, the result is zero reward.
+Temporary files are not submitted.
+
+If a concrete model, tool, or execution problem appears, investigate it as needed before continuing.
+Iterate by editing the declared deliverable and using public development benches to diagnose observed behavior.
+Do not repeatedly enumerate files, reread unchanged references, or retry unchanged discovery commands instead of editing and simulating.

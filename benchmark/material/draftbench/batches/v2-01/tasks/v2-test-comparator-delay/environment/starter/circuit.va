@@ -1,0 +1,8 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module delay_meter(vdd,vss,clk,vinp,vinn,outp,outn,delay_ps,overdrive_mv,polarity,valid);
+inout vdd,vss,clk,vinp,vinn,outp,outn,delay_ps,overdrive_mv,polarity,valid;
+electrical vdd,vss,clk,vinp,vinn,outp,outn,delay_ps,overdrive_mv,polarity,valid;
+// TODO: implement the public contract.
+endmodule

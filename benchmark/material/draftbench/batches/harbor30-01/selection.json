@@ -1,0 +1,2025 @@
+{
+  "schema_version": 1,
+  "purpose": "首批30项现有资产的Harbor改造集合；保留原ID和唯一活跃题包目录，不增加独立题目计数。",
+  "source_baseline": "c485de860c6005f451133e8cdc05fe923da29206",
+  "selection_status": "local-implementation-reviewed-grading-runtime-pending",
+  "tasks": [
+    {
+      "slot": 1,
+      "task_id": "v2-spec-024-clocked-sample-and-hold",
+      "path": "../v2-01/tasks/v2-spec-024-clocked-sample-and-hold",
+      "engineering_action": "spec-modeling",
+      "source_group": "v4-024",
+      "selection_reason": "边沿采样的公开数值合同已经写到观察时刻和保持，而且四通道集成题把同一职责做成固定部件。它是采样家族里可以直接改造的规格样板。",
+      "replaces_initial_recommendation": null,
+      "evas_requirements": {
+        "kind": "requirements_for_read_only_cross_line_planning_not_capability_claim",
+        "basis": "../v2-01/tasks/v2-spec-024-clocked-sample-and-hold/instruction.md",
+        "required_behavior_combinations": [
+          "阈值上升沿读取连续输入，保持离散状态；有限单调输出过渡、非零参考轨、停钟保持"
+        ],
+        "reference_constructs_nonprescriptive": {
+          "solution/circuit.va": {
+            "sha256": "e58e5baa42c0ec8a82b194da6f63370bf8f08dd819821a7d7f7d25d3abe27e69",
+            "constructs": [
+              "cross",
+              "initial_step",
+              "transition"
+            ]
+          }
+        },
+        "backend_basis": {
+          "declared_candidate_backend": "Spectre",
+          "contract_source": "../v2-01/tasks/v2-spec-024-clocked-sample-and-hold/SOURCE.md",
+          "current_harbor_numerical_run": "not_executed",
+          "current_evas_evidence": "not_verified_by_this_batch",
+          "historical_evidence": "Only the source-identified historical records linked from SOURCE; not a current Harbor or EVAS pass."
+        },
+        "unresolved_scientific_conditions": [
+          "沿用原公开合同；本轮不据参考解或EVAS输出新增数值、输入域或容差。逐题评分一致性与当前运行校准仍待核验，具体未决见本题SOURCE。",
+          "原合同已要求进入目标带后持续保持。2026-10-27公私checker已改为按最后一次进入±2mV带并保持到下一目标前的时刻定完成，保留2mV、0.1*tedge和2ps网格，时间端点按观测值的精确有理数作闭区间判定；合成红绿与端点控制通过。数值校准仍待完成；其他观察窗口差异不算新容差或新科学选择。"
+        ],
+        "contract_decision_card": {
+          "path": "SOURCE.md#评分合同决定卡",
+          "status": "existing-requirement-checker-fixed",
+          "needs_user_scientific_choice": false,
+          "summary": "原合同已要求进入目标带后持续保持。2026-10-27公私checker已改为按最后一次进入±2mV带并保持到下一目标前的时刻定完成，保留2mV、0.1*tedge和2ps网格，时间端点按观测值的精确有理数作闭区间判定；合成红绿与端点控制通过。数值校准仍待完成；其他观察窗口差异不算新容差或新科学选择。",
+          "checker_sha256": "552ac191344d4126ee8a73c30a18e304078ea2f08963e68a3f42b251a57f59d0",
+          "evidence": "../../../../../runs/t3-harbor30-20261027/checker-fixes/"
+        },
+        "evas_documented_gaps": {
+          "issue": "https://github.com/BucketSran/vaEVAS/issues/270",
+          "basis": "Static reading of EVAS main@ac1b6e8d docs and source; no EVAS run. An empty list does not show that the task runs on EVAS, and front-end acceptance is not a numerical pass. blocks_all_candidates marks gaps in a bench or an instantiated fixed support module; starter and reference-solution gaps only constrain those files.",
+          "items": [
+            {
+              "issue_item": 3,
+              "feature": "scs-output-point-budget",
+              "status": "rejected-resource",
+              "where": [
+                "hidden_bench",
+                "public_bench",
+                "starter_bench_copy"
+              ],
+              "blocks_all_candidates": true
+            },
+            {
+              "issue_item": 3,
+              "feature": "scs-strobe-point-budget",
+              "status": "rejected-resource",
+              "where": [
+                "hidden_bench",
+                "public_bench",
+                "starter_bench_copy"
+              ],
+              "blocks_all_candidates": true
+            }
+          ]
+        }
+      },
+      "simulation_route": {
+        "route": "pure-va",
+        "stored_device_truth": false
+      }
+    },
+    {
+      "slot": 2,
+      "task_id": "v2-data-sampling-identification",
+      "path": "../v2-01/tasks/v2-data-sampling-identification",
+      "engineering_action": "data-modeling",
+      "source_group": "jku-sampling-stage",
+      "selection_reason": "56 题里只有两道从数据建模。这道的数据身份、留出方式和分段误差已经写在题面，补上规格建模没有覆盖的真实采集动态。",
+      "replaces_initial_recommendation": null,
+      "evas_requirements": {
+        "kind": "requirements_for_read_only_cross_line_planning_not_capability_claim",
+        "basis": "../v2-01/tasks/v2-data-sampling-identification/instruction.md",
+        "required_behavior_combinations": [
+          "输入/时钟驱动的连续采集与保持记忆；不同初态及短采集历史；候选输出与固定晶体管观测对齐"
+        ],
+        "reference_constructs_nonprescriptive": {
+          "solution/circuit.va": {
+            "sha256": "61cd42da4a0a83e60b67e7d481388d8ad2ce4feadaa683ade461f127cda8b94f",
+            "constructs": [
+              "$bound_step",
+              "idt",
+              "initial_step"
+            ]
+          }
+        },
+        "backend_basis": {
+          "declared_candidate_backend": "Spectre",
+          "contract_source": "../v2-01/tasks/v2-data-sampling-identification/SOURCE.md",
+          "current_harbor_numerical_run": "not_executed",
+          "current_evas_evidence": "not_verified_by_this_batch",
+          "historical_evidence": "Only the source-identified historical records linked from SOURCE; not a current Harbor or EVAS pass."
+        },
+        "unresolved_scientific_conditions": [
+          "沿用原公开合同；本轮不据参考解或EVAS输出新增数值、输入域或容差。逐题评分一致性与当前运行校准仍待核验，具体未决见本题SOURCE。"
+        ],
+        "scope_dependency": "晶体管仿真只用于已有固定训练/留出数据；候选运行不要求在线PDK。数据真值不能由EVAS重新生成替代。",
+        "evas_documented_gaps": {
+          "issue": "https://github.com/BucketSran/vaEVAS/issues/270",
+          "basis": "Static reading of EVAS main@ac1b6e8d docs and source; no EVAS run. An empty list does not show that the task runs on EVAS, and front-end acceptance is not a numerical pass. blocks_all_candidates marks gaps in a bench or an instantiated fixed support module; starter and reference-solution gaps only constrain those files.",
+          "items": [
+            {
+              "issue_item": 10,
+              "feature": "va-operator-setting-dependency",
+              "status": "rejected",
+              "where": [
+                "reference_solution"
+              ],
+              "blocks_all_candidates": false
+            }
+          ]
+        }
+      },
+      "simulation_route": {
+        "route": "pure-va",
+        "stored_device_truth": true
+      }
+    },
+    {
+      "slot": 3,
+      "task_id": "v2-integrate-349-multichannel-readout",
+      "path": "../v2-01/tasks/v2-integrate-349-multichannel-readout",
+      "engineering_action": "extension-integration",
+      "source_group": "v4-349",
+      "selection_reason": "集成责任和采样责任已经拆开，公开部件、读出顺序和复位适配都在题面。它直接检验求解者是否真的复用模块。",
+      "replaces_initial_recommendation": null,
+      "evas_requirements": {
+        "kind": "requirements_for_read_only_cross_line_planning_not_capability_claim",
+        "basis": "../v2-01/tasks/v2-integrate-349-multichannel-readout/instruction.md",
+        "required_behavior_combinations": [
+          "多个固定采样器实例的实际因果连接；同拍先读旧帧再更新；复位适配、输出保持及部件替换"
+        ],
+        "reference_constructs_nonprescriptive": {
+          "solution/circuit.va": {
+            "sha256": "ff2186efc7595e7d702bb64b5ce5c9783cefe662593dc4673170603d7b2c2f73",
+            "constructs": [
+              "$abstime",
+              "cross",
+              "initial_step",
+              "timer",
+              "transition"
+            ]
+          }
+        },
+        "backend_basis": {
+          "declared_candidate_backend": "Spectre",
+          "contract_source": "../v2-01/tasks/v2-integrate-349-multichannel-readout/SOURCE.md",
+          "current_harbor_numerical_run": "not_executed",
+          "current_evas_evidence": "not_verified_by_this_batch",
+          "historical_evidence": "Only the source-identified historical records linked from SOURCE; not a current Harbor or EVAS pass."
+        },
+        "unresolved_scientific_conditions": [
+          "沿用原公开合同；本轮不据参考解或EVAS输出新增数值、输入域或容差。逐题评分一致性与当前运行校准仍待核验，具体未决见本题SOURCE。"
+        ],
+        "source_review_open_items_unaccepted": [
+          "Gold internal 50 ps/200 ps reset timers were not adopted as the contract. The public limits remain 50 ps adapter delay and 1 ns clear/measure."
+        ],
+        "evas_documented_gaps": {
+          "issue": "https://github.com/BucketSran/vaEVAS/issues/270",
+          "basis": "Static reading of EVAS main@ac1b6e8d docs and source; no EVAS run. An empty list does not show that the task runs on EVAS, and front-end acceptance is not a numerical pass. blocks_all_candidates marks gaps in a bench or an instantiated fixed support module; starter and reference-solution gaps only constrain those files.",
+          "items": []
+        }
+      },
+      "simulation_route": {
+        "route": "pure-va",
+        "stored_device_truth": false
+      }
+    },
+    {
+      "slot": 4,
+      "task_id": "v2-spec-003-pipeline-adc-stage",
+      "path": "../v2-01/tasks/v2-spec-003-pipeline-adc-stage",
+      "engineering_action": "spec-modeling",
+      "source_group": "v4-003",
+      "selection_reason": "残差递推和两相判决是独立于 SAR 与 ΣΔ 的转换结构，数值合同已写明。",
+      "replaces_initial_recommendation": null,
+      "evas_requirements": {
+        "kind": "requirements_for_read_only_cross_line_planning_not_capability_claim",
+        "basis": "../v2-01/tasks/v2-spec-003-pipeline-adc-stage/instruction.md",
+        "required_behavior_combinations": [
+          "两相边沿采样与MDAC状态；轨相关判决、残差限幅、输出过渡"
+        ],
+        "reference_constructs_nonprescriptive": {
+          "solution/circuit.va": {
+            "sha256": "027c1b3b2679e6cbd1a86aefb60ec86d0ff34e6dbd24bea95b646c9020e218ee",
+            "constructs": [
+              "cross",
+              "initial_step",
+              "transition"
+            ]
+          }
+        },
+        "backend_basis": {
+          "declared_candidate_backend": "Spectre",
+          "contract_source": "../v2-01/tasks/v2-spec-003-pipeline-adc-stage/SOURCE.md",
+          "current_harbor_numerical_run": "not_executed",
+          "current_evas_evidence": "not_verified_by_this_batch",
+          "historical_evidence": "Only the source-identified historical records linked from SOURCE; not a current Harbor or EVAS pass."
+        },
+        "unresolved_scientific_conditions": [
+          "沿用原公开合同；本轮不据参考解或EVAS输出新增数值、输入域或容差。逐题评分一致性与当前运行校准仍待核验，具体未决见本题SOURCE。"
+        ],
+        "source_review_open_items_unaccepted": [
+          "supply input/inout unspecified",
+          "pre-first-PHI1 sample unspecified",
+          "checker 1.15*tedge skip not adopted",
+          "/app reference run, public/private consistency, and package calibration unverified"
+        ],
+        "evas_documented_gaps": {
+          "issue": "https://github.com/BucketSran/vaEVAS/issues/270",
+          "basis": "Static reading of EVAS main@ac1b6e8d docs and source; no EVAS run. An empty list does not show that the task runs on EVAS, and front-end acceptance is not a numerical pass. blocks_all_candidates marks gaps in a bench or an instantiated fixed support module; starter and reference-solution gaps only constrain those files.",
+          "items": []
+        }
+      },
+      "simulation_route": {
+        "route": "pure-va",
+        "stored_device_truth": false
+      }
+    },
+    {
+      "slot": 5,
+      "task_id": "v2-spec-055-first-order-sigma-delta-modulator",
+      "path": "../v2-01/tasks/v2-spec-055-first-order-sigma-delta-modulator",
+      "engineering_action": "spec-modeling",
+      "source_group": "v4-055",
+      "selection_reason": "积分历史和一位反馈密度与流水级、SAR 控制器都不同，更新式已冻结。",
+      "replaces_initial_recommendation": null,
+      "evas_requirements": {
+        "kind": "requirements_for_read_only_cross_line_planning_not_capability_claim",
+        "basis": "../v2-01/tasks/v2-spec-055-first-order-sigma-delta-modulator/instruction.md",
+        "required_behavior_combinations": [
+          "时钟驱动累加器与前次判决反馈；初态、零边界判决、bit流过渡；bit=0及首个时钟沿前输出0V"
+        ],
+        "reference_constructs_nonprescriptive": {
+          "solution/circuit.va": {
+            "sha256": "d2257c0b8402fd9662d25214eb3b59db62369e413d3a220dcaeebbf50258b511",
+            "constructs": [
+              "cross",
+              "initial_step",
+              "transition"
+            ]
+          }
+        },
+        "backend_basis": {
+          "declared_candidate_backend": "Spectre",
+          "contract_source": "../v2-01/tasks/v2-spec-055-first-order-sigma-delta-modulator/SOURCE.md",
+          "current_harbor_numerical_run": "not_executed",
+          "current_evas_evidence": "not_verified_by_this_batch",
+          "historical_evidence": "Only the source-identified historical records linked from SOURCE; not a current Harbor or EVAS pass."
+        },
+        "unresolved_scientific_conditions": [
+          "沿用原公开合同；本轮不据参考解或EVAS输出新增数值、输入域或容差。逐题评分一致性与当前运行校准仍待核验，具体未决见本题SOURCE。",
+          "2026-10-27用户确认bit=0及首个时钟沿前的目标为0V，沿用±2mV；Spec已写明，参考与checker的低电平公式原即0V。公私checker的保持检查起点由1.15*tr改为tr。tr末端对过渡起点的时间敏感性须在Spectre校准中确认。"
+        ],
+        "source_review_open_items_unaccepted": [
+          "port order absent from instruction text",
+          "/app package unverified"
+        ],
+        "contract_decision_card": {
+          "path": "SOURCE.md#评分合同决定卡",
+          "status": "user-selected-adopted",
+          "needs_user_scientific_choice": false,
+          "decided_at": "2026-10-27",
+          "summary": "2026-10-27用户确认bit=0及首个时钟沿前的目标为0V，沿用±2mV；Spec已写明，参考与checker的低电平公式原即0V。公私checker的保持检查起点由1.15*tr改为tr。tr末端对过渡起点的时间敏感性须在Spectre校准中确认。",
+          "resolved_open_items": [
+            "logic-low voltage unnamed",
+            "checker 1.15*tr skip not adopted"
+          ],
+          "checker_sha256": "552ac191344d4126ee8a73c30a18e304078ea2f08963e68a3f42b251a57f59d0",
+          "evidence": "../../../../../runs/t3-harbor30-20261027/grading-adoption/"
+        },
+        "evas_documented_gaps": {
+          "issue": "https://github.com/BucketSran/vaEVAS/issues/270",
+          "basis": "Static reading of EVAS main@ac1b6e8d docs and source; no EVAS run. An empty list does not show that the task runs on EVAS, and front-end acceptance is not a numerical pass. blocks_all_candidates marks gaps in a bench or an instantiated fixed support module; starter and reference-solution gaps only constrain those files.",
+          "items": []
+        }
+      },
+      "simulation_route": {
+        "route": "pure-va",
+        "stored_device_truth": false
+      }
+    },
+    {
+      "slot": 6,
+      "task_id": "v2-spec-186-sarfend-logic-4b",
+      "path": "../v2-01/tasks/v2-spec-186-sarfend-logic-4b",
+      "engineering_action": "spec-modeling",
+      "source_group": "v4-186",
+      "selection_reason": "工程内补模块的边界已经写明，而且它正是相对 C109 的现有资产。首批可以先改造这道已实现控制器，而不裁决 C109 的 vref。",
+      "replaces_initial_recommendation": null,
+      "evas_requirements": {
+        "kind": "requirements_for_read_only_cross_line_planning_not_capability_claim",
+        "basis": "../v2-01/tasks/v2-spec-186-sarfend-logic-4b/instruction.md",
+        "required_behavior_combinations": [
+          "跨模块比较器/DAC握手；交替请求/返回与四次判决历史；test覆盖、首帧与异常第五次判决"
+        ],
+        "reference_constructs_nonprescriptive": {
+          "solution/circuit.va": {
+            "sha256": "983b21c79bc6ca24f5ffacd3ef9d6e61726eb96a8a4d4758f241df3c05941161",
+            "constructs": [
+              "cross",
+              "initial_step",
+              "transition"
+            ]
+          }
+        },
+        "backend_basis": {
+          "declared_candidate_backend": "Spectre",
+          "contract_source": "../v2-01/tasks/v2-spec-186-sarfend-logic-4b/SOURCE.md",
+          "current_harbor_numerical_run": "not_executed",
+          "current_evas_evidence": "not_verified_by_this_batch",
+          "historical_evidence": "Only the source-identified historical records linked from SOURCE; not a current Harbor or EVAS pass."
+        },
+        "unresolved_scientific_conditions": [
+          "沿用原公开合同；本轮不据参考解或EVAS输出新增数值、输入域或容差。逐题评分一致性与当前运行校准仍待核验，具体未决见本题SOURCE。"
+        ],
+        "source_review_open_items_unaccepted": [
+          "dcomp wording versus consumed direction",
+          "falling-edge clkc versus checker event rule",
+          "pre-first-edge both-low",
+          "both-high unspecified",
+          "fifth-decision text has no extra equation",
+          "/app package unverified"
+        ],
+        "evas_documented_gaps": {
+          "issue": "https://github.com/BucketSran/vaEVAS/issues/270",
+          "basis": "Static reading of EVAS main@ac1b6e8d docs and source; no EVAS run. An empty list does not show that the task runs on EVAS, and front-end acceptance is not a numerical pass. blocks_all_candidates marks gaps in a bench or an instantiated fixed support module; starter and reference-solution gaps only constrain those files.",
+          "items": [
+            {
+              "issue_item": 15,
+              "feature": "va-runtime-shift-count",
+              "status": "rejected",
+              "where": [
+                "fixed_support"
+              ],
+              "blocks_all_candidates": true
+            }
+          ]
+        }
+      },
+      "simulation_route": {
+        "route": "pure-va",
+        "stored_device_truth": false
+      }
+    },
+    {
+      "slot": 7,
+      "task_id": "v2-spec-002-capacitive-sar-feedback-dac",
+      "path": "../v2-01/tasks/v2-spec-002-capacitive-sar-feedback-dac",
+      "engineering_action": "spec-modeling",
+      "source_group": "v4-002",
+      "selection_reason": "这是与后四道单位元件加权和不同的 DAC 合同：二进制主码、冗余校准偏移和差分输出已经冻结。",
+      "replaces_initial_recommendation": null,
+      "evas_requirements": {
+        "kind": "requirements_for_read_only_cross_line_planning_not_capability_claim",
+        "basis": "../v2-01/tasks/v2-spec-002-capacitive-sar-feedback-dac/instruction.md",
+        "required_behavior_combinations": [
+          "多位控制阈值解码；时钟采样加权差分DAC；校准码、参考轨和保持"
+        ],
+        "reference_constructs_nonprescriptive": {
+          "solution/circuit.va": {
+            "sha256": "c7414e3ed6628fe36b697e4ff68c8b9b4c1122c6efeb734b6dabc54a56b96ff7",
+            "constructs": [
+              "cross",
+              "initial_step",
+              "transition"
+            ]
+          }
+        },
+        "backend_basis": {
+          "declared_candidate_backend": "Spectre",
+          "contract_source": "../v2-01/tasks/v2-spec-002-capacitive-sar-feedback-dac/SOURCE.md",
+          "current_harbor_numerical_run": "not_executed",
+          "current_evas_evidence": "not_verified_by_this_batch",
+          "historical_evidence": "Only the source-identified historical records linked from SOURCE; not a current Harbor or EVAS pass."
+        },
+        "unresolved_scientific_conditions": [
+          "沿用原公开合同；本轮不据参考解或EVAS输出新增数值、输入域或容差。逐题评分一致性与当前运行校准仍待核验，具体未决见本题SOURCE。"
+        ],
+        "source_review_open_items_unaccepted": [
+          "supply input/inout unspecified",
+          "VSS-relative threshold not adopted",
+          "checker 1.15*tt skip not adopted",
+          "/app package unverified"
+        ],
+        "evas_documented_gaps": {
+          "issue": "https://github.com/BucketSran/vaEVAS/issues/270",
+          "basis": "Static reading of EVAS main@ac1b6e8d docs and source; no EVAS run. An empty list does not show that the task runs on EVAS, and front-end acceptance is not a numerical pass. blocks_all_candidates marks gaps in a bench or an instantiated fixed support module; starter and reference-solution gaps only constrain those files.",
+          "items": []
+        }
+      },
+      "simulation_route": {
+        "route": "pure-va",
+        "stored_device_truth": false
+      }
+    },
+    {
+      "slot": 8,
+      "task_id": "v3-converter-dac-linearity",
+      "path": "../v3-01/tasks/v3-converter-dac-linearity",
+      "engineering_action": "testing-characterization",
+      "source_group": "repository-owned-dac-scan",
+      "selection_reason": "测量对象是实际扫描电压，动作与 002 的建模不同。公开 cases 只列 dnl、inl、valid。固定 dut/fixed.va 存在。",
+      "replaces_initial_recommendation": null,
+      "evas_requirements": {
+        "kind": "requirements_for_read_only_cross_line_planning_not_capability_claim",
+        "basis": "../v3-01/tasks/v3-converter-dac-linearity/instruction.md",
+        "required_behavior_combinations": [
+          "实际固定DAC响应扫描；端点拟合、DNL/INL、缺码与重复码/中断资格"
+        ],
+        "reference_constructs_nonprescriptive": {
+          "solution/circuit.va": {
+            "sha256": "29ed702ccb84f1e6c489c06d000ee17176fb4d85a2ec00eb1d31b97e49a53e1f",
+            "constructs": [
+              "cross",
+              "initial_step"
+            ]
+          }
+        },
+        "backend_basis": {
+          "declared_candidate_backend": "Spectre",
+          "contract_source": "../v3-01/tasks/v3-converter-dac-linearity/SOURCE.md",
+          "current_harbor_numerical_run": "not_executed",
+          "current_evas_evidence": "not_verified_by_this_batch",
+          "historical_evidence": "Only the source-identified historical records linked from SOURCE; not a current Harbor or EVAS pass."
+        },
+        "unresolved_scientific_conditions": [
+          "沿用原公开合同；本轮不据参考解或EVAS输出新增数值、输入域或容差。逐题评分一致性与当前运行校准仍待核验，具体未决见本题SOURCE。"
+        ],
+        "source_review_open_items_unaccepted": [
+          "The spectrum dB and ENOB tolerances remain in this DAC instruction because the pre-migration text included them. They were not deleted as inapplicable."
+        ],
+        "main_correction": "删除无对应输出/判定的频谱与ENOB共享模板句；DNL/INL数值条件未改。",
+        "evas_documented_gaps": {
+          "issue": "https://github.com/BucketSran/vaEVAS/issues/270",
+          "basis": "Static reading of EVAS main@ac1b6e8d docs and source; no EVAS run. An empty list does not show that the task runs on EVAS, and front-end acceptance is not a numerical pass. blocks_all_candidates marks gaps in a bench or an instantiated fixed support module; starter and reference-solution gaps only constrain those files.",
+          "items": [
+            {
+              "issue_item": 13,
+              "feature": "va-floor-unproven-range",
+              "status": "rejected",
+              "where": [
+                "fixed_support"
+              ],
+              "blocks_all_candidates": true
+            }
+          ]
+        }
+      },
+      "simulation_route": {
+        "route": "pure-va",
+        "stored_device_truth": false
+      }
+    },
+    {
+      "slot": 9,
+      "task_id": "v3-converter-adc-spectrum",
+      "path": "../v3-01/tasks/v3-converter-adc-spectrum",
+      "engineering_action": "testing-characterization",
+      "source_group": "first-batch-measure-adc-spectrum",
+      "selection_reason": "它是现有资产里的动态码域指标，和静态 DAC 扫描互补。公开 cases 的容差与题面的 0.03dB、0.006bit 一致。",
+      "replaces_initial_recommendation": null,
+      "evas_requirements": {
+        "kind": "requirements_for_read_only_cross_line_planning_not_capability_claim",
+        "basis": "../v3-01/tasks/v3-converter-adc-spectrum/instruction.md",
+        "required_behavior_combinations": [
+          "实际离散输入采样；完整记录窗的频谱累积、基波/谐波区分及无效记录资格"
+        ],
+        "reference_constructs_nonprescriptive": {
+          "solution/circuit.va": {
+            "sha256": "2fb7da7b0a9b8a5416ae3940d8eb6ea0cbfd30e90b3f196ef7e9366084b1f9c3",
+            "constructs": [
+              "cross",
+              "initial_step"
+            ]
+          }
+        },
+        "backend_basis": {
+          "declared_candidate_backend": "Spectre",
+          "contract_source": "../v3-01/tasks/v3-converter-adc-spectrum/SOURCE.md",
+          "current_harbor_numerical_run": "not_executed",
+          "current_evas_evidence": "not_verified_by_this_batch",
+          "historical_evidence": "Only the source-identified historical records linked from SOURCE; not a current Harbor or EVAS pass."
+        },
+        "unresolved_scientific_conditions": [
+          "沿用原公开合同；本轮不据参考解或EVAS输出新增数值、输入域或容差。逐题评分一致性与当前运行校准仍待核验，具体未决见本题SOURCE。"
+        ],
+        "source_review_open_items_unaccepted": [
+          "No new DFT conflict. Checker control flow was not copied into the spec."
+        ],
+        "evas_documented_gaps": {
+          "issue": "https://github.com/BucketSran/vaEVAS/issues/270",
+          "basis": "Static reading of EVAS main@ac1b6e8d docs and source; no EVAS run. An empty list does not show that the task runs on EVAS, and front-end acceptance is not a numerical pass. blocks_all_candidates marks gaps in a bench or an instantiated fixed support module; starter and reference-solution gaps only constrain those files.",
+          "items": [
+            {
+              "issue_item": 8,
+              "feature": "scs-pulse-magnitude-only",
+              "status": "conditional-consumer-found",
+              "where": [
+                "hidden_bench"
+              ],
+              "blocks_all_candidates": false
+            },
+            {
+              "issue_item": 14,
+              "feature": "va-event-dynamic-math",
+              "status": "rejected",
+              "where": [
+                "reference_solution"
+              ],
+              "blocks_all_candidates": false
+            },
+            {
+              "issue_item": 13,
+              "feature": "va-floor-partition-budget",
+              "status": "rejected-resource",
+              "where": [
+                "reference_solution"
+              ],
+              "blocks_all_candidates": false
+            }
+          ]
+        }
+      },
+      "simulation_route": {
+        "route": "pure-va",
+        "stored_device_truth": false
+      }
+    },
+    {
+      "slot": 10,
+      "task_id": "v2-spec-091-chopper-stabilized-differential-amplifier",
+      "path": "../v2-01/tasks/v2-spec-091-chopper-stabilized-differential-amplifier",
+      "engineering_action": "spec-modeling",
+      "source_group": "v4-091",
+      "selection_reason": "多模块职责、替换验收和时序延迟已经写进系统连接合同，适合作为 Harbor 多文件题的现成资产。",
+      "replaces_initial_recommendation": null,
+      "evas_requirements": {
+        "kind": "requirements_for_read_only_cross_line_planning_not_capability_claim",
+        "basis": "../v2-01/tasks/v2-spec-091-chopper-stabilized-differential-amplifier/instruction.md",
+        "required_behavior_combinations": [
+          "两个公开helper与顶层因果连接；斩波两方向沿、延迟通知、离散低通历史和替换部件消费"
+        ],
+        "reference_constructs_nonprescriptive": {
+          "solution/circuit.va": {
+            "sha256": "725291d0216bcdddd2413d809699be51e5a8cd38e04579ecada7d3986bb4cefb",
+            "constructs": []
+          },
+          "solution/chopper_gain_core.va": {
+            "sha256": "52b69b90aaef760532d993237c75279e9668c92931daf40734c7278307748c2b",
+            "constructs": [
+              "cross",
+              "initial_step",
+              "transition"
+            ]
+          },
+          "solution/synchronous_lp_state.va": {
+            "sha256": "73863b2313e1b959bebb84be44a4f5bda974edd1b0e9299f5319f42b5402ece8",
+            "constructs": [
+              "cross",
+              "initial_step",
+              "transition"
+            ]
+          }
+        },
+        "backend_basis": {
+          "declared_candidate_backend": "Spectre",
+          "contract_source": "../v2-01/tasks/v2-spec-091-chopper-stabilized-differential-amplifier/SOURCE.md",
+          "current_harbor_numerical_run": "not_executed",
+          "current_evas_evidence": "not_verified_by_this_batch",
+          "historical_evidence": "Only the source-identified historical records linked from SOURCE; not a current Harbor or EVAS pass."
+        },
+        "unresolved_scientific_conditions": [
+          "沿用原公开合同；本轮不据参考解或EVAS输出新增数值、输入域或容差。逐题评分一致性与当前运行校准仍待核验，具体未决见本题SOURCE。"
+        ],
+        "source_review_open_items_unaccepted": [
+          "chop polarity sign",
+          "initial strobe level",
+          "enabled power-on state",
+          "checker skip 4.1*tr versus public 4*tr",
+          "historical six-condition calibration does not certify /app"
+        ],
+        "evas_documented_gaps": {
+          "issue": "https://github.com/BucketSran/vaEVAS/issues/270",
+          "basis": "Static reading of EVAS main@ac1b6e8d docs and source; no EVAS run. An empty list does not show that the task runs on EVAS, and front-end acceptance is not a numerical pass. blocks_all_candidates marks gaps in a bench or an instantiated fixed support module; starter and reference-solution gaps only constrain those files.",
+          "items": [
+            {
+              "issue_item": 7,
+              "feature": "scs-save-hierarchical-node",
+              "status": "rejected",
+              "where": [
+                "hidden_bench"
+              ],
+              "blocks_all_candidates": true
+            }
+          ]
+        }
+      },
+      "simulation_route": {
+        "route": "pure-va",
+        "stored_device_truth": false
+      }
+    },
+    {
+      "slot": 11,
+      "task_id": "v2-spec-082-agc-receiver-leveling-loop",
+      "path": "../v2-01/tasks/v2-spec-082-agc-receiver-leveling-loop",
+      "engineering_action": "spec-modeling",
+      "source_group": "v4-082",
+      "selection_reason": "这是现有资产里写明步进和死区的接收电平环，和斩波的信号通路、持续失调校准的零输入窗口都不同。",
+      "replaces_initial_recommendation": null,
+      "evas_requirements": {
+        "kind": "requirements_for_read_only_cross_line_planning_not_capability_claim",
+        "basis": "../v2-01/tasks/v2-spec-082-agc-receiver-leveling-loop/instruction.md",
+        "required_behavior_combinations": [
+          "边沿更新的幅度/RSSI状态及增益反馈；饱和、复位与输出保持"
+        ],
+        "reference_constructs_nonprescriptive": {
+          "solution/circuit.va": {
+            "sha256": "6496caf8b8feb4c6cd6872fb115db2cf20b856c603328ccc824f3ee90d401391",
+            "constructs": [
+              "cross",
+              "initial_step",
+              "transition"
+            ]
+          }
+        },
+        "backend_basis": {
+          "declared_candidate_backend": "Spectre",
+          "contract_source": "../v2-01/tasks/v2-spec-082-agc-receiver-leveling-loop/SOURCE.md",
+          "current_harbor_numerical_run": "not_executed",
+          "current_evas_evidence": "not_verified_by_this_batch",
+          "historical_evidence": "Only the source-identified historical records linked from SOURCE; not a current Harbor or EVAS pass."
+        },
+        "unresolved_scientific_conditions": [
+          "沿用原公开合同；本轮不据参考解或EVAS输出新增数值、输入域或容差。逐题评分一致性与当前运行校准仍待核验，具体未决见本题SOURCE。"
+        ],
+        "source_review_open_items_unaccepted": [
+          "clk/rst direction keyword absent",
+          "checker 1.15*tr skip not adopted",
+          "/app package unverified"
+        ],
+        "evas_documented_gaps": {
+          "issue": "https://github.com/BucketSran/vaEVAS/issues/270",
+          "basis": "Static reading of EVAS main@ac1b6e8d docs and source; no EVAS run. An empty list does not show that the task runs on EVAS, and front-end acceptance is not a numerical pass. blocks_all_candidates marks gaps in a bench or an instantiated fixed support module; starter and reference-solution gaps only constrain those files.",
+          "items": []
+        }
+      },
+      "simulation_route": {
+        "route": "pure-va",
+        "stored_device_truth": false
+      }
+    },
+    {
+      "slot": 12,
+      "task_id": "v3-ota-continuous",
+      "path": "../v3-01/tasks/v3-ota-continuous",
+      "engineering_action": "spec-modeling",
+      "source_group": "jku-ota-dynamics",
+      "selection_reason": "公开微分方程把大信号压摆和小信号建立分成可独立检查的连续动态，而且不依赖晶体管网表。",
+      "replaces_initial_recommendation": null,
+      "evas_requirements": {
+        "kind": "requirements_for_read_only_cross_line_planning_not_capability_claim",
+        "basis": "../v3-01/tasks/v3-ota-continuous/instruction.md",
+        "required_behavior_combinations": [
+          "连续有限带宽与限速、轨限制；enable/启动、关断及再启动的动态状态"
+        ],
+        "reference_constructs_nonprescriptive": {
+          "solution/circuit.va": {
+            "sha256": "73453a7046a2105d6e59973273233102ce6471855ca7470d365da69a01c1c27c",
+            "constructs": [
+              "$bound_step",
+              "idt"
+            ]
+          }
+        },
+        "backend_basis": {
+          "declared_candidate_backend": "Spectre",
+          "contract_source": "../v3-01/tasks/v3-ota-continuous/SOURCE.md",
+          "current_harbor_numerical_run": "not_executed",
+          "current_evas_evidence": "not_verified_by_this_batch",
+          "historical_evidence": "Only the source-identified historical records linked from SOURCE; not a current Harbor or EVAS pass."
+        },
+        "unresolved_scientific_conditions": [
+          "沿用原公开合同；本轮不据参考解或EVAS输出新增数值、输入域或容差。逐题评分一致性与当前运行校准仍待核验，具体未决见本题SOURCE。"
+        ],
+        "source_review_open_items_unaccepted": [
+          "No equation change. Reference $bound_step was not made contractual."
+        ],
+        "evas_documented_gaps": {
+          "issue": "https://github.com/BucketSran/vaEVAS/issues/270",
+          "basis": "Static reading of EVAS main@ac1b6e8d docs and source; no EVAS run. An empty list does not show that the task runs on EVAS, and front-end acceptance is not a numerical pass. blocks_all_candidates marks gaps in a bench or an instantiated fixed support module; starter and reference-solution gaps only constrain those files.",
+          "items": []
+        }
+      },
+      "simulation_route": {
+        "route": "pure-va",
+        "stored_device_truth": false
+      }
+    },
+    {
+      "slot": 13,
+      "task_id": "v3-ota-data-model",
+      "path": "../v3-01/tasks/v3-ota-data-model",
+      "engineering_action": "data-modeling",
+      "source_group": "jku-ota-dynamics",
+      "selection_reason": "它是第二道、也是最后一道已实现的数据建模题，误差窗口和数据身份已经公开。",
+      "replaces_initial_recommendation": null,
+      "evas_requirements": {
+        "kind": "requirements_for_read_only_cross_line_planning_not_capability_claim",
+        "basis": "../v3-01/tasks/v3-ota-data-model/instruction.md",
+        "required_behavior_combinations": [
+          "自由运行动态模型对真实OTA完整实验预测；初态、启停、短建立/长保持及限制区历史"
+        ],
+        "reference_constructs_nonprescriptive": {
+          "solution/circuit.va": {
+            "sha256": "4804f079155d80103876f82c7ad6979d029e345fd793b87933d2e90f46ae6816",
+            "constructs": [
+              "$abstime",
+              "$bound_step",
+              "idt"
+            ]
+          }
+        },
+        "backend_basis": {
+          "declared_candidate_backend": "Spectre",
+          "contract_source": "../v3-01/tasks/v3-ota-data-model/SOURCE.md",
+          "current_harbor_numerical_run": "not_executed",
+          "current_evas_evidence": "not_verified_by_this_batch",
+          "historical_evidence": "Only the source-identified historical records linked from SOURCE; not a current Harbor or EVAS pass."
+        },
+        "unresolved_scientific_conditions": [
+          "沿用原公开合同；本轮不据参考解或EVAS输出新增数值、输入域或容差。逐题评分一致性与当前运行校准仍待核验，具体未决见本题SOURCE。"
+        ],
+        "scope_dependency": "晶体管仿真只用于已有固定训练/留出数据；候选运行不要求在线PDK。数据真值不能由EVAS重新生成替代。",
+        "evas_documented_gaps": {
+          "issue": "https://github.com/BucketSran/vaEVAS/issues/270",
+          "basis": "Static reading of EVAS main@ac1b6e8d docs and source; no EVAS run. An empty list does not show that the task runs on EVAS, and front-end acceptance is not a numerical pass. blocks_all_candidates marks gaps in a bench or an instantiated fixed support module; starter and reference-solution gaps only constrain those files.",
+          "items": [
+            {
+              "issue_item": 3,
+              "feature": "scs-output-point-budget",
+              "status": "rejected-resource",
+              "where": [
+                "hidden_bench",
+                "public_bench",
+                "starter_bench_copy"
+              ],
+              "blocks_all_candidates": true
+            }
+          ]
+        }
+      },
+      "simulation_route": {
+        "route": "pure-va",
+        "stored_device_truth": true
+      }
+    },
+    {
+      "slot": 14,
+      "task_id": "v3-ota-step-measurement",
+      "path": "../v3-01/tasks/v3-ota-step-measurement",
+      "engineering_action": "testing-characterization",
+      "source_group": "jku-ota-dynamics",
+      "selection_reason": "它要求求解者产生激励并消费真实响应，和只实现 OTA 方程、只拟合轨迹都不同。公开 dut.va 存在。",
+      "replaces_initial_recommendation": null,
+      "evas_requirements": {
+        "kind": "requirements_for_read_only_cross_line_planning_not_capability_claim",
+        "basis": "../v3-01/tasks/v3-ota-step-measurement/instruction.md",
+        "required_behavior_combinations": [
+          "真实固定OTA响应的阶跃观测；正负方向、稳定窗口、增益及未建立资格"
+        ],
+        "reference_constructs_nonprescriptive": {
+          "solution/circuit.va": {
+            "sha256": "abc9d1effa7471ab7a64afd2759c3df10b5cb480bb6a7b090639d376bcb4e1a2",
+            "constructs": [
+              "$abstime",
+              "$bound_step",
+              "initial_step",
+              "timer",
+              "transition"
+            ]
+          }
+        },
+        "backend_basis": {
+          "declared_candidate_backend": "Spectre",
+          "contract_source": "../v3-01/tasks/v3-ota-step-measurement/SOURCE.md",
+          "current_harbor_numerical_run": "not_executed",
+          "current_evas_evidence": "not_verified_by_this_batch",
+          "historical_evidence": "Only the source-identified historical records linked from SOURCE; not a current Harbor or EVAS pass."
+        },
+        "unresolved_scientific_conditions": [
+          "沿用原公开合同；本轮不据参考解或EVAS输出新增数值、输入域或容差。逐题评分一致性与当前运行校准仍待核验，具体未决见本题SOURCE。"
+        ],
+        "source_review_open_items_unaccepted": [
+          "The continuous OTA 50 ns disable law was not imported as a new meter requirement."
+        ],
+        "evas_documented_gaps": {
+          "issue": "https://github.com/BucketSran/vaEVAS/issues/270",
+          "basis": "Static reading of EVAS main@ac1b6e8d docs and source; no EVAS run. An empty list does not show that the task runs on EVAS, and front-end acceptance is not a numerical pass. blocks_all_candidates marks gaps in a bench or an instantiated fixed support module; starter and reference-solution gaps only constrain those files.",
+          "items": []
+        }
+      },
+      "simulation_route": {
+        "route": "pure-va",
+        "stored_device_truth": false
+      }
+    },
+    {
+      "slot": 15,
+      "task_id": "v2-spec-314-hysteretic-window-comparator",
+      "path": "../v2-01/tasks/v2-spec-314-hysteretic-window-comparator",
+      "engineering_action": "spec-modeling",
+      "source_group": "v4-314",
+      "selection_reason": "比较器家族需要一道带历史的规格模型。进入/退出电平和脉冲规则已经公开，不依赖文件长度。",
+      "replaces_initial_recommendation": null,
+      "evas_requirements": {
+        "kind": "requirements_for_read_only_cross_line_planning_not_capability_claim",
+        "basis": "../v2-01/tasks/v2-spec-314-hysteretic-window-comparator/instruction.md",
+        "required_behavior_combinations": [
+          "连续输入的上下滞回交点；异步reset/enable；定宽脉冲及待发事件取消"
+        ],
+        "reference_constructs_nonprescriptive": {
+          "solution/circuit.va": {
+            "sha256": "da892869caf39897dc4711d7608bd59e6fefd48afb20eae38db5dc4b2c84f80c",
+            "constructs": [
+              "$abstime",
+              "cross",
+              "initial_step",
+              "timer",
+              "transition"
+            ]
+          }
+        },
+        "backend_basis": {
+          "declared_candidate_backend": "Spectre",
+          "contract_source": "../v2-01/tasks/v2-spec-314-hysteretic-window-comparator/SOURCE.md",
+          "current_harbor_numerical_run": "not_executed",
+          "current_evas_evidence": "not_verified_by_this_batch",
+          "historical_evidence": "Only the source-identified historical records linked from SOURCE; not a current Harbor or EVAS pass."
+        },
+        "unresolved_scientific_conditions": [
+          "沿用原公开合同；本轮不据参考解或EVAS输出新增数值、输入域或容差。逐题评分一致性与当前运行校准仍待核验，具体未决见本题SOURCE。"
+        ],
+        "source_review_open_items_unaccepted": [
+          "direction keywords absent",
+          "vcm unused",
+          "vth applied only to rst/enable",
+          "pending versus completed historical calibration wording",
+          "checker 1.15*tr pulse-end skip not adopted",
+          "/app package unverified"
+        ],
+        "evas_documented_gaps": {
+          "issue": "https://github.com/BucketSran/vaEVAS/issues/270",
+          "basis": "Static reading of EVAS main@ac1b6e8d docs and source; no EVAS run. An empty list does not show that the task runs on EVAS, and front-end acceptance is not a numerical pass. blocks_all_candidates marks gaps in a bench or an instantiated fixed support module; starter and reference-solution gaps only constrain those files.",
+          "items": []
+        }
+      },
+      "simulation_route": {
+        "route": "pure-va",
+        "stored_device_truth": false
+      }
+    },
+    {
+      "slot": 16,
+      "task_id": "v2-test-offset-search",
+      "path": "../v2-01/tasks/v2-test-offset-search",
+      "engineering_action": "testing-characterization",
+      "source_group": "v4-109",
+      "selection_reason": "实验步骤由真实 ready 决定，能区分闭环搜索和开环查表。公开 DUT 文件存在，不像占空比题缺少所声称的 dut 目录。",
+      "replaces_initial_recommendation": null,
+      "evas_requirements": {
+        "kind": "requirements_for_read_only_cross_line_planning_not_capability_claim",
+        "basis": "../v2-01/tasks/v2-test-offset-search/instruction.md",
+        "required_behavior_combinations": [
+          "主动刺激固定比较器并等待响应；搜索状态、偏移估计、超时和无效资格"
+        ],
+        "reference_constructs_nonprescriptive": {
+          "solution/circuit.va": {
+            "sha256": "e343f3583ef0286fac7c34fae5404b1abe4b1af5336c4008ef8ea6dbfc2678de",
+            "constructs": [
+              "$abstime",
+              "cross",
+              "initial_step",
+              "timer",
+              "transition"
+            ]
+          }
+        },
+        "backend_basis": {
+          "declared_candidate_backend": "Spectre",
+          "contract_source": "../v2-01/tasks/v2-test-offset-search/SOURCE.md",
+          "current_harbor_numerical_run": "not_executed",
+          "current_evas_evidence": "not_verified_by_this_batch",
+          "historical_evidence": "Only the source-identified historical records linked from SOURCE; not a current Harbor or EVAS pass."
+        },
+        "unresolved_scientific_conditions": [
+          "沿用原公开合同；本轮不据参考解或EVAS输出新增数值、输入域或容差。逐题评分一致性与当前运行校准仍待核验，具体未决见本题SOURCE。"
+        ],
+        "source_review_open_items_unaccepted": [
+          "No vref field in this contract. C109 vref was left untouched."
+        ],
+        "evas_documented_gaps": {
+          "issue": "https://github.com/BucketSran/vaEVAS/issues/270",
+          "basis": "Static reading of EVAS main@ac1b6e8d docs and source; no EVAS run. An empty list does not show that the task runs on EVAS, and front-end acceptance is not a numerical pass. blocks_all_candidates marks gaps in a bench or an instantiated fixed support module; starter and reference-solution gaps only constrain those files.",
+          "items": []
+        }
+      },
+      "simulation_route": {
+        "route": "pure-va",
+        "stored_device_truth": false
+      }
+    },
+    {
+      "slot": 17,
+      "task_id": "v2-spec-001-bang-bang-phase-detector",
+      "path": "../v2-01/tasks/v2-spec-001-bang-bang-phase-detector",
+      "engineering_action": "spec-modeling",
+      "source_group": "v4-001",
+      "selection_reason": "采样历史和判相规则写到了边沿顺序，是时钟家族里边界清楚的规格模型。",
+      "replaces_initial_recommendation": null,
+      "evas_requirements": {
+        "kind": "requirements_for_read_only_cross_line_planning_not_capability_claim",
+        "basis": "../v2-01/tasks/v2-spec-001-bang-bang-phase-detector/instruction.md",
+        "required_behavior_combinations": [
+          "时钟双边沿读取data历史；三样本判决、异步reset/disable、延迟和平滑"
+        ],
+        "reference_constructs_nonprescriptive": {
+          "solution/circuit.va": {
+            "sha256": "ac4e7229361ace9416faaca2436fa0f0fbee1cfad25553bf3c54d314632de250",
+            "constructs": [
+              "cross",
+              "initial_step",
+              "transition"
+            ]
+          }
+        },
+        "backend_basis": {
+          "declared_candidate_backend": "Spectre",
+          "contract_source": "../v2-01/tasks/v2-spec-001-bang-bang-phase-detector/SOURCE.md",
+          "current_harbor_numerical_run": "not_executed",
+          "current_evas_evidence": "not_verified_by_this_batch",
+          "historical_evidence": "Only the source-identified historical records linked from SOURCE; not a current Harbor or EVAS pass."
+        },
+        "unresolved_scientific_conditions": [
+          "沿用原公开合同；本轮不据参考解或EVAS输出新增数值、输入域或容差。逐题评分一致性与当前运行校准仍待核验，具体未决见本题SOURCE。"
+        ],
+        "source_review_open_items_unaccepted": [
+          "voltage equal to vth is unclassified",
+          "pending versus completed historical calibration wording",
+          "checker 1.15*trf skip not adopted",
+          "no long quarter-transition sentence added",
+          "/app package unverified"
+        ],
+        "evas_documented_gaps": {
+          "issue": "https://github.com/BucketSran/vaEVAS/issues/270",
+          "basis": "Static reading of EVAS main@ac1b6e8d docs and source; no EVAS run. An empty list does not show that the task runs on EVAS, and front-end acceptance is not a numerical pass. blocks_all_candidates marks gaps in a bench or an instantiated fixed support module; starter and reference-solution gaps only constrain those files.",
+          "items": []
+        }
+      },
+      "simulation_route": {
+        "route": "pure-va",
+        "stored_device_truth": false
+      }
+    },
+    {
+      "slot": 18,
+      "task_id": "v2-integrate-case0007-adpll-fine-tdc",
+      "path": "../v2-01/tasks/v2-integrate-case0007-adpll-fine-tdc",
+      "engineering_action": "extension-integration",
+      "source_group": "tiny-tapeout-adpll",
+      "selection_reason": "这是已实现资产里职责最完整的闭环集成：复用健康部件、新增测相通路，并要求通路影响执行器。",
+      "replaces_initial_recommendation": null,
+      "evas_requirements": {
+        "kind": "requirements_for_read_only_cross_line_planning_not_capability_claim",
+        "basis": "../v2-01/tasks/v2-integrate-case0007-adpll-fine-tdc/instruction.md",
+        "required_behavior_combinations": [
+          "真实DCO/分频反馈与控制模块协作；相位连续振荡；TDC配对/量化/超时；重调和持续lock资格"
+        ],
+        "reference_constructs_nonprescriptive": {
+          "solution/circuit.va": {
+            "sha256": "1970e07c05d56c72cb4cad9cd01b52e8a59b2a5c4906c2ff1d93475ac15d52a9",
+            "constructs": [
+              "$abstime",
+              "cross",
+              "initial_step",
+              "timer",
+              "transition"
+            ]
+          }
+        },
+        "backend_basis": {
+          "declared_candidate_backend": "Spectre",
+          "contract_source": "../v2-01/tasks/v2-integrate-case0007-adpll-fine-tdc/SOURCE.md",
+          "current_harbor_numerical_run": "not_executed",
+          "current_evas_evidence": "not_verified_by_this_batch",
+          "historical_evidence": "Only the source-identified historical records linked from SOURCE; not a current Harbor or EVAS pass."
+        },
+        "unresolved_scientific_conditions": [
+          "沿用原公开合同；本轮不据参考解或EVAS输出新增数值、输入域或容差。逐题评分一致性与当前运行校准仍待核验，具体未决见本题SOURCE。"
+        ],
+        "source_review_open_items_unaccepted": [
+          "Pre-migration instruction says tolerances still need a calibration freeze. Pre-migration SOURCE says author simulation calibration completed. Neither was promoted to a current run."
+        ],
+        "evas_documented_gaps": {
+          "issue": "https://github.com/BucketSran/vaEVAS/issues/270",
+          "basis": "Static reading of EVAS main@ac1b6e8d docs and source; no EVAS run. An empty list does not show that the task runs on EVAS, and front-end acceptance is not a numerical pass. blocks_all_candidates marks gaps in a bench or an instantiated fixed support module; starter and reference-solution gaps only constrain those files.",
+          "items": [
+            {
+              "issue_item": 3,
+              "feature": "scs-output-point-budget",
+              "status": "rejected-resource",
+              "where": [
+                "hidden_bench"
+              ],
+              "blocks_all_candidates": true
+            },
+            {
+              "issue_item": 8,
+              "feature": "scs-pulse-magnitude-only",
+              "status": "conditional-consumer-found",
+              "where": [
+                "public_bench",
+                "starter_bench_copy"
+              ],
+              "blocks_all_candidates": false
+            },
+            {
+              "issue_item": 13,
+              "feature": "va-floor-unproven-range",
+              "status": "rejected",
+              "where": [
+                "reference_solution"
+              ],
+              "blocks_all_candidates": false
+            },
+            {
+              "issue_item": 6,
+              "feature": "va-idt-reset-dependency",
+              "status": "rejected",
+              "where": [
+                "fixed_support",
+                "fixed_support_copy"
+              ],
+              "blocks_all_candidates": true
+            },
+            {
+              "issue_item": 5,
+              "feature": "va-unsupported-system-function",
+              "status": "rejected",
+              "where": [
+                "fixed_support",
+                "fixed_support_copy",
+                "reference_solution"
+              ],
+              "blocks_all_candidates": true
+            }
+          ]
+        }
+      },
+      "simulation_route": {
+        "route": "pure-va",
+        "stored_device_truth": false
+      }
+    },
+    {
+      "slot": 19,
+      "task_id": "v2-repair-pfd-reset",
+      "path": "../v2-01/tasks/v2-repair-pfd-reset",
+      "engineering_action": "diagnosis-repair",
+      "source_group": "v4-family-249",
+      "selection_reason": "PLL 家族需要一道事件取消修复。正确时序已写在题面，起始源码也在题包内。",
+      "replaces_initial_recommendation": null,
+      "evas_requirements": {
+        "kind": "requirements_for_read_only_cross_line_planning_not_capability_claim",
+        "basis": "../v2-01/tasks/v2-repair-pfd-reset/instruction.md",
+        "required_behavior_combinations": [
+          "双时钟PFD状态、延迟复位与可重入边沿；过期复位事件不得清除新一轮状态"
+        ],
+        "reference_constructs_nonprescriptive": {
+          "solution/circuit.va": {
+            "sha256": "efd3bfdec4fed600b9a0e62bab1b6ff89cc1857356aa7178a00684cf26a5acca",
+            "constructs": [
+              "$abstime",
+              "cross",
+              "initial_step",
+              "timer",
+              "transition"
+            ]
+          }
+        },
+        "backend_basis": {
+          "declared_candidate_backend": "Spectre",
+          "contract_source": "../v2-01/tasks/v2-repair-pfd-reset/SOURCE.md",
+          "current_harbor_numerical_run": "not_executed",
+          "current_evas_evidence": "not_verified_by_this_batch",
+          "historical_evidence": "Only the source-identified historical records linked from SOURCE; not a current Harbor or EVAS pass."
+        },
+        "unresolved_scientific_conditions": [
+          "沿用原公开合同；本轮不据参考解或EVAS输出新增数值、输入域或容差。逐题评分一致性与当前运行校准仍待核验，具体未决见本题SOURCE。"
+        ],
+        "source_review_open_items_unaccepted": [
+          "SOURCE.json calibration_status and agent_pilots are pending. Pre-migration SOURCE says author simulation calibration completed."
+        ],
+        "evas_documented_gaps": {
+          "issue": "https://github.com/BucketSran/vaEVAS/issues/270",
+          "basis": "Static reading of EVAS main@ac1b6e8d docs and source; no EVAS run. An empty list does not show that the task runs on EVAS, and front-end acceptance is not a numerical pass. blocks_all_candidates marks gaps in a bench or an instantiated fixed support module; starter and reference-solution gaps only constrain those files.",
+          "items": []
+        }
+      },
+      "simulation_route": {
+        "route": "pure-va",
+        "stored_device_truth": false
+      }
+    },
+    {
+      "slot": 20,
+      "task_id": "v3-calibration-fractional-pll",
+      "path": "../v3-01/tasks/v3-calibration-fractional-pll",
+      "engineering_action": "extension-integration",
+      "source_group": "fractional-pll-302",
+      "selection_reason": "分数分频、扰动恢复和整数兼容是 fine TDC 题没有的责任，公开数值界限已经列出。",
+      "replaces_initial_recommendation": null,
+      "evas_requirements": {
+        "kind": "requirements_for_read_only_cross_line_planning_not_capability_claim",
+        "basis": "../v3-01/tasks/v3-calibration-fractional-pll/instruction.md",
+        "required_behavior_combinations": [
+          "实际振荡边沿驱动N/N+1分频；分数累加状态与闭环调谐；重调/扰动后的持续锁定资格"
+        ],
+        "reference_constructs_nonprescriptive": {
+          "solution/circuit.va": {
+            "sha256": "6632ecd8f08d6a4c0176c0875e13be53835f0c959d54fec21b51769a1589cb6e",
+            "constructs": [
+              "$abstime",
+              "cross",
+              "initial_step",
+              "timer",
+              "transition"
+            ]
+          }
+        },
+        "backend_basis": {
+          "declared_candidate_backend": "Spectre",
+          "contract_source": "../v3-01/tasks/v3-calibration-fractional-pll/SOURCE.md",
+          "current_harbor_numerical_run": "not_executed",
+          "current_evas_evidence": "not_verified_by_this_batch",
+          "historical_evidence": "Only the source-identified historical records linked from SOURCE; not a current Harbor or EVAS pass."
+        },
+        "unresolved_scientific_conditions": [
+          "沿用原公开合同；本轮不据参考解或EVAS输出新增数值、输入域或容差。逐题评分一致性与当前运行校准仍待核验，具体未决见本题SOURCE。",
+          "2026-10-27用户确认abs(mean(phi))≤0.2周期：首个反馈沿取相对最近参考沿的有符号相位，此后连续展开；同一序列max(phi)-min(phi)≤0.35周期。不是mean(abs(phi))，单位为周期。Spec已写明，公私checker原已按此计算。"
+        ],
+        "source_review_open_items_unaccepted": [
+          "interface.json hidden_changes mentions bias/common-mode envelope and slope, which the D1 instruction does not publish. Those terms were not added."
+        ],
+        "contract_decision_card": {
+          "path": "SOURCE.md#评分合同决定卡",
+          "status": "user-selected-adopted",
+          "needs_user_scientific_choice": false,
+          "decided_at": "2026-10-27",
+          "summary": "2026-10-27用户确认abs(mean(phi))≤0.2周期：首个反馈沿取相对最近参考沿的有符号相位，此后连续展开；同一序列max(phi)-min(phi)≤0.35周期。不是mean(abs(phi))，单位为周期。Spec已写明，公私checker原已按此计算。",
+          "checker_sha256": "7efea5c0bbd65a0f644bd702d6e4b0540f867768a102ce3748a8489ee2c32f96",
+          "evidence": "../../../../../runs/t3-harbor30-20261027/grading-adoption/"
+        },
+        "evas_documented_gaps": {
+          "issue": "https://github.com/BucketSran/vaEVAS/issues/270",
+          "basis": "Static reading of EVAS main@ac1b6e8d docs and source; no EVAS run. An empty list does not show that the task runs on EVAS, and front-end acceptance is not a numerical pass. blocks_all_candidates marks gaps in a bench or an instantiated fixed support module; starter and reference-solution gaps only constrain those files.",
+          "items": [
+            {
+              "issue_item": 3,
+              "feature": "scs-output-point-budget",
+              "status": "rejected-resource",
+              "where": [
+                "hidden_bench",
+                "public_bench",
+                "starter_bench_copy"
+              ],
+              "blocks_all_candidates": true
+            },
+            {
+              "issue_item": 8,
+              "feature": "scs-pulse-magnitude-only",
+              "status": "conditional-consumer-found",
+              "where": [
+                "hidden_bench",
+                "public_bench",
+                "starter_bench_copy"
+              ],
+              "blocks_all_candidates": false
+            },
+            {
+              "issue_item": 6,
+              "feature": "va-idt-reset-dependency",
+              "status": "rejected",
+              "where": [
+                "fixed_support",
+                "fixed_support_copy"
+              ],
+              "blocks_all_candidates": true
+            },
+            {
+              "issue_item": 5,
+              "feature": "va-unsupported-system-function",
+              "status": "rejected",
+              "where": [
+                "reference_solution",
+                "starter"
+              ],
+              "blocks_all_candidates": false
+            }
+          ]
+        }
+      },
+      "simulation_route": {
+        "route": "pure-va",
+        "stored_device_truth": false
+      }
+    },
+    {
+      "slot": 21,
+      "task_id": "v2-test-clock-frequency",
+      "path": "../v2-01/tasks/v2-test-clock-frequency",
+      "engineering_action": "testing-characterization",
+      "source_group": "v4-362",
+      "selection_reason": "占空比和时间协议题的公开树缺少题面所写的 dut 目录。本题目录与题面一致，而且包含分频比必须实测的责任。",
+      "replaces_initial_recommendation": null,
+      "evas_requirements": {
+        "kind": "requirements_for_read_only_cross_line_planning_not_capability_claim",
+        "basis": "../v2-01/tasks/v2-test-clock-frequency/instruction.md",
+        "required_behavior_combinations": [
+          "实际DCO/分频输出边沿计时；频率估计、分频关系及坏DUT仍正确报告"
+        ],
+        "reference_constructs_nonprescriptive": {
+          "solution/circuit.va": {
+            "sha256": "e4101183215afea6d26e773939706c4fe5215ca901fbfa4c2503e9df865a4948",
+            "constructs": [
+              "$abstime",
+              "cross",
+              "initial_step",
+              "transition"
+            ]
+          }
+        },
+        "backend_basis": {
+          "declared_candidate_backend": "Spectre",
+          "contract_source": "../v2-01/tasks/v2-test-clock-frequency/SOURCE.md",
+          "current_harbor_numerical_run": "not_executed",
+          "current_evas_evidence": "not_verified_by_this_batch",
+          "historical_evidence": "Only the source-identified historical records linked from SOURCE; not a current Harbor or EVAS pass."
+        },
+        "unresolved_scientific_conditions": [
+          "沿用原公开合同；本轮不据参考解或EVAS输出新增数值、输入域或容差。逐题评分一致性与当前运行校准仍待核验，具体未决见本题SOURCE。"
+        ],
+        "source_review_open_items_unaccepted": [
+          "f_max=250 MHz is a source default, not a newly published sweep range."
+        ],
+        "evas_documented_gaps": {
+          "issue": "https://github.com/BucketSran/vaEVAS/issues/270",
+          "basis": "Static reading of EVAS main@ac1b6e8d docs and source; no EVAS run. An empty list does not show that the task runs on EVAS, and front-end acceptance is not a numerical pass. blocks_all_candidates marks gaps in a bench or an instantiated fixed support module; starter and reference-solution gaps only constrain those files.",
+          "items": []
+        }
+      },
+      "simulation_route": {
+        "route": "pure-va",
+        "stored_device_truth": false
+      }
+    },
+    {
+      "slot": 22,
+      "task_id": "v2-spec-353-ffe-transmitter-3tap",
+      "path": "../v2-01/tasks/v2-spec-353-ffe-transmitter-3tap",
+      "engineering_action": "spec-modeling",
+      "source_group": "v4-353",
+      "selection_reason": "输入符号历史的公式、tap 解码和保持窗口已经冻结，可直接改成 Harbor 规格题。",
+      "replaces_initial_recommendation": null,
+      "evas_requirements": {
+        "kind": "requirements_for_read_only_cross_line_planning_not_capability_claim",
+        "basis": "../v2-01/tasks/v2-spec-353-ffe-transmitter-3tap/instruction.md",
+        "required_behavior_combinations": [
+          "NRZ输入符号历史与两路2-bit tap解码；逐拍FFE贡献、复位空历史及输出过渡"
+        ],
+        "reference_constructs_nonprescriptive": {
+          "solution/circuit.va": {
+            "sha256": "345a1a24f8e6f785a0b951de381cb99ea04c37b1df8980b01e3b96d15d5e45b6",
+            "constructs": [
+              "cross",
+              "initial_step",
+              "transition"
+            ]
+          }
+        },
+        "backend_basis": {
+          "declared_candidate_backend": "Spectre",
+          "contract_source": "../v2-01/tasks/v2-spec-353-ffe-transmitter-3tap/SOURCE.md",
+          "current_harbor_numerical_run": "not_executed",
+          "current_evas_evidence": "not_verified_by_this_batch",
+          "historical_evidence": "Only the source-identified historical records linked from SOURCE; not a current Harbor or EVAS pass."
+        },
+        "unresolved_scientific_conditions": [
+          "沿用原公开合同；本轮不据参考解或EVAS输出新增数值、输入域或容差。逐题评分一致性与当前运行校准仍待核验，具体未决见本题SOURCE。"
+        ],
+        "source_review_open_items_unaccepted": [
+          "direction keywords absent",
+          "clamp limits identified with vss and vdd",
+          "checker 1.15*tr skip not adopted",
+          "/app package unverified"
+        ],
+        "evas_documented_gaps": {
+          "issue": "https://github.com/BucketSran/vaEVAS/issues/270",
+          "basis": "Static reading of EVAS main@ac1b6e8d docs and source; no EVAS run. An empty list does not show that the task runs on EVAS, and front-end acceptance is not a numerical pass. blocks_all_candidates marks gaps in a bench or an instantiated fixed support module; starter and reference-solution gaps only constrain those files.",
+          "items": []
+        }
+      },
+      "simulation_route": {
+        "route": "pure-va",
+        "stored_device_truth": false
+      }
+    },
+    {
+      "slot": 23,
+      "task_id": "v2-spec-307-switched-capacitor-integrator-phase-pair",
+      "path": "../v2-01/tasks/v2-spec-307-switched-capacitor-integrator-phase-pair",
+      "engineering_action": "spec-modeling",
+      "source_group": "v4-307",
+      "selection_reason": "两相采样、一次消费和替换验收构成与 FFE、连续滤波器都不同的开关电容责任。",
+      "replaces_initial_recommendation": null,
+      "evas_requirements": {
+        "kind": "requirements_for_read_only_cross_line_planning_not_capability_claim",
+        "basis": "../v2-01/tasks/v2-spec-307-switched-capacitor-integrator-phase-pair/instruction.md",
+        "required_behavior_combinations": [
+          "非重叠两相采样与一次性消费；跨模块真实样本/有效性传播；夹位积分状态（饱和后反向样本当拍退出）、复位和替换部件消费"
+        ],
+        "reference_constructs_nonprescriptive": {
+          "solution/circuit.va": {
+            "sha256": "dd1b37c1c4675eda2b92a6de9ce02b2724b5987fc01fc30113a96d446fa8f30c",
+            "constructs": []
+          },
+          "solution/integrator_state_cell.va": {
+            "sha256": "b5341b90cf756bfc7e5c8537250adc451df12196d4f5fa9e5c01f6462539909c",
+            "constructs": [
+              "cross",
+              "initial_step",
+              "transition"
+            ]
+          },
+          "solution/sample_phase_cell.va": {
+            "sha256": "e7265b884b4b602a644739bc50bc6cb734e42494a106aa10973be4807a206df2",
+            "constructs": [
+              "cross",
+              "initial_step",
+              "transition"
+            ]
+          }
+        },
+        "backend_basis": {
+          "declared_candidate_backend": "Spectre",
+          "contract_source": "../v2-01/tasks/v2-spec-307-switched-capacitor-integrator-phase-pair/SOURCE.md",
+          "current_harbor_numerical_run": "not_executed",
+          "current_evas_evidence": "not_verified_by_this_batch",
+          "historical_evidence": "Only the source-identified historical records linked from SOURCE; not a current Harbor or EVAS pass."
+        },
+        "unresolved_scientific_conditions": [
+          "沿用原公开合同；本轮不据参考解或EVAS输出新增数值、输入域或容差。逐题评分一致性与当前运行校准仍待核验，具体未决见本题SOURCE。",
+          "2026-10-27用户确认状态夹位：q_next=clamp(q+k_int*(sample_node-vcm),vss,vdd)，vout=q_next，不保留超轨累计量；Spec已写明。参考与公私checker原已按此递推。该选择不代决未复位且已使能时的上电积分状态。"
+        ],
+        "source_review_open_items_unaccepted": [
+          "top direction keywords absent from the first sentence",
+          "enabled power-on vout/valid unspecified",
+          "checker 1.15*tr skip not adopted",
+          "historical six-condition calibration does not certify /app"
+        ],
+        "contract_decision_card": {
+          "path": "SOURCE.md#评分合同决定卡",
+          "status": "user-selected-adopted",
+          "needs_user_scientific_choice": false,
+          "decided_at": "2026-10-27",
+          "summary": "2026-10-27用户确认状态夹位：q_next=clamp(q+k_int*(sample_node-vcm),vss,vdd)，vout=q_next，不保留超轨累计量；Spec已写明。参考与公私checker原已按此递推。该选择不代决未复位且已使能时的上电积分状态。",
+          "checker_sha256": "6c3187d1c824a18de7264e8d98e7cdd4eafa0d78b91e73ba00fbd625b020d2ac",
+          "evidence": "../../../../../runs/t3-harbor30-20261027/grading-adoption/"
+        },
+        "evas_documented_gaps": {
+          "issue": "https://github.com/BucketSran/vaEVAS/issues/270",
+          "basis": "Static reading of EVAS main@ac1b6e8d docs and source; no EVAS run. An empty list does not show that the task runs on EVAS, and front-end acceptance is not a numerical pass. blocks_all_candidates marks gaps in a bench or an instantiated fixed support module; starter and reference-solution gaps only constrain those files.",
+          "items": []
+        }
+      },
+      "simulation_route": {
+        "route": "pure-va",
+        "stored_device_truth": false
+      }
+    },
+    {
+      "slot": 24,
+      "task_id": "v3-filter-ctle",
+      "path": "../v3-01/tasks/v3-filter-ctle",
+      "engineering_action": "spec-modeling",
+      "source_group": "verilogalib-ctle",
+      "selection_reason": "连续均衡器的状态方程和误差已经公开，来源组也不同于离散 FFE。",
+      "replaces_initial_recommendation": null,
+      "evas_requirements": {
+        "kind": "requirements_for_read_only_cross_line_planning_not_capability_claim",
+        "basis": "../v3-01/tasks/v3-filter-ctle/instruction.md",
+        "required_behavior_combinations": [
+          "连续二阶零极点响应；初态、参数变化、反馈连接中的因果与稳定数值状态"
+        ],
+        "reference_constructs_nonprescriptive": {
+          "solution/circuit.va": {
+            "sha256": "d1cbd215f7e96a6ac3296f5e899d4d5b194aa156159f5e9b74318891c598799b",
+            "constructs": [
+              "idt"
+            ]
+          }
+        },
+        "backend_basis": {
+          "declared_candidate_backend": "Spectre",
+          "contract_source": "../v3-01/tasks/v3-filter-ctle/SOURCE.md",
+          "current_harbor_numerical_run": "not_executed",
+          "current_evas_evidence": "not_verified_by_this_batch",
+          "historical_evidence": "Only the source-identified historical records linked from SOURCE; not a current Harbor or EVAS pass."
+        },
+        "unresolved_scientific_conditions": [
+          "沿用原公开合同；本轮不据参考解或EVAS输出新增数值、输入域或容差。逐题评分一致性与当前运行校准仍待核验，具体未决见本题SOURCE。"
+        ],
+        "source_review_open_items_unaccepted": [
+          "External gain-parameter gap in verilogaLib was not used to change this contract's gain default or range."
+        ],
+        "evas_documented_gaps": {
+          "issue": "https://github.com/BucketSran/vaEVAS/issues/270",
+          "basis": "Static reading of EVAS main@ac1b6e8d docs and source; no EVAS run. An empty list does not show that the task runs on EVAS, and front-end acceptance is not a numerical pass. blocks_all_candidates marks gaps in a bench or an instantiated fixed support module; starter and reference-solution gaps only constrain those files.",
+          "items": [
+            {
+              "issue_item": 9,
+              "feature": "scs-sine-consumer-boundary",
+              "status": "conditional-consumer-found",
+              "where": [
+                "hidden_bench",
+                "public_bench",
+                "starter_bench_copy"
+              ],
+              "blocks_all_candidates": false
+            },
+            {
+              "issue_item": 2,
+              "feature": "scs-sine-floating",
+              "status": "rejected",
+              "where": [
+                "hidden_bench",
+                "public_bench",
+                "starter_bench_copy"
+              ],
+              "blocks_all_candidates": true
+            },
+            {
+              "issue_item": 1,
+              "feature": "scs-sine-missing-sinedc",
+              "status": "rejected",
+              "where": [
+                "hidden_bench",
+                "public_bench",
+                "starter_bench_copy"
+              ],
+              "blocks_all_candidates": true
+            }
+          ]
+        }
+      },
+      "simulation_route": {
+        "route": "pure-va",
+        "stored_device_truth": false
+      }
+    },
+    {
+      "slot": 25,
+      "task_id": "v3-filter-iq-conversion",
+      "path": "../v3-01/tasks/v3-filter-iq-conversion",
+      "engineering_action": "spec-modeling",
+      "source_group": "v4-364+400",
+      "selection_reason": "变频极性和禁用期间的状态保持是现有 RF 资产里清楚的额外责任，方程和误差已经公开。",
+      "replaces_initial_recommendation": null,
+      "evas_requirements": {
+        "kind": "requirements_for_read_only_cross_line_planning_not_capability_claim",
+        "basis": "../v3-01/tasks/v3-filter-iq-conversion/instruction.md",
+        "required_behavior_combinations": [
+          "连续I/Q乘法变频与低通状态；LO实际输入、enable及双向输出"
+        ],
+        "reference_constructs_nonprescriptive": {
+          "solution/circuit.va": {
+            "sha256": "61e5b94f1d237d342e875bda637158f93ea13c8a260094112edb7c2bf751ebd9",
+            "constructs": [
+              "idt"
+            ]
+          }
+        },
+        "backend_basis": {
+          "declared_candidate_backend": "Spectre",
+          "contract_source": "../v3-01/tasks/v3-filter-iq-conversion/SOURCE.md",
+          "current_harbor_numerical_run": "not_executed",
+          "current_evas_evidence": "not_verified_by_this_batch",
+          "historical_evidence": "Only the source-identified historical records linked from SOURCE; not a current Harbor or EVAS pass."
+        },
+        "unresolved_scientific_conditions": [
+          "沿用原公开合同；本轮不据参考解或EVAS输出新增数值、输入域或容差。逐题评分一致性与当前运行校准仍待核验，具体未决见本题SOURCE。"
+        ],
+        "source_review_open_items_unaccepted": [
+          "Old clamp, common-mode, and discrete-tick behavior stays out of the contract."
+        ],
+        "evas_documented_gaps": {
+          "issue": "https://github.com/BucketSran/vaEVAS/issues/270",
+          "basis": "Static reading of EVAS main@ac1b6e8d docs and source; no EVAS run. An empty list does not show that the task runs on EVAS, and front-end acceptance is not a numerical pass. blocks_all_candidates marks gaps in a bench or an instantiated fixed support module; starter and reference-solution gaps only constrain those files.",
+          "items": [
+            {
+              "issue_item": 9,
+              "feature": "scs-sine-consumer-boundary",
+              "status": "conditional-consumer-found",
+              "where": [
+                "hidden_bench",
+                "public_bench",
+                "starter_bench_copy"
+              ],
+              "blocks_all_candidates": false
+            },
+            {
+              "issue_item": 1,
+              "feature": "scs-sine-missing-sinedc",
+              "status": "rejected",
+              "where": [
+                "hidden_bench",
+                "public_bench",
+                "starter_bench_copy"
+              ],
+              "blocks_all_candidates": true
+            }
+          ]
+        }
+      },
+      "simulation_route": {
+        "route": "pure-va",
+        "stored_device_truth": false
+      }
+    },
+    {
+      "slot": 26,
+      "task_id": "v3-filter-sweep-measurement",
+      "path": "../v3-01/tasks/v3-filter-sweep-measurement",
+      "engineering_action": "testing-characterization",
+      "source_group": "original-filter-measurement",
+      "selection_reason": "它把激励生成和复数测量放在同一 VA 交付里，并有真实的无效窗口。healthy.va 在公开目录中。",
+      "replaces_initial_recommendation": null,
+      "evas_requirements": {
+        "kind": "requirements_for_read_only_cross_line_planning_not_capability_claim",
+        "basis": "../v3-01/tasks/v3-filter-sweep-measurement/instruction.md",
+        "required_behavior_combinations": [
+          "分段多频主动激励与固定DUT响应；真实波形同步积分、复数幅相、窗末更新及无效窗资格"
+        ],
+        "reference_constructs_nonprescriptive": {
+          "solution/circuit.va": {
+            "sha256": "3a774882ca3eab7d15d8fb44d43d19044d8f383596e0afe71cabd16b46235212",
+            "constructs": [
+              "$abstime",
+              "$bound_step",
+              "idt",
+              "initial_step",
+              "timer"
+            ]
+          }
+        },
+        "backend_basis": {
+          "declared_candidate_backend": "Spectre",
+          "contract_source": "../v3-01/tasks/v3-filter-sweep-measurement/SOURCE.md",
+          "current_harbor_numerical_run": "not_executed",
+          "current_evas_evidence": "not_verified_by_this_batch",
+          "historical_evidence": "Only the source-identified historical records linked from SOURCE; not a current Harbor or EVAS pass."
+        },
+        "unresolved_scientific_conditions": [
+          "沿用原公开合同；本轮不据参考解或EVAS输出新增数值、输入域或容差。逐题评分一致性与当前运行校准仍待核验，具体未决见本题SOURCE。"
+        ],
+        "source_review_open_items_unaccepted": [
+          "第2槽 could be misread as one-based k=1. The contract's own 第k槽 = k*slot numbering selects k=2. cases.json index 2 agrees but was not used as the deciding authority."
+        ],
+        "evas_documented_gaps": {
+          "issue": "https://github.com/BucketSran/vaEVAS/issues/270",
+          "basis": "Static reading of EVAS main@ac1b6e8d docs and source; no EVAS run. An empty list does not show that the task runs on EVAS, and front-end acceptance is not a numerical pass. blocks_all_candidates marks gaps in a bench or an instantiated fixed support module; starter and reference-solution gaps only constrain those files.",
+          "items": [
+            {
+              "issue_item": 14,
+              "feature": "va-event-dynamic-math",
+              "status": "rejected",
+              "where": [
+                "reference_solution"
+              ],
+              "blocks_all_candidates": false
+            },
+            {
+              "issue_item": 13,
+              "feature": "va-floor-unproven-range",
+              "status": "rejected",
+              "where": [
+                "reference_solution"
+              ],
+              "blocks_all_candidates": false
+            },
+            {
+              "issue_item": 6,
+              "feature": "va-idt-reset-dependency",
+              "status": "rejected",
+              "where": [
+                "reference_solution"
+              ],
+              "blocks_all_candidates": false
+            },
+            {
+              "issue_item": 12,
+              "feature": "va-math-function-unsupported",
+              "status": "rejected",
+              "where": [
+                "reference_solution"
+              ],
+              "blocks_all_candidates": false
+            }
+          ]
+        }
+      },
+      "simulation_route": {
+        "route": "pure-va",
+        "stored_device_truth": false
+      }
+    },
+    {
+      "slot": 27,
+      "task_id": "v3-filter-programmable-lp",
+      "path": "../v3-01/tasks/v3-filter-programmable-lp",
+      "engineering_action": "extension-integration",
+      "source_group": "v4-334",
+      "selection_reason": "码控截止频率与连续状态保留构成明确扩展责任；本批保留冻结校准SOURCE原路径，持续失调仍作后续迁移候补。",
+      "replaces_initial_recommendation": "v3-calibration-continuous-offset",
+      "evas_requirements": {
+        "kind": "requirements_for_read_only_cross_line_planning_not_capability_claim",
+        "basis": "../v3-01/tasks/v3-filter-programmable-lp/instruction.md",
+        "required_behavior_combinations": [
+          "连续单极点状态；代码改变积分速率但不清历史；初态/复位状态；code=0的外部行为兼容固定baseline。原合同不要求实例化baseline或复用其内部形式。"
+        ],
+        "reference_constructs_nonprescriptive": {
+          "solution/circuit.va": {
+            "sha256": "d4ecdc6a449ea8aa78ba45355686f4e58a26a817c3a7093a4209b5be44c7b95c",
+            "constructs": [
+              "idt"
+            ]
+          }
+        },
+        "backend_basis": {
+          "declared_candidate_backend": "Spectre",
+          "contract_source": "../v3-01/tasks/v3-filter-programmable-lp/SOURCE.md",
+          "current_harbor_numerical_run": "not_executed",
+          "current_evas_evidence": "not_verified_by_this_batch",
+          "historical_evidence": "Only the source-identified historical records linked from SOURCE; not a current Harbor or EVAS pass."
+        },
+        "unresolved_scientific_conditions": [
+          "沿用原公开合同；本轮不据参考解或EVAS输出新增数值、输入域或容差。逐题评分一致性与当前运行校准仍待核验，具体未决见本题SOURCE。"
+        ],
+        "source_review_open_items_unaccepted": [
+          "The excluded reset transition region has no published duration. None was invented."
+        ],
+        "main_correction": "早期映射把扩展误写为固定部件实际复用；根据原公开合同及现题面更正，不增加模块实例化要求。",
+        "evas_documented_gaps": {
+          "issue": "https://github.com/BucketSran/vaEVAS/issues/270",
+          "basis": "Static reading of EVAS main@ac1b6e8d docs and source; no EVAS run. An empty list does not show that the task runs on EVAS, and front-end acceptance is not a numerical pass. blocks_all_candidates marks gaps in a bench or an instantiated fixed support module; starter and reference-solution gaps only constrain those files.",
+          "items": [
+            {
+              "issue_item": 9,
+              "feature": "scs-sine-consumer-boundary",
+              "status": "conditional-consumer-found",
+              "where": [
+                "hidden_bench",
+                "public_bench",
+                "starter_bench_copy"
+              ],
+              "blocks_all_candidates": false
+            },
+            {
+              "issue_item": 1,
+              "feature": "scs-sine-missing-sinedc",
+              "status": "rejected",
+              "where": [
+                "hidden_bench",
+                "public_bench",
+                "starter_bench_copy"
+              ],
+              "blocks_all_candidates": true
+            },
+            {
+              "issue_item": 13,
+              "feature": "va-floor-unproven-range",
+              "status": "rejected",
+              "where": [
+                "reference_solution"
+              ],
+              "blocks_all_candidates": false
+            },
+            {
+              "issue_item": 6,
+              "feature": "va-idt-reset-dependency",
+              "status": "rejected",
+              "where": [
+                "public_material",
+                "reference_solution"
+              ],
+              "blocks_all_candidates": false
+            }
+          ]
+        }
+      },
+      "simulation_route": {
+        "route": "pure-va",
+        "stored_device_truth": false
+      }
+    },
+    {
+      "slot": 28,
+      "task_id": "v2-repair-uvlo-reset-chain",
+      "path": "../v2-01/tasks/v2-repair-uvlo-reset-chain",
+      "engineering_action": "diagnosis-repair",
+      "source_group": "original-uvlo-chain-case0009",
+      "selection_reason": "这是已实现资产里跨模块的电源修复，正确外部行为、容差和可改文件都写了出来。",
+      "replaces_initial_recommendation": null,
+      "evas_requirements": {
+        "kind": "requirements_for_read_only_cross_line_planning_not_capability_claim",
+        "basis": "../v2-01/tasks/v2-repair-uvlo-reset-chain/instruction.md",
+        "required_behavior_combinations": [
+          "多模块UVLO/延迟释放/使能链；跨阈值迟滞、掉电取消与恢复时旧事件隔离"
+        ],
+        "reference_constructs_nonprescriptive": {
+          "solution/circuit.va": {
+            "sha256": "554d68c3f30830212b96b91a294d29ec36a4c9818206769c7ee4bc0725727750",
+            "constructs": []
+          },
+          "solution/uvlo.va": {
+            "sha256": "9449db961e3b930fe3bf6370972e2fcc59989fd14fec6849dc351710de69076b",
+            "constructs": [
+              "cross",
+              "initial_step",
+              "transition"
+            ]
+          },
+          "solution/release.va": {
+            "sha256": "e945d3423f7cd0d6048ed5abf584242c0d0ec31e0e9d0df063da398ae0ee6302",
+            "constructs": [
+              "$abstime",
+              "cross",
+              "initial_step",
+              "timer",
+              "transition"
+            ]
+          },
+          "solution/enable.va": {
+            "sha256": "6b01e99a70c76df919158e06305f05b6bdb45f6e54e67cd69bf2b737329b0aea",
+            "constructs": []
+          },
+          "solution/downstream.va": {
+            "sha256": "660a5488e6f37fea1ebdaa0f49b89083147978771453c181b43c15d7813eae5e",
+            "constructs": [
+              "cross",
+              "initial_step",
+              "transition"
+            ]
+          }
+        },
+        "backend_basis": {
+          "declared_candidate_backend": "Spectre",
+          "contract_source": "../v2-01/tasks/v2-repair-uvlo-reset-chain/SOURCE.md",
+          "current_harbor_numerical_run": "not_executed",
+          "current_evas_evidence": "not_verified_by_this_batch",
+          "historical_evidence": "Only the source-identified historical records linked from SOURCE; not a current Harbor or EVAS pass."
+        },
+        "unresolved_scientific_conditions": [
+          "沿用原公开合同；本轮不据参考解或EVAS输出新增数值、输入域或容差。逐题评分一致性与当前运行校准仍待核验，具体未决见本题SOURCE。"
+        ],
+        "source_review_open_items_unaccepted": [
+          "SOURCE.json pending versus prose claim that calibration completed. The fault line was not identified in the solver instruction."
+        ],
+        "evas_documented_gaps": {
+          "issue": "https://github.com/BucketSran/vaEVAS/issues/270",
+          "basis": "Static reading of EVAS main@ac1b6e8d docs and source; no EVAS run. An empty list does not show that the task runs on EVAS, and front-end acceptance is not a numerical pass. blocks_all_candidates marks gaps in a bench or an instantiated fixed support module; starter and reference-solution gaps only constrain those files.",
+          "items": []
+        }
+      },
+      "simulation_route": {
+        "route": "pure-va",
+        "stored_device_truth": false
+      }
+    },
+    {
+      "slot": 29,
+      "task_id": "v2-test-comparator-delay",
+      "path": "../v2-01/tasks/v2-test-comparator-delay",
+      "engineering_action": "testing-characterization",
+      "source_group": "v4-170",
+      "selection_reason": "2026-10-27用户决定首批优先不需SPICE网表的纯VA题，本题补POR原位。它测时钟到固定比较器实际首个输出沿的延迟及当次过驱动，缺决策时不得沿用旧valid；公开固定DUT与用例齐备，台架只用接地dc/pulse/pwl源。与失调搜索测的量不同，替换后工程动作分布不变。",
+      "replaces_initial_recommendation": "v2-test-por-sequence",
+      "evas_requirements": {
+        "kind": "requirements_for_read_only_cross_line_planning_not_capability_claim",
+        "basis": "../v2-01/tasks/v2-test-comparator-delay/instruction.md",
+        "required_behavior_combinations": [
+          "clk上升沿重新武装并采样过驱动；固定比较器实际首个输出沿的延迟与极性锁存；缺决策时清valid、保持旧数值，未武装沿忽略"
+        ],
+        "reference_constructs_nonprescriptive": {
+          "solution/circuit.va": {
+            "sha256": "775ffd0416ef0a9fa42cb384f34c4379ec6f0972b13c47682713f736438bfaca",
+            "constructs": [
+              "$abstime",
+              "cross",
+              "initial_step",
+              "transition"
+            ]
+          }
+        },
+        "backend_basis": {
+          "declared_candidate_backend": "Spectre",
+          "contract_source": "../v2-01/tasks/v2-test-comparator-delay/SOURCE.md",
+          "current_harbor_numerical_run": "not_executed",
+          "current_evas_evidence": "not_verified_by_this_batch",
+          "historical_evidence": "Only the source-identified historical records linked from SOURCE; not a current Harbor or EVAS pass."
+        },
+        "unresolved_scientific_conditions": [
+          "沿用原公开合同；本轮不据参考解或EVAS输出新增数值、输入域或容差。逐题评分一致性与当前运行校准仍待核验，具体未决见本题SOURCE。"
+        ],
+        "source_review_open_items_unaccepted": [
+          "Original wording leaves three readings unstated (launch, which previous values re-arming keeps, the endpoints of the 1 ns response); the fixed checker uses the natural reading. Listed in SOURCE, not decided. The edge measurement level is settled by the 0.45 V logic detection threshold.",
+          "The public dut/support_cmp.va is the normal comparator; the missing-final-decision fault variant exists only inline in the case records ($abstime < 24n public, 22n private).",
+          "v2_testing.py:64-65 skips state intervals no longer than 2*guard (160 ps); the public normal case never samples valid=0 inside the re-arm window, the slow and missing-decision cases do."
+        ],
+        "evas_documented_gaps": {
+          "issue": "https://github.com/BucketSran/vaEVAS/issues/270",
+          "basis": "Static reading of EVAS main@ac1b6e8d docs and source; no EVAS run. An empty list does not show that the task runs on EVAS, and front-end acceptance is not a numerical pass. blocks_all_candidates marks gaps in a bench or an instantiated fixed support module; starter and reference-solution gaps only constrain those files.",
+          "items": [
+            {
+              "issue_item": 4,
+              "feature": "va-transition-timing-dependency",
+              "status": "rejected",
+              "where": [
+                "fixed_support",
+                "fixed_support_copy"
+              ],
+              "blocks_all_candidates": true
+            }
+          ]
+        }
+      },
+      "replacement_record": {
+        "date": "2026-10-27",
+        "decision": "runs/t3-harbor30-20261027/user-decision-route-split.json",
+        "build_receipts": "runs/t3-harbor30-20261027/por-swap/build/",
+        "main_verification": "runs/t3-harbor30-20261027/por-swap/main-verify/verify-build.json",
+        "independent_review": {
+          "report": "runs/t3-harbor30-20261027/por-swap/astra-review-r1.json",
+          "reviewer": "codex/gpt-6-astra reasoningEffort=max serviceTier=default",
+          "findings": "POR-R1-01 (P2) and POR-R1-02 (P3), both wording; fixed by the main controller and verified by hash diff",
+          "disposition": "runs/t3-harbor30-20261027/por-swap/r1-fixes/disposition.json"
+        }
+      },
+      "simulation_route": {
+        "route": "pure-va",
+        "stored_device_truth": false
+      }
+    },
+    {
+      "slot": 30,
+      "task_id": "v2-test-gain-settling",
+      "path": "../v2-01/tasks/v2-test-gain-settling",
+      "engineering_action": "testing-characterization",
+      "source_group": "case-0018+v4-038+v4-370",
+      "selection_reason": "从并联静态与动态DUT测量实际增益和有限建立，包含无效跨度和未建立情况；本批保留冻结LDO SOURCE原路径，响应实验仍作后续迁移候补。",
+      "replaces_initial_recommendation": "v3-ldo-response-experiment",
+      "evas_requirements": {
+        "kind": "requirements_for_read_only_cross_line_planning_not_capability_claim",
+        "basis": "../v2-01/tasks/v2-test-gain-settling/instruction.md",
+        "required_behavior_combinations": [
+          "只读观测固定并联放大器的输入、静态输出、动态输出与launch；按launch重启有限采样窗，报告增益、建立时间、未建立和跨度不足状态。激励由固定台架提供，候选不得驱动观测输入。"
+        ],
+        "reference_constructs_nonprescriptive": {
+          "solution/circuit.va": {
+            "sha256": "cd0d49a2f1a0eed923eff8deb9ea5058c09d92107496a4692d247534a1e00552",
+            "constructs": [
+              "$abstime",
+              "cross",
+              "initial_step",
+              "timer",
+              "transition"
+            ]
+          }
+        },
+        "backend_basis": {
+          "declared_candidate_backend": "Spectre",
+          "contract_source": "../v2-01/tasks/v2-test-gain-settling/SOURCE.md",
+          "current_harbor_numerical_run": "not_executed",
+          "current_evas_evidence": "not_verified_by_this_batch",
+          "historical_evidence": "Only the source-identified historical records linked from SOURCE; not a current Harbor or EVAS pass."
+        },
+        "unresolved_scientific_conditions": [
+          "沿用原公开合同；本轮不据参考解或EVAS输出新增数值、输入域或容差。逐题评分一致性与当前运行校准仍待核验，具体未决见本题SOURCE。"
+        ],
+        "source_review_open_items_unaccepted": [
+          "static_amp.va defaults gain_low=0.8 and gain_high=2.4, while the instruction and public netlists set 2.5. dynamic_amp.va defaults tick=250 ps and tr=200 ps, while public netlists also show tick=50 ps and tr=100 ps. tick and DUT tr were not added as a new published sweep."
+        ],
+        "main_correction": "公开case显式覆盖静态两档增益为2.5，库默认值不同不构成矛盾；不扩大动态tick/tr扫描域。",
+        "mapping_review_correction": "Astra B-R1-04确认主控映射把被动观测误写成主动驱动；已按原公开合同更正，不扩展tick/tr范围。",
+        "evas_documented_gaps": {
+          "issue": "https://github.com/BucketSran/vaEVAS/issues/270",
+          "basis": "Static reading of EVAS main@ac1b6e8d docs and source; no EVAS run. An empty list does not show that the task runs on EVAS, and front-end acceptance is not a numerical pass. blocks_all_candidates marks gaps in a bench or an instantiated fixed support module; starter and reference-solution gaps only constrain those files.",
+          "items": []
+        }
+      },
+      "simulation_route": {
+        "route": "pure-va",
+        "stored_device_truth": false
+      }
+    }
+  ],
+  "deferred_science": [
+    "C109 vref语义未决；Q1模块职责选择保留",
+    "U17判决编码与空历史语义待确认",
+    "DLL/DCC/CPPLL既有时序、健康部件与参考资格依赖保留"
+  ],
+  "author_notes": [
+    "C056的taperture默认200ps已有来源，不是尚未选择的数值；本批先改造现有024，C056保留后续新题建设资格。",
+    "未把四种DAC加权合同视为没有独立价值；本批因覆盖和合同清理成本后置。",
+    "四份冻结SOURCE保留原字节和原路径；本批不迁移continuous-offset与ldo-response两项。",
+    "选择不证明题面/参考/checker已完成当前验收，也不授予录取或运行资格。",
+    "2026-10-27：四项评分决定材料补在原SOURCE；新建议未采用，已有包装/A-B/packaging-r2审核和r2归档保持原冻结身份，不为这些卡片重开审核。",
+    "2026-10-27：用户确认055低电平0V、307状态夹位、PLL连续展开相位abs(mean)≤0.2周期三项评分语义，已写入题面、SOURCE与本文件；024/055公私checker按已有合同修复。参考解、cases和其他题未改。本增量只有合成判据检查，独立审核记录在本线决策日志；后端运行、作者校准与录取仍待完成。",
+    "2026-10-27：用户决定首批优先不需SPICE网表的纯VA题。v2-test-por-sequence移出首批，原记录连同evas_requirements完整保留在spice_route_reserve；slot 29由v2-test-comparator-delay补位，题包已迁成本地Harbor形式，新上下文Astra独审的两项措辞发现已修正并哈希核验。动作分布仍为14/2/4/2/8。"
+  ],
+  "cross_line_usage": "EVAS主控只读消费各task.evas_requirements；先核对已定公开合同，按自身支持范围及独立预期规划组合。reference_constructs只是当前参考写法，不限制合法其他实现。此映射不裁决C109/Q2等候补科学条件，不授予运行或验收资格。",
+  "spice_route_reserve": [
+    {
+      "task_id": "v2-test-por-sequence",
+      "path": "../v2-01/tasks/v2-test-por-sequence",
+      "engineering_action": "testing-characterization",
+      "source_group": "case-0001-sky130-ajc-por",
+      "selection_reason": "这是器件电路路线上合同最长、DUT 文件与题面路径一致的测试台，覆盖 UVLO 行为模型没有覆盖的真实 POR 时序。",
+      "replaces_initial_recommendation": null,
+      "evas_requirements": {
+        "kind": "requirements_for_read_only_cross_line_planning_not_capability_claim",
+        "basis": "../v2-01/tasks/v2-test-por-sequence/instruction.md",
+        "required_behavior_combinations": [
+          "固定晶体管POR与数字VA混合电路；真实电源/复位边沿观察、振荡分频、恢复序列和错误响应资格"
+        ],
+        "reference_constructs_nonprescriptive": {
+          "solution/circuit.va": {
+            "sha256": "9af58c95e8e3fc6e388c4e83a0da4abdbaf52581dd9cadaeda00e2cf60f63809",
+            "constructs": [
+              "$abstime",
+              "cross",
+              "initial_step",
+              "timer",
+              "transition"
+            ]
+          }
+        },
+        "backend_basis": {
+          "declared_candidate_backend": "Spectre",
+          "contract_source": "../v2-01/tasks/v2-test-por-sequence/SOURCE.md",
+          "current_harbor_numerical_run": "not_executed",
+          "current_evas_evidence": "not_verified_by_this_batch",
+          "historical_evidence": "Only the source-identified historical records linked from SOURCE; not a current Harbor or EVAS pass."
+        },
+        "unresolved_scientific_conditions": [
+          "沿用原公开合同；本轮不据参考解或EVAS输出新增数值、输入域或容差。逐题评分一致性与当前运行校准仍待核验，具体未决见本题SOURCE。"
+        ],
+        "scope_dependency": "本题含固定MOS/SPICE器件电路；EVAS电压域VA能力不能单独满足整题。混合器件后端/观测接线属于额外依赖，不据本映射扩展EVAS既定范围。",
+        "source_review_open_items_unaccepted": [
+          "public-default.scs includes /app/circuit.va but still includes DUT paths under /work/public/dut/. Files actually live in /app/testbench/dut/. The netlist was not edited."
+        ],
+        "main_correction": "公开示例网表旧/work路径已修；原电气合同、源文件与私有用例不变。"
+      },
+      "former_slot": 29,
+      "status": "spice-route-reserve",
+      "moved_out": {
+        "date": "2026-10-27",
+        "decision": "runs/t3-harbor30-20261027/user-decision-route-split.json",
+        "reason": "题包含sky130 MOS子电路、R/C/I器件及SPICE语言网表，需要SPICE仿真能力；EVAS电压域范围不覆盖。题包保持现状，不删除、不改写，作为Spectre/SPICE路线后备。"
+      },
+      "simulation_route": {
+        "route": "spice",
+        "stored_device_truth": false
+      }
+    }
+  ],
+  "route_split": {
+    "date": "2026-10-27",
+    "decision": "runs/t3-harbor30-20261027/user-decision-route-split.json",
+    "classification": "../../planning/simulation-routes/README.md",
+    "evas_issue": "https://github.com/BucketSran/vaEVAS/issues/270",
+    "first30": {
+      "pure-va": 30,
+      "with_documented_evas_gaps": 14,
+      "blocked_for_every_candidate": 11
+    },
+    "corrections": [
+      "runs/t3-harbor30-20261027/route-split/main-verify/corrections-r1.json",
+      "runs/t3-harbor30-20261027/route-split/main-verify/corrections-r2.json",
+      "runs/t3-harbor30-20261027/route-split/main-verify/corrections-r3.json"
+    ]
+  }
+}

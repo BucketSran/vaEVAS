@@ -1,0 +1,20 @@
+[
+  {
+    "kind": "programmable",
+    "name": "codes-0",
+    "parameters": {
+      "base": 800,
+      "initval": 0.0
+    },
+    "signals": [
+      "u",
+      "code",
+      "reset",
+      "y"
+    ],
+    "stop": 0.009,
+    "step": 1e-06,
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nVu (u 0) vsource type=sine ampl=0.2 freq=700 sinephase=90.0\nVc (code 0) vsource type=pwl wave=[0 0 0.002 0 0.002001 3 0.004 3 0.004001 1 0.007 1 0.007001 2]\nVr (reset 0) vsource type=pwl wave=[0 0 0.005 0 0.005001 1 0.0055 1 0.005501 0]\nX (u code reset y) programmable_lp base=800 initval=0.0\ntran tran stop=0.009 maxstep=1e-06 errpreset=conservative\nsave u code reset y\n",
+    "timeout_s": 120
+  }
+]

@@ -1,0 +1,28 @@
+[
+  {
+    "kind": "ctle",
+    "name": "ctle-0",
+    "parameters": {
+      "fz": 1000,
+      "fp1": 4000,
+      "fp2": 12000,
+      "gain": 1.0,
+      "x1init": 0.0,
+      "x2init": -0.0,
+      "tones": [
+        500,
+        2000,
+        8000,
+        16000
+      ]
+    },
+    "signals": [
+      "u",
+      "y"
+    ],
+    "stop": 0.012,
+    "step": 1e-06,
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nVdc (u n0) vsource dc=0.03\nVn0 (n0 n1) vsource type=sine ampl=0.035 freq=500 sinephase=90.0\nVn1 (n1 n2) vsource type=sine ampl=0.035 freq=2000 sinephase=101.45915590261646\nVn2 (n2 n3) vsource type=sine ampl=0.035 freq=8000 sinephase=112.91831180523293\nVn3 (n3 0) vsource type=sine ampl=0.035 freq=16000 sinephase=124.3774677078494\nX (u y) ctle fz=1000 fp1=4000 fp2=12000 gain=1.0 x1init=0.0 x2init=-0.0\nsimulatorOptions options reltol=1e-6 vabstol=1e-8 iabstol=1e-12\ntran tran stop=0.012 maxstep=1e-06 errpreset=conservative\nsave u y\n",
+    "timeout_s": 120
+  }
+]

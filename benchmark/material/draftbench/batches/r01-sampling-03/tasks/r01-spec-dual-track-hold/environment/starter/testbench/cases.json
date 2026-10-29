@@ -1,0 +1,20 @@
+[
+  {
+    "name": "base",
+    "source_id": "v4-236",
+    "purpose": "default parameters and static 0.9/0 V rails, public case. Low phases of 2 to 7 ticks and high phases of 2 to 10 ticks with clock crossings at varied tick phases (65 to 435 ps after a tick); vin moves inside low phases (the held output must not follow), inside high phases (the output stage must follow the held input stage, not vin) and as a ramp read at the ticks; short phases leave either stage short of its target; vin 0.2 V above vdd and 0.3 V below vss during 3-tick low phases, so the stored value is limited after the update",
+    "signals": [
+      "vdd",
+      "vss",
+      "clk",
+      "vin",
+      "vout",
+      "phase"
+    ],
+    "stop": 4.5e-08,
+    "resolution": 1e-11,
+    "atol": 0.002,
+    "params": {},
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVvdd (vdd 0) vsource type=dc dc=0.9\nVvss (vss 0) vsource type=dc dc=0\nVclk (clk 0) vsource type=pwl wave=[0n 0 3.26n 0 3.35n 0.9 4.63n 0.9 4.72n 0 6.88n 0 6.97n 0.9 9.02n 0.9 9.11n 0 10.39n 0 10.48n 0.9 15.06n 0.9 15.15n 0 17.2n 0 17.29n 0.9 18.3n 0.9 18.39n 0 21.86n 0 21.95n 0.9 24.06n 0.9 24.15n 0 25.77n 0 25.86n 0.9 27.13n 0.9 27.22n 0 29.29n 0 29.38n 0.9 31.66n 0.9 31.75n 0 33.02n 0 33.11n 0.9 35.2n 0.9 35.29n 0 36.39n 0 36.48n 0.9 39.53n 0.9 39.62n 0 40.62n 0 40.71n 0.9 43.56n 0.9 43.65n 0 45n 0]\nVvin (vin 0) vsource type=pwl wave=[0n 0.6 2.1n 0.6 2.2n 0.75 3.8n 0.75 3.9n 0.2 5.6n 0.2 6.4n 0.35 7.6n 0.35 7.7n 0.8 11n 0.8 14n 0.1 17n 0.1 17.5n 0.55 19.1n 0.55 19.2n 0.3 21.1n 0.3 21.2n 0.7 24.6n 0.7 24.7n 1.1 27.1n 1.1 27.2n 0.4 31.1n 0.4 31.2n -0.3 33.3n -0.3 33.4n 0.5 34.8n 0.5 34.9n 0.15 38n 0.15 40n 0.65 45n 0.65]\n\nXDUT (vdd vss clk vin vout phase) dual_track_sample_hold\n\nsimulatorOptions options reltol=1e-6 vabstol=1e-8 iabstol=1e-12\ntran tran stop=45n maxstep=0.01n strobeperiod=0.01n errpreset=moderate strobeoutput=strobeonly\nsave vdd vss clk vin vout phase\n"
+  }
+]

@@ -1,0 +1,9 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module leaky_hold(sample,rst,vin,vout);
+input sample,rst,vin;
+output vout;
+electrical sample,rst,vin,vout;
+// TODO: implement the public contract.
+endmodule

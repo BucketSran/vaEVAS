@@ -1,0 +1,9 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module sampled_true_rms_to_dc(vinp,vinn,clk,reset,enable,rms_out,valid);
+input vinp,vinn,clk,reset,enable;
+output rms_out,valid;
+electrical vinp,vinn,clk,reset,enable,rms_out,valid;
+// TODO: implement the public contract.
+endmodule

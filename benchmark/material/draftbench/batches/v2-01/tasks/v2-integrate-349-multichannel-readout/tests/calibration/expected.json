@@ -1,0 +1,266 @@
+{
+ "task": "v2-integrate-349-multichannel-readout",
+ "cases": [
+  "sample-read-reset",
+  "reset-during-sample-high",
+  "architecture-gain-0.75-sample-read-reset",
+  "architecture-gain-0.6-sample-read-reset",
+  "param-vdd-vth-sample-read-reset",
+  "reset-high-across-clock-edge"
+ ],
+ "public_cases": [
+  {
+   "name": "sample-read-reset",
+   "same_as_private": "sample-read-reset"
+  }
+ ],
+ "checker_failure": "an out, ch_sel_1, ch_sel_0 or valid value more than 3 mV from the frozen expected value at a listed check time, or an out row more than 3 mV from the expected value inside a listed hold window (tests/v2_integration.py:139-152, values frozen in tests/cases.json)",
+ "semantics": "Point checks sit 0.95 ns (rst rising edges with 100 ps ramps) or 0.99 ns (20 ps edges) after the vth crossing of the rising clk or rst edge that caused the latest event (the frozen times are binary64 values of these instants). first30-fix-r4 changed the instruction to state this ('measured 0.95 ns to 1 ns after the rising clk or rst edge that causes the event crosses vth') and to set the clearing deadline before it ('within 0.9 ns after the clearing edge crosses vth'), following the user's F01 decision of 2026-10-28 (item 6); the checker is unchanged. late_clear_after_check finishes the visible clear 1.04 ns after the rst crossing and fails the check 0.95 ns after it wherever out, a select bit or valid was nonzero before the reset; inwindow_clear_before_check finishes it 0.92 ns after the crossing, between the deadline and the check, and passes (the margin accepted under F01). Every other candidate differs from the expected values by tens of mV or more at checks outside that margin. The architecture cases use the diagnostic sample_hold with gain 0.75 or 0.6, so a model that keeps frames outside the parts fails them. reset-during-sample-high raises rst while the adapter clock is still high from the 15 ns sample edge. param-vdd-vth-sample-read-reset runs the sample-read-reset timing at vdd 1.0 V and vth 0.5 V (1.0 V control levels, frames up to 0.98 V), so 0.9 V select and valid levels fail it. reset-high-across-clock-edge keeps rst high across the 45.01 ns clk rising edge while read and sample are both high: that edge must clear, so handling it as a normal edge raises valid and advances the pointer (rst_high_clk_as_normal_edge, rejected at 46 ns and 56 ns), and a model without the input clamp would also store the 0.64/0.28/0.83/0.16 V inputs as a new frame.",
+ "conditions": {},
+ "candidates": [
+  {
+   "name": "read_pause_advance",
+   "group": "wrong",
+   "must_reject": [
+    "sample-read-reset",
+    "reset-during-sample-high",
+    "architecture-gain-0.75-sample-read-reset",
+    "architecture-gain-0.6-sample-read-reset",
+    "param-vdd-vth-sample-read-reset",
+    "reset-high-across-clock-edge"
+   ],
+   "must_accept": [],
+   "public_must_reject": [
+    "sample-read-reset"
+   ],
+   "public_must_accept": [],
+   "author_synthetic_control": "model-read_pause_advance"
+  },
+  {
+   "name": "valid_sticky",
+   "group": "wrong",
+   "must_reject": [
+    "sample-read-reset",
+    "architecture-gain-0.75-sample-read-reset",
+    "architecture-gain-0.6-sample-read-reset",
+    "param-vdd-vth-sample-read-reset",
+    "reset-high-across-clock-edge"
+   ],
+   "must_accept": [
+    "reset-during-sample-high"
+   ],
+   "public_must_reject": [
+    "sample-read-reset"
+   ],
+   "public_must_accept": [],
+   "author_synthetic_control": "model-valid_sticky"
+  },
+  {
+   "name": "reset_output_stale",
+   "group": "wrong",
+   "must_reject": [
+    "sample-read-reset",
+    "architecture-gain-0.75-sample-read-reset",
+    "architecture-gain-0.6-sample-read-reset",
+    "param-vdd-vth-sample-read-reset",
+    "reset-high-across-clock-edge"
+   ],
+   "must_accept": [
+    "reset-during-sample-high"
+   ],
+   "public_must_reject": [
+    "sample-read-reset"
+   ],
+   "public_must_accept": [],
+   "author_synthetic_control": "model-reset_output_stale"
+  },
+  {
+   "name": "reset_clock_high_bank_stale",
+   "group": "wrong",
+   "must_reject": [
+    "reset-during-sample-high"
+   ],
+   "must_accept": [
+    "sample-read-reset",
+    "architecture-gain-0.75-sample-read-reset",
+    "architecture-gain-0.6-sample-read-reset",
+    "param-vdd-vth-sample-read-reset",
+    "reset-high-across-clock-edge"
+   ],
+   "public_must_reject": [],
+   "public_must_accept": [
+    "sample-read-reset"
+   ],
+   "author_synthetic_control": "model-reset_clock_high_bank_stale"
+  },
+  {
+   "name": "channel0_only",
+   "group": "wrong",
+   "must_reject": [
+    "sample-read-reset",
+    "architecture-gain-0.75-sample-read-reset",
+    "architecture-gain-0.6-sample-read-reset",
+    "param-vdd-vth-sample-read-reset",
+    "reset-high-across-clock-edge"
+   ],
+   "must_accept": [
+    "reset-during-sample-high"
+   ],
+   "public_must_reject": [
+    "sample-read-reset"
+   ],
+   "public_must_accept": [],
+   "author_synthetic_control": "model-channel0_only"
+  },
+  {
+   "name": "read_after_capture",
+   "group": "wrong",
+   "must_reject": [
+    "sample-read-reset",
+    "architecture-gain-0.75-sample-read-reset",
+    "architecture-gain-0.6-sample-read-reset",
+    "param-vdd-vth-sample-read-reset"
+   ],
+   "must_accept": [
+    "reset-during-sample-high",
+    "reset-high-across-clock-edge"
+   ],
+   "public_must_reject": [
+    "sample-read-reset"
+   ],
+   "public_must_accept": [],
+   "author_synthetic_control": "model-read_after_capture"
+  },
+  {
+   "name": "continuous_mux_output",
+   "group": "wrong",
+   "must_reject": [
+    "sample-read-reset",
+    "architecture-gain-0.75-sample-read-reset",
+    "architecture-gain-0.6-sample-read-reset",
+    "param-vdd-vth-sample-read-reset",
+    "reset-high-across-clock-edge"
+   ],
+   "must_accept": [
+    "reset-during-sample-high"
+   ],
+   "public_must_reject": [
+    "sample-read-reset"
+   ],
+   "public_must_accept": [],
+   "author_synthetic_control": "model-continuous_mux_output"
+  },
+  {
+   "name": "architecture_bypass",
+   "group": "wrong",
+   "must_reject": [
+    "architecture-gain-0.75-sample-read-reset",
+    "architecture-gain-0.6-sample-read-reset"
+   ],
+   "must_accept": [
+    "sample-read-reset",
+    "reset-during-sample-high",
+    "param-vdd-vth-sample-read-reset",
+    "reset-high-across-clock-edge"
+   ],
+   "public_must_reject": [],
+   "public_must_accept": [
+    "sample-read-reset"
+   ],
+   "author_synthetic_control": "model-architecture_bypass"
+  },
+  {
+   "name": "original_v4_349_gold",
+   "group": "wrong",
+   "must_reject": [
+    "sample-read-reset",
+    "architecture-gain-0.75-sample-read-reset",
+    "architecture-gain-0.6-sample-read-reset",
+    "param-vdd-vth-sample-read-reset",
+    "reset-high-across-clock-edge"
+   ],
+   "must_accept": [
+    "reset-during-sample-high"
+   ],
+   "public_must_reject": [
+    "sample-read-reset"
+   ],
+   "public_must_accept": [],
+   "author_synthetic_control": "model-original_v4_349_gold"
+  },
+  {
+   "name": "rst_high_clk_as_normal_edge",
+   "group": "wrong",
+   "must_reject": [
+    "reset-high-across-clock-edge"
+   ],
+   "must_accept": [
+    "sample-read-reset",
+    "reset-during-sample-high",
+    "architecture-gain-0.75-sample-read-reset",
+    "architecture-gain-0.6-sample-read-reset",
+    "param-vdd-vth-sample-read-reset"
+   ],
+   "public_must_reject": [],
+   "public_must_accept": [
+    "sample-read-reset"
+   ],
+   "author_synthetic_control": "model-rst_high_clk_as_normal_edge"
+  },
+  {
+   "name": "late_clear_after_check",
+   "group": "wrong",
+   "must_reject": [
+    "sample-read-reset",
+    "architecture-gain-0.75-sample-read-reset",
+    "architecture-gain-0.6-sample-read-reset",
+    "param-vdd-vth-sample-read-reset",
+    "reset-high-across-clock-edge"
+   ],
+   "must_accept": [
+    "reset-during-sample-high"
+   ],
+   "public_must_reject": [
+    "sample-read-reset"
+   ],
+   "public_must_accept": [],
+   "author_synthetic_control": "model-late_clear_after_check"
+  },
+  {
+   "name": "alt_one_hot_token",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "sample-read-reset",
+    "reset-during-sample-high",
+    "architecture-gain-0.75-sample-read-reset",
+    "architecture-gain-0.6-sample-read-reset",
+    "param-vdd-vth-sample-read-reset",
+    "reset-high-across-clock-edge"
+   ],
+   "public_must_reject": [],
+   "public_must_accept": [
+    "sample-read-reset"
+   ],
+   "author_synthetic_control": "model-alt_one_hot_token"
+  },
+  {
+   "name": "inwindow_clear_before_check",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "sample-read-reset",
+    "reset-during-sample-high",
+    "architecture-gain-0.75-sample-read-reset",
+    "architecture-gain-0.6-sample-read-reset",
+    "param-vdd-vth-sample-read-reset",
+    "reset-high-across-clock-edge"
+   ],
+   "public_must_reject": [],
+   "public_must_accept": [
+    "sample-read-reset"
+   ],
+   "author_synthetic_control": "model-inwindow_clear_before_check"
+  }
+ ]
+}

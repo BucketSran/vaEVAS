@@ -1,0 +1,35 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module ct_lowpass_sampler(vin, clk, rst, out);
+    input vin, clk, rst;
+    output out;
+    electrical vin, clk, rst, out;
+
+    parameter real tau = 100n from [20n:1u];
+    parameter real vth = 0.45;
+    parameter real tr = 200p from [10p:1n];
+
+    real filtered;
+    real held;
+
+    analog begin
+        // H(s) = 1/(1 + s*tau), unity DC gain. The operator is evaluated on every
+        // time step, outside any event, so clock and reset never restart or freeze
+        // it. Its state starts at the DC operating point: filtered = V(vin) at t = 0.
+        filtered = laplace_nd(V(vin), {1.0}, {1.0, tau});
+
+        @(initial_step)
+            held = 0.0;
+
+        // Synchronous sampler: a reset sample clears only the held value.
+        @(cross(V(clk) - vth, +1)) begin
+            if (V(rst) > vth)
+                held = 0.0;
+            else
+                held = filtered;
+        end
+
+        V(out) <+ transition(held, 0.0, tr, tr);
+    end
+endmodule

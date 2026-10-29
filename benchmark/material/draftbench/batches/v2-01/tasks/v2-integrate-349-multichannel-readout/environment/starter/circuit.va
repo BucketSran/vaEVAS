@@ -1,0 +1,8 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module sample_mux_readout_top(ch0,ch1,ch2,ch3,clk,rst,sample,read,out,ch_sel_1,ch_sel_0,valid);
+inout ch0,ch1,ch2,ch3,clk,rst,sample,read,out,ch_sel_1,ch_sel_0,valid;
+electrical ch0,ch1,ch2,ch3,clk,rst,sample,read,out,ch_sel_1,ch_sel_0,valid;
+// TODO: implement the public contract.
+endmodule

@@ -1,0 +1,8 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module sweep_meter(drive,sense,gain,phase,valid);
+inout drive,sense,gain,phase,valid;
+electrical drive,sense,gain,phase,valid;
+// TODO: implement the public contract.
+endmodule

@@ -1,0 +1,9 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module pipeline_adc_two_stage(vin,clk,rst,valid_i,code_3,code_2,code_1,code_0,valid_o,residue_dbg);
+input vin,clk,rst,valid_i;
+output code_3,code_2,code_1,code_0,valid_o,residue_dbg;
+electrical vin,clk,rst,valid_i,code_3,code_2,code_1,code_0,valid_o,residue_dbg;
+// TODO: implement the public contract.
+endmodule
