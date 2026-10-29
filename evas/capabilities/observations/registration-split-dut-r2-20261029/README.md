@@ -1,0 +1,3 @@
+# Catalog inputs for the vanished non-pass check and the split-DUT registration change
+
+The change refuses an unchanged baseline when a registered non-pass vanished, and lets an E1 that ran on the batch's own DUT register while the registration run stays on main's DUT. It touches scripts/ only: four changed blobs and two new test modules. Discovery recollects the scripts/tests entry that owns the new modules; the other 30 entries reuse their archived receipts. Criteria, DUT, collector, language profile and invocation are unchanged. Head 0a5d89b7 on main d6b7543f. It replaces the unpublished construction archives 7f9045d1 and c93e5ffd of earlier attempts. Scientific qualification is false.
