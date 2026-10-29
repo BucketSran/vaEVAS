@@ -3669,6 +3669,65 @@
       "dependencies": [
         {
           "id": "asset:d4f485ccf350ac812ada5787",
+          "sha256": "ce94ab42fdfc0bc276d7b20269fb8daafd4da0f23b52ad530e081d74a50ad70a",
+          "version": "270dd34ac9ec91d8238928a687b4a1b0192fc553d7c65b1374e8c37e29992f64"
+        }
+      ],
+      "discovery_observations": [
+        {
+          "entrypoint_id": "9e3cbe0f30d6d42ddd906b13ed03b6ef7b93749030e93d0dcb536849dc06803a",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:1ad6852fc26d9600100652bf",
+            "sha256": "e7cc06c30d24cb7124ec104262cb77bf9c66bdd68b8d258c257026592222cea6",
+            "version": "91f70ec0624807524f5486946ec19040b86d3732fbe83ab019ff36b26b66ca4a"
+          },
+          "row_canonical_sha256": "5def3a75c693bb66e9fdbecaeaa3290d060af1b20877feedd0d31bc0fdf44402",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        }
+      ],
+      "entrypoints": [
+        {
+          "id": "entry:11f8fd047bef3bf6a7161af8",
+          "sha256": "ced7590e0ca63089aa240b580971de973e06d45c3346500e7b51f9af3b4171fd",
+          "version": "d8282d803bccdcabca199cd82d1fcfe12888e1c40163d67962058d3b148fdb7a"
+        }
+      ],
+      "generated": false,
+      "id": "method:089578dddc9e4659e5610c32",
+      "kind": "method",
+      "module": {
+        "id": "asset:d4f485ccf350ac812ada5787",
+        "sha256": "ce94ab42fdfc0bc276d7b20269fb8daafd4da0f23b52ad530e081d74a50ad70a",
+        "version": "270dd34ac9ec91d8238928a687b4a1b0192fc553d7c65b1374e8c37e29992f64"
+      },
+      "namespace": "maintenance",
+      "qualification_status": "not-granted",
+      "runtime_history": [],
+      "runtime_id": "test_benchmark_package.PackageTests.test_interface_accepts_comments_ansi_ports_and_fixed_support_models",
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "12c67ba442759003d6d2ff3b6ec4e127fce46223816692aa9a7f32eb8f3fb904",
+      "version_scope": "full-version-bound-object-v1"
+    },
+    {
+      "definition": {
+        "line": 209,
+        "name": "test_interface_accepts_comments_ansi_ports_and_fixed_support_models",
+        "path": "scripts/tests/test_benchmark_package.py",
+        "sha256": "71ddbcdf49fe610451f137d619476cfa73ecbdccc2c77dab4c76917f181a4f54"
+      },
+      "dependencies": [
+        {
+          "id": "asset:d4f485ccf350ac812ada5787",
           "sha256": "acb573ab06bc2fcf0a2ecabeb3daaad2f1adb5a8f5ca3cc3bfd4ce10d507e19d",
           "version": "745857ab9abfa90b9c153c2ef3932fbf94fd9ac905434e25640f29c168f172ac"
         }
@@ -13463,6 +13522,65 @@
       "dependencies": [
         {
           "id": "asset:c32e0f068c2b34ed45b31619",
+          "sha256": "d0235e602f615eccb5878a3a60b5195d9cd3a6c5cee540476204e12c548fadcc",
+          "version": "4555e7640a6b7ec715991332d40c8a190069c0966859675ba36b667daf8cbce7"
+        }
+      ],
+      "discovery_observations": [
+        {
+          "entrypoint_id": "9e3cbe0f30d6d42ddd906b13ed03b6ef7b93749030e93d0dcb536849dc06803a",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:1ad6852fc26d9600100652bf",
+            "sha256": "e7cc06c30d24cb7124ec104262cb77bf9c66bdd68b8d258c257026592222cea6",
+            "version": "91f70ec0624807524f5486946ec19040b86d3732fbe83ab019ff36b26b66ca4a"
+          },
+          "row_canonical_sha256": "4c03b1be10208a12af3ca3f7ab07373a2827822dee2ad72bd039807767a11b0f",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        }
+      ],
+      "entrypoints": [
+        {
+          "id": "entry:11f8fd047bef3bf6a7161af8",
+          "sha256": "ced7590e0ca63089aa240b580971de973e06d45c3346500e7b51f9af3b4171fd",
+          "version": "d8282d803bccdcabca199cd82d1fcfe12888e1c40163d67962058d3b148fdb7a"
+        }
+      ],
+      "generated": false,
+      "id": "method:11e137c9fc427f0104167b91",
+      "kind": "method",
+      "module": {
+        "id": "asset:c32e0f068c2b34ed45b31619",
+        "sha256": "d0235e602f615eccb5878a3a60b5195d9cd3a6c5cee540476204e12c548fadcc",
+        "version": "4555e7640a6b7ec715991332d40c8a190069c0966859675ba36b667daf8cbce7"
+      },
+      "namespace": "maintenance",
+      "qualification_status": "not-granted",
+      "runtime_history": [],
+      "runtime_id": "test_discover_rust._StrictRun.runTest",
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "529238b93d4e33c8809d97d208d0fb2cf3ff00970e9514509b038ae109bd0e66",
+      "version_scope": "full-version-bound-object-v1"
+    },
+    {
+      "definition": {
+        "line": 2568,
+        "name": "runTest",
+        "path": "scripts/tests/test_discover_rust.py",
+        "sha256": "6460e31cb304ba9beb89922baa62b46dc1df30888529586158b3a7f2e16ec5fb"
+      },
+      "dependencies": [
+        {
+          "id": "asset:c32e0f068c2b34ed45b31619",
           "sha256": "116b10cc0bdcb47c63ed5ce31bcaee1ea177e191e6bf2d3b82d9ee8d920612df",
           "version": "a84f89564d6c0868c602a95b9bf55e47e924cbac5c4916727b5a9c4e664370e0"
         }
@@ -14100,6 +14218,65 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "93daa81981f51696ab52d11c232bb3de6acffc50ccd73555d2259a2db83e88b9",
+      "version_scope": "full-version-bound-object-v1"
+    },
+    {
+      "definition": {
+        "line": 180,
+        "name": "test_input_changed_before_dispatch_never_starts_or_charges",
+        "path": "scripts/tests/test_task_continuation_review_execution.py",
+        "sha256": "95c937ffea69500b314620d22fc34511ac02f20f9c6e81b69d9508a093b8fe6d"
+      },
+      "dependencies": [
+        {
+          "id": "asset:693cd5575e42d7d4bcd1faf1",
+          "sha256": "e560de080e41a8dd788e066ef6a5358dfc1176d183b99b0dd9c4436ee8370cfa",
+          "version": "94cfe7d418e87cb430f3bb3e864a0fe1cd7e17306abce03e8e0bc2434065dcc5"
+        }
+      ],
+      "discovery_observations": [
+        {
+          "entrypoint_id": "9e3cbe0f30d6d42ddd906b13ed03b6ef7b93749030e93d0dcb536849dc06803a",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:1ad6852fc26d9600100652bf",
+            "sha256": "e7cc06c30d24cb7124ec104262cb77bf9c66bdd68b8d258c257026592222cea6",
+            "version": "91f70ec0624807524f5486946ec19040b86d3732fbe83ab019ff36b26b66ca4a"
+          },
+          "row_canonical_sha256": "116dfca7d9c6aad49a227c2908f6297d78a596a4a218412f2f1f7df1344f45a9",
+          "skip_declaration": {
+            "class": true,
+            "declared": true,
+            "method": false,
+            "reason": "external Harness unavailable; no fallback runner"
+          }
+        }
+      ],
+      "entrypoints": [
+        {
+          "id": "entry:11f8fd047bef3bf6a7161af8",
+          "sha256": "ced7590e0ca63089aa240b580971de973e06d45c3346500e7b51f9af3b4171fd",
+          "version": "d8282d803bccdcabca199cd82d1fcfe12888e1c40163d67962058d3b148fdb7a"
+        }
+      ],
+      "generated": false,
+      "id": "method:12aafa9e315b6b8556ffc0f5",
+      "kind": "method",
+      "module": {
+        "id": "asset:693cd5575e42d7d4bcd1faf1",
+        "sha256": "e560de080e41a8dd788e066ef6a5358dfc1176d183b99b0dd9c4436ee8370cfa",
+        "version": "94cfe7d418e87cb430f3bb3e864a0fe1cd7e17306abce03e8e0bc2434065dcc5"
+      },
+      "namespace": "maintenance",
+      "qualification_status": "not-granted",
+      "runtime_history": [],
+      "runtime_id": "test_task_continuation_review_execution.ReviewExecutionTests.test_input_changed_before_dispatch_never_starts_or_charges",
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "96194f328f8834d7de1c07822d132e1069bf65fa94ef1352683333093f35585b",
       "version_scope": "full-version-bound-object-v1"
     },
     {
@@ -17770,6 +17947,65 @@
       "dependencies": [
         {
           "id": "asset:aa85b613e5cdf7a7cf656d44",
+          "sha256": "ce2eb1118ed014e4af94dddca1e14d45473f5b7da2e160849c4b8b389374a9b7",
+          "version": "15e9a2b13a4fda589a587fc0beb8fac31e0f43c97a0b93b24dc042d6ed31c07f"
+        }
+      ],
+      "discovery_observations": [
+        {
+          "entrypoint_id": "9e3cbe0f30d6d42ddd906b13ed03b6ef7b93749030e93d0dcb536849dc06803a",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:1ad6852fc26d9600100652bf",
+            "sha256": "e7cc06c30d24cb7124ec104262cb77bf9c66bdd68b8d258c257026592222cea6",
+            "version": "91f70ec0624807524f5486946ec19040b86d3732fbe83ab019ff36b26b66ca4a"
+          },
+          "row_canonical_sha256": "9a4887c7c19a8856a3576eac85be3133895ddcd5f4e132daf0360d17fe0380a2",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        }
+      ],
+      "entrypoints": [
+        {
+          "id": "entry:11f8fd047bef3bf6a7161af8",
+          "sha256": "ced7590e0ca63089aa240b580971de973e06d45c3346500e7b51f9af3b4171fd",
+          "version": "d8282d803bccdcabca199cd82d1fcfe12888e1c40163d67962058d3b148fdb7a"
+        }
+      ],
+      "generated": false,
+      "id": "method:176921f7c7e12325dfd87fa3",
+      "kind": "method",
+      "module": {
+        "id": "asset:aa85b613e5cdf7a7cf656d44",
+        "sha256": "ce2eb1118ed014e4af94dddca1e14d45473f5b7da2e160849c4b8b389374a9b7",
+        "version": "15e9a2b13a4fda589a587fc0beb8fac31e0f43c97a0b93b24dc042d6ed31c07f"
+      },
+      "namespace": "maintenance",
+      "qualification_status": "not-granted",
+      "runtime_history": [],
+      "runtime_id": "test_task_continuation_policy.RuntimePolicyTests.test_settled_result_cannot_be_downgraded_by_a_late_notification",
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "62c38df43f593e1dc24e4be078694c8055185ff21b959747593dae7e44b37dfd",
+      "version_scope": "full-version-bound-object-v1"
+    },
+    {
+      "definition": {
+        "line": 649,
+        "name": "test_settled_result_cannot_be_downgraded_by_a_late_notification",
+        "path": "scripts/tests/test_task_continuation_policy.py",
+        "sha256": "3753d59179f9f53f450f03fed2ef9adc00feb4b3e8edc2cee28bf343cb70cd9f"
+      },
+      "dependencies": [
+        {
+          "id": "asset:aa85b613e5cdf7a7cf656d44",
           "sha256": "2c2674b0ffd4a658e12433bf62c80ac1496e1a6d262ae849ba8a58592e8a06d9",
           "version": "f7ce2348b5ff52c9e2bf8c4da9de28144c14053e1cc1d43dcf86eca9ad8ad0b4"
         }
@@ -21423,6 +21659,65 @@
         "line": 89,
         "name": "test_required_job_wiring_and_separate_always_uploaded_artifacts",
         "path": "scripts/tests/test_regression_admission.py",
+        "sha256": "cf3abaea928a9c9d54046006ad078e50e0f8ce8f18fc65da78164c0f69f218e7"
+      },
+      "dependencies": [
+        {
+          "id": "asset:e190a5b3618405c738c6a323",
+          "sha256": "1cf55fde0bec3b7e36765fef4ff4c6b984730a3a6dc3f439272bb7348aa69139",
+          "version": "2a3e2eff4ed92686d1c3f7712dc73aa7ee8e29f9dfdb70c78e8f12dbdf458fd4"
+        }
+      ],
+      "discovery_observations": [
+        {
+          "entrypoint_id": "9e3cbe0f30d6d42ddd906b13ed03b6ef7b93749030e93d0dcb536849dc06803a",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:1ad6852fc26d9600100652bf",
+            "sha256": "e7cc06c30d24cb7124ec104262cb77bf9c66bdd68b8d258c257026592222cea6",
+            "version": "91f70ec0624807524f5486946ec19040b86d3732fbe83ab019ff36b26b66ca4a"
+          },
+          "row_canonical_sha256": "c1158e28eba9c12abf142cfa2ca3c876781002c1da3ccb1d0b58069bf5336e33",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        }
+      ],
+      "entrypoints": [
+        {
+          "id": "entry:11f8fd047bef3bf6a7161af8",
+          "sha256": "ced7590e0ca63089aa240b580971de973e06d45c3346500e7b51f9af3b4171fd",
+          "version": "d8282d803bccdcabca199cd82d1fcfe12888e1c40163d67962058d3b148fdb7a"
+        }
+      ],
+      "generated": false,
+      "id": "method:19ff0ca84f0f41a4c4ab9226",
+      "kind": "method",
+      "module": {
+        "id": "asset:e190a5b3618405c738c6a323",
+        "sha256": "1cf55fde0bec3b7e36765fef4ff4c6b984730a3a6dc3f439272bb7348aa69139",
+        "version": "2a3e2eff4ed92686d1c3f7712dc73aa7ee8e29f9dfdb70c78e8f12dbdf458fd4"
+      },
+      "namespace": "maintenance",
+      "qualification_status": "not-granted",
+      "runtime_history": [],
+      "runtime_id": "test_regression_admission.AdmissionIntegrationTests.test_required_job_wiring_and_separate_always_uploaded_artifacts",
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "cfa7f345a315029cfc3b016862acfc45ab210090e3da54028882d842994929ab",
+      "version_scope": "full-version-bound-object-v1"
+    },
+    {
+      "definition": {
+        "line": 89,
+        "name": "test_required_job_wiring_and_separate_always_uploaded_artifacts",
+        "path": "scripts/tests/test_regression_admission.py",
         "sha256": "a6ef44ad712e20280fe811f70c64ebedd090227663527f731aab3a716b41ab4b"
       },
       "dependencies": [
@@ -24425,6 +24720,65 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "c8d3e8d19d3caa0c0236e27860f8026c197d5604ee3247a44230031fd686ccd0",
+      "version_scope": "full-version-bound-object-v1"
+    },
+    {
+      "definition": {
+        "line": 201,
+        "name": "test_verified_full_target_can_stop_but_counter_only_cannot",
+        "path": "scripts/tests/test_task_continuation.py",
+        "sha256": "2e7420969f345407ff8327dc5358b58e76204ed426605613f7b2505955942e01"
+      },
+      "dependencies": [
+        {
+          "id": "asset:ab05e4a9526d157d6707fbcb",
+          "sha256": "f53a4eefa0186e9cccbc0dddca5c71d447cb607e28079656c1e03f8c850f3992",
+          "version": "442dd135fbae334e6ea9a1b25339b781a8049eeba60d1bb84028d959e423b6cc"
+        }
+      ],
+      "discovery_observations": [
+        {
+          "entrypoint_id": "9e3cbe0f30d6d42ddd906b13ed03b6ef7b93749030e93d0dcb536849dc06803a",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:1ad6852fc26d9600100652bf",
+            "sha256": "e7cc06c30d24cb7124ec104262cb77bf9c66bdd68b8d258c257026592222cea6",
+            "version": "91f70ec0624807524f5486946ec19040b86d3732fbe83ab019ff36b26b66ca4a"
+          },
+          "row_canonical_sha256": "69df21693cbb12a37507c6d7932cad8bd0f8b6be1c4dfd92697d89215f86db03",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        }
+      ],
+      "entrypoints": [
+        {
+          "id": "entry:11f8fd047bef3bf6a7161af8",
+          "sha256": "ced7590e0ca63089aa240b580971de973e06d45c3346500e7b51f9af3b4171fd",
+          "version": "d8282d803bccdcabca199cd82d1fcfe12888e1c40163d67962058d3b148fdb7a"
+        }
+      ],
+      "generated": false,
+      "id": "method:228fe8c24197b930d6287b32",
+      "kind": "method",
+      "module": {
+        "id": "asset:ab05e4a9526d157d6707fbcb",
+        "sha256": "f53a4eefa0186e9cccbc0dddca5c71d447cb607e28079656c1e03f8c850f3992",
+        "version": "442dd135fbae334e6ea9a1b25339b781a8049eeba60d1bb84028d959e423b6cc"
+      },
+      "namespace": "maintenance",
+      "qualification_status": "not-granted",
+      "runtime_history": [],
+      "runtime_id": "test_task_continuation.ContinuationChecks.test_verified_full_target_can_stop_but_counter_only_cannot",
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "c8dbc83a6c79694c2148929db058744ef1b99604153e62edc7c8a8a8797d739d",
       "version_scope": "full-version-bound-object-v1"
     },
     {
@@ -28260,6 +28614,65 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "348da9968de6913cce653f43a4c3714a25354f7feda752b2f801df9fa4545af4",
+      "version_scope": "full-version-bound-object-v1"
+    },
+    {
+      "definition": {
+        "line": 91,
+        "name": "test_bounded_window_resumes_313_without_erasing_unknown_native_history",
+        "path": "scripts/tests/test_task_continuation.py",
+        "sha256": "4c8e82defd71455455f9bd597e5bec370164c7b698df98c451b01f7bda83db02"
+      },
+      "dependencies": [
+        {
+          "id": "asset:ab05e4a9526d157d6707fbcb",
+          "sha256": "f53a4eefa0186e9cccbc0dddca5c71d447cb607e28079656c1e03f8c850f3992",
+          "version": "442dd135fbae334e6ea9a1b25339b781a8049eeba60d1bb84028d959e423b6cc"
+        }
+      ],
+      "discovery_observations": [
+        {
+          "entrypoint_id": "9e3cbe0f30d6d42ddd906b13ed03b6ef7b93749030e93d0dcb536849dc06803a",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:1ad6852fc26d9600100652bf",
+            "sha256": "e7cc06c30d24cb7124ec104262cb77bf9c66bdd68b8d258c257026592222cea6",
+            "version": "91f70ec0624807524f5486946ec19040b86d3732fbe83ab019ff36b26b66ca4a"
+          },
+          "row_canonical_sha256": "16fd822839c8f430e63ec7a1f96f28d1bae9f752dd91d0de5cf1a04195fa55b9",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        }
+      ],
+      "entrypoints": [
+        {
+          "id": "entry:11f8fd047bef3bf6a7161af8",
+          "sha256": "ced7590e0ca63089aa240b580971de973e06d45c3346500e7b51f9af3b4171fd",
+          "version": "d8282d803bccdcabca199cd82d1fcfe12888e1c40163d67962058d3b148fdb7a"
+        }
+      ],
+      "generated": false,
+      "id": "method:2827dc2580f71e74f0473805",
+      "kind": "method",
+      "module": {
+        "id": "asset:ab05e4a9526d157d6707fbcb",
+        "sha256": "f53a4eefa0186e9cccbc0dddca5c71d447cb607e28079656c1e03f8c850f3992",
+        "version": "442dd135fbae334e6ea9a1b25339b781a8049eeba60d1bb84028d959e423b6cc"
+      },
+      "namespace": "maintenance",
+      "qualification_status": "not-granted",
+      "runtime_history": [],
+      "runtime_id": "test_task_continuation.ContinuationChecks.test_bounded_window_resumes_313_without_erasing_unknown_native_history",
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "51fbabeffd7bee5bfa55009d0c26a7cd4435faf8fe3e1a0fe08f97ae44749059",
       "version_scope": "full-version-bound-object-v1"
     },
     {
@@ -32461,6 +32874,65 @@
       "dependencies": [
         {
           "id": "asset:96bfa8d845a5f2f86b024b8b",
+          "sha256": "0e41fbbda7b452a89ab63dc72c4528b8cc306c338a91daefa6f469d1a996832b",
+          "version": "935b252741840e83c26a8de7a06183277d83c684373f681d68d4bde46fc63746"
+        }
+      ],
+      "discovery_observations": [
+        {
+          "entrypoint_id": "9e3cbe0f30d6d42ddd906b13ed03b6ef7b93749030e93d0dcb536849dc06803a",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:1ad6852fc26d9600100652bf",
+            "sha256": "e7cc06c30d24cb7124ec104262cb77bf9c66bdd68b8d258c257026592222cea6",
+            "version": "91f70ec0624807524f5486946ec19040b86d3732fbe83ab019ff36b26b66ca4a"
+          },
+          "row_canonical_sha256": "1fc9820a8a5ad53385abaae32de77b1229a8efb6c99966a66af829b9770db57c",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        }
+      ],
+      "entrypoints": [
+        {
+          "id": "entry:11f8fd047bef3bf6a7161af8",
+          "sha256": "ced7590e0ca63089aa240b580971de973e06d45c3346500e7b51f9af3b4171fd",
+          "version": "d8282d803bccdcabca199cd82d1fcfe12888e1c40163d67962058d3b148fdb7a"
+        }
+      ],
+      "generated": false,
+      "id": "method:29dcfb41890f4ecf2d3d1eca",
+      "kind": "method",
+      "module": {
+        "id": "asset:96bfa8d845a5f2f86b024b8b",
+        "sha256": "0e41fbbda7b452a89ab63dc72c4528b8cc306c338a91daefa6f469d1a996832b",
+        "version": "935b252741840e83c26a8de7a06183277d83c684373f681d68d4bde46fc63746"
+      },
+      "namespace": "maintenance",
+      "qualification_status": "not-granted",
+      "runtime_history": [],
+      "runtime_id": "test_evas_integration_checks.IntegrationChecks.test_nested_production_modules_and_impls_cannot_hide_allowances",
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "7ad5af70d12000f34c9709bad9a55cf529b72c97377a69aa1e8180dcc27d2c98",
+      "version_scope": "full-version-bound-object-v1"
+    },
+    {
+      "definition": {
+        "line": 95,
+        "name": "test_nested_production_modules_and_impls_cannot_hide_allowances",
+        "path": "scripts/tests/test_evas_integration_checks.py",
+        "sha256": "4f10b9bdb14e9321ce6142723970fb4bc3ecd08430a54e3e12f6f507ec7e7d11"
+      },
+      "dependencies": [
+        {
+          "id": "asset:96bfa8d845a5f2f86b024b8b",
           "sha256": "c8ddbc4e6c14581efd46d557562f555a8b27269ec59005302cb6c606f62744bb",
           "version": "f6848865cfe232fc721bebd24528eefb145a2530bfb4864b5fc67fb0107a1f28"
         }
@@ -35824,6 +36296,65 @@
       "dependencies": [
         {
           "id": "asset:60d1af8d8e2a2df01ea15fb3",
+          "sha256": "13ebcd459bc2ff2ef0caaf46870b13992f355a5fa3ffe5030fde0d1bf0d4f68e",
+          "version": "61420857647157c12c6412b085b21b38ac0a718804ff9be49fe9135cfe58b8dd"
+        }
+      ],
+      "discovery_observations": [
+        {
+          "entrypoint_id": "9e3cbe0f30d6d42ddd906b13ed03b6ef7b93749030e93d0dcb536849dc06803a",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:1ad6852fc26d9600100652bf",
+            "sha256": "e7cc06c30d24cb7124ec104262cb77bf9c66bdd68b8d258c257026592222cea6",
+            "version": "91f70ec0624807524f5486946ec19040b86d3732fbe83ab019ff36b26b66ca4a"
+          },
+          "row_canonical_sha256": "336977ce57dc86909fbc6d770dc24c834b0b75a137e6228b697636af751b0656",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        }
+      ],
+      "entrypoints": [
+        {
+          "id": "entry:11f8fd047bef3bf6a7161af8",
+          "sha256": "ced7590e0ca63089aa240b580971de973e06d45c3346500e7b51f9af3b4171fd",
+          "version": "d8282d803bccdcabca199cd82d1fcfe12888e1c40163d67962058d3b148fdb7a"
+        }
+      ],
+      "generated": false,
+      "id": "method:2d702b25b4879d2cde417a9c",
+      "kind": "method",
+      "module": {
+        "id": "asset:60d1af8d8e2a2df01ea15fb3",
+        "sha256": "13ebcd459bc2ff2ef0caaf46870b13992f355a5fa3ffe5030fde0d1bf0d4f68e",
+        "version": "61420857647157c12c6412b085b21b38ac0a718804ff9be49fe9135cfe58b8dd"
+      },
+      "namespace": "maintenance",
+      "qualification_status": "not-granted",
+      "runtime_history": [],
+      "runtime_id": "test_regression_transition.RetentionBehavior.test_proposal_context_or_subject_drift_is_rejected",
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "204fa6bf51ef62d50b75c504e33cc012a3b10740c602085f28d1381103e41683",
+      "version_scope": "full-version-bound-object-v1"
+    },
+    {
+      "definition": {
+        "line": 80,
+        "name": "test_proposal_context_or_subject_drift_is_rejected",
+        "path": "scripts/tests/test_regression_transition.py",
+        "sha256": "83dbb30ca3849591374837b0dcb40e6f88ff1e1924d3443af0429af9e40f70d1"
+      },
+      "dependencies": [
+        {
+          "id": "asset:60d1af8d8e2a2df01ea15fb3",
           "sha256": "cb214b0f17a4bf139850406d56ba0ce1ab1e4164eae4cbe2e3d50119c24f63c8",
           "version": "379189da3156c6263308da6ca4f15d4a5f7e55a9dcf11096b682c74e127256ba"
         }
@@ -38535,6 +39066,88 @@
       "dependencies": [
         {
           "id": "asset:6e10e21596e26daaf68e1f62",
+          "sha256": "9a3b67ad061b7f3066a69da79bea8e742149807b65b1350f083ecb9d3ebdffd6",
+          "version": "e893cdda362cc52b21450b9536cf4ce0778d46f099d3b80453593583ddf1f95f"
+        }
+      ],
+      "discovery_observations": [
+        {
+          "entrypoint_id": "a367ca9e54e073397d0c48dfe78e4519af43987064252a7121e1cf4f6d26e575",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:a3284a9ec67acebef49ba896",
+            "sha256": "c5a84b12ea6ead32b6f8ff9c54e06762cf927b2f2a17a339209ee91d3373bcb0",
+            "version": "ec3fa1d2368e71c4863149f030cc1dac89953089fc3d3d06b8d7f65c02b3c78a"
+          },
+          "row_canonical_sha256": "c4902e5ddbf01f890652f28028e8acd1399fc156a8acf51fb06e605c502876ae",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        },
+        {
+          "entrypoint_id": "9e3cbe0f30d6d42ddd906b13ed03b6ef7b93749030e93d0dcb536849dc06803a",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:1ad6852fc26d9600100652bf",
+            "sha256": "e7cc06c30d24cb7124ec104262cb77bf9c66bdd68b8d258c257026592222cea6",
+            "version": "91f70ec0624807524f5486946ec19040b86d3732fbe83ab019ff36b26b66ca4a"
+          },
+          "row_canonical_sha256": "c4902e5ddbf01f890652f28028e8acd1399fc156a8acf51fb06e605c502876ae",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        }
+      ],
+      "entrypoints": [
+        {
+          "id": "entry:03afac1a212f19d22790209d",
+          "sha256": "194197864873af73561930da5c0bfe0daaa3de14ac542c509dfce54a641ebe22",
+          "version": "47648eae2ab00445f7e55f157edd27c1a2d0d9e5ed592a0e8460fea8b8d7d83a"
+        },
+        {
+          "id": "entry:11f8fd047bef3bf6a7161af8",
+          "sha256": "ced7590e0ca63089aa240b580971de973e06d45c3346500e7b51f9af3b4171fd",
+          "version": "d8282d803bccdcabca199cd82d1fcfe12888e1c40163d67962058d3b148fdb7a"
+        }
+      ],
+      "generated": false,
+      "id": "method:307e3287702455ebaa3d756e",
+      "kind": "method",
+      "module": {
+        "id": "asset:6e10e21596e26daaf68e1f62",
+        "sha256": "9a3b67ad061b7f3066a69da79bea8e742149807b65b1350f083ecb9d3ebdffd6",
+        "version": "e893cdda362cc52b21450b9536cf4ce0778d46f099d3b80453593583ddf1f95f"
+      },
+      "namespace": "maintenance",
+      "qualification_status": "not-granted",
+      "runtime_history": [],
+      "runtime_id": "test_ci_selection.RoutingTests.test_catalog_generator_selects_maintenance_without_exempting_neighbors",
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "9ab7088c0b48f8ba6599e058d0a42282d52f2864b3cb24b5789de1c0fce86d7f",
+      "version_scope": "full-version-bound-object-v1"
+    },
+    {
+      "definition": {
+        "line": 20,
+        "name": "test_catalog_generator_selects_maintenance_without_exempting_neighbors",
+        "path": "scripts/tests/test_ci_selection.py",
+        "sha256": "4db717985d357b7820939ccfa1db33096f1495a6bab57af3532c86df930d158c"
+      },
+      "dependencies": [
+        {
+          "id": "asset:6e10e21596e26daaf68e1f62",
           "sha256": "8abcb2880939641507ff2a9c2de173231c059f51f44eeea6323df3c553bc2e68",
           "version": "e4b3f59b0a523b9329ec842f8907aa4892d3501a02d05c2291c8ad6ce055aa84"
         }
@@ -38746,6 +39359,65 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "909711a259d18410742cc6a853991d106f11b5030959cc0d8339a52fad1ed580",
+      "version_scope": "full-version-bound-object-v1"
+    },
+    {
+      "definition": {
+        "line": 3036,
+        "name": "test_the_same_channels_with_nothing_to_hide_are_not_refused",
+        "path": "scripts/tests/test_discover_rust.py",
+        "sha256": "475b0fd9cce9a429283e6e2cc21653aa157082310db40178e6476009dc79b6be"
+      },
+      "dependencies": [
+        {
+          "id": "asset:c32e0f068c2b34ed45b31619",
+          "sha256": "d0235e602f615eccb5878a3a60b5195d9cd3a6c5cee540476204e12c548fadcc",
+          "version": "4555e7640a6b7ec715991332d40c8a190069c0966859675ba36b667daf8cbce7"
+        }
+      ],
+      "discovery_observations": [
+        {
+          "entrypoint_id": "9e3cbe0f30d6d42ddd906b13ed03b6ef7b93749030e93d0dcb536849dc06803a",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:1ad6852fc26d9600100652bf",
+            "sha256": "e7cc06c30d24cb7124ec104262cb77bf9c66bdd68b8d258c257026592222cea6",
+            "version": "91f70ec0624807524f5486946ec19040b86d3732fbe83ab019ff36b26b66ca4a"
+          },
+          "row_canonical_sha256": "e78dafb0f475673e8affe5cb27b15e55fc63a43c0357c103bec36497845259bc",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        }
+      ],
+      "entrypoints": [
+        {
+          "id": "entry:11f8fd047bef3bf6a7161af8",
+          "sha256": "ced7590e0ca63089aa240b580971de973e06d45c3346500e7b51f9af3b4171fd",
+          "version": "d8282d803bccdcabca199cd82d1fcfe12888e1c40163d67962058d3b148fdb7a"
+        }
+      ],
+      "generated": false,
+      "id": "method:315efb348d3194a72ed52e6d",
+      "kind": "method",
+      "module": {
+        "id": "asset:c32e0f068c2b34ed45b31619",
+        "sha256": "d0235e602f615eccb5878a3a60b5195d9cd3a6c5cee540476204e12c548fadcc",
+        "version": "4555e7640a6b7ec715991332d40c8a190069c0966859675ba36b667daf8cbce7"
+      },
+      "namespace": "maintenance",
+      "qualification_status": "not-granted",
+      "runtime_history": [],
+      "runtime_id": "test_discover_rust.CiShellInputChannelTests.test_the_same_channels_with_nothing_to_hide_are_not_refused",
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "c375c1a148122c2cbc459cc94227915aa5f14132a293bb39abc01821cc797a8f",
       "version_scope": "full-version-bound-object-v1"
     },
     {
@@ -44894,6 +45566,65 @@
       "dependencies": [
         {
           "id": "asset:1a6385202cebb313ae8cba27",
+          "sha256": "d34420dba111e52f84557729e24bd328eb48d6b9b0dd047eaf34e64fe19435f3",
+          "version": "5a3fe0f7efa0478de06c9fd4137b040f3cda553a92ebe506dfafb2a940486a60"
+        }
+      ],
+      "discovery_observations": [
+        {
+          "entrypoint_id": "9e3cbe0f30d6d42ddd906b13ed03b6ef7b93749030e93d0dcb536849dc06803a",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:1ad6852fc26d9600100652bf",
+            "sha256": "e7cc06c30d24cb7124ec104262cb77bf9c66bdd68b8d258c257026592222cea6",
+            "version": "91f70ec0624807524f5486946ec19040b86d3732fbe83ab019ff36b26b66ca4a"
+          },
+          "row_canonical_sha256": "19d57fe74afd0cdb771938591ccba0700d5b1ae72d1fbe8dcd6e1e51490e3cde",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        }
+      ],
+      "entrypoints": [
+        {
+          "id": "entry:11f8fd047bef3bf6a7161af8",
+          "sha256": "ced7590e0ca63089aa240b580971de973e06d45c3346500e7b51f9af3b4171fd",
+          "version": "d8282d803bccdcabca199cd82d1fcfe12888e1c40163d67962058d3b148fdb7a"
+        }
+      ],
+      "generated": false,
+      "id": "method:353432b70ce3143b2d337939",
+      "kind": "method",
+      "module": {
+        "id": "asset:1a6385202cebb313ae8cba27",
+        "sha256": "d34420dba111e52f84557729e24bd328eb48d6b9b0dd047eaf34e64fe19435f3",
+        "version": "5a3fe0f7efa0478de06c9fd4137b040f3cda553a92ebe506dfafb2a940486a60"
+      },
+      "namespace": "maintenance",
+      "qualification_status": "not-granted",
+      "runtime_history": [],
+      "runtime_id": "test_registration_bundle.BundleWorkflowTests.test_head_pointer_and_helper_cannot_replace_base_authority",
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "a6546efaa64deb693796490987e8bd5d5d763b4a4088afc32762ae8380822045",
+      "version_scope": "full-version-bound-object-v1"
+    },
+    {
+      "definition": {
+        "line": 137,
+        "name": "test_head_pointer_and_helper_cannot_replace_base_authority",
+        "path": "scripts/tests/test_registration_bundle.py",
+        "sha256": "9fb7779c8a0103d8f0e89697274a406c7213a9075ce4476804b9790fe377385e"
+      },
+      "dependencies": [
+        {
+          "id": "asset:1a6385202cebb313ae8cba27",
           "sha256": "d3b9e7d18688552f65629d7f5c71cb3863b6faca734bfcf2b498edd3e45671aa",
           "version": "199028cf2670450f9707d227955edffbd20f5eae12652803b6b70679ed149c23"
         }
@@ -47301,6 +48032,65 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "9f8354c9cd6bbf35764d46b6545c3f109099441da4eb062a9eb8e2dfe08b1dc1",
+      "version_scope": "full-version-bound-object-v1"
+    },
+    {
+      "definition": {
+        "line": 68,
+        "name": "test_primary_only_needs_no_registry_and_ignores_archive_copies",
+        "path": "scripts/tests/test_workspaces.py",
+        "sha256": "b49d3a3733070a924b6273925eb7880da8f2720a1b3a2042ed37cdfbb50f9c5f"
+      },
+      "dependencies": [
+        {
+          "id": "asset:9346558cd6aaa1967c544a44",
+          "sha256": "de9d81f9a5b9a4eabebe3d07b2de8c53cc17d91b3733c301c78b8139e2e02d3d",
+          "version": "d74349772447817cb7af29e8b1c38c00a98aee455ac0cce184ca5423f0a920be"
+        }
+      ],
+      "discovery_observations": [
+        {
+          "entrypoint_id": "9e3cbe0f30d6d42ddd906b13ed03b6ef7b93749030e93d0dcb536849dc06803a",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:1ad6852fc26d9600100652bf",
+            "sha256": "e7cc06c30d24cb7124ec104262cb77bf9c66bdd68b8d258c257026592222cea6",
+            "version": "91f70ec0624807524f5486946ec19040b86d3732fbe83ab019ff36b26b66ca4a"
+          },
+          "row_canonical_sha256": "a21d88a8146f291293606165cb8451c893925528fd44eccc0e85aed62e008acb",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        }
+      ],
+      "entrypoints": [
+        {
+          "id": "entry:11f8fd047bef3bf6a7161af8",
+          "sha256": "ced7590e0ca63089aa240b580971de973e06d45c3346500e7b51f9af3b4171fd",
+          "version": "d8282d803bccdcabca199cd82d1fcfe12888e1c40163d67962058d3b148fdb7a"
+        }
+      ],
+      "generated": false,
+      "id": "method:36be8c44cdde2b4166590393",
+      "kind": "method",
+      "module": {
+        "id": "asset:9346558cd6aaa1967c544a44",
+        "sha256": "de9d81f9a5b9a4eabebe3d07b2de8c53cc17d91b3733c301c78b8139e2e02d3d",
+        "version": "d74349772447817cb7af29e8b1c38c00a98aee455ac0cce184ca5423f0a920be"
+      },
+      "namespace": "maintenance",
+      "qualification_status": "not-granted",
+      "runtime_history": [],
+      "runtime_id": "test_workspaces.WorkspaceChecks.test_primary_only_needs_no_registry_and_ignores_archive_copies",
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "a1acac02778b565ec838163123c59aa7f386412bb8b7a6c90f70cad7a751ed19",
       "version_scope": "full-version-bound-object-v1"
     },
     {
@@ -53676,6 +54466,88 @@
       "dependencies": [
         {
           "id": "asset:baf92e7358044cda62508fdc",
+          "sha256": "d210d0bb806188a3453daf812968294f0732b82b8bea9f86cad96673e135ed31",
+          "version": "156b73d91bfe22bba7d2311c0bedfa8f2bb0aa987b503ab22b156c59d5763886"
+        }
+      ],
+      "discovery_observations": [
+        {
+          "entrypoint_id": "f282b31b167175b0540a25c5372c7e04d72faeb78915955465d0606f2f553927",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:8752c23e198ab606f7fd553a",
+            "sha256": "e40e6747558b36553bf1a7199f9efafe36aa532ea15d1de6514698d4ba63539e",
+            "version": "e90bd08a4d6eeb6be180ec3f8f5ce82178b1a8a19ed85fada2f495be03f89004"
+          },
+          "row_canonical_sha256": "e61c2f95ae6b31858e7c0b8bd5a28299fda0ccf6eb87753d0f34cc38e7b04b3f",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        },
+        {
+          "entrypoint_id": "9e3cbe0f30d6d42ddd906b13ed03b6ef7b93749030e93d0dcb536849dc06803a",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:1ad6852fc26d9600100652bf",
+            "sha256": "e7cc06c30d24cb7124ec104262cb77bf9c66bdd68b8d258c257026592222cea6",
+            "version": "91f70ec0624807524f5486946ec19040b86d3732fbe83ab019ff36b26b66ca4a"
+          },
+          "row_canonical_sha256": "e61c2f95ae6b31858e7c0b8bd5a28299fda0ccf6eb87753d0f34cc38e7b04b3f",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        }
+      ],
+      "entrypoints": [
+        {
+          "id": "entry:11f8fd047bef3bf6a7161af8",
+          "sha256": "ced7590e0ca63089aa240b580971de973e06d45c3346500e7b51f9af3b4171fd",
+          "version": "d8282d803bccdcabca199cd82d1fcfe12888e1c40163d67962058d3b148fdb7a"
+        },
+        {
+          "id": "entry:b46a32fbe74a2bd1a4e6ab77",
+          "sha256": "a594a3bde25124d141b6eaedce60934b7ad3995da6c36a918fdba4e320a931d5",
+          "version": "42a48610f93c17df6dca6298a8198ba99c6977d0b52b7c907bd54d09f0e8bd65"
+        }
+      ],
+      "generated": false,
+      "id": "method:446ffe3d19b492cb6d233436",
+      "kind": "method",
+      "module": {
+        "id": "asset:baf92e7358044cda62508fdc",
+        "sha256": "d210d0bb806188a3453daf812968294f0732b82b8bea9f86cad96673e135ed31",
+        "version": "156b73d91bfe22bba7d2311c0bedfa8f2bb0aa987b503ab22b156c59d5763886"
+      },
+      "namespace": "maintenance",
+      "qualification_status": "not-granted",
+      "runtime_history": [],
+      "runtime_id": "test_regression_runner.RegressionRunnerTests.test_plain_loop_dictionary_cannot_impersonate_a_typed_float_tag",
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "acc0ee5db7e1b69d37049fa53852607a880c340c66c9bb021160f69ddb5aab76",
+      "version_scope": "full-version-bound-object-v1"
+    },
+    {
+      "definition": {
+        "line": 294,
+        "name": "test_plain_loop_dictionary_cannot_impersonate_a_typed_float_tag",
+        "path": "scripts/tests/test_regression_runner.py",
+        "sha256": "d4b1622a264f5a73fd4bdf247186c6ee580d03dc6755e7b3db8eb34a4677e788"
+      },
+      "dependencies": [
+        {
+          "id": "asset:baf92e7358044cda62508fdc",
           "sha256": "925cc0bd2cbe18681fa5d477d34a8316d54d1230ecc8e49a155e6aee7557bcc8",
           "version": "54fc4d5399c8e05ea94e8d3a3ce9b49a71a131fa074acbc7837b43badee796c2"
         }
@@ -55607,6 +56479,65 @@
       "dependencies": [
         {
           "id": "asset:60a00d0936f367dd22d4ad96",
+          "sha256": "27ddf7d0da9ce63c56646d85b16227817d821be36239640d175d5e79a1da2bb2",
+          "version": "44226dea1428a96ac122ebbfa159eaa3dbc95e51b6c1ef75c73987d0285ef910"
+        }
+      ],
+      "discovery_observations": [
+        {
+          "entrypoint_id": "9e3cbe0f30d6d42ddd906b13ed03b6ef7b93749030e93d0dcb536849dc06803a",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:1ad6852fc26d9600100652bf",
+            "sha256": "e7cc06c30d24cb7124ec104262cb77bf9c66bdd68b8d258c257026592222cea6",
+            "version": "91f70ec0624807524f5486946ec19040b86d3732fbe83ab019ff36b26b66ca4a"
+          },
+          "row_canonical_sha256": "d557ed4b2b364ac4727ee1b9e25b8fcff07ebac3e436ddd284d6a3a279c74d06",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        }
+      ],
+      "entrypoints": [
+        {
+          "id": "entry:11f8fd047bef3bf6a7161af8",
+          "sha256": "ced7590e0ca63089aa240b580971de973e06d45c3346500e7b51f9af3b4171fd",
+          "version": "d8282d803bccdcabca199cd82d1fcfe12888e1c40163d67962058d3b148fdb7a"
+        }
+      ],
+      "generated": false,
+      "id": "method:452b6a1627a8579e42f6c3e8",
+      "kind": "method",
+      "module": {
+        "id": "asset:60a00d0936f367dd22d4ad96",
+        "sha256": "27ddf7d0da9ce63c56646d85b16227817d821be36239640d175d5e79a1da2bb2",
+        "version": "44226dea1428a96ac122ebbfa159eaa3dbc95e51b6c1ef75c73987d0285ef910"
+      },
+      "namespace": "maintenance",
+      "qualification_status": "not-granted",
+      "runtime_history": [],
+      "runtime_id": "test_regression_input_subject.SubjectProducerTests.test_other_config_changes_comparison_subject",
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "7d1da4e9d63190e395855477a78e00f857e63f33940a653b9ab89e445691f93a",
+      "version_scope": "full-version-bound-object-v1"
+    },
+    {
+      "definition": {
+        "line": 34,
+        "name": "test_other_config_changes_comparison_subject",
+        "path": "scripts/tests/test_regression_input_subject.py",
+        "sha256": "ec3a6fd748fc60ddcbb9d9cab90f5708ee96ba378fc06da424deeeb4eaa5fa3f"
+      },
+      "dependencies": [
+        {
+          "id": "asset:60a00d0936f367dd22d4ad96",
           "sha256": "c5c32df98e150dfd7c5149997d6be56803e7cf53f941e1987f8480e44a70ef49",
           "version": "19acf8b0f2ad81d890aed42380655ef06ddc21d962ec79d3fb491575fcfa7b13"
         }
@@ -56700,6 +57631,88 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "55ddea13192f1c0d556462ac094f6b2fce43d1f60c2815802b7eac446eb37303",
+      "version_scope": "full-version-bound-object-v1"
+    },
+    {
+      "definition": {
+        "line": 169,
+        "name": "test_missing_and_deleted_required_modules_remain_blocked",
+        "path": "scripts/tests/test_evas_check_policy.py",
+        "sha256": "08d7ed0cd892e6fd4f19e13ba92bac5955896d00f9df6fac5380581c6466628d"
+      },
+      "dependencies": [
+        {
+          "id": "asset:849115630211879bc48c590a",
+          "sha256": "8d510e8e3a335f569cd4b7e48b703b79c47dce1499ef1e217f5b83a56446a53b",
+          "version": "073f9329bbe21eae30e62b2b526023a456c4f00dcf681c45781f38d22f217321"
+        }
+      ],
+      "discovery_observations": [
+        {
+          "entrypoint_id": "60ae801e63b506a431608e548b407cbf4ee9774c95b2ce149b80ff28c7e6057b",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:9d19540741f857622725d241",
+            "sha256": "4ab337a9669a21dbe19580ff6667807e7ceec821a061faf1a5b58eeaa4f24a35",
+            "version": "a9bb482c1fc7f1473df9f8d25e0e2585215056db2f8743a3b03ce65eeaceede1"
+          },
+          "row_canonical_sha256": "71afd1dddac77715b0cba06cf661cb06283bcdf00b2c0ba03d9592257581cb46",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        },
+        {
+          "entrypoint_id": "9e3cbe0f30d6d42ddd906b13ed03b6ef7b93749030e93d0dcb536849dc06803a",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:1ad6852fc26d9600100652bf",
+            "sha256": "e7cc06c30d24cb7124ec104262cb77bf9c66bdd68b8d258c257026592222cea6",
+            "version": "91f70ec0624807524f5486946ec19040b86d3732fbe83ab019ff36b26b66ca4a"
+          },
+          "row_canonical_sha256": "71afd1dddac77715b0cba06cf661cb06283bcdf00b2c0ba03d9592257581cb46",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        }
+      ],
+      "entrypoints": [
+        {
+          "id": "entry:11f8fd047bef3bf6a7161af8",
+          "sha256": "ced7590e0ca63089aa240b580971de973e06d45c3346500e7b51f9af3b4171fd",
+          "version": "d8282d803bccdcabca199cd82d1fcfe12888e1c40163d67962058d3b148fdb7a"
+        },
+        {
+          "id": "entry:f600bfb9f209e2535e49fff6",
+          "sha256": "7dc3f7e43f0705ea06975df8a495f0730e0c656bb2a84c8a27803a0bc41a1a8e",
+          "version": "05a4ccf4cc7511b17d0c9c0f146423b1904cab797b19af16e083e0abd2683f43"
+        }
+      ],
+      "generated": false,
+      "id": "method:45790efdc407969cde460c3a",
+      "kind": "method",
+      "module": {
+        "id": "asset:849115630211879bc48c590a",
+        "sha256": "8d510e8e3a335f569cd4b7e48b703b79c47dce1499ef1e217f5b83a56446a53b",
+        "version": "073f9329bbe21eae30e62b2b526023a456c4f00dcf681c45781f38d22f217321"
+      },
+      "namespace": "maintenance",
+      "qualification_status": "not-granted",
+      "runtime_history": [],
+      "runtime_id": "test_evas_check_policy.PolicyCommands.test_missing_and_deleted_required_modules_remain_blocked",
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "5837fb9491e03ab9e84bb8c4d26bb1a227a4f12e4ea404dd093b5007ddc7774b",
       "version_scope": "full-version-bound-object-v1"
     },
     {
@@ -63834,6 +64847,65 @@
     },
     {
       "definition": {
+        "line": 163,
+        "name": "test_later_run_must_equal_the_registered_entry",
+        "path": "scripts/tests/test_registration_split_dut.py",
+        "sha256": "c032d0589e7bec1c3ee4d34c8b749d303766287996494a17dc1c16c87a71663b"
+      },
+      "dependencies": [
+        {
+          "id": "asset:24ca7ba3b2370cf7f903bab9",
+          "sha256": "c9dc08e208e69d9b899b66734add7373b5087bdeb61f11ee0db235bfd231e977",
+          "version": "ad7396a1e04e66ef59d2bbe4560fb73c5f48b440866ef8d4da4d66b550f58911"
+        }
+      ],
+      "discovery_observations": [
+        {
+          "entrypoint_id": "9e3cbe0f30d6d42ddd906b13ed03b6ef7b93749030e93d0dcb536849dc06803a",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:1ad6852fc26d9600100652bf",
+            "sha256": "e7cc06c30d24cb7124ec104262cb77bf9c66bdd68b8d258c257026592222cea6",
+            "version": "91f70ec0624807524f5486946ec19040b86d3732fbe83ab019ff36b26b66ca4a"
+          },
+          "row_canonical_sha256": "8bcf96d83666adff1f8a5a76615400bdf2f4a063fe252896f4969498e1567349",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        }
+      ],
+      "entrypoints": [
+        {
+          "id": "entry:11f8fd047bef3bf6a7161af8",
+          "sha256": "ced7590e0ca63089aa240b580971de973e06d45c3346500e7b51f9af3b4171fd",
+          "version": "d8282d803bccdcabca199cd82d1fcfe12888e1c40163d67962058d3b148fdb7a"
+        }
+      ],
+      "generated": false,
+      "id": "method:520de977e166e4af3efb2de1",
+      "kind": "method",
+      "module": {
+        "id": "asset:24ca7ba3b2370cf7f903bab9",
+        "sha256": "c9dc08e208e69d9b899b66734add7373b5087bdeb61f11ee0db235bfd231e977",
+        "version": "ad7396a1e04e66ef59d2bbe4560fb73c5f48b440866ef8d4da4d66b550f58911"
+      },
+      "namespace": "maintenance",
+      "qualification_status": "not-granted",
+      "runtime_history": [],
+      "runtime_id": "test_registration_split_dut.AfterRegistrationAdmissionTests.test_later_run_must_equal_the_registered_entry",
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "4ed21398a4d709441ad670c94e2b84ea5f74c18fe512aff3827456924b025de2",
+      "version_scope": "full-version-bound-object-v1"
+    },
+    {
+      "definition": {
         "line": 105,
         "name": "test_shallow_crossing_uses_true_root_and_post_crossing_side",
         "path": "evas/tests/test_event_accuracy.py",
@@ -67441,6 +68513,65 @@
       "dependencies": [
         {
           "id": "asset:9346558cd6aaa1967c544a44",
+          "sha256": "de9d81f9a5b9a4eabebe3d07b2de8c53cc17d91b3733c301c78b8139e2e02d3d",
+          "version": "d74349772447817cb7af29e8b1c38c00a98aee455ac0cce184ca5423f0a920be"
+        }
+      ],
+      "discovery_observations": [
+        {
+          "entrypoint_id": "9e3cbe0f30d6d42ddd906b13ed03b6ef7b93749030e93d0dcb536849dc06803a",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:1ad6852fc26d9600100652bf",
+            "sha256": "e7cc06c30d24cb7124ec104262cb77bf9c66bdd68b8d258c257026592222cea6",
+            "version": "91f70ec0624807524f5486946ec19040b86d3732fbe83ab019ff36b26b66ca4a"
+          },
+          "row_canonical_sha256": "af1d1145fb78a27a3668a96d4ace6e21cfa408600173da1778f19f2b7fc77aae",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        }
+      ],
+      "entrypoints": [
+        {
+          "id": "entry:11f8fd047bef3bf6a7161af8",
+          "sha256": "ced7590e0ca63089aa240b580971de973e06d45c3346500e7b51f9af3b4171fd",
+          "version": "d8282d803bccdcabca199cd82d1fcfe12888e1c40163d67962058d3b148fdb7a"
+        }
+      ],
+      "generated": false,
+      "id": "method:5862cfa8a5b56a992a202d2a",
+      "kind": "method",
+      "module": {
+        "id": "asset:9346558cd6aaa1967c544a44",
+        "sha256": "de9d81f9a5b9a4eabebe3d07b2de8c53cc17d91b3733c301c78b8139e2e02d3d",
+        "version": "d74349772447817cb7af29e8b1c38c00a98aee455ac0cce184ca5423f0a920be"
+      },
+      "namespace": "maintenance",
+      "qualification_status": "not-granted",
+      "runtime_history": [],
+      "runtime_id": "test_workspaces.WorkspaceChecks.test_reports_changes_ignored_material_and_commits_against_named_base",
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "1a34958245614ea2346d507758b177c76e636d5ae870533010b0f23f1a418edd",
+      "version_scope": "full-version-bound-object-v1"
+    },
+    {
+      "definition": {
+        "line": 105,
+        "name": "test_reports_changes_ignored_material_and_commits_against_named_base",
+        "path": "scripts/tests/test_workspaces.py",
+        "sha256": "91baab9ae6a93937e2f0cd3cd70c0814e1b7d082ad0449c080992265de39eb9e"
+      },
+      "dependencies": [
+        {
+          "id": "asset:9346558cd6aaa1967c544a44",
           "sha256": "4f628b1b81797838ff3fa40be8a2e53d25b3a63566455688f35d637087f6d9d9",
           "version": "e62f682a90fb7bf49ef41963a59e25d9f18e8810b68aaa488444bb54c5525dc2"
         }
@@ -69832,6 +70963,88 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "5bd6c6b6182fa092e0fca9dab235b09f5545504531332d43c89f7be19ece625a",
+      "version_scope": "full-version-bound-object-v1"
+    },
+    {
+      "definition": {
+        "line": 60,
+        "name": "test_development_records_only_select_maintenance",
+        "path": "scripts/tests/test_ci_selection.py",
+        "sha256": "9bcea3002d475eb0440d1f5fb666bf27d6e6a4fd4603925b1cb4a97b82e620fb"
+      },
+      "dependencies": [
+        {
+          "id": "asset:6e10e21596e26daaf68e1f62",
+          "sha256": "9a3b67ad061b7f3066a69da79bea8e742149807b65b1350f083ecb9d3ebdffd6",
+          "version": "e893cdda362cc52b21450b9536cf4ce0778d46f099d3b80453593583ddf1f95f"
+        }
+      ],
+      "discovery_observations": [
+        {
+          "entrypoint_id": "a367ca9e54e073397d0c48dfe78e4519af43987064252a7121e1cf4f6d26e575",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:a3284a9ec67acebef49ba896",
+            "sha256": "c5a84b12ea6ead32b6f8ff9c54e06762cf927b2f2a17a339209ee91d3373bcb0",
+            "version": "ec3fa1d2368e71c4863149f030cc1dac89953089fc3d3d06b8d7f65c02b3c78a"
+          },
+          "row_canonical_sha256": "0d98f00d7cdb15495f4d4d9c4c0ce38f4a7f09547861e2367c2b11cf5f9e8bf2",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        },
+        {
+          "entrypoint_id": "9e3cbe0f30d6d42ddd906b13ed03b6ef7b93749030e93d0dcb536849dc06803a",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:1ad6852fc26d9600100652bf",
+            "sha256": "e7cc06c30d24cb7124ec104262cb77bf9c66bdd68b8d258c257026592222cea6",
+            "version": "91f70ec0624807524f5486946ec19040b86d3732fbe83ab019ff36b26b66ca4a"
+          },
+          "row_canonical_sha256": "0d98f00d7cdb15495f4d4d9c4c0ce38f4a7f09547861e2367c2b11cf5f9e8bf2",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        }
+      ],
+      "entrypoints": [
+        {
+          "id": "entry:03afac1a212f19d22790209d",
+          "sha256": "194197864873af73561930da5c0bfe0daaa3de14ac542c509dfce54a641ebe22",
+          "version": "47648eae2ab00445f7e55f157edd27c1a2d0d9e5ed592a0e8460fea8b8d7d83a"
+        },
+        {
+          "id": "entry:11f8fd047bef3bf6a7161af8",
+          "sha256": "ced7590e0ca63089aa240b580971de973e06d45c3346500e7b51f9af3b4171fd",
+          "version": "d8282d803bccdcabca199cd82d1fcfe12888e1c40163d67962058d3b148fdb7a"
+        }
+      ],
+      "generated": false,
+      "id": "method:5a3615c1ba56bf65ce83aa50",
+      "kind": "method",
+      "module": {
+        "id": "asset:6e10e21596e26daaf68e1f62",
+        "sha256": "9a3b67ad061b7f3066a69da79bea8e742149807b65b1350f083ecb9d3ebdffd6",
+        "version": "e893cdda362cc52b21450b9536cf4ce0778d46f099d3b80453593583ddf1f95f"
+      },
+      "namespace": "maintenance",
+      "qualification_status": "not-granted",
+      "runtime_history": [],
+      "runtime_id": "test_ci_selection.RoutingTests.test_development_records_only_select_maintenance",
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "65341a543e79ee969fc7a61edb9f29a162f5b26ea46474860f41cfca128f6af1",
       "version_scope": "full-version-bound-object-v1"
     },
     {
@@ -74496,6 +75709,65 @@
       "dependencies": [
         {
           "id": "asset:60d1af8d8e2a2df01ea15fb3",
+          "sha256": "13ebcd459bc2ff2ef0caaf46870b13992f355a5fa3ffe5030fde0d1bf0d4f68e",
+          "version": "61420857647157c12c6412b085b21b38ac0a718804ff9be49fe9135cfe58b8dd"
+        }
+      ],
+      "discovery_observations": [
+        {
+          "entrypoint_id": "9e3cbe0f30d6d42ddd906b13ed03b6ef7b93749030e93d0dcb536849dc06803a",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:1ad6852fc26d9600100652bf",
+            "sha256": "e7cc06c30d24cb7124ec104262cb77bf9c66bdd68b8d258c257026592222cea6",
+            "version": "91f70ec0624807524f5486946ec19040b86d3732fbe83ab019ff36b26b66ca4a"
+          },
+          "row_canonical_sha256": "da92e2573c29c3168c1c88a34816154ec2245e7cf70cfcad86dc8adac2df69f1",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        }
+      ],
+      "entrypoints": [
+        {
+          "id": "entry:11f8fd047bef3bf6a7161af8",
+          "sha256": "ced7590e0ca63089aa240b580971de973e06d45c3346500e7b51f9af3b4171fd",
+          "version": "d8282d803bccdcabca199cd82d1fcfe12888e1c40163d67962058d3b148fdb7a"
+        }
+      ],
+      "generated": false,
+      "id": "method:6116fd44e285d2a38625a46c",
+      "kind": "method",
+      "module": {
+        "id": "asset:60d1af8d8e2a2df01ea15fb3",
+        "sha256": "13ebcd459bc2ff2ef0caaf46870b13992f355a5fa3ffe5030fde0d1bf0d4f68e",
+        "version": "61420857647157c12c6412b085b21b38ac0a718804ff9be49fe9135cfe58b8dd"
+      },
+      "namespace": "maintenance",
+      "qualification_status": "not-granted",
+      "runtime_history": [],
+      "runtime_id": "test_regression_transition.RetentionBehavior.test_review_fields_are_required",
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "86a5a442acc557d63dbae4f91df8e4f3396c7d061cd293b9a367c20b81189d26",
+      "version_scope": "full-version-bound-object-v1"
+    },
+    {
+      "definition": {
+        "line": 65,
+        "name": "test_review_fields_are_required",
+        "path": "scripts/tests/test_regression_transition.py",
+        "sha256": "05f5a45f16e4875d497f69e484e0c3d1b99befc3e276900134464eabb2bc6986"
+      },
+      "dependencies": [
+        {
+          "id": "asset:60d1af8d8e2a2df01ea15fb3",
           "sha256": "eb465cd85a1643b92eaf6788864b64e728e41b351824dbc9596edfb7ed83dd14",
           "version": "57012fc277d824f58cb477622ac3739b92b0ca31bc5e7a5b403ee3b7899d47ce"
         }
@@ -78543,6 +79815,88 @@
     },
     {
       "definition": {
+        "line": 355,
+        "name": "test_cli_emits_github_boolean_outputs",
+        "path": "scripts/tests/test_ci_selection.py",
+        "sha256": "22099b227333753d18f041087758e71bef18a65baf4656e3d5a192732f212530"
+      },
+      "dependencies": [
+        {
+          "id": "asset:6e10e21596e26daaf68e1f62",
+          "sha256": "9a3b67ad061b7f3066a69da79bea8e742149807b65b1350f083ecb9d3ebdffd6",
+          "version": "e893cdda362cc52b21450b9536cf4ce0778d46f099d3b80453593583ddf1f95f"
+        }
+      ],
+      "discovery_observations": [
+        {
+          "entrypoint_id": "a367ca9e54e073397d0c48dfe78e4519af43987064252a7121e1cf4f6d26e575",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:a3284a9ec67acebef49ba896",
+            "sha256": "c5a84b12ea6ead32b6f8ff9c54e06762cf927b2f2a17a339209ee91d3373bcb0",
+            "version": "ec3fa1d2368e71c4863149f030cc1dac89953089fc3d3d06b8d7f65c02b3c78a"
+          },
+          "row_canonical_sha256": "12995bb9ce43acb791a3756b5995ca82e74a19125f33b8783ae7996ec872ab2f",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        },
+        {
+          "entrypoint_id": "9e3cbe0f30d6d42ddd906b13ed03b6ef7b93749030e93d0dcb536849dc06803a",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:1ad6852fc26d9600100652bf",
+            "sha256": "e7cc06c30d24cb7124ec104262cb77bf9c66bdd68b8d258c257026592222cea6",
+            "version": "91f70ec0624807524f5486946ec19040b86d3732fbe83ab019ff36b26b66ca4a"
+          },
+          "row_canonical_sha256": "12995bb9ce43acb791a3756b5995ca82e74a19125f33b8783ae7996ec872ab2f",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        }
+      ],
+      "entrypoints": [
+        {
+          "id": "entry:03afac1a212f19d22790209d",
+          "sha256": "194197864873af73561930da5c0bfe0daaa3de14ac542c509dfce54a641ebe22",
+          "version": "47648eae2ab00445f7e55f157edd27c1a2d0d9e5ed592a0e8460fea8b8d7d83a"
+        },
+        {
+          "id": "entry:11f8fd047bef3bf6a7161af8",
+          "sha256": "ced7590e0ca63089aa240b580971de973e06d45c3346500e7b51f9af3b4171fd",
+          "version": "d8282d803bccdcabca199cd82d1fcfe12888e1c40163d67962058d3b148fdb7a"
+        }
+      ],
+      "generated": false,
+      "id": "method:65d2cd2aab06ac1e943ddebb",
+      "kind": "method",
+      "module": {
+        "id": "asset:6e10e21596e26daaf68e1f62",
+        "sha256": "9a3b67ad061b7f3066a69da79bea8e742149807b65b1350f083ecb9d3ebdffd6",
+        "version": "e893cdda362cc52b21450b9536cf4ce0778d46f099d3b80453593583ddf1f95f"
+      },
+      "namespace": "maintenance",
+      "qualification_status": "not-granted",
+      "runtime_history": [],
+      "runtime_id": "test_ci_selection.GitChangeTests.test_cli_emits_github_boolean_outputs",
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "48d0e937f549d2600497f311047cb6993f59b2504e70d8c0b5970c0114e35902",
+      "version_scope": "full-version-bound-object-v1"
+    },
+    {
+      "definition": {
         "line": 339,
         "name": "test_cli_emits_github_boolean_outputs",
         "path": "scripts/tests/test_ci_selection.py",
@@ -80418,6 +81772,65 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "8faa84de244d63ac85fa96d423fd5e0e709ae82f1e94d958185d8569df5c04f1",
+      "version_scope": "full-version-bound-object-v1"
+    },
+    {
+      "definition": {
+        "line": 224,
+        "name": "test_fixture_skip_and_error_remain_collectable_but_never_cache",
+        "path": "scripts/tests/test_ci_evidence_v3.py",
+        "sha256": "0dc7087defd633808e83ade3973f8b3eb24b38cabfbc1723f436ec50336ae37f"
+      },
+      "dependencies": [
+        {
+          "id": "asset:f8e8b7c2946ff140e6260e84",
+          "sha256": "946a5dbef324fece1868f05a5f114165bdef8e0aa55f6ec064fbe341589a8fe3",
+          "version": "74b3d1460ab9e65c7aea068e101c0eaf18cbc60e36877b49071a420459781bc4"
+        }
+      ],
+      "discovery_observations": [
+        {
+          "entrypoint_id": "9e3cbe0f30d6d42ddd906b13ed03b6ef7b93749030e93d0dcb536849dc06803a",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:1ad6852fc26d9600100652bf",
+            "sha256": "e7cc06c30d24cb7124ec104262cb77bf9c66bdd68b8d258c257026592222cea6",
+            "version": "91f70ec0624807524f5486946ec19040b86d3732fbe83ab019ff36b26b66ca4a"
+          },
+          "row_canonical_sha256": "80cbb853eef2b866f9634809927f4d81fb08ce5a817d8ac4d70f96c25788d9aa",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        }
+      ],
+      "entrypoints": [
+        {
+          "id": "entry:11f8fd047bef3bf6a7161af8",
+          "sha256": "ced7590e0ca63089aa240b580971de973e06d45c3346500e7b51f9af3b4171fd",
+          "version": "d8282d803bccdcabca199cd82d1fcfe12888e1c40163d67962058d3b148fdb7a"
+        }
+      ],
+      "generated": false,
+      "id": "method:66066fd745e97617347cd01b",
+      "kind": "method",
+      "module": {
+        "id": "asset:f8e8b7c2946ff140e6260e84",
+        "sha256": "946a5dbef324fece1868f05a5f114165bdef8e0aa55f6ec064fbe341589a8fe3",
+        "version": "74b3d1460ab9e65c7aea068e101c0eaf18cbc60e36877b49071a420459781bc4"
+      },
+      "namespace": "maintenance",
+      "qualification_status": "not-granted",
+      "runtime_history": [],
+      "runtime_id": "test_ci_evidence_v3.EvidenceV3Tests.test_fixture_skip_and_error_remain_collectable_but_never_cache",
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "91e8b277a2be6f4351685c8a9956ed6448dad8b5f6edf36892dfe24f6125fe8e",
       "version_scope": "full-version-bound-object-v1"
     },
     {
@@ -85846,6 +87259,65 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "b9887e48c17cfca298837d0e0f8e67481397e05eec9a468836ef495099dafd38",
+      "version_scope": "full-version-bound-object-v1"
+    },
+    {
+      "definition": {
+        "line": 16,
+        "name": "test_production_optional_work_budget_retains_local_sticky_probe",
+        "path": "scripts/tests/test_evas_integration_checks.py",
+        "sha256": "2c21355a98702612c2d591992b7599327f8b4e791d98e93196890a641fa72acd"
+      },
+      "dependencies": [
+        {
+          "id": "asset:96bfa8d845a5f2f86b024b8b",
+          "sha256": "0e41fbbda7b452a89ab63dc72c4528b8cc306c338a91daefa6f469d1a996832b",
+          "version": "935b252741840e83c26a8de7a06183277d83c684373f681d68d4bde46fc63746"
+        }
+      ],
+      "discovery_observations": [
+        {
+          "entrypoint_id": "9e3cbe0f30d6d42ddd906b13ed03b6ef7b93749030e93d0dcb536849dc06803a",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:1ad6852fc26d9600100652bf",
+            "sha256": "e7cc06c30d24cb7124ec104262cb77bf9c66bdd68b8d258c257026592222cea6",
+            "version": "91f70ec0624807524f5486946ec19040b86d3732fbe83ab019ff36b26b66ca4a"
+          },
+          "row_canonical_sha256": "ccdea907b2dbf572423db6d005ebc057cbabbea9a91e08d7d44c208bab8840d9",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        }
+      ],
+      "entrypoints": [
+        {
+          "id": "entry:11f8fd047bef3bf6a7161af8",
+          "sha256": "ced7590e0ca63089aa240b580971de973e06d45c3346500e7b51f9af3b4171fd",
+          "version": "d8282d803bccdcabca199cd82d1fcfe12888e1c40163d67962058d3b148fdb7a"
+        }
+      ],
+      "generated": false,
+      "id": "method:6bfda4706f92d575f9cc901f",
+      "kind": "method",
+      "module": {
+        "id": "asset:96bfa8d845a5f2f86b024b8b",
+        "sha256": "0e41fbbda7b452a89ab63dc72c4528b8cc306c338a91daefa6f469d1a996832b",
+        "version": "935b252741840e83c26a8de7a06183277d83c684373f681d68d4bde46fc63746"
+      },
+      "namespace": "maintenance",
+      "qualification_status": "not-granted",
+      "runtime_history": [],
+      "runtime_id": "test_evas_integration_checks.IntegrationChecks.test_production_optional_work_budget_retains_local_sticky_probe",
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "c7cdee0b90fc2ca5a822e8f1959a328aaa405609a7ccebc128c175496ba8d563",
       "version_scope": "full-version-bound-object-v1"
     },
     {
@@ -97186,6 +98658,65 @@
       "dependencies": [
         {
           "id": "asset:20e0a5945c6518970975b490",
+          "sha256": "e21d63009f4edfa9e621c376775e2e7bea56f4149d1fce81ab10455d3a0d71fd",
+          "version": "0636816585b161891a037d37028aec0e56f72bb5625b97a153d9d281c05775d7"
+        }
+      ],
+      "discovery_observations": [
+        {
+          "entrypoint_id": "9e3cbe0f30d6d42ddd906b13ed03b6ef7b93749030e93d0dcb536849dc06803a",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:1ad6852fc26d9600100652bf",
+            "sha256": "e7cc06c30d24cb7124ec104262cb77bf9c66bdd68b8d258c257026592222cea6",
+            "version": "91f70ec0624807524f5486946ec19040b86d3732fbe83ab019ff36b26b66ca4a"
+          },
+          "row_canonical_sha256": "0ea7d3245cd294d55c0ba02268dfbae5a44f2f431943e727484b9a733673e677",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        }
+      ],
+      "entrypoints": [
+        {
+          "id": "entry:11f8fd047bef3bf6a7161af8",
+          "sha256": "ced7590e0ca63089aa240b580971de973e06d45c3346500e7b51f9af3b4171fd",
+          "version": "d8282d803bccdcabca199cd82d1fcfe12888e1c40163d67962058d3b148fdb7a"
+        }
+      ],
+      "generated": false,
+      "id": "method:83f720452941f09ef58333f4",
+      "kind": "method",
+      "module": {
+        "id": "asset:20e0a5945c6518970975b490",
+        "sha256": "e21d63009f4edfa9e621c376775e2e7bea56f4149d1fce81ab10455d3a0d71fd",
+        "version": "0636816585b161891a037d37028aec0e56f72bb5625b97a153d9d281c05775d7"
+      },
+      "namespace": "maintenance",
+      "qualification_status": "not-granted",
+      "runtime_history": [],
+      "runtime_id": "test_benchmark_workbench.WorkbenchTests.test_duplicate_package_across_batches_is_rejected",
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "036eb788b8e2be47202617af71b8f93d283a602a4fd2e82dbb0bd1f571e1b985",
+      "version_scope": "full-version-bound-object-v1"
+    },
+    {
+      "definition": {
+        "line": 101,
+        "name": "test_duplicate_package_across_batches_is_rejected",
+        "path": "scripts/tests/test_benchmark_workbench.py",
+        "sha256": "24512f4db4bece64f8308cdcd7f2c1354c50651989bce491d7d2ecea7114ca30"
+      },
+      "dependencies": [
+        {
+          "id": "asset:20e0a5945c6518970975b490",
           "sha256": "fa2b2a8c3cad7d9c298e9dd21d58f63870e8d3a3a589a6bdce468f9b673e8c87",
           "version": "89bd0cbec3956fa235f32b725df7a45d631593e333ce391de773f4f701dff3ea"
         }
@@ -100726,6 +102257,65 @@
       "dependencies": [
         {
           "id": "asset:29dcd6bb05434065dfe5ddb1",
+          "sha256": "0c7803f07311fa54b8f491902d9717b9a4ef283662a26b89c8d155a0dae33726",
+          "version": "b94f8472b650b146ec38b055406cc55ba311a360f9ad533664a65e0d237a933d"
+        }
+      ],
+      "discovery_observations": [
+        {
+          "entrypoint_id": "9e3cbe0f30d6d42ddd906b13ed03b6ef7b93749030e93d0dcb536849dc06803a",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:1ad6852fc26d9600100652bf",
+            "sha256": "e7cc06c30d24cb7124ec104262cb77bf9c66bdd68b8d258c257026592222cea6",
+            "version": "91f70ec0624807524f5486946ec19040b86d3732fbe83ab019ff36b26b66ca4a"
+          },
+          "row_canonical_sha256": "3b431865394190ffcd565e25b6c890329d51b925c9d5ad9666165a390dcb5c5b",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        }
+      ],
+      "entrypoints": [
+        {
+          "id": "entry:11f8fd047bef3bf6a7161af8",
+          "sha256": "ced7590e0ca63089aa240b580971de973e06d45c3346500e7b51f9af3b4171fd",
+          "version": "d8282d803bccdcabca199cd82d1fcfe12888e1c40163d67962058d3b148fdb7a"
+        }
+      ],
+      "generated": false,
+      "id": "method:85dd1a4f668a359f776bd044",
+      "kind": "method",
+      "module": {
+        "id": "asset:29dcd6bb05434065dfe5ddb1",
+        "sha256": "0c7803f07311fa54b8f491902d9717b9a4ef283662a26b89c8d155a0dae33726",
+        "version": "b94f8472b650b146ec38b055406cc55ba311a360f9ad533664a65e0d237a933d"
+      },
+      "namespace": "maintenance",
+      "qualification_status": "not-granted",
+      "runtime_history": [],
+      "runtime_id": "test_traceability.TraceabilityChecks.test_human_overview_can_change_without_invalidating_evidence",
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "24097f3e2cd761e70c5439b367dbaaba0b80737f05ce025d756ce45a03d353e6",
+      "version_scope": "full-version-bound-object-v1"
+    },
+    {
+      "definition": {
+        "line": 72,
+        "name": "test_human_overview_can_change_without_invalidating_evidence",
+        "path": "scripts/tests/test_traceability.py",
+        "sha256": "d3c862b7ee555bf28b8913e548c144170042fad99c28b0a94efe084328205fa8"
+      },
+      "dependencies": [
+        {
+          "id": "asset:29dcd6bb05434065dfe5ddb1",
           "sha256": "b81643df1af877fb2ee0d33c5f895432f204eb600fa2de54e4328470a5a0a2a5",
           "version": "5da24c48e68230a9cc22366b37f8495311b1099807fb1912b93eeb0ff9a7db33"
         }
@@ -103360,6 +104950,88 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "aed3c219084f0eb9319ce6524503761b9b2ec0e9dcec118448256388ce94edf4",
+      "version_scope": "full-version-bound-object-v1"
+    },
+    {
+      "definition": {
+        "line": 371,
+        "name": "test_unknown_while_state_cannot_be_a_matchable_failure",
+        "path": "scripts/tests/test_regression_runner.py",
+        "sha256": "996bbda529e541fec072291b0cbdacd7f7bb8ea60c2c560171ea3e13930293b8"
+      },
+      "dependencies": [
+        {
+          "id": "asset:baf92e7358044cda62508fdc",
+          "sha256": "d210d0bb806188a3453daf812968294f0732b82b8bea9f86cad96673e135ed31",
+          "version": "156b73d91bfe22bba7d2311c0bedfa8f2bb0aa987b503ab22b156c59d5763886"
+        }
+      ],
+      "discovery_observations": [
+        {
+          "entrypoint_id": "f282b31b167175b0540a25c5372c7e04d72faeb78915955465d0606f2f553927",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:8752c23e198ab606f7fd553a",
+            "sha256": "e40e6747558b36553bf1a7199f9efafe36aa532ea15d1de6514698d4ba63539e",
+            "version": "e90bd08a4d6eeb6be180ec3f8f5ce82178b1a8a19ed85fada2f495be03f89004"
+          },
+          "row_canonical_sha256": "588dbb63c3a30f34742f4a5fb500d4fc162f4e853995f06b8c21f827f9e99175",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        },
+        {
+          "entrypoint_id": "9e3cbe0f30d6d42ddd906b13ed03b6ef7b93749030e93d0dcb536849dc06803a",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:1ad6852fc26d9600100652bf",
+            "sha256": "e7cc06c30d24cb7124ec104262cb77bf9c66bdd68b8d258c257026592222cea6",
+            "version": "91f70ec0624807524f5486946ec19040b86d3732fbe83ab019ff36b26b66ca4a"
+          },
+          "row_canonical_sha256": "588dbb63c3a30f34742f4a5fb500d4fc162f4e853995f06b8c21f827f9e99175",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        }
+      ],
+      "entrypoints": [
+        {
+          "id": "entry:11f8fd047bef3bf6a7161af8",
+          "sha256": "ced7590e0ca63089aa240b580971de973e06d45c3346500e7b51f9af3b4171fd",
+          "version": "d8282d803bccdcabca199cd82d1fcfe12888e1c40163d67962058d3b148fdb7a"
+        },
+        {
+          "id": "entry:b46a32fbe74a2bd1a4e6ab77",
+          "sha256": "a594a3bde25124d141b6eaedce60934b7ad3995da6c36a918fdba4e320a931d5",
+          "version": "42a48610f93c17df6dca6298a8198ba99c6977d0b52b7c907bd54d09f0e8bd65"
+        }
+      ],
+      "generated": false,
+      "id": "method:86292d69cc55cfe69b669177",
+      "kind": "method",
+      "module": {
+        "id": "asset:baf92e7358044cda62508fdc",
+        "sha256": "d210d0bb806188a3453daf812968294f0732b82b8bea9f86cad96673e135ed31",
+        "version": "156b73d91bfe22bba7d2311c0bedfa8f2bb0aa987b503ab22b156c59d5763886"
+      },
+      "namespace": "maintenance",
+      "qualification_status": "not-granted",
+      "runtime_history": [],
+      "runtime_id": "test_regression_runner.RegressionRunnerTests.test_unknown_while_state_cannot_be_a_matchable_failure",
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "af9eb2b760103fc4c5b9eca09afbb950c2e10d07b7a8e7b2f3160f07b763788b",
       "version_scope": "full-version-bound-object-v1"
     },
     {
@@ -109256,6 +110928,88 @@
       "dependencies": [
         {
           "id": "asset:baf92e7358044cda62508fdc",
+          "sha256": "d210d0bb806188a3453daf812968294f0732b82b8bea9f86cad96673e135ed31",
+          "version": "156b73d91bfe22bba7d2311c0bedfa8f2bb0aa987b503ab22b156c59d5763886"
+        }
+      ],
+      "discovery_observations": [
+        {
+          "entrypoint_id": "f282b31b167175b0540a25c5372c7e04d72faeb78915955465d0606f2f553927",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:8752c23e198ab606f7fd553a",
+            "sha256": "e40e6747558b36553bf1a7199f9efafe36aa532ea15d1de6514698d4ba63539e",
+            "version": "e90bd08a4d6eeb6be180ec3f8f5ce82178b1a8a19ed85fada2f495be03f89004"
+          },
+          "row_canonical_sha256": "eeae833b7db062d56763dad7a8f6857f009b0affe0015af23fe05a17bd549667",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        },
+        {
+          "entrypoint_id": "9e3cbe0f30d6d42ddd906b13ed03b6ef7b93749030e93d0dcb536849dc06803a",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:1ad6852fc26d9600100652bf",
+            "sha256": "e7cc06c30d24cb7124ec104262cb77bf9c66bdd68b8d258c257026592222cea6",
+            "version": "91f70ec0624807524f5486946ec19040b86d3732fbe83ab019ff36b26b66ca4a"
+          },
+          "row_canonical_sha256": "eeae833b7db062d56763dad7a8f6857f009b0affe0015af23fe05a17bd549667",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        }
+      ],
+      "entrypoints": [
+        {
+          "id": "entry:11f8fd047bef3bf6a7161af8",
+          "sha256": "ced7590e0ca63089aa240b580971de973e06d45c3346500e7b51f9af3b4171fd",
+          "version": "d8282d803bccdcabca199cd82d1fcfe12888e1c40163d67962058d3b148fdb7a"
+        },
+        {
+          "id": "entry:b46a32fbe74a2bd1a4e6ab77",
+          "sha256": "a594a3bde25124d141b6eaedce60934b7ad3995da6c36a918fdba4e320a931d5",
+          "version": "42a48610f93c17df6dca6298a8198ba99c6977d0b52b7c907bd54d09f0e8bd65"
+        }
+      ],
+      "generated": false,
+      "id": "method:8f3d96bc5e0f5d139434e8ec",
+      "kind": "method",
+      "module": {
+        "id": "asset:baf92e7358044cda62508fdc",
+        "sha256": "d210d0bb806188a3453daf812968294f0732b82b8bea9f86cad96673e135ed31",
+        "version": "156b73d91bfe22bba7d2311c0bedfa8f2bb0aa987b503ab22b156c59d5763886"
+      },
+      "namespace": "maintenance",
+      "qualification_status": "not-granted",
+      "runtime_history": [],
+      "runtime_id": "test_regression_runner.RegressionRunnerTests.test_parameter_identity_does_not_call_shadowed_storage_or_metaclass_properties",
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "127193086716077a1091a49c74379ae1931f6199ad3329892c7e880ed9bd5ae3",
+      "version_scope": "full-version-bound-object-v1"
+    },
+    {
+      "definition": {
+        "line": 271,
+        "name": "test_parameter_identity_does_not_call_shadowed_storage_or_metaclass_properties",
+        "path": "scripts/tests/test_regression_runner.py",
+        "sha256": "9ed6b16a397506c96ed2ecfdb9c10632dfe459e92d67f1b7c6df23b19f1e6f1d"
+      },
+      "dependencies": [
+        {
+          "id": "asset:baf92e7358044cda62508fdc",
           "sha256": "cdfa53095024b3af87762e239d09e7f55710f8f91feb6f816df3eed9c9ff2ff7",
           "version": "fc9b5901f227a9e8b10759e48ba4021cdf2941901a72565172fbc00e41873031"
         }
@@ -113998,6 +115752,65 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "ee82823fb26c6d67fd0a25b0c90942f458515f26e2b8c9f1cff8d63a2aa0ee41",
+      "version_scope": "full-version-bound-object-v1"
+    },
+    {
+      "definition": {
+        "line": 212,
+        "name": "test_all_cases_passed_does_not_skip_pending_delivery",
+        "path": "scripts/tests/test_task_continuation.py",
+        "sha256": "11166523f6523ded4c1fec3704de217cac8d68d3bea9f06f5de979bae75f6b1b"
+      },
+      "dependencies": [
+        {
+          "id": "asset:ab05e4a9526d157d6707fbcb",
+          "sha256": "f53a4eefa0186e9cccbc0dddca5c71d447cb607e28079656c1e03f8c850f3992",
+          "version": "442dd135fbae334e6ea9a1b25339b781a8049eeba60d1bb84028d959e423b6cc"
+        }
+      ],
+      "discovery_observations": [
+        {
+          "entrypoint_id": "9e3cbe0f30d6d42ddd906b13ed03b6ef7b93749030e93d0dcb536849dc06803a",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:1ad6852fc26d9600100652bf",
+            "sha256": "e7cc06c30d24cb7124ec104262cb77bf9c66bdd68b8d258c257026592222cea6",
+            "version": "91f70ec0624807524f5486946ec19040b86d3732fbe83ab019ff36b26b66ca4a"
+          },
+          "row_canonical_sha256": "e3424cf00dbcb97f81e146846b8dc7c40e19b3f9662648ebdc86a7748d5f5978",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        }
+      ],
+      "entrypoints": [
+        {
+          "id": "entry:11f8fd047bef3bf6a7161af8",
+          "sha256": "ced7590e0ca63089aa240b580971de973e06d45c3346500e7b51f9af3b4171fd",
+          "version": "d8282d803bccdcabca199cd82d1fcfe12888e1c40163d67962058d3b148fdb7a"
+        }
+      ],
+      "generated": false,
+      "id": "method:921982b34ed9bf8393afe4a3",
+      "kind": "method",
+      "module": {
+        "id": "asset:ab05e4a9526d157d6707fbcb",
+        "sha256": "f53a4eefa0186e9cccbc0dddca5c71d447cb607e28079656c1e03f8c850f3992",
+        "version": "442dd135fbae334e6ea9a1b25339b781a8049eeba60d1bb84028d959e423b6cc"
+      },
+      "namespace": "maintenance",
+      "qualification_status": "not-granted",
+      "runtime_history": [],
+      "runtime_id": "test_task_continuation.ContinuationChecks.test_all_cases_passed_does_not_skip_pending_delivery",
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "1bd07cb341d301761770478d8eedbd98b98b6549943c90f5f4b0934f237d650b",
       "version_scope": "full-version-bound-object-v1"
     },
     {
@@ -123922,6 +125735,65 @@
       "dependencies": [
         {
           "id": "asset:269dc5839e76fa8e61d3dd35",
+          "sha256": "98d12fe96f04fb4bd186e36fb81b686e088364f1d3f5ae088499ae3eab165d03",
+          "version": "6abc69da837c7c5b84239bc30364a1f5fc3ad89f967da39441d9e2d00649deda"
+        }
+      ],
+      "discovery_observations": [
+        {
+          "entrypoint_id": "9e3cbe0f30d6d42ddd906b13ed03b6ef7b93749030e93d0dcb536849dc06803a",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:1ad6852fc26d9600100652bf",
+            "sha256": "e7cc06c30d24cb7124ec104262cb77bf9c66bdd68b8d258c257026592222cea6",
+            "version": "91f70ec0624807524f5486946ec19040b86d3732fbe83ab019ff36b26b66ca4a"
+          },
+          "row_canonical_sha256": "2c835e5b13f31c6b33d8473fdb3c10dc4ea20db6627e755f0b5e9102de20d5a0",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        }
+      ],
+      "entrypoints": [
+        {
+          "id": "entry:11f8fd047bef3bf6a7161af8",
+          "sha256": "ced7590e0ca63089aa240b580971de973e06d45c3346500e7b51f9af3b4171fd",
+          "version": "d8282d803bccdcabca199cd82d1fcfe12888e1c40163d67962058d3b148fdb7a"
+        }
+      ],
+      "generated": false,
+      "id": "method:9bcba126dcf136f2377fd0b5",
+      "kind": "method",
+      "module": {
+        "id": "asset:269dc5839e76fa8e61d3dd35",
+        "sha256": "98d12fe96f04fb4bd186e36fb81b686e088364f1d3f5ae088499ae3eab165d03",
+        "version": "6abc69da837c7c5b84239bc30364a1f5fc3ad89f967da39441d9e2d00649deda"
+      },
+      "namespace": "maintenance",
+      "qualification_status": "not-granted",
+      "runtime_history": [],
+      "runtime_id": "test_task_continuation_execution.ExecutionAdapterTests.test_missing_native_agent_meter_refuses_before_marker_process_starts",
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "5a7fa917c941757b17275454273c32ae2494765ca136c6f853456944685f250b",
+      "version_scope": "full-version-bound-object-v1"
+    },
+    {
+      "definition": {
+        "line": 396,
+        "name": "test_missing_native_agent_meter_refuses_before_marker_process_starts",
+        "path": "scripts/tests/test_task_continuation_execution.py",
+        "sha256": "6f883ae6ca12dfa70f192b9d45baf262065dc9a45f229bb3d97db8f1c8dd6b85"
+      },
+      "dependencies": [
+        {
+          "id": "asset:269dc5839e76fa8e61d3dd35",
           "sha256": "b201fa3e03254c8746a2241f6c2ffca06f9a427693ab63c9bba2a5da5f22fadc",
           "version": "eb2bc6d8f2ce33c60e0423c11a80cbc862745d4e725cc60fd21dac7b3a36b032"
         }
@@ -132701,6 +134573,65 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "28afff831d0bec298b5dcd105158bd59eea71d84b17f71c968f60a3b1868a812",
+      "version_scope": "full-version-bound-object-v1"
+    },
+    {
+      "definition": {
+        "line": 523,
+        "name": "test_unknown_current_context_stops_before_registration_bundle",
+        "path": "scripts/tests/test_trusted_regression_gate.py",
+        "sha256": "2ae4a112acb4ea43457196b69a488194df1f2b1831be6c2edcc6b682e91d2de2"
+      },
+      "dependencies": [
+        {
+          "id": "asset:0540764a9431232ec4bdaed3",
+          "sha256": "d5ce2e6bd6bd25eda40c57b1ff3c1c9229df4a92c0bcf7f8641cbffb036eff85",
+          "version": "594c178f5f9a9aed327ee67a167c8dfa6bbc187b78be60d521b4736a76c2e22d"
+        }
+      ],
+      "discovery_observations": [
+        {
+          "entrypoint_id": "9e3cbe0f30d6d42ddd906b13ed03b6ef7b93749030e93d0dcb536849dc06803a",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:1ad6852fc26d9600100652bf",
+            "sha256": "e7cc06c30d24cb7124ec104262cb77bf9c66bdd68b8d258c257026592222cea6",
+            "version": "91f70ec0624807524f5486946ec19040b86d3732fbe83ab019ff36b26b66ca4a"
+          },
+          "row_canonical_sha256": "7ca499e25246aa5dcfcf4ebecb5a56a5907c9ad4794a7de4acba24fd613adcc5",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        }
+      ],
+      "entrypoints": [
+        {
+          "id": "entry:11f8fd047bef3bf6a7161af8",
+          "sha256": "ced7590e0ca63089aa240b580971de973e06d45c3346500e7b51f9af3b4171fd",
+          "version": "d8282d803bccdcabca199cd82d1fcfe12888e1c40163d67962058d3b148fdb7a"
+        }
+      ],
+      "generated": false,
+      "id": "method:a59682d77f7760507d13cbd0",
+      "kind": "method",
+      "module": {
+        "id": "asset:0540764a9431232ec4bdaed3",
+        "sha256": "d5ce2e6bd6bd25eda40c57b1ff3c1c9229df4a92c0bcf7f8641cbffb036eff85",
+        "version": "594c178f5f9a9aed327ee67a167c8dfa6bbc187b78be60d521b4736a76c2e22d"
+      },
+      "namespace": "maintenance",
+      "qualification_status": "not-granted",
+      "runtime_history": [],
+      "runtime_id": "test_trusted_regression_gate.RegistrationLoaderIntegrationTests.test_unknown_current_context_stops_before_registration_bundle",
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "3b1e211e2c7039d5420c67f778bf9a00c008068cf64d3caeca1c592f1c11bbd0",
       "version_scope": "full-version-bound-object-v1"
     },
     {
@@ -142271,6 +144202,65 @@
       "dependencies": [
         {
           "id": "asset:ab05e4a9526d157d6707fbcb",
+          "sha256": "f53a4eefa0186e9cccbc0dddca5c71d447cb607e28079656c1e03f8c850f3992",
+          "version": "442dd135fbae334e6ea9a1b25339b781a8049eeba60d1bb84028d959e423b6cc"
+        }
+      ],
+      "discovery_observations": [
+        {
+          "entrypoint_id": "9e3cbe0f30d6d42ddd906b13ed03b6ef7b93749030e93d0dcb536849dc06803a",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:1ad6852fc26d9600100652bf",
+            "sha256": "e7cc06c30d24cb7124ec104262cb77bf9c66bdd68b8d258c257026592222cea6",
+            "version": "91f70ec0624807524f5486946ec19040b86d3732fbe83ab019ff36b26b66ca4a"
+          },
+          "row_canonical_sha256": "e5483e73b20ca72bfd80de968953e5aab438089b55936e53f97f9446b754f0b4",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        }
+      ],
+      "entrypoints": [
+        {
+          "id": "entry:11f8fd047bef3bf6a7161af8",
+          "sha256": "ced7590e0ca63089aa240b580971de973e06d45c3346500e7b51f9af3b4171fd",
+          "version": "d8282d803bccdcabca199cd82d1fcfe12888e1c40163d67962058d3b148fdb7a"
+        }
+      ],
+      "generated": false,
+      "id": "method:ae72373c336637c4e127c0ef",
+      "kind": "method",
+      "module": {
+        "id": "asset:ab05e4a9526d157d6707fbcb",
+        "sha256": "f53a4eefa0186e9cccbc0dddca5c71d447cb607e28079656c1e03f8c850f3992",
+        "version": "442dd135fbae334e6ea9a1b25339b781a8049eeba60d1bb84028d959e423b6cc"
+      },
+      "namespace": "maintenance",
+      "qualification_status": "not-granted",
+      "runtime_history": [],
+      "runtime_id": "test_task_continuation.ContinuationChecks.test_only_ready_case_already_running_can_wait",
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "5062bc8971f5bebac78f990b93f3bba8c377218ff72fc2a4506d895a5cd8661f",
+      "version_scope": "full-version-bound-object-v1"
+    },
+    {
+      "definition": {
+        "line": 136,
+        "name": "test_only_ready_case_already_running_can_wait",
+        "path": "scripts/tests/test_task_continuation.py",
+        "sha256": "5ab0cb4287379bf6f5e2d40c5e84f4deb3927b983545a0714b4ea4ce9bb0d909"
+      },
+      "dependencies": [
+        {
+          "id": "asset:ab05e4a9526d157d6707fbcb",
           "sha256": "d4dcbf654e675cb3daddcee996a8bfa61c3c3b8ce55138b54cac8effc97a2264",
           "version": "01425efd489b83bd938020efeb25117ee4606f7c94504d8354b06288ed282c67"
         }
@@ -147864,6 +149854,65 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "06304cbb738d5b17cbfc069b4da220857b0e0572a7a2e0816b38f6b43ab5db76",
+      "version_scope": "full-version-bound-object-v1"
+    },
+    {
+      "definition": {
+        "line": 423,
+        "name": "test_invalid_child_JSON_preserves_actual_stdout_and_stderr",
+        "path": "scripts/tests/test_ci_inventory.py",
+        "sha256": "a798aa2cf92b6e1e6e98fb6a0f9007fff7afbbb995964adce5933b0bb41bb4e3"
+      },
+      "dependencies": [
+        {
+          "id": "asset:ba7bee72ebc49c16bd2a5bde",
+          "sha256": "4ee86f573e3cac99decef510219aa26eca95e756e8c6ede13d7281103d14e8f7",
+          "version": "2a7e61ccd7bcf234b43a7b686a426c2c1af0941c5922a2f9ffaca2e26d23102f"
+        }
+      ],
+      "discovery_observations": [
+        {
+          "entrypoint_id": "9e3cbe0f30d6d42ddd906b13ed03b6ef7b93749030e93d0dcb536849dc06803a",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:1ad6852fc26d9600100652bf",
+            "sha256": "e7cc06c30d24cb7124ec104262cb77bf9c66bdd68b8d258c257026592222cea6",
+            "version": "91f70ec0624807524f5486946ec19040b86d3732fbe83ab019ff36b26b66ca4a"
+          },
+          "row_canonical_sha256": "5bd3fe68f4599b3a9a4ed00ab900ac4e66c756bfb3bb37f6e3b5d6019ebdf26d",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        }
+      ],
+      "entrypoints": [
+        {
+          "id": "entry:11f8fd047bef3bf6a7161af8",
+          "sha256": "ced7590e0ca63089aa240b580971de973e06d45c3346500e7b51f9af3b4171fd",
+          "version": "d8282d803bccdcabca199cd82d1fcfe12888e1c40163d67962058d3b148fdb7a"
+        }
+      ],
+      "generated": false,
+      "id": "method:bb6a65beca7191679c29c429",
+      "kind": "method",
+      "module": {
+        "id": "asset:ba7bee72ebc49c16bd2a5bde",
+        "sha256": "4ee86f573e3cac99decef510219aa26eca95e756e8c6ede13d7281103d14e8f7",
+        "version": "2a7e61ccd7bcf234b43a7b686a426c2c1af0941c5922a2f9ffaca2e26d23102f"
+      },
+      "namespace": "maintenance",
+      "qualification_status": "not-granted",
+      "runtime_history": [],
+      "runtime_id": "test_ci_inventory.ConstructionTests.test_invalid_child_JSON_preserves_actual_stdout_and_stderr",
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "0ce7fcaa9dd10942d321a19685f135f7ec6f947fe0219978ee79e0a6d1e7d869",
       "version_scope": "full-version-bound-object-v1"
     },
     {
@@ -157753,6 +159802,88 @@
       "dependencies": [
         {
           "id": "asset:849115630211879bc48c590a",
+          "sha256": "8d510e8e3a335f569cd4b7e48b703b79c47dce1499ef1e217f5b83a56446a53b",
+          "version": "073f9329bbe21eae30e62b2b526023a456c4f00dcf681c45781f38d22f217321"
+        }
+      ],
+      "discovery_observations": [
+        {
+          "entrypoint_id": "60ae801e63b506a431608e548b407cbf4ee9774c95b2ce149b80ff28c7e6057b",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:9d19540741f857622725d241",
+            "sha256": "4ab337a9669a21dbe19580ff6667807e7ceec821a061faf1a5b58eeaa4f24a35",
+            "version": "a9bb482c1fc7f1473df9f8d25e0e2585215056db2f8743a3b03ce65eeaceede1"
+          },
+          "row_canonical_sha256": "4102d533173dbd961d780b1d4a46c0b6f103d9806dcb14dbc48c752ec901aeb6",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        },
+        {
+          "entrypoint_id": "9e3cbe0f30d6d42ddd906b13ed03b6ef7b93749030e93d0dcb536849dc06803a",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:1ad6852fc26d9600100652bf",
+            "sha256": "e7cc06c30d24cb7124ec104262cb77bf9c66bdd68b8d258c257026592222cea6",
+            "version": "91f70ec0624807524f5486946ec19040b86d3732fbe83ab019ff36b26b66ca4a"
+          },
+          "row_canonical_sha256": "4102d533173dbd961d780b1d4a46c0b6f103d9806dcb14dbc48c752ec901aeb6",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        }
+      ],
+      "entrypoints": [
+        {
+          "id": "entry:11f8fd047bef3bf6a7161af8",
+          "sha256": "ced7590e0ca63089aa240b580971de973e06d45c3346500e7b51f9af3b4171fd",
+          "version": "d8282d803bccdcabca199cd82d1fcfe12888e1c40163d67962058d3b148fdb7a"
+        },
+        {
+          "id": "entry:f600bfb9f209e2535e49fff6",
+          "sha256": "7dc3f7e43f0705ea06975df8a495f0730e0c656bb2a84c8a27803a0bc41a1a8e",
+          "version": "05a4ccf4cc7511b17d0c9c0f146423b1904cab797b19af16e083e0abd2683f43"
+        }
+      ],
+      "generated": false,
+      "id": "method:c4701a162407e8da9f3e3823",
+      "kind": "method",
+      "module": {
+        "id": "asset:849115630211879bc48c590a",
+        "sha256": "8d510e8e3a335f569cd4b7e48b703b79c47dce1499ef1e217f5b83a56446a53b",
+        "version": "073f9329bbe21eae30e62b2b526023a456c4f00dcf681c45781f38d22f217321"
+      },
+      "namespace": "maintenance",
+      "qualification_status": "not-granted",
+      "runtime_history": [],
+      "runtime_id": "test_evas_check_policy.PolicyCommands.test_new_proof_paths_keep_accounting_obligation_after_local_pass",
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "ecfd4f812bc0a1f77522a965a32bad697da2f4e5daa23cccef95914ff0079307",
+      "version_scope": "full-version-bound-object-v1"
+    },
+    {
+      "definition": {
+        "line": 48,
+        "name": "test_new_proof_paths_keep_accounting_obligation_after_local_pass",
+        "path": "scripts/tests/test_evas_check_policy.py",
+        "sha256": "7fb671393fbab962527bfe77827d8d2a07e899c039fb790c34eb703affd62d46"
+      },
+      "dependencies": [
+        {
+          "id": "asset:849115630211879bc48c590a",
           "sha256": "a762b5de5f6ba0f52186e3004f3ce9a48142c7239a7d2a86ab39683560c99f78",
           "version": "b73f988ef002513f99d482a69efd1f6183962324d5b513edd2df5054e04e49a8"
         }
@@ -162062,6 +164193,65 @@
     },
     {
       "definition": {
+        "line": 457,
+        "name": "test_preauthorized_shards_must_bind_inputs_and_actual_shard_labels",
+        "path": "scripts/tests/test_trusted_regression_gate.py",
+        "sha256": "745435f828000e32afb228d15cfa546a95afb74922aaea2423b30c2689333468"
+      },
+      "dependencies": [
+        {
+          "id": "asset:0540764a9431232ec4bdaed3",
+          "sha256": "d5ce2e6bd6bd25eda40c57b1ff3c1c9229df4a92c0bcf7f8641cbffb036eff85",
+          "version": "594c178f5f9a9aed327ee67a167c8dfa6bbc187b78be60d521b4736a76c2e22d"
+        }
+      ],
+      "discovery_observations": [
+        {
+          "entrypoint_id": "9e3cbe0f30d6d42ddd906b13ed03b6ef7b93749030e93d0dcb536849dc06803a",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:1ad6852fc26d9600100652bf",
+            "sha256": "e7cc06c30d24cb7124ec104262cb77bf9c66bdd68b8d258c257026592222cea6",
+            "version": "91f70ec0624807524f5486946ec19040b86d3732fbe83ab019ff36b26b66ca4a"
+          },
+          "row_canonical_sha256": "a762067916ce3b91007b798b96ad47e56c1721ba1d3bcf0dfbd3586e557817c2",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        }
+      ],
+      "entrypoints": [
+        {
+          "id": "entry:11f8fd047bef3bf6a7161af8",
+          "sha256": "ced7590e0ca63089aa240b580971de973e06d45c3346500e7b51f9af3b4171fd",
+          "version": "d8282d803bccdcabca199cd82d1fcfe12888e1c40163d67962058d3b148fdb7a"
+        }
+      ],
+      "generated": false,
+      "id": "method:ca1e5e68559e16d6f31aaf95",
+      "kind": "method",
+      "module": {
+        "id": "asset:0540764a9431232ec4bdaed3",
+        "sha256": "d5ce2e6bd6bd25eda40c57b1ff3c1c9229df4a92c0bcf7f8641cbffb036eff85",
+        "version": "594c178f5f9a9aed327ee67a167c8dfa6bbc187b78be60d521b4736a76c2e22d"
+      },
+      "namespace": "maintenance",
+      "qualification_status": "not-granted",
+      "runtime_history": [],
+      "runtime_id": "test_trusted_regression_gate.RegistrationLoaderIntegrationTests.test_preauthorized_shards_must_bind_inputs_and_actual_shard_labels",
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "d26d7eef494c4756a6f0c33184e6de260a6a9150efbe856f241e9d2848ded0b7",
+      "version_scope": "full-version-bound-object-v1"
+    },
+    {
+      "definition": {
         "line": 428,
         "name": "test_preauthorized_shards_must_bind_inputs_and_actual_shard_labels",
         "path": "scripts/tests/test_trusted_regression_gate.py",
@@ -165964,6 +168154,65 @@
       "dependencies": [
         {
           "id": "asset:086e19ac884eb40d8e5f9c1f",
+          "sha256": "b19c2ad2c98e4d96d29dfc77dcec827d9bdc11671069f434dd6a56011fed428e",
+          "version": "37911298865cd411ad70d2dcb8ca8f71797b2d509afdca1684136e618b42980e"
+        }
+      ],
+      "discovery_observations": [
+        {
+          "entrypoint_id": "9e3cbe0f30d6d42ddd906b13ed03b6ef7b93749030e93d0dcb536849dc06803a",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:1ad6852fc26d9600100652bf",
+            "sha256": "e7cc06c30d24cb7124ec104262cb77bf9c66bdd68b8d258c257026592222cea6",
+            "version": "91f70ec0624807524f5486946ec19040b86d3732fbe83ab019ff36b26b66ca4a"
+          },
+          "row_canonical_sha256": "4e9191f16922139c32847a8b52a22993d61ae2c404bddfd0f64d2722159fc41d",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        }
+      ],
+      "entrypoints": [
+        {
+          "id": "entry:11f8fd047bef3bf6a7161af8",
+          "sha256": "ced7590e0ca63089aa240b580971de973e06d45c3346500e7b51f9af3b4171fd",
+          "version": "d8282d803bccdcabca199cd82d1fcfe12888e1c40163d67962058d3b148fdb7a"
+        }
+      ],
+      "generated": false,
+      "id": "method:cd25da1c99d326425dc62153",
+      "kind": "method",
+      "module": {
+        "id": "asset:086e19ac884eb40d8e5f9c1f",
+        "sha256": "b19c2ad2c98e4d96d29dfc77dcec827d9bdc11671069f434dd6a56011fed428e",
+        "version": "37911298865cd411ad70d2dcb8ca8f71797b2d509afdca1684136e618b42980e"
+      },
+      "namespace": "maintenance",
+      "qualification_status": "not-granted",
+      "runtime_history": [],
+      "runtime_id": "test_regression_reason_identity.AssertionIdentityTests.test_rejected_custom_exception_formatter_cannot_break_collection",
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "144f9ce0704ad30734f4a48f1aa9ad807ab0e4ff120191b97ab66842a02a2793",
+      "version_scope": "full-version-bound-object-v1"
+    },
+    {
+      "definition": {
+        "line": 169,
+        "name": "test_rejected_custom_exception_formatter_cannot_break_collection",
+        "path": "scripts/tests/test_regression_reason_identity.py",
+        "sha256": "fc2a041abdbc4b5ff0be79d8c875ec5548205f47607de32b0314b4455e6c82cf"
+      },
+      "dependencies": [
+        {
+          "id": "asset:086e19ac884eb40d8e5f9c1f",
           "sha256": "a8959876a60f9f860f4019a03710fd4a281ee15d6187120cc7be8c072cbca2d4",
           "version": "45cccbe37f172cce58aa009303b5454a39b25b45918c3f33f9344cc63bf7af7e"
         }
@@ -168088,6 +170337,65 @@
       "dependencies": [
         {
           "id": "asset:96bfa8d845a5f2f86b024b8b",
+          "sha256": "0e41fbbda7b452a89ab63dc72c4528b8cc306c338a91daefa6f469d1a996832b",
+          "version": "935b252741840e83c26a8de7a06183277d83c684373f681d68d4bde46fc63746"
+        }
+      ],
+      "discovery_observations": [
+        {
+          "entrypoint_id": "9e3cbe0f30d6d42ddd906b13ed03b6ef7b93749030e93d0dcb536849dc06803a",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:1ad6852fc26d9600100652bf",
+            "sha256": "e7cc06c30d24cb7124ec104262cb77bf9c66bdd68b8d258c257026592222cea6",
+            "version": "91f70ec0624807524f5486946ec19040b86d3732fbe83ab019ff36b26b66ca4a"
+          },
+          "row_canonical_sha256": "744bb48c25bb92e69b71a98966f26487fec83ea46f634c94c5564f40957d3c89",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        }
+      ],
+      "entrypoints": [
+        {
+          "id": "entry:11f8fd047bef3bf6a7161af8",
+          "sha256": "ced7590e0ca63089aa240b580971de973e06d45c3346500e7b51f9af3b4171fd",
+          "version": "d8282d803bccdcabca199cd82d1fcfe12888e1c40163d67962058d3b148fdb7a"
+        }
+      ],
+      "generated": false,
+      "id": "method:cd6d31ea78999b960182ac04",
+      "kind": "method",
+      "module": {
+        "id": "asset:96bfa8d845a5f2f86b024b8b",
+        "sha256": "0e41fbbda7b452a89ab63dc72c4528b8cc306c338a91daefa6f469d1a996832b",
+        "version": "935b252741840e83c26a8de7a06183277d83c684373f681d68d4bde46fc63746"
+      },
+      "namespace": "maintenance",
+      "qualification_status": "not-granted",
+      "runtime_history": [],
+      "runtime_id": "test_evas_integration_checks.IntegrationChecks.test_new_independent_allowance_has_two_production_owners",
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "addfc749cc6a5d3a7f4211a3dda875dd04cbd671ecbf168e18b2381a068bfcbf",
+      "version_scope": "full-version-bound-object-v1"
+    },
+    {
+      "definition": {
+        "line": 81,
+        "name": "test_new_independent_allowance_has_two_production_owners",
+        "path": "scripts/tests/test_evas_integration_checks.py",
+        "sha256": "9f8885c37a9bc693a0c303789a6d10cdd13f234a87deef093c2a6cd21e1777ab"
+      },
+      "dependencies": [
+        {
+          "id": "asset:96bfa8d845a5f2f86b024b8b",
           "sha256": "34ca52d8fbb860907e9e21301fa286b74ce8319309e2e6cf19526cc3e8d23700",
           "version": "de22bfdfa5506498ccd0fd8507c07e94821db6f99fb576697f30b0e282a590b2"
         }
@@ -169284,6 +171592,69 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "4985e9b75ec069c13229cc2a7da7a437883fbe1ae9badc1e5ad0811f284a580d",
+      "version_scope": "full-version-bound-object-v1"
+    },
+    {
+      "definition": {
+        "line": 537,
+        "name": "test_unknown_admitted_attempt_never_dispatches_a_second_process",
+        "path": "scripts/tests/test_task_continuation_execution.py",
+        "sha256": "bd95b49eb23571099bbfcfc5b338e71d098be3cf5b2b05c99b7ecc8c339a9997"
+      },
+      "dependencies": [
+        {
+          "id": "asset:269dc5839e76fa8e61d3dd35",
+          "sha256": "98d12fe96f04fb4bd186e36fb81b686e088364f1d3f5ae088499ae3eab165d03",
+          "version": "6abc69da837c7c5b84239bc30364a1f5fc3ad89f967da39441d9e2d00649deda"
+        }
+      ],
+      "discovery_observations": [
+        {
+          "entrypoint_id": "9e3cbe0f30d6d42ddd906b13ed03b6ef7b93749030e93d0dcb536849dc06803a",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": {
+            "authority_sha256": "d34af81767815000a437efa53ca7709ef8c3523bb7738d676f9feb7bf8977772",
+            "layers": 1,
+            "profile": "registered-native-unittest-skip-v1"
+          },
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:1ad6852fc26d9600100652bf",
+            "sha256": "e7cc06c30d24cb7124ec104262cb77bf9c66bdd68b8d258c257026592222cea6",
+            "version": "91f70ec0624807524f5486946ec19040b86d3732fbe83ab019ff36b26b66ca4a"
+          },
+          "row_canonical_sha256": "943b5c035439808d0f1f0a1d70c77994943daa13c0e0565a29794fd8a7b14dbd",
+          "skip_declaration": {
+            "class": false,
+            "declared": true,
+            "method": true,
+            "reason": "external Harness unavailable; no fallback runner"
+          }
+        }
+      ],
+      "entrypoints": [
+        {
+          "id": "entry:11f8fd047bef3bf6a7161af8",
+          "sha256": "ced7590e0ca63089aa240b580971de973e06d45c3346500e7b51f9af3b4171fd",
+          "version": "d8282d803bccdcabca199cd82d1fcfe12888e1c40163d67962058d3b148fdb7a"
+        }
+      ],
+      "generated": false,
+      "id": "method:ce2709ea459d0f67f97a9711",
+      "kind": "method",
+      "module": {
+        "id": "asset:269dc5839e76fa8e61d3dd35",
+        "sha256": "98d12fe96f04fb4bd186e36fb81b686e088364f1d3f5ae088499ae3eab165d03",
+        "version": "6abc69da837c7c5b84239bc30364a1f5fc3ad89f967da39441d9e2d00649deda"
+      },
+      "namespace": "maintenance",
+      "qualification_status": "not-granted",
+      "runtime_history": [],
+      "runtime_id": "test_task_continuation_execution.ExecutionAdapterTests.test_unknown_admitted_attempt_never_dispatches_a_second_process",
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "4bdb65a06bb13f449e9185103d67250b4e8057874bb5735637f06cf0118f038d",
       "version_scope": "full-version-bound-object-v1"
     },
     {
@@ -171131,6 +173502,88 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "839a0d82f3a717bcdf7ca5892eab816a8af2a635cb645be087a520fd1d06c204",
+      "version_scope": "full-version-bound-object-v1"
+    },
+    {
+      "definition": {
+        "line": 414,
+        "name": "test_execution_toolchain_changes_context_but_dut_kernel_content_does_not",
+        "path": "scripts/tests/test_regression_runner.py",
+        "sha256": "c87769ab1754a36b764d6a9d4135ed0c47c6a1f1c118c9c8805d99d72f896db2"
+      },
+      "dependencies": [
+        {
+          "id": "asset:baf92e7358044cda62508fdc",
+          "sha256": "d210d0bb806188a3453daf812968294f0732b82b8bea9f86cad96673e135ed31",
+          "version": "156b73d91bfe22bba7d2311c0bedfa8f2bb0aa987b503ab22b156c59d5763886"
+        }
+      ],
+      "discovery_observations": [
+        {
+          "entrypoint_id": "f282b31b167175b0540a25c5372c7e04d72faeb78915955465d0606f2f553927",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:8752c23e198ab606f7fd553a",
+            "sha256": "e40e6747558b36553bf1a7199f9efafe36aa532ea15d1de6514698d4ba63539e",
+            "version": "e90bd08a4d6eeb6be180ec3f8f5ce82178b1a8a19ed85fada2f495be03f89004"
+          },
+          "row_canonical_sha256": "7f175cd9b7babdb296ec1a30462f8911515a9ffe601d1ac3ebf2c416d5c96db6",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        },
+        {
+          "entrypoint_id": "9e3cbe0f30d6d42ddd906b13ed03b6ef7b93749030e93d0dcb536849dc06803a",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:1ad6852fc26d9600100652bf",
+            "sha256": "e7cc06c30d24cb7124ec104262cb77bf9c66bdd68b8d258c257026592222cea6",
+            "version": "91f70ec0624807524f5486946ec19040b86d3732fbe83ab019ff36b26b66ca4a"
+          },
+          "row_canonical_sha256": "7f175cd9b7babdb296ec1a30462f8911515a9ffe601d1ac3ebf2c416d5c96db6",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        }
+      ],
+      "entrypoints": [
+        {
+          "id": "entry:11f8fd047bef3bf6a7161af8",
+          "sha256": "ced7590e0ca63089aa240b580971de973e06d45c3346500e7b51f9af3b4171fd",
+          "version": "d8282d803bccdcabca199cd82d1fcfe12888e1c40163d67962058d3b148fdb7a"
+        },
+        {
+          "id": "entry:b46a32fbe74a2bd1a4e6ab77",
+          "sha256": "a594a3bde25124d141b6eaedce60934b7ad3995da6c36a918fdba4e320a931d5",
+          "version": "42a48610f93c17df6dca6298a8198ba99c6977d0b52b7c907bd54d09f0e8bd65"
+        }
+      ],
+      "generated": false,
+      "id": "method:cf346815791cc79175f25279",
+      "kind": "method",
+      "module": {
+        "id": "asset:baf92e7358044cda62508fdc",
+        "sha256": "d210d0bb806188a3453daf812968294f0732b82b8bea9f86cad96673e135ed31",
+        "version": "156b73d91bfe22bba7d2311c0bedfa8f2bb0aa987b503ab22b156c59d5763886"
+      },
+      "namespace": "maintenance",
+      "qualification_status": "not-granted",
+      "runtime_history": [],
+      "runtime_id": "test_regression_runner.RegressionRunnerTests.test_execution_toolchain_changes_context_but_dut_kernel_content_does_not",
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "96c26f26645a6447ee6168f148e98d27c8d75fde0a2fb2ac1741bd297d9d839b",
       "version_scope": "full-version-bound-object-v1"
     },
     {
@@ -173390,6 +175843,65 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "10cbb576990a08b79d980e322c79fbcd01cea24ef34ddac3f12fc2c70bdfb0d6",
+      "version_scope": "full-version-bound-object-v1"
+    },
+    {
+      "definition": {
+        "line": 117,
+        "name": "test_missing_selected_kernel_cannot_generate_cache_identity",
+        "path": "scripts/tests/test_ci_evidence_v3.py",
+        "sha256": "f63ca6bbb7a0a37eb8b0de2a562eec7f5341ecba4cf742f985e3af3edb275fb8"
+      },
+      "dependencies": [
+        {
+          "id": "asset:f8e8b7c2946ff140e6260e84",
+          "sha256": "946a5dbef324fece1868f05a5f114165bdef8e0aa55f6ec064fbe341589a8fe3",
+          "version": "74b3d1460ab9e65c7aea068e101c0eaf18cbc60e36877b49071a420459781bc4"
+        }
+      ],
+      "discovery_observations": [
+        {
+          "entrypoint_id": "9e3cbe0f30d6d42ddd906b13ed03b6ef7b93749030e93d0dcb536849dc06803a",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:1ad6852fc26d9600100652bf",
+            "sha256": "e7cc06c30d24cb7124ec104262cb77bf9c66bdd68b8d258c257026592222cea6",
+            "version": "91f70ec0624807524f5486946ec19040b86d3732fbe83ab019ff36b26b66ca4a"
+          },
+          "row_canonical_sha256": "f0fcb6486ffc6e0a26a679c8d9fa026448b1cb34890fd8c52687ee44db560913",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        }
+      ],
+      "entrypoints": [
+        {
+          "id": "entry:11f8fd047bef3bf6a7161af8",
+          "sha256": "ced7590e0ca63089aa240b580971de973e06d45c3346500e7b51f9af3b4171fd",
+          "version": "d8282d803bccdcabca199cd82d1fcfe12888e1c40163d67962058d3b148fdb7a"
+        }
+      ],
+      "generated": false,
+      "id": "method:d2b9e7e30101d2c60893561e",
+      "kind": "method",
+      "module": {
+        "id": "asset:f8e8b7c2946ff140e6260e84",
+        "sha256": "946a5dbef324fece1868f05a5f114165bdef8e0aa55f6ec064fbe341589a8fe3",
+        "version": "74b3d1460ab9e65c7aea068e101c0eaf18cbc60e36877b49071a420459781bc4"
+      },
+      "namespace": "maintenance",
+      "qualification_status": "not-granted",
+      "runtime_history": [],
+      "runtime_id": "test_ci_evidence_v3.EvidenceV3Tests.test_missing_selected_kernel_cannot_generate_cache_identity",
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "1356ee395cca23ebf718d87bc46323ab2ef5df6aa676345974bb12e426e19c82",
       "version_scope": "full-version-bound-object-v1"
     },
     {
@@ -175773,6 +178285,88 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "0fc3d6e1c54d6a048134a928e85be5a63b7976c10df1e7d47d88ffa102126aac",
+      "version_scope": "full-version-bound-object-v1"
+    },
+    {
+      "definition": {
+        "line": 272,
+        "name": "test_missing_overlapping_failed_or_mismatched_shard_cannot_pass",
+        "path": "scripts/tests/test_fast_feedback.py",
+        "sha256": "d40c60c00b2f33f0d1c26730edaa651d0ece72f5df5f23c5875a49d4110b023e"
+      },
+      "dependencies": [
+        {
+          "id": "asset:63ed56d88fb966240356677d",
+          "sha256": "02fb4cd9af53cac416f08b909db9327bee12bdca11b7975cbd8342c40601bc13",
+          "version": "40647420a7cac0d401ee310bdec023b35181f50c32893732f58c1406e6097b74"
+        }
+      ],
+      "discovery_observations": [
+        {
+          "entrypoint_id": "5a53f7385a5c2b4b9992daf4703ee7798badecf9880f7faeee24e55d8b5c545c",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:91cd0a05f98cd22c6e258fa0",
+            "sha256": "be7bb7216ae4865ed3aa3a3620f0067d375d6de9f3243970d3243836c68d5340",
+            "version": "54cd47a626fd0f746a2b754f62de973f601a3542b0d1aee8810014544625ac4f"
+          },
+          "row_canonical_sha256": "5c37f1565114ba51f086ac43f2324818debe4c69b51777e299d6e9c213982211",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        },
+        {
+          "entrypoint_id": "9e3cbe0f30d6d42ddd906b13ed03b6ef7b93749030e93d0dcb536849dc06803a",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:1ad6852fc26d9600100652bf",
+            "sha256": "e7cc06c30d24cb7124ec104262cb77bf9c66bdd68b8d258c257026592222cea6",
+            "version": "91f70ec0624807524f5486946ec19040b86d3732fbe83ab019ff36b26b66ca4a"
+          },
+          "row_canonical_sha256": "5c37f1565114ba51f086ac43f2324818debe4c69b51777e299d6e9c213982211",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        }
+      ],
+      "entrypoints": [
+        {
+          "id": "entry:11f8fd047bef3bf6a7161af8",
+          "sha256": "ced7590e0ca63089aa240b580971de973e06d45c3346500e7b51f9af3b4171fd",
+          "version": "d8282d803bccdcabca199cd82d1fcfe12888e1c40163d67962058d3b148fdb7a"
+        },
+        {
+          "id": "entry:cbf7bc74e8188466a1cf042b",
+          "sha256": "ba2898a3ea312f3b52e5ea72fb077eb5a712c5ac6cab206d7a912d7347f4d0f2",
+          "version": "4aec0d30a3f1d9dafb6d174eeb460eacaa6748aaf7ad471b4d287e1d5df60244"
+        }
+      ],
+      "generated": false,
+      "id": "method:d55f5290a1dec7697e093277",
+      "kind": "method",
+      "module": {
+        "id": "asset:63ed56d88fb966240356677d",
+        "sha256": "02fb4cd9af53cac416f08b909db9327bee12bdca11b7975cbd8342c40601bc13",
+        "version": "40647420a7cac0d401ee310bdec023b35181f50c32893732f58c1406e6097b74"
+      },
+      "namespace": "maintenance",
+      "qualification_status": "not-granted",
+      "runtime_history": [],
+      "runtime_id": "test_fast_feedback.CoverageGate.test_missing_overlapping_failed_or_mismatched_shard_cannot_pass",
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "17c6943d825c006db0c1563a1d9a121075243235583480898d46f50ca0c3d4be",
       "version_scope": "full-version-bound-object-v1"
     },
     {
@@ -185578,6 +188172,65 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "c4ae823a79c22bf687830c8319129c080fb971b9ee82ede0d13d86f027ba83ba",
+      "version_scope": "full-version-bound-object-v1"
+    },
+    {
+      "definition": {
+        "line": 169,
+        "name": "test_a_missing_shard_fails",
+        "path": "scripts/tests/test_regression_shard_selection.py",
+        "sha256": "8e0a8c3302c7ccf13b916cb1b82e51d8e88d0df10b655bf6b49727183e694495"
+      },
+      "dependencies": [
+        {
+          "id": "asset:e42b86ac9fcf56c97923d65e",
+          "sha256": "f75d773596f57e3eb21e622476b1017151cbb7b4e747b5a7dc37cfdd16256d51",
+          "version": "b9e047e5e44a40da935e6f14ebc98483b3a03f0478fb63766b12659f667399e0"
+        }
+      ],
+      "discovery_observations": [
+        {
+          "entrypoint_id": "9e3cbe0f30d6d42ddd906b13ed03b6ef7b93749030e93d0dcb536849dc06803a",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:1ad6852fc26d9600100652bf",
+            "sha256": "e7cc06c30d24cb7124ec104262cb77bf9c66bdd68b8d258c257026592222cea6",
+            "version": "91f70ec0624807524f5486946ec19040b86d3732fbe83ab019ff36b26b66ca4a"
+          },
+          "row_canonical_sha256": "ce05f81b9dc53d76dde12d3245e4998b0753b57d3e05d78a2b501d32a9a64588",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        }
+      ],
+      "entrypoints": [
+        {
+          "id": "entry:11f8fd047bef3bf6a7161af8",
+          "sha256": "ced7590e0ca63089aa240b580971de973e06d45c3346500e7b51f9af3b4171fd",
+          "version": "d8282d803bccdcabca199cd82d1fcfe12888e1c40163d67962058d3b148fdb7a"
+        }
+      ],
+      "generated": false,
+      "id": "method:e5a56d7e5d39adfc9690ff90",
+      "kind": "method",
+      "module": {
+        "id": "asset:e42b86ac9fcf56c97923d65e",
+        "sha256": "f75d773596f57e3eb21e622476b1017151cbb7b4e747b5a7dc37cfdd16256d51",
+        "version": "b9e047e5e44a40da935e6f14ebc98483b3a03f0478fb63766b12659f667399e0"
+      },
+      "namespace": "maintenance",
+      "qualification_status": "not-granted",
+      "runtime_history": [],
+      "runtime_id": "test_regression_shard_selection.ShardSelectionTests.test_a_missing_shard_fails",
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "f3734461d9ca9eb5e665bb37f0df2514243150caef8bf7fbbe044b317ec435fa",
       "version_scope": "full-version-bound-object-v1"
     },
     {
@@ -198794,6 +201447,65 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "febc04c553c0448d6de75a088c6c112ec0913bfc25938c8f03414c3a9e2c05c7",
+      "version_scope": "full-version-bound-object-v1"
+    },
+    {
+      "definition": {
+        "line": 433,
+        "name": "test_patch_pinned_workflow_python_matches_by_major_minor",
+        "path": "scripts/tests/test_ci_inventory.py",
+        "sha256": "16fc30f99552c97f77820277f0b8c4917c3fd95c81836d794dca03f0965bf4e8"
+      },
+      "dependencies": [
+        {
+          "id": "asset:ba7bee72ebc49c16bd2a5bde",
+          "sha256": "4ee86f573e3cac99decef510219aa26eca95e756e8c6ede13d7281103d14e8f7",
+          "version": "2a7e61ccd7bcf234b43a7b686a426c2c1af0941c5922a2f9ffaca2e26d23102f"
+        }
+      ],
+      "discovery_observations": [
+        {
+          "entrypoint_id": "9e3cbe0f30d6d42ddd906b13ed03b6ef7b93749030e93d0dcb536849dc06803a",
+          "execution_status": "not-executed-by-discovery",
+          "native_skip_wrapper": null,
+          "receipt_pointer": "/receipt",
+          "receipt_source": {
+            "id": "source:1ad6852fc26d9600100652bf",
+            "sha256": "e7cc06c30d24cb7124ec104262cb77bf9c66bdd68b8d258c257026592222cea6",
+            "version": "91f70ec0624807524f5486946ec19040b86d3732fbe83ab019ff36b26b66ca4a"
+          },
+          "row_canonical_sha256": "8bf2e6e9db591ecd15ca175d1be2e9c84baef72befc409e515e8a3aeab76e4de",
+          "skip_declaration": {
+            "class": false,
+            "declared": false,
+            "method": false,
+            "reason": null
+          }
+        }
+      ],
+      "entrypoints": [
+        {
+          "id": "entry:11f8fd047bef3bf6a7161af8",
+          "sha256": "ced7590e0ca63089aa240b580971de973e06d45c3346500e7b51f9af3b4171fd",
+          "version": "d8282d803bccdcabca199cd82d1fcfe12888e1c40163d67962058d3b148fdb7a"
+        }
+      ],
+      "generated": false,
+      "id": "method:ff8129c4f6550acd2e8b2498",
+      "kind": "method",
+      "module": {
+        "id": "asset:ba7bee72ebc49c16bd2a5bde",
+        "sha256": "4ee86f573e3cac99decef510219aa26eca95e756e8c6ede13d7281103d14e8f7",
+        "version": "2a7e61ccd7bcf234b43a7b686a426c2c1af0941c5922a2f9ffaca2e26d23102f"
+      },
+      "namespace": "maintenance",
+      "qualification_status": "not-granted",
+      "runtime_history": [],
+      "runtime_id": "test_ci_inventory.ConstructionTests.test_patch_pinned_workflow_python_matches_by_major_minor",
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "ff0e039d5493c2c6ffea5fc5ce777fd13f1135ca51ecb0819448cbdd126cdf14",
       "version_scope": "full-version-bound-object-v1"
     }
   ],

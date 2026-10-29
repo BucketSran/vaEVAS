@@ -41,11 +41,11 @@ def condition(identity, outcome, opaque=False, criteria='C0'):
     return value
 
 
-def report(criteria='C0', collector='I0', correction=False, opaque_count=58, runtime=None):
+def report(criteria='C0', collector='I0', correction=False, opaque_count=58, runtime=None, *, dut='D0'):
     criteria_files = [['evas/tests/test_demo.py', h(criteria)]]
-    dut_files = [['evas/src/evas/core.py', h('D0 implementation fixture')]]
+    dut_files = [['evas/src/evas/core.py', h(dut + ' implementation fixture')]]
     collector_manifest = {role: h(collector + ':' + role) for role in api.COLLECTOR_PATHS}
-    kernel = b'SYNTHETIC NONEXECUTABLE D0 BINARY FIXTURE'
+    kernel = b'SYNTHETIC NONEXECUTABLE ' + dut.encode() + b' BINARY FIXTURE'
     environment = {'python': 'synthetic-python', 'machine': 'synthetic-host',
                    'kernel_sha256': api.raw_digest(kernel), 'shard': '0-of-1'}
     entries = [['evas/tests/test_demo.py', '100644', 0o644, h(criteria)],
@@ -116,10 +116,11 @@ class Store:
 
 def make_fixture(correction=False, opaque_count=58, alter_e1=None, alter_entry=None,
                  alter_auth=None, alter_baseline=None, new_criteria='C1', new_collector='I1',
-                 merged=False, alter_blobs=None, alter_shard=None, runtime=None, e1_runtime=None):
+                 merged=False, alter_blobs=None, alter_shard=None, runtime=None, e1_runtime=None,
+                 e1_dut='D0'):
     current, _, _, _ = report(opaque_count=opaque_count, runtime=runtime)
     e1, entries, collector, kernel = report(new_criteria, new_collector, correction, opaque_count,
-                                            e1_runtime or runtime)
+                                            e1_runtime or runtime, dut=e1_dut)
     shards = [e1]
     if merged:
         names = e1['discovered_test_ids'] + ['synthetic.Case.test_added']
