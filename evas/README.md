@@ -8,8 +8,10 @@ EVAS相关内容统一从本页进入。源码、模型和原始结果仍保留�
 专题文档负责详细内容，本页负责汇总入口。网站展示也引用这些来源。
 
 当前源码为 **0.25.0 / IR33 开发基线**，完整组合验收尚未完成。
-逐次 binary64 舍入和同过程事件顺序采用[已定合同](docs/development/DECISIONS.md#adr-006)。
-已知失败与下一步见[统一功能缺口](docs/COMPARISON.md#engineering-status)和 [Issue #229](https://github.com/BucketSran/vaEVAS/issues/229)。
+逐次 binary64 舍入和同过程事件顺序采用[已定合同](docs/development/DECISIONS.md#adr-006)；
+2026-10-26 以后新定的原则见 [ADR-010 至 ADR-012](docs/development/DECISIONS.md#adr-010)。
+已知失败与下一步见[统一功能缺口](docs/COMPARISON.md#engineering-status)和 [Issue #229](https://github.com/BucketSran/vaEVAS/issues/229)，
+现在的计划见下方[当前状态与计划](#current-status)。
 下方旧版本检查点及能力目录中的 Q 成绩保留各自的来源版本，不代表本开发基线已通过相同验收。
 
 1. **实现与使用**：Python前端在 `evas/src/evas/`，Rust内核在 `evas/rust_core/`。从[构建与运行](#构建与运行)、[模块与接口](#模块与接口)查代码和用法。
@@ -18,6 +20,30 @@ EVAS相关内容统一从本页进入。源码、模型和原始结果仍保留�
 4. **运行结果与错误诊断**：哪个版本跑过，哪些失败，依据什么修复。见下方[结果与诊断](#evas-results)。
 5. **后端比较**：共同要求由[比较标准](docs/COMPARISON-METHODOLOGY.md)定义，已验证的支持范围只在[比较表](docs/COMPARISON.md)维护。
 6. **验收交付与待办**：检查方法见[验证与开发](#验证与开发)，正式检查点见[版本与验证记录](#verification-checkpoints)，功能缺口与依赖见[统一进度表](docs/COMPARISON.md#progress-board)，具体任务沿用原Issue和PR。
+
+<a id="current-status"></a>
+
+### 当前状态与计划（2026-10-29）
+
+- **能力目标**：首批30题的参考解在 EVAS 上跑完全部公开与私有用例，并通过各题自己的 checker。
+  这是 [#270](https://github.com/BucketSran/vaEVAS/issues/270) 的关闭条件。按逐题归因估计，#282 合入后能跑通 11 题，
+  以合入后的复跑为准（[#270 的说明](https://github.com/BucketSran/vaEVAS/issues/270#issuecomment-6491345349)）。
+  后续候选会用到的写法在 [#276](https://github.com/BucketSran/vaEVAS/issues/276)。
+- **批次次序**：第一批能力修复是 [#282](https://github.com/BucketSran/vaEVAS/pull/282)。合入前先完成它的可信回归登记：
+  登记授权 [#296](https://github.com/BucketSran/vaEVAS/pull/296) 合入，再追加基线，最后跑 #282 的激活 CI 并合入。
+  第二批能力修复从 [#281](https://github.com/BucketSran/vaEVAS/issues/281) 开始，同样经过一次登记；
+  [#286](https://github.com/BucketSran/vaEVAS/issues/286)、[#289](https://github.com/BucketSran/vaEVAS/issues/289) 排在第三批能力修复。
+  批次内的先后随审核与实现进度调整，以各 issue 为准。
+- **要求卡与用例**：每项修复以标准审核起草并审过的要求卡为验收依据，卡随修复登记进[规范与能力目录](capabilities/README.md)。
+  改动已有测试的期望须先经标准审核认可，规则见 [#288](https://github.com/BucketSran/vaEVAS/issues/288)。
+  标准审核还按 LRM 条款编写语言一致性用例，尚未入库，也不计入任何支持结论。
+- **可信回归登记**：判据、采集器或语言配置变化时，按 [ADR-009](docs/development/DECISIONS.md#adr-009) 和
+  [登记说明](../scripts/README.md#新判据和采集器的可信-context-登记)追加可信 context，每次只追加一个。
+- **外部 Spectre 运行**：本地已无 Spectre，待跑作业列在 [#283](https://github.com/BucketSran/vaEVAS/issues/283)，
+  由外部运行方认领并交回结果。Spectre 只作参考：参考解以 Spectre 可解为准（[ADR-010](docs/development/DECISIONS.md#adr-010)），
+  EVAS 的语义依据仍是 LRM 配置（[ADR-007](docs/development/DECISIONS.md#adr-007)）。
+- **已知回退**：#243 带来的能力回退在 [#287](https://github.com/BucketSran/vaEVAS/issues/287)，
+  测试期望的迁移在 #288。
 
 <a id="evas-validation"></a>
 
