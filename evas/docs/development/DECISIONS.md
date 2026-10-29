@@ -214,6 +214,27 @@ IR33 为这些语义保留显式运算、边界、局部绑定和过程顺序。
 不能只改版本字段。已有 #229、#214 及 #176 候选须按新边界核对生产者、消费者和原请求，旧证据保留原身份。
 数学与迁移边界见[程序 real 与过程执行合同](../math/events.md#program-real-procedure-contract)。
 
+### 补充与澄清（2026-10-29）
+
+保留上述逐次舍入，并证明其误差界；证明不了就拒答，见 [ADR-012](#adr-012)。
+
+**澄清一：同刻反馈经过程序 real（决定单第 22 项，D-R2-1 = A）。**
+状态：用户于 2026-10-29 选定。修复尚未合入，跟踪见 [#287](https://github.com/BucketSran/vaEVAS/issues/287) 的 R2 一节。
+
+同一时刻的反馈经过程序 `real` 时，在精确数学下求解同刻方程组并认证，再保存解的 binary64 最近舍入；
+精确方程组无解或不止一个解时拒答。本澄清只适用于同刻反馈经过程序 real 的情形，
+其余程序 real 仍按本节第一段逐次舍入。细节留在要求卡
+`requirement:program-real-values-in-waveform-certificate` v3 与 `requirement:same-time-event-feedback-through-node` v5。
+
+**澄清二：带精确时间证明的将来 timer 按面值触发（D-M3-2 = T）。**
+状态：标准审核与 EVAS 维护方于 2026-10-29 商定。修复尚未合入，跟踪见 [#290](https://github.com/BucketSran/vaEVAS/issues/290)。
+
+事件体读到的 `$abstime` 可以带精确事件时刻的证明，面值仍是 binary64 舍入值。
+将来的 timer 按面值 F 触发；精确时间证明只用来判定 timer 起点相对当前事件边界属于过去、当前还是将来。
+不采用 U3（按精确时刻触发）：那样 timer 的事件体会读到小于自己起点的 `$abstime`，
+等于重开本节“状态、条件、timer 和显示读取同一份已舍入值”的合同。
+细节留在要求卡 `requirement:abstime-time-proof-and-same-time-timer-closure`（审核中）。
+
 <a id="adr-007"></a>
 
 ## ADR-007：采用 LRM 2.4.0 基础与逐条选入的 VAMS-2023 扩展
@@ -244,6 +265,31 @@ IR33 为这些语义保留显式运算、边界、局部绑定和过程顺序。
 旧测试、ADR-006 的具体规则和历史四端成绩仍须按条款核对，不能只替换引用版本或自动转授结论。
 规范文件身份、条款清单和资格依赖按[六批计划](validation-restructure-plan.md)实施；
 当前登记见[规范与能力目录](../../capabilities/README.md)，测试映射、CI及资产迁移按各批验收。
+
+### 修订（2026-10-29）：语言配置 v2 选入 Mantis 7922
+
+状态：项目协调方于 2026-10-29 按标准审核的建议选定（D-C08）。依据是用户 2026-10-28 的条件指示：
+Spectre 能接受的写法，EVAS 也要接受，是否告警由实现决定。
+[#283](https://github.com/BucketSran/vaEVAS/issues/283) 批次 C 第 8 项的 Spectre 21.1 实测满足这一条件：
+向 `input` 端口的贡献被静默接受，按正常支路计算。规范依据仍是 LRM 本身，实测只说明这一条件已经成立。
+选入不表示实现或验证已完成。
+
+语言配置由 `evas-va-2.4-plus-2023-v1`（选入 7780、7920）改为 `evas-va-2.4-plus-2023-v2`，
+即 v1 加 Mantis 7922（2023 的 Table G.7，PDF 第 436 页；正文 §5.6.1）。
+LRM 2.4 §5.6.1（PDF 第 119 页）写的是“Contributions cannot be made to an analog port declared with an input direction”；
+2023 §5.6.1（PDF 第 121 页）改为“Implementations may issue a warning if a contribution is made to an analog port declared with an input direction”。
+因此向 `input` 端口贡献合法，实现可以告警。
+
+- EVAS 的行为不变：不检查端口方向，按正常支路计算。非致命的可移植性提示可选，排在最后。
+- 7780、7920 的选入范围不变。
+- 仓库里的 [language-profile.json](../../capabilities/data/language-profile.json) 仍是 v1。
+  它是可信回归 context 的一部分，本次文档同步不改；配置文件随下一次登记更新。
+
+### 状态说明（未定）：transition 写 0 或省略上升、下降时间时的缺省边沿
+
+决定单第 17 项还没有定成决定，这里只记状态。上升、下降时间写 0 或省略，又没有 `default_transition` 时，
+LRM 2.4 §4.5.8（PDF 第 87 页）只规定“a negligible, but non-zero, transition time is used”，没有给出具体取值。
+方向是与 Spectre 统一，规则等 Spectre 补测后确定。在此之前 EVAS 继续拒答，实现不变。
 
 <a id="adr-008"></a>
 
@@ -300,3 +346,95 @@ EVAS 专用的规范登记、案例、判据、后端适配和常用验证命令
 缺证对象继续标为待审核或未取得资格，不能因共享检查器已有通过记录而自动取得支持结论。
 
 上述登记与 CI 门槛仍待实施，本记录不表示现有工具已经执行这些检查。
+
+<a id="adr-010"></a>
+
+## ADR-010：参考解以 Spectre 可解为准
+
+状态：用户于 2026-10-28 提出这一原则；2026-10-29 在决定单第 1 项决定，只为迁就 EVAS 的改写一律退回原件，
+见 [#270 的说明](https://github.com/BucketSran/vaEVAS/issues/270#issuecomment-6491345349)。
+首批30题中的这类改写已经退回。EVAS 一侧尚未落实：退回的写法要由 EVAS 支持，
+退回后重新出现的平局要由 EVAS 判定或证明，这两项都还没有完成。
+
+用户的原则是：不要求参考解在 EVAS 上实现，参考解应在 Spectre 上可解；EVAS 不可解时，先确认是不是 EVAS 的问题。
+据此，Benchmark 的参考解以 Spectre **可解**为准：参考解在 Spectre 上跑得通、通过本题的 checker，就可以使用。
+不为迁就 EVAS 改题。只为迁就 EVAS 而做的改写（等价写法，不影响评分）一律退回原件，这些写法改由 EVAS 支持。
+
+本决定的适用范围是 Benchmark 的参考解与题目验收，不把 Spectre 的输出当作 Verilog-A 的规范答案。
+EVAS 的语义依据仍是 [ADR-007](#adr-007) 的语言配置，“也不把某个后端的实现范围或输出当作规范依据”。
+Spectre 的静默偏差仍按偏差记录，不变成 EVAS 的要求，例如[四后端支持对比](../COMPARISON.md#支持矩阵)第 2、3、5 节表后记下的几处。
+网表一侧另见 [ADR-011](#adr-011)，两条的区别写在该条。
+
+参考解里两个事件的先后次序不定时，按平局判据分类（`TIE-RULE.md`，sha256 `418d542a…`，由标准审核维护，未入库）。
+涉及 EVAS 的后果只有三条：
+
+- EVAS 按 LRM 判定这个平局，或证明两种次序给出相同的结果；两者都做不到时拒答。
+- 拒答记为 EVAS 的能力项，不是错答（[ADR-012](#adr-012)）。
+- 不为 EVAS 改题。
+
+后果：
+
+- 已退回原件的写法重新计入 [#270](https://github.com/BucketSran/vaEVAS/issues/270) 的关闭条件；
+  [#276](https://github.com/BucketSran/vaEVAS/issues/276) 第二部分的对应条目同样回到 EVAS 一侧。
+- Verilog-A 源码里 Spectre 能接受、而 LRM 2.4 不允许的写法，不因 Spectre 接受就成为语言规则。
+  2023 有对应变化的，按 ADR-007 的程序逐项选入，例如第 7922 项（见 ADR-007 下的修订）。
+  没有的逐项决定，例如滤波系数写成 `{...}`（LRM 写作 `'{...}`）时按兼容写法接受，并给出非致命的可移植性提示，
+  语言配置不变（D-F1-5，要求卡 `requirement:filter-coefficient-array-literals`，尚未实现）。
+- 定义域错误（例如对负数开平方）在 EVAS 里仍是错误，给出诊断；Spectre 21.1 的实测是静默代入一个值继续计算。
+  这是 EVAS 与 Spectre 的一处明确不同，Spectre 评分也不为此加选项（决定单第 10 项）。
+
+<a id="adr-011"></a>
+
+## ADR-011：网表一侧以 Spectre 为准，Verilog-A 仍按 LRM 配置
+
+状态：项目规则：项目协调方 2026-10-28 提出，用户当日随整套标准方案批准；同日收窄显式写参数一条；D-FU04、PWL F1 按此执行。
+决定成立不表示实现已完成：D-FU04 与 PWL F1 尚未实现。
+
+测试台用的 Spectre 网表语言没有独立的语言标准，LRM 也不管它，唯一的定义是 Spectre 手册。
+因此在 LRM 不管的这一侧，包括源的公式与缺省值、数值写法和 tran 选项，EVAS 按 Spectre 手册和 Spectre 21.1 的实测执行；
+手册没有写清的地方以实测为准；每条规则都写进要求卡，并注明实测依据。模块里的 Verilog-A 部分仍按 [ADR-007](#adr-007) 的语言配置。
+
+同日的收窄只涉及显式写参数：测试台只在缺省值文档不明、或会影响结果时，才必须显式写出参数。
+“以 Spectre 手册为准”这一半不变。
+
+本条与 [ADR-010](#adr-010) 说的是两件事，分开记录：
+
+- ADR-010：Benchmark 的参考解要能在 Spectre 上求解，不为迁就 EVAS 改写；
+- 本条：Spectre 网表语言本身的语义，以 Spectre 手册和实测为准。
+
+两条都不表示“Spectre 的输出就是 Verilog-A 的规范答案”，Verilog-A 语义仍以 LRM 为准（ADR-007）。
+两条的来历也不同：ADR-010 是用户的决定，本条是随标准方案批准的项目规则，所以不合成一条。
+
+后果：
+
+- 按本条执行的实例，本页只记编号：pulse 源的构造（D-FU04）、PWL 源在 binary64 时刻的取值（EV-D1，即 PWL F1）、
+  SCS 数值的比例后缀（[#289](https://github.com/BucketSran/vaEVAS/issues/289) 的 SCS 一侧，Spectre 的读法待 #283 实测确认）。
+- 细则留在要求卡里：PWL F1 的 D-PWLF1-1 至 5（`requirement:pwl-source-value-f1`）；
+  pulse 的构造与省略参数，即 D-FU04、D-C05、D-PV4-4、D-PV7-1（`requirement:periodic-pulse-source-exact-corners`、
+  `requirement:spectre-pulse-default-width`）；sine 省略 `sinedc` 时的缺省值（`requirement:spectre-sine-omitted-sinedc`）；
+  比例后缀只舍入一次（`requirement:scaled-real-literal-single-rounding`）。
+- 只按已有实测的写法执行；文档不明、又还没有实测的写法继续拒答，例如 pulse 省略参数里尚未实测的组合。
+- 这些实例会改动已有的测试期望；每项改动经标准审核认可，并附独立答案。
+
+<a id="adr-012"></a>
+
+## ADR-012：结果须与语言规定一致，证明不了就拒答；拒答不是错答
+
+状态：用户于 2026-10-29 在决定单第 2 项选定（NF-14，选项 B）。决定成立不表示实现或验证已完成：
+按此改写的要求卡还在审核，相应实现尚未排期。
+
+决定：EVAS 给出的结果须与语言规定一致。EVAS 证明不了一致时拒答，不给值。
+拒答说明 EVAS 的能力还不够，不是错答；没有诊断就给出与语言规定不一致的值，才是错答。
+
+依据：LRM 2.4 §3.2（PDF 第 39 页）规定 real 变量按 IEEE 754 双精度存储，“The real variables are stored as 64-bit quantities”，
+但没有规定一个表达式内中间结果的精度和舍入位置。§4.5.2（PDF 第 80 页）规定
+“each equation, at a minimum, shall have a tolerance defined and associated with it”。
+因此相差在容差以内的几种求值都与语言一致；相差超出容差时，语言没有指定哪一个是正确答案，EVAS 只能先证明再作答。
+
+后果：
+
+- 判据写“与语言规定一致”，不写“与 Spectre 一致”；Spectre 的结果用于对照（ADR-010、ADR-011）。
+- 程序 real 保留 [ADR-006](#adr-006) 的逐次舍入，并证明其误差界；证明的机制留在要求卡
+  `requirement:integrator-input-state-feedback`（[#270](https://github.com/BucketSran/vaEVAS/issues/270) 的 NF-14）。
+- 拒答按能力项登记和排期。已有测试里把拒答改成给值、或把给值改成拒答，都须先经标准审核认可，
+  规则见 [#288](https://github.com/BucketSran/vaEVAS/issues/288)。
