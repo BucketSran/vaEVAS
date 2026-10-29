@@ -364192,6 +364192,51 @@
       "consumers": [],
       "content": {
         "algorithm": "sha256",
+        "value": "3d206a95151d06b829d3949e2598c5f3223f11f1eec6659bc6e067f3e0862f60"
+      },
+      "current_path": "evas/docs/COMPARISON.md",
+      "dependencies": [
+        {
+          "id": "source:903b469ebcf7979517d53442",
+          "sha256": "4090691f5c0d84825ebad591aea44c0d0323b44610c49097144cb111700b8a2a",
+          "version": "47afed60557c28c962869ffae083146b602cd4b6333e631490c091f7401ed16c"
+        }
+      ],
+      "id": "asset:c32a4fda7f072fda87d2279a",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "prior_readiness": {
+        "confirmed_fact_count": 0,
+        "current_blob_matches_prior": false,
+        "git_blob": "e88d6c4fcbacfce3ae36cacbd51dacebf8f145da",
+        "row_canonical_sha256": "5d5361646f40c18991320a1d05333dab48aeeb761cee28aeffd1a65b341e8891",
+        "row_pointer": "/items/98",
+        "source": {
+          "id": "source:903b469ebcf7979517d53442",
+          "sha256": "4090691f5c0d84825ebad591aea44c0d0323b44610c49097144cb111700b8a2a",
+          "version": "47afed60557c28c962869ffae083146b602cd4b6333e631490c091f7401ed16c"
+        },
+        "source_revision": "380e7a4e12e428b9776417d9d8a7792848aed6e7",
+        "status": "prior limited facts only; underlying evidence availability and current semantic/consumer closure remain unverified"
+      },
+      "qualification_status": "not-granted",
+      "role": {
+        "reason": "responsibility awaits source review; path does not infer semantics",
+        "status": "pending",
+        "value": null
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "51daf364687773be630aa5be8a60808dcd2cdccc31d99e32f1aa15bfbf1b95cb"
+    },
+    {
+      "consumer_status": "pending",
+      "consumers": [],
+      "content": {
+        "algorithm": "sha256",
         "value": "8c260945647147a1512eb9c2a1947c5faddb561989d55db98e65baf1895e11a9"
       },
       "current_path": "evas/docs/COMPARISON.md",
