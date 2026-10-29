@@ -1,0 +1,60 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module dfe_rx_top(vin, clk, rst, tap1_1, tap1_0, tap2_1, tap2_0, decision, fb_metric, slicer_in_dbg);
+    input vin, clk, rst, tap1_1, tap1_0, tap2_1, tap2_0;
+    output decision, fb_metric, slicer_in_dbg;
+    electrical vin, clk, rst, tap1_1, tap1_0, tap2_1, tap2_0, decision, fb_metric, slicer_in_dbg;
+
+    parameter real vdd = 0.9 from [0.5:1.5];
+    parameter real vss = 0.0 from [-0.5:0.5];
+    parameter real vcm = 0.45 from [0.2:0.7];
+    parameter real vth = 0.45 from [0.2:0.7];
+    parameter real tap_lsb = 20e-3 from [5e-3:50e-3];
+    parameter real tr = 200p from [10p:1n];
+
+    integer h1, h2;      // history: +1 high, -1 low, 0 no decision since the latest reset
+    integer k1, k2;      // tap codes read at the decision edge
+    integer d;           // the decision being made
+    real fb;             // feedback used by the latest decision
+    real slicer;         // corrected input used by the latest decision
+    real level;          // decision output level
+
+    analog begin
+        @(initial_step) begin
+            h1 = 0;
+            h2 = 0;
+            fb = 0.0;
+            slicer = 0.0;
+            level = vss;
+        end
+
+        // Asynchronous clear: both history slots become empty.
+        @(cross(V(rst) - vth, +1)) begin
+            h1 = 0;
+            h2 = 0;
+            fb = 0.0;
+            slicer = 0.0;
+            level = vss;
+        end
+
+        // Decision edge: read the taps and the existing history, correct the input,
+        // decide, and only then shift the new decision into the history.
+        @(cross(V(clk) - vth, +1)) begin
+            if (V(rst) <= vth) begin
+                k1 = (V(tap1_1) > vth ? 2 : 0) + (V(tap1_0) > vth ? 1 : 0);
+                k2 = (V(tap2_1) > vth ? 2 : 0) + (V(tap2_0) > vth ? 1 : 0);
+                fb = tap_lsb * (k1 * h1 + k2 * h2);
+                slicer = V(vin) - fb;
+                d = (slicer >= vcm) ? 1 : -1;
+                level = (d > 0) ? vdd : vss;
+                h2 = h1;
+                h1 = d;
+            end
+        end
+
+        V(decision) <+ transition(level, 0.0, tr, tr);
+        V(fb_metric) <+ transition(fb, 0.0, tr, tr);
+        V(slicer_in_dbg) <+ transition(slicer, 0.0, tr, tr);
+    end
+endmodule

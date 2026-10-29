@@ -1,0 +1,10 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module window_comparator_ref(VDD,VSS,vin,out);
+input vin;
+output out;
+inout VDD,VSS;
+electrical VDD,VSS,vin,out;
+// TODO: implement the public contract.
+endmodule

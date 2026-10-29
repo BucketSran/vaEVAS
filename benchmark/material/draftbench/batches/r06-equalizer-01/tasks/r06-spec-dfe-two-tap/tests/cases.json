@@ -1,0 +1,232 @@
+[
+ {
+  "name": "base",
+  "source_id": "v4-354",
+  "purpose": "default parameters, 5 ns clock. Power-up with tap codes 3/3 and an empty history: the first decision has no feedback and the second uses tap 1 only; a feedback that cancels; decisions that the feedback turns against the raw input. Tap codes change to 2/1 between edges, and the paper example of the decision card: vin = 0.46 V gives low after history (+1, -1) and high after (-1, +1). A reset that rises between edges and spans two edges while the tap codes change to 1/3; the first two decisions after it. vin changes in the middle of every clock interval.",
+  "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVvin (vin 0) vsource type=pwl wave=[0 0.4 7.5n 0.4 7.6n 0.47 12.5n 0.47 12.6n 0.5 17.5n 0.5 17.6n 0.55 22.5n 0.55 22.6n 0.4 27.5n 0.4 27.6n 0.35 32.5n 0.35 32.6n 0.3 37.5n 0.3 37.6n 0.62 42.5n 0.62 42.6n 0.46 47.5n 0.46 47.6n 0.62 52.5n 0.62 52.6n 0.3 57.5n 0.3 57.6n 0.46 62.5n 0.46 62.6n 0.44 67.5n 0.44 67.6n 0.6 72.5n 0.6 72.6n 0.3 77.5n 0.3 77.6n 0.43 82.5n 0.43 82.6n 0.47 87.5n 0.47 87.6n 0.52 92.5n 0.52 92.6n 0.47 97.5n 0.47 97.6n 0.4 107.5n 0.4 107.6n 0.5 113n 0.5]\nVclk (clk 0) vsource type=pulse val0=0 val1=0.9 period=5n width=2.5n delay=4.995n rise=100p fall=100p\nVrst (rst 0) vsource type=pwl wave=[0 0 66.495n 0 66.595n 0.9 77.495n 0.9 77.595n 0 113n 0]\nVtap1_1 (tap1_1 0) vsource type=pwl wave=[0 0.9 67.8n 0.9 67.9n 0 113n 0]\nVtap1_0 (tap1_0 0) vsource type=pwl wave=[0 0.9 32.8n 0.9 32.9n 0 67.8n 0 67.9n 0.9 113n 0.9]\nVtap2_1 (tap2_1 0) vsource type=pwl wave=[0 0.9 32.8n 0.9 32.9n 0 67.8n 0 67.9n 0.9 113n 0.9]\nVtap2_0 (tap2_0 0) vsource type=pwl wave=[0 0.9 113n 0.9]\n\nXDUT (vin clk rst tap1_1 tap1_0 tap2_1 tap2_0 decision fb_metric slicer_in_dbg) dfe_rx_top\n\nsimulatorOptions options reltol=1e-6 vabstol=1e-8 iabstol=1e-12\ntran tran stop=113n maxstep=50p strobeperiod=50p errpreset=moderate strobeoutput=strobeonly\nsave vin clk rst tap1_1 tap1_0 tap2_1 tap2_0 decision fb_metric slicer_in_dbg\n",
+  "signals": [
+   "vin",
+   "clk",
+   "rst",
+   "tap1_1",
+   "tap1_0",
+   "tap2_1",
+   "tap2_0",
+   "decision",
+   "fb_metric",
+   "slicer_in_dbg"
+  ],
+  "stop": 1.13e-07,
+  "resolution": 5e-11,
+  "atol": 0.002,
+  "params": {}
+ },
+ {
+  "name": "history-pairs",
+  "source_id": "v4-354",
+  "purpose": "default parameters, 4 ns clock. For six tap-code pairs (1/2, 2/1, 3/0, 0/3, 3/2, 1/3) and each of the four histories, two decisions far from vcm set the history and a probe at vcm +- 5 mV follows, so the same input and taps give different decisions after different histories. Probes decided against the raw input feed the next corrections; the first decision after each tap change uses the new codes with the old history.",
+  "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVvin (vin 0) vsource type=pwl wave=[0 0.65 10n 0.65 10.1n 0.455 14n 0.455 14.1n 0.25 18n 0.25 18.1n 0.65 22n 0.65 22.1n 0.455 26n 0.455 26.1n 0.65 30n 0.65 30.1n 0.25 34n 0.25 34.1n 0.455 38n 0.455 38.1n 0.25 46n 0.25 46.1n 0.455 50n 0.455 50.1n 0.65 58n 0.65 58.1n 0.445 62n 0.445 62.1n 0.25 66n 0.25 66.1n 0.65 70n 0.65 70.1n 0.445 74n 0.445 74.1n 0.65 78n 0.65 78.1n 0.25 82n 0.25 82.1n 0.445 86n 0.445 86.1n 0.25 94n 0.25 94.1n 0.445 98n 0.445 98.1n 0.65 106n 0.65 106.1n 0.455 110n 0.455 110.1n 0.25 114n 0.25 114.1n 0.65 118n 0.65 118.1n 0.455 122n 0.455 122.1n 0.65 126n 0.65 126.1n 0.25 130n 0.25 130.1n 0.455 134n 0.455 134.1n 0.25 142n 0.25 142.1n 0.455 146n 0.455 146.1n 0.65 154n 0.65 154.1n 0.445 158n 0.445 158.1n 0.25 162n 0.25 162.1n 0.65 166n 0.65 166.1n 0.445 170n 0.445 170.1n 0.65 174n 0.65 174.1n 0.25 178n 0.25 178.1n 0.445 182n 0.445 182.1n 0.25 190n 0.25 190.1n 0.445 194n 0.445 194.1n 0.65 202n 0.65 202.1n 0.455 206n 0.455 206.1n 0.25 210n 0.25 210.1n 0.65 214n 0.65 214.1n 0.455 218n 0.455 218.1n 0.65 222n 0.65 222.1n 0.25 226n 0.25 226.1n 0.455 230n 0.455 230.1n 0.25 238n 0.25 238.1n 0.455 242n 0.455 242.1n 0.65 250n 0.65 250.1n 0.445 254n 0.445 254.1n 0.25 258n 0.25 258.1n 0.65 262n 0.65 262.1n 0.445 266n 0.445 266.1n 0.65 270n 0.65 270.1n 0.25 274n 0.25 274.1n 0.445 278n 0.445 278.1n 0.25 286n 0.25 286.1n 0.445 290n 0.445 290.1n 0.65 294n 0.65 294.1n 0.25 298.05n 0.25]\nVclk (clk 0) vsource type=pulse val0=0 val1=0.9 period=4n width=2n delay=3.995n rise=100p fall=100p\nVrst (rst 0) vsource type=pwl wave=[0 0 298.05n 0]\nVtap1_1 (tap1_1 0) vsource type=pwl wave=[0 0 50.3n 0 50.4n 0.9 146.3n 0.9 146.4n 0 194.3n 0 194.4n 0.9 242.3n 0.9 242.4n 0 298.05n 0]\nVtap1_0 (tap1_0 0) vsource type=pwl wave=[0 0.9 50.3n 0.9 50.4n 0 98.3n 0 98.4n 0.9 146.3n 0.9 146.4n 0 194.3n 0 194.4n 0.9 298.05n 0.9]\nVtap2_1 (tap2_1 0) vsource type=pwl wave=[0 0.9 50.3n 0.9 50.4n 0 146.3n 0 146.4n 0.9 298.05n 0.9]\nVtap2_0 (tap2_0 0) vsource type=pwl wave=[0 0 50.3n 0 50.4n 0.9 98.3n 0.9 98.4n 0 146.3n 0 146.4n 0.9 194.3n 0.9 194.4n 0 242.3n 0 242.4n 0.9 298.05n 0.9]\n\nXDUT (vin clk rst tap1_1 tap1_0 tap2_1 tap2_0 decision fb_metric slicer_in_dbg) dfe_rx_top\n\nsimulatorOptions options reltol=1e-6 vabstol=1e-8 iabstol=1e-12\ntran tran stop=298.05n maxstep=50p strobeperiod=50p errpreset=moderate strobeoutput=strobeonly\nsave vin clk rst tap1_1 tap1_0 tap2_1 tap2_0 decision fb_metric slicer_in_dbg\n",
+  "signals": [
+   "vin",
+   "clk",
+   "rst",
+   "tap1_1",
+   "tap1_0",
+   "tap2_1",
+   "tap2_0",
+   "decision",
+   "fb_metric",
+   "slicer_in_dbg"
+  ],
+  "stop": 2.9805e-07,
+  "resolution": 5e-11,
+  "atol": 0.002,
+  "params": {}
+ },
+ {
+  "name": "reset-restart",
+  "source_id": "v4-354",
+  "purpose": "tr = 400 ps (100 ps grid, 200 ps control edges), 5 ns clock. rst is high at t = 0 with tap codes 3/2 and two clock edges pass in reset; a 0.502 ns reset pulse between two edges (the 0.5 ns minimum plus a 2 ps design margin, since a separation exactly at a minimum is a tie); a reset across two edges while the codes change to 2/3; a double reset whose second rising crossing finds the outputs cleared; a reset held to the end with two more edges. Each restart is followed by its first and second decisions with nonzero taps.",
+  "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVvin (vin 0) vsource type=pwl wave=[0 0.6 7.5n 0.6 7.6n 0.3 12.5n 0.3 12.6n 0.47 17.5n 0.47 17.6n 0.4 22.5n 0.4 22.6n 0.62 27.5n 0.62 27.6n 0.3 32.5n 0.3 32.6n 0.47 37.5n 0.47 37.6n 0.43 42.5n 0.43 42.6n 0.47 47.5n 0.47 47.6n 0.62 52.5n 0.62 52.6n 0.3 57.5n 0.3 57.6n 0.47 62.5n 0.47 62.6n 0.62 67.5n 0.62 67.6n 0.3 72.5n 0.3 72.6n 0.46 77.5n 0.46 77.6n 0.4 82.5n 0.4 82.6n 0.52 87.5n 0.52 87.6n 0.44 92.5n 0.44 92.6n 0.4 97.5n 0.4 97.6n 0.457 102.5n 0.457 102.6n 0.44 107.5n 0.44 107.6n 0.6 112.5n 0.6 112.6n 0.3 117.5n 0.3 117.6n 0.6 122.1n 0.6]\nVclk (clk 0) vsource type=pulse val0=0 val1=0.9 period=5n width=2.5n delay=4.99n rise=200p fall=200p\nVrst (rst 0) vsource type=pwl wave=[0 0.9 12.49n 0.9 12.69n 0 36.49n 0 36.69n 0.9 36.992n 0.9 37.192n 0 61.49n 0 61.69n 0.9 71.99n 0.9 72.19n 0 95.99n 0 96.19n 0.9 96.99n 0.9 97.19n 0 97.99n 0 98.19n 0.9 98.99n 0.9 99.19n 0 111.49n 0 111.69n 0.9 122.1n 0.9]\nVtap1_1 (tap1_1 0) vsource type=pwl wave=[0 0.9 122.1n 0.9]\nVtap1_0 (tap1_0 0) vsource type=pwl wave=[0 0.9 62.8n 0.9 62.9n 0 122.1n 0]\nVtap2_1 (tap2_1 0) vsource type=pwl wave=[0 0.9 122.1n 0.9]\nVtap2_0 (tap2_0 0) vsource type=pwl wave=[0 0 62.8n 0 62.9n 0.9 122.1n 0.9]\n\nXDUT (vin clk rst tap1_1 tap1_0 tap2_1 tap2_0 decision fb_metric slicer_in_dbg) dfe_rx_top tr=400p\n\nsimulatorOptions options reltol=1e-6 vabstol=1e-8 iabstol=1e-12\ntran tran stop=122.1n maxstep=100p strobeperiod=100p errpreset=moderate strobeoutput=strobeonly\nsave vin clk rst tap1_1 tap1_0 tap2_1 tap2_0 decision fb_metric slicer_in_dbg\n",
+  "signals": [
+   "vin",
+   "clk",
+   "rst",
+   "tap1_1",
+   "tap1_0",
+   "tap2_1",
+   "tap2_0",
+   "decision",
+   "fb_metric",
+   "slicer_in_dbg"
+  ],
+  "stop": 1.221e-07,
+  "resolution": 1e-10,
+  "atol": 0.002,
+  "params": {
+   "tr": 4e-10
+  }
+ },
+ {
+  "name": "param-override",
+  "source_id": "v4-354",
+  "purpose": "vdd 1.2 V, vss 0.1 V, vcm 0.35 V, vth 0.7 V, tap_lsb 30 mV, tr 100 ps (25 ps grid). clk and rst edges last 180 ps, so a 0.45 V threshold acts 50 ps early; clk stays high for 0.58 ns above vth; decisions with slicer inputs between vcm and 0.45 V and between vcm and vth; a cleared slicer_in_dbg (0 V) that differs from vss; negative slicer input; a reset with tap codes changing inside it.",
+  "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVvin (vin 0) vsource type=pwl wave=[0 0.37 6n 0.37 6.1n 0.3 10n 0.3 10.1n 0.42 14n 0.42 14.1n 0.4 18n 0.4 18.1n 0.43 22n 0.43 22.1n 0.2 26n 0.2 26.1n 0.6 30n 0.6 30.1n 0.33 34n 0.33 34.1n 0.4 38n 0.4 38.1n 0.3 42n 0.3 42.1n 0.25 46n 0.25 46.1n 0.32 50n 0.32 50.1n 0.36 54n 0.36 54.1n 0.3 58n 0.3 58.1n 0.38 62n 0.38 62.1n 0.4 66n 0.4 66.1n 0.5 70n 0.5 70.1n 0.1 74n 0.1 74.1n 0.6 78n 0.6 78.1n 0.3 82.05n 0.3]\nVclk (clk 0) vsource type=pulse val0=0 val1=0.9 period=4n width=0.5n delay=3.8825n rise=180p fall=180p\nVrst (rst 0) vsource type=pwl wave=[0 0 48.8825n 0 49.0625n 0.9 50.4825n 0.9 50.6625n 0 82.05n 0]\nVtap1_1 (tap1_1 0) vsource type=pwl wave=[0 0 26.3n 0 26.4n 0.9 82.05n 0.9]\nVtap1_0 (tap1_0 0) vsource type=pwl wave=[0 0.9 50.3n 0.9 50.4n 0 82.05n 0]\nVtap2_1 (tap2_1 0) vsource type=pwl wave=[0 0.9 26.3n 0.9 26.4n 0 50.3n 0 50.4n 0.9 82.05n 0.9]\nVtap2_0 (tap2_0 0) vsource type=pwl wave=[0 0 26.3n 0 26.4n 0.9 50.3n 0.9 50.4n 0 82.05n 0]\n\nXDUT (vin clk rst tap1_1 tap1_0 tap2_1 tap2_0 decision fb_metric slicer_in_dbg) dfe_rx_top vdd=1.2 vss=0.1 vcm=0.35 vth=0.7 tap_lsb=30m tr=100p\n\nsimulatorOptions options reltol=1e-6 vabstol=1e-8 iabstol=1e-12\ntran tran stop=82.05n maxstep=25p strobeperiod=25p errpreset=moderate strobeoutput=strobeonly\nsave vin clk rst tap1_1 tap1_0 tap2_1 tap2_0 decision fb_metric slicer_in_dbg\n",
+  "signals": [
+   "vin",
+   "clk",
+   "rst",
+   "tap1_1",
+   "tap1_0",
+   "tap2_1",
+   "tap2_0",
+   "decision",
+   "fb_metric",
+   "slicer_in_dbg"
+  ],
+  "stop": 8.205e-08,
+  "resolution": 2.5e-11,
+  "atol": 0.002,
+  "params": {
+   "vdd": 1.2,
+   "vss": 0.1,
+   "vcm": 0.35,
+   "vth": 0.7,
+   "tap_lsb": 0.03,
+   "tr": 1e-10
+  }
+ },
+ {
+  "name": "isi-channel",
+  "source_id": "v4-354",
+  "purpose": "default parameters, 2.05 ns clock (the shortest legal period of 2 ns plus one 50 ps grid step as a design margin, since a period exactly at the minimum is a tie), tap codes 2/1 matched to a channel with 40 mV and 20 mV post-cursors: vin = vcm + 50 mV*x(n) + 40 mV*x(n-1) + 20 mV*x(n-2) for a fixed pseudo-random symbol sequence that also covers the two symbols before t = 0, so the first two decisions see uncancelled intersymbol interference. Three disturbances of 85 to 95 mV against the symbol cause wrong decisions whose feedback propagates into the next decisions.",
+  "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVvin (vin 0) vsource type=pwl wave=[0 0.44 3n 0.44 3.1n 0.42 5.05n 0.42 5.15n 0.48 7.1n 0.48 7.2n 0.52 9.15n 0.52 9.25n 0.56 11.2n 0.56 11.3n 0.46 13.25n 0.46 13.35n 0.38 15.3n 0.38 15.4n 0.44 17.35n 0.44 17.45n 0.42 19.4n 0.42 19.5n 0.48 21.45n 0.48 21.55n 0.42 23.5n 0.42 23.6n 0.48 25.55n 0.48 25.65n 0.52 27.6n 0.52 27.7n 0.46 29.65n 0.46 29.75n 0.39 31.7n 0.39 31.8n 0.42 33.75n 0.42 33.85n 0.48 35.8n 0.48 35.9n 0.42 37.85n 0.42 37.95n 0.48 39.9n 0.48 40n 0.52 41.95n 0.52 42.05n 0.56 44n 0.56 44.1n 0.46 46.05n 0.46 46.15n 0.48 48.1n 0.48 48.2n 0.42 50.15n 0.42 50.25n 0.38 52.2n 0.38 52.3n 0.34 54.25n 0.34 54.35n 0.44 56.3n 0.44 56.4n 0.42 58.35n 0.42 58.45n 0.48 60.4n 0.48 60.5n 0.42 62.45n 0.42 62.55n 0.38 64.5n 0.38 64.6n 0.355 66.55n 0.355 66.65n 0.42 68.6n 0.42 68.7n 0.38 70.65n 0.38 70.75n 0.44 72.7n 0.44 72.8n 0.52 74.75n 0.52 74.85n 0.46 76.8n 0.46 76.9n 0.48 78.85n 0.48 78.95n 0.42 80.9n 0.42 81n 0.48 82.95n 0.48 83.05n 0.52 85n 0.52 85.1n 0.46 87.05n 0.46 87.15n 0.48 89.1n 0.48 89.2n 0.42 91.15n 0.42 91.25n 0.48 93.2n 0.48 93.3n 0.42 95.25n 0.42 95.35n 0.48 97.3n 0.48 97.4n 0.425 99.35n 0.425 99.45n 0.46 101.4n 0.46 101.5n 0.48 103.45n 0.48 103.55n 0.52 105.5n 0.52 105.6n 0.56 109.6n 0.56 109.7n 0.46 111.65n 0.46 111.75n 0.38 113.7n 0.38 113.8n 0.34 117.8n 0.34 117.9n 0.44 119.85n 0.44 119.95n 0.42 121.9n 0.42 122n 0.48 124.5n 0.48]\nVclk (clk 0) vsource type=pulse val0=0 val1=0.9 period=2.05n width=1n delay=1.995n rise=100p fall=100p\nVrst (rst 0) vsource type=pwl wave=[0 0 124.5n 0]\nVtap1_1 (tap1_1 0) vsource type=pwl wave=[0 0.9 124.5n 0.9]\nVtap1_0 (tap1_0 0) vsource type=pwl wave=[0 0 124.5n 0]\nVtap2_1 (tap2_1 0) vsource type=pwl wave=[0 0 124.5n 0]\nVtap2_0 (tap2_0 0) vsource type=pwl wave=[0 0.9 124.5n 0.9]\n\nXDUT (vin clk rst tap1_1 tap1_0 tap2_1 tap2_0 decision fb_metric slicer_in_dbg) dfe_rx_top\n\nsimulatorOptions options reltol=1e-6 vabstol=1e-8 iabstol=1e-12\ntran tran stop=124.5n maxstep=50p strobeperiod=50p errpreset=moderate strobeoutput=strobeonly\nsave vin clk rst tap1_1 tap1_0 tap2_1 tap2_0 decision fb_metric slicer_in_dbg\n",
+  "signals": [
+   "vin",
+   "clk",
+   "rst",
+   "tap1_1",
+   "tap1_0",
+   "tap2_1",
+   "tap2_0",
+   "decision",
+   "fb_metric",
+   "slicer_in_dbg"
+  ],
+  "stop": 1.245e-07,
+  "resolution": 5e-11,
+  "atol": 0.002,
+  "params": {}
+ },
+ {
+  "name": "long-tr",
+  "source_id": "v4-354",
+  "purpose": "tr = 1 ns, the longest legal transition, on a 50 ps grid (finer than tr/4), 3 ns clock, tap codes 2/1. Two resets rise 0.6 ns after a decision, while the outputs are still moving: the decision and the metrics reverse toward their cleared values, or keep falling past or short of their old targets. A decision turned against the raw input by the feedback feeds the next correction. A reset held to the end with one edge in reset.",
+  "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVvin (vin 0) vsource type=pwl wave=[0 0.4 4.5n 0.4 4.6n 0.47 7.5n 0.47 7.6n 0.43 10.5n 0.43 10.6n 0.47 13.5n 0.47 13.6n 0.48 16.5n 0.48 16.6n 0.5 19.5n 0.5 19.6n 0.4 22.5n 0.4 22.6n 0.3 25.5n 0.3 25.6n 0.6 28.5n 0.6 28.6n 0.3 31.5n 0.3 31.6n 0.52 34.5n 0.52 34.6n 0.4 37.5n 0.4 37.6n 0.5 40.5n 0.5 40.6n 0.6 43.55n 0.6]\nVclk (clk 0) vsource type=pulse val0=0 val1=0.9 period=3n width=1.5n delay=2.995n rise=100p fall=100p\nVrst (rst 0) vsource type=pwl wave=[0 0 6.595n 0 6.695n 0.9 7.595n 0.9 7.695n 0 24.595n 0 24.695n 0.9 25.195n 0.9 25.295n 0 41.395n 0 41.495n 0.9 43.55n 0.9]\nVtap1_1 (tap1_1 0) vsource type=pwl wave=[0 0.9 43.55n 0.9]\nVtap1_0 (tap1_0 0) vsource type=pwl wave=[0 0 43.55n 0]\nVtap2_1 (tap2_1 0) vsource type=pwl wave=[0 0 43.55n 0]\nVtap2_0 (tap2_0 0) vsource type=pwl wave=[0 0.9 43.55n 0.9]\n\nXDUT (vin clk rst tap1_1 tap1_0 tap2_1 tap2_0 decision fb_metric slicer_in_dbg) dfe_rx_top tr=1n\n\nsimulatorOptions options reltol=1e-6 vabstol=1e-8 iabstol=1e-12\ntran tran stop=43.55n maxstep=50p strobeperiod=50p errpreset=moderate strobeoutput=strobeonly\nsave vin clk rst tap1_1 tap1_0 tap2_1 tap2_0 decision fb_metric slicer_in_dbg\n",
+  "signals": [
+   "vin",
+   "clk",
+   "rst",
+   "tap1_1",
+   "tap1_0",
+   "tap2_1",
+   "tap2_0",
+   "decision",
+   "fb_metric",
+   "slicer_in_dbg"
+  ],
+  "stop": 4.355e-08,
+  "resolution": 5e-11,
+  "atol": 0.002,
+  "params": {
+   "tr": 1e-09
+  }
+ },
+ {
+  "name": "param-endpoints-low",
+  "source_id": "v4-354",
+  "purpose": "parameter endpoints, low side: vdd 0.5 V and vss 0.1 V (the minimum swing of 0.4 V), vcm 0.2 V, vth 0.2 V, tap_lsb 5 mV and tr 10 ps on a 2.5 ps grid (tr/4), 2.0025 ns clock (the shortest legal period of 2 ns plus one 2.5 ps grid step as a design margin, since a period exactly at the minimum is a tie) with 90 ps edges. Each output-changing event sits at 0.92 of the grid, so a scored row lies 1.27*tr after it. Power-up with tap codes 1/2; feedback of 5 to 20 mV turns decisions against the raw input, and the same input gives different decisions after different histories; the tap codes change to 3/1 between edges; a reset rises between edges and spans one edge while the codes change to 2/3; the first two decisions after it.",
+  "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVvin (vin 0) vsource type=pwl wave=[0 0.26 2n 0.26 2.1n 0.24 4.0025n 0.24 4.1025n 0.207 6.005n 0.207 6.105n 0.16 8.0075n 0.16 8.1075n 0.193 10.01n 0.193 10.11n 0.207 14.015n 0.207 14.115n 0.18 16.0175n 0.18 16.1175n 0.19 18.02n 0.19 18.12n 0.23 22.025n 0.23 22.125n 0.202 24.0275n 0.202 24.1275n 0.23 26.5325n 0.23]\nVclk (clk 0) vsource type=pulse val0=0 val1=0.9 period=2.0025n width=1n delay=0.9823n rise=90p fall=90p\nVrst (rst 0) vsource type=pwl wave=[0 0 18.0023n 0 18.0923n 0.9 19.9548n 0.9 20.0448n 0 26.5325n 0]\nVtap1_1 (tap1_1 0) vsource type=pwl wave=[0 0 14.315n 0 14.415n 0.9 26.5325n 0.9]\nVtap1_0 (tap1_0 0) vsource type=pwl wave=[0 0.9 18.32n 0.9 18.42n 0 26.5325n 0]\nVtap2_1 (tap2_1 0) vsource type=pwl wave=[0 0.9 14.315n 0.9 14.415n 0 18.32n 0 18.42n 0.9 26.5325n 0.9]\nVtap2_0 (tap2_0 0) vsource type=pwl wave=[0 0 14.315n 0 14.415n 0.9 26.5325n 0.9]\n\nXDUT (vin clk rst tap1_1 tap1_0 tap2_1 tap2_0 decision fb_metric slicer_in_dbg) dfe_rx_top vdd=0.5 vss=0.1 vcm=0.2 vth=0.2 tap_lsb=5e-3 tr=10p\n\nsimulatorOptions options reltol=1e-6 vabstol=1e-8 iabstol=1e-12\ntran tran stop=26.5325n maxstep=2.5p strobeperiod=2.5p errpreset=moderate strobeoutput=strobeonly\nsave vin clk rst tap1_1 tap1_0 tap2_1 tap2_0 decision fb_metric slicer_in_dbg\n",
+  "signals": [
+   "vin",
+   "clk",
+   "rst",
+   "tap1_1",
+   "tap1_0",
+   "tap2_1",
+   "tap2_0",
+   "decision",
+   "fb_metric",
+   "slicer_in_dbg"
+  ],
+  "stop": 2.65325e-08,
+  "resolution": 2.5e-12,
+  "atol": 0.002,
+  "params": {
+   "vdd": 0.5,
+   "vss": 0.1,
+   "vcm": 0.2,
+   "vth": 0.2,
+   "tap_lsb": 0.005,
+   "tr": 1e-11
+  }
+ },
+ {
+  "name": "param-endpoints-high",
+  "source_id": "v4-354",
+  "purpose": "parameter endpoints, high side: every parameter at the upper end of its range, vdd 1.5 V, vss 0.5 V, vcm 0.7 V, vth 0.7 V, tap_lsb 50 mV, tr 1 ns (50 ps grid), 3 ns clock with 180 ps edges. Power-up with tap codes 2/1; feedback of up to 200 mV turns decisions against the raw input, and the same input gives different decisions after different histories; the tap codes change to 1/3 between edges, so the first decision after the change differs from one made with the old codes; a reset rises between edges and spans one edge while the codes change to 3/2; the first two decisions after it.",
+  "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVvin (vin 0) vsource type=pwl wave=[0 0.8 4.5n 0.8 4.6n 0.76 7.5n 0.76 7.6n 0.68 13.5n 0.68 13.6n 0.76 16.5n 0.76 16.6n 0.55 19.5n 0.55 19.6n 0.8 25.5n 0.8 25.6n 0.78 28.5n 0.78 28.6n 0.68 34.5n 0.68 34.6n 0.8 37.55n 0.8]\nVclk (clk 0) vsource type=pulse val0=0 val1=0.9 period=3n width=1.5n delay=2.885n rise=180p fall=180p\nVrst (rst 0) vsource type=pwl wave=[0 0 19.385n 0 19.565n 0.9 22.485n 0.9 22.665n 0 37.55n 0]\nVtap1_1 (tap1_1 0) vsource type=pwl wave=[0 0.9 13.8n 0.9 13.9n 0 19.8n 0 19.9n 0.9 37.55n 0.9]\nVtap1_0 (tap1_0 0) vsource type=pwl wave=[0 0 13.8n 0 13.9n 0.9 37.55n 0.9]\nVtap2_1 (tap2_1 0) vsource type=pwl wave=[0 0 13.8n 0 13.9n 0.9 37.55n 0.9]\nVtap2_0 (tap2_0 0) vsource type=pwl wave=[0 0.9 19.8n 0.9 19.9n 0 37.55n 0]\n\nXDUT (vin clk rst tap1_1 tap1_0 tap2_1 tap2_0 decision fb_metric slicer_in_dbg) dfe_rx_top vdd=1.5 vss=0.5 vcm=0.7 vth=0.7 tap_lsb=50e-3 tr=1n\n\nsimulatorOptions options reltol=1e-6 vabstol=1e-8 iabstol=1e-12\ntran tran stop=37.55n maxstep=50p strobeperiod=50p errpreset=moderate strobeoutput=strobeonly\nsave vin clk rst tap1_1 tap1_0 tap2_1 tap2_0 decision fb_metric slicer_in_dbg\n",
+  "signals": [
+   "vin",
+   "clk",
+   "rst",
+   "tap1_1",
+   "tap1_0",
+   "tap2_1",
+   "tap2_0",
+   "decision",
+   "fb_metric",
+   "slicer_in_dbg"
+  ],
+  "stop": 3.755e-08,
+  "resolution": 5e-11,
+  "atol": 0.002,
+  "params": {
+   "vdd": 1.5,
+   "vss": 0.5,
+   "vcm": 0.7,
+   "vth": 0.7,
+   "tap_lsb": 0.05,
+   "tr": 1e-09
+  }
+ },
+ {
+  "name": "min-pulse-vss-low",
+  "source_id": "v4-354",
+  "purpose": "vss at the lower end of its range (-0.5 V) with vdd 1.5 V, the largest legal swing (2.0 V), and the shortest legal clk threshold pulses: one high time and one low time of 0.502 ns between vth crossings (the 0.5 ns minimum plus a 2 ps design margin, since a separation exactly at a minimum is a tie); also a 0.502 ns rst pulse and one pair of rising clk crossings 2.01 ns apart. vcm 0.55 V above vth 0.3 V, tap_lsb 40 mV, tr 40 ps on a 10 ps grid (tr/4), 90 ps control edges. Each output-changing event sits at 0.9 of the grid, so a scored row lies 1.275*tr after it. Power-up with tap codes 3/1; feedback of 40 to 120 mV turns decisions against the raw input, and the same input gives different decisions after different histories; the codes change to 1/2 between edges; a reset rises between edges and spans one edge while the codes change to 2/3; the first two decisions after it; the short reset pulse between two edges and the first two decisions after it.",
+  "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVvin (vin 0) vsource type=pwl wave=[0 0.61 2.25n 0.61 2.35n 0.63 4.51n 0.63 4.61n 0.51 6.76n 0.51 6.86n 0.59 11.76n 0.59 11.86n 0.53 14.26n 0.53 14.36n 0.65 16.76n 0.65 16.86n 0.62 19.26n 0.62 19.36n 0.52 21.76n 0.52 21.86n 0.5 24.26n 0.5 24.36n 0.58 26.76n 0.58 26.86n 0.5 29n 0.5]\nVclk (clk 0) vsource type=pwl wave=[0 0 0.979n 0 1.069n 0.9 2.199n 0.9 2.289n 0 3.479n 0 3.569n 0.9 3.951n 0.9 4.041n 0 5.489n 0 5.579n 0.9 7.457n 0.9 7.547n 0 7.989n 0 8.079n 0.9 9.209n 0.9 9.299n 0 10.489n 0 10.579n 0.9 11.709n 0.9 11.799n 0 12.989n 0 13.079n 0.9 14.209n 0.9 14.299n 0 15.489n 0 15.579n 0.9 16.709n 0.9 16.799n 0 17.989n 0 18.079n 0.9 19.209n 0.9 19.299n 0 20.489n 0 20.579n 0.9 21.709n 0.9 21.799n 0 22.989n 0 23.079n 0.9 24.209n 0.9 24.299n 0 25.489n 0 25.579n 0.9 26.709n 0.9 26.799n 0 27.989n 0 28.079n 0.9 29n 0.9]\nVrst (rst 0) vsource type=pwl wave=[0 0 16.489n 0 16.579n 0.9 18.959n 0.9 19.049n 0 23.689n 0 23.779n 0.9 24.161n 0.9 24.251n 0 29n 0]\nVtap1_1 (tap1_1 0) vsource type=pwl wave=[0 0.9 12.105n 0.9 12.195n 0 18.705n 0 18.795n 0.9 29n 0.9]\nVtap1_0 (tap1_0 0) vsource type=pwl wave=[0 0.9 18.705n 0.9 18.795n 0 29n 0]\nVtap2_1 (tap2_1 0) vsource type=pwl wave=[0 0 12.105n 0 12.195n 0.9 29n 0.9]\nVtap2_0 (tap2_0 0) vsource type=pwl wave=[0 0.9 12.105n 0.9 12.195n 0 18.705n 0 18.795n 0.9 29n 0.9]\n\nXDUT (vin clk rst tap1_1 tap1_0 tap2_1 tap2_0 decision fb_metric slicer_in_dbg) dfe_rx_top vdd=1.5 vss=-0.5 vcm=0.55 vth=0.3 tap_lsb=40m tr=40p\n\nsimulatorOptions options reltol=1e-6 vabstol=1e-8 iabstol=1e-12\ntran tran stop=29n maxstep=10p strobeperiod=10p errpreset=moderate strobeoutput=strobeonly\nsave vin clk rst tap1_1 tap1_0 tap2_1 tap2_0 decision fb_metric slicer_in_dbg\n",
+  "signals": [
+   "vin",
+   "clk",
+   "rst",
+   "tap1_1",
+   "tap1_0",
+   "tap2_1",
+   "tap2_0",
+   "decision",
+   "fb_metric",
+   "slicer_in_dbg"
+  ],
+  "stop": 2.9e-08,
+  "resolution": 1e-11,
+  "atol": 0.002,
+  "params": {
+   "vdd": 1.5,
+   "vss": -0.5,
+   "vcm": 0.55,
+   "vth": 0.3,
+   "tap_lsb": 0.04,
+   "tr": 4e-11
+  }
+ }
+]

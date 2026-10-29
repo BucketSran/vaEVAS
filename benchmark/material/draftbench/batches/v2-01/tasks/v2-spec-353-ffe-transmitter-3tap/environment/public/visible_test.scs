@@ -13,5 +13,6 @@ Vpost1 (post_1 0) vsource type=pwl wave=[0 0 42n 0 42.1n 0.9 72n 0.9 72.1n 0 88n
 
 XDUT (data clk rst pre_1 pre_0 post_1 post_0 vout main_dbg pre_dbg post_dbg) ffe_tx_3tap
 
-tran tran stop=88n maxstep=2p strobeperiod=2p
+simulatorOptions options reltol=1e-6 vabstol=1e-8 iabstol=1e-12
+tran tran stop=88n maxstep=2p strobeperiod=2p errpreset=moderate strobeoutput=strobeonly
 save data clk rst pre_1 pre_0 post_1 post_0 vout main_dbg pre_dbg post_dbg

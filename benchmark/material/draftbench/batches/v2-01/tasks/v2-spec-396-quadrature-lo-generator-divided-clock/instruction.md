@@ -1,60 +1,50 @@
-# Quadrature LO Generator from Divided Clock
+# Quadrature LO generator from a divided clock
 
-## Task Contract
+Build a divide-by-four quadrature LO generator that steps through a fixed four-state sequence on qualified clock edges and asserts a qualification flag after two full traversals.
 
-Implement a Verilog-A DUT source package for a mixed-signal behavioral circuit block.
+## Spec
 
-- Target artifacts: `dut.va`
-- Public top module: `quadrature_lo_generator_divided_clock`
-- Required public module: `quadrature_lo_generator_divided_clock`
+Use the starter declaration of `quadrature_lo_generator_divided_clock`. Every top-level port is electrical. The positional order is `clk_in`, `rst`, `enable`, `lo_i`, `lo_q`, `div_metric`, `quad_ok`. The top module must expose exactly this port order. Optional implementation-local helper modules are allowed, but the public contract requires no helper module.
 
-The submitted source must include the target artifact and public module listed above. The public top module is the module instantiated by the evaluator; optional helper modules may be included only when they are part of the DUT source package, not testbench code.
+`clk_in`, `rst`, and `enable` are inputs. The model drives `lo_i`, `lo_q`, `div_metric`, and `quad_ok`.
 
-## Public Verilog-A Interface
+Declare these overrideable parameters on the top module and pass compatible values to any helper module that needs them.
 
-Declare top module `quadrature_lo_generator_divided_clock` with positional electrical ports `clk_in, rst, enable, lo_i, lo_q, div_metric, quad_ok`. All top-level ports are electrical.
+- `vdd` = 0.9 V. Logic-high output level.
+- `vss` = 0.0 V. Logic-low output level.
+- `vth` = 0.45 V. Threshold for `clk_in`, `rst`, and `enable`.
+- `tr` = 200 ps. Output transition smoothing time. The qualification output also uses it.
 
-The top module must expose exactly the public top-level port order above. Optional implementation-local helper modules are allowed, but no helper module is required by the public contract.
+All outputs start at `vss`. On reset or while disabled, clear `lo_i`, `lo_q`, `div_metric`, and `quad_ok`. Every reset or disable clears the phase asynchronously. Releasing the controls does not advance the sequence; the first new qualified clock edge outputs `10`.
 
-## Public Parameter Contract
+A qualified rising edge is a rising `clk_in` edge while `rst` is low and `enable` is high. On successive qualified edges, generate the repeating state sequence `(lo_i, lo_q) = 10, 11, 01, 00`. Each state lasts one input clock period, so both outputs divide the input clock by four, have the same divided frequency, and `lo_q` trails `lo_i` by one quarter of the divided-clock period. `div_metric` exposes the state index `k` of the currently driven pair as `vss + (vdd - vss) * k / 3`, where the sequence above uses `k = 0..3`.
 
-Provide these overrideable public parameters on the top module and propagate compatible values to helper modules where needed:
+After a reset or a re-enable, counting restarts from the first qualified edge. `quad_ok` stays at `vss` on the first through seventh qualified edges and updates to `vdd` on the eighth, when the second traversal of `10, 11, 01, 00` enters `00`. It does not wait for a ninth edge back at `10`. `quad_ok` stays asserted until reset or disable.
 
-- `vdd = 0.9 V`: logic high output level.
-- `vss = 0.0 V`: logic low output level.
-- `vth = 0.45 V`: threshold for clock, reset, and enable.
-- `tr = 200 ps`: output transition smoothing time.
+Initial levels and edges are unambiguous. `clk_in`, `rst`, and `enable` never rest at `vth`. Each of them that reaches `vth` always crosses it; it never touches `vth` and returns to the same side. Independent control edges are at least `2*tr` apart. Supplies stay fixed. The control threshold is `vth`. Simultaneous events that this contract does not define are not scored.
 
-## Required Behavior
+Voltage error is at most 2 mV. Each output reaches its new value within `tr` after the event that changes it. Every saved point is scored, for all four outputs, except points less than `1.15*tr` after t = 0 or after an event that changes an output target: a qualified rising `clk_in` edge, or a clear by a rising `rst` or a falling `enable`. A scored waveform uses a time step no coarser than one quarter of the shortest output transition. Final evaluation may change inputs and parameters inside this contract.
 
-- On reset or when disabled, clear `lo_i`, `lo_q`, `div_metric`, and `quad_ok`.
-- On successive rising `clk_in` edges while enabled, generate the repeating
-  state sequence `(lo_i, lo_q) = 10, 11, 01, 00`. Each state lasts one input
-  clock period, so both outputs divide the input clock by four and `lo_q`
-  trails `lo_i` by one quarter of the divided-clock period.
-- `lo_i` and `lo_q` must have the same divided frequency and a deterministic quadrature phase relationship.
-- `div_metric` must expose the state index `k` for the currently driven pair as
-  `vss + (vdd - vss) * k / 3`, where the sequence above uses `k = 0..3`.
-- Assert `quad_ok` on the eighth qualified rising `clk_in` edge after reset or disable, when the second traversal of `10, 11, 01, 00` enters `00`. Keep it asserted until reset or disable.
+An executed attempt that fails a required check scores 0. The failure cause is recorded separately. A zero that comes from the simulator, the bench, or other infrastructure does not by itself show that the submitted Verilog-A behavior is wrong. Acceptance uses the fixed Spectre backend.
 
-## 实现与修改边界
+## Deliverable
 
-按公开接口建立电压域行为模型。实现方法与合法Verilog-A表达方式由求解者选择。不得读取评分材料或重放固定测试答案。只修改交付源码，固定激励及评分程序保持不变。
+- Edit `/app/circuit.va` and implement `quadrature_lo_generator_divided_clock` on the module and positional ports in the starter. Any helper module goes in the same file.
+- Any Verilog-A implementation is acceptable when it meets that interface and the external behavior in Spec. The state sequence and the qualification count define the observable outputs. They do not require a particular state name or event operator.
+- The submitted model must not read grading files, replay stored answers, or start external processes. You may read this instruction, the starter, and the public testbench, and you may run the public check. Do not edit the public testbench.
 
-## Output Contract
+From `/app`, run `python3 testbench/check.py --output /app/output/public-check`.
 
-Return exactly these complete source artifacts:
+[testbench/README.md](testbench/README.md) describes that check. The public bench sources stay visible, including [testbench/visible_test.scs](testbench/visible_test.scs). Tool version, timeouts, and diagnostics are in that README.
 
-- `dut.va`
+This is an implementation task, not a repository-audit task.
+Work in /app and modify only the declared deliverable; do not edit public development benches, model libraries, or external fixtures.
+Make one bounded inspection pass over this instruction, the declared deliverable, supplied starter material, and public development benches.
+As the task solver, create a runnable candidate in the file named in the Deliverable section before beginning detailed exploration, and keep that file updated as you work.
+If your working time expires, the evaluator copies that file exactly as it exists at that moment and runs the verifier on it.
+If the file is missing or empty, the result is zero reward.
+Temporary files are not submitted.
 
-## 固定评测合同
-
-后端固定为Spectre，运行版本和容器身份随校准记录保存。公开自测是public/visible_test.scs，交付物位于/work/dut.va及声明的其他源码。初态、输入范围和同时刻事件遵循下面补充合同。终评可以改变同一合同内的输入和参数。电压误差不超过2mV，输出过渡结束后的保持区间逐点检查；时间分辨率不超过最短过渡的四分之一。
-
-输入初态及边沿保持明确，控制不恰好停在门限，独立控制边沿互相至少隔开两倍输出过渡时间。模拟输入在采样时连续。电源固定，控制门限采用题面注明的参考轨。未规定的同刻事件不评分。各模块的初态以本题补充合同为准。
-
-## 本轮冻结的数值合同
-
-初态所有输出vss。每次reset/disable异步清相位；释放控制不推进，首次新clk输出10。
-
-合格上升沿指rst低且enable高时的clk_in上升沿。重新使能后从第1个合格沿重新计数，quad_ok在第1至第7沿保持vss，在第8沿更新为vdd；该资格表示完成两遍四状态序列，不另等待第9沿回到10。资格输出也使用tr过渡。
+If a concrete model, tool, or execution problem appears, investigate it as needed before continuing.
+Iterate by editing the declared deliverable and using public development benches to diagnose observed behavior.
+Do not repeatedly enumerate files, reread unchanged references, or retry unchanged discovery commands instead of editing and simulating.

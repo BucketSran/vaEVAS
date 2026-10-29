@@ -1,0 +1,9 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module agc_receiver_leveling_loop(clk,rst,vin,out,metric,gain_mon,rssi_mon);
+input clk,rst,vin;
+output out,metric,gain_mon,rssi_mon;
+electrical clk,rst,vin,out,metric,gain_mon,rssi_mon;
+// TODO: implement the public contract.
+endmodule

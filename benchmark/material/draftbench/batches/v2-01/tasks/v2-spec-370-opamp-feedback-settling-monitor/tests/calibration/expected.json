@@ -1,0 +1,179 @@
+{
+ "task": "v2-spec-370-opamp-feedback-settling-monitor",
+ "cases": [
+  "contract-base",
+  "contract-stretched-input",
+  "contract-code-clamp-release",
+  "contract-vss-offset"
+ ],
+ "checker_failure": "a scored vout, error_metric or settled sample more than atol (2 mV) from the expected value (tests/v2_spec.py:205-208)",
+ "semantics": "F01 scoring start, user-confirmed 2026-10-28 (option A): tests/v2_spec.py:188 skips points less than 1.15*tr after t = 0 or after a tick that changes any expected output; the instruction states this rule and the checker is unchanged. Polling as tests/v2_spec.py:48-50 and 123-128 fix it: global ticks k*tick from t = 0 (tick = 250 ps), controls read just after the tick (1e-16 s look-ahead, line 68), an update at a tick where clk is high and was not high at the previous tick, the previous clk level tracked at every tick, reset and disable values vout = vcm, error_metric = vcm, settled = vss (line 125; vss from the case parameters). The checker omits the outer clamp of vout_next, which is a no-op inside the stated parameter domain 0 < alpha <= 1, vss <= vcm <= vdd. contract-code-clamp-release (fix-dec-r1) applies codes 001, 010, 100 and 111, drives the raw target above vdd and below vss at code 7, and releases rst (13.1 ns) and enable (19.1 ns) while clk is high; contract-vss-offset sets vss = 0.1 V and starts out of reset, then resets (9.6-11.1 ns) and disables (17.6-19.6 ns) after settled is high. Candidates differ from solution/ in the output transition, in when an update happens, or in one rule each.",
+ "conditions": {},
+ "candidates": [
+  {
+   "name": "late_transition_1p3tr",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "contract-stretched-input",
+    "contract-code-clamp-release",
+    "contract-vss-offset"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "F01-late-transition-1.3tr"
+  },
+  {
+   "name": "inwindow_transition_1p1tr",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "contract-base",
+    "contract-stretched-input",
+    "contract-code-clamp-release",
+    "contract-vss-offset"
+   ],
+   "author_synthetic_control": "F01-inwindow-transition-1.1tr"
+  },
+  {
+   "name": "edge_triggered_update",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "contract-stretched-input",
+    "contract-code-clamp-release",
+    "contract-vss-offset"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "fail-edge-triggered"
+  },
+  {
+   "name": "half_tick_phase",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "contract-stretched-input",
+    "contract-code-clamp-release",
+    "contract-vss-offset"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "fail-half-tick"
+  },
+  {
+   "name": "settled_low_zero",
+   "group": "wrong",
+   "must_reject": [
+    "contract-vss-offset"
+   ],
+   "must_accept": [
+    "contract-base",
+    "contract-stretched-input",
+    "contract-code-clamp-release"
+   ],
+   "author_synthetic_control": "fail-settled-low-zero"
+  },
+  {
+   "name": "reset_settled_zero",
+   "group": "wrong",
+   "must_reject": [
+    "contract-vss-offset"
+   ],
+   "must_accept": [
+    "contract-base",
+    "contract-stretched-input",
+    "contract-code-clamp-release"
+   ],
+   "author_synthetic_control": "fail-reset-settled-zero"
+  },
+  {
+   "name": "disable_settled_zero",
+   "group": "wrong",
+   "must_reject": [
+    "contract-vss-offset"
+   ],
+   "must_accept": [
+    "contract-base",
+    "contract-stretched-input",
+    "contract-code-clamp-release"
+   ],
+   "author_synthetic_control": "fail-disable-settled-zero"
+  },
+  {
+   "name": "gain_bits_reversed",
+   "group": "wrong",
+   "must_reject": [
+    "contract-code-clamp-release"
+   ],
+   "must_accept": [
+    "contract-base",
+    "contract-stretched-input",
+    "contract-vss-offset"
+   ],
+   "author_synthetic_control": "fail-reversed-bits"
+  },
+  {
+   "name": "gain_code_from_bit0_only",
+   "group": "wrong",
+   "must_reject": [
+    "contract-code-clamp-release"
+   ],
+   "must_accept": [
+    "contract-base",
+    "contract-stretched-input",
+    "contract-vss-offset"
+   ],
+   "author_synthetic_control": "fail-code-from-bit0-only"
+  },
+  {
+   "name": "target_no_upper_clamp",
+   "group": "wrong",
+   "must_reject": [
+    "contract-code-clamp-release"
+   ],
+   "must_accept": [
+    "contract-base",
+    "contract-stretched-input",
+    "contract-vss-offset"
+   ],
+   "author_synthetic_control": "fail-no-upper-clamp"
+  },
+  {
+   "name": "target_no_lower_clamp",
+   "group": "wrong",
+   "must_reject": [
+    "contract-code-clamp-release"
+   ],
+   "must_accept": [
+    "contract-base",
+    "contract-stretched-input",
+    "contract-vss-offset"
+   ],
+   "author_synthetic_control": "fail-no-lower-clamp"
+  },
+  {
+   "name": "prev_clk_frozen_in_reset",
+   "group": "wrong",
+   "must_reject": [
+    "contract-code-clamp-release"
+   ],
+   "must_accept": [
+    "contract-base",
+    "contract-stretched-input",
+    "contract-vss-offset"
+   ],
+   "author_synthetic_control": "fail-prev-frozen-in-reset"
+  },
+  {
+   "name": "prev_clk_frozen_in_disable",
+   "group": "wrong",
+   "must_reject": [
+    "contract-code-clamp-release"
+   ],
+   "must_accept": [
+    "contract-base",
+    "contract-stretched-input",
+    "contract-vss-offset"
+   ],
+   "author_synthetic_control": "fail-prev-frozen-in-disable"
+  }
+ ]
+}

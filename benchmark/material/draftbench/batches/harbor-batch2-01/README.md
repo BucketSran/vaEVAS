@@ -32,3 +32,5 @@
 2026-10-29 author-r2（未仿真）：online-gain 的 `strict_start_no_margin` 改为随后端而定的探针（Spectre 上通过，旧版拒 4/6）；uvlo-brownout 题面写明门限是 0.65、0.55 的 binary64 值；两道伺服题与 segmented 的台架写了容差（reltol 1e-6、vabstol 1e-8、iabstol 1e-12，与 B2PC 作业同一行）并补了 dc 的 `type=` 与 PWL 到 stop。见 author-r2 记录（`runs/t3-batch2-20261027/author-r2/disposition.md`）。
 
 2026-10-29 记：`tests/v2_next_converter.py` 有分叉（总协调 2026-10-29 定现在不同步）。segmented 的两份（tests 与 starter，`2ba60eb0…`）在 author-r2 加了只在 `kind == 'dac'` 时运行的台架检查；v3-01 里其余 7 份仍是原字节 `b390ea0b…`：首批 slot 8 dac-linearity、slot 9 adc-spectrum 各两份（用例 kind 为 scan、spectrum，同步过去新检查不运行），nonideal、subradix、thermometer 三个变体各一份（只有 tests，用例 kind 都是 dac，同步过去新检查会真的运行）。以后同步时，先重跑这几题的判决核对，不能直接覆盖。
+
+2026-10-29 触碰门限（决定单第 4 项，A 收窄版；v2spec-touch-r1，未仿真）：038、071、183、308、370、375、396 七题题面补写同一句（都由原句 “A control does not stop exactly on its threshold.” 合并，并点名信号与门限）；047 按标准线的三条豁免条件照现状，题面不加句子，SOURCE 记逐条核对的结果。题包全部网表精确核对，停在门限、触碰后返回、t = 0 恰在门限都是 0（047 的门限平台与 t = 0 起点是合同有意为之，三条已核）。checker、用例、网表、参考解未改，不需要新的 Spectre 作业。见记录（`runs/t3-harbor30-20261027/v2spec-touch-r1/disposition.md`）。

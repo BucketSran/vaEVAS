@@ -1,0 +1,9 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module chopper_stabilized_differential_amplifier(vinp,vinn,chop_clk,rst,enable,hold,voutp,voutn,settled,offset_residual);
+input vinp,vinn,chop_clk,rst,enable,hold;
+output voutp,voutn,settled,offset_residual;
+electrical vinp,vinn,chop_clk,rst,enable,hold,voutp,voutn,settled,offset_residual;
+// TODO: implement the public contract.
+endmodule

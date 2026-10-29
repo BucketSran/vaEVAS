@@ -1,0 +1,48 @@
+{
+ "task": "v2-spec-375-nonoverlap-clock-generator",
+ "cases": [
+  "contract-base",
+  "contract-stretched-input",
+  "sub-tick-cancel-and-next-edge-restart"
+ ],
+ "checker_failure": "a scored output sample more than atol (2 mV) from the expected value (tests/v2_spec.py:205-208); at any row, phi1 and phi2 both above (vdd+vss)/2 (kind=phase_overlap, tests/v2_spec.py:184-187)",
+ "semantics": "F01 scoring start: option A user-confirmed 2026-10-28; option B of decision sheet item 12, prepared in f01-r2, chosen by the user on 2026-10-29. Every case carries params tr = 1e-10, the default tr of its instance, so tests/v2_spec.py:188 skips points less than 1.15*tr = 115 ps after t = 0 or after an event that changes an output target (:99-104); before f01-r2 the params were empty, tr fell back to 200 ps (:11) and the start was 230 ps. The phase-overlap check (:184-187) runs at every row; the checker is unchanged. Candidates differ from solution/ only in output transition time.",
+ "conditions": {
+  "inwindow_transition_1p1tr": "arrives 110 ps after the event, 5 ps before the 115 ps scoring start on the cases' 2 ps strobe grid; the expectation assumes the backend's event and transition times stay within 5 ps of the nominal ones (legacy EVAS 0.8.7: within 1e-18 s). Spectre 21.1, B2PC rec-02 and opt-01 (accepted 2026-10-29): accepted on the three private cases and the public case."
+ },
+ "candidates": [
+  {
+   "name": "late_transition_2p6tr",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "contract-stretched-input",
+    "sub-tick-cancel-and-next-edge-restart"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "late-shift-160ps"
+  },
+  {
+   "name": "late_transition_1p3tr",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "contract-stretched-input",
+    "sub-tick-cancel-and-next-edge-restart"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "late-shift-30ps"
+  },
+  {
+   "name": "inwindow_transition_1p1tr",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "contract-base",
+    "contract-stretched-input",
+    "sub-tick-cancel-and-next-edge-restart"
+   ],
+   "author_synthetic_control": "inwindow-shift-10ps"
+  }
+ ]
+}

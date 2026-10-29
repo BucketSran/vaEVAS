@@ -1,0 +1,10 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module pipeline_stage(VDD,VSS,PHI1,PHI2,VIN,VREF,VRES,D1,D0);
+input PHI1,PHI2,VIN,VREF;
+output VRES,D1,D0;
+inout VDD,VSS;
+electrical VDD,VSS,PHI1,PHI2,VIN,VREF,VRES,D1,D0;
+// TODO: implement the public contract.
+endmodule

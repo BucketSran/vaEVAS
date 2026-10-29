@@ -1,0 +1,41 @@
+{
+ "task": "v2-spec-047-window-comparator-detector",
+ "cases": [
+  "contract-base",
+  "contract-stretched-input",
+  "nonzero-vss",
+  "exact-boundary-samples",
+  "sub-tick-windows"
+ ],
+ "checker_failure": "a scored output sample more than atol (2 mV) from the expected value (tests/v2_spec.py:205-208)",
+ "semantics": "F01 scoring start, user-confirmed 2026-10-28 (option A): tests/v2_spec.py:188 skips points less than 1.15*tedge after t = 0 or after a tick k*tick (:48-50) at which the polled decision changes the target of out (:78, :151); vin crossings of the window edges (:46-47) change no target; the instruction states this rule and the checker is unchanged. Candidates differ from solution/ only in output delay or transition time.",
+ "conditions": {},
+ "candidates": [
+  {
+   "name": "late_transition_1p3tedge",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "contract-stretched-input",
+    "nonzero-vss",
+    "exact-boundary-samples",
+    "sub-tick-windows"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "late-shift-60ps"
+  },
+  {
+   "name": "inwindow_transition_1p1tedge",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "contract-base",
+    "contract-stretched-input",
+    "nonzero-vss",
+    "exact-boundary-samples",
+    "sub-tick-windows"
+   ],
+   "author_synthetic_control": "inwindow-shift-20ps"
+  }
+ ]
+}

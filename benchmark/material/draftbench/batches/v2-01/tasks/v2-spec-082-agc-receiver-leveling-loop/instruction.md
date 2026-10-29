@@ -1,71 +1,56 @@
-# AGC Receiver Leveling Loop
+# AGC receiver leveling loop
 
-## Task Contract
+Build a voltage-domain receiver leveling loop that updates a bounded gain on a clock and drives the leveled output plus its monitors.
 
-Implement the requested Verilog-A artifact for `AGC Receiver Leveling Loop`.
-- Form: `dut`
-- Level: `L2`
-- Category: `rf_afe_behavioral_macromodels`
-- Target artifact(s): `dut.va`
+## Spec
 
-Implement a voltage-domain automatic-gain-control receiver leveling loop.
+Use the starter declaration of `agc_receiver_leveling_loop`. Every port is electrical. The positional order is `clk`, `rst`, `vin`, `out`, `metric`, `gain_mon`, `rssi_mon`.
 
-## Public Verilog-A Interface
+`clk` is the gain-control update clock. `rst` is an active-high voltage-coded reset. `vin` is the receiver input envelope, centered on the 0.45 V common mode. `out` is the leveled receiver output. `gain_mon` exposes the bounded gain-control state. `rssi_mon` exposes the observed output envelope. `metric` indicates near-target settling. The model drives `out`, `metric`, `gain_mon`, and `rssi_mon`. It reads `clk`, `rst`, and `vin`.
 
-Declare module `agc_receiver_leveling_loop` with positional ports `clk, rst,
-vin, out, metric, gain_mon, rssi_mon`. All ports are electrical.
+Declare these overrideable parameters. No legal range is stated beyond the values and equations here.
 
-`clk` is the gain-control update clock, `rst` is an active-high voltage-coded
-reset, `vin` is the receiver input envelope centered around common mode, `out`
-is the leveled receiver output, `gain_mon` exposes the bounded gain-control
-state, `rssi_mon` exposes the observed output envelope, and `metric` indicates
-near-target settling.
+- `tr` = 100 ps. Transition time of the smoothed voltage contributions.
+- `vth` = 0.45 V. Threshold for a voltage-coded logic decision.
+- `target_amp` = 0.18 V. Desired output-envelope amplitude around the 0.45 V common mode.
+- `deadband` = 0.025 V. Tolerance around the target amplitude before the gain changes.
 
-## Public Parameter Contract
+The constants 0.45 V, 0.02 V, 0.88 V, 0.43 V, 0.18, 0.10, 0.9 V, 4.0, and the gain limits 0.45 and 3.0 are part of the behavior. They are not extra parameters.
 
-Provide these overrideable public parameters:
+From the initial time, `out` is 0.45 V, `metric` is 0 V, `rssi_mon` is 0 V, the gain state is 2.2, and `gain_mon` is `0.9 * (2.2 - 0.45) / (3.0 - 0.45)`. The denominator equals 2.55.
 
-- `tr = 100p`: transition time used for smoothed voltage contributions.
-- `vth = 0.45 V`: threshold for voltage-coded logic decisions.
-- `target_amp = 0.18 V`: desired output-envelope amplitude around common mode.
-- `deadband = 0.025 V`: tolerance band around the target amplitude before gain
-  correction is needed.
+`rst` is read on a rising `clk` edge. It is not an asynchronous clear between edges. On a rising `clk` crossing of `vth` while `rst` is high, restore that same initial state, including gain 2.2 and the initial `gain_mon`.
 
-## Required Behavior
+On a rising `clk` crossing of `vth` after reset has been released, use the gain from before this update. The leveled output is `out = clamp(0.45 + gain * (vin - 0.45), 0.02 V, 0.88 V)`. The observed envelope is `abs(out - 0.45)`. Drive `rssi_mon` as `clamp(0.9 * envelope / 0.43, 0 V, 0.9 V)`.
 
-On reset, initialize the gain state to `2.2`, return `out` to the 0.45 V
-common-mode level, drive `rssi_mon` and `metric` to 0 V, and drive `gain_mon`
-from the public gain-monitor scaling below. After reset releases, update the
-sampled loop on rising `clk` crossings through `vth`.
+If the envelope is greater than `target_amp + deadband`, subtract 0.18 from the gain. If the envelope is less than `target_amp - deadband`, add 0.10 to the gain. Otherwise keep the gain. Then clamp the gain to `[0.45, 3.0]`. After that update, drive `gain_mon` as `0.9 * (gain - 0.45) / (3.0 - 0.45)`. Drive `metric` as `clamp(0.9 - 4.0 * abs(envelope - target_amp), 0 V, 0.9 V)`. The envelope used by `rssi_mon` and `metric` is the envelope of the output just computed, before the gain step.
 
-For each non-reset update, compute the leveled output from the current gain as
-`out = 0.45 + gain * (vin - 0.45)` and clamp `out` to `[0.02 V, 0.88 V]`.
-The observed output envelope is `abs(out - 0.45)`. Drive `rssi_mon` as
-`0.9 * envelope / 0.43`, clamped to `[0 V, 0.9 V]`. If the envelope is greater
-than `target_amp + deadband`, reduce the gain by `0.18`; if the envelope is
-less than `target_amp - deadband`, increase the gain by `0.10`; otherwise keep
-the gain unchanged. Clamp the gain state to `[0.45, 3.0]`.
+Between rising edges, hold the output targets. Each voltage contribution uses a smooth transition of length `tr`. A small input envelope raises the gain. An overload window lowers `gain_mon`. The output moves toward `target_amp` around the common mode and stays inside the output clamp.
 
-Drive `gain_mon` as `0.9 * (gain - 0.45) / (3.0 - 0.45)` after the gain
-update. Drive `metric` as `0.9 - 4.0 * abs(envelope - target_amp)`, clamped to
-`[0 V, 0.9 V]`. Small input envelopes should be amplified, overload windows
-should reduce the gain monitor, and the output should settle toward
-`target_amp` around common mode while remaining bounded.
+Initial levels and edges are unambiguous. `clk` and `rst` never rest at `vth`. Each of them that reaches `vth` always crosses it; it never touches `vth` and returns to the same side. Independent control edges are at least `2*tr` apart. `vin` is continuous at the sample. Supplies stay fixed. The control threshold is `vth`. Simultaneous events that this contract does not define are not scored.
 
-## 实现与修改边界
+Voltage error is at most 2 mV. Each output reaches its new value within `tr` after the rising `clk` crossing that sets it. Every saved point is scored, for all four outputs, except points less than `1.15*tr` after t = 0 or after a rising `clk` crossing that changes an output target. A scored waveform uses a time step no coarser than one quarter of the shortest output transition. Final evaluation may change inputs and parameters inside this contract.
 
-按公开接口建立电压域行为模型。实现方法与合法Verilog-A表达方式由求解者选择。不得读取评分材料或重放固定测试答案。只修改交付源码，固定激励及评分程序保持不变。
+An executed attempt that fails a required check scores 0. The failure cause is recorded separately. A zero that comes from the simulator, the bench, or other infrastructure does not by itself show that the submitted Verilog-A behavior is wrong. Acceptance uses the fixed Spectre backend.
 
-## Output Contract
+## Deliverable
 
-Return exactly one complete source artifact named `dut.va`. Do not include explanatory prose outside the source artifact contents.
+- Edit `/app/circuit.va` and implement `agc_receiver_leveling_loop` on the module and positional ports in the starter.
+- Any Verilog-A implementation is acceptable when it meets that interface and the external behavior in Spec. The update order defines the observable voltages. It does not require a particular state name or event operator.
+- The submitted model must not read grading files, replay stored answers, or start external processes. You may read this instruction, the starter, and the public testbench, and you may run the public check. Do not edit the public testbench.
 
-## 固定评测合同
+From `/app`, run `python3 testbench/check.py --output /app/output/public-check`.
 
-后端固定为Spectre，运行版本和容器身份随校准记录保存。公开自测是public/visible_test.scs，交付物位于/work/dut.va及声明的其他源码。初态、输入范围和同时刻事件遵循下面补充合同。终评可以改变同一合同内的输入和参数。电压误差不超过2mV，输出过渡结束后的保持区间逐点检查；时间分辨率不超过最短过渡的四分之一。
+[testbench/README.md](testbench/README.md) describes that check. The public bench sources stay visible, including [testbench/visible_test.scs](testbench/visible_test.scs). Tool version, timeouts, and diagnostics are in that README.
 
-输入初态及边沿保持明确，控制不恰好停在门限，独立控制边沿互相至少隔开两倍输出过渡时间。模拟输入在采样时连续。电源固定，控制门限采用题面注明的参考轨。未规定的同刻事件不评分。各模块的初态以本题补充合同为准。
+This is an implementation task, not a repository-audit task.
+Work in /app and modify only the declared deliverable; do not edit public development benches, model libraries, or external fixtures.
+Make one bounded inspection pass over this instruction, the declared deliverable, supplied starter material, and public development benches.
+As the task solver, create a runnable candidate in the file named in the Deliverable section before beginning detailed exploration, and keep that file updated as you work.
+If your working time expires, the evaluator copies that file exactly as it exists at that moment and runs the verifier on it.
+If the file is missing or empty, the result is zero reward.
+Temporary files are not submitted.
 
-## 本轮冻结的数值合同
-
-reset在clk上升读取。初始out=.45、metric=rssi=0、gain=2.2，gain_mon=.9*(2.2-.45)/2.55。
+If a concrete model, tool, or execution problem appears, investigate it as needed before continuing.
+Iterate by editing the declared deliverable and using public development benches to diagnose observed behavior.
+Do not repeatedly enumerate files, reread unchanged references, or retry unchanged discovery commands instead of editing and simulating.

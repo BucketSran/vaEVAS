@@ -1,13 +1,21 @@
 schema_version = "1.4"
+artifacts = ["/app/circuit.va"]
 [metadata]
 name = "v2-spec-082-agc-receiver-leveling-loop"
 category = "verilog-a"
 engineering_action = "spec-modeling"
 source_group = "v4-082"
 context_level = "single-module"
+circuit_route = "all-va"
+starter_kind = "new-model"
+stage = "implementation"
+review_status = "pending"
+pending = ["grading", "runtime"]
+
 [agent]
 timeout_sec = 900
 [verifier]
+environment_mode = "separate"
 timeout_sec = 600
 [environment]
 build_timeout_sec = 600

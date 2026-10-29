@@ -1,61 +1,49 @@
-# Pipeline ADC Stage
+# Pipeline ADC stage
 
-## Task Contract
+Build a clocked 1.5-bit pipeline ADC MDAC stage that samples on `PHI1` and publishes the residue and sub-ADC decision on `PHI2`.
 
-Implement the requested Verilog-A artifact for `Pipeline ADC Stage`.
-- Form: `dut`
-- Level: `L1`
-- Category: `data_converter`
-- Target artifact(s): `dut.va`
+## Spec
 
-Implement a clocked 1.5-bit pipeline ADC MDAC stage.
+Use the starter declaration of `pipeline_stage`. Every port is electrical. The positional order is `VDD`, `VSS`, `PHI1`, `PHI2`, `VIN`, `VREF`, `VRES`, `D1`, `D0`.
 
-## Public Verilog-A Interface
+`VRES` is the residue output. `D1` and `D0` are the sub-ADC decision outputs. `PHI1` and `PHI2` are the two clocks. `VIN` is the analog voltage sampled by the stage. `VREF` is the reference read at the decision. `VDD` and `VSS` are the supply nodes used by the residue and decision levels. The interface sentence names the three outputs and does not say whether the supply ports are inputs or inouts. The equations read `V(VDD)` and `V(VSS)`.
 
-Declare module `pipeline_stage` with positional ports `VDD, VSS, PHI1, PHI2,
-VIN, VREF, VRES, D1, D0`. All ports are electrical. `VRES` is the residue
-output and `D1,D0` are the sub-ADC decision outputs.
+Declare these overrideable parameters in the model. No legal range is stated beyond the values and equations here.
 
-## Public Parameter Contract
+- `vth` = 0.45 V. Threshold for a rising `PHI1` or `PHI2` decision.
+- `vdd` = 0.9 V. Nominal high level used only for the initial residue. It is not a substitute for `V(VDD)` in the residue equation.
+- `tedge` = 200 ps. Smoothing time of each output transition.
 
-Provide these overrideable public parameters:
+The high intervals of `PHI1` and `PHI2` do not overlap. At the initial time, `VRES` is `vdd/2` and both `D1` and `D0` are 0 V. After a decision, high is `V(VDD)` and low is `V(VSS)`.
 
-- `vth = 0.45 V`: clock decision threshold for `PHI1` and `PHI2`.
-- `vdd = 0.9 V`: nominal output high level used for initialization.
-- `tedge = 200 ps`: output transition smoothing time.
+On each rising `PHI1` edge, sample `VIN`. That edge does not change `VRES`, `D1`, or `D0`. On each rising `PHI2` edge, let `cm = V(VDD)/2`, let `x` be the `VIN` captured at the preceding rising `PHI1` edge minus `cm`, and let `ref = V(VREF)` at this edge. The region is +1 when `x > ref/4`, -1 when `x < -ref/4`, and 0 otherwise. Equality with `+ref/4` or `-ref/4` is region 0.
 
-## Required Behavior
+The residue target is `clamp(cm + 2*x - region*ref/2, V(VSS), V(VDD))`. `D1` is high only for region +1. `D0` is high only for region 0. The other decision level is low. Both decisions update on that same edge. The outputs then hold until the next rising `PHI2` edge. Each output uses a smooth voltage transition of length `tedge`.
 
-On each rising `PHI1` edge, sample `VIN`. On each rising `PHI2` edge, compare
-the sampled input around `V(VDD)/2` against the 1.5-bit thresholds
-`+V(VREF)/4` and `-V(VREF)/4`.
+Initial levels and edges are unambiguous. `PHI1` and `PHI2` never rest at `vth`. Each of them that reaches `vth` always crosses it; it never touches `vth` and returns to the same side. Independent control edges are at least `2*tedge` apart. `VIN` is continuous at the sample. Supplies stay fixed. Simultaneous events that this contract does not define are not scored.
 
-- Upper region: drive `D1` high, `D0` low, and subtract a half-reference from
-  the gain-two residue.
-- Middle region: drive `D1` low, `D0` high, and use the gain-two residue
-  without reference subtraction or addition.
-- Lower region: drive both decision outputs low and add a half-reference to the
-  gain-two residue.
+Voltage error is at most 2 mV. Each output reaches its new value within `tedge` after the rising `PHI2` crossing that sets it. Every saved point is scored, for all three outputs, except points less than `1.15*tedge` after t = 0 or after a rising `PHI2` crossing that changes an output target. A scored waveform uses a time step no coarser than one quarter of the shortest output transition. Final evaluation may change inputs and parameters inside this contract.
 
-Clamp `VRES` to the supply range and drive all outputs with smooth
-voltage-domain transitions.
+An executed attempt that fails a required check scores 0. The failure cause is recorded separately. A zero that comes from the simulator, the bench, or other infrastructure does not by itself show that the submitted Verilog-A behavior is wrong. Acceptance uses the fixed Spectre backend.
 
-## 实现与修改边界
+## Deliverable
 
-按公开接口建立电压域行为模型。实现方法与合法Verilog-A表达方式由求解者选择。不得读取评分材料或重放固定测试答案。只修改交付源码，固定激励及评分程序保持不变。
+- Edit `/app/circuit.va` and implement `pipeline_stage` on the module and positional ports in the starter.
+- Any Verilog-A implementation is acceptable when it meets that interface and the external behavior in Spec. The equations define the observable result. They do not require a particular state name or event operator.
+- The submitted model must not read grading files, replay stored answers, or start external processes. You may read this instruction, the starter, and the public testbench, and you may run the public check. Do not edit the public testbench.
 
-## Output Contract
+From `/app`, run `python3 testbench/check.py --output /app/output/public-check`.
 
-Return exactly one complete source artifact named `dut.va`. Do not include explanatory prose outside the source artifact contents.
+[testbench/README.md](testbench/README.md) describes that check. The public bench sources stay visible, including [testbench/visible_test.scs](testbench/visible_test.scs). Tool version, timeouts, and diagnostics are in that README.
 
-## 固定评测合同
+This is an implementation task, not a repository-audit task.
+Work in /app and modify only the declared deliverable; do not edit public development benches, model libraries, or external fixtures.
+Make one bounded inspection pass over this instruction, the declared deliverable, supplied starter material, and public development benches.
+As the task solver, create a runnable candidate in the file named in the Deliverable section before beginning detailed exploration, and keep that file updated as you work.
+If your working time expires, the evaluator copies that file exactly as it exists at that moment and runs the verifier on it.
+If the file is missing or empty, the result is zero reward.
+Temporary files are not submitted.
 
-后端固定为Spectre，运行版本和容器身份随校准记录保存。公开自测是public/visible_test.scs，交付物位于/work/dut.va及声明的其他源码。初态、输入范围和同时刻事件遵循下面补充合同。终评可以改变同一合同内的输入和参数。电压误差不超过2mV，输出过渡结束后的保持区间逐点检查；时间分辨率不超过最短过渡的四分之一。
-
-输入初态及边沿保持明确，控制不恰好停在门限，独立控制边沿互相至少隔开两倍输出过渡时间。模拟输入在采样时连续。电源固定，控制门限采用题面注明的参考轨。未规定的同刻事件不评分。各模块的初态以本题补充合同为准。
-
-## 本轮冻结的数值合同
-
-初始VRES=vdd/2、两个D=0。门限相对对地VDD/2，边界等于±VREF/4归middle。PHI1与PHI2非重叠。
-
-在PHI2上升沿，令 `cm=V(VDD)/2`、`x=此前PHI1采到的VIN-cm`，并读取该时刻的 `ref=V(VREF)`。当 `x>ref/4` 时 `region=1`；当 `x<-ref/4` 时 `region=-1`；其余为 `region=0`。残差目标为 `VRES=clamp(cm+2*x-region*ref/2, V(VSS), V(VDD))`，其中clamp把电压限制在给定上下界。两个决策输出在同一PHI2沿更新，D1仅在region=1时高，D0仅在region=0时高；高低电平分别为V(VDD)与V(VSS)。输出保持到下一PHI2上升沿，过渡时间使用tedge。
+If a concrete model, tool, or execution problem appears, investigate it as needed before continuing.
+Iterate by editing the declared deliverable and using public development benches to diagnose observed behavior.
+Do not repeatedly enumerate files, reread unchanged references, or retry unchanged discovery commands instead of editing and simulating.

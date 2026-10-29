@@ -14,5 +14,6 @@ Venable (enable 0) vsource type=pwl wave=[0 0 3.5n 0 3.6n 0.9 41n 0.9 41.1n 0 47
 XDUT (vin phi1 phi2 rst enable vout phase_metric valid) switched_cap_integrator_phase_pair_top
 
 
-tran tran stop=76n maxstep=2p strobeperiod=2p
+simulatorOptions options reltol=1e-6 vabstol=1e-8 iabstol=1e-12
+tran tran stop=76n maxstep=2p strobeperiod=2p errpreset=moderate strobeoutput=strobeonly
 save vin phi1 phi2 rst enable vout phase_metric valid

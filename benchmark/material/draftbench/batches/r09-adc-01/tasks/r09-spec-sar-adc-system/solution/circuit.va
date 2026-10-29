@@ -1,0 +1,196 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+// DAC of the input code over the conversion range: vss + (vref - vss)*code/16.
+module binary_weighted_cdac(bit_3, bit_2, bit_1, bit_0, dac_o, dac_dbg);
+    input bit_3, bit_2, bit_1, bit_0;
+    output dac_o, dac_dbg;
+    electrical bit_3, bit_2, bit_1, bit_0, dac_o, dac_dbg;
+
+    parameter real vss = 0.0 from [-0.5:0.5];
+    parameter real vref = 0.9;
+    parameter real vth = 0.45 from [0.2:0.7];
+    parameter real tr = 200p from [10p:1n];
+
+    integer b3, b2, b1, b0;
+    real level;
+
+    analog begin
+        @(initial_step) begin
+            b3 = V(bit_3) > vth;
+            b2 = V(bit_2) > vth;
+            b1 = V(bit_1) > vth;
+            b0 = V(bit_0) > vth;
+        end
+        @(cross(V(bit_3) - vth, +1, 1p)) b3 = 1;
+        @(cross(V(bit_3) - vth, -1, 1p)) b3 = 0;
+        @(cross(V(bit_2) - vth, +1, 1p)) b2 = 1;
+        @(cross(V(bit_2) - vth, -1, 1p)) b2 = 0;
+        @(cross(V(bit_1) - vth, +1, 1p)) b1 = 1;
+        @(cross(V(bit_1) - vth, -1, 1p)) b1 = 0;
+        @(cross(V(bit_0) - vth, +1, 1p)) b0 = 1;
+        @(cross(V(bit_0) - vth, -1, 1p)) b0 = 0;
+
+        level = vss + (vref - vss)*(8*b3 + 4*b2 + 2*b1 + b0)/16.0;
+        V(dac_o) <+ transition(level, 0.0, tr, tr);
+        V(dac_dbg) <+ transition(level, 0.0, tr, tr);
+    end
+endmodule
+
+// 1 while the held sample is at or above the DAC level, equality included. The output follows
+// that level at every time point, also when the difference leaves an exact 0; cross() only
+// places a time point at each zero crossing.
+module sar_comparator(sample_i, dac_i, cmp_o);
+    input sample_i, dac_i;
+    output cmp_o;
+    electrical sample_i, dac_i, cmp_o;
+
+    parameter real vdd = 0.9;
+    parameter real vss = 0.0 from [-0.5:0.5];
+    parameter real vth = 0.45 from [0.2:0.7];
+    parameter real tr = 200p from [10p:1n];
+
+    integer high;
+
+    analog begin
+        @(cross(V(sample_i) - V(dac_i), 0, 1p));
+        high = V(sample_i) >= V(dac_i);
+        V(cmp_o) <+ transition(high ? vdd : vss, 0.0, tr, tr);
+    end
+endmodule
+
+// Samples vin at a clock edge while sample_en is high; reset clears to vss.
+module sample_hold(vin, clk, rst, sample_en, sample_o, sample_dbg);
+    input vin, clk, rst, sample_en;
+    output sample_o, sample_dbg;
+    electrical vin, clk, rst, sample_en, sample_o, sample_dbg;
+
+    parameter real vss = 0.0 from [-0.5:0.5];
+    parameter real vth = 0.45 from [0.2:0.7];
+    parameter real tr = 200p from [10p:1n];
+
+    real held;
+
+    analog begin
+        @(initial_step) held = vss;
+        @(cross(V(rst) - vth, +1, 1p)) held = vss;
+        @(cross(V(clk) - vth, +1, 1p)) begin
+            if (V(rst) < vth && V(sample_en) > vth)
+                held = V(vin);
+        end
+        V(sample_o) <+ transition(held, 0.0, tr, tr);
+        V(sample_dbg) <+ transition(held, 0.0, tr, tr);
+    end
+endmodule
+
+// SAR sequencer: start arms, the next clock edge samples, four clock edges decide bits 3..0.
+module sar_controller(clk, rst, start, cmp_i, sample_en, trial_3, trial_2, trial_1, trial_0,
+                      code_3, code_2, code_1, code_0, done);
+    input clk, rst, start, cmp_i;
+    output sample_en, trial_3, trial_2, trial_1, trial_0, code_3, code_2, code_1, code_0, done;
+    electrical clk, rst, start, cmp_i, sample_en, trial_3, trial_2, trial_1, trial_0;
+    electrical code_3, code_2, code_1, code_0, done;
+
+    parameter real vdd = 0.9;
+    parameter real vss = 0.0 from [-0.5:0.5];
+    parameter real vth = 0.45 from [0.2:0.7];
+    parameter real tr = 200p from [10p:1n];
+
+    integer phase;      // 0 idle, 1 armed (waiting for the sample edge), 2 converting
+    integer bitpos;     // bit decided at the next clock edge while converting
+    integer trial;      // T
+    integer result;     // R
+    integer en;
+    integer fin;
+
+    analog begin
+        @(initial_step) begin
+            phase = 0;
+            bitpos = 3;
+            trial = 0;
+            result = 0;
+            en = 0;
+            fin = 0;
+        end
+
+        // Reset has priority and abandons any conversion.
+        @(cross(V(rst) - vth, +1, 1p)) begin
+            phase = 0;
+            trial = 0;
+            result = 0;
+            en = 0;
+            fin = 0;
+        end
+
+        // Listed before the start event: a start at the same instant as the
+        // clock edge is taken after it, so sampling waits for the next edge.
+        @(cross(V(clk) - vth, +1, 1p)) begin
+            if (V(rst) < vth) begin
+                if (phase == 1) begin
+                    en = 0;
+                    trial = 8;
+                    bitpos = 3;
+                    phase = 2;
+                end else if (phase == 2) begin
+                    if (V(cmp_i) > vth)
+                        result = trial;
+                    else
+                        result = trial - (1 << bitpos);
+                    if (bitpos > 0) begin
+                        bitpos = bitpos - 1;
+                        trial = result + (1 << bitpos);
+                    end else begin
+                        trial = result;
+                        fin = 1;
+                        phase = 0;
+                    end
+                end
+            end
+        end
+
+        // Every start request re-arms, also during a conversion.
+        @(cross(V(start) - vth, +1, 1p)) begin
+            if (V(rst) < vth) begin
+                phase = 1;
+                trial = 0;
+                result = 0;
+                en = 1;
+                fin = 0;
+            end
+        end
+
+        V(sample_en) <+ transition(en ? vdd : vss, 0.0, tr, tr);
+        V(trial_3) <+ transition(((trial >> 3) & 1) ? vdd : vss, 0.0, tr, tr);
+        V(trial_2) <+ transition(((trial >> 2) & 1) ? vdd : vss, 0.0, tr, tr);
+        V(trial_1) <+ transition(((trial >> 1) & 1) ? vdd : vss, 0.0, tr, tr);
+        V(trial_0) <+ transition((trial & 1) ? vdd : vss, 0.0, tr, tr);
+        V(code_3) <+ transition(((result >> 3) & 1) ? vdd : vss, 0.0, tr, tr);
+        V(code_2) <+ transition(((result >> 2) & 1) ? vdd : vss, 0.0, tr, tr);
+        V(code_1) <+ transition(((result >> 1) & 1) ? vdd : vss, 0.0, tr, tr);
+        V(code_0) <+ transition((result & 1) ? vdd : vss, 0.0, tr, tr);
+        V(done) <+ transition(fin ? vdd : vss, 0.0, tr, tr);
+    end
+endmodule
+
+module sar_adc_top(vin, clk, rst, start, code_3, code_2, code_1, code_0, done, sample_dbg, dac_dbg);
+    input vin, clk, rst, start;
+    output code_3, code_2, code_1, code_0, done, sample_dbg, dac_dbg;
+    electrical vin, clk, rst, start, code_3, code_2, code_1, code_0, done, sample_dbg, dac_dbg;
+    electrical held, dac, cmp, sample_en, trial_3, trial_2, trial_1, trial_0;
+
+    parameter real vdd = 0.9;
+    parameter real vss = 0.0 from [-0.5:0.5];
+    parameter real vref = 0.9;
+    parameter real vth = 0.45 from [0.2:0.7];
+    parameter real tr = 200p from [10p:1n];
+
+    sample_hold #(.vss(vss), .vth(vth), .tr(tr))
+        XSH(vin, clk, rst, sample_en, held, sample_dbg);
+    binary_weighted_cdac #(.vss(vss), .vref(vref), .vth(vth), .tr(tr))
+        XDAC(trial_3, trial_2, trial_1, trial_0, dac, dac_dbg);
+    sar_comparator #(.vdd(vdd), .vss(vss), .vth(vth), .tr(tr))
+        XCMP(held, dac, cmp);
+    sar_controller #(.vdd(vdd), .vss(vss), .vth(vth), .tr(tr))
+        XCTL(clk, rst, start, cmp, sample_en, trial_3, trial_2, trial_1, trial_0,
+             code_3, code_2, code_1, code_0, done);
+endmodule

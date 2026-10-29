@@ -1,0 +1,37 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module binary_weighted_cdac(bit_3,bit_2,bit_1,bit_0,dac_o,dac_dbg);
+input bit_3,bit_2,bit_1,bit_0;
+output dac_o,dac_dbg;
+electrical bit_3,bit_2,bit_1,bit_0,dac_o,dac_dbg;
+// TODO: implement the public contract.
+endmodule
+
+module sar_comparator(sample_i,dac_i,cmp_o);
+input sample_i,dac_i;
+output cmp_o;
+electrical sample_i,dac_i,cmp_o;
+// TODO: implement the public contract.
+endmodule
+
+module sample_hold(vin,clk,rst,sample_en,sample_o,sample_dbg);
+input vin,clk,rst,sample_en;
+output sample_o,sample_dbg;
+electrical vin,clk,rst,sample_en,sample_o,sample_dbg;
+// TODO: implement the public contract.
+endmodule
+
+module sar_controller(clk,rst,start,cmp_i,sample_en,trial_3,trial_2,trial_1,trial_0,code_3,code_2,code_1,code_0,done);
+input clk,rst,start,cmp_i;
+output sample_en,trial_3,trial_2,trial_1,trial_0,code_3,code_2,code_1,code_0,done;
+electrical clk,rst,start,cmp_i,sample_en,trial_3,trial_2,trial_1,trial_0,code_3,code_2,code_1,code_0,done;
+// TODO: implement the public contract.
+endmodule
+
+module sar_adc_top(vin,clk,rst,start,code_3,code_2,code_1,code_0,done,sample_dbg,dac_dbg);
+input vin,clk,rst,start;
+output code_3,code_2,code_1,code_0,done,sample_dbg,dac_dbg;
+electrical vin,clk,rst,start,code_3,code_2,code_1,code_0,done,sample_dbg,dac_dbg;
+// TODO: implement the public contract and connect the four modules.
+endmodule

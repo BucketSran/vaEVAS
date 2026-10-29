@@ -1,0 +1,18 @@
+simulator lang=spectre
+global 0
+
+ahdl_include "/app/circuit.va"
+
+Vvin (vin 0) vsource type=pwl wave=[0 0.4 7.5n 0.4 7.6n 0.47 12.5n 0.47 12.6n 0.5 17.5n 0.5 17.6n 0.55 22.5n 0.55 22.6n 0.4 27.5n 0.4 27.6n 0.35 32.5n 0.35 32.6n 0.3 37.5n 0.3 37.6n 0.62 42.5n 0.62 42.6n 0.46 47.5n 0.46 47.6n 0.62 52.5n 0.62 52.6n 0.3 57.5n 0.3 57.6n 0.46 62.5n 0.46 62.6n 0.44 67.5n 0.44 67.6n 0.6 72.5n 0.6 72.6n 0.3 77.5n 0.3 77.6n 0.43 82.5n 0.43 82.6n 0.47 87.5n 0.47 87.6n 0.52 92.5n 0.52 92.6n 0.47 97.5n 0.47 97.6n 0.4 107.5n 0.4 107.6n 0.5 113n 0.5]
+Vclk (clk 0) vsource type=pulse val0=0 val1=0.9 period=5n width=2.5n delay=4.995n rise=100p fall=100p
+Vrst (rst 0) vsource type=pwl wave=[0 0 66.495n 0 66.595n 0.9 77.495n 0.9 77.595n 0 113n 0]
+Vtap1_1 (tap1_1 0) vsource type=pwl wave=[0 0.9 67.8n 0.9 67.9n 0 113n 0]
+Vtap1_0 (tap1_0 0) vsource type=pwl wave=[0 0.9 32.8n 0.9 32.9n 0 67.8n 0 67.9n 0.9 113n 0.9]
+Vtap2_1 (tap2_1 0) vsource type=pwl wave=[0 0.9 32.8n 0.9 32.9n 0 67.8n 0 67.9n 0.9 113n 0.9]
+Vtap2_0 (tap2_0 0) vsource type=pwl wave=[0 0.9 113n 0.9]
+
+XDUT (vin clk rst tap1_1 tap1_0 tap2_1 tap2_0 decision fb_metric slicer_in_dbg) dfe_rx_top
+
+simulatorOptions options reltol=1e-6 vabstol=1e-8 iabstol=1e-12
+tran tran stop=113n maxstep=50p strobeperiod=50p errpreset=moderate strobeoutput=strobeonly
+save vin clk rst tap1_1 tap1_0 tap2_1 tap2_0 decision fb_metric slicer_in_dbg

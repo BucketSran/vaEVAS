@@ -1,0 +1,9 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module nonoverlap_clock_generator(clk_in,rst,enable,phi1,phi2,deadtime_metric,valid);
+input clk_in,rst,enable;
+output phi1,phi2,deadtime_metric,valid;
+electrical clk_in,rst,enable,phi1,phi2,deadtime_metric,valid;
+// TODO: implement the public contract.
+endmodule

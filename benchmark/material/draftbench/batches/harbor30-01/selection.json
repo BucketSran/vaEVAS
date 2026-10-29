@@ -1948,7 +1948,8 @@
     "选择不证明题面/参考/checker已完成当前验收，也不授予录取或运行资格。",
     "2026-10-27：四项评分决定材料补在原SOURCE；新建议未采用，已有包装/A-B/packaging-r2审核和r2归档保持原冻结身份，不为这些卡片重开审核。",
     "2026-10-27：用户确认055低电平0V、307状态夹位、PLL连续展开相位abs(mean)≤0.2周期三项评分语义，已写入题面、SOURCE与本文件；024/055公私checker按已有合同修复。参考解、cases和其他题未改。本增量只有合成判据检查，独立审核记录在本线决策日志；后端运行、作者校准与录取仍待完成。",
-    "2026-10-27：用户决定首批优先不需SPICE网表的纯VA题。v2-test-por-sequence移出首批，原记录连同evas_requirements完整保留在spice_route_reserve；slot 29由v2-test-comparator-delay补位，题包已迁成本地Harbor形式，新上下文Astra独审的两项措辞发现已修正并哈希核验。动作分布仍为14/2/4/2/8。"
+    "2026-10-27：用户决定首批优先不需SPICE网表的纯VA题。v2-test-por-sequence移出首批，原记录连同evas_requirements完整保留在spice_route_reserve；slot 29由v2-test-comparator-delay补位，题包已迁成本地Harbor形式，新上下文Astra独审的两项措辞发现已修正并哈希核验。动作分布仍为14/2/4/2/8。",
+    "2026-10-29：决定单第 4 项（触碰门限，A 收窄版）已落到首批 11 道 v2-spec 题：题面补写点名信号的“never rest at … / always crosses …”一句，SOURCE 记核对；题包全部网表精确核对，无停留、无触碰、无 t = 0 恰在门限；checker、cases、参考解未改，未仿真。记录 runs/t3-harbor30-20261027/v2spec-touch-r1/disposition.md。"
   ],
   "cross_line_usage": "EVAS主控只读消费各task.evas_requirements；先核对已定公开合同，按自身支持范围及独立预期规划组合。reference_constructs只是当前参考写法，不限制合法其他实现。此映射不裁决C109/Q2等候补科学条件，不授予运行或验收资格。",
   "spice_route_reserve": [

@@ -1,0 +1,35 @@
+{
+ "task": "v2-spec-186-sarfend-logic-4b",
+ "cases": [
+  "contract-base",
+  "fixed-sar-collaboration",
+  "contract-stretched-input"
+ ],
+ "checker_failure": "a scored output sample more than atol (2 mV) from the expected value (tests/v2_spec.py:205-208)",
+ "semantics": "F01 scoring start, user-confirmed 2026-10-28 (option A): tests/v2_spec.py:188 skips points less than 1.15*200 ps after t = 0 or after an event that changes any expected output; the instruction states this rule and the checker is unchanged. Candidates differ from solution/ only in output delay or transition time.",
+ "conditions": {},
+ "candidates": [
+  {
+   "name": "late_output_delay_250ps",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "fixed-sar-collaboration",
+    "contract-stretched-input"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "late-shift-230ps"
+  },
+  {
+   "name": "inwindow_output_delay_210ps",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "contract-base",
+    "fixed-sar-collaboration",
+    "contract-stretched-input"
+   ],
+   "author_synthetic_control": "inwindow-shift-180ps"
+  }
+ ]
+}

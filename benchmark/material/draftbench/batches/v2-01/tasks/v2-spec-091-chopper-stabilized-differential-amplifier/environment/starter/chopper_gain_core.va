@@ -1,0 +1,9 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module chopper_gain_core(vinp,vinn,chop_clk,rst,enable,hold,demod_sample,baseband_ref,event_strobe);
+input vinp,vinn,chop_clk,rst,enable,hold;
+output demod_sample,baseband_ref,event_strobe;
+electrical vinp,vinn,chop_clk,rst,enable,hold,demod_sample,baseband_ref,event_strobe;
+// TODO: implement the public contract.
+endmodule
