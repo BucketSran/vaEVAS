@@ -1,0 +1,69 @@
+{
+  "prepared_at_utc": "2026-10-29T20:58:13.206126+00:00",
+  "base": "0ad80828f47aaea2dac94fcaf3acb99aeca0cf0d",
+  "base_tree": "b0fa321b42eee3322eb5fde7c4542da52e87ac5f",
+  "base_parents": [
+    "7a487c8f6e02ea06e0ec2531674d2a1a5086602f",
+    "9ef7a700b07ef539c1ab0950536fdacff2ce1ff2"
+  ],
+  "pr282": "84d6b71f8fbfd19b31f1696a88cb35643b375b3d",
+  "pr282_tree": "e2e9755ea7916b03144e27b553da3ef89562a034",
+  "merge_base": "d6b7543fc815aaa584c886108691b6f2c01eb220",
+  "export": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/activation-r1/source",
+  "private_git": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/activation-r1/source/.git",
+  "alternates": [
+    "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/.git/objects",
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/c0-r3/source/.git/objects",
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/registration-rule-dut-fix-impl-opus-20261029/r2a2/repo/.git/objects",
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/c0/source/.git/objects"
+  ],
+  "pr282_export": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/activation-r1/source-282",
+  "plan": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/activation-r1/source-plan.json",
+  "merge_sources": 76,
+  "three_way": [],
+  "regenerated_before_capture": [],
+  "checks": [
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "scripts/diagnostic_inventory.py",
+        "--check"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/activation-r1/source",
+      "log": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/activation-r1/logs/source-diagnostic-inventory-check.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-29T20:57:23.702941+00:00",
+      "finished_at_utc": "2026-10-29T20:57:25.874908+00:00",
+      "limit_seconds": 3000,
+      "extra_env": {
+        "PATH": "/Users/bucketsran/.cargo/bin:/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin",
+        "CARGO_TARGET_DIR": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/activation-r1/cargo-target",
+        "RUSTUP_TOOLCHAIN": "1.99.1"
+      },
+      "evas_kernel_peak_during_step": 0
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "evas/capabilities/render.py"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/activation-r1/source",
+      "log": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/activation-r1/logs/pre-render.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-29T20:57:25.875193+00:00",
+      "finished_at_utc": "2026-10-29T20:58:12.665030+00:00",
+      "limit_seconds": 3000,
+      "extra_env": {
+        "PATH": "/Users/bucketsran/.cargo/bin:/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin",
+        "CARGO_TARGET_DIR": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/activation-r1/cargo-target",
+        "RUSTUP_TOOLCHAIN": "1.99.1"
+      },
+      "evas_kernel_peak_during_step": 0
+    }
+  ],
+  "guard_before": "2026-10-29T20:50:33+00:00",
+  "guard_after": "2026-10-29T20:58:13+00:00",
+  "scientific_execution": false
+}

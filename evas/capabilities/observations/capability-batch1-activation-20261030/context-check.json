@@ -1,0 +1,242 @@
+{
+  "checks": {
+    "git_diff_context_key_paths_only_the_two_baseline_files": true,
+    "every_item_equal_except_the_two_baseline_files": true,
+    "baseline_files_equal_main": true,
+    "six_contexts_sixth_bound_to_e1_head": true,
+    "workflow_equal_e1_head": true,
+    "criteria_manifest_equals_E1": true,
+    "dut_manifest_equals_E1": true,
+    "context_keys_equal_sixth_context": true,
+    "context_keys_equal_E1_report": true
+  },
+  "ok": true,
+  "e1_head": "84d6b71f8fbfd19b31f1696a88cb35643b375b3d",
+  "merged_head": "a0dd4fb42c4f2ca8169ecbec1c94a14af8bee490",
+  "context_key_paths": [
+    "evas/tests",
+    "evas/validation",
+    "evas/examples",
+    "experiments",
+    "evas/src",
+    "evas/rust_core",
+    "evas/capabilities/data/language-profile.json",
+    "scripts/run_regression.py",
+    "scripts/ci_evidence.py",
+    "scripts/regression_reason_identity.py",
+    "scripts/regression_observation_policy.json"
+  ],
+  "git_diff": {
+    "default": {
+      "command": "/usr/bin/git --no-lazy-fetch diff --name-only 84d6b71f8fbfd19b31f1696a88cb35643b375b3d a0dd4fb42c4f2ca8169ecbec1c94a14af8bee490 -- evas/tests evas/validation evas/examples experiments evas/src evas/rust_core evas/capabilities/data/language-profile.json scripts/run_regression.py scripts/ci_evidence.py scripts/regression_reason_identity.py scripts/regression_observation_policy.json",
+      "output_bytes": 97,
+      "paths": [
+        "evas/validation/baselines/regression-v1.json",
+        "evas/validation/baselines/regression-v1.review.json"
+      ]
+    },
+    "no_renames": {
+      "command": "/usr/bin/git --no-lazy-fetch diff --name-only --no-renames 84d6b71f8fbfd19b31f1696a88cb35643b375b3d a0dd4fb42c4f2ca8169ecbec1c94a14af8bee490 -- evas/tests evas/validation evas/examples experiments evas/src evas/rust_core evas/capabilities/data/language-profile.json scripts/run_regression.py scripts/ci_evidence.py scripts/regression_reason_identity.py scripts/regression_observation_policy.json",
+      "output_bytes": 97,
+      "paths": [
+        "evas/validation/baselines/regression-v1.json",
+        "evas/validation/baselines/regression-v1.review.json"
+      ]
+    }
+  },
+  "allowed_paths": [
+    "evas/validation/baselines/regression-v1.json",
+    "evas/validation/baselines/regression-v1.review.json"
+  ],
+  "items": [
+    {
+      "item": "evas/tests",
+      "kind": "criteria",
+      "files_merged_head": 389,
+      "files_e1_head": 389,
+      "equal_blobs": 389,
+      "differences": [],
+      "differences_allowed": [],
+      "equal_except_the_two_baseline_files": true
+    },
+    {
+      "item": "evas/validation",
+      "kind": "criteria",
+      "files_merged_head": 585,
+      "files_e1_head": 585,
+      "equal_blobs": 583,
+      "differences": [
+        "evas/validation/baselines/regression-v1.json",
+        "evas/validation/baselines/regression-v1.review.json"
+      ],
+      "differences_allowed": [
+        "evas/validation/baselines/regression-v1.json",
+        "evas/validation/baselines/regression-v1.review.json"
+      ],
+      "equal_except_the_two_baseline_files": true
+    },
+    {
+      "item": "evas/examples",
+      "kind": "criteria",
+      "files_merged_head": 38,
+      "files_e1_head": 38,
+      "equal_blobs": 38,
+      "differences": [],
+      "differences_allowed": [],
+      "equal_except_the_two_baseline_files": true
+    },
+    {
+      "item": "experiments",
+      "kind": "criteria",
+      "files_merged_head": 2648,
+      "files_e1_head": 2648,
+      "equal_blobs": 2648,
+      "differences": [],
+      "differences_allowed": [],
+      "equal_except_the_two_baseline_files": true
+    },
+    {
+      "item": "evas/src",
+      "kind": "DUT",
+      "files_merged_head": 80,
+      "files_e1_head": 80,
+      "equal_blobs": 80,
+      "differences": [],
+      "differences_allowed": [],
+      "equal_except_the_two_baseline_files": true
+    },
+    {
+      "item": "evas/rust_core",
+      "kind": "DUT",
+      "files_merged_head": 247,
+      "files_e1_head": 247,
+      "equal_blobs": 247,
+      "differences": [],
+      "differences_allowed": [],
+      "equal_except_the_two_baseline_files": true
+    },
+    {
+      "item": "evas/capabilities/data/language-profile.json",
+      "kind": "language profile",
+      "files_merged_head": 1,
+      "files_e1_head": 1,
+      "equal_blobs": 1,
+      "differences": [],
+      "differences_allowed": [],
+      "equal_except_the_two_baseline_files": true,
+      "blob": {
+        "merged_head": "e1934fc680a5701d189622102ffc2ce5366e01e8",
+        "e1_head": "e1934fc680a5701d189622102ffc2ce5366e01e8"
+      }
+    },
+    {
+      "item": "scripts/run_regression.py",
+      "kind": "collector",
+      "files_merged_head": 1,
+      "files_e1_head": 1,
+      "equal_blobs": 1,
+      "differences": [],
+      "differences_allowed": [],
+      "equal_except_the_two_baseline_files": true,
+      "blob": {
+        "merged_head": "7c79aba2b0f961b45be6a0030a47be90a7ce36c4",
+        "e1_head": "7c79aba2b0f961b45be6a0030a47be90a7ce36c4"
+      }
+    },
+    {
+      "item": "scripts/ci_evidence.py",
+      "kind": "collector",
+      "files_merged_head": 1,
+      "files_e1_head": 1,
+      "equal_blobs": 1,
+      "differences": [],
+      "differences_allowed": [],
+      "equal_except_the_two_baseline_files": true,
+      "blob": {
+        "merged_head": "26009927c8e370a642e5b62f07111f357949f9c0",
+        "e1_head": "26009927c8e370a642e5b62f07111f357949f9c0"
+      }
+    },
+    {
+      "item": "scripts/regression_reason_identity.py",
+      "kind": "collector",
+      "files_merged_head": 1,
+      "files_e1_head": 1,
+      "equal_blobs": 1,
+      "differences": [],
+      "differences_allowed": [],
+      "equal_except_the_two_baseline_files": true,
+      "blob": {
+        "merged_head": "e356cdd7ddd9391c9f577a7d84f9c33838b7e491",
+        "e1_head": "e356cdd7ddd9391c9f577a7d84f9c33838b7e491"
+      }
+    },
+    {
+      "item": "scripts/regression_observation_policy.json",
+      "kind": "collector",
+      "files_merged_head": 1,
+      "files_e1_head": 1,
+      "equal_blobs": 1,
+      "differences": [],
+      "differences_allowed": [],
+      "equal_except_the_two_baseline_files": true,
+      "blob": {
+        "merged_head": "a91f72545898d1dc05b3c5f61cbd56cc90cbbfe9",
+        "e1_head": "a91f72545898d1dc05b3c5f61cbd56cc90cbbfe9"
+      }
+    }
+  ],
+  "baselines_directory": {
+    "evas/validation/baselines/regression-v1.json": {
+      "merged_head": "437c44b7ad0775912ddb922e97c81a2d7e9df3b9",
+      "e1_head": "7fb1a117a7b12e0f382cb8026f59d4ed29fb727a",
+      "main": "437c44b7ad0775912ddb922e97c81a2d7e9df3b9"
+    },
+    "evas/validation/baselines/regression-v1.review.json": {
+      "merged_head": "e84c1c89c3d6a7cb9b3596134692b1f719769e5c",
+      "e1_head": "f514c706a424401d7fd18f2304ccdab723707681",
+      "main": "e84c1c89c3d6a7cb9b3596134692b1f719769e5c"
+    }
+  },
+  "workflow": {
+    "merged_head_blob": "0872264cf8da590322080591f931dc66ce95c965",
+    "e1_head_blob": "0872264cf8da590322080591f931dc66ce95c965",
+    "equal": true
+  },
+  "computed": {
+    "criteria_id": "9dbfb4aa2afa8a6012899b338c0b192dc273b3ab3aaa938fcad6375f1b8ccf4f",
+    "language_profile": "cb96d837943af90db29d359f57cc6e3a2f6f37fcf3956ed8163486f33d6111c1",
+    "collector_sha256": "fb887b59bb92063d784dd7cb56d39ec1ec6cb5e7ef9265ab0bd39b9089fe6dc5",
+    "invocation": {
+      "modules": [],
+      "pattern": "test*.py"
+    },
+    "criteria_files": 3612,
+    "dut_files": 327,
+    "dut_manifest_sha256": "7713308b855e99f30f5979b3b93f80489f5f772eadd86d53d52497674a5bec9b"
+  },
+  "sixth_context": {
+    "criteria_id": "9dbfb4aa2afa8a6012899b338c0b192dc273b3ab3aaa938fcad6375f1b8ccf4f",
+    "language_profile": "cb96d837943af90db29d359f57cc6e3a2f6f37fcf3956ed8163486f33d6111c1",
+    "collector_sha256": "fb887b59bb92063d784dd7cb56d39ec1ec6cb5e7ef9265ab0bd39b9089fe6dc5",
+    "invocation": {
+      "modules": [],
+      "pattern": "test*.py"
+    },
+    "snapshot_revision": "84d6b71f8fbfd19b31f1696a88cb35643b375b3d"
+  },
+  "e1_report": {
+    "criteria_id": "9dbfb4aa2afa8a6012899b338c0b192dc273b3ab3aaa938fcad6375f1b8ccf4f",
+    "language_profile": "cb96d837943af90db29d359f57cc6e3a2f6f37fcf3956ed8163486f33d6111c1",
+    "collector_sha256": "fb887b59bb92063d784dd7cb56d39ec1ec6cb5e7ef9265ab0bd39b9089fe6dc5",
+    "invocation": {
+      "modules": [],
+      "pattern": "test*.py"
+    },
+    "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/bundle-r1/bundle/report.json",
+    "sha256": "7cc4bd08613c01716c69d47eeb29e6e484781664a454aa1c8497b4259561c6ac",
+    "criteria_files": 3612,
+    "dut_files": 327
+  },
+  "manifest_exclusions": "scripts/run_regression.py file_manifest skips path parts __pycache__, target, baselines, .git, runs"
+}

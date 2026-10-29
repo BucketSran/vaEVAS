@@ -1,0 +1,151 @@
+{
+  "at_utc": "2026-10-29T21:42:47.194122+00:00",
+  "chain": "c2",
+  "chain1_merge_commit": "5240711106953a504925a679f7bcecddeed0033f",
+  "chain1_catalog_commit": "efb152d67032f7f5bde30e1b91eb7e362344c951",
+  "reset": "private repository branch pr282-activation moved from efb152d67032f7f5bde30e1b91eb7e362344c951 to 5240711106953a504925a679f7bcecddeed0033f (git reset --hard, inside W)",
+  "registry_merge": {
+    "checks": {
+      "serialization_roundtrips": true,
+      "main_hand_written_objects_equal_merge_base": true,
+      "pr282_keeps_merge_base_hand_written_objects": true,
+      "merge_base_hand_written_current_unchanged_on_both": true,
+      "added_objects_absent_from_main": true,
+      "added_objects_current_on_pr282": true,
+      "pr282_objects_are_merge_base_then_added": true,
+      "header_keys_equal": true
+    },
+    "added": [
+      [
+        "source:request-limits-contract",
+        "1"
+      ],
+      [
+        "source:proof-work-limit-tests",
+        "1"
+      ],
+      [
+        "source:output-point-limit-tests",
+        "1"
+      ],
+      [
+        "requirement:proof-work-limit",
+        "1"
+      ],
+      [
+        "requirement:output-point-limit",
+        "1"
+      ],
+      [
+        "checker:proof-work-limit",
+        "1"
+      ],
+      [
+        "checker:output-point-limit",
+        "1"
+      ],
+      [
+        "case:proof-work-limit-python",
+        "1"
+      ],
+      [
+        "case:proof-work-limit-rust",
+        "1"
+      ],
+      [
+        "case:output-point-limit-python",
+        "1"
+      ],
+      [
+        "case:output-point-limit-rust",
+        "1"
+      ]
+    ],
+    "added_current": {
+      "source:request-limits-contract": "1",
+      "source:proof-work-limit-tests": "1",
+      "source:output-point-limit-tests": "1",
+      "requirement:proof-work-limit": "1",
+      "requirement:output-point-limit": "1",
+      "checker:proof-work-limit": "1",
+      "checker:output-point-limit": "1",
+      "case:proof-work-limit-python": "1",
+      "case:proof-work-limit-rust": "1",
+      "case:output-point-limit-python": "1",
+      "case:output-point-limit-rust": "1"
+    },
+    "main_objects": 25,
+    "merged_objects": 36,
+    "main_current": 12484,
+    "merged_current": 12495,
+    "other_header_keys_from_main": [
+      "asset_scope",
+      "object_parts",
+      "schema_version"
+    ],
+    "sha256": {
+      "merge_base": "d355d2e3bf6b760180abf2b399f952124754125a5fe5d1b60d78195d5090cc7e",
+      "main": "ce7545a300658fb4d63599e4847b66d715cafc852d8be967412dd1e922e13c26",
+      "pr282": "b01e418dda0bbea2f021a08a660730eff22874731c15ada12aa405faa93bba12",
+      "merged": "4fff90e0985380f266843ccc5092eb671640093a97306c8c9b2db2d1f2b0492d"
+    },
+    "serialization": "json.dumps(indent=2, ensure_ascii=False, sort_keys=True) + newline; reproduces all three inputs byte for byte"
+  },
+  "changed_vs_chain1_merge": [
+    "evas/capabilities/data/registry.json",
+    "evas/capabilities/generated/normative.md",
+    "evas/capabilities/generated/support-facts.json",
+    "evas/capabilities/generated/support.md"
+  ],
+  "render_outputs_changed": [
+    "evas/capabilities/generated/normative.md",
+    "evas/capabilities/generated/support-facts.json",
+    "evas/capabilities/generated/support.md"
+  ],
+  "checks": [
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "scripts/diagnostic_inventory.py",
+        "--check"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/activation-r1/source",
+      "log": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/activation-r1/logs/remerge-diagnostic-inventory-check-c2.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-29T21:39:54.044731+00:00",
+      "finished_at_utc": "2026-10-29T21:39:58.001072+00:00",
+      "limit_seconds": 3000,
+      "extra_env": {
+        "PATH": "/Users/bucketsran/.cargo/bin:/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin",
+        "CARGO_TARGET_DIR": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/activation-r1/cargo-target",
+        "RUSTUP_TOOLCHAIN": "1.99.0",
+        "CARGO_HOME": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/activation-r1/cargo-home"
+      },
+      "evas_kernel_peak_during_step": 0
+    },
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "evas/capabilities/render.py"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/activation-r1/source",
+      "log": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/activation-r1/logs/remerge-render-c2.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-29T21:39:58.023273+00:00",
+      "finished_at_utc": "2026-10-29T21:40:46.812250+00:00",
+      "limit_seconds": 3000,
+      "extra_env": {
+        "PATH": "/Users/bucketsran/.cargo/bin:/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin",
+        "CARGO_TARGET_DIR": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/activation-r1/cargo-target",
+        "RUSTUP_TOOLCHAIN": "1.99.0",
+        "CARGO_HOME": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/activation-r1/cargo-home"
+      },
+      "evas_kernel_peak_during_step": 0
+    }
+  ],
+  "guard_before": "2026-10-29T21:39:27+00:00",
+  "guard_after": "2026-10-29T21:42:47+00:00",
+  "scientific_execution": false
+}
