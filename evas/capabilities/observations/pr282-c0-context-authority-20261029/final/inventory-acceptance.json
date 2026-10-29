@@ -1,0 +1,56 @@
+{
+  "candidate": "9071629eb09443309197100aafa52d7fa3be2fad",
+  "tree": "195904f9e953bb6e696978e2e46293f6063ab700",
+  "checks": [
+    {
+      "command": [
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr4/trusted-context/SP-01/lint-venv/bin/python",
+        "-B",
+        "scripts/capabilities/collect_ci_inventory.py",
+        "--root",
+        ".",
+        "--output",
+        "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/c0-r3/catalog-inventory-local",
+        "--require-catalog",
+        "--registry-data",
+        "evas/capabilities/data"
+      ],
+      "cwd": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/c0-r3/source",
+      "log": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/c0-r3/inventory-local.txt",
+      "returncode": 0,
+      "started_at_utc": "2026-10-29T13:53:32.874190+00:00",
+      "finished_at_utc": "2026-10-29T13:56:59.099605+00:00",
+      "limit_seconds": 3000,
+      "extra_env": {
+        "CI_INVENTORY_BASE": "b4a072959d55fa3b23e34dfcadd92103ec89f2a3",
+        "CI_INVENTORY_HEAD": "9071629eb09443309197100aafa52d7fa3be2fad"
+      }
+    }
+  ],
+  "summary": {
+    "success": true,
+    "reconciled": true,
+    "construction_complete": true,
+    "mode": "require-catalog",
+    "entry_count": 31,
+    "denominators": {
+      "maintenance": {
+        "generated_count": 0,
+        "instance_count": 852,
+        "unique_method_count": 756
+      },
+      "python-regression": {
+        "generated_count": 12,
+        "instance_count": 3257,
+        "unique_method_count": 3257
+      },
+      "validation": {
+        "generated_count": 22,
+        "instance_count": 849,
+        "unique_method_count": 849
+      }
+    }
+  },
+  "scientific_execution": false,
+  "scientific_qualification": false
+}
