@@ -97,8 +97,14 @@ class GroupMathSampledDomain(unittest.TestCase):
                      timer=True, direct=True, vabstol=1)
         y = result['nodes'].index('y')
         low, high = result['observation_evidence']['voltage_bounds_V'][-1][y]
-        self.assertLessEqual(F(low) ** 2, F(1, 4) - F(.1))
-        self.assertGreaterEqual(F(high) ** 2, F(1, 4) + F(.1))
+        # SL-SO-20261030-001 (EC-3): q is a program real (ADR-006), so the targets are the
+        # ends of its rounded image, computed here without the kernel: L = RN(sqrt(1/4 - e))
+        # = 0.3872983346207417 = 872118317739593/2**51, H = RN(sqrt(1/4 + e)) =
+        # 0.5916079783099616 = 5328730941332311/2**53 (math.sqrt rounds correctly; .25 - .1 is
+        # exact and .25 + .1 rounds to .35, which gives the same H).
+        import math  # SL-SO-20261030-001 (EC-3)
+        self.assertLessEqual(F(low), F(math.sqrt(.25 - .1)))  # SL-SO-20261030-001 (EC-3)
+        self.assertGreaterEqual(F(high), F(math.sqrt(.25 + .1)))  # SL-SO-20261030-001 (EC-3)
         self.assertLess(high - low, .25)
         # The cross/transition shape has no time-shape bound for uncertain
         # sources yet; it is refused by that specific gate, never by nominal.
