@@ -79,5 +79,32 @@
       "overflow"
     ],
     "support": {}
+  },
+  {
+    "name": "terminal-rearm-unarmed-stop",
+    "kind": "tdc",
+    "stop": 3.8e-08,
+    "threshold": 0.5,
+    "vhigh": 1,
+    "guard": 4e-11,
+    "atol": 0.002,
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nVclk (clk 0) vsource type=pulse val0=0 val1=1 delay=.06n period=.092n width=.04n rise=5p fall=5p\nVrst (rst 0) vsource type=pwl wave=[0 1 0.44n 1 0.46n 0 38.4n 0]\nVstart (start 0) vsource type=pwl wave=[0 0 2.005n 0 2.025n 1 2.055n 1 2.075n 0 4.49n 0 4.51n 1 4.54n 1 4.56n 0 10.98n 0 11n 1 11.025n 1 11.045n 0 38.4n 0]\nVstop (stop 0) vsource type=pwl wave=[0 0 0.995n 0 1.015n 1 1.04n 1 1.06n 0 6.47n 0 6.49n 1 6.515n 1 6.535n 0 9n 0 9.02n 1 9.045n 1 9.065n 0 36n 0 36.02n 1 36.045n 1 36.065n 0 38.4n 0]\nXM (start stop clk rst code_0 code_1 code_2 code_3 code_4 code_5 code_6 code_7 valid overflow) tdc_meter\ntran tran stop=38n maxstep=2p\nsave start stop clk rst code_0 code_1 code_2 code_3 code_4 code_5 code_6 code_7 valid overflow\n",
+    "signals": [
+      "start",
+      "stop",
+      "clk",
+      "rst",
+      "code_0",
+      "code_1",
+      "code_2",
+      "code_3",
+      "code_4",
+      "code_5",
+      "code_6",
+      "code_7",
+      "valid",
+      "overflow"
+    ],
+    "support": {}
   }
 ]

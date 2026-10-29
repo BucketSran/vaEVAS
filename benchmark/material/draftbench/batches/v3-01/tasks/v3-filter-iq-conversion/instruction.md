@@ -1,10 +1,37 @@
-# v3-filter-iq-conversion
+# I/Q upconversion and downconversion
 
-实现固定模块 `iq_mixer(i,q,lc,ls,rf,en,up,di,dq)`，输入是实际电压，LO 为健康外部正弦，lc=cos θ、ls=sin θ。
-启用时 up=gain*(i*lc-q*ls)。gain 为0.5–2。真实I/Q输入应搬移至和频侧带，不能直接合成目标载波。
-下变频连续状态 a'=2πfbw*(2*rf*lc-a)、b'=2πfbw*(-2*rf*ls-b)，初态均为0，fbw为1500–3000 Hz。
-di=a、dq=b；en<=0.5 时三个输出均为0，内部低通状态继续积分。重新启用后显露该状态。
-LO为10–16kHz；基带100–1000Hz，RF频偏在±1500Hz。无噪声、限幅、镜像抑制指标。
-上变频逐点误差上限0.002V，下变频0.008V，和频幅值误差0.015V。
+Implement the fixed mixer below. The local oscillator is a healthy external sine. Real I and Q voltages must be translated. Do not synthesize the target carrier directly. The fixed backend is Spectre. Legal Verilog-A is not restricted. A public self-test does not replace independent final evaluation. Task weight is 1.
 
-交付文件仅为 `/work/dut.va`，保持模块名、端口和参数。公开目录提供接口壳与自测网表。只允许修改候选文件；固定DUT和工程可读。后端固定Spectre，不限制合法Verilog-A写法。自测不能代替独立终评。权重1。
+## Spec
+
+Use the module and port order in `/app/circuit.va`. The module is `iq_mixer(i, q, lc, ls, rf, en, up, di, dq)`. All ports are electrical. `i`, `q`, `lc`, `ls`, `rf`, and `en` are inputs. `up`, `di`, and `dq` are outputs. `lc` is cos θ and `ls` is sin θ. The inputs are actual voltages.
+
+Declare real `gain` defaulting to 1, legal range 0.5–2, and real `fbw` defaulting to 2000 Hz, legal range 1500–3000 Hz.
+
+While enabled, `up = gain * (i*lc - q*ls)`. A real I/Q input moves to the sum-frequency sideband. The downconversion state is `a' = 2π fbw * (2*rf*lc - a)` and `b' = 2π fbw * (-2*rf*ls - b)`, both starting at 0. `di=a` and `dq=b`. When `en<=0.5`, all three outputs are 0, while the internal low-pass state continues to integrate. Enabling again reveals that state.
+
+The LO is 10–16 kHz. The baseband is 100–1000 Hz. The RF offset is within ±1500 Hz. There is no noise, clipping, or image-rejection specification. The pointwise upconversion error limit is 0.002 V. The downconversion error limit is 0.008 V. The sum-frequency amplitude error limit is 0.015 V.
+
+The public contract text is also at `/app/testbench/contract.md`. The public netlist is `/app/testbench/feedback.scs`. There is no fixed DUT file. The old candidate shell is only `/app/circuit.va`.
+
+Every required acceptance condition must pass. An executed attempt that fails scores 0, and the failure cause is recorded separately. A missing simulator, compile failure, timeout, missing waveform, or other execution or infrastructure failure is not evidence that the submitted model behavior is wrong.
+
+## Deliverable
+
+- Edit only `/app/circuit.va`. Keep the module name, ports, and parameters.
+- Upconversion must use the actual `i`, `q`, `lc`, and `ls` inputs. Any equivalent internal realization of the stated state is acceptable. Particular state names are not required. While disabled, the low-pass state still integrates.
+- Do not edit the public contract or netlist. The submitted model must not synthesize the carrier without the input product. This restriction applies to the submitted model. You may read the public bench and run the public check.
+
+Run `python3 /app/testbench/check.py --output /app/output/public-check`. The [public testbench guide](/app/testbench/README.md) documents the Spectre dependency, case selection, timeouts, output layout, and diagnostic exit codes. Public feedback is not the final task score.
+
+This is an implementation task, not a repository-audit task.
+Work in /app and modify only the declared deliverable; do not edit public development benches, model libraries, or external fixtures.
+Make one bounded inspection pass over this instruction, the declared deliverable, supplied starter material, and public development benches.
+As the task solver, create a runnable candidate in the file named in the Deliverable section before beginning detailed exploration, and keep that file updated as you work.
+If your working time expires, the evaluator copies that file exactly as it exists at that moment and runs the verifier on it.
+If the file is missing or empty, the result is zero reward.
+Temporary files are not submitted.
+
+If a concrete model, tool, or execution problem appears, investigate it as needed before continuing.
+Iterate by editing the declared deliverable and using public development benches to diagnose observed behavior.
+Do not repeatedly enumerate files, reread unchanged references, or retry unchanged discovery commands instead of editing and simulating.

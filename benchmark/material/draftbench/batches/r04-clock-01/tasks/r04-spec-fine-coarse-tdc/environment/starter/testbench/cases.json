@@ -1,0 +1,28 @@
+[
+  {
+    "name": "base",
+    "source_id": "v4-325",
+    "purpose": "T_ref 4 ns from 10 ns: a start before any ref crossing and one after a single crossing are ignored (warm-up); a normal result (51); a stop outside a measurement; a borrow (q_e 3 < q_s 12, result 23); a same-period result 0 (valid with code 0) and 15; a stop 45 ps after a ref crossing (25); a restart by a second start (43); an overflow at the 16th crossing and a later stop; 255 without overflow (N 15, q_e 15, q_s 0); a start that clears a valid result (18)",
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVstart (start 0) vsource type=pwl wave=[0 0 5n 0 5.05n 0.5 5.1n 0.9 6n 0.9 6.05n 0.4 6.1n 0 10.5n 0 10.55n 0.5 10.6n 0.9 11.5n 0.9 11.55n 0.4 11.6n 0 18.5n 0 18.55n 0.5 18.6n 0.9 19.5n 0.9 19.55n 0.4 19.6n 0 41.15n 0 41.2n 0.5 41.25n 0.9 42.15n 0.9 42.2n 0.4 42.25n 0 54.25n 0 54.3n 0.5 54.35n 0.9 55.25n 0.9 55.3n 0.4 55.35n 0 62n 0 62.05n 0.5 62.1n 0.9 63n 0.9 63.05n 0.4 63.1n 0 71.8n 0 71.85n 0.5 71.9n 0.9 72.8n 0.9 72.85n 0.4 72.9n 0 86.75n 0 86.8n 0.5 86.85n 0.9 87.75n 0.9 87.8n 0.4 87.85n 0 92.3n 0 92.35n 0.5 92.4n 0.9 93.3n 0.9 93.35n 0.4 93.4n 0 111.5n 0 111.55n 0.5 111.6n 0.9 112.5n 0.9 112.55n 0.4 112.6n 0 186n 0 186.05n 0.5 186.1n 0.9 187n 0.9 187.05n 0.4 187.1n 0 260.05n 0 260.1n 0.5 260.15n 0.9 261.05n 0.9 261.1n 0.4 261.15n 0 280n 0]\nVstop (stop 0) vsource type=pwl wave=[0 0 7n 0 7.05n 0.5 7.1n 0.9 8n 0.9 8.05n 0.4 8.1n 0 12.05n 0 12.1n 0.5 12.15n 0.9 13.05n 0.9 13.1n 0.4 13.15n 0 31.25n 0 31.3n 0.5 31.35n 0.9 32.25n 0.9 32.3n 0.4 32.35n 0 36.15n 0 36.2n 0.5 36.25n 0.9 37.15n 0.9 37.2n 0.4 37.25n 0 46.75n 0 46.8n 0.5 46.85n 0.9 47.75n 0.9 47.8n 0.4 47.85n 0 54.4n 0 54.45n 0.5 54.5n 0.9 55.4n 0.9 55.45n 0.4 55.5n 0 65.9n 0 65.95n 0.5 66n 0.9 66.9n 0.9 66.95n 0.4 67n 0 78n 0 78.05n 0.5 78.1n 0.9 79n 0.9 79.05n 0.4 79.1n 0 103.05n 0 103.1n 0.5 103.15n 0.9 104.05n 0.9 104.1n 0.4 104.15n 0 176.05n 0 176.1n 0.5 176.15n 0.9 177.05n 0.9 177.1n 0.4 177.15n 0 249.9n 0 249.95n 0.5 250n 0.9 250.9n 0.9 250.95n 0.4 251n 0 264.55n 0 264.6n 0.5 264.65n 0.9 265.55n 0.9 265.6n 0.4 265.65n 0 280n 0]\nVref (ref_clk 0) vsource type=pulse val0=0 val1=0.9 period=4n width=1.9n delay=9.95n rise=0.1n fall=0.1n\nVrst (rst 0) vsource type=pwl wave=[0 0 280n 0]\n\nXDUT (start stop ref_clk rst code_7 code_6 code_5 code_4 code_3 code_2 code_1 code_0 valid overflow) fine_coarse_tdc\n\ntran tran stop=280n maxstep=50p strobeperiod=50p\nsave start stop ref_clk rst code_7 code_6 code_5 code_4 code_3 code_2 code_1 code_0 valid overflow\n",
+    "signals": [
+      "start",
+      "stop",
+      "ref_clk",
+      "rst",
+      "code_7",
+      "code_6",
+      "code_5",
+      "code_4",
+      "code_3",
+      "code_2",
+      "code_1",
+      "code_0",
+      "valid",
+      "overflow"
+    ],
+    "stop": 2.8e-07,
+    "resolution": 5.000000000000001e-11,
+    "atol": 0.01,
+    "params": {}
+  }
+]

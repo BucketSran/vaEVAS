@@ -1,15 +1,42 @@
-# 给健康整数闭环增加 N/N+1 分数反馈
+# Add N/N+1 fractional feedback to a healthy integer loop
 
-起始 `dut.va` 已形成整数 PLL，固定 DCO 的实际输出驱动反馈分频器。扩展分数分频，同时保留 fraction=0 的整数行为。必须由真实反馈误差调谐 DCO；不能用参考时钟复制反馈或直接生成目标输出时钟。
+Extend the supplied integer PLL so the feedback divider can emit N or N+1 DCO edges per reference interval, and keep the integer behavior when `frac` is 0. The fixed backend is Spectre. The candidate runs as submitted bytes. Task weight is 1.
 
-接口为 `fractional_pll(ref,rst,n,frac,dco,fb,tune,lock)`。固定 `healthy_dco(tune,rst,dco)` 由不可修改台架实例化，dco 是候选的输入；候选输出只有 tune、fb、lock。其频率为20MHz加 sensitivity×tune及环境频率扰动，限20到60MHz。sensitivity 可在8到12MHz/V内变化；标称10MHz/V。固定DCO在150us加入绝对值不超过2MHz的频率偏移，175us撤除；偏移期间仍需闭环保持目标频比，加入与撤除后各15us内恢复既定频率、相位和资格要求。参考标称10MHz，周期100ns。n为3或4，frac 为0、.25、.5、.75。模式改变在2ns内生效，清分频余数、部分计数及资格；rst 高时反馈和资格为零，DCO本身按环境复位。
+## Spec
 
-相邻 feedback 上升沿间必须恰好有 N 或 N+1 个实际 DCO 上升沿。frac=0时只能N。每个评估窗口的平均间隔计数与 N+frac 的误差不超过.04；不要求唯一的累加器或 DSM 比特序列。真实 DCO/参考频比误差不超过.06，反馈/参考频比误差不超过.015。频比由整个观察窗口首末实际边沿计算。
+`/app/circuit.va` already contains the complete integer `fractional_pll(ref, rst, n, frac, dco, fb, tune, lock)` source to extend. All ports are electrical nodes referenced to ground. `ref`, `rst`, `n`, `frac`, and `dco` are inputs. `fb`, `tune`, and `lock` are the only candidate outputs. Logic high is 0.9 V. The threshold is 0.45 V.
 
-分数路径有正常相位波动。锁定窗口里反馈边沿相对最近参考边沿的平均相位绝对值不超过.2周期，展开后峰峰相位不超过.35周期；不要求每个边沿重合。每次模式改变或reset后在2ns内撤销lock，模式改变后首1us保持低，15us内重新获得资格。reset高期间fb和lock须保持低；检查为2ns生效加200ps数值过渡余量。资格恢复期限由实际n/frac变化、rst撤除或固定DCO扰动事件起算15us，允许2.2ns事件响应与数值过渡余量。检查器单独检查期限处已恢复lock，再从期限之后的观察窗口检查原频率、相位和95%资格覆盖；不要求在15us期限之前提前恢复。每段模式驻留25us，扰动加入与撤除也各留25us用于验收。评估窗口包含原整数模式、分数模式、n切换、返回整数、reset重捕获与另一次分数配置，以及运行中DCO频率扰动和撤除后的恢复。lock 高电平覆盖稳定窗口至少95%，但lock位不代替实际频率和相位判据。不要求相噪、杂散或更快锁定。
+`healthy_dco(tune, rst, dco)` is instantiated by the fixed bench from `/app/testbench/healthy.va`. Do not modify that file. Its frequency is `20 MHz + sensitivity*tune` plus an environmental frequency disturbance, limited to 20 MHz through 60 MHz. `sensitivity` may vary from 8 MHz/V to 12 MHz/V. The nominal value is 10 MHz/V, which is also the part's default. The fixed DCO adds a frequency offset whose absolute value is at most 2 MHz at 150 µs and removes it at 175 µs. The part's defaults are `frequency_step=0`, `step_start=150 µs`, and `step_end=175 µs`. During the offset the loop must still hold the target frequency ratio. Within 15 µs after the offset is applied, and again within 15 µs after it is removed, the stated frequency, phase, and qualification requirements are met again.
 
-## 交付与环境
+The reference is nominally 10 MHz, so its period is 100 ns. `n` is 3 or 4. `frac` is 0, 0.25, 0.5, or 0.75. A mode change takes effect within 2 ns and clears the division remainder, the partial count, and qualification. While `rst` is high, feedback and qualification are zero. The DCO itself follows the environment reset.
 
-只提交 `/work/dut.va`，允许改变其中控制算法、辅助模块及连接。所有公开工程文件可读；`healthy.va` 是不可修改的行为电路环境。它没有晶体管器件数据。实际候选原字节在固定 Spectre 后端执行。编译、超时或后端证据不完整保留未评分状态，不当作语义失败。参考解和私有条件不属于公开包。
+Between adjacent rising `fb` edges there must be exactly N or N+1 rising edges of the actual DCO. When `frac` is 0, only N is allowed. Over each evaluation window, the average interval count may differ from `N+frac` by at most 0.04. A unique accumulator or DSM bit sequence is not required. The real DCO-to-reference frequency-ratio error is at most 0.06. The feedback-to-reference frequency-ratio error is at most 0.015. Each ratio uses the first and last actual edges of the whole observation window.
 
-所有端口都是以地为参考的 electrical 节点。逻辑高 .9V，阈值 .45V。公开 `public-default.scs` 可供自测；隐藏条件只改变下面公布的范围，不按参考实现逐样本匹配。复位必须清除控制状态；无复位时不得偷偷周期性重新初始化。任务权重1。
+The fractional path has ordinary phase variation. Phase is measured in cycles of the reference period, not in degrees. Within each evaluation window, take the rising `fb` edges in time order. The first value of `phi` is the signed phase of the first edge relative to its nearest rising reference edge, positive when `fb` follows the reference. Each later edge is measured from its own nearest rising reference edge and then shifted by whole cycles until it differs from the previous value by at most 0.5 cycle. This gives one continuous sequence `phi`. Its sustained mean bias `abs(mean(phi))` is at most 0.2 cycle. This bound takes the mean of the signed sequence first; it is not `mean(abs(phi))`. The peak-to-peak value `max(phi) - min(phi)` of the same sequence is at most 0.35 cycle. Individual edges do not have to coincide. After every mode change or reset, withdraw `lock` within 2 ns. After a mode change, keep `lock` low for the first 1 µs, and regain qualification within 15 µs. While `rst` is high, `fb` and `lock` stay low. That check is the 2 ns effect time plus 200 ps of numerical transition margin. The 15 µs recovery deadline is measured from the actual `n`/`frac` change, from `rst` release, or from a fixed DCO disturbance. It allows 2.2 ns for event response and numerical transition. The checker first checks that `lock` has recovered at the deadline, then checks the original frequency, phase, and 95 percent qualification coverage on the observation window after the deadline. Recovery is not required before the 15 µs deadline. Each mode dwells for 25 µs. The disturbance application and removal each also leave 25 µs for acceptance.
+
+The evaluation windows include the original integer mode, fractional modes, an `n` change, a return to integer, reset recapture, another fractional configuration, and recovery after an in-run DCO frequency disturbance and its removal. `lock` high covers at least 95 percent of a settled window, but the lock bit does not replace the actual frequency and phase criteria. Phase noise, spurs, and a faster lock are not required.
+
+The loop must be tuned from the real feedback error. Do not copy the reference clock onto the feedback output or synthesize the target output clock directly. Reset must clear the control state. Without reset, do not periodically reinitialize in secret. The public bench is `/app/testbench/public-default.scs`. `/app/testbench/acceptance-windows.json` and `/app/testbench/interface.json` are public material. Hidden conditions change only the published ranges above. They do not require a sample-by-sample match to a reference implementation.
+
+Every required acceptance condition must pass. An executed attempt that fails scores 0, and the failure cause is recorded separately. A missing simulator, compile failure, timeout, missing waveform, or other execution or infrastructure failure is not evidence that the submitted model behavior is wrong.
+
+## Deliverable
+
+- Edit `/app/circuit.va`. It is the existing integer PLL, not an empty port shell. You may change the control algorithm, auxiliary modules, and connections inside this file. Keep `fractional_pll` and the port order.
+- The candidate outputs are only `tune`, `fb`, and `lock`. `dco` remains an input from `/app/testbench/healthy.va`. The fractional extension must use real DCO edges. Any implementation that meets this interface and external behavior is acceptable. A particular accumulator or event organization is not required.
+- Do not edit `/app/testbench/healthy.va`. The submitted model must not copy `ref` to `fb` or generate the target clock without the feedback loop. This restriction applies to the submitted model. You may read the public bench and run the public check.
+- `healthy.va` has no transistor device data.
+
+Run `python3 /app/testbench/check.py --output /app/output/public-check`. The [public testbench guide](/app/testbench/README.md) documents the Spectre dependency, case selection, timeouts, output layout, and diagnostic exit codes. Public feedback is not the final task score.
+
+This is an implementation task, not a repository-audit task.
+Work in /app and modify only the declared deliverable; do not edit public development benches, model libraries, or external fixtures.
+Make one bounded inspection pass over this instruction, the declared deliverable, supplied starter material, and public development benches.
+As the task solver, create a runnable candidate in the file named in the Deliverable section before beginning detailed exploration, and keep that file updated as you work.
+If your working time expires, the evaluator copies that file exactly as it exists at that moment and runs the verifier on it.
+If the file is missing or empty, the result is zero reward.
+Temporary files are not submitted.
+
+If a concrete model, tool, or execution problem appears, investigate it as needed before continuing.
+Iterate by editing the declared deliverable and using public development benches to diagnose observed behavior.
+Do not repeatedly enumerate files, reread unchanged references, or retry unchanged discovery commands instead of editing and simulating.

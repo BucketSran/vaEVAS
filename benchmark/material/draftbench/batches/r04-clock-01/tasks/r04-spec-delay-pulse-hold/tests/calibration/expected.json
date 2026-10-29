@@ -1,0 +1,402 @@
+{
+ "task": "r04-spec-delay-pulse-hold",
+ "cases": [
+  "contract-base",
+  "reset-and-initial",
+  "long-delay-overlap",
+  "parameter-override",
+  "self-loading-burst",
+  "minimum-tr-pulses"
+ ],
+ "checker_failure": "hold: out_clk more than 2 mV from the expected level between edges (state: loaded, unloaded or reset); edge: an edge window leaves the vss..vdd band by more than 2 mV or reverses by more than 2 mV (overlapping windows of successive edges are one window whose samples must fit the edges in order, each edge monotone and moving only inside its own window)",
+ "semantics": "Verilog-A LRM 2.4: transition() 4.5.8 (td is a transport delay; a newly scheduled transition deletes only pending transitions that would follow it), timer() 5.10.3.3, cross() 5.10.3.1, and the source order of event statements at one instant. Expectations only; every entry is pending until Spectre calibration",
+ "conditions": {
+  "transport_reset_unchanged": "LRM 4.5.8 keeps the pending transitions, so long-delay-overlap and self-loading-burst accept it; a backend whose transition() replaces a pending change (legacy EVAS 0.8.7) rejects it there too",
+  "historical_per_edge_transport": "LRM 4.5.8 keeps the pending transitions, so self-loading-burst accepts it; a backend whose transition() replaces a pending change (legacy EVAS 0.8.7) rejects it there too"
+ },
+ "candidates": [
+  {
+   "name": "per_edge_latch",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "long-delay-overlap",
+    "parameter-override"
+   ],
+   "must_accept": [
+    "reset-and-initial",
+    "self-loading-burst",
+    "minimum-tr-pulses"
+   ],
+   "author_synthetic_control": "per_edge_latch"
+  },
+  {
+   "name": "single_slot",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "reset-and-initial",
+    "long-delay-overlap",
+    "parameter-override",
+    "self-loading-burst",
+    "minimum-tr-pulses"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "single_slot"
+  },
+  {
+   "name": "rise_clears_pending_fall",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "long-delay-overlap",
+    "parameter-override",
+    "self-loading-burst"
+   ],
+   "must_accept": [
+    "reset-and-initial",
+    "minimum-tr-pulses"
+   ],
+   "author_synthetic_control": "rise_clears_pending_fall"
+  },
+  {
+   "name": "fall_time_from_current_delay",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "long-delay-overlap",
+    "parameter-override",
+    "self-loading-burst"
+   ],
+   "must_accept": [
+    "reset-and-initial",
+    "minimum-tr-pulses"
+   ],
+   "author_synthetic_control": "fall_time_from_current_delay"
+  },
+  {
+   "name": "retime_on_load",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "reset-and-initial",
+    "long-delay-overlap",
+    "parameter-override",
+    "self-loading-burst",
+    "minimum-tr-pulses"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "retime_on_load"
+  },
+  {
+   "name": "reset_gate_only",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "reset-and-initial",
+    "long-delay-overlap"
+   ],
+   "must_accept": [
+    "parameter-override",
+    "self-loading-burst",
+    "minimum-tr-pulses"
+   ],
+   "author_synthetic_control": "reset_gate_only"
+  },
+  {
+   "name": "reset_no_force_low",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "reset-and-initial",
+    "long-delay-overlap",
+    "parameter-override"
+   ],
+   "must_accept": [
+    "self-loading-burst",
+    "minimum-tr-pulses"
+   ],
+   "author_synthetic_control": "reset_no_force_low"
+  },
+  {
+   "name": "reset_keeps_code",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "parameter-override"
+   ],
+   "must_accept": [
+    "reset-and-initial",
+    "long-delay-overlap",
+    "self-loading-burst",
+    "minimum-tr-pulses"
+   ],
+   "author_synthetic_control": "reset_keeps_code"
+  },
+  {
+   "name": "unloaded_code0",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "reset-and-initial",
+    "parameter-override"
+   ],
+   "must_accept": [
+    "long-delay-overlap",
+    "self-loading-burst",
+    "minimum-tr-pulses"
+   ],
+   "author_synthetic_control": "unloaded_code0"
+  },
+  {
+   "name": "load_during_reset",
+   "group": "wrong",
+   "must_reject": [
+    "reset-and-initial"
+   ],
+   "must_accept": [
+    "contract-base",
+    "long-delay-overlap",
+    "parameter-override",
+    "self-loading-burst",
+    "minimum-tr-pulses"
+   ],
+   "author_synthetic_control": "load_during_reset"
+  },
+  {
+   "name": "edge_first",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "reset-and-initial",
+    "long-delay-overlap",
+    "self-loading-burst"
+   ],
+   "must_accept": [
+    "parameter-override",
+    "minimum-tr-pulses"
+   ],
+   "author_synthetic_control": "edge_first"
+  },
+  {
+   "name": "load_on_falling_edge",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "reset-and-initial",
+    "long-delay-overlap",
+    "self-loading-burst"
+   ],
+   "must_accept": [
+    "parameter-override",
+    "minimum-tr-pulses"
+   ],
+   "author_synthetic_control": "load_on_falling"
+  },
+  {
+   "name": "code_at_input_edge",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base"
+   ],
+   "must_accept": [
+    "reset-and-initial",
+    "long-delay-overlap",
+    "parameter-override",
+    "self-loading-burst",
+    "minimum-tr-pulses"
+   ],
+   "author_synthetic_control": "code_at_input_edge"
+  },
+  {
+   "name": "bit_order_reversed",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "reset-and-initial",
+    "long-delay-overlap",
+    "parameter-override",
+    "self-loading-burst",
+    "minimum-tr-pulses"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "bit_order_reversed"
+  },
+  {
+   "name": "no_delay_min",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "reset-and-initial",
+    "long-delay-overlap",
+    "parameter-override",
+    "self-loading-burst",
+    "minimum-tr-pulses"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "no_delay_min"
+  },
+  {
+   "name": "fixed_vth",
+   "group": "wrong",
+   "must_reject": [
+    "parameter-override"
+   ],
+   "must_accept": [
+    "contract-base",
+    "reset-and-initial",
+    "long-delay-overlap",
+    "self-loading-burst",
+    "minimum-tr-pulses"
+   ],
+   "author_synthetic_control": "vth_hardcoded"
+  },
+  {
+   "name": "fixed_levels",
+   "group": "wrong",
+   "must_reject": [
+    "parameter-override"
+   ],
+   "must_accept": [
+    "contract-base",
+    "reset-and-initial",
+    "long-delay-overlap",
+    "self-loading-burst",
+    "minimum-tr-pulses"
+   ],
+   "author_synthetic_control": "levels_hardcoded"
+  },
+  {
+   "name": "fixed_delay_params",
+   "group": "wrong",
+   "must_reject": [
+    "long-delay-overlap",
+    "parameter-override"
+   ],
+   "must_accept": [
+    "contract-base",
+    "reset-and-initial",
+    "self-loading-burst",
+    "minimum-tr-pulses"
+   ],
+   "author_synthetic_control": "delay_params_hardcoded"
+  },
+  {
+   "name": "slow_output",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "reset-and-initial",
+    "long-delay-overlap",
+    "parameter-override",
+    "self-loading-burst"
+   ],
+   "must_accept": [
+    "minimum-tr-pulses"
+   ],
+   "author_synthetic_control": "slow_output_2x"
+  },
+  {
+   "name": "fixed_tr",
+   "group": "wrong",
+   "must_reject": [
+    "parameter-override",
+    "minimum-tr-pulses"
+   ],
+   "must_accept": [
+    "contract-base",
+    "reset-and-initial",
+    "long-delay-overlap",
+    "self-loading-burst"
+   ],
+   "author_synthetic_control": "tr_hardcoded_10p"
+  },
+  {
+   "name": "centered_transition",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "reset-and-initial",
+    "long-delay-overlap",
+    "self-loading-burst"
+   ],
+   "must_accept": [
+    "parameter-override",
+    "minimum-tr-pulses"
+   ],
+   "author_synthetic_control": "centered_transition"
+  },
+  {
+   "name": "transport_reset_unchanged",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "reset-and-initial",
+    "parameter-override",
+    "minimum-tr-pulses"
+   ],
+   "must_accept": [
+    "long-delay-overlap",
+    "self-loading-burst"
+   ],
+   "author_synthetic_control": "transport_reset_unchanged"
+  },
+  {
+   "name": "historical_per_edge_transport",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "reset-and-initial",
+    "long-delay-overlap",
+    "parameter-override",
+    "minimum-tr-pulses"
+   ],
+   "must_accept": [
+    "self-loading-burst"
+   ],
+   "author_synthetic_control": "historical_gold_lrm"
+  },
+  {
+   "name": "alt_fifo_queue",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "contract-base",
+    "reset-and-initial",
+    "long-delay-overlap",
+    "parameter-override",
+    "self-loading-burst",
+    "minimum-tr-pulses"
+   ],
+   "author_synthetic_control": "contract"
+  },
+  {
+   "name": "alt_fast_output",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "contract-base",
+    "reset-and-initial",
+    "long-delay-overlap",
+    "parameter-override",
+    "self-loading-burst",
+    "minimum-tr-pulses"
+   ],
+   "author_synthetic_control": "fast_output"
+  },
+  {
+   "name": "alt_level_state",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "contract-base",
+    "reset-and-initial",
+    "long-delay-overlap",
+    "parameter-override",
+    "self-loading-burst",
+    "minimum-tr-pulses"
+   ],
+   "author_synthetic_control": "contract"
+  }
+ ]
+}

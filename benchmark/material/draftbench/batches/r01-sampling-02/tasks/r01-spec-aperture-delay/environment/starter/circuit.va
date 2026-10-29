@@ -1,0 +1,10 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module aperture_sample_hold(VDD,VSS,clk,vin,vout);
+inout VDD,VSS;
+input clk,vin;
+output vout;
+electrical VDD,VSS,clk,vin,vout;
+// TODO: implement the public contract.
+endmodule

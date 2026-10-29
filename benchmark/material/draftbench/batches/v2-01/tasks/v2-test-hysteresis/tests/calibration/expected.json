@@ -1,0 +1,38 @@
+{
+ "task": "v2-test-hysteresis",
+ "cases": [
+  "terminal-normal",
+  "terminal-bad-dut-wide",
+  "terminal-incomplete-second-round",
+  "terminal-same-round-refresh"
+ ],
+ "checker_failure": "kind=capture: a scored saved row more than 2 mV from the expected value (tests/v2_testing.py:50-54)",
+ "semantics": "F01 scoring start, user-confirmed 2026-10-28 (option A): hysteresis() in tests/v2_testing.py (:29-55) scores, in each interval between consecutive events (the start of the transient included, the end of the transient closing the last interval), only the saved rows more than 100 ps from both ends (:51), with no midpoint; the events are every rising begin_round crossing and every rising or falling cmp_out crossing through 0.5 V (:30-32, :38). The instruction states this rule and the checker is unchanged. Candidates differ from solution/ only in a report delay. A report that changes more than 100 ps before its event is acausal and exists only as the synthetic control early-report--120ps.",
+ "conditions": {},
+ "candidates": [
+  {
+   "name": "late_report_delay_120ps",
+   "group": "wrong",
+   "must_reject": [
+    "terminal-normal",
+    "terminal-bad-dut-wide",
+    "terminal-incomplete-second-round",
+    "terminal-same-round-refresh"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "late-report-+120ps"
+  },
+  {
+   "name": "inwindow_report_delay_50ps",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "terminal-normal",
+    "terminal-bad-dut-wide",
+    "terminal-incomplete-second-round",
+    "terminal-same-round-refresh"
+   ],
+   "author_synthetic_control": "inwindow-report-+50ps"
+  }
+ ]
+}

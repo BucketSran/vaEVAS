@@ -1,0 +1,181 @@
+[
+ {
+  "name": "base",
+  "source_id": "v4-100",
+  "purpose": "default parameters (8 ps grid, 50 ps clk edges), vdd 0.9 V and vss 0 V. Eight samples, each read after a vin step inside the 200 ps aperture (the value at the trigger differs); a sample of 0.47 V that droops below vth over a 14 ns low phase while coarse stays high; clamps of 1.05 V to vdd and of -0.15 V to vss; vdd drops to 0.8 V while valid and coarse are low and the next 1.05 V sample clamps to 0.8 V; vdd returns to 0.9 V after a low decision; vin changes during holds; high phases of 1.504 to 8 ns, so droop is skipped for different numbers of updates; triggers 53 ps after an update instant.",
+  "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVvdd (vdd 0) vsource type=pwl wave=[0 0.9 70n 0.9 70.1n 0.8 110n 0.8 110.1n 0.9 169.8n 0.9]\nVvss (vss 0) vsource type=dc dc=0\nVclk (clk 0) vsource type=pwl wave=[0 0 5.028n 0 5.078n 0.9 13.028n 0.9 13.078n 0 25.084n 0 25.134n 0.9 31.084n 0.9 31.134n 0 45.132n 0 45.182n 0.9 53.132n 0.9 53.182n 0 65.18n 0 65.23n 0.9 67.18n 0.9 67.23n 0 85.028n 0 85.078n 0.9 93.028n 0.9 93.078n 0 105.084n 0 105.134n 0.9 113.084n 0.9 113.134n 0 125.132n 0 125.182n 0.9 126.636n 0.9 126.686n 0 145.18n 0 145.23n 0.9 153.18n 0.9 153.23n 0 169.8n 0]\nVvin (vin 0) vsource type=pwl wave=[0 0.18 5.104n 0.18 5.152n 0.72 15n 0.72 15.008n 0.3 25.08n 0.3 25.088n 0.72 25.16n 0.72 25.208n 0.47 45.208n 0.47 45.256n 1.05 53n 1.05 53.008n 0.95 65.176n 0.95 65.184n 1.05 65.256n 1.05 65.304n -0.15 85.104n -0.15 85.152n 1.05 95n 1.05 95.008n 0.1 105.08n 0.1 105.088n 1.05 105.16n 1.05 105.208n 0.32 125.208n 0.32 125.256n 0.78 130n 0.78 130.008n 0.55 145.176n 0.55 145.184n 0.78 145.256n 0.78 145.304n 0.4 169.8n 0.4]\n\nXDUT (vdd vss clk vin vout valid coarse) sample_hold_droop\n\nsimulatorOptions options reltol=1e-6 vabstol=1e-8 iabstol=1e-12\ntran tran stop=169.8n maxstep=8p strobeperiod=8p errpreset=moderate strobeoutput=strobeonly\nsave vdd vss clk vin vout valid coarse\n",
+  "signals": [
+   "vdd",
+   "vss",
+   "clk",
+   "vin",
+   "vout",
+   "valid",
+   "coarse"
+  ],
+  "stop": 1.698e-07,
+  "resolution": 8e-12,
+  "atol": 0.002,
+  "params": {}
+ },
+ {
+  "name": "rails-reference",
+  "source_id": "v4-100",
+  "purpose": "vss 0.15 V and vdd 1.05 V (span 0.9 V), clk from 0.15 V to 1.05 V, so the clk and decision thresholds sit at 0.6 V. Samples whose distance from vss decides coarse (0.62 V gives 0.47 V, high; 0.55 V gives 0.40 V, low, though above 0.45 V from ground); droop toward vss, not toward ground; a clamp of 0.05 V to vss (0.15 V); vdd drops to 0.95 V (span 0.8 V, the minimum) while valid and coarse are low, and a 1.3 V sample clamps to it; valid and coarse levels 1.05 V or 0.95 V high and 0.15 V low. clk edges last 200 ps, the longest legal edge, so a threshold of 0.45 V from ground acts 33 ps early on rising edges (8 ps grid).",
+  "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVvdd (vdd 0) vsource type=pwl wave=[0 1.05 85n 1.05 85.1n 0.95 129.8n 0.95]\nVvss (vss 0) vsource type=dc dc=0.15\nVclk (clk 0) vsource type=pwl wave=[0 0.15 3.953n 0.15 4.153n 1.05 9.953n 1.05 10.153n 0.15 22.009n 0.15 22.209n 1.05 27.009n 1.05 27.209n 0.15 40.057n 0.15 40.257n 1.05 47.057n 1.05 47.257n 0.15 58.105n 0.15 58.305n 1.05 61.105n 1.05 61.305n 0.15 75.953n 0.15 76.153n 1.05 81.953n 1.05 82.153n 0.15 94.009n 0.15 94.209n 1.05 100.009n 1.05 100.209n 0.15 112.057n 0.15 112.257n 1.05 116.057n 1.05 116.257n 0.15 129.8n 0.15]\nVvin (vin 0) vsource type=pwl wave=[0 0.3 4.104n 0.3 4.152n 0.9 12n 0.9 12.008n 0.2 22.08n 0.2 22.088n 0.9 22.16n 0.9 22.208n 0.62 40.208n 0.62 40.256n 0.55 48n 0.55 48.008n 1 58.176n 1 58.184n 0.55 58.256n 0.55 58.304n 1.2 76.104n 1.2 76.152n 0.05 94.16n 0.05 94.208n 1.3 100n 1.3 100.008n 0.4 112.128n 0.4 112.136n 1.3 112.208n 1.3 112.256n 0.75 129.8n 0.75]\n\nXDUT (vdd vss clk vin vout valid coarse) sample_hold_droop\n\nsimulatorOptions options reltol=1e-6 vabstol=1e-8 iabstol=1e-12\ntran tran stop=129.8n maxstep=8p strobeperiod=8p errpreset=moderate strobeoutput=strobeonly\nsave vdd vss clk vin vout valid coarse\n",
+  "signals": [
+   "vdd",
+   "vss",
+   "clk",
+   "vin",
+   "vout",
+   "valid",
+   "coarse"
+  ],
+  "stop": 1.298e-07,
+  "resolution": 8e-12,
+  "atol": 0.002,
+  "params": {}
+ },
+ {
+  "name": "phase-grid",
+  "source_id": "v4-100",
+  "purpose": "default parameters (8 ps grid). Ten cycles whose clk crossings and sample instants lie 53 ps to 245 ps from the nearest droop update instant: falls 53 ps after and 55 ps before an update, so that update is applied or skipped; sample instants 55 ps before an update; low phases of 3.8 to 12 ns starting at different grid phases; high phases of 1.104 to 6 ns. A droop grid anchored at the falling edge, droop during the high phase, or continuous droop are wrong on most cycles.",
+  "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVvdd (vdd 0) vsource type=dc dc=0.9\nVvss (vss 0) vsource type=dc dc=0\nVclk (clk 0) vsource type=pwl wave=[0 0 3.028n 0 3.078n 0.9 5.028n 0.9 5.078n 0 12.22n 0 12.27n 0.9 15.42n 0.9 15.47n 0 23.116n 0 23.166n 0.9 24.22n 0.9 24.27n 0 36.028n 0 36.078n 0.9 40.028n 0.9 40.078n 0 45.164n 0 45.214n 0.9 47.564n 0.9 47.614n 0 56.068n 0 56.118n 0.9 62.068n 0.9 62.118n 0 69.22n 0 69.27n 0.9 70.42n 0.9 70.47n 0 78.084n 0 78.134n 0.9 81.084n 0.9 81.134n 0 89.18n 0 89.23n 0.9 91.58n 0.9 91.63n 0 102.028n 0 102.078n 0.9 107.028n 0.9 107.078n 0 117.8n 0]\nVvin (vin 0) vsource type=pwl wave=[0 0.1 3.104n 0.1 3.152n 0.8 12.296n 0.8 12.344n 0.3 23.192n 0.3 23.24n 0.65 36.104n 0.65 36.152n 0.5 45.24n 0.5 45.288n 0.85 56.144n 0.85 56.192n 0.2 69.296n 0.2 69.344n 0.7 78.16n 0.7 78.208n 0.35 89.256n 0.35 89.304n 0.9 102.104n 0.9 102.152n 0.6 117.8n 0.6]\n\nXDUT (vdd vss clk vin vout valid coarse) sample_hold_droop\n\nsimulatorOptions options reltol=1e-6 vabstol=1e-8 iabstol=1e-12\ntran tran stop=117.8n maxstep=8p strobeperiod=8p errpreset=moderate strobeoutput=strobeonly\nsave vdd vss clk vin vout valid coarse\n",
+  "signals": [
+   "vdd",
+   "vss",
+   "clk",
+   "vin",
+   "vout",
+   "valid",
+   "coarse"
+  ],
+  "stop": 1.178e-07,
+  "resolution": 8e-12,
+  "atol": 0.002,
+  "params": {}
+ },
+ {
+  "name": "param-override",
+  "source_id": "v4-100",
+  "purpose": "vth 0.25 V, trf 100 ps, tau 10 ns, dt 2 ns, taperture 1.5 ns, valid_width 4 ns (2 ps grid, 180 ps clk edges, so a 0.45 V threshold acts 40 ps late on rising edges). The first and last clk pulses are shorter than the aperture, so the sample happens while clk is low again; vdd drops to 0.85 V inside an aperture window, after the trigger and 1 ns before the sample, which clamps 1.05 V to 0.85 V; a 0.30 V sample is high only for vth = 0.25 V; droop steps of 18 % (exp(-0.2), not 1 - 0.2).",
+  "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVvdd (vdd 0) vsource type=pwl wave=[0 0.9 10.6225n 0.9 10.7225n 0.85 37n 0.85 37.1n 0.9 64.9n 0.9]\nVvss (vss 0) vsource type=dc dc=0\nVclk (clk 0) vsource type=pwl wave=[0 0 3.0725n 0 3.2525n 0.9 4.0125n 0.9 4.1925n 0 10.0725n 0 10.2525n 0.9 15.9925n 0.9 16.1725n 0 20.1225n 0 20.3025n 0.9 23.0425n 0.9 23.2225n 0 30.1725n 0 30.3525n 0.9 34.0925n 0.9 34.2725n 0 40.2225n 0 40.4025n 0.9 42.1425n 0.9 42.3225n 0 50.2725n 0 50.4525n 0.9 51.3925n 0.9 51.5725n 0 64.9n 0]\nVvin (vin 0) vsource type=pwl wave=[0 0.6 3.498n 0.6 3.872n 0.2 10.498n 0.2 10.872n 1.05 20.548n 1.05 20.922n 0.3 26n 0.3 26.01n 0.05 30.216n 0.05 30.218n 0.3 30.598n 0.3 30.972n 0.1 40.648n 0.1 41.022n 0.7 50.698n 0.7 51.072n 0.85 64.9n 0.85]\n\nXDUT (vdd vss clk vin vout valid coarse) sample_hold_droop vth=0.25 trf=100p tau=10n dt=2n taperture=1.5n valid_width=4n\n\nsimulatorOptions options reltol=1e-6 vabstol=1e-8 iabstol=1e-12\ntran tran stop=64.9n maxstep=2p strobeperiod=2p errpreset=moderate strobeoutput=strobeonly\nsave vdd vss clk vin vout valid coarse\n",
+  "signals": [
+   "vdd",
+   "vss",
+   "clk",
+   "vin",
+   "vout",
+   "valid",
+   "coarse"
+  ],
+  "stop": 6.49e-08,
+  "resolution": 2e-12,
+  "atol": 0.002,
+  "params": {
+   "vth": 0.25,
+   "trf": 1e-10,
+   "tau": 1e-08,
+   "dt": 2e-09,
+   "taperture": 1.5e-09,
+   "valid_width": 4e-09
+  }
+ },
+ {
+  "name": "param-endpoints-low",
+  "source_id": "v4-100",
+  "purpose": "vth 0.2 V, trf 10 ps, tau 10 ns, dt 0.2 ns, taperture 20 ps, valid_width 0.5 ns (the lower ends of the legal ranges), 2 ps grid, 90 ps clk edges (a 0.45 V threshold acts 25 ps late on rising edges). The sampled value changes 4.75 to 8.75 ps after the trigger, inside the 20 ps aperture; clk high phases of 1.002 ns (one 2 ps grid step above the 1 ns minimum spacing); a sample 50.75 ps before a droop update (less than one grid step above the 50 ps minimum); a 0.25 V sample decided high only for vth = 0.2 V and a 0.12 V sample decided low; droop of 2 % per 0.2 ns update.",
+  "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVvdd (vdd 0) vsource type=dc dc=0.9\nVvss (vss 0) vsource type=dc dc=0\nVclk (clk 0) vsource type=pwl wave=[0 0 1.05325n 0 1.14325n 0.9 2.00525n 0.9 2.09525n 0 3.09325n 0 3.18325n 0.9 4.24325n 0.9 4.33325n 0 5.45325n 0 5.54325n 0.9 6.40525n 0.9 6.49525n 0 7.67725n 0 7.76725n 0.9 9.02725n 0.9 9.11725n 0 10.30925n 0 10.39925n 0.9 11.45925n 0.9 11.54925n 0 12.45n 0]\nVvin (vin 0) vsource type=pwl wave=[0 0.1 1.078n 0.1 1.082n 0.6 3.118n 0.6 3.122n 0.25 5.478n 0.25 5.482n 0.85 7.702n 0.85 7.706n 0.12 10.322n 0.12 10.324n 0.4 10.334n 0.4 10.338n 0.7 12.45n 0.7]\n\nXDUT (vdd vss clk vin vout valid coarse) sample_hold_droop vth=0.2 trf=10p tau=10n dt=0.2n taperture=20p valid_width=0.5n\n\nsimulatorOptions options reltol=1e-6 vabstol=1e-8 iabstol=1e-12\ntran tran stop=12.45n maxstep=2p strobeperiod=2p errpreset=moderate strobeoutput=strobeonly\nsave vdd vss clk vin vout valid coarse\n",
+  "signals": [
+   "vdd",
+   "vss",
+   "clk",
+   "vin",
+   "vout",
+   "valid",
+   "coarse"
+  ],
+  "stop": 1.245e-08,
+  "resolution": 2e-12,
+  "atol": 0.002,
+  "params": {
+   "vth": 0.2,
+   "trf": 1e-11,
+   "tau": 1e-08,
+   "dt": 2e-10,
+   "taperture": 2e-11,
+   "valid_width": 5e-10
+  }
+ },
+ {
+  "name": "param-endpoints-high",
+  "source_id": "v4-100",
+  "purpose": "vth 0.7 V, trf 200 ps, tau 1 us, dt 5 ns, taperture 2 ns, valid_width 10 ns (the upper ends of the legal ranges; trf = dt/25 here, the trf limit is 200 ps), 40 ps grid, 180 ps clk edges (a 0.45 V threshold acts 50 ps early on rising edges). A 0.75 V sample decided high and a 0.60 V sample decided low; valid pulses of 10 ns; droop of 0.5 % per 5 ns update; samples 2 ns after their triggers.",
+  "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVvdd (vdd 0) vsource type=dc dc=0.9\nVvss (vss 0) vsource type=dc dc=0\nVclk (clk 0) vsource type=pwl wave=[0 0 2.964n 0 3.144n 0.9 7.064n 0.9 7.244n 0 16.004n 0 16.184n 0.9 22.104n 0.9 22.284n 0 29.044n 0 29.224n 0.9 32.144n 0.9 32.324n 0 42.084n 0 42.264n 0.9 50.184n 0.9 50.364n 0 55.124n 0 55.304n 0.9 58.224n 0.9 58.404n 0 71.92n 0]\nVvin (vin 0) vsource type=pwl wave=[0 0.2 3.6n 0.2 4.08n 0.8 16.64n 0.8 17.12n 0.75 29.68n 0.75 30.16n 0.2 42.72n 0.2 43.2n 0.95 55.76n 0.95 56.24n 0.6 71.92n 0.6]\n\nXDUT (vdd vss clk vin vout valid coarse) sample_hold_droop vth=0.7 trf=200p tau=1u dt=5n taperture=2n valid_width=10n\n\nsimulatorOptions options reltol=1e-6 vabstol=1e-8 iabstol=1e-12\ntran tran stop=71.92n maxstep=40p strobeperiod=40p errpreset=moderate strobeoutput=strobeonly\nsave vdd vss clk vin vout valid coarse\n",
+  "signals": [
+   "vdd",
+   "vss",
+   "clk",
+   "vin",
+   "vout",
+   "valid",
+   "coarse"
+  ],
+  "stop": 7.192e-08,
+  "resolution": 4e-11,
+  "atol": 0.002,
+  "params": {
+   "vth": 0.7,
+   "trf": 2e-10,
+   "tau": 1e-06,
+   "dt": 5e-09,
+   "taperture": 2e-09,
+   "valid_width": 1e-08
+  }
+ },
+ {
+  "name": "start-high",
+  "source_id": "v4-100",
+  "purpose": "default parameters (8 ps grid). clk is above vth at t = 0 while vin = 0.7 V: a level at t = 0 is no trigger, so vout stays at vss and valid and coarse stay low through the first falling crossing at 2.333 ns, the droop updates in the low phase and until the first sample at 5.309 ns; then a 0.62 V sample (coarse high) that droops while clk is low and a 0.30 V sample (coarse low).",
+  "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVvdd (vdd 0) vsource type=dc dc=0.9\nVvss (vss 0) vsource type=dc dc=0\nVclk (clk 0) vsource type=pwl wave=[0 0.9 2.308n 0.9 2.358n 0 5.084n 0 5.134n 0.9 13.084n 0.9 13.134n 0 20.18n 0 20.23n 0.9 22.18n 0.9 22.23n 0 31.8n 0]\nVvin (vin 0) vsource type=pwl wave=[0 0.7 5.16n 0.7 5.208n 0.62 20.256n 0.62 20.304n 0.3 31.8n 0.3]\n\nXDUT (vdd vss clk vin vout valid coarse) sample_hold_droop\n\nsimulatorOptions options reltol=1e-6 vabstol=1e-8 iabstol=1e-12\ntran tran stop=31.8n maxstep=8p strobeperiod=8p errpreset=moderate strobeoutput=strobeonly\nsave vdd vss clk vin vout valid coarse\n",
+  "signals": [
+   "vdd",
+   "vss",
+   "clk",
+   "vin",
+   "vout",
+   "valid",
+   "coarse"
+  ],
+  "stop": 3.18e-08,
+  "resolution": 8e-12,
+  "atol": 0.002,
+  "params": {}
+ },
+ {
+  "name": "interrupt",
+  "source_id": "v4-100",
+  "purpose": "trf 200 ps (the upper end), dt 1 ns, tau 10 ns, taperture 1.5 ns, valid_width 0.5 ns, 4 ps grid. Three samples with clk already low again (1.05 ns high phases) and the next droop update 55, 95 and 195 ps after each sample instant, while the vout ramp of the sample is still running: the first two retarget it in the same direction (0.8 V and 0.3 V samples), the third backwards (0.9 V sample at 97.5 % of its ramp). A model that starts the droop step only after the sample ramp has ended is still moving at the scored rows 1.3*trf after the update; droop of 9.5 % per 1 ns update.",
+  "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVvdd (vdd 0) vsource type=dc dc=0.9\nVvss (vss 0) vsource type=dc dc=0\nVclk (clk 0) vsource type=pwl wave=[0 0 3.395n 0 3.495n 0.9 4.445n 0.9 4.545n 0 10.355n 0 10.455n 0.9 11.405n 0.9 11.505n 0 17.255n 0 17.355n 0.9 18.305n 0.9 18.405n 0 27.9n 0]\nVvin (vin 0) vsource type=pwl wave=[0 0.1 3.82n 0.1 4.192n 0.8 10.78n 0.8 11.152n 0.3 17.68n 0.3 18.052n 0.9 27.9n 0.9]\n\nXDUT (vdd vss clk vin vout valid coarse) sample_hold_droop trf=200p tau=10n dt=1n taperture=1.5n valid_width=0.5n\n\nsimulatorOptions options reltol=1e-6 vabstol=1e-8 iabstol=1e-12\ntran tran stop=27.9n maxstep=4p strobeperiod=4p errpreset=moderate strobeoutput=strobeonly\nsave vdd vss clk vin vout valid coarse\n",
+  "signals": [
+   "vdd",
+   "vss",
+   "clk",
+   "vin",
+   "vout",
+   "valid",
+   "coarse"
+  ],
+  "stop": 2.79e-08,
+  "resolution": 4e-12,
+  "atol": 0.002,
+  "params": {
+   "trf": 2e-10,
+   "tau": 1e-08,
+   "dt": 1e-09,
+   "taperture": 1.5e-09,
+   "valid_width": 5e-10
+  }
+ }
+]

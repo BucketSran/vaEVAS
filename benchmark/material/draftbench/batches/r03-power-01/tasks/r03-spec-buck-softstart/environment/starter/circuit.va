@@ -1,0 +1,9 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module buck_ctrl_top(vfb,vref,clk,rst,enable,pwm,duty_metric,soft_ref,pgood);
+input vfb,vref,clk,rst,enable;
+output pwm,duty_metric,soft_ref,pgood;
+electrical vfb,vref,clk,rst,enable,pwm,duty_metric,soft_ref,pgood;
+// TODO: implement the public contract.
+endmodule

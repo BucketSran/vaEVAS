@@ -1,0 +1,86 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module buck_ctrl_top(vfb, vref, clk, rst, enable, pwm, duty_metric, soft_ref, pgood);
+    input vfb, vref, clk, rst, enable;
+    output pwm, duty_metric, soft_ref, pgood;
+    electrical vfb, vref, clk, rst, enable, pwm, duty_metric, soft_ref, pgood;
+
+    parameter real vdd = 0.9;
+    parameter real vss = 0.0;
+    parameter real vth = 0.45;
+    parameter real duty_min = 0.05 from [0:1];
+    parameter real duty_max = 0.95 from [0:1];
+    parameter real soft_step = 25m from [5m:100m];
+    parameter real pgood_tol = 25m from [5m:100m];
+    parameter real tr = 200p from [10p:1n];
+
+    real soft;       // soft-start reference held between clock edges
+    real duty;       // dimensionless duty, cleared to 0 (not to vss)
+    real pwm_level;
+    real pgood_level;
+    real fb_now;
+    real ref_now;
+    integer carrier;     // modulo-20 carrier phase
+    integer good_count;  // consecutive qualifying edges, saturating at 3
+    integer duty_up;
+
+    analog begin
+        @(initial_step) begin
+            soft = vss;
+            duty = 0.0;
+            carrier = 0;
+            good_count = 0;
+            pwm_level = vss;
+            pgood_level = vss;
+        end
+
+        @(cross(V(clk) - vth, +1)) begin
+            fb_now = V(vfb);
+            ref_now = V(vref);
+            if (V(rst) > vth || V(enable) <= vth) begin
+                // Reset or disable at an edge overrides every update and
+                // restarts soft start, duty, carrier phase and qualification.
+                soft = vss;
+                duty = 0.0;
+                carrier = 0;
+                good_count = 0;
+                pwm_level = vss;
+                pgood_level = vss;
+            end else begin
+                // The error decision uses the soft reference held before this edge.
+                duty_up = (fb_now < soft);
+
+                if (abs(ref_now - soft) <= soft_step)
+                    soft = ref_now;
+                else if (ref_now > soft)
+                    soft = soft + soft_step;
+                else
+                    soft = soft - soft_step;
+
+                duty = duty_up ? duty + 0.05 : duty - 0.05;
+                if (duty < duty_min)
+                    duty = duty_min;
+                if (duty > duty_max)
+                    duty = duty_max;
+
+                // The updated duty is compared on every edge, also inside a carrier cycle.
+                carrier = (carrier + 1) % 20;
+                pwm_level = (carrier + 0.5 < 20.0 * duty) ? vdd : vss;
+
+                // Qualification follows vfb against vref, not the soft reference.
+                if (abs(fb_now - ref_now) <= pgood_tol) begin
+                    if (good_count < 3)
+                        good_count = good_count + 1;
+                end else
+                    good_count = 0;
+                pgood_level = (good_count >= 3) ? vdd : vss;
+            end
+        end
+
+        V(soft_ref) <+ transition(soft, 0.0, tr, tr);
+        V(duty_metric) <+ transition(duty, 0.0, tr, tr);
+        V(pwm) <+ transition(pwm_level, 0.0, tr, tr);
+        V(pgood) <+ transition(pgood_level, 0.0, tr, tr);
+    end
+endmodule

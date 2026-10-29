@@ -1,0 +1,35 @@
+{
+ "task": "v2-test-clock-frequency",
+ "cases": [
+  "terminal-normal",
+  "terminal-bad-divider",
+  "terminal-different-frequency-map"
+ ],
+ "checker_failure": "kind=report: a scored report value (saved point, or interpolated interval midpoint) more than its tolerance from the expected value (tests/v2_testing.py:58-74)",
+ "semantics": "F01 timing guard, user-confirmed 2026-10-28 (option A): tests/v2_testing.py pieces() leaves out points no more than 80 ps from an event or from the start or end of the transient, skips intervals no longer than 160 ps and scores the midpoint of every longer interval; the event table is t = 0 and every rising dco_clk, div_clk and reset crossing and every falling enable crossing through 0.45 V. The instruction states this rule and the checker is unchanged. Candidates differ from solution/ only in a report delay. A report that changes more than 80 ps before its event is acausal and exists only as the synthetic control early-report--100ps.",
+ "conditions": {},
+ "candidates": [
+  {
+   "name": "late_report_delay_100ps",
+   "group": "wrong",
+   "must_reject": [
+    "terminal-normal",
+    "terminal-bad-divider",
+    "terminal-different-frequency-map"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "late-report-+100ps"
+  },
+  {
+   "name": "inwindow_report_delay_50ps",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "terminal-normal",
+    "terminal-bad-divider",
+    "terminal-different-frequency-map"
+   ],
+   "author_synthetic_control": "inwindow-report-+50ps"
+  }
+ ]
+}

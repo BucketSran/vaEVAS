@@ -1,0 +1,14 @@
+simulator lang=spectre
+global 0
+
+ahdl_include "/app/circuit.va"
+
+Vsample (sample 0) vsource type=pwl wave=[0 0 5.2725n 0 5.3725n 0.9 15.2725n 0.9 15.3725n 0 35.5725n 0 35.6725n 0.9 36.1225n 0.9 36.2225n 0 55.0225n 0 55.1225n 0.9 55.5475n 0.9 55.6475n 0 60.8975n 0 60.9975n 0.9 61.8975n 0.9 61.9975n 0 75.3725n 0 75.4725n 0.9 75.9225n 0.9 76.0225n 0 87.2725n 0 87.3725n 0.9 90.2725n 0.9 90.3725n 0 95.7225n 0 95.8225n 0.9 96.7225n 0.9 96.8225n 0 110.2225n 0 110.3225n 0.9 110.7725n 0.9 110.8725n 0 130.8n 0]
+Vrst (rst 0) vsource type=pwl wave=[0 0 70.1225n 0 70.2225n 0.9 70.6475n 0.9 70.7475n 0 85.1725n 0 85.2725n 0.9 89.7725n 0.9 89.8725n 0 130.8n 0]
+Vvin (vin 0) vsource type=pwl wave=[0 0.3 2n 0.3 2.1n 0.55 4n 0.55 4.1n 0.8 8n 0.8 8.1n 0.2 12n 0.2 12.1n 0.65 30n 0.65 30.1n -0.6 45n -0.6 45.1n 0.95 58n 0.95 58.1n 0.7 73n 0.7 73.1n 0.4 86n 0.4 86.1n -0.3 94n -0.3 94.1n 0.85 100n 0.85 100.1n 0.5 108n 0.5 108.1n 0.1 130.8n 0.1]
+
+XDUT (sample rst vin vout) leaky_hold
+
+simulatorOptions options reltol=1e-6 vabstol=1e-8 iabstol=1e-12
+tran tran stop=130.8n maxstep=10p strobeperiod=10p errpreset=moderate strobeoutput=strobeonly
+save sample rst vin vout

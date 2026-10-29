@@ -1,0 +1,103 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module fine_coarse_tdc(start, stop, ref_clk, rst, code_7, code_6, code_5, code_4,
+                       code_3, code_2, code_1, code_0, valid, overflow);
+    input start, stop, ref_clk, rst;
+    output code_7, code_6, code_5, code_4, code_3, code_2, code_1, code_0, valid, overflow;
+    electrical start, stop, ref_clk, rst, code_7, code_6, code_5, code_4,
+               code_3, code_2, code_1, code_0, valid, overflow;
+
+    parameter real vth = 0.45 from [0.2:0.7];
+    parameter real vdd = 0.9 from [0.5:1.5];
+    parameter real tr = 200p from [10p:1n];
+
+    integer seen;       // ref crossings since t = 0 or the last reset release, up to 2
+    integer armed;      // 1 while a measurement is in progress
+    integer count;      // ref crossings since the start (coarse count N)
+    integer q_start;    // start fine code
+    integer code;       // published result register
+    integer valid_q;
+    integer overflow_q;
+    real t_last;        // latest ref crossing counted outside reset
+    real t_prev;        // the one before it; t_last - t_prev is the reference period
+
+    analog begin
+        @(initial_step) begin
+            seen = 0;
+            armed = 0;
+            count = 0;
+            q_start = 0;
+            code = 0;
+            valid_q = 0;
+            overflow_q = 0;
+            t_last = 0.0;
+            t_prev = 0.0;
+        end
+
+        // Reset clears the outputs, ends a measurement without a result and
+        // restarts the warm-up; its release starts the warm-up again.
+        @(cross(V(rst) - vth, +1, 1p)) begin
+            armed = 0;
+            code = 0;
+            valid_q = 0;
+            overflow_q = 0;
+            seen = 0;
+        end
+        @(cross(V(rst) - vth, -1, 1p))
+            seen = 0;
+
+        // Coarse count. The 16th crossing of a measurement ends it as an overflow.
+        @(cross(V(ref_clk) - vth, +1, 1p)) begin
+            if (V(rst) < vth) begin
+                t_prev = t_last;
+                t_last = $abstime;
+                if (seen < 2)
+                    seen = seen + 1;
+                if (armed) begin
+                    count = count + 1;
+                    if (count == 16) begin
+                        armed = 0;
+                        code = 255;
+                        valid_q = 1;
+                        overflow_q = 1;
+                    end
+                end
+            end
+        end
+
+        // Fine codes are the phase since the latest ref crossing in sixteenths of
+        // the measured period, truncated. Warm-up guarantees a measured period.
+        @(cross(V(start) - vth, +1, 1p)) begin
+            if (V(rst) < vth && seen >= 2) begin
+                q_start = floor(16.0*($abstime - t_last)/(t_last - t_prev));
+                armed = 1;
+                count = 0;
+                code = 0;
+                valid_q = 0;
+                overflow_q = 0;
+            end
+        end
+
+        // D = 16*N + q_e - q_s borrows from the coarse count when q_e < q_s.
+        @(cross(V(stop) - vth, +1, 1p)) begin
+            if (armed) begin
+                code = 16*count + floor(16.0*($abstime - t_last)/(t_last - t_prev)) - q_start;
+                armed = 0;
+                valid_q = 1;
+                overflow_q = 0;
+            end
+        end
+
+        V(code_7) <+ transition(((code >> 7) & 1) ? vdd : 0.0, 0.0, tr, tr);
+        V(code_6) <+ transition(((code >> 6) & 1) ? vdd : 0.0, 0.0, tr, tr);
+        V(code_5) <+ transition(((code >> 5) & 1) ? vdd : 0.0, 0.0, tr, tr);
+        V(code_4) <+ transition(((code >> 4) & 1) ? vdd : 0.0, 0.0, tr, tr);
+        V(code_3) <+ transition(((code >> 3) & 1) ? vdd : 0.0, 0.0, tr, tr);
+        V(code_2) <+ transition(((code >> 2) & 1) ? vdd : 0.0, 0.0, tr, tr);
+        V(code_1) <+ transition(((code >> 1) & 1) ? vdd : 0.0, 0.0, tr, tr);
+        V(code_0) <+ transition((code & 1) ? vdd : 0.0, 0.0, tr, tr);
+        V(valid) <+ transition(valid_q ? vdd : 0.0, 0.0, tr, tr);
+        V(overflow) <+ transition(overflow_q ? vdd : 0.0, 0.0, tr, tr);
+    end
+endmodule

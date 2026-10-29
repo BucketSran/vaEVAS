@@ -1,0 +1,28 @@
+[
+  {
+    "kind": "iq",
+    "name": "conversion-0",
+    "parameters": {
+      "gain": 1.0,
+      "fbw": 2000,
+      "flo": 12000,
+      "fbb": 500,
+      "phase": 0.3
+    },
+    "signals": [
+      "i",
+      "q",
+      "lc",
+      "ls",
+      "rf",
+      "en",
+      "up",
+      "di",
+      "dq"
+    ],
+    "stop": 0.01,
+    "step": 1e-06,
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nVi (i 0) vsource type=sine ampl=0.18 freq=500 sinephase=101.45915590261646\nVq (q 0) vsource type=sine ampl=0.18 freq=500 sinephase=11.459155902616459\nVlc (lc 0) vsource type=sine ampl=1 freq=12000 sinephase=107.1887338539247\nVls (ls 0) vsource type=sine ampl=1 freq=12000 sinephase=17.188733853924703\nVrf (rf 0) vsource type=sine ampl=0.2 freq=12700 sinephase=130.10704565915762\nVe (en 0) vsource type=pwl wave=[0 1 0.007 1 0.007001 0 0.008 0 0.008001 1]\nX (i q lc ls rf en up di dq) iq_mixer gain=1.0 fbw=2000\ntran tran stop=0.01 maxstep=1e-06 errpreset=conservative\nsave i q lc ls rf en up di dq\n",
+    "timeout_s": 120
+  }
+]

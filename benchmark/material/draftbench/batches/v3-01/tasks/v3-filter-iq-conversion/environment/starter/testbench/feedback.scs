@@ -1,0 +1,11 @@
+simulator lang=spectre
+ahdl_include "/app/circuit.va"
+Vi (i 0) vsource type=sine ampl=0.18 freq=500 sinephase=101.45915590261646
+Vq (q 0) vsource type=sine ampl=0.18 freq=500 sinephase=11.459155902616459
+Vlc (lc 0) vsource type=sine ampl=1 freq=12000 sinephase=107.1887338539247
+Vls (ls 0) vsource type=sine ampl=1 freq=12000 sinephase=17.188733853924703
+Vrf (rf 0) vsource type=sine ampl=0.2 freq=12700 sinephase=130.10704565915762
+Ve (en 0) vsource type=pwl wave=[0 1 0.007 1 0.007001 0 0.008 0 0.008001 1]
+X (i q lc ls rf en up di dq) iq_mixer gain=1.0 fbw=2000
+tran tran stop=0.01 maxstep=1e-06 errpreset=conservative
+save i q lc ls rf en up di dq

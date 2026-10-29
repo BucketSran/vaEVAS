@@ -743,6 +743,13 @@ def _passed_observations(report):
         for c in report['fixtures'] if c['outcome'] == 'passed'}
 
 
+def _observed_keys(report, nonpassing_only=False):
+    return {(row['id'], c['id']) for row in report['tests'] for c in row['conditions']
+            if not nonpassing_only or c['outcome'] != 'passed'} | {
+        ('fixture:' + c['scope'], c['id']) for c in report['fixtures']
+        if not nonpassing_only or c['outcome'] != 'passed'}
+
+
 def validate_baseline_transition(report, trusted_baseline, head_proposal):
     """Retain improvements only after old trusted comparison permits the candidate.
 
@@ -772,15 +779,21 @@ def validate_baseline_transition(report, trusted_baseline, head_proposal):
         if any(c['outcome'] != 'passed' and not _matchable(c) for c in actual_conditions):
             raise ValueError('unknown or incomplete actual condition identity')
         newly_passed = _passed_observations(report) - _passed_observations(old)
-        result['transition']['refresh_required'] = bool(newly_passed)
+        # compare_report checks the passes it keeps and the non-passes it sees; a registered
+        # non-pass that no longer occurs at all is a change too, never an unchanged result.
+        vanished = _observed_keys(old, nonpassing_only=True) - _observed_keys(report)
+        result['transition']['refresh_required'] = bool(newly_passed or vanished)
         result['transition']['new_passed_observations'] = [dict(owner=o, condition=c) for o,c,_ in sorted(newly_passed)]
+        result['transition']['vanished_nonpassing_observations'] = [dict(owner=o, condition=c) for o,c in sorted(vanished)]
         unchanged = _json(head_proposal) == _json(trusted_baseline)
-        if unchanged and not newly_passed:
+        if unchanged and not newly_passed and not vanished:
             result['transition'].update(accepted=True, reused_trusted_baseline=True)
             result['merge_allowed'] = True
             return result
-        if unchanged:
+        if unchanged and newly_passed:
             raise ValueError('newly passed observations require a reviewed refreshed baseline')
+        if unchanged:
+            raise ValueError('vanished nonpassing observations require a reviewed refreshed baseline')
         result['transition']['proposal_evaluated'] = True
         if (not isinstance(head_proposal, dict) or type(head_proposal.get('schema_version')) is not int
                 or head_proposal['schema_version'] != 1 or not isinstance(head_proposal.get('contexts'), list)):

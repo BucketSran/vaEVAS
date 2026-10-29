@@ -1,0 +1,8 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module frequency_meter(dco_clk,div_clk,enable,reset,freq_mhz,divider_ratio,valid);
+inout dco_clk,div_clk,enable,reset,freq_mhz,divider_ratio,valid;
+electrical dco_clk,div_clk,enable,reset,freq_mhz,divider_ratio,valid;
+// TODO: implement the public contract.
+endmodule

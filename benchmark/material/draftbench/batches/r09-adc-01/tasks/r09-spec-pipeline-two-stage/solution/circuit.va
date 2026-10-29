@@ -1,0 +1,91 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module pipeline_adc_two_stage(vin, clk, rst, valid_i, code_3, code_2, code_1, code_0, valid_o, residue_dbg);
+    input vin, clk, rst, valid_i;
+    output code_3, code_2, code_1, code_0, valid_o, residue_dbg;
+    electrical vin, clk, rst, valid_i, code_3, code_2, code_1, code_0, valid_o, residue_dbg;
+
+    parameter real vdd = 0.9;
+    parameter real vss = 0.0 from [-0.5:0.5];
+    parameter real vref = 0.9;
+    parameter real vth = 0.45 from [0.2:0.7];
+    parameter real tr = 200p from [10p:1n];
+
+    real span;          // input range
+    real x;             // stage-1 sample buffer: the held sample, limited to the range
+    real res;           // residue of the held sample, driven on residue_dbg
+    integer k1;         // coarse code of the held sample
+    integer s1_new;     // 1 when the latest clock edge took a sample
+    integer k2, f2;     // stage-2 register: coarse and fine code of the sample one edge older
+    integer s2_valid;
+    integer code;       // published code
+    integer valid_q;
+
+    analog begin
+        span = vref - vss;
+
+        @(initial_step) begin
+            x = vss;
+            res = vss;
+            k1 = 0;
+            s1_new = 0;
+            k2 = 0;
+            f2 = 0;
+            s2_valid = 0;
+            code = 0;
+            valid_q = 0;
+        end
+
+        // Asynchronous clear: samples in progress are dropped.
+        @(cross(V(rst) - vth, +1, 1p)) begin
+            x = vss;
+            res = vss;
+            k1 = 0;
+            s1_new = 0;
+            s2_valid = 0;
+            code = 0;
+            valid_q = 0;
+        end
+
+        // Each clock edge outside reset moves every sample one stage on. The
+        // stages are updated from the output end, so each one reads what the
+        // stage before it held since the previous edge.
+        @(cross(V(clk) - vth, +1, 1p)) begin
+            if (V(rst) < vth) begin
+                valid_q = s2_valid;
+                if (s2_valid)
+                    code = 4*k2 + f2;
+
+                s2_valid = s1_new;
+                if (s1_new) begin
+                    k2 = k1;
+                    f2 = 0;
+                    if (res >= vss + 0.25*span) f2 = 1;
+                    if (res >= vss + 0.50*span) f2 = 2;
+                    if (res >= vss + 0.75*span) f2 = 3;
+                end
+
+                s1_new = V(valid_i) > vth;
+                if (s1_new) begin
+                    x = V(vin);
+                    if (x < vss) x = vss;
+                    if (x > vref) x = vref;
+                    k1 = 0;
+                    if (x >= vss + 0.25*span) k1 = 1;
+                    if (x >= vss + 0.50*span) k1 = 2;
+                    if (x >= vss + 0.75*span) k1 = 3;
+                    // Gain-of-four error from the bin center, referred to mid-scale.
+                    res = 0.5*(vss + vref) + 4.0*(x - (vss + (k1 + 0.5)*0.25*span));
+                end
+            end
+        end
+
+        V(code_3) <+ transition(((code >> 3) & 1) ? vdd : vss, 0.0, tr, tr);
+        V(code_2) <+ transition(((code >> 2) & 1) ? vdd : vss, 0.0, tr, tr);
+        V(code_1) <+ transition(((code >> 1) & 1) ? vdd : vss, 0.0, tr, tr);
+        V(code_0) <+ transition((code & 1) ? vdd : vss, 0.0, tr, tr);
+        V(valid_o) <+ transition(valid_q ? vdd : vss, 0.0, tr, tr);
+        V(residue_dbg) <+ transition(res, 0.0, tr, tr);
+    end
+endmodule
