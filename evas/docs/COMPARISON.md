@@ -58,6 +58,10 @@ Q 是验收上限：1 V 刻度的 Q1 / Q2 / Q3 为 10.1 µV / 1.01 µV / 101 nV�
 | [一阶 laplace_np](../validation/paper/COVERAGE.md#scope-l2-13) | ✓ Q3 | 编译失败 | 误差超限 | ✓ Q3 |
 | [二阶滤波（内部微分）](../validation/paper/COVERAGE.md#scope-l2-14) | ✓ Q3 | Q1 误差超限 | 误差超限 | ✓ Q3 |
 
+**Spectre 列失败格的原因（2026-10-29 补记）**：格子保留原成绩，这里只写原因。依据是 L0 归因补跑（任务包 spectre-L0-attrib-v1）的判读和标准线同日的裁定；交回结果已正式核收，判读和裁定文件只在本地保存（`L0A-JUDGEMENT.md`，sha256 11ee307d…；`JUDGMENT-W2-S7S12-G400-L0A.md`，sha256 bd7702f4…）。
+
+- ddt：二次时间表达式：Spectre 的输出全程为 0。Spectre 21.1 对只含时间、不含电路量的表达式求 ddt 一律返回 0，L2/L3 交回对照里的同类用例也是这样（对照清单 G13 组）。这一行的 Spectre 参考因此记为不可用，按 LRM 给出的闭式导数判。这是 Spectre 的偏差，不是精度不够。
+
 ## 3. 简单组合
 
 | 能力与测试范围 | Spectre | ngspice + OpenVAF-R | Gnucap + modelgen-verilog | EVAS |
@@ -75,6 +79,11 @@ Q 是验收上限：1 V 刻度的 Q1 / Q2 / Q3 为 10.1 µV / 1.01 µV / 101 nV�
 | [两级 slew 与反向追赶](../validation/paper/COVERAGE.md#scope-l3-09) | ✓ Q3 | 编译失败 | ✓ Q3 | ✓ Q3 |
 | [中断边沿→积分](../validation/paper/COVERAGE.md#scope-l3-10) | ✓ Q3 | 新版验收未跑 | 新版验收未跑 | ✓ Q3 |
 | [数组的事件状态更新](../validation/paper/COVERAGE.md#scope-l3-11) | ✓ Q3 | 初始化失败 | 编译失败 | ✓ Q3 |
+
+**Spectre 列失败格的原因**（依据见第 2 节表后）：
+
+- 积分级联与复位：只有复位事件那一行的输出不等于积分初值 ic，四种积分方法都这样；下一行起就是 ic。这是 Spectre 在复位行上的偏差（行级，与 L2/L3 对照清单的 G12 组同类），不是精度问题。
+- 滤波与微分：DC 直通项：是配置问题。积分方法用 gear2only 时全程 ✓ Q3；用 traponly 时只有启动那一行超出 Q3。
 
 ## 4. 完整工程信号链
 
@@ -96,6 +105,10 @@ Q 是验收上限：1 V 刻度的 Q1 / Q2 / Q3 为 10.1 µV / 1.01 µV / 101 nV�
 | [事件改变动态：Riccati 滤波](../validation/paper/COVERAGE.md#scope-l5-03-riccati) | ✓ Q3 | 初始化失败 | 误差超限 | ✓ Q3 |
 | [近邻定时事件：原整链](../validation/paper/COVERAGE.md#scope-l5-04-chain) | ✓ 1 µV | 初始化失败 | ✓ 1µV | ✓ Q3 |
 | [近邻定时事件：相邻浮点采样积分](../validation/paper/COVERAGE.md#scope-l5-04-adjacent) | 回调同刻 | 初始化失败 | 回调同刻 | ✓ Q3 |
+
+**Spectre 列失败格的原因**（依据见第 2 节表后）：
+
+- 实例隔离：双积分器复位：与“积分级联与复位”是同一现象，即 Spectre 在复位行上的偏差（行级），不是精度问题。v1、v2 两个版本的结果逐位相同，与实例的声明顺序无关。
 
 表外需求和待验收项见[覆盖缺口](../validation/paper/COVERAGE.md#engineering-gap-audit)；原失败与旧成绩见[历史批次索引](../validation/paper/COVERAGE.md#先找到各批的原始成绩)。
 
