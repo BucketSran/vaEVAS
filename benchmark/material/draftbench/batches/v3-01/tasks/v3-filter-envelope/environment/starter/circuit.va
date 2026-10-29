@@ -1,0 +1,8 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module envelope(i,q,en,reset,env);
+inout i,q,en,reset,env;
+electrical i,q,en,reset,env;
+// TODO: implement the public contract.
+endmodule

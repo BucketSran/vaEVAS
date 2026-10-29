@@ -273,60 +273,33 @@ def verify_tool(tool, profile, env):
                 raise ValueError('compiler changed after preflight')
 
 
+def evas_worker_adapter():
+    """Load the validation adapter when a response or worker call needs it."""
+    name = 'paper_evas_worker_adapter'
+    cached = sys.modules.get(name)
+    if cached is not None:
+        return cached
+    path = Path(__file__).resolve().parents[3] / 'evas/validation/adapters/paper_evas_worker.py'
+    spec = importlib.util.spec_from_file_location(name, path)
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
 def save_raw_response(path, response):
     """Only the potentially large response uses compact JSON; preserve all values."""
-    with path.open('x') as stream:
-        json.dump(response,stream,separators=(',',':'),ensure_ascii=False,allow_nan=False)
-        stream.write('\n')
+    return evas_worker_adapter().save_raw_response(path, response)
 
 
 def evas_effective_record(request,response):
     """The transient public API has already validated the actual response."""
-    evidence=response.get('observation_evidence')
-    record={'request_echo':{'reltol':request['reltol'],'vabstol':request['vabstol'],
-                           'stop':request['stop'],'maxstep':request['max_step']},
-            'observed_response':{'engine':response['engine'],'accepted_steps':response['transient'].get('accepted_steps')},
-            'unsupported_controls':['iabstol','integration_method']}
-    if evidence is None:
-        record.update(sample_origin='unknown; legacy response has no observation evidence',
-                      settings_readback='unknown; legacy response does not report actual controls')
-    else:
-        record['runtime_controls']=dict(evidence['effective_controls'])
-        origins=evidence['sample_origins']
-        record['sample_origin_summary']={origin:origins.count(origin) for origin in sorted(set(origins))}
-        record['sample_origin']='actual response origins; these do not independently establish paper native qualification'
-        record['settings_readback']='validated public response observation_evidence.effective_controls'
-    return record
+    return evas_worker_adapter().evas_effective_record(request, response)
 
 
 def worker(work, kernel):
     """Normal compiler/top hierarchy, current transient API, no source rewriting."""
-    sys.path.insert(0,str(ROOT/'evas/src'))
-    from evas import CompileError, KernelError, Instance, compile_sources, transient
-    request=load(work/'request.json')
-    result={'status':'execution_failed','reason':'worker did not complete'}
-    try:
-        instances=[Instance(i['name'],i['module'],i['ports'],i['parameters']) for i in request['instances']]
-        program=compile_sources({'dut.va':(work/'dut.va').read_text()},instances)
-        save(work/'program.json',program.to_dict())
-        times=load(work/request['requested_times'])
-        response=transient(program,request['inputs'],times,stop=request['stop'],max_step=request['max_step'],
-                           kernel=kernel,vabstol=request['vabstol'],reltol=request['reltol'],timeout=None)
-        save_raw_response(work/'raw-response.json',response)
-        # Owned outer stage kills the complete worker/kernel group at its limit.
-        with (work/'waveform.csv').open('x') as f:
-            writer=csv.writer(f)
-            writer.writerow(['time',*response['nodes']])
-            writer.writerows([t,*r['voltages']] for t,r in zip(times,response['solutions'],strict=True))
-        save(work/'effective.json',evas_effective_record(request,response))
-        result={'status':'waveform_available','waveform':'waveform.csv'}
-    except CompileError as exc:
-        result={'status':'compile_failed','failure_stage':'compile','reason':str(exc)}
-    except KernelError as exc:
-        result={'status':'execution_failed','failure_stage':'kernel','reason':str(exc),'detail':exc.detail}
-    except Exception as exc:
-        result={'status':'execution_failed','failure_stage':'worker','exception_type':type(exc).__name__,'reason':str(exc)}
-    save(work/'worker-result.json',result)
+    return evas_worker_adapter().worker(work, kernel)
 
 
 def effective_settings(work, backend):

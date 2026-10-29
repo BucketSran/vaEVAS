@@ -1,0 +1,81 @@
+[
+  {
+    "name": "base",
+    "source_id": "v3-324",
+    "purpose": "default slopes; reset held at start with vin above the clamp; peak hold, hold against a lower input, release down, peak up, release to a negative input (clamp at 0), release upward, peak above 0.8 V (clamp), asynchronous clear between samples, clear 1 ns after a sample that turns metric mid-ramp, a sample while rst is high, release down and up after reset",
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVvin (vin 0) vsource type=pwl wave=[0 0.9 34.5n 0.9 35.5n 0.2 74.5n 0.2 75.5n 0.5 94.5n 0.5 95.5n -0.3 114.5n -0.3 115.5n 0.75 139.5n 0.75 140.5n 1.1 154.5n 1.1 155.5n 0.6 204.5n 0.6 205.5n 0.95 224.5n 0.95 225.5n 0.7 259.5n 0.7 260.5n 0.35 274.5n 0.35 275.5n 0.55 300n 0.55]\nVclk (clk 0) vsource type=pwl wave=[0 0 9.95n 0 10.05n 0.9 15.95n 0.9 16.05n 0 29.95n 0 30.05n 0.9 35.95n 0.9 36.05n 0 49.95n 0 50.05n 0.9 55.95n 0.9 56.05n 0 69.95n 0 70.05n 0.9 75.95n 0.9 76.05n 0 89.95n 0 90.05n 0.9 95.95n 0.9 96.05n 0 109.95n 0 110.05n 0.9 115.95n 0.9 116.05n 0 129.95n 0 130.05n 0.9 135.95n 0.9 136.05n 0 149.95n 0 150.05n 0.9 155.95n 0.9 156.05n 0 169.95n 0 170.05n 0.9 175.95n 0.9 176.05n 0 189.95n 0 190.05n 0.9 195.95n 0.9 196.05n 0 209.95n 0 210.05n 0.9 215.95n 0.9 216.05n 0 229.95n 0 230.05n 0.9 235.95n 0.9 236.05n 0 249.95n 0 250.05n 0.9 255.95n 0.9 256.05n 0 269.95n 0 270.05n 0.9 275.95n 0.9 276.05n 0 289.95n 0 290.05n 0.9 295.95n 0.9 296.05n 0 300n 0]\nVmode (mode 0) vsource type=pwl wave=[0 0 57.95n 0 58.05n 0.9 78.95n 0.9 79.05n 0 97.95n 0 98.05n 0.9 137.95n 0.9 138.05n 0 254.95n 0 255.05n 0.9 300n 0.9]\nVrst (rst 0) vsource type=pwl wave=[0 0.9 14.95n 0.9 15.05n 0 174.95n 0 175.05n 0.9 184.95n 0.9 185.05n 0 194.95n 0 195.05n 0.9 199.95n 0.9 200.05n 0 210.95n 0 211.05n 0.9 234.95n 0.9 235.05n 0 300n 0]\n\nXDUT (vin clk mode rst out metric) slew_envelope_tracker\n\ntran tran stop=300n maxstep=50p strobeperiod=50p\nsave vin clk mode rst out metric\n",
+    "signals": [
+      "vin",
+      "clk",
+      "mode",
+      "rst",
+      "out",
+      "metric"
+    ],
+    "stop": 3.0000000000000004e-07,
+    "resolution": 5e-11,
+    "atol": 0.002,
+    "params": {}
+  },
+  {
+    "name": "rate-override",
+    "source_id": "v3-324",
+    "purpose": "rise_rate = 1.5e8 V/s and fall_rate = 6e8 V/s, so falls are faster than rises; vin starts at 0.4 V with rst low; samples 5 ns apart land inside rising ramps: a peak-hold sample with vin between the output and its target, a release that turns metric down mid-ramp; a clear 2 ns into a rising ramp",
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVvin (vin 0) vsource type=pwl wave=[0 0.4 13.5n 0.4 14.5n 0.9 25.5n 0.9 26.5n -0.2 34.5n -0.2 35.5n 0.95 42.5n 0.95 43.5n 0.5 48.5n 0.5 49.5n 0.3 54.5n 0.3 55.5n 0.7 60.5n 0.7 61.5n 0.1 66.5n 0.1 67.5n 0.9 72.5n 0.9 73.5n 0.2 77.5n 0.2 78.5n 0.6 130n 0.6]\nVclk (clk 0) vsource type=pwl wave=[0 0 9.95n 0 10.05n 0.9 11.95n 0.9 12.05n 0 19.95n 0 20.05n 0.9 21.95n 0.9 22.05n 0 29.95n 0 30.05n 0.9 31.95n 0.9 32.05n 0 39.95n 0 40.05n 0.9 41.95n 0.9 42.05n 0 44.95n 0 45.05n 0.9 46.95n 0.9 47.05n 0 51.95n 0 52.05n 0.9 53.95n 0.9 54.05n 0 57.95n 0 58.05n 0.9 59.95n 0.9 60.05n 0 62.95n 0 63.05n 0.9 64.95n 0.9 65.05n 0 69.95n 0 70.05n 0.9 71.95n 0.9 72.05n 0 74.95n 0 75.05n 0.9 76.95n 0.9 77.05n 0 89.95n 0 90.05n 0.9 91.95n 0.9 92.05n 0 99.95n 0 100.05n 0.9 101.95n 0.9 102.05n 0 109.95n 0 110.05n 0.9 111.95n 0.9 112.05n 0 119.95n 0 120.05n 0.9 121.95n 0.9 122.05n 0 130n 0]\nVmode (mode 0) vsource type=pwl wave=[0 0 23.95n 0 24.05n 0.9 32.95n 0.9 33.05n 0 47.45n 0 47.55n 0.9 65.95n 0.9 66.05n 0 71.95n 0 72.05n 0.9 96.95n 0.9 97.05n 0 130n 0]\nVrst (rst 0) vsource type=pwl wave=[0 0 84.95n 0 85.05n 0.9 86.95n 0.9 87.05n 0 91.95n 0 92.05n 0.9 94.95n 0.9 95.05n 0 130n 0]\n\nXDUT (vin clk mode rst out metric) slew_envelope_tracker rise_rate=1.5e8 fall_rate=6e8\n\ntran tran stop=130n maxstep=50p strobeperiod=50p\nsave vin clk mode rst out metric\n",
+    "signals": [
+      "vin",
+      "clk",
+      "mode",
+      "rst",
+      "out",
+      "metric"
+    ],
+    "stop": 1.3e-07,
+    "resolution": 5e-11,
+    "atol": 0.002,
+    "params": {
+      "rise_rate": 150000000.0,
+      "fall_rate": 600000000.0
+    }
+  },
+  {
+    "name": "reset-and-start",
+    "source_id": "v3-324",
+    "purpose": "mode high and rst low at t = 0 with vin = 0.6 V, so the outputs must stay at 0 V until the first sample; a clear during the first rise; three samples while rst is high with vin and mode changing; release, hold of a lower and an equal input, peak at the 1.2 V input limit, release to the -0.5 V limit; a short rst pulse with the target already at 0; a clear 1 ns after a release",
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVvin (vin 0) vsource type=pwl wave=[0 0.6 17.5n 0.6 18.5n 0.9 27.5n 0.9 28.5n 0.1 44.5n 0.1 45.5n 0.3 54.5n 0.3 55.5n 0.25 64.5n 0.25 65.5n 0.3 74.5n 0.3 75.5n 1.2 84.5n 1.2 85.5n -0.5 95.5n -0.5 96.5n 0.45 140n 0.45]\nVclk (clk 0) vsource type=pwl wave=[0 0 6.95n 0 7.05n 0.9 10.95n 0.9 11.05n 0 19.95n 0 20.05n 0.9 23.95n 0.9 24.05n 0 29.95n 0 30.05n 0.9 33.95n 0.9 34.05n 0 39.95n 0 40.05n 0.9 43.95n 0.9 44.05n 0 49.95n 0 50.05n 0.9 53.95n 0.9 54.05n 0 59.95n 0 60.05n 0.9 63.95n 0.9 64.05n 0 69.95n 0 70.05n 0.9 73.95n 0.9 74.05n 0 79.95n 0 80.05n 0.9 83.95n 0.9 84.05n 0 89.95n 0 90.05n 0.9 93.95n 0.9 94.05n 0 99.95n 0 100.05n 0.9 103.95n 0.9 104.05n 0 109.95n 0 110.05n 0.9 113.95n 0.9 114.05n 0 119.95n 0 120.05n 0.9 123.95n 0.9 124.05n 0 129.95n 0 130.05n 0.9 133.95n 0.9 134.05n 0 140n 0]\nVmode (mode 0) vsource type=pwl wave=[0 0.9 24.95n 0.9 25.05n 0 34.95n 0 35.05n 0.9 52.95n 0.9 53.05n 0 82.95n 0 83.05n 0.9 104.95n 0.9 105.05n 0 140n 0]\nVrst (rst 0) vsource type=pwl wave=[0 0 11.95n 0 12.05n 0.9 44.95n 0.9 45.05n 0 91.95n 0 92.05n 0.9 93.95n 0.9 94.05n 0 100.95n 0 101.05n 0.9 102.95n 0.9 103.05n 0 140n 0]\n\nXDUT (vin clk mode rst out metric) slew_envelope_tracker\n\ntran tran stop=140n maxstep=50p strobeperiod=50p\nsave vin clk mode rst out metric\n",
+    "signals": [
+      "vin",
+      "clk",
+      "mode",
+      "rst",
+      "out",
+      "metric"
+    ],
+    "stop": 1.4e-07,
+    "resolution": 5e-11,
+    "atol": 0.002,
+    "params": {}
+  },
+  {
+    "name": "vth-override",
+    "source_id": "v3-324",
+    "purpose": "vth 0.8 V with 200 ps control edges, rise_rate 4e9 V/s (legal maximum) and fall_rate 1e9 V/s: a 0.45 V threshold samples and clears 77.8 ps early, beyond the 50 ps event tolerance; vin starts at 0.5 V; peak hold, hold against a lower input, release down, an asynchronous clear, a sample while rst is high, peak above 0.8 V (clamp), release to a negative input (clamp at 0), release up, and a last clear 22.2 ps before the end of the run",
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVvin (vin 0) vsource type=pwl wave=[0 0.5 7.5n 0.5 8.5n 0.3 12.5n 0.3 13.5n 0.2 17.5n 0.2 18.5n 0.6 22.5n 0.6 23.5n 0.9 27.5n 0.9 28.5n 0.6 32.5n 0.6 33.5n -0.2 37.5n -0.2 38.5n 0.7 45n 0.7]\nVclk (clk 0) vsource type=pwl wave=[0 0 5n 0 5.2n 0.9 7.5n 0.9 7.7n 0 10n 0 10.2n 0.9 12.5n 0.9 12.7n 0 15n 0 15.2n 0.9 17.5n 0.9 17.7n 0 20n 0 20.2n 0.9 22.5n 0.9 22.7n 0 25n 0 25.2n 0.9 27.5n 0.9 27.7n 0 30n 0 30.2n 0.9 32.5n 0.9 32.7n 0 35n 0 35.2n 0.9 37.5n 0.9 37.7n 0 40n 0 40.2n 0.9 42.5n 0.9 42.7n 0 45n 0]\nVmode (mode 0) vsource type=pwl wave=[0 0 12n 0 12.2n 0.9 23n 0.9 23.2n 0 32n 0 32.2n 0.9 45n 0.9]\nVrst (rst 0) vsource type=pwl wave=[0 0 18n 0 18.2n 0.9 22n 0.9 22.2n 0 44.8n 0 45n 0.9]\n\nXDUT (vin clk mode rst out metric) slew_envelope_tracker vth=0.8 rise_rate=4e9 fall_rate=1e9\n\ntran tran stop=45n maxstep=50p strobeperiod=50p\nsave vin clk mode rst out metric\n",
+    "signals": [
+      "vin",
+      "clk",
+      "mode",
+      "rst",
+      "out",
+      "metric"
+    ],
+    "stop": 4.5e-08,
+    "resolution": 5e-11,
+    "atol": 0.002,
+    "params": {
+      "vth": 0.8,
+      "rise_rate": 4000000000.0,
+      "fall_rate": 1000000000.0
+    }
+  }
+]

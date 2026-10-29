@@ -1,0 +1,9 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module programmable_delay_cell(in_clk,load,rst,code_5,code_4,code_3,code_2,code_1,code_0,out_clk);
+input in_clk,load,rst,code_5,code_4,code_3,code_2,code_1,code_0;
+output out_clk;
+electrical in_clk,load,rst,code_5,code_4,code_3,code_2,code_1,code_0,out_clk;
+// TODO: implement the public contract.
+endmodule

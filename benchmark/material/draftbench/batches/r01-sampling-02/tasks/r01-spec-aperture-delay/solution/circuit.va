@@ -1,0 +1,42 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+// Track-and-hold with aperture delay. A rising clk crossing only schedules the
+// capture; vin is read when the aperture instant arrives, not at the clock edge.
+module aperture_sample_hold(VDD, VSS, clk, vin, vout);
+inout VDD, VSS;
+input clk, vin;
+output vout;
+electrical VDD, VSS, clk, vin, vout;
+
+parameter real vth = 0.45;
+parameter real taperture = 200p from (0:inf);
+parameter real tedge = 50p from (0:inf);
+
+real held;       // value presented on vout
+real t_capture;  // aperture instant of the pending capture
+integer pending; // a trigger is waiting for its aperture instant
+
+analog begin
+    @(initial_step) begin
+        held = V(vin);
+        t_capture = -1.0;
+        pending = 0;
+    end
+
+    @(cross(V(clk) - vth, +1)) begin
+        t_capture = $abstime + taperture;
+        pending = 1;
+    end
+
+    @(timer(t_capture)) begin
+        if (pending) begin
+            held = V(vin);
+            pending = 0;
+        end
+    end
+
+    // VDD and VSS only complete the connection; the held value is not clamped or re-referenced.
+    V(vout) <+ transition(held, 0, tedge, tedge);
+end
+endmodule

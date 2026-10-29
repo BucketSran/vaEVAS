@@ -1,11 +1,44 @@
-# 实际放大器静态增益和有限建立
+# Measured static gain and finite settling
 
-实现 `/work/dut.va`，保留以下公开接口与行为。固定 DUT 源码位于 `/work/public/dut/`，只读。不得驱动观测输入。测量不达标 DUT 时，报告正确结果仍可通过。
+Measure one static amplifier and one dynamic amplifier that observe the same input in parallel. They are not cascaded. The fixed backend is Spectre. Candidate source runs as submitted bytes, and the syntax is that backend's Verilog-A. A dynamic response that does not settle can still be measured correctly and pass. The result covers only the stated finite window. It does not claim stability for all later time.
 
-模块 gain_settling_meter(vin,static_out,dynamic_out,launch,gain,gain_valid,settling_ns,settled,status)。固定台分别实例化静态038和动态370，二者并联观测相同输入，不是级联；只读端口没有内部settled标志。首个launch上升沿前，gain、gain_valid、settling_ns、settled、status均为0；有效标志为0时，数值报告仍须按本合同初始化或保持。launch上升捕获输入和静态输出基线，清报告，随后每250ps采样动态输出80次，观察窗口20ns；输入在第一个采样前改变后保持，第二轮重新捕获全部状态。跨度边界按1pV数值比较容差验收（abs(span)≤0.02V+1pV为无效），正常与慢DUT激励均离开该边界。窗口末输入与基线跨度无效时status=2、其余报告0；否则gain=实际静态输出变化/实际输入变化、gain_valid=1。最终static_out定义观测目标。所有81个动态样本包括基线中，最后一个误差大于2mV的样本之后第一个样本定义settling_ns；完全无超差为0。末8个样本都在2mV内才settled=1、status=1并报告建立时间，否则settled=0、status=3、settling_ns=0，仍报告实际静态gain。收集中status=0。只证明公开有限观察窗口，不能宣称无限时间稳定；不达标动态也可被正确仪表测量并通过。tr20ps、guard80ps，gain误差0.02，建立时间0.03ns，其余3mV。
+## Spec
 
-## 公开自测与终评范围
+Use the module and port order in `/app/circuit.va`. The module is `gain_settling_meter(vin, static_out, dynamic_out, launch, gain, gain_valid, settling_ns, settled, status)`. `vin`, `static_out`, `dynamic_out`, and `launch` are read-only. Do not drive them. `gain`, `gain_valid`, `settling_ns`, `settled`, and `status` are outputs. The read-only DUT ports do not expose an internal settled flag for the meter to use.
 
-静态放大器增益固定2.5，动态alpha为0.01至0.35；vin基线与阶跃值在0.42至0.49V。每轮launch后200至240ps内完成输入阶跃，随后保持至窗口末；可有有效跨度、无效跨度或窗口内未建立DUT。各轮相隔至少25ns；固定80次采样和末8样本条件不变。
+Declare these defaults: real `sample_period=250 ps`, real `min_input_span=0.02` V, real `settle_tol=0.002` V, real `tr=20 ps`, integer `samples=80`, and integer `tail_samples=8`. The 80-sample count and the final-8-sample condition stay fixed. The timing guard is 80 ps. Gain error is 0.02, settling-time error is 0.03 ns, and the remaining voltage tolerance is 3 mV.
 
-固定后端为 Spectre；语法遵循该后端的 Verilog-A。源码按原字节运行。工具链故障单独诊断，不作为候选零分。公开自测实例位于 `/work/public/cases.json`，固定DUT实现位于 `/work/public/dut/`，可据此运行自己的Spectre自测。终评在提交后使用合同范围内不同的参数、事件及故障实例；终评台架和checker不进入解题材料。判定目标与数值容差以本题公开合同为准。
+The timing guard applies around these events: every rising crossing of `launch` through 0.5 V, and the end of each window, 80 sample periods of 250 ps (20 ns) after its `launch` crossing. These events, together with the start and the end of the transient, divide the run into intervals. An interval no longer than 160 ps is not scored. In every longer interval, each output is scored at every saved point more than 80 ps from both ends of the interval, and at the midpoint of the interval, where its value is interpolated linearly between saved points.
+
+Before the first rising `launch`, `gain`, `gain_valid`, `settling_ns`, `settled`, and `status` are 0. While a validity flag is 0, the numeric reports must still be initialized or held as this contract requires. A rising `launch` captures the input and static-output baselines, clears the report, and then samples `dynamic_out` 80 times at 250 ps. The observation window is 20 ns. The input changes and then holds before the first sample. A second round captures every state again.
+
+The span boundary uses a 1 pV numerical comparison tolerance: `abs(span) <= 0.02 V + 1 pV` is invalid. Both the normal and slow DUT stimuli leave that boundary. If the input-to-baseline span at the end of the window is invalid, `status=2` and the other reports are 0. Otherwise `gain` is the actual static-output change divided by the actual input change, and `gain_valid=1`. The final `static_out` defines the observation target.
+
+Among all 81 dynamic samples, including the baseline, settling time is the first sample after the last sample whose error exceeds 2 mV. If no sample exceeds 2 mV, the settling time is 0. `settled=1` and `status=1` only when the last 8 samples are all inside 2 mV; the settling time is then reported. Otherwise `settled=0`, `status=3`, and `settling_ns=0`, while the actual static gain is still reported. During collection, `status=0`.
+
+The static amplifier gain used by this contract is 2.5. Dynamic `alpha` is 0.01 to 0.35. The `vin` baseline and step lie in 0.42 V to 0.49 V. Each round completes its input step within 200 ps to 240 ps after `launch` and then holds through the end of the window. A round may have a valid span, an invalid span, or a DUT that has not settled inside the window. Rounds are at least 25 ns apart. In every case, public and final, no interval is exactly 160 ps long.
+
+The read-only parts are `/app/testbench/dut/static_amp.va` (`programmable_gain_amplifier`) and `/app/testbench/dut/dynamic_amp.va` (`opamp_feedback_settling`). Their source defaults are not a substitute for the waveform. The static part declares `vth=0.45`, `vcm=0.45`, `gain_low=0.8`, `gain_high=2.4`, `vmin=0`, `vmax=0.9`, and `tr=200 ps`. The published static-gain condition is still 2.5. The dynamic part declares `vdd=0.9`, `vss=0`, `vcm=0.45`, `vth=0.45`, `gain_lsb=0.5`, `alpha=0.3`, `settle_tol=40e-3`, `tr=200 ps`, and `tick=250 ps`. Public cases may override instance parameters inside the ranges stated above. The candidate cannot read those parameters.
+
+Public cases are in `/app/testbench/cases.json`. Final evaluation, after submission, uses different parameters, events, and fault instances inside this contract. Every required acceptance condition must pass. An executed attempt that fails scores 0, and the failure cause is recorded separately. A missing simulator, compile failure, timeout, missing waveform, or other execution or infrastructure failure is not evidence that the submitted model behavior is wrong.
+
+## Deliverable
+
+- Edit `/app/circuit.va` and implement `gain_settling_meter` on the declared ports, including the parameter defaults above.
+- Deliver the static-gain and finite-settling reports. Any implementation that meets this interface and external behavior is acceptable. A particular internal state variable or event organization is not required.
+- Do not drive `vin`, `static_out`, `dynamic_out`, or `launch`, and do not edit the files under `/app/testbench/dut/`. The submitted model must not read DUT parameters or an internal settled flag. This restriction applies to the submitted model. You may read the public DUT and run the public check.
+- An unsettled dynamic waveform is still a valid measurement when `status=3` and the static gain are reported as specified.
+
+Run `python3 /app/testbench/check.py --output /app/output/public-check`. The [public testbench guide](/app/testbench/README.md) documents the Spectre dependency, case selection, timeouts, output layout, and diagnostic exit codes. Public feedback is not the final task score.
+
+This is an implementation task, not a repository-audit task.
+Work in /app and modify only the declared deliverable; do not edit public development benches, model libraries, or external fixtures.
+Make one bounded inspection pass over this instruction, the declared deliverable, supplied starter material, and public development benches.
+As the task solver, create a runnable candidate in the file named in the Deliverable section before beginning detailed exploration, and keep that file updated as you work.
+If your working time expires, the evaluator copies that file exactly as it exists at that moment and runs the verifier on it.
+If the file is missing or empty, the result is zero reward.
+Temporary files are not submitted.
+
+If a concrete model, tool, or execution problem appears, investigate it as needed before continuing.
+Iterate by editing the declared deliverable and using public development benches to diagnose observed behavior.
+Do not repeatedly enumerate files, reread unchanged references, or retry unchanged discovery commands instead of editing and simulating.

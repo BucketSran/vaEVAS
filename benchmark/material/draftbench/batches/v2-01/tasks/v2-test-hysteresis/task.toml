@@ -1,12 +1,20 @@
 schema_version = "1.4"
+artifacts = ["/app/circuit.va"]
 [metadata]
 name = "v2-test-hysteresis"
 category = "verilog-a"
 engineering_action = "testing-characterization"
 source_group = "v4-111"
+circuit_route = "all-va"
+starter_kind = "new-model"
+stage = "implementation"
+review_status = "pending"
+pending = ["grading", "runtime"]
+
 [agent]
 timeout_sec = 900
 [verifier]
+environment_mode = "separate"
 timeout_sec = 600
 [environment]
 build_timeout_sec = 600

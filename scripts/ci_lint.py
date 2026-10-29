@@ -43,7 +43,6 @@ def commands(paths, *, rust=False, maintenance=False):
             [
                 [
                     "cargo",
-                    "+stable",
                     "fmt",
                     "--manifest-path",
                     "evas/rust_core/Cargo.toml",
@@ -52,7 +51,6 @@ def commands(paths, *, rust=False, maintenance=False):
                 ],
                 [
                     "cargo",
-                    "+stable",
                     "clippy",
                     "--locked",
                     "--workspace",
@@ -70,8 +68,9 @@ def commands(paths, *, rust=False, maintenance=False):
     ):
         result.extend(
             [
-                [sys.executable, "-B", "scripts/" + script, "--check"]
-                for script in ["diagnostic_inventory.py", "traceability.py"]
+                [sys.executable, "-B", "scripts/diagnostic_inventory.py", "--check"],
+                [sys.executable, "-B", "scripts/traceability.py", "--check",
+                 "--catalog-data", "evas/capabilities/data"],
             ]
         )
         result.append([sys.executable, "-B", "scripts/verify_validation_version.py"])

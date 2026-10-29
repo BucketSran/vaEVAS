@@ -47,6 +47,11 @@ class SourceMath(unittest.TestCase):
                     self.assertGreaterEqual(hi, reference(x))
                     self.assertLessEqual(lo, Decimal.from_float(sample['voltages'][idx]))
                     self.assertGreaterEqual(hi, Decimal.from_float(sample['voltages'][idx]))
+                    actual = Decimal.from_float(sample['voltages'][idx])
+                    # Original request defaults: 1e-12 V absolute + 1e-10 relative.
+                    budget = Decimal.from_float(1e-12) + Decimal.from_float(1e-10)*abs(actual)
+                    self.assertLessEqual(abs(actual-reference(x)), budget)
+                    self.assertLessEqual(max(abs(actual-lo), abs(hi-actual)), budget)
 
     def test_true_source_error_is_propagated_and_amplification_is_refused(self):
         program = self.program('V(u)*tanh(V(u))')
@@ -146,10 +151,16 @@ class SourceMath(unittest.TestCase):
         program = compile_sources({'math.va':source}, [instance()])
         response = self.run_value(program, .1)
         idx = response['nodes'].index('y')
-        for bounds in response['observation_evidence']['voltage_bounds_V']:
+        for sample, bounds in zip(response['solutions'],
+                response['observation_evidence']['voltage_bounds_V']):
             lo, hi = map(Decimal.from_float, bounds[idx])
-            self.assertLessEqual(lo, reference(.1)+Decimal('.25'))
-            self.assertGreaterEqual(hi, reference(.1)+Decimal('.25'))
+            expected = reference(.1)+Decimal('.25')
+            self.assertLessEqual(lo, expected)
+            self.assertGreaterEqual(hi, expected)
+            actual = Decimal.from_float(sample['voltages'][idx])
+            budget = Decimal.from_float(1e-12) + Decimal.from_float(1e-10)*abs(actual)
+            self.assertLessEqual(abs(actual-expected), budget)
+            self.assertLessEqual(max(abs(actual-lo), abs(hi-actual)), budget)
 
     def test_invalid_original_arithmetic_is_not_hidden_by_math_saturation(self):
         program = self.program('V(u)*tanh(1e308*V(u))')

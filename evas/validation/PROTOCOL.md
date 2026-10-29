@@ -3,6 +3,22 @@
 本页保存验证集的行为义务、独立答案来源、精度方案和计数规则。
 使用入口、当前结果与材料目录见 [README](README.md)。
 
+## 现行语言配置与历史协议
+
+新建或修改的要求使用[语言配置 `evas-va-2.4-plus-2023-v1`](../capabilities/data/language-profile.json)：
+LRM 2.4 基础，逐项选入 7780 的 `ln1p`、`expm1` 及其语言别名、域和必要依赖，
+以及 7920 的 `$rtoi`、`$itor` 模拟上下文。未选入的变化继续按 2.4。
+Table 4-14、A.8.2 或保留字表不能整表替换；共享容器中的未选变化保持原身份。
+具体来源处置、目标范围和资格分别见[规范登记](../capabilities/README.md)。
+
+既有案例、协议版本和冻结收据仍描述其原来采用的 2.4 要求及执行身份。
+本次配置更新不重写旧成绩，也不自动把它们认证为新要求的证据。
+引用的 IEEE 1364 转换定义尚未固定时，相关要求保持待补证；独立精度预算须另行审核。
+外部后端兼容结论仍须真实比较，Spectre 待跑。
+
+当前四端要求视图由 `evas/capabilities/render.py` 从登记生成，见 [support.md](../capabilities/generated/support.md)。
+四个当前要求在取得匹配证据和审核之前保持 pending。本页既有协议计数和冻结收据保持原身份。
+
 ## 范围、编码与可比性
 
 ### 纳入
@@ -42,7 +58,7 @@
 
 | 来源 | 作用与本版使用位置 | 限制 |
 | --- | --- | --- |
-| [Accellera LRM 2.4.0](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf) | §4.4 电压访问；§4.5 动态算子；§5.6 贡献；§5.10 事件；§8.2–8.3 初始化/求解语义 | 本版固定 2.4 语义；不是全语言合规测评；未逐条认证全标准 |
+| [Accellera LRM 2.4.0](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf) | §4.4 电压访问；§4.5 动态算子；§5.6 贡献；§5.10 事件；§8.2–8.3 初始化/求解语义 | 既有案例固定 2.4 身份；新要求按上面的版本化配置；不是全语言合规测评 |
 | [Designer’s Guide: Functional Modeling](https://www.verilogams.org/tutorials/functional-modeling.html) | V3/V5 的功能需求依据 | 含教学反例，不复制为黄金源码 |
 | [Designer’s Guide: Digital Buses](https://www.verilogams.org/tutorials/digital-buses.html) | V2/V4 的电压总线、差分及采样应用依据 | 同一出版来源组；不由示例推出工业分布 |
 | [Designer’s Guide: Multiplexers](https://www.verilogams.org/tutorials/multiplexers.html) | V1/V7 的贡献相加和连续/离散交互需求 | 混有 AMS 写法；提取行为要求后按固定 LRM 写合法 VA |

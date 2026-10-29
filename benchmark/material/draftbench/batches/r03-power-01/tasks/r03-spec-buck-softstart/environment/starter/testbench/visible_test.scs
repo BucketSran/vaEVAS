@@ -1,0 +1,15 @@
+simulator lang=spectre
+global 0
+
+ahdl_include "/app/circuit.va"
+
+Vvfb (vfb 0) vsource type=pwl wave=[0 0.11 236.3n 0.11 236.5n 0.6275 268.3n 0.6275 268.5n 0.66 276.3n 0.66 276.5n 0.6275 388.3n 0.6275 388.5n 0.59 421.3n 0.59 421.5n 0.06 600n 0.06]
+Vvref (vref 0) vsource dc=0.62
+Vclk (clk 0) vsource type=pulse val0=0 val1=0.9 period=8n width=3.9n delay=0.95n rise=100p fall=100p
+Vrst (rst 0) vsource type=pwl wave=[0 0.9 2.95n 0.9 3.05n 0 555.95n 0 556.05n 0.9 562.95n 0.9 563.05n 0 600n 0]
+Ven (enable 0) vsource type=pwl wave=[0 0.9 403.95n 0.9 404.05n 0 419.95n 0 420.05n 0.9 600n 0.9]
+
+XDUT (vfb vref clk rst enable pwm duty_metric soft_ref pgood) buck_ctrl_top
+
+tran tran stop=600n maxstep=50p strobeperiod=50p
+save vfb vref clk rst enable pwm duty_metric soft_ref pgood

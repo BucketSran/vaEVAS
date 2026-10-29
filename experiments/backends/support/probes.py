@@ -54,7 +54,8 @@ def freeze(output, cards_path=None, gnucap_time_bits=None):
             save(work/'requested_settings.json', backend_settings)
     paths = [*(ROOT/'evas/validation/support').glob('*.py'), *Path(__file__).parent.glob('*.py'), * (ROOT/'experiments/backends/paper').glob('*.py'),
              ROOT/'experiments/backends/evidence/legacy_waveforms.py',
-             ROOT/'experiments/backends/dvs2-spectre-validation/report.py']
+             ROOT/'experiments/backends/dvs2-spectre-validation/report.py',
+             ROOT/'evas/validation/adapters/paper_evas_worker.py']
     save(output/'ADAPTER_IDENTITY.json', {str(p.relative_to(ROOT)): sha(p) for p in sorted(paths)})
     save(output/'INPUT_MANIFEST.json', {str(p.relative_to(output)): sha(p) for p in sorted(output.rglob('*')) if p.is_file()})
 

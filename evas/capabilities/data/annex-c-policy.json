@@ -1,0 +1,186 @@
+{
+  "schema_version": 1,
+  "items": [
+    {
+      "source_id": "lrm24:clause_candidate:C.1:p398l12",
+      "clause": "C.1",
+      "language_applicability": "include",
+      "basis": "Defines analog language subset; electrical and non-electrical systems remain in language scope.",
+      "decision_origin": "analyst reading of 2.4 Annex C, candidate for independent review",
+      "review_status": "pending-independent-review",
+      "evas_target_scope": "separate decision required; not inferred from applicability"
+    },
+    {
+      "source_id": "lrm24:clause_candidate:C.2:p398l32",
+      "clause": "C.2",
+      "language_applicability": "include",
+      "basis": "Feature summary; use detailed normative clauses for requirements.",
+      "decision_origin": "analyst reading of 2.4 Annex C, candidate for independent review",
+      "review_status": "pending-independent-review",
+      "evas_target_scope": "separate decision required; not inferred from applicability"
+    },
+    {
+      "source_id": "lrm24:clause_candidate:C.3:p399l5",
+      "clause": "C.3",
+      "language_applicability": "include_with_exceptions",
+      "basis": "Clause 2 applies; X/Z/? restricted to mixed-signal contexts; all AMS keywords reserved, unused keywords separately identified.",
+      "decision_origin": "analyst reading of 2.4 Annex C, candidate for independent review",
+      "review_status": "pending-independent-review",
+      "evas_target_scope": "separate decision required; not inferred from applicability"
+    },
+    {
+      "source_id": "lrm24:clause_candidate:C.4:p399l20",
+      "clause": "C.4",
+      "language_applicability": "include_with_exceptions",
+      "basis": "Clause 3 applies; discrete domain binding is an error, wreal/default_discipline unsupported; module disciplines required.",
+      "decision_origin": "analyst reading of 2.4 Annex C, candidate for independent review",
+      "review_status": "pending-independent-review",
+      "evas_target_scope": "separate decision required; not inferred from applicability"
+    },
+    {
+      "source_id": "lrm24:clause_candidate:C.5:p399l33",
+      "clause": "C.5",
+      "language_applicability": "include_with_exceptions",
+      "basis": "Clause 4 applies except === and !==.",
+      "decision_origin": "analyst reading of 2.4 Annex C, candidate for independent review",
+      "review_status": "pending-independent-review",
+      "evas_target_scope": "separate decision required; not inferred from applicability"
+    },
+    {
+      "source_id": "lrm24:clause_candidate:C.6:p399l41",
+      "clause": "C.6",
+      "language_applicability": "include",
+      "basis": "Section 5.4 analog signals applies.",
+      "decision_origin": "analyst reading of 2.4 Annex C, candidate for independent review",
+      "review_status": "pending-independent-review",
+      "evas_target_scope": "separate decision required; not inferred from applicability"
+    },
+    {
+      "source_id": "lrm24:clause_candidate:C.7:p399l46",
+      "clause": "C.7",
+      "language_applicability": "include_with_exceptions",
+      "basis": "Clause 5 applies except digital behavior/events and casex/casez.",
+      "decision_origin": "analyst reading of 2.4 Annex C, candidate for independent review",
+      "review_status": "pending-independent-review",
+      "evas_target_scope": "separate decision required; not inferred from applicability"
+    },
+    {
+      "source_id": "lrm24:clause_candidate:C.8:p400l5",
+      "clause": "C.8",
+      "language_applicability": "include_with_exceptions",
+      "basis": "Clause 6 applies except real-valued ports from 6.5.3.",
+      "decision_origin": "analyst reading of 2.4 Annex C, candidate for independent review",
+      "review_status": "pending-independent-review",
+      "evas_target_scope": "separate decision required; not inferred from applicability"
+    },
+    {
+      "source_id": "lrm24:clause_candidate:C.9:p400l12",
+      "clause": "C.9",
+      "language_applicability": "exclude",
+      "basis": "Clause 7 applies only to AMS. Retain referenced contextual definitions as dependencies where required.",
+      "decision_origin": "analyst reading of 2.4 Annex C, candidate for independent review",
+      "review_status": "pending-independent-review",
+      "evas_target_scope": "separate decision required; not inferred from applicability"
+    },
+    {
+      "source_id": "lrm24:clause_candidate:C.10:p400l17",
+      "clause": "C.10",
+      "language_applicability": "include_with_interpretation_gap",
+      "basis": "C.10 names the analog cycle as applicable, but its mixed-signal reference says 8.2. In the same 2.4 document, 8.2 is Simulation initialization, 8.3 Analog simulation cycle and 8.4 Mixed-signal simulation cycle. Do not mechanically exclude all of 8.2; retain an explicit stale-cross-reference interpretation gap. No 2023 correction is selected.",
+      "decision_origin": "analyst reading of 2.4 Annex C, candidate for independent review",
+      "review_status": "pending-independent-review",
+      "evas_target_scope": "separate decision required; not inferred from applicability",
+      "interpretation_gap_id": "lrm24:gap:C.10-stale-8.2-reference"
+    },
+    {
+      "source_id": "lrm24:clause_candidate:C.11:p400l23",
+      "clause": "C.11",
+      "language_applicability": "conditional_include",
+      "basis": "Clause 9 only for functions/tasks applicable in analog context; resolve every table row against context columns and profile overlays.",
+      "decision_origin": "analyst reading of 2.4 Annex C, candidate for independent review",
+      "review_status": "pending-independent-review",
+      "evas_target_scope": "separate decision required; not inferred from applicability"
+    },
+    {
+      "source_id": "lrm24:clause_candidate:C.12:p400l29",
+      "clause": "C.12",
+      "language_applicability": "include",
+      "basis": "Clause 10 compiler directives apply, subject to explicit C.4 exception for default_discipline.",
+      "decision_origin": "analyst reading of 2.4 Annex C, candidate for independent review",
+      "review_status": "pending-independent-review",
+      "evas_target_scope": "separate decision required; not inferred from applicability"
+    },
+    {
+      "source_id": "lrm24:clause_candidate:C.13:p400l34",
+      "clause": "C.13",
+      "language_applicability": "conditional_include",
+      "basis": "Analog behavior of Clause 11 VPI applies; EVAS target exclusion is a separate field.",
+      "decision_origin": "analyst reading of 2.4 Annex C, candidate for independent review",
+      "review_status": "pending-independent-review",
+      "evas_target_scope": "separate decision required; not inferred from applicability"
+    },
+    {
+      "source_id": "lrm24:clause_candidate:C.14:p400l39",
+      "clause": "C.14",
+      "language_applicability": "conditional_include",
+      "basis": "Analog behavior of Clause 12 VPI applies; EVAS target exclusion is a separate field.",
+      "decision_origin": "analyst reading of 2.4 Annex C, candidate for independent review",
+      "review_status": "pending-independent-review",
+      "evas_target_scope": "separate decision required; not inferred from applicability"
+    },
+    {
+      "source_id": "lrm24:clause_candidate:C.15:p400l44",
+      "clause": "C.15",
+      "language_applicability": "include",
+      "basis": "Annex A supplies BNF; apply C restrictions to productions, not an alternate subset grammar.",
+      "decision_origin": "analyst reading of 2.4 Annex C, candidate for independent review",
+      "review_status": "pending-independent-review",
+      "evas_target_scope": "separate decision required; not inferred from applicability"
+    },
+    {
+      "source_id": "lrm24:clause_candidate:C.16:p400l50",
+      "clause": "C.16",
+      "language_applicability": "include_with_exceptions",
+      "basis": "Annex B reserved words apply. Unused connect/connectmodule/connectrules/driver_update/endconnectrules/merged/net_resolution/resolvedto/split/wreal remain reserved; 5027 is unselected.",
+      "decision_origin": "analyst reading of 2.4 Annex C, candidate for independent review",
+      "review_status": "pending-independent-review",
+      "evas_target_scope": "separate decision required; not inferred from applicability"
+    },
+    {
+      "source_id": "lrm24:clause_candidate:C.17:p401l15",
+      "clause": "C.17",
+      "language_applicability": "include_with_exceptions",
+      "basis": "Annex D applies except discrete-domain discipline definitions must be silently ignored. Distinguish this from C.4 explicit discrete binding error.",
+      "decision_origin": "analyst reading of 2.4 Annex C, candidate for independent review",
+      "review_status": "pending-independent-review",
+      "evas_target_scope": "separate decision required; not inferred from applicability"
+    },
+    {
+      "source_id": "lrm24:clause_candidate:C.18:p401l22",
+      "clause": "C.18",
+      "language_applicability": "include",
+      "basis": "Annex E SPICE compatibility applies, independently of EVAS target support.",
+      "decision_origin": "analyst reading of 2.4 Annex C, candidate for independent review",
+      "review_status": "pending-independent-review",
+      "evas_target_scope": "separate decision required; not inferred from applicability"
+    },
+    {
+      "source_id": "lrm24:clause_candidate:C.19:p401l27",
+      "clause": "C.19",
+      "language_applicability": "informative_dependency",
+      "basis": "Annex G identifies changes; it does not replace normative body or select 2023 changes.",
+      "decision_origin": "analyst reading of 2.4 Annex C, candidate for independent review",
+      "review_status": "pending-independent-review",
+      "evas_target_scope": "separate decision required; not inferred from applicability"
+    },
+    {
+      "source_id": "lrm24:clause_candidate:C.20:p401l32",
+      "clause": "C.20",
+      "language_applicability": "dependency_review",
+      "basis": "Annex G obsolete functionality is referenced for unsupported statements; G is informative, so conflicts with normative body need explicit interpretation review.",
+      "decision_origin": "analyst reading of 2.4 Annex C, candidate for independent review",
+      "review_status": "pending-independent-review",
+      "evas_target_scope": "separate decision required; not inferred from applicability"
+    }
+  ]
+}

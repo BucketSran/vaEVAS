@@ -1,6 +1,7 @@
 """Freeze exactly eight existing development conditions and 32 base configurations."""
 from __future__ import annotations
 import argparse
+import ast
 import json
 from pathlib import Path
 import sys
@@ -21,11 +22,35 @@ def save(path, value):
         stream.write('\n')
 
 
+WORKER_ADAPTER = 'evas/validation/adapters/comparison_evas_worker.py'
+
+
+def worker_dependencies(source):
+    """Select the dependency contract from audited runner source, never file presence."""
+    tree = ast.parse(source)
+    assignments = [n.value for n in tree.body if isinstance(n, ast.Assign)
+                   and any(isinstance(t, ast.Name) and t.id == '_EVAS_WORKER_PATH' for t in n.targets)]
+    if assignments:
+        expected = ast.parse('ROOT / ' + repr(WORKER_ADAPTER), mode='eval').body
+        if len(assignments) != 1 or ast.dump(assignments[0]) != ast.dump(expected):
+            raise ValueError('unknown comparison worker dependency contract')
+        return (WORKER_ADAPTER,)
+    if any(isinstance(n, ast.Constant) and isinstance(n.value, str)
+           and n.value.endswith('/comparison_evas_worker.py') for n in ast.walk(tree)):
+        raise ValueError('unregistered comparison worker dependency contract')
+    return ()
+
+
+def worker_sources():
+    source = (ROOT / 'experiments/backends/comparison/runner.py').read_text()
+    return {name: sha(ROOT / name) for name in worker_dependencies(source)}
+
+
 def runtime_identity():
     paths = sorted(p for base in ('evas/src', 'evas/rust_core') for p in (ROOT / base).rglob('*')
                    if p.is_file() and (p.suffix in ('.py', '.rs', '.toml') or p.name == 'Cargo.lock')
                    and 'target' not in p.parts and '__pycache__' not in p.parts)
-    return identity({str(p.relative_to(ROOT)): sha(p) for p in paths})
+    return identity({**{str(p.relative_to(ROOT)): sha(p) for p in paths}, **worker_sources()})
 
 
 def checker_identity():

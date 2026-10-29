@@ -1,5 +1,11 @@
 # 短脉冲
 
+历史视图身份：`historical-comparison-import-f210ebd5`。
+原输入：`evas/docs/COMPARISON.md`。
+原判据范围：Historical transcription; not qualification for current main。
+这些成绩留在该历史身份下。当前要求分母只计登记中的当前要求。
+当前逐要求四后端事实见 [support.md](../generated/support.md) 与 [support-facts.json](../generated/support-facts.json)。
+
 章节：延迟、边沿、周期。
 状态：等待跑。
 审核：待审核。

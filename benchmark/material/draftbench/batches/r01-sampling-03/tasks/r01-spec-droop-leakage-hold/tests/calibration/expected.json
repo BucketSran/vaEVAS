@@ -1,0 +1,477 @@
+{
+ "task": "r01-spec-droop-leakage-hold",
+ "cases": [
+  "base",
+  "phase-grid",
+  "reset-release",
+  "param-override",
+  "param-endpoints-low",
+  "param-endpoints-high",
+  "start-high"
+ ],
+ "checker_failure": "an output sample more than atol (2 mV) from the expected held value outside the unscored 1.25*tr after a change of that value by more than the threshold 0.1 mV of the instruction",
+ "semantics": "Verilog-A LRM 2.4 5.10.3.1 cross (event at the crossing within its time tolerance), 5.10.3.3 timer (periodic timer from its start time; an absolute timer re-armed in its own event), 4.5.8 transition (zero-delay interruption by the completion slope; delayed transitions), 5.10.2 initial_step; to be recorded on Spectre",
+ "conditions": {
+  "all": "every expectation assumes cross() events at the crossing or just after it (within a few ps where tr is 100 ps or more, within 0.5 ps in param-endpoints-low, tr = 10 ps) and timer(0, leak_period) events at k*leak_period; the leak instants are grid rows and every rising sample crossing is at least 50.35 ps away from them (param-endpoints-low; 52.5 ps in base and phase-grid), so no expectation depends on which side of a leak instant a capture lands; no saved row lies on a scoring start 1.25*tr after a change of h",
+  "interrupted_transitions": "base (7 changes), phase-grid (11), reset-release (6), param-override (1) and start-high (2) retarget running output ramps: captures 52.5 ps before a leak instant (57.5 ps in param-override), clears 22.5 to 222.5 ps after one, leak updates inside a capture ramp; by the LRM 4.5.8 completion rule an interrupted zero-delay transition() with equal rise and fall times reaches the new value within tr of the interruption, so these cases need no exclusion; the synthetic restart-ramp model, which restarts a full tr from the current value, is accepted as well",
+  "margin_arrival_1p2tr": "arrives after the tr deadline but before the 1.25*tr scoring start; accepted under the user-confirmed observation rule (F01, 2026-10-28), not a correct model",
+  "late_arrival_1p3tr": "captures and clears sit 2.5 or 7.5 ps past a row of the 10 ps grid in base, phase-grid, reset-release and start-high (first scored row 1.255*tr or 1.265*tr), 0.5 ps past a row of the 2 ps grid in param-override (1.255*tr), 0.05 ps past a row of the 0.8 ps grid in param-endpoints-low (1.275*tr) and 18 ps past a row of the 20 ps grid in param-endpoints-high (1.262*tr); no row lies on any scoring start; every case keeps at least three captures or clears of 300 mV or more with a row inside (1.25*tr, 1.3*tr); the captures that a leak update interrupts before 1.25*tr are exceptions. Leak updates are grid rows: in param-override the first scored row after each is 1.26*tr and in param-endpoints-low 1.28*tr, where a 1.3*tr arrival of a settled leak step of 65 mV (10 % of h) or 130 mV (50 % of h) or more misses 2 mV (3 steps in param-override, 11 in param-endpoints-low; the synthetic leak-late-1p3tr control is rejected only there); in the default cases the first scored row is 1.26*tr, but their largest leak step (1.5 % of h, 14 mV) cannot show a 1.3*tr arrival by 2 mV at any row inside the window, and param-endpoints-high has no leak change (decay = 1)",
+  "alt_delayed_within_tr": "uses a 0.2*tr transport delay; a capture 52.5 ps before a leak instant leaves its change pending when the leak change arrives (base and phase-grid, tr 500 ps: delay 100 ps); both the LRM 4.5.8 queue and a backend that replaces the pending change reach the leak target, which already includes the capture, within tr of the leak instant; in the other cases every delayed change has started before the next event",
+  "alt_counter_grid": "absolute timer re-armed to updates*leak_period inside its own event; no time comparison, so no TIE-RULE case 4 boundary",
+  "continuous_leak": "output = held*decay^((t - t_capture)/leak_period) as a bare contribution; decay = 1 makes it equal to the reference, so param-endpoints-high accepts it",
+  "leak_only_sample_low": "in param-endpoints-high decay = 1, so skipped updates change nothing",
+  "period_fixed_1n": "param-endpoints-high has decay = 1, so the period is not observable there",
+  "tr_fixed_500p": "faster than the 1 ns limit in param-endpoints-high, which is allowed",
+  "tr_floor_100p": "the output transition time is max(tr, 100 ps); identical to the reference wherever tr is 100 ps or more, so only param-endpoints-low (tr = 10 ps) rejects it, at the scored row 1.275*tr after each capture (U17R1-01 pattern)",
+  "sync_reset_events": "the historical v4:042 reset: rst read only at leak instants and rising sample crossings; every case with a rst rising crossing clears a nonzero value away from both, so it is rejected there; phase-grid has no rst activity",
+  "original_v4_042_gold": "the released v4:042 gold unchanged (same module name and ports); not written for this task: mutants.py reads it byte for byte from benchmark/material/historyref; its reset is event-synchronous (sync_reset_events); generated only inside the repository",
+  "historical_v4_1042_buggy": "the released v4:1042 buggy bundle unchanged: a capture stores 0 V and decay defaults to 0.9; generated only inside the repository; every case captures a nonzero value",
+  "track_while_high": "phase-grid and param-override reject it through a leak update inside a sample-high window (tracking shows the undecayed vin); param-endpoints-high has decay = 1 and vin constant while sample is high",
+  "sample_deglitch_0p6n": "phase-grid (0.525 ns low before the last capture) and param-endpoints-low (0.5008 ns low before the capture at 2.10485 ns) reject it; the other cases have at least 1.5 ns low before every capture (start-high: 2.6 ns after its first falling crossing)",
+  "initial_vin": "phase-grid starts with vin = 0 V, so it cannot reject it; reset-release starts in reset with vin = 0.65 V; start-high starts with sample high and vin = 0.6 V",
+  "capture_initial_high": "a level of sample above vth at t = 0 (with rst low) is taken as a capture of vin(0); only start-high starts with sample high (vin 0.6 V, first rising crossing at 5.3225 ns), so only start-high rejects it; the other six cases start with sample low and match the reference"
+ },
+ "candidates": [
+  {
+   "name": "leak_from_capture",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "phase-grid",
+    "reset-release",
+    "param-override",
+    "param-endpoints-low",
+    "start-high"
+   ],
+   "must_accept": [
+    "param-endpoints-high"
+   ],
+   "author_synthetic_control": "leak-from-capture"
+  },
+  {
+   "name": "leak_grid_half_phase",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "phase-grid",
+    "reset-release",
+    "param-override",
+    "param-endpoints-low",
+    "start-high"
+   ],
+   "must_accept": [
+    "param-endpoints-high"
+   ],
+   "author_synthetic_control": "leak-grid-half-phase"
+  },
+  {
+   "name": "continuous_leak",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "phase-grid",
+    "reset-release",
+    "param-override",
+    "param-endpoints-low",
+    "start-high"
+   ],
+   "must_accept": [
+    "param-endpoints-high"
+   ],
+   "author_synthetic_control": "continuous-leak"
+  },
+  {
+   "name": "no_leak",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "phase-grid",
+    "reset-release",
+    "param-override",
+    "param-endpoints-low",
+    "start-high"
+   ],
+   "must_accept": [
+    "param-endpoints-high"
+   ],
+   "author_synthetic_control": "no-leak"
+  },
+  {
+   "name": "leak_only_sample_low",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "phase-grid",
+    "reset-release",
+    "param-override",
+    "param-endpoints-low",
+    "start-high"
+   ],
+   "must_accept": [
+    "param-endpoints-high"
+   ],
+   "author_synthetic_control": "leak-only-sample-low"
+  },
+  {
+   "name": "negative_not_leaked",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "phase-grid",
+    "reset-release",
+    "param-override",
+    "param-endpoints-low",
+    "start-high"
+   ],
+   "must_accept": [
+    "param-endpoints-high"
+   ],
+   "author_synthetic_control": "negative-not-leaked"
+  },
+  {
+   "name": "capture_includes_leak",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "phase-grid",
+    "reset-release",
+    "param-override",
+    "param-endpoints-low",
+    "start-high"
+   ],
+   "must_accept": [
+    "param-endpoints-high"
+   ],
+   "author_synthetic_control": "capture-includes-leak"
+  },
+  {
+   "name": "decay_fixed_0p985",
+   "group": "wrong",
+   "must_reject": [
+    "param-override",
+    "param-endpoints-low",
+    "param-endpoints-high"
+   ],
+   "must_accept": [
+    "base",
+    "phase-grid",
+    "reset-release",
+    "start-high"
+   ],
+   "author_synthetic_control": "decay-fixed-0p985"
+  },
+  {
+   "name": "period_fixed_1n",
+   "group": "wrong",
+   "must_reject": [
+    "param-override",
+    "param-endpoints-low"
+   ],
+   "must_accept": [
+    "base",
+    "phase-grid",
+    "reset-release",
+    "param-endpoints-high",
+    "start-high"
+   ],
+   "author_synthetic_control": "period-fixed-1n"
+  },
+  {
+   "name": "tr_fixed_500p",
+   "group": "wrong",
+   "must_reject": [
+    "param-override",
+    "param-endpoints-low"
+   ],
+   "must_accept": [
+    "base",
+    "phase-grid",
+    "reset-release",
+    "param-endpoints-high",
+    "start-high"
+   ],
+   "author_synthetic_control": "tr-fixed-500p"
+  },
+  {
+   "name": "vth_fixed_0p45",
+   "group": "wrong",
+   "must_reject": [
+    "param-override",
+    "param-endpoints-low",
+    "param-endpoints-high"
+   ],
+   "must_accept": [
+    "base",
+    "phase-grid",
+    "reset-release",
+    "start-high"
+   ],
+   "author_synthetic_control": "vth-fixed-0p45"
+  },
+  {
+   "name": "tr_floor_100p",
+   "group": "wrong",
+   "must_reject": [
+    "param-endpoints-low"
+   ],
+   "must_accept": [
+    "base",
+    "phase-grid",
+    "reset-release",
+    "param-override",
+    "param-endpoints-high",
+    "start-high"
+   ],
+   "author_synthetic_control": "tr-floor-100p"
+  },
+  {
+   "name": "sync_reset_events",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "reset-release",
+    "param-override",
+    "param-endpoints-low",
+    "param-endpoints-high",
+    "start-high"
+   ],
+   "must_accept": [
+    "phase-grid"
+   ],
+   "author_synthetic_control": "sync-reset-events"
+  },
+  {
+   "name": "capture_in_reset",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "reset-release"
+   ],
+   "must_accept": [
+    "phase-grid",
+    "param-override",
+    "param-endpoints-low",
+    "param-endpoints-high",
+    "start-high"
+   ],
+   "author_synthetic_control": "capture-in-reset"
+  },
+  {
+   "name": "capture_on_release",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "reset-release"
+   ],
+   "must_accept": [
+    "phase-grid",
+    "param-override",
+    "param-endpoints-low",
+    "param-endpoints-high",
+    "start-high"
+   ],
+   "author_synthetic_control": "capture-on-release"
+  },
+  {
+   "name": "reset_ignored",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "reset-release",
+    "param-override",
+    "param-endpoints-low",
+    "param-endpoints-high",
+    "start-high"
+   ],
+   "must_accept": [
+    "phase-grid"
+   ],
+   "author_synthetic_control": "reset-ignored"
+  },
+  {
+   "name": "falling_edge_capture",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "phase-grid",
+    "reset-release",
+    "param-override",
+    "param-endpoints-low",
+    "param-endpoints-high",
+    "start-high"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "falling-edge-capture"
+  },
+  {
+   "name": "track_while_high",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "phase-grid",
+    "reset-release",
+    "param-override",
+    "param-endpoints-low",
+    "start-high"
+   ],
+   "must_accept": [
+    "param-endpoints-high"
+   ],
+   "author_synthetic_control": "track-while-high"
+  },
+  {
+   "name": "sample_deglitch_0p6n",
+   "group": "wrong",
+   "must_reject": [
+    "phase-grid",
+    "param-endpoints-low"
+   ],
+   "must_accept": [
+    "base",
+    "reset-release",
+    "param-override",
+    "param-endpoints-high",
+    "start-high"
+   ],
+   "author_synthetic_control": "sample-deglitch-0p6n"
+  },
+  {
+   "name": "initial_vin",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "reset-release",
+    "param-override",
+    "param-endpoints-low",
+    "param-endpoints-high",
+    "start-high"
+   ],
+   "must_accept": [
+    "phase-grid"
+   ],
+   "author_synthetic_control": "initial-vin"
+  },
+  {
+   "name": "late_arrival_1p3tr",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "phase-grid",
+    "reset-release",
+    "param-override",
+    "param-endpoints-low",
+    "param-endpoints-high",
+    "start-high"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "late-arrival-1p3tr"
+  },
+  {
+   "name": "capture_initial_high",
+   "group": "wrong",
+   "must_reject": [
+    "start-high"
+   ],
+   "must_accept": [
+    "base",
+    "phase-grid",
+    "reset-release",
+    "param-override",
+    "param-endpoints-low",
+    "param-endpoints-high"
+   ],
+   "author_synthetic_control": "capture-initial-high"
+  },
+  {
+   "name": "original_v4_042_gold",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "reset-release",
+    "param-override",
+    "param-endpoints-low",
+    "param-endpoints-high",
+    "start-high"
+   ],
+   "must_accept": [
+    "phase-grid"
+   ],
+   "author_synthetic_control": "sync-reset-events"
+  },
+  {
+   "name": "historical_v4_1042_buggy",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "phase-grid",
+    "reset-release",
+    "param-override",
+    "param-endpoints-low",
+    "param-endpoints-high",
+    "start-high"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": null
+  },
+  {
+   "name": "alt_fast_output",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "base",
+    "phase-grid",
+    "reset-release",
+    "param-override",
+    "param-endpoints-low",
+    "param-endpoints-high",
+    "start-high"
+   ],
+   "author_synthetic_control": "fast-output"
+  },
+  {
+   "name": "alt_counter_grid",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "base",
+    "phase-grid",
+    "reset-release",
+    "param-override",
+    "param-endpoints-low",
+    "param-endpoints-high",
+    "start-high"
+   ],
+   "author_synthetic_control": "contract"
+  },
+  {
+   "name": "alt_delayed_within_tr",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "base",
+    "phase-grid",
+    "reset-release",
+    "param-override",
+    "param-endpoints-low",
+    "param-endpoints-high",
+    "start-high"
+   ],
+   "author_synthetic_control": "delayed-within-tr"
+  },
+  {
+   "name": "margin_arrival_1p2tr",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "base",
+    "phase-grid",
+    "reset-release",
+    "param-override",
+    "param-endpoints-low",
+    "param-endpoints-high",
+    "start-high"
+   ],
+   "author_synthetic_control": "margin-arrival-1p2tr"
+  }
+ ]
+}

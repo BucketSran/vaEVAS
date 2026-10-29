@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "targets": [
+    {
+      "source_path": "evas/tests/test_generated_transient.py",
+      "site_policy": {
+        "schema_version": 1,
+        "id": "generated.hold.assertion",
+        "version": 1,
+        "kind": "native-assertion",
+        "source_sha256": "0313814883d721b804383b6ca14fb34868066214f36ebebe6b42547e7d9a65c0",
+        "function": "GeneratedKernelContracts.test_generated_cases_match_exact_oracles",
+        "assertion_line": 88,
+        "operation": "assertEqual"
+      },
+      "timing_policy": {
+        "schema_version": 1,
+        "id": "generated.hold.duration",
+        "version": 1,
+        "kind": "diagnostic-duration",
+        "source_sha256": "0313814883d721b804383b6ca14fb34868066214f36ebebe6b42547e7d9a65c0",
+        "function": "GeneratedKernelContracts.test_generated_cases_match_exact_oracles",
+        "assertion_line": 88,
+        "operation": "assertEqual",
+        "message_path": [
+          "elapsed_s"
+        ],
+        "role": "duration-seconds",
+        "producer": {
+          "source_sha256": "3470cd1ed1b7dad60880fd31d1935adb71498a9c70b1526809224074d60adf3b",
+          "function": "run_case",
+          "assignment_line": 375
+        }
+      }
+    },
+    {
+      "source_path": "evas/tests/test_generated_transient.py",
+      "site_policy": {
+        "schema_version": 1,
+        "id": "generated.mutated.assertion",
+        "version": 1,
+        "kind": "native-assertion",
+        "source_sha256": "0313814883d721b804383b6ca14fb34868066214f36ebebe6b42547e7d9a65c0",
+        "function": "GeneratedKernelContracts.test_numerical_defect_is_reported_as_value_mismatch",
+        "assertion_line": 120,
+        "operation": "assertEqual"
+      },
+      "timing_policy": {
+        "schema_version": 1,
+        "id": "generated.mutated.duration",
+        "version": 1,
+        "kind": "diagnostic-duration",
+        "source_sha256": "0313814883d721b804383b6ca14fb34868066214f36ebebe6b42547e7d9a65c0",
+        "function": "GeneratedKernelContracts.test_numerical_defect_is_reported_as_value_mismatch",
+        "assertion_line": 120,
+        "operation": "assertEqual",
+        "message_path": [
+          "elapsed_s"
+        ],
+        "role": "duration-seconds",
+        "producer": {
+          "source_sha256": "3470cd1ed1b7dad60880fd31d1935adb71498a9c70b1526809224074d60adf3b",
+          "function": "run_case",
+          "assignment_line": 375
+        }
+      }
+    },
+    {
+      "source_path": "evas/tests/test_migrate.py",
+      "site_policy": {
+        "schema_version": 1,
+        "id": "migration.diagnostic.assertion",
+        "version": 1,
+        "kind": "native-assertion",
+        "source_sha256": "03024b63f4f5697f05e0c4eae2bf13d006ffaffec5e896c9381c0918104f879c",
+        "function": "ManifestMigrationTests.test_invalid_source_is_a_diagnostic_not_a_fake_ir",
+        "assertion_line": 103,
+        "operation": "assertIn"
+      },
+      "tempdir_policy": {
+        "schema_version": 1,
+        "id": "migration.diagnostic.temporary-root",
+        "version": 1,
+        "kind": "temporary-directory-root",
+        "source_sha256": "03024b63f4f5697f05e0c4eae2bf13d006ffaffec5e896c9381c0918104f879c",
+        "function": "ManifestMigrationTests.test_invalid_source_is_a_diagnostic_not_a_fake_ir",
+        "assertion_line": 103,
+        "operation": "assertIn",
+        "target": "tmp"
+      }
+    },
+    {
+      "source_path": "evas/tests/test_original_source_consumers.py",
+      "site_policy": {
+        "schema_version": 1,
+        "id": "source.range.assertion",
+        "version": 1,
+        "kind": "native-assertion",
+        "source_sha256": "94539cbe92146496c64cbef6daf99c1b874c218d21c8406d65a6e7e5b36c1c06",
+        "function": "SampledTransitionProfileContracts.test_nonpoint_sample_keeps_error_and_passive_query_invariance",
+        "assertion_line": 187,
+        "operation": "assertGreaterEqual"
+      }
+    }
+  ]
+}

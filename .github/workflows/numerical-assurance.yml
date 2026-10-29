@@ -22,13 +22,22 @@ on:
 permissions:
   contents: read
 
+# One fixed Rust toolchain for every job that builds or records stable Rust. rustup applies it
+# to plain cargo and rustc, and to the scripts that record the toolchain; change it only for a
+# deliberate upgrade. A reusable workflow does not inherit this env: selection exports the value
+# as an output and package passes it to package-install.yml as an input, so no copy exists.
+# Exception: fuzz-smoke installs and names one fixed dated nightly, which cargo-fuzz requires; its spelling is
+# FUZZ_NIGHTLY in scripts/tests/test_discover_rust.py, and a different date means changing both together.
+env:
+  RUSTUP_TOOLCHAIN: '1.99.1'
+
 concurrency:
   group: numerical-assurance-${{ github.event_name }}-${{ github.event.pull_request.number || github.run_id }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   selection:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     outputs:
       maintenance: ${{ steps.changes.outputs.maintenance }}
@@ -45,6 +54,7 @@ jobs:
       modules: ${{ steps.changes.outputs.modules }}
       base: ${{ steps.changes.outputs.base }}
       head: ${{ steps.changes.outputs.head }}
+      rust_toolchain: ${{ env.RUSTUP_TOOLCHAIN }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
@@ -67,7 +77,7 @@ jobs:
           fi
   fast-checks:
     needs: selection
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     env:
       PYTHONPATH: evas/src
@@ -80,9 +90,9 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
-          python-version: '3.12'
+          python-version: '3.12.15'
       - run: python -m pip install ruff==0.14.1
-      - run: rustup toolchain install stable --profile minimal --component clippy --component rustfmt
+      - run: rustup toolchain install "$RUSTUP_TOOLCHAIN" --profile minimal --component clippy --component rustfmt
         if: needs.selection.outputs.regression == 'true' || needs.selection.outputs.focused == 'true'
       - uses: ./.github/actions/rust-cache
         if: needs.selection.outputs.regression == 'true' || needs.selection.outputs.focused == 'true'
@@ -98,7 +108,7 @@ jobs:
           status=0
           python3 -B scripts/evas_check_policy.py --early-checks --plan runs/ci-plan.json --report runs/early-integration.json || status=$?
           if [ "$status" = 2 ]; then
-            cargo +stable build --locked --manifest-path evas/rust_core/Cargo.toml
+            cargo build --locked --manifest-path evas/rust_core/Cargo.toml
             python3 -B scripts/evas_check_policy.py --early-checks --plan runs/ci-plan.json --kernel evas/rust_core/target/debug/evas-kernel --report runs/early-integration.json
           elif [ "$status" != 0 ]; then
             exit "$status"
@@ -109,8 +119,8 @@ jobs:
           PYTHONPATH: evas/src
           CI_MODULES: ${{ needs.selection.outputs.modules }}
         run: |
-          cargo +stable build --locked --manifest-path evas/rust_core/Cargo.toml
-          cargo +stable test --locked --workspace --manifest-path evas/rust_core/Cargo.toml
+          cargo build --locked --manifest-path evas/rust_core/Cargo.toml
+          cargo test --locked --workspace --manifest-path evas/rust_core/Cargo.toml
           python3 - <<'PYTHON'
           import json, os, subprocess, sys
           modules = json.loads(os.environ['CI_MODULES'])
@@ -128,11 +138,35 @@ jobs:
             runs/draft-regression.json*
           if-no-files-found: warn
           retention-days: 14
+  catalog-inventory:
+    needs: [selection, fast-checks]
+    if: always() && needs.selection.result == 'success' && needs.fast-checks.result == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12.15'
+      - name: Observe declared Python entries and tracked asset facts
+        env:
+          CI_INVENTORY_BASE: ${{ needs.selection.outputs.base }}
+          CI_INVENTORY_HEAD: ${{ needs.selection.outputs.head }}
+        run: python3 -B scripts/capabilities/collect_ci_inventory.py --root . --output runs/catalog-inventory --require-catalog --registry-data evas/capabilities/data
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: catalog-inventory
+          path: runs/catalog-inventory/
+          if-no-files-found: error
+          retention-days: 14
   static-checks:
     needs: [selection, fast-checks]
     if: needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
@@ -140,15 +174,26 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
-          python-version: '3.12'
+          python-version: '3.12.15'
       - name: Traceability and frozen validation identities
         if: needs.selection.outputs.maintenance == 'true'
+        env:
+          GIT_FIXTURE_RETAIN_DIR: runs/git-fixture-isolation
         run: |
-          python3 -B scripts/traceability.py --check
+          python3 -B scripts/traceability.py --check --catalog-data evas/capabilities/data
           python3 -B scripts/diagnostic_inventory.py --check
           python3 -B scripts/verify_validation_version.py
           python3 -B -m unittest discover -s scripts/tests -v
-          python3 -B -m unittest discover -s evas/capabilities -p 'test_registry.py' -v
+          python3 -B -m unittest discover -s evas/capabilities -p 'test_*.py' -v
+      - name: Retain Git fixture incident controls
+        if: always() && needs.selection.outputs.maintenance == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: git-fixture-isolation
+          path: runs/git-fixture-isolation/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 14
       - name: Independent mathematics and checker calibration (no simulator)
         if: needs.selection.outputs.calibration == 'true'
         run: |
@@ -169,7 +214,7 @@ jobs:
   provenance-paper:
     needs: [selection, fast-checks]
     if: needs.selection.outputs.provenance == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -177,18 +222,25 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
-          python-version: '3.12'
+          python-version: '3.12.15'
       - name: Paper contracts, observable criteria and table provenance
         run: |
           python3 -B evas/validation/paper/check_design.py
           python3 -B -m unittest discover -s evas/validation/paper -p 'test_criteria.py' -v
           python3 -B -m unittest discover -s evas/validation/paper -p 'test_*root*.py' -v
+          python3 -B -m unittest discover -s evas/validation/checker_calibration -v
+          python3 -B -m unittest discover -s evas/validation/paper -p 'test_coefficient_first_order.py' -v
+          python3 -B -m unittest discover -s evas/validation/paper -p 'test_precision.py' -v
+          python3 -B -m unittest discover -s evas/validation/paper -p 'test_precision_binding.py' -v
+          python3 -B -m unittest discover -s evas/validation/paper -p 'test_precision_v2.py' -v
+          python3 -B -m unittest discover -s evas/validation/paper -p 'test_primitives.py' -v
           python3 -B -m unittest discover -s experiments/backends/paper -p 'test_*.py' -v
+          python3 -B -m unittest discover -s experiments/backends/comparison -p 'test_*.py' -v
           python3 -B -m unittest discover -s evas/validation/support -p 'test_*.py' -v
   provenance-support:
     needs: [selection, fast-checks]
     if: needs.selection.outputs.provenance == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -196,13 +248,13 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
-          python-version: '3.12'
+          python-version: '3.12.15'
       - name: Backend support checker tests
         run: python3 -B -m unittest discover -s experiments/backends/support -p 'test_*.py' -v
   rust-regression:
     needs: [selection, fast-checks]
     if: needs.selection.outputs.regression == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     env:
       CARGO_PROFILE_DEV_OPT_LEVEL: '1'
@@ -214,8 +266,8 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
-          python-version: '3.12'
-      - run: rustup toolchain install stable --profile minimal --component clippy --component rustfmt
+          python-version: '3.12.15'
+      - run: rustup toolchain install "$RUSTUP_TOOLCHAIN" --profile minimal --component clippy --component rustfmt
       - uses: ./.github/actions/rust-cache
         with:
           lane: regression-opt1
@@ -225,7 +277,7 @@ jobs:
         env:
           PYTHONPATH: evas/src
         run: |
-          cargo +stable build --locked --release --manifest-path evas/rust_core/Cargo.toml
+          cargo build --locked --release --manifest-path evas/rust_core/Cargo.toml
           python3 -B scripts/check_source_kernel.py --kernel evas/rust_core/target/release/evas-kernel --report runs/source-kernel.json
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: success() && needs.selection.outputs.package != 'true'
@@ -235,7 +287,27 @@ jobs:
           if-no-files-found: error
           retention-days: 14
       - name: Full Rust regression, including interval properties
-        run: cargo +stable test --locked --workspace --manifest-path evas/rust_core/Cargo.toml
+        run: cargo test --locked --workspace --manifest-path evas/rust_core/Cargo.toml
+      - name: Collect actual owned Rust binary listing
+        if: always()
+        run: |
+          mkdir -p runs
+          set +e
+          cargo test --locked --workspace --no-run --message-format=json --manifest-path evas/rust_core/Cargo.toml > runs/rust-test-build.jsonl 2> runs/rust-test-build.stderr.txt
+          build_exit=$?
+          set -e
+          python3 -B scripts/capabilities/discover_rust.py --repo . --build-messages runs/rust-test-build.jsonl --build-exit "$build_exit" --report runs/rust-test-listing.json --raw-directory runs/rust-test-listing --require-catalog evas/capabilities/data --listing-profile linux-x86_64-regression-opt1-v1 --source-repository vaevas=.
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: rust-test-listing
+          path: |
+            runs/rust-test-listing.json
+            runs/rust-test-build.jsonl
+            runs/rust-test-build.stderr.txt
+            runs/rust-test-listing/
+          if-no-files-found: error
+          retention-days: 14
   regression:
     strategy:
       fail-fast: false
@@ -243,7 +315,7 @@ jobs:
         shard: [0, 1, 2, 3]
     needs: [selection, fast-checks]
     if: needs.selection.outputs.regression == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     env:
       # Retain runtime checks while avoiding unoptimized interval arithmetic.
       PYTHONPATH: evas/src
@@ -259,14 +331,17 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
-          python-version: '3.12'
-      - run: rustup toolchain install stable --profile minimal --component clippy --component rustfmt
+          python-version: '3.12.15'
+      - run: rustup toolchain install "$RUSTUP_TOOLCHAIN" --profile minimal --component clippy --component rustfmt
       - uses: ./.github/actions/rust-cache
         with:
           lane: regression-opt1
           targets: evas/rust_core/target
       - name: Build the kernel used by Python regressions
-        run: cargo +stable build --locked --manifest-path evas/rust_core/Cargo.toml
+        run: |
+          mkdir -p runs/regression-build
+          cargo build --locked --manifest-path evas/rust_core/Cargo.toml > runs/regression-build/stdout.txt 2> runs/regression-build/stderr.txt
+          cp evas/rust_core/target/debug/evas-kernel runs/regression-build/evas-kernel
       - name: Identify complete regression inputs and actual toolchain
         id: evidence
         env:
@@ -275,11 +350,11 @@ jobs:
           python3 -B scripts/ci_evidence.py identity
           --identity runs/regression-identity.json --shard ${{ matrix.shard }}-of-4
           --output "$GITHUB_OUTPUT"
-      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+      - uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830
         if: github.event_name != 'schedule'
         with:
           path: runs/regression-evidence
-          key: regression-evidence-v1-${{ steps.evidence.outputs.key }}
+          key: regression-evidence-v3-${{ steps.evidence.outputs.key }}
       - name: Validate reusable successful evidence
         id: reuse
         run: |
@@ -289,76 +364,343 @@ jobs:
           else
             echo 'verified=false' >> "$GITHUB_OUTPUT"
           fi
-      - name: Full Python regression shard
+      - name: Collect complete Python regression observations
+        id: collect
         if: steps.reuse.outputs.verified != 'true'
         env:
           PYTHONPATH: evas/src
-        run: >-
-          python3 -B scripts/run_regression.py --shard-count 4 --shard-index ${{ matrix.shard }}
-          --weights scripts/regression-weights.json --report runs/regression-evidence/report.json
-      - name: Record successful evidence after verifying inputs remained unchanged
-        if: steps.reuse.outputs.verified != 'true'
+        run: |
+          set +e
+          python3 -B scripts/run_regression.py --shard-count 4 --shard-index ${{ matrix.shard }} --weights scripts/regression-weights.json --input-identity runs/regression-identity.json --report runs/regression-evidence/report.json > runs/regression-evidence/stdout.txt 2> runs/regression-evidence/stderr.txt
+          raw_exit=$?
+          set -e
+          python3 -B scripts/ci_evidence.py collect --identity runs/regression-identity.json --shard ${{ matrix.shard }}-of-4 --report runs/regression-evidence/report.json --raw-exit "$raw_exit" > runs/regression-evidence/collection.json
+          python3 - <<'PYTHON'
+          import json, os
+          from pathlib import Path
+          result = json.loads(Path('runs/regression-evidence/collection.json').read_text())
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as stream:
+              stream.write('cacheable=' + str(result['cacheable']).lower() + '\n')
+          PYTHON
+      - name: Record only newly executed all-pass evidence
+        if: steps.collect.outputs.cacheable == 'true'
         run: >-
           python3 -B scripts/ci_evidence.py record --identity runs/regression-identity.json
           --shard ${{ matrix.shard }}-of-4 --receipt runs/regression-evidence/receipt.json
           --report runs/regression-evidence/report.json
+      - uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830
+        if: github.event_name != 'schedule' && steps.collect.outputs.cacheable == 'true'
+        with:
+          path: runs/regression-evidence
+          key: regression-evidence-v3-${{ steps.evidence.outputs.key }}
       - name: Retain test manifest, timings and reuse provenance
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: python-regression-shard-${{ matrix.shard }}
+          # The attempt number lets coverage pick the newest upload of a rerun shard; artifact IDs do not follow time.
+          name: python-regression-shard-${{ matrix.shard }}-attempt-${{ github.run_attempt }}
           path: |
             runs/regression-evidence
             runs/regression-identity.json
+            runs/regression-build/
           if-no-files-found: error
           retention-days: 14
   regression-coverage:
     needs: [selection, regression]
-    if: needs.selection.outputs.regression == 'true'
-    runs-on: ubuntu-latest
+    if: always() && needs.selection.outputs.regression == 'true'
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
-          python-version: '3.12'
+          python-version: '3.12.15'
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
         with:
           pattern: python-regression-shard-*
           path: runs/shards
-      - name: Require disjoint, complete successful test coverage
+      - name: Select the newest attempt of each regression shard
         run: |
           python3 - <<'PYTHON'
           from pathlib import Path
-          import subprocess, sys
-          reports = sorted(Path('runs/shards').rglob('report.json'))
-          assert len(reports) == 4, 'all four regression reports are required'
-          subprocess.run([sys.executable, '-B', 'scripts/run_regression.py', '--merge',
-                          *map(str, reports), '--report', 'runs/python-regression.json'], check=True)
+          import hashlib, json, os, re, sys
+          current = int(os.environ['GITHUB_RUN_ATTEMPT'])
+          pattern = re.compile(r'python-regression-shard-([0-3])-attempt-([1-9][0-9]*)', re.ASCII)
+          errors, found = [], {}
+          base = Path('runs/shards')
+          for entry in sorted(base.iterdir()) if base.is_dir() else []:
+              match = pattern.fullmatch(entry.name)
+              if not match or entry.is_symlink() or not entry.is_dir():
+                  errors.append('unexpected entry in runs/shards: ' + entry.name)
+                  continue
+              shard, attempt = map(int, match.groups())
+              reports = sorted(entry.rglob('report.json'))
+              if len(reports) != 1:
+                  errors.append(entry.name + ': expected exactly one report.json, found ' + str(len(reports)))
+              elif attempt > current:
+                  errors.append(entry.name + ': attempt ' + str(attempt) + ' is newer than this run attempt ' + str(current))
+              else:
+                  found.setdefault(shard, {})[attempt] = (entry.name, reports[0])
+          errors += ['shard ' + str(shard) + ': no valid artifact' for shard in range(4) if shard not in found]
+          selected, superseded = [], []
+          for shard in sorted(found) if not errors else []:
+              attempts = found[shard]
+              for attempt in sorted(attempts):
+                  name, report = attempts[attempt]
+                  if attempt == max(attempts):
+                      selected.append(dict(shard=shard, attempt=attempt, artifact=name, report=report.as_posix(),
+                                           report_sha256=hashlib.sha256(report.read_bytes()).hexdigest()))
+                  else:
+                      superseded.append(dict(shard=shard, attempt=attempt, artifact=name))
+          receipt = dict(valid=not errors, run_attempt=current, selected=selected, superseded=superseded, errors=errors)
+          Path('runs').mkdir(exist_ok=True)
+          Path('runs/regression-shard-selection.json').write_text(json.dumps(receipt, indent=2) + '\n')
+          lines = ['## Regression shard artifacts', '', 'Run attempt ' + str(current), '',
+                   '| shard | attempt | artifact | use |', '| --- | --- | --- | --- |']
+          lines += ['| %d | %d | %s | merged |' % (item['shard'], item['attempt'], item['artifact']) for item in selected]
+          lines += ['| %d | %d | %s | superseded |' % (item['shard'], item['attempt'], item['artifact']) for item in superseded]
+          lines += ['- ' + error for error in errors]
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as stream:
+              stream.write('\n'.join(lines) + '\n')
+          print('\n'.join(errors), file=sys.stderr)
+          sys.exit(1 if errors else 0)
+          PYTHON
+      - name: Verify complete raw coverage
+        run: |
+          python3 - <<'PYTHON'
+          from pathlib import Path
+          import json, os, subprocess, sys
+          sys.path.insert(0, 'scripts')
+          from regression_gate import validate_report
+          selection = json.loads(Path('runs/regression-shard-selection.json').read_text())
+          assert selection['valid'] and [item['shard'] for item in selection['selected']] == [0, 1, 2, 3], 'all four regression reports are required'
+          reports = [Path(item['report']) for item in selection['selected']]
+          result = subprocess.run([sys.executable, '-B', 'scripts/run_regression.py', '--merge',
+                                   *map(str, reports), '--report', 'runs/python-regression.json'])
+          report = json.loads(Path('runs/python-regression.json').read_text())
+          validation = validate_report(report)
+          assert validation['valid'], validation['errors']
+          assert result.returncode == (0 if report['successful'] else 1), 'raw exit/report mismatch'
+          # Coverage establishes complete observations; admission is separate.
+          status = dict(collection_valid=True, raw_successful=report['successful'],
+                        methods=report['tests_run'], discovered=len(report['discovered_test_ids']),
+                        failures=report['failures'], errors=report['errors'], skipped=report['skipped'],
+                        expected_failures=report['expected_failures'], unexpected_successes=report['unexpected_successes'])
+          Path('runs/regression-collection.json').write_text(json.dumps(status, indent=2) + '\n')
+          print(json.dumps(status))
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as stream:
+              stream.write('## Regression observation collection\n\n```json\n' + json.dumps(status, indent=2) + '\n```\n')
           PYTHON
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
         with:
           name: python-regression-timings
-          path: runs/python-regression.json
+          path: |
+            runs/python-regression.json
+            runs/regression-collection.json
+            runs/regression-shard-selection.json
+          if-no-files-found: error
+          retention-days: 14
+  regression-admission:
+    needs: [selection, regression-coverage]
+    if: always() && needs.selection.outputs.regression == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12.15'
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: python-regression-timings
+          path: runs
+      - name: Compare raw observations with the trusted comparator
+        run: |
+          mkdir -p runs
+          python3 -I - <<'PYTHON'
+          import ast
+          import hashlib
+          import json
+          from pathlib import Path
+          import re
+          import subprocess
+          import sys
+          import tempfile
+
+          # Fill only after the inactive bootstrap has actually merged to reviewed main.
+          BOOTSTRAP_COMMIT = "72f1c2e4c22d8a2f743da8ec23101d022a3096d5"
+          BOOTSTRAP_SHA256 = "30cb19e469db4ea26b00ca4959e68c4aa1196be15a9051452ff491210619aa63"
+          BOOTSTRAP_PATH = "scripts/run_trusted_regression_gate.py"
+          repo = Path.cwd().resolve()
+          report = repo / "runs/python-regression.json"
+          admission = repo / "runs/regression-admission.json"
+          source_path = repo / "runs/regression-bootstrap-source.json"
+          bundle_source_path = repo / "runs/regression-bundle-source.json"
+          bundle_source_path.write_text(json.dumps(dict(schema_version=1, requested=False,
+                                                       materialized=False)) + "\n")
+          source = dict(schema_version=1, source="fixed-reviewed-main-commit",
+                        bootstrap_commit=BOOTSTRAP_COMMIT, bootstrap_path=BOOTSTRAP_PATH,
+                        expected_loader_sha256=BOOTSTRAP_SHA256, loaded=False, execution_cwd="isolated-temporary-directory")
+          status = 2
+
+          # Only the verified loader selects authority. Resolve the bundle lazily:
+          # compare_from_commit asks for its path only after the ordinary C0 gate.
+          consumer = '''
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+          import runpy
+          import subprocess
+          import sys
+
+          loader, repo, report_path, receipt = map(Path, sys.argv[1:])
+          facts = dict(schema_version=1, requested=False, materialized=False)
+          report = None
+          status = 2
+          try:
+              api = runpy.run_path(str(loader))
+              report = json.loads(report_path.read_text())
+              if not isinstance(report, dict):
+                  raise ValueError("report must be an object")
+              event = json.loads(Path(os.environ["GITHUB_EVENT_PATH"]).read_text())
+              commit, source = api["select_trusted_commit"](repo, os.environ["GITHUB_EVENT_NAME"], event)
+              facts["trusted_commit"] = commit
+
+              class RegistrationBundle:
+                  def __fspath__(self):
+                      if not facts["materialized"]:
+                          facts["requested"] = True
+                          pointer_path = "scripts/context-registration-bundle.json"
+                          helper_path = "scripts/materialize_registration_bundle.py"
+                          pointer = api["_blob"](repo, commit, pointer_path)
+                          helper = api["_blob"](repo, commit, helper_path)
+                          facts.update(pointer_path=pointer_path, helper_path=helper_path,
+                                       pointer_sha256=hashlib.sha256(pointer).hexdigest(),
+                                       helper_sha256=hashlib.sha256(helper).hexdigest())
+                          manifest = loader.parent / "bundle-pointer.json"
+                          script = loader.parent / "materialize.py"
+                          manifest.write_bytes(pointer)
+                          script.write_bytes(helper)
+                          process = subprocess.run([sys.executable, "-I", str(script), "--repo", str(repo),
+                                                    "--manifest", str(manifest), "--output", str(bundle)],
+                                                   cwd=loader.parent, capture_output=True)
+                          if process.returncode:
+                              raise ValueError("trusted bundle materializer failed: " +
+                                               process.stdout.decode(errors="replace") +
+                                               process.stderr.decode(errors="replace"))
+                          inventory = json.loads(process.stdout)
+                          if not isinstance(inventory, dict) or inventory.get("materialized") is not True:
+                              raise ValueError("trusted materializer returned no inventory")
+                          facts.update(materialized=True, inventory=inventory)
+                      return str(bundle)
+
+              bundle = loader.parent / "registration-bundle"
+              result = api["compare_from_commit"](repo, commit, report, RegistrationBundle())
+              result["trust"].update(source=source, default_branch="main")
+              status = 0 if result["merge_allowed"] else 1
+          except (OSError, ValueError, TypeError, KeyError, SyntaxError) as error:
+              facts["error"] = str(error)
+              result = dict(merge_allowed=False,
+                            raw_successful=report.get("successful") if isinstance(report, dict) else None,
+                            error=str(error))
+          finally:
+              receipt.write_text(json.dumps(facts, indent=2) + "\\n")
+          print(json.dumps(result, indent=2, allow_nan=False))
+          raise SystemExit(status)
+          '''
+
+          def git(*args):
+              result = subprocess.run(["git", "-C", str(repo), *args], capture_output=True)
+              if result.returncode:
+                  raise ValueError(result.stderr.decode(errors="replace").strip())
+              return result.stdout
+
+          try:
+              if (not re.fullmatch(r"(?:[0-9a-f]{40}|[0-9a-f]{64})", BOOTSTRAP_COMMIT)
+                      or set(BOOTSTRAP_COMMIT) == {"0"}):
+                  raise ValueError("a fixed full reviewed bootstrap commit is required")
+              resolved = git("rev-parse", "--verify", BOOTSTRAP_COMMIT + "^{commit}").decode().strip()
+              if resolved != BOOTSTRAP_COMMIT:
+                  raise ValueError("bootstrap pin must name an exact commit")
+              entries = [item for item in git("ls-tree", "-z", BOOTSTRAP_COMMIT, "--", BOOTSTRAP_PATH).split(b"\0") if item]
+              if len(entries) != 1:
+                  raise ValueError("fixed bootstrap source is missing")
+              metadata, name = entries[0].split(b"\t", 1)
+              mode, kind, blob = metadata.decode().split()
+              if mode not in ("100644", "100755") or kind != "blob" or name.decode() != BOOTSTRAP_PATH:
+                  raise ValueError("fixed bootstrap source must be a regular Git blob")
+              content = git("show", BOOTSTRAP_COMMIT + ":" + BOOTSTRAP_PATH)
+              if not content.strip():
+                  raise ValueError("fixed bootstrap source is empty")
+              observed = hashlib.sha256(content).hexdigest()
+              source.update(bootstrap_blob=blob, bootstrap_mode=mode, loader_sha256=observed)
+              if not re.fullmatch(r"[0-9a-f]{64}", BOOTSTRAP_SHA256) or observed != BOOTSTRAP_SHA256:
+                  raise ValueError("fixed bootstrap SHA256 mismatch")
+              tree = ast.parse(content, filename=BOOTSTRAP_PATH)
+              functions = {item.name for item in tree.body if isinstance(item, ast.FunctionDef)}
+              if not {"main", "select_trusted_commit", "evaluate_event", "compare_from_commit"} <= functions:
+                  raise ValueError("fixed bootstrap source lacks its public entry structure")
+              source["loaded"] = True
+              with tempfile.TemporaryDirectory(prefix="regression-bootstrap-") as directory:
+                  isolated = Path(directory)
+                  loader = isolated / "trusted-loader.py"
+                  loader.write_bytes(content)
+                  process = subprocess.run([sys.executable, "-I", "-c", consumer, str(loader), str(repo),
+                                            str(report), str(bundle_source_path)], cwd=isolated,
+                                           capture_output=True)
+              if process.stderr:
+                  sys.stderr.buffer.write(process.stderr)
+              result = json.loads(process.stdout)
+              if (not isinstance(result, dict) or type(result.get("merge_allowed")) is not bool
+                      or (process.returncode == 0) != result["merge_allowed"]):
+                  raise ValueError("trusted bootstrap exit/result mismatch")
+              admission.write_bytes(process.stdout)
+              source["bootstrap_exit"] = process.returncode
+              trust = result.get("trust")
+              if isinstance(trust, dict):
+                  source["event_trusted_commit"] = trust.get("trusted_commit")
+                  source["event_trust_source"] = trust.get("source")
+              status = process.returncode
+          except (OSError, ValueError, TypeError, KeyError, SyntaxError) as error:
+              source["error"] = str(error)
+              admission.write_text(json.dumps(dict(merge_allowed=False, raw_successful=None,
+                                                  bootstrap_error=str(error)), indent=2) + "\n")
+          finally:
+              source_path.write_text(json.dumps(source, indent=2) + "\n")
+              print(json.dumps(source))
+          raise SystemExit(status)
+          PYTHON
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: python-regression-admission
+          path: |
+            runs/regression-admission.json
+            runs/regression-bootstrap-source.json
+            runs/regression-bundle-source.json
           if-no-files-found: error
           retention-days: 14
   properties-and-ngspice:
     needs: [selection, fast-checks]
     if: needs.selection.outputs.differential == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
-          python-version: '3.12'
-      - run: sudo apt-get update && sudo apt-get install -y ngspice
-      - run: rustup update stable --no-self-update
+          python-version: '3.12.15'
+      - run: sudo apt-get update && sudo apt-get install -y ngspice=42+ds-3build1
+      - run: rustup toolchain install "$RUSTUP_TOOLCHAIN" --profile minimal
       - uses: ./.github/actions/rust-cache
         with:
           lane: ngspice
           targets: evas/rust_core/target
-      - run: cargo +stable build --locked --manifest-path evas/rust_core/Cargo.toml
+      - run: cargo build --locked --manifest-path evas/rust_core/Cargo.toml
       - run: python3 -B -m unittest discover -s evas/validation/differential -v
       - run: >-
           python3 -B evas/validation/differential/ngspice_compare.py
@@ -374,7 +716,7 @@ jobs:
   fuzz-smoke:
     needs: [selection, fast-checks]
     if: needs.selection.outputs.fuzz == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     strategy:
       fail-fast: false
@@ -386,11 +728,11 @@ jobs:
             max_len: 24
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-      - run: rustup toolchain install nightly --profile minimal
+      - run: rustup toolchain install nightly-2026-10-27 --profile minimal
       - uses: ./.github/actions/rust-cache
         id: rust-cache
         with:
-          toolchain: nightly
+          toolchain: nightly-2026-10-27
           lane: fuzz
           targets: evas/rust_core/fuzz/target
       - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
@@ -400,7 +742,7 @@ jobs:
           key: cargo-fuzz-v1-${{ runner.os }}-${{ runner.arch }}-0.13.2-${{ steps.rust-cache.outputs.compiler }}
       - name: Install cargo-fuzz when absent from cache
         if: steps.fuzz-cli.outputs.cache-hit != 'true'
-        run: cargo +nightly install cargo-fuzz --version 0.13.2 --locked --root "$HOME/.local/share/evas-ci/cargo-fuzz"
+        run: cargo +nightly-2026-10-27 install cargo-fuzz --version 0.13.2 --locked --root "$HOME/.local/share/evas-ci/cargo-fuzz"
       - name: Put cargo-fuzz on PATH
         run: echo "$HOME/.local/share/evas-ci/cargo-fuzz/bin" >> "$GITHUB_PATH"
       - working-directory: evas/rust_core
@@ -411,7 +753,7 @@ jobs:
           fi
           fuzz_seconds=45
           if [ "$GITHUB_EVENT_NAME" = schedule ]; then fuzz_seconds=300; fi
-          cargo +nightly fuzz run "${{ matrix.target }}" -- -max_total_time="$fuzz_seconds" -max_len="${{ matrix.max_len }}"
+          cargo +nightly-2026-10-27 fuzz run "${{ matrix.target }}" -- -max_total_time="$fuzz_seconds" -max_len="${{ matrix.max_len }}"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: failure()
         with:
@@ -423,15 +765,17 @@ jobs:
     needs: [selection, fast-checks]
     if: needs.selection.outputs.package == 'true'
     uses: ./.github/workflows/package-install.yml
+    with:
+      rust_toolchain: ${{ needs.selection.outputs.rust_toolchain }}
   benchmark:
     needs: [selection, fast-checks]
     if: needs.selection.outputs.benchmark == 'true'
     uses: ./.github/workflows/benchmark-evidence.yml
   ci-result:
     name: ${{ needs.selection.outputs.mode == 'iteration' && 'iteration-result' || 'ci-result' }}
-    needs: [selection, fast-checks, static-checks, provenance-paper, provenance-support, regression, rust-regression, regression-coverage, properties-and-ngspice, fuzz-smoke, package, benchmark]
+    needs: [selection, fast-checks, catalog-inventory, static-checks, provenance-paper, provenance-support, regression, rust-regression, regression-coverage, regression-admission, properties-and-ngspice, fuzz-smoke, package, benchmark]
     if: always()
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4

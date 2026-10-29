@@ -1,0 +1,328 @@
+{
+ "task": "r08-spec-debounce-latch",
+ "cases": [
+  "base",
+  "retrigger-ties",
+  "short-stable",
+  "threshold-override"
+ ],
+ "checker_failure": "out sample more than atol from the expected ideal level",
+ "semantics": "Verilog-A LRM 2.4 5.10.3.1 cross, 5.10.3.2 above, 5.10.3.3 timer (fires only at the latest start time, and only if that time is in the future), 4.5.8 transition (pending changes, deletion of later ones, interruption); the reference relies on 5.10.3.3 rescheduling, to be recorded on Spectre",
+ "conditions": {
+  "alt_transition_delay": "accepted on every fixed case provided a falling change scheduled with zero delay deletes the pending rising change that would follow it (LRM 4.5.8) and td is taken when each change is scheduled. Outside the evaluated domain, at an exact tie of a completion instant with a falling crossing, legacy EVAS still executes the pending rise and the output pulses to 0.9 V (author tie probe), which the tie rule forbids; if exact ties become evaluated, this candidate moves to wrong",
+  "transport_delay_and": "rejected in every case provided transition() keeps every pending change, which makes it a transport delay (LRM 4.5.8); a backend that replaces a pending change can reject it in fewer cases",
+  "alt_event_flags": "accepted provided a timer whose start time is moved into the past does not fire (LRM 5.10.3.3)"
+ },
+ "candidates": [
+  {
+   "name": "immediate_set_on_rise",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "retrigger-ties",
+    "short-stable",
+    "threshold-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "immediate-set-on-rise"
+  },
+  {
+   "name": "stale_first_reservation",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "retrigger-ties",
+    "short-stable"
+   ],
+   "must_accept": [
+    "threshold-override"
+   ],
+   "author_synthetic_control": "stale-first-reservation"
+  },
+  {
+   "name": "reset_keeps_reservation",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "short-stable"
+   ],
+   "must_accept": [
+    "retrigger-ties",
+    "threshold-override"
+   ],
+   "author_synthetic_control": "reset-keeps-reservation"
+  },
+  {
+   "name": "no_recheck_fall_keeps_reservation",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "short-stable",
+    "threshold-override"
+   ],
+   "must_accept": [
+    "retrigger-ties"
+   ],
+   "author_synthetic_control": "no-recheck-fall-keeps-reservation"
+  },
+  {
+   "name": "arms_while_reset",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "retrigger-ties"
+   ],
+   "must_accept": [
+    "short-stable",
+    "threshold-override"
+   ],
+   "author_synthetic_control": "arms-while-reset"
+  },
+  {
+   "name": "level_sensitive_start",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "retrigger-ties",
+    "short-stable"
+   ],
+   "must_accept": [
+    "threshold-override"
+   ],
+   "author_synthetic_control": "level-sensitive-start"
+  },
+  {
+   "name": "power_up_above",
+   "group": "wrong",
+   "must_reject": [
+    "retrigger-ties"
+   ],
+   "must_accept": [
+    "base",
+    "short-stable",
+    "threshold-override"
+   ],
+   "author_synthetic_control": "power-up-high-qualifies"
+  },
+  {
+   "name": "accumulated_high_time",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "retrigger-ties",
+    "short-stable",
+    "threshold-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "accumulated-high-time"
+  },
+  {
+   "name": "transport_delay_and",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "retrigger-ties",
+    "short-stable",
+    "threshold-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "two-point-armed"
+  },
+  {
+   "name": "symmetric_debounce",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "retrigger-ties",
+    "short-stable",
+    "threshold-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "symmetric-debounce"
+  },
+  {
+   "name": "fall_keeps_output",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "retrigger-ties",
+    "short-stable",
+    "threshold-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "fall-keeps-output"
+  },
+  {
+   "name": "output_gated_by_reset",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "retrigger-ties",
+    "short-stable",
+    "threshold-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "output-gated-by-reset"
+  },
+  {
+   "name": "rst_active_high",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "retrigger-ties",
+    "short-stable",
+    "threshold-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "rst-active-high"
+  },
+  {
+   "name": "hardcoded_stable_12n",
+   "group": "wrong",
+   "must_reject": [
+    "short-stable",
+    "threshold-override"
+   ],
+   "must_accept": [
+    "base",
+    "retrigger-ties"
+   ],
+   "author_synthetic_control": "hardcoded-stable-12n"
+  },
+  {
+   "name": "hardcoded_vth_045",
+   "group": "wrong",
+   "must_reject": [
+    "threshold-override"
+   ],
+   "must_accept": [
+    "base",
+    "retrigger-ties",
+    "short-stable"
+   ],
+   "author_synthetic_control": "hardcoded-vth-0.45"
+  },
+  {
+   "name": "hardcoded_vdd_09",
+   "group": "wrong",
+   "must_reject": [
+    "short-stable"
+   ],
+   "must_accept": [
+    "base",
+    "retrigger-ties",
+    "threshold-override"
+   ],
+   "author_synthetic_control": "hardcoded-vdd-0.9"
+  },
+  {
+   "name": "hardcoded_tr_500p",
+   "group": "wrong",
+   "must_reject": [
+    "short-stable"
+   ],
+   "must_accept": [
+    "base",
+    "retrigger-ties",
+    "threshold-override"
+   ],
+   "author_synthetic_control": "hardcoded-tr-500p"
+  },
+  {
+   "name": "slow_output_1p3tr",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "retrigger-ties",
+    "short-stable",
+    "threshold-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "arrival-1.3tr"
+  },
+  {
+   "name": "late_by_0p3tr",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "retrigger-ties",
+    "short-stable",
+    "threshold-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "late-qualification-0.3tr"
+  },
+  {
+   "name": "late_by_tr",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "retrigger-ties",
+    "short-stable",
+    "threshold-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "late-qualification-tr"
+  },
+  {
+   "name": "early_by_tr",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "retrigger-ties",
+    "short-stable",
+    "threshold-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "early-qualification-tr"
+  },
+  {
+   "name": "alt_transition_delay",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "base",
+    "retrigger-ties",
+    "short-stable",
+    "threshold-override"
+   ],
+   "author_synthetic_control": "contract"
+  },
+  {
+   "name": "alt_event_flags",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "base",
+    "retrigger-ties",
+    "short-stable",
+    "threshold-override"
+   ],
+   "author_synthetic_control": "contract"
+  },
+  {
+   "name": "alt_fast_output",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "base",
+    "retrigger-ties",
+    "short-stable",
+    "threshold-override"
+   ],
+   "author_synthetic_control": "alt-fast-output-0.2tr"
+  },
+  {
+   "name": "alt_delayed_within_tr",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "base",
+    "retrigger-ties",
+    "short-stable",
+    "threshold-override"
+   ],
+   "author_synthetic_control": "alt-delayed-start-within-tr"
+  }
+ ]
+}

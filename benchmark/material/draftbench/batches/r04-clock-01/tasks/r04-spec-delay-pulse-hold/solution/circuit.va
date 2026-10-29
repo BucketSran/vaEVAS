@@ -1,0 +1,102 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+// Programmable delay cell with pulse hold. An accepted input pulse latches one
+// delay at its rising crossing and both of its output edges use it, so a later
+// load never changes the width of a pulse that is already accepted. The legal
+// stimuli keep at most one rising and one falling output edge pending, so each
+// direction has its own scheduled time. Reset discards every pending edge.
+module programmable_delay_cell(in_clk, load, rst, code_5, code_4, code_3, code_2, code_1, code_0, out_clk);
+input in_clk, load, rst, code_5, code_4, code_3, code_2, code_1, code_0;
+output out_clk;
+electrical in_clk, load, rst, code_5, code_4, code_3, code_2, code_1, code_0, out_clk;
+
+parameter real vth = 0.45;
+parameter real vdd = 0.9;
+parameter real vss = 0.0;
+parameter real delay_min = 20p from (0:inf);
+parameter real delay_lsb = 3p from [0:inf);
+parameter real tr = 10p from (0:inf);
+
+integer loaded;        // a code was loaded after power-up or the last reset
+integer code;          // loaded delay code
+integer in_pulse;      // the present in_clk high phase belongs to an accepted pulse
+real pulse_delay;      // delay latched at the accepted rising crossing
+integer rise_pending;  // a rising output edge is scheduled at t_rise
+integer fall_pending;  // a falling output edge is scheduled at t_fall
+real t_rise, t_fall;
+integer out_high;
+
+analog begin
+    @(initial_step) begin
+        loaded = 0;
+        code = 0;
+        in_pulse = 0;
+        pulse_delay = delay_min;
+        rise_pending = 0;
+        fall_pending = 0;
+        t_rise = -1.0;
+        t_fall = -1.0;
+        out_high = 0;
+    end
+
+    // Reset ends every accepted pulse: its pending edges are dropped and its
+    // later falling input crossing schedules nothing.
+    @(cross(V(rst) - vth, +1)) begin
+        loaded = 0;
+        in_pulse = 0;
+        rise_pending = 0;
+        fall_pending = 0;
+        out_high = 0;
+    end
+
+    // This block precedes the in_clk blocks, so a load at the same instant as a
+    // rising in_clk crossing already applies to the pulse that starts there.
+    @(cross(V(load) - vth, +1)) begin
+        if (V(rst) < vth) begin
+            code = 0;
+            if (V(code_0) > vth) code = code + 1;
+            if (V(code_1) > vth) code = code + 2;
+            if (V(code_2) > vth) code = code + 4;
+            if (V(code_3) > vth) code = code + 8;
+            if (V(code_4) > vth) code = code + 16;
+            if (V(code_5) > vth) code = code + 32;
+            loaded = 1;
+        end
+    end
+
+    @(cross(V(in_clk) - vth, +1)) begin
+        in_pulse = 0;
+        if (V(rst) < vth && loaded) begin
+            pulse_delay = delay_min + delay_lsb * code;
+            t_rise = $abstime + pulse_delay;
+            rise_pending = 1;
+            in_pulse = 1;
+        end
+    end
+
+    @(cross(V(in_clk) - vth, -1)) begin
+        if (in_pulse) begin
+            t_fall = $abstime + pulse_delay;
+            fall_pending = 1;
+            in_pulse = 0;
+        end
+    end
+
+    @(timer(t_rise)) begin
+        if (rise_pending) begin
+            out_high = 1;
+            rise_pending = 0;
+        end
+    end
+
+    @(timer(t_fall)) begin
+        if (fall_pending) begin
+            out_high = 0;
+            fall_pending = 0;
+        end
+    end
+
+    V(out_clk) <+ transition(out_high ? vdd : vss, 0, tr, tr);
+end
+endmodule

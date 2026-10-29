@@ -1,0 +1,513 @@
+{
+ "task": "r09-spec-pipeline-two-stage",
+ "cases": [
+  "base",
+  "stream-irregular",
+  "reset-recovery",
+  "param-override"
+ ],
+ "checker_failure": "an output sample more than atol from the expected level of code_3..code_0, valid_o or residue_dbg",
+ "semantics": "Verilog-A LRM 2.4 5.10.3.1 cross (event within its time tolerance, 1 ps in the reference), 5.10.3.3 timer, 4.5.8 transition (interrupted and delayed transitions), 4.2 floor; module instances evaluate at the same event time point; to be recorded on Spectre",
+ "conditions": {
+  "alt_three_module_hierarchy": "accepted provided a module that reads another module's transition() output at a clock event sees the value held before that event (the transition started by the same event has not moved yet, LRM 4.5.8)",
+  "alt_delayed_within_tr": "uses a 0.2*tr transport delay; output-changing events are at least 100 ps apart, so no change arrives while an earlier delayed transition is still pending",
+  "valid_5ns_pulse": "uses @(timer) with a moving start time; rejected whether or not a superseded timer event still fires (LRM 5.10.3.3 reschedules it)",
+  "original_v4_343_gold": "the five released v4:343 gold modules under a pipeline_adc_two_stage wrapper; needs hierarchical instances with #() parameter overrides; generated only inside the repository (it reads benchmark/material/historyref)",
+  "all": "every expectation assumes cross() events located within a few ps of the threshold crossing; the contract keeps vin within 0.25 mV and valid_i/rst crossings 100 ps away around every rising clk crossing, so the verdicts do not depend on that precision"
+ },
+ "candidates": [
+  {
+   "name": "center_residue_no_midscale",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "stream-irregular",
+    "reset-recovery",
+    "param-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "center-residue-no-midscale"
+  },
+  {
+   "name": "edge_residue_midscale_offset",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "stream-irregular",
+    "reset-recovery",
+    "param-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "edge-residue-midscale-offset"
+  },
+  {
+   "name": "residue_gain_2",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "stream-irregular",
+    "reset-recovery",
+    "param-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "residue-gain-2"
+  },
+  {
+   "name": "rounded_coarse_thresholds",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "stream-irregular",
+    "reset-recovery",
+    "param-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "rounded-coarse-thresholds"
+  },
+  {
+   "name": "rounded_fine_thresholds",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "stream-irregular",
+    "reset-recovery",
+    "param-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "rounded-fine-thresholds"
+  },
+  {
+   "name": "stage_order_swapped",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "stream-irregular",
+    "reset-recovery",
+    "param-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "stage-order-swapped"
+  },
+  {
+   "name": "low_bits_swapped",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "stream-irregular",
+    "reset-recovery",
+    "param-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "low-bits-swapped"
+  },
+  {
+   "name": "no_input_limit_wraps",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "stream-irregular",
+    "param-override"
+   ],
+   "must_accept": [
+    "reset-recovery"
+   ],
+   "author_synthetic_control": "no-input-limit-wraps"
+  },
+  {
+   "name": "residue_from_unlimited_input",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "stream-irregular",
+    "param-override"
+   ],
+   "must_accept": [
+    "reset-recovery"
+   ],
+   "author_synthetic_control": "residue-from-unlimited-input"
+  },
+  {
+   "name": "top_bin_floor_at_vref",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "stream-irregular",
+    "param-override"
+   ],
+   "must_accept": [
+    "reset-recovery"
+   ],
+   "author_synthetic_control": "top-bin-floor-at-vref"
+  },
+  {
+   "name": "live_input_residue",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "stream-irregular",
+    "reset-recovery",
+    "param-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "live-input-residue"
+  },
+  {
+   "name": "track_while_clock_high",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "stream-irregular",
+    "reset-recovery",
+    "param-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "track-while-clock-high"
+  },
+  {
+   "name": "residue_one_cycle_then_vss",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "stream-irregular",
+    "reset-recovery",
+    "param-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "residue-one-cycle-then-vss"
+  },
+  {
+   "name": "stage2_takes_new_sample",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "stream-irregular",
+    "reset-recovery",
+    "param-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "stage2-takes-new-sample"
+  },
+  {
+   "name": "aligner_takes_new_coarse",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "stream-irregular",
+    "reset-recovery",
+    "param-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "aligner-takes-new-coarse"
+  },
+  {
+   "name": "latency_one_edge",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "stream-irregular",
+    "reset-recovery",
+    "param-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "latency-one-edge"
+  },
+  {
+   "name": "latency_three_edges",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "stream-irregular",
+    "reset-recovery",
+    "param-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "latency-three-edges"
+  },
+  {
+   "name": "sticky_valid",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "stream-irregular",
+    "reset-recovery",
+    "param-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "sticky-valid"
+  },
+  {
+   "name": "valid_5ns_pulse",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "stream-irregular",
+    "reset-recovery",
+    "param-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "valid-5ns-pulse"
+  },
+  {
+   "name": "advance_only_on_valid",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "stream-irregular",
+    "reset-recovery",
+    "param-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "advance-only-on-valid"
+  },
+  {
+   "name": "ignores_valid_i",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "stream-irregular",
+    "reset-recovery",
+    "param-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "ignores-valid-i"
+  },
+  {
+   "name": "valid_not_pipelined",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "stream-irregular",
+    "reset-recovery",
+    "param-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "valid-not-pipelined"
+  },
+  {
+   "name": "code_zero_between_results",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "stream-irregular",
+    "reset-recovery",
+    "param-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "code-zero-between-results"
+  },
+  {
+   "name": "falling_edge_clock",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "stream-irregular",
+    "reset-recovery",
+    "param-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "falling-edge-clock"
+  },
+  {
+   "name": "synchronous_reset",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "reset-recovery",
+    "param-override"
+   ],
+   "must_accept": [
+    "stream-irregular"
+   ],
+   "author_synthetic_control": "synchronous-reset"
+  },
+  {
+   "name": "reset_keeps_pipeline",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "reset-recovery",
+    "param-override"
+   ],
+   "must_accept": [
+    "stream-irregular"
+   ],
+   "author_synthetic_control": "reset-keeps-pipeline"
+  },
+  {
+   "name": "reset_keeps_residue",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "reset-recovery",
+    "param-override"
+   ],
+   "must_accept": [
+    "stream-irregular"
+   ],
+   "author_synthetic_control": "reset-keeps-residue"
+  },
+  {
+   "name": "reset_keeps_code",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "reset-recovery",
+    "param-override"
+   ],
+   "must_accept": [
+    "stream-irregular"
+   ],
+   "author_synthetic_control": "reset-keeps-code"
+  },
+  {
+   "name": "samples_while_rst_high",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "reset-recovery"
+   ],
+   "must_accept": [
+    "stream-irregular",
+    "param-override"
+   ],
+   "author_synthetic_control": "samples-while-rst-high"
+  },
+  {
+   "name": "slow_output_1p3tr",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "stream-irregular",
+    "reset-recovery",
+    "param-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "arrival-1.3tr"
+  },
+  {
+   "name": "hardcoded_vss_0",
+   "group": "wrong",
+   "must_reject": [
+    "param-override"
+   ],
+   "must_accept": [
+    "base",
+    "stream-irregular",
+    "reset-recovery"
+   ],
+   "author_synthetic_control": "hardcoded-vss-0"
+  },
+  {
+   "name": "hardcoded_vref_0p9",
+   "group": "wrong",
+   "must_reject": [
+    "param-override"
+   ],
+   "must_accept": [
+    "base",
+    "stream-irregular",
+    "reset-recovery"
+   ],
+   "author_synthetic_control": "hardcoded-vref-0.9"
+  },
+  {
+   "name": "hardcoded_vdd_0p9",
+   "group": "wrong",
+   "must_reject": [
+    "param-override"
+   ],
+   "must_accept": [
+    "base",
+    "stream-irregular",
+    "reset-recovery"
+   ],
+   "author_synthetic_control": "hardcoded-vdd-0.9"
+  },
+  {
+   "name": "hardcoded_vth_0p45",
+   "group": "wrong",
+   "must_reject": [
+    "param-override"
+   ],
+   "must_accept": [
+    "base",
+    "stream-irregular",
+    "reset-recovery"
+   ],
+   "author_synthetic_control": "hardcoded-vth-0.45"
+  },
+  {
+   "name": "hardcoded_tr_200p",
+   "group": "wrong",
+   "must_reject": [
+    "param-override"
+   ],
+   "must_accept": [
+    "base",
+    "stream-irregular",
+    "reset-recovery"
+   ],
+   "author_synthetic_control": "hardcoded-tr-200p"
+  },
+  {
+   "name": "original_v4_343_gold",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "stream-irregular",
+    "reset-recovery",
+    "param-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "live-input-residue"
+  },
+  {
+   "name": "alt_compute_then_delay",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "base",
+    "stream-irregular",
+    "reset-recovery",
+    "param-override"
+   ],
+   "author_synthetic_control": "contract"
+  },
+  {
+   "name": "alt_three_module_hierarchy",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "base",
+    "stream-irregular",
+    "reset-recovery",
+    "param-override"
+   ],
+   "author_synthetic_control": "contract"
+  },
+  {
+   "name": "alt_fast_output",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "base",
+    "stream-irregular",
+    "reset-recovery",
+    "param-override"
+   ],
+   "author_synthetic_control": "alt-fast-output-0.2tr"
+  },
+  {
+   "name": "alt_delayed_within_tr",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "base",
+    "stream-irregular",
+    "reset-recovery",
+    "param-override"
+   ],
+   "author_synthetic_control": "alt-delayed-start-within-tr"
+  }
+ ]
+}

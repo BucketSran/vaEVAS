@@ -6,7 +6,8 @@ from pathlib import Path
 import subprocess
 import tempfile
 import unittest
-from unittest.mock import patch
+
+import git_fixture
 
 
 SCRIPT = Path(__file__).resolve().parents[1] / 'ci_selection.py'
@@ -16,6 +17,30 @@ spec.loader.exec_module(ci)
 
 
 class RoutingTests(unittest.TestCase):
+    def test_catalog_generator_selects_maintenance_without_exempting_neighbors(self):
+        exact = 'scripts/capabilities/generate_catalog.py'
+        self.assertEqual(ci.classify([exact]), ci.flags('maintenance'))
+        for path in ('scripts/capabilities/discover_methods.py',
+                     'scripts/capabilities/observe_assets.py',
+                     'scripts/capabilities/collect_ci_inventory.py',
+                     'scripts/capabilities/new_helper.py',
+                     'experiments/new_backend/test.py',
+                     'scripts/new_tool.py'):
+            with self.subTest(path=path):
+                self.assertEqual(ci.classify([path]), ci.flags(*ci.CHECKS))
+        before = "MAINTENANCE_FILES = {'scripts/traceability.py'}\n"
+        after = ("MAINTENANCE_FILES = {'scripts/traceability.py', "
+                 "'scripts/capabilities/generate_catalog.py'}\n")
+        self.assertFalse(ci.maintenance_registration_only(before, after))
+
+    def test_comparison_worker_migration_routes_actual_consumers(self):
+        for path in ('experiments/backends/comparison/runner.py',
+                     'experiments/backends/comparison/freeze.py',
+                     'experiments/backends/comparison/ingest.py',
+                     'evas/validation/adapters/comparison_evas_worker.py'):
+            with self.subTest(path=path):
+                self.assertEqual(ci.classify([path]), ci.flags('calibration', 'provenance'))
+
     def test_continuation_controls_only_select_maintenance(self):
         paths = ('scripts/check_task_continuation.py',
                  'scripts/task_continuation_policy.py',
@@ -219,6 +244,7 @@ class GitChangeTests(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
         self.repo = Path(self.tmp.name)
+        git_fixture.bind(self, self.repo)
         self.git('init', '-q')
         self.git('config', 'user.email', 'ci-test@example.invalid')
         self.git('config', 'user.name', 'CI Test')
@@ -231,7 +257,9 @@ class GitChangeTests(unittest.TestCase):
         self.base = self.commit()
 
     def git(self, *args):
-        return subprocess.check_output(['git', *args], cwd=self.repo, text=True).strip()
+        completed = git_fixture.run(args, cwd=self.repo, scratch=self.repo, check=True,
+                                    capture_output=True, text=True)
+        return completed.stdout.strip()
 
     def write(self, path, data):
         target = self.repo / path
@@ -259,10 +287,14 @@ class GitChangeTests(unittest.TestCase):
             with self.subTest(policy=policy):
                 config.write_text(settings)
                 fixture = GitChangeTests()
-                with patch.dict(os.environ, {'GIT_CONFIG_GLOBAL': str(config),
-                                             'GIT_CONFIG_NOSYSTEM': '1'}):
+                with git_fixture.explicit(GIT_CONFIG_GLOBAL=str(config), GIT_CONFIG_NOSYSTEM='1'):
                     try:
                         fixture.setUp()
+                        if policy == 'signing':
+                            self.assertEqual(fixture.git('config', '--global', '--get', 'commit.gpgsign'), 'true')
+                        else:
+                            self.assertEqual(fixture.git('config', '--global', '--get', 'core.hooksPath'), str(hooks))
+                        self.assertEqual(fixture.git('config', '--local', '--get', 'commit.gpgsign'), 'false')
                         fixture.write('evas/docs/new.md', 'maintenance fixture\n')
                         self.assertNotEqual(fixture.commit(), fixture.base)
                         self.assertEqual(fixture.git('status', '--porcelain'), '')
@@ -330,7 +362,7 @@ class GitChangeTests(unittest.TestCase):
             'python3', '-B', str(SCRIPT), 'select', '--repo', str(self.repo),
             '--event-name', 'push', '--event-path', str(event_file),
             '--output', str(output_file), '--json',
-        ], text=True, capture_output=True, check=True)
+        ], env=git_fixture.child_env(), text=True, capture_output=True, check=True)
         self.assertFalse(json.loads(completed.stdout)['regression'])
         self.assertIn('regression=false\n', output_file.read_text())
         self.assertIn('package=false\n', output_file.read_text())
@@ -344,7 +376,7 @@ class GitChangeTests(unittest.TestCase):
         run = subprocess.run(['python3', '-B', str(SCRIPT), 'select', '--repo', str(self.repo),
                               '--event-name', 'push', '--event-path', str(event),
                               '--output', str(output), '--report', str(report)],
-                             capture_output=True, text=True, check=True)
+                             env=git_fixture.child_env(), capture_output=True, text=True, check=True)
         self.assertIn('Selected: maintenance', run.stdout)
         self.assertIn(str(report), run.stdout)
         self.assertEqual(json.loads(report.read_text())['paths'], ['scripts/check_workspaces.py'])
@@ -410,12 +442,24 @@ class GateTests(unittest.TestCase):
         output.update(plan_version='2', mode='delivery')
         needs = {'selection': {'result': 'success', 'outputs': output}}
         needs['fast-checks'] = {'result': 'success'}
+        for job in ci.ALWAYS_REQUIRED_JOBS:
+            needs[job] = {'result': 'success'}
         needs['regression-coverage'] = {'result': 'success' if 'regression' in selected else 'skipped'}
         for job, flags in ci.JOB_FLAGS.items():
             result = 'success' if any(flag in selected for flag in flags) else 'skipped'
             needs[job] = {'result': result, 'outputs': {
                 child: result for child in ci.CHILD_RESULTS.get(job, ())}}
         return needs
+
+    def test_maintenance_still_requires_inventory_and_static_checks(self):
+        needs = self.results('maintenance')
+        self.assertEqual(ci.gate_errors(needs), [])
+        self.assertIn('catalog-inventory', ci.ALWAYS_REQUIRED_JOBS)
+        for job in ('catalog-inventory', 'static-checks'):
+            with self.subTest(job=job):
+                skipped = self.results('maintenance')
+                skipped[job]['result'] = 'skipped'
+                self.assertTrue(any(job in error for error in ci.gate_errors(skipped)))
 
     def test_intentional_skips_are_allowed_but_selected_skips_are_not(self):
         self.assertEqual(ci.gate_errors(self.results()), [])
@@ -455,13 +499,12 @@ class GateTests(unittest.TestCase):
                         self.assertTrue(ci.gate_errors(needs))
 
     def test_cli_gate_returns_nonzero_for_failed_selected_check(self):
-        import os
         for failed in (False, True):
             needs = self.results('regression')
             if failed:
                 needs['regression']['result'] = 'failure'
             result = subprocess.run(['python3', '-B', str(SCRIPT), 'gate'],
-                                    env={**os.environ, 'CI_NEEDS': json.dumps(needs)},
+                                    env=git_fixture.child_env(CI_NEEDS=json.dumps(needs)),
                                     capture_output=True, text=True)
             self.assertEqual(result.returncode, int(failed), result.stderr)
 

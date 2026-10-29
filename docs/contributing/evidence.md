@@ -7,6 +7,8 @@ and publication rules.
 ## Evidence and assets
 
 For EVAS behavior or support/evidence changes, use stable capability IDs and update affected rows.
+Current requirement facts are regenerated from the capability registration by `evas/capabilities/render.py`.
+Historical scores stay in `evas/docs/COMPARISON.md` under identity `historical-comparison-import-f210ebd5`.
 Keep implementation, evidence and review/release status separate; preserve known counterexamples.
 EVAS semantic/numerical changes include the
 [feature explanation](../../evas/docs/README.md#feature-documentation-contract) and independent checks.

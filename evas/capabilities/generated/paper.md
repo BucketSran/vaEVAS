@@ -1,6 +1,12 @@
 # 给使用者和审稿人的能力比较
 
-由 `evas/capabilities/catalog.py` 生成。只包含已经有四后端成绩的能力节点。
+历史视图身份：`historical-comparison-import-f210ebd5`。
+原输入：`evas/docs/COMPARISON.md`。
+原判据范围：Historical transcription; not qualification for current main。
+这些成绩留在该历史身份下。当前要求分母只计登记中的当前要求。
+当前逐要求四后端事实见 [support.md](support.md) 与 [support-facts.json](support-facts.json)。
+
+由 `evas/capabilities/data/` 生成。只包含已经有四后端成绩的能力节点。
 这一页不是实验开发的登记簿。落后和未验收留在格子里。
 
 成绩沿用[原支持矩阵](../../docs/COMPARISON.md#支持矩阵)的固定模型和配置，

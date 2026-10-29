@@ -1,4 +1,14 @@
 {
+  "language_profile": "evas-va-2.4-plus-2023-v1",
+  "target_scope": "evas-voltage-domain-v1",
+  "normative_index": {
+    "items": 12880,
+    "dispositions": {
+      "excluded": 2592,
+      "included": 270,
+      "pending": 10018
+    }
+  },
   "chapters": [
     "语言",
     "静态电压传递",
@@ -83,6 +93,13 @@
       "note": "冻结收据仍在 experiments/backends/dvs2-spectre-validation。逐条条件对应到能力节点尚未审核，这里不猜测映射。"
     }
   ],
+  "historical_view": {
+    "identity": "historical-comparison-import-f210ebd5",
+    "source": "evas/docs/COMPARISON.md",
+    "scope": "Historical transcription; not qualification for current main",
+    "role": "historical-index",
+    "in_current_requirement_denominator": false
+  },
   "nodes": [
     {
       "id": "macro-include",

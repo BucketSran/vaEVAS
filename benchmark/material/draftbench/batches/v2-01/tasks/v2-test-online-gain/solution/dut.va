@@ -40,7 +40,8 @@ module gain_estimator(VDD, VSS, vinp, vinn, voutp, voutn, gain_out, valid, begin
         end
 
         @(timer(0, sample_period)) begin
-            if ($abstime >= start_time) begin
+            // Half a sample period of margin: the sample at start_time itself counts.
+            if ($abstime >= start_time - 0.5*sample_period) begin
                 vin_diff = V(vinp, vinn);
                 vout_diff = V(voutp, voutn);
                 if (vin_diff < in_min) in_min = vin_diff;

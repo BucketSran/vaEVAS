@@ -1,0 +1,298 @@
+{
+ "task": "r06-spec-slew-envelope",
+ "cases": [
+  "base",
+  "rate-override",
+  "reset-and-start",
+  "vth-override"
+ ],
+ "checker_failure": "out or metric point more than atol outside the trajectory bounds with each event shifted by up to 50 ps",
+ "semantics": "Verilog-A LRM 2.4 4.5.8 transition and 4.5.9 slew; slew ramp start relative to the event to be recorded on Spectre",
+ "conditions": {
+  "fixed_vth": "rejected only through the clk and rst crossing times: in vth-override every control edge takes 200 ps, so a 0.45 V threshold moves each rising crossing 77.8 ps early, 27.8 ps beyond the 50 ps event tolerance (111 mV on a 4e9 V/s rise, 27.8 mV on a 1e9 V/s fall); mode and rst are at a rail at every sample instant, so reading them at 0.45 V changes nothing",
+  "peak_on_output": "accepted in vth-override: with rise_rate 4e9 V/s every ramp ends long before the next sample, so the output equals the envelope whenever a peak-hold sample reads it"
+ },
+ "candidates": [
+  {
+   "name": "no_slew",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "rate-override",
+    "reset-and-start",
+    "vth-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "no-slew-jump"
+  },
+  {
+   "name": "rates_swapped",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "rate-override",
+    "reset-and-start",
+    "vth-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "rates-swapped"
+  },
+  {
+   "name": "symmetric_rate",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "rate-override",
+    "reset-and-start",
+    "vth-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "symmetric-rise-rate"
+  },
+  {
+   "name": "fixed_duration_transition",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "rate-override",
+    "reset-and-start",
+    "vth-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "fixed-duration-ramps"
+  },
+  {
+   "name": "step_per_sample",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "rate-override",
+    "reset-and-start",
+    "vth-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "step-per-sample"
+  },
+  {
+   "name": "metric_from_out",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "rate-override",
+    "reset-and-start",
+    "vth-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "metric-from-out"
+  },
+  {
+   "name": "metric_same_target",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "rate-override",
+    "reset-and-start",
+    "vth-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "metric-same-target"
+  },
+  {
+   "name": "fixed_rates",
+   "group": "wrong",
+   "must_reject": [
+    "rate-override",
+    "vth-override"
+   ],
+   "must_accept": [
+    "base",
+    "reset-and-start"
+   ],
+   "author_synthetic_control": "hardcoded-default-rates"
+  },
+  {
+   "name": "no_upper_clamp",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "rate-override",
+    "reset-and-start",
+    "vth-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "no-upper-clamp"
+  },
+  {
+   "name": "no_lower_clamp",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "rate-override",
+    "vth-override"
+   ],
+   "must_accept": [
+    "reset-and-start"
+   ],
+   "author_synthetic_control": "no-lower-clamp"
+  },
+  {
+   "name": "mode_inverted",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "rate-override",
+    "reset-and-start",
+    "vth-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "mode-inverted"
+  },
+  {
+   "name": "always_release",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "rate-override",
+    "reset-and-start",
+    "vth-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "always-release"
+  },
+  {
+   "name": "always_hold",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "rate-override",
+    "reset-and-start",
+    "vth-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "always-hold"
+  },
+  {
+   "name": "peak_on_output",
+   "group": "wrong",
+   "must_reject": [
+    "rate-override"
+   ],
+   "must_accept": [
+    "base",
+    "reset-and-start",
+    "vth-override"
+   ],
+   "author_synthetic_control": "peak-on-actual-output"
+  },
+  {
+   "name": "sync_reset_only",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "rate-override",
+    "reset-and-start",
+    "vth-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "sync-reset-only"
+  },
+  {
+   "name": "reset_ignored_while_high",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "reset-and-start",
+    "vth-override"
+   ],
+   "must_accept": [
+    "rate-override"
+   ],
+   "author_synthetic_control": "reset-ignored-while-high"
+  },
+  {
+   "name": "reset_jumps_outputs",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "rate-override",
+    "reset-and-start",
+    "vth-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "reset-jumps-outputs"
+  },
+  {
+   "name": "falling_clk_sample",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "rate-override",
+    "reset-and-start",
+    "vth-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "falling-clk-sample"
+  },
+  {
+   "name": "init_env_from_vin",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "rate-override",
+    "reset-and-start",
+    "vth-override"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "init-env-from-vin"
+  },
+  {
+   "name": "fixed_vth",
+   "group": "wrong",
+   "must_reject": [
+    "vth-override"
+   ],
+   "must_accept": [
+    "base",
+    "rate-override",
+    "reset-and-start"
+   ],
+   "author_synthetic_control": "fixed-vth-0.45"
+  },
+  {
+   "name": "alt_explicit_ramp",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "base",
+    "rate-override",
+    "reset-and-start",
+    "vth-override"
+   ],
+   "author_synthetic_control": "contract"
+  },
+  {
+   "name": "alt_clamp_then_compare",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "base",
+    "rate-override",
+    "reset-and-start",
+    "vth-override"
+   ],
+   "author_synthetic_control": "contract"
+  },
+  {
+   "name": "alt_above_reset",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "base",
+    "rate-override",
+    "reset-and-start",
+    "vth-override"
+   ],
+   "author_synthetic_control": "contract"
+  }
+ ]
+}

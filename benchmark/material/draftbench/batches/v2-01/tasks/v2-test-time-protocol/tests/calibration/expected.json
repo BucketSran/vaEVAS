@@ -1,0 +1,38 @@
+{
+ "task": "v2-test-time-protocol",
+ "cases": [
+  "terminal-rearm-stop-overflow",
+  "terminal-reset-abort",
+  "terminal-extra-stop",
+  "terminal-rearm-unarmed-stop"
+ ],
+ "checker_failure": "kind=report: a scored report value (saved point, or interpolated interval midpoint) more than its tolerance from the expected value (tests/v2_testing.py:58-74)",
+ "semantics": "F01 scoring start, user-confirmed 2026-10-28 (option A): tests/v2_testing.py pieces() (:58-74) leaves out points no more than 40 ps from an event or from the start or end of the transient, skips intervals no longer than 80 ps and scores the midpoint of every longer interval; the events are every rising rst, start, stop and clk crossing through 0.5 V, armed or not (:263, :266-267, :296). The instruction states this rule and the checker is unchanged. Candidates differ from solution/ only in a report delay. A report that changes more than 40 ps before its event is acausal and exists only as the synthetic control early-report--60ps.",
+ "conditions": {},
+ "candidates": [
+  {
+   "name": "late_report_delay_60ps",
+   "group": "wrong",
+   "must_reject": [
+    "terminal-rearm-stop-overflow",
+    "terminal-reset-abort",
+    "terminal-extra-stop",
+    "terminal-rearm-unarmed-stop"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "late-report-+60ps"
+  },
+  {
+   "name": "inwindow_report_delay_10ps",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "terminal-rearm-stop-overflow",
+    "terminal-reset-abort",
+    "terminal-extra-stop",
+    "terminal-rearm-unarmed-stop"
+   ],
+   "author_synthetic_control": "inwindow-report-+10ps"
+  }
+ ]
+}

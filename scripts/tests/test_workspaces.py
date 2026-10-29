@@ -8,6 +8,8 @@ import sys
 import tempfile
 import unittest
 from unittest.mock import patch
+
+import git_fixture
 from urllib.parse import quote
 
 
@@ -19,12 +21,13 @@ class WorkspaceChecks(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name).resolve()
+        git_fixture.bind(self, self.root)
         self.project = self.root / "project"
         self.primary = self.project / "current"
         self.visible = self.project / "worktrees"
         self.primary.mkdir(parents=True)
-        self.env = dict(os.environ, GIT_CONFIG_NOSYSTEM="1", GIT_CONFIG_GLOBAL=os.devnull,
-                        GIT_OPTIONAL_LOCKS="0")
+        self.git_explicit = {"GIT_CONFIG_NOSYSTEM": "1", "GIT_CONFIG_GLOBAL": os.devnull}
+        self.env = git_fixture.child_env(**self.git_explicit, GIT_OPTIONAL_LOCKS="0")
         self.git(self.primary, "init", "--initial-branch=main")
         self.git(self.primary, "config", "user.name", "Workspace test")
         self.git(self.primary, "config", "user.email", "workspace@example.invalid")
@@ -34,8 +37,9 @@ class WorkspaceChecks(unittest.TestCase):
         self.git(self.primary, "commit", "-m", "baseline")
 
     def git(self, directory, *args):
-        return subprocess.run(["git", "-C", str(directory), *args], env=self.env,
-                              text=True, capture_output=True, check=True).stdout
+        return git_fixture.run(["-C", str(directory), *args], scratch=self.root,
+                               explicit=self.git_explicit, text=True, capture_output=True,
+                               check=True).stdout
 
     def worktree(self, path=None):
         path = path or self.root / "hidden" / "task"

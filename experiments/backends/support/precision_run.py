@@ -4,7 +4,6 @@ Backend process ownership, compiler identity and format readers reuse the paper
 adapter. This pilot owns its new cards, observation grid and independent checker.
 """
 import argparse
-import csv
 import json
 import math
 from pathlib import Path
@@ -50,8 +49,9 @@ def source_files():
            'target' not in p.parts and '__pycache__' not in p.parts]
     paths += [Path(__file__),ROOT/'experiments/backends/support/precision_report.py',ROOT/'evas/pyproject.toml',
               ROOT/'experiments/backends/evidence/legacy_waveforms.py',
-              ROOT/'evas/validation/paper/precision-v1.json']
-    return sorted(set(paths))
+              ROOT/'evas/validation/paper/precision-v1.json',
+              ROOT/'evas/validation/adapters/paper_evas_worker.py']
+    return sorted(set(paths + worker_source_files()))
 
 
 def freeze(output):
@@ -98,28 +98,17 @@ def verify(inputs):
         if not p.is_relative_to(ROOT) or sha(p)!=digest:raise ValueError('source drift: '+rel)
 
 
+def worker_source_files():
+    """Current worker closure for new freezes; historical freezes retain old sources."""
+    return [ROOT/'evas/validation/adapters/precision_evas_worker.py',
+            ROOT/'evas/validation/adapters/paper_evas_worker.py']
+
+
 def worker(work,kernel):
-    sys.path.insert(0,str(ROOT/'evas/src'))
-    from evas import compile_sources, transient, Instance, CompileError, KernelError
-    request=load(work/'request.json');times=load(work/'requested_times.json')
-    try:
-        instances=[Instance(i['name'],i['module'],i['ports'],i['parameters']) for i in request['instances']]
-        program=compile_sources({'dut.va':(work/'dut.va').read_text()},instances)
-        save(work/'program.json',program.to_dict())
-        response=transient(program,request['inputs'],times,stop=request['stop'],max_step=request['max_step'],
-                           strobetimes=times,kernel=kernel,vabstol=request['vabstol'],reltol=request['reltol'],timeout=None)
-        save_raw_response(work/'raw-response.json',response)
-        strobe=response['strobe_evidence']
-        if strobe['times']!=times:raise ValueError('strobe time mismatch')
-        with (work/'waveform.csv').open('x') as stream:
-            writer=csv.writer(stream);writer.writerow(['time',*response['nodes']])
-            writer.writerows([t,*v] for t,v in zip(strobe['times'],strobe['voltages_V'],strict=True))
-        save(work/'effective.json',evas_effective_record(request,response))
-        result={'status':'waveform_available','origins':sorted(set(strobe['sample_origins']))}
-    except CompileError as exc:result={'status':'compile_failed','reason':str(exc)}
-    except KernelError as exc:result={'status':'execution_failed','reason':str(exc),'detail':exc.detail}
-    except Exception as exc:result={'status':'execution_failed','reason':repr(exc)}
-    save(work/'worker-result.json',result)
+    """Compatibility entry for the precision-specific validation adapter."""
+    sys.path.insert(0,str(ROOT/'evas/validation/adapters'))
+    from precision_evas_worker import worker as adapter_worker
+    return adapter_worker(work,kernel)
 
 
 def qualify(work,backend,result):

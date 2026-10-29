@@ -1,3 +1,4 @@
 #!/bin/sh
 set -eu
-cp -R /solution/files/. /work/
+mkdir -p /app
+cp /solution/circuit.va /app/circuit.va

@@ -44,7 +44,11 @@ Known component tasks can enter their skill directly. Name skills briefly and re
 checks actually run. No mandatory interview, plan, KPI or separate workflow file.
 For EVAS build/run commands, use [evas/README](evas/README.md#构建与运行).
 EVAS behavior or support claims require the component's capability/evidence gates;
-documentation-only changes need no simulator run. Keep failing cases and denominators,
+documentation-only changes need no simulator run. Current four-backend requirement facts
+come from [render.py](evas/capabilities/render.py) into
+[support.md](evas/capabilities/generated/support.md).
+[COMPARISON.md](evas/docs/COMPARISON.md) keeps historical score identity
+`historical-comparison-import-f210ebd5`. Keep failing cases and denominators,
 source identities and local/published status truthful. Publishing, merging and cleanup
 require authorization for that action and target.
 

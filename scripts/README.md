@@ -143,6 +143,13 @@ main 推送使用推送前后的提交差异，不使用有文件数量上限的
 都不能通过。需要设置分支必需检查时使用 `ci-result`，它替代原来的三个 `*-result` 检查。
 草稿迭代只产生 `iteration-result`，不产生可供合并门禁使用的 `ci-result`；转为非草稿会触发完整验收。完整阶段的 `ci-result` 额外要求 `regression-coverage` 通过。本次没有修改 GitHub 分支保护配置。
 
+`catalog-inventory` 在两种模式中都是必需作业，独立记录真实 unittest 入口与全部跟踪资产。
+它区分入口实例数、去重方法数、生成方法及各命名空间，不运行测试体，也不取得语义资格。
+`--observe-only` 仅用于同一 PR 构建目录前的观察检查点；最终交付使用 `--require-catalog`，
+将实际发现与同一 Registry 双向对账，并逐条核对历史原文，失败不退回观察模式。
+Rust 原生 listing 由 `rust-regression` 单独采集，保留原完整测试步骤。
+协议和来源读取规则见[能力登记说明](../evas/capabilities/README.md#资产实际方法与历史来源)。
+
 同一 PR 的新推送会取消该 PR 的过期 CI。main 推送和手动运行互相独立，不自动取消，
 避免后来的文档推送取消前一版代码尚未完成的回归。
 CI 针对固定提交后台执行。主对话按[等待边界](../CONTRIBUTING.md#keep-iteration-feedback-short)
@@ -234,6 +241,218 @@ python3 -B scripts/run_regression.py --merge runs/<task>/shard0.json runs/<task>
 [分阶段持续集成](https://martinfowler.com/articles/continuousIntegration.html#KeepTheBuildFast)与
 [测试范围和隔离](https://testing.googleblog.com/2010/12/test-sizes.html)。
 
+### 原始观察、基线提案与合入门禁
+
+`run_regression.py` 的 schema 3 保留方法、子测试、测试体及清理阶段的诊断。
+普通循环失败记录当次循环变量；无法稳定序列化的条件标为 `identity_complete=false`，
+不能自动按旧失败豁免。有理数按精确分子和分母编码。普通数据类须通过字段元数据及静态属性检查，保留实例属性、声明默认值和类数据；
+运行描述符、自定义属性解析或元数据迭代不能取得完整身份。数据字典始终带类型编码，只有命名子测试参数另设名称映射。
+未注解的 Python 函数仅在代码、默认值、闭包和引用全局均能稳定记录时取得条件身份；名称绑定的存在状态与其值分层记录。循环引用、动态导入、
+懒注解、不透明状态及变化的标准数学模块仍不匹配。采集器不执行这些函数来推算身份。
+没有子测试的通过方法只记录方法完成，不推定内部断言已逐项认证。
+`successful` 沿用 unittest 原始结论，预期失败和跳过仍可令该字段为真。
+`collection_complete` 另记导入和收集是否完整。空集合、缺片、中断或覆盖不符不能通过完整性检查。
+
+完整的失败分片仍能合并；合并命令保留失败诊断并返回 1。
+旧 schema 2 仅保留原有只读合并规则，不补造子条件或转成可信基线。
+`metadata` 绑定判据文件、语言配置、采集器、运行环境和模块选择。
+判据身份覆盖 `evas/tests`、`evas/validation`、`evas/examples`、`experiments` 的实际文件，
+排除缓存、构建输出、临时运行及基线目录。生产源码与内核另记在 `source_identity`。
+CI 的运行配置同时绑定完整执行身份中的实际编译器、Cargo 及构建配置，内核内容归 DUT 身份。
+无法确定状态的 `while` 调用和属性条件不授予稳定身份，子测试沿用这个限制。
+这是保守的输入边界，身份变化需要独立审核相应基线配置。
+GitHub 托管 runner 换镜像时，只有 `platform` 中的内核版本段和 `ImageVersion` 改变。
+可信比较先找完全相同的 context；找不到时，忽略这两项后恰好对应一个已登记 context，才逐条比较全部观察，
+并在结果的 `host_runtime_difference` 列出两边的值。`platform` 按固定格式解析，glibc 与架构须相同；
+Python、PATH、Rust 工具链和其余变量仍精确匹配，对应多个 context 时按歧义拒绝。
+新镜像上出现新通过时，刷新条目保留原登记 context，并在 `source_identity` 的 `observed_host`、
+`observed_run` 写明实际取得观察的环境。
+
+CI 先生成完整输入身份，再用 `--input-identity` 绑定采集报告。
+`ci_evidence.py collect --raw-exit` 检查输入未漂移、报告完整以及原始退出码一致。
+`ci_evidence.py` 统一维护内核选择、运行配置和额外证据输出变量。
+采集器使用同一份表，其内容哈希纳入采集器身份。Python 配置读取及 Rust 运行配置读取有消费者覆盖检查；
+新增键或无法解析的动态读取须先补齐审核。所有登记内核选择及实际文件字节纳入执行身份，
+缺失选择文件拒绝身份生成和复用。未设置与空值分别记录。
+请求额外证据文件时强制执行，不复用成功报告；性能专用 `EVAS_PROFILE_INPUTS` 不在此回归缓存范围内。
+采集成功只表示数据可用。`record` 和 `verify` 只接受非空、全部实际通过的独立分片；
+跳过、预期失败和已知失败均不能写入成功缓存。恢复与保存缓存分别执行。
+
+`regression-coverage` 校验完整采集和固定分母，保留原始合并报告及
+`regression-collection.json`。独立的 `regression-admission` job 使用 workflow 内固定的完整
+已审 main bootstrap commit，从该提交的 regular Git blob 抽取 loader。
+执行前还须核对已审 loader SHA256；缺 pin、缺文件、非 regular blob 或摘要不符均拒绝，
+没有 head loader、HEAD、任意 source override 或空 pin 回退。`python -I` 只隔离导入环境，
+不能防被执行的脚本本体遭替换，因此不得直接运行 PR checkout 的同名 loader 作准入。
+
+bootstrap 来源与科学比较来源分别记录：固定 bootstrap commit 只提供入口；
+loader 仍从真实 CI 事件选择 gate、transition API 和可信基线所在提交。
+PR 固定取 `pull_request.base.sha`，默认主线 push 取 `before`；schedule/manual 重新 fetch
+origin 默认主线后取本次 `FETCH_HEAD`，忽略手动 `inputs.base`。
+默认分支为 `main`，其它分支名只能由受审 workflow 固定配置。
+HEAD 的 baseline 只作候选数据，不能允许当前新失败；先前可信比较拒绝后不检查它。
+新增通过须由同一可信 transition 检查完整提案和实际 producer input subject。
+
+结果分别保存在 `regression-bootstrap-source.json` 和 `regression-admission.json`，失败也上传。
+已审核且条件未变的失败可取得 `merge_allowed=true`，原始 `successful=false` 保持不变。
+所选准入 job 失败、跳过或缺失均阻断总门槛；未选完整回归的 iteration 仍按现策略跳过。
+
+启用前必须先将 inactive loader/有界测试独审合入实际 main，再由独立激活 PR 填入那个完整
+bootstrap commit 和已核对的 loader SHA256。临时 fixture commit、PR head 或发布但尚未合入的
+commit 不能代替它。workflow/pin 本身仍依正常源码审查；这里不宣称能防获准合入的任意恶意
+workflow，也不改变 GitHub 事件权限或分支保护。
+
+维护入口：
+
+```sh
+python3 -B -m unittest discover -s scripts/tests -p test_regression_admission.py -v
+```
+
+本地报告检查和基线提案仍使用以下入口：
+
+```sh
+python3 -B scripts/regression_gate.py validate runs/<task>/complete.json
+python3 -B scripts/regression_gate.py propose runs/<task>/complete.json --source-identity runs/<task>/source.json > runs/<task>/baseline-proposal.json
+python3 -B scripts/regression_gate.py compare runs/<task>/complete.json --repo . --trusted-base <full-commit-id> --inactive
+```
+
+提案默认待审，不自动信任工作树或同一 PR 内修改的基线。
+正式基线使用 `regression-observations-v1` 投影，保留全部方法、条件、阶段、参数、原因及通过观察，
+将完整输入清单、traceback 和原始报告保留在原证据位置。重复的大型循环值按内容哈希共享，
+比较时无损恢复；缺引用、冲突或内容哈希变化均拒绝。投影不修改原报告，另记规范 JSON 的 SHA-256；
+调用者的 `source_identity` 仍须提供实际原文件字节哈希和可获得性。未知投影格式不能取得匹配结论。
+比较器只接受完整可信提交中的 `evas/validation/baselines/regression-v1.json`。
+原通过条件消失、同一方法由失败 A 换成失败 B、新增非通过或条件身份不明均阻断。
+已审核且条件不变的失败可与原始 `successful=false` 并存；这不授予能力资格。
+
+#### 诊断文本中的非确定值
+
+默认比较保留精确诊断文本。对已经复现的耗时、临时目录及巨大有理数 repr 漂移，
+`regression_observation_policy.json` 按源码哈希、函数和断言位置显式选择采集范围。
+选中的标准 unittest 断言另外记录 `reason.comparison_identity`，保留操作、标准库源码身份、
+完整操作数、自定义消息和策略版本；原始 `message` 与 traceback 继续保留。
+未选中的断言沿用精确文本比较。选中但证据不完整的断言不能退回文本豁免。
+自定义失败异常、非精确原生 `AssertionError` 或动态失败属性解析，均不能用操作数替代其诊断。
+
+操作数使用有类型的有限编码。有理数的分子与分母使用无损十六进制，避免十进制显示上限或对象地址。
+用户字典始终编码为键值序列，不能伪装成内部的耗时角色或临时目录标记。
+未知标签、缺失字段、不透明值和不受支持的策略结构均拒绝匹配。
+
+耗时角色须绑定实际生产函数、赋值来源及返回对象，只略去明确诊断耗时的数值，保留其角色与类型。
+同名用户字段仍参与比较。临时目录标记须证明异常发生时的实际标准库目录与调用帧绑定，
+保留文件后缀、源码定位和诊断正文；目录在 subTest 记录失败前正常退出不丢失该证据。
+已有 trace/profile 回调不会被覆盖。策略和采集实现的实际内容均纳入采集器身份，
+变更后须在原 DUT 上重新执行并审核新上下文，不能给旧原始记录补写身份。
+
+#### 保留修复后的通过观察
+
+`validate_baseline_transition` 先按旧可信基线比较本次报告。只有这一比较允许后，
+才检查候选基线的数据；候选提案不能豁免本次新失败。
+如果旧失败已经修好，新增的通过观察必须进入完整、获审查的更新提案。
+只删除旧失败豁免而未保存实际通过条件，同样不能准入。
+基线中已登记的失败或错误观察若在本次运行里完全不再出现，也不算结果不变：
+基线不改时拒绝，须经审查的更新提案保存实际观察。`compare_report` 只核对保留下来的通过
+和本次出现的非通过，不会发现这种消失。
+下一次比较从合入后的可信提交读取这些通过观察，原失败 A 再次出现或换成失败 B 均须拒绝。
+已有不透明的通过观察保留其未取得身份资格的标记，不能由提案改成合格。
+
+完整执行指纹与成功缓存继续包含基线文件。为避免“写入提案又改变原报告指纹”的循环，
+同一次输入采集另外生成 `comparison_subject`，固定仅分离
+`evas/validation/baselines/regression-v1.json` 和 `regression-v1.review.json`。
+其余输入清单的内容摘要、Git 与实际文件模式、运行环境和工具身份仍参与绑定；
+分片坐标另由完整分片覆盖检查保留。候选数据不能扩大这份固定列表。
+更新提案的 `execution_subject` 还绑定判据、语言、采集器、模块选择、实际 DUT 清单与内核。
+
+提案保留其原始执行的完整报告 SHA 和审查身份。该 SHA 可以不同于写入提案后再次执行的报告 SHA，
+但实际观察、上下文和上述完整输入主体必须匹配。缺失、篡改、混用分片或漏掉输入均拒绝；
+不为缺少新主体字段的旧报告补造资格。正式准入已通过固定可信引导接入 CI。
+
+### 新判据和采集器的可信 context 登记
+
+`regression_context_registration.py` 校验一个预先授权的追加事务。新 loader
+支持 `--registration-bundle <directory>`；该目录只提供不可信数据，不能指定代码
+或审批来源。`report.json` 保存新判据的完整实际报告（E1），另外九个固定
+文件名为 `composition_recipe`、`snapshot_manifest`、`dut_build`、`kernel_binary`、
+`collector_manifest`、`artifact_manifest`、`stdout`、`stderr` 和 `shard_reports`。
+各文件的原始 bytes 由先前可信主线的授权记录锁定。完整快照、所有分片、实际
+DUT/kernel、环境及旧新义务映射均参与核验；夹具测试不能替代这些实际执行。
+每个原始分片的 `input_identity` 须与实际元数据、来源和所选方法的摘要一致，
+执行环境中的分片标签须匹配该报告的分片序号及总数；精确预授权不能豁免这两项检查。
+
+登记顺序是先在已审主线安装校验器，再取得新判据的完整证据并独审，
+将精确授权追加到既有 `regression-v1.review.json` 的
+`context_registration_authorizations`，最后另提一个只改固定 baseline 的追加事务。
+授权须先进入事件选择的可信 base；HEAD 的授权、同名源码和未提交修改不能授予权限。
+所有旧 context 的内容和顺序必须保留，每次只追加一个。新判据启用另作下一次正常
+CI，不得沿用旧 criteria/collector ID，也不得在未知 context 失败后改用 HEAD 基线。
+
+普通可信比较先执行，拒绝时不读取 HEAD 或新证据。追加流程还要求旧 context 的
+改进保留检查通过、语言/runtime/invocation 相同、旧新 DUT/binary 相同（例外见下一节），
+全部旧义务有精确映射。新 skip/xfail、丢失义务、非通过身份不全或任意证据哈希不符均拒绝。
+JSON 中的 reviewer 字段仅记录已审主线的决定，不认证独立审查者身份。
+
+#### E1 在另一个 DUT 上运行
+
+登记运行在 main 的 DUT 上，记为 D0，由授权的 `current_dut` 绑定。批次 PR 改了 DUT 时，
+E1 在批次自己的 DUT 上运行，记为 D1。这时 D0 只绑登记运行，E1 绑它自己的执行主体。
+这是对“E1 必须在旧 DUT 上运行”的放松，只在以下条件全部满足时生效：
+
+- 授权的 `e1.execution_subject` 的 DUT 清单或内核与 `current_dut` 不同；
+- E1 的实际执行主体等于授权的主体；
+- `kernel_binary` 角色的哈希等于该主体的内核；
+- E1 的 DUT 清单等于快照中的 DUT 范围（`evas/src`、`evas/rust_core`）。
+
+任一条不满足，E1 仍按原规则绑到 D0：预期的数据或形状异常也退回 D0，未处理的异常中止登记。
+环境照旧逐项比较，只去掉 `kernel_sha256`。
+这一项是 DUT 内核的哈希（`ci_evidence.py` 的 `environment()`）。两边的这一项须各自等于
+自己 DUT 的内核。`kernel_mode`、`kernel_overrides` 等其余键仍须相同。
+
+D0 与 D1 不同时，映射只接受两种：
+- 旧义务全部为 `preserved`，即结果相同；
+- 未配对的新增义务全部为 passed。
+
+新增的 failed 或 error 拒绝，新增 skip、xfail、unexpected-success 照旧拒绝。
+`criterion-correction-reveals-old-dut-defect` 只在 D0 与 D1 相同时接受：DUT 变了以后，
+结果变化不能再归给判据更正。授权中的 E1 DUT 对与 `current_dut` 相等时，规则、检查顺序和
+拒绝消息都与此前相同。授权写错时可能不同：实际是同一 DUT，但 `current_dut` 写错，两版都会拒绝，
+只是消息不同。
+登记结果的 `registration_dut` 记下 D0（`current`）、D1（`e1`）和两者是否不同（`changed`）。
+
+这次放松附带三道约束，以后各批照此执行：
+1. 在本节只接受 `preserved` 与新增通过。`preserved` 只按已经独立审核的配对保持结果标签，
+   并不证明新旧义务是同一个问题。签名或身份变化的配对，要在审核时逐条呈现；
+   非空的理由文字或测试文件的字节变化，都不能当作变化原因的证明。
+   以后的 DUT 修复类别只能把 failed 或 error 变成 passed，且判据逐字节相同；
+   通过变失败或判据有改动的，走带标准线认可编号的期望改动类别。
+2. 放松单独成一个提交，送审时列为第一审查点：D0 与 D1 分开以后，能否让未经认可的
+   结果变化进入可信基线，或让一个 DUT 认证它自己。
+3. PR 正文和登记记录写明这次放松与这些约束。
+
+批次 PR 合入时，它的运行须与新登记的 context 逐条一致，由以下比较保证：
+- `regression_gate.py:549-569`（`compare_report`）要求原通过条件仍通过且签名不变，
+  本次出现的非通过条件须与已登记的条件逐条相同；`:543-548`、`:571-575` 另核对方法清单与夹具；
+- `regression_gate.py:781-796`（`validate_baseline_transition`）把多出来的通过和消失的
+  已登记非通过观察，都当作需要审核刷新的基线。
+
+比较按观察进行，不比较 DUT 身份。
+
+workflow 将引导锁定到已审主线 `72f1c2e4c22d8a2f743da8ec23101d022a3096d5`
+及 loader 的独立 SHA256。loader 只选择一次事件可信 base。普通 C0 比较允许且
+候选追加一个 context 时，workflow 才从同一 base 读取
+`scripts/context-registration-bundle.json` 和 `scripts/materialize_registration_bundle.py`。
+HEAD 中的同名文件不能替代它们；没有追加时不要求这些文件存在。
+
+指针仅含 `schema_version: 1`、非零完整 `commit` 和仓库内相对目录 `prefix`。
+物化 helper 只读本地 Git 中的十个固定普通 blob，不抓取对象、不执行 bundle，
+并记录 commit、tree、blob 和 SHA256。缺对象、符号链接、目录、浮动 ref 或路径逃逸
+均拒绝。bundle 字节仍须经过可信登记 API 的精确授权核验，指针本身不授予资格。
+`runs/regression-bundle-source.json` 与原准入收据一同上传，区分未请求、已物化和错误。
+
+后续授权 PR 须同时将精确授权及其数据指针放入可信 base；之后的追加事务仍只改
+固定 baseline。本批没有加入真实指针、context 或授权。现有科学判据、collector
+和基线没有因此获得新资格。
+
+
 ### 找出回归慢在哪里
 
 Python 回归在 Actions 摘要列出最慢的 20 个测试，并保留 `python-regression-timings` 附件。
@@ -254,11 +473,12 @@ PYTHONPATH=evas/src python3 -B scripts/run_regression.py --report runs/python-re
 `regression` 使用 Cargo 开发配置的 `opt-level=1`，明确保留 `debug-assertions=true`
 和 `overflow-checks=true`，缓存单独使用 `regression-opt1`。这减少未优化代码的执行成本，
 不改变模型、精度参数或误差门槛。配置含义见 [Cargo profiles](https://doc.rust-lang.org/cargo/reference/profiles.html)。
-需要复现 CI 构建时，在 Cargo 命令前设置对应环境变量：
+需要复现 CI 构建时，在 Cargo 命令前设置对应环境变量。CI 用 workflow 顶部的 `RUSTUP_TOOLCHAIN`
+固定 Rust 版本（当前 1.99.1），rustup 据此解析不带 `+toolchain` 的 cargo、rustc 和记录工具链的脚本：
 
 ```sh
-CARGO_PROFILE_DEV_OPT_LEVEL=1 CARGO_PROFILE_DEV_DEBUG_ASSERTIONS=true CARGO_PROFILE_DEV_OVERFLOW_CHECKS=true \
-  cargo +stable build --locked --manifest-path evas/rust_core/Cargo.toml
+RUSTUP_TOOLCHAIN=1.99.1 CARGO_PROFILE_DEV_OPT_LEVEL=1 CARGO_PROFILE_DEV_DEBUG_ASSERTIONS=true \
+  CARGO_PROFILE_DEV_OVERFLOW_CHECKS=true cargo build --locked --manifest-path evas/rust_core/Cargo.toml
 ```
 
 数值拒绝测试必须核对预期的错误类型。`kernel_timeout`、进程启动失败或协议错误
@@ -488,14 +708,16 @@ python3 -B -m unittest discover -s scripts/tests -p 'test_task_continuation*.py'
 ## 生成和检查追溯矩阵
 
 ```sh
-python3 -B scripts/traceability.py
-python3 -B scripts/traceability.py --check
+python3 -B scripts/traceability.py --catalog-data evas/capabilities/data
+python3 -B scripts/traceability.py --catalog-data evas/capabilities/data --check
 python3 -B -m unittest discover -s scripts/tests -v
 ```
 
 `traceability.py` 读取测试 GUARDS 标签、[能力 ID 与证据索引](../evas/docs/development/capability-evidence.md)和 DUT 目录，生成
 [追溯矩阵](../evas/docs/development/TRACEABILITY.md)。`--check` 不写文件，拒绝无效标签、
 失效本地目标和过期矩阵。它不执行测试，也不证明完整覆盖或验证资格。
+`--catalog-data` 增加同一 Registry 的资产、方法及历史来源导航，生成前逐条读取历史原文。
+不带该参数只生成原 GUARDS 视图，不能用于完整目录交付。
 维护工具的回归在 `scripts/tests/`，不计入 EVAS 测试或原矩阵分母。
 
 ## Benchmark 题卡与 review 索引

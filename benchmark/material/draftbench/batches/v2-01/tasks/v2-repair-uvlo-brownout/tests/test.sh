@@ -1,3 +1,4 @@
 #!/bin/sh
 set -eu
-exec python3 -B /tests/verify.py --candidate "${CANDIDATE:-/work/dut.va}" --output "${VERIFY_OUTPUT:-/logs/verifier}" --tests /tests "$@"
+TESTS=$(CDPATH= cd -- "$(dirname "$0")" && pwd)
+exec python3 -B "$TESTS/harbor_entry.py" --candidate "${CANDIDATE:-/app/circuit.va}" --output "${VERIFY_OUTPUT:-/logs/verifier}"

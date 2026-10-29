@@ -1,5 +1,6 @@
 """Check the public generator CLI with synthetic contracts, never EVAS outputs."""
 from pathlib import Path
+import importlib.util
 import shutil
 import subprocess
 import sys
@@ -112,6 +113,91 @@ class TraceabilityChecks(unittest.TestCase):
     def test_empty_test_inventory_is_an_error(self):
         shutil.rmtree(self.root / "evas/tests")
         self.assertNotEqual(self.run_cli("--check").returncode, 0)
+
+    def catalog_fixture(self, *, corrupt=False):
+        self.write("evas/capabilities/data/registry.json", "{}\n")
+        self.write("evas/capabilities/registry.py", '''
+class Catalog:
+    def namespace_counts(self):
+        return {'maintenance': {'methods': 2, 'generated': 0, 'entrypoints': 1}}
+    def current(self, kind):
+        if kind == 'asset':
+            return [{'role': {'status': 'pending'}, 'consumer_status': 'partial'}]
+        if kind == 'historical-audit-record':
+            return [{'id': 'old-audit'}]
+        return []
+    def read_history(self, obj):
+        HISTORY_CHECK
+class Registry:
+    def catalog(self):
+        return Catalog()
+def load(data_dir, *, root, repositories):
+    if not (data_dir / 'registry.json').is_file() or repositories != {'vaevas': root}:
+        raise ValueError('missing or incorrect catalogue source')
+    return Registry()
+'''.replace('HISTORY_CHECK', "raise ValueError('historical row drift')" if corrupt else 'return {}'))
+
+    def test_explicit_catalogue_cli_renders_same_registry_and_checks_freshness(self):
+        self.catalog_fixture()
+        flags = ('--catalog-data', str(self.root / 'evas/capabilities/data'))
+        result = self.run_cli(*flags)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        output = self.root / 'evas/docs/development/TRACEABILITY.md'
+        self.assertIn('maintenance: 2 registered methods', output.read_text())
+        self.assertIn('1 historical records verified', output.read_text())
+        self.assertEqual(self.run_cli('--check', *flags).returncode, 0)
+
+    def test_corrupt_historical_source_or_missing_catalogue_cannot_rewrite_view(self):
+        self.assertEqual(self.run_cli().returncode, 0)
+        output = self.root / 'evas/docs/development/TRACEABILITY.md'
+        before = output.read_bytes()
+        self.catalog_fixture(corrupt=True)
+        flags = ('--catalog-data', str(self.root / 'evas/capabilities/data'))
+        result = self.run_cli(*flags)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('historical row drift', result.stderr)
+        self.assertEqual(output.read_bytes(), before)
+        shutil.rmtree(self.root / 'evas/capabilities/data')
+        self.assertNotEqual(self.run_cli(*flags).returncode, 0)
+        self.assertEqual(output.read_bytes(), before)
+
+    def test_rust_navigation_uses_verified_native_listing_denominator(self):
+        spec = importlib.util.spec_from_file_location('traceability_view_fixture', SCRIPT)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        class FixtureCatalog:
+            def current(self, kind):
+                return [{'collector': 'binary-listing', 'listing_profile': 'fixture-profile',
+                         'listing_source': {'id': 'source-fixture'}}] if kind == 'entrypoint' else []
+            def namespace_counts(self):
+                return {'rust-tests': {'methods': 0, 'generated': 0, 'entrypoints': 1}}
+            def bound(self, ref, kind):
+                return ref
+            def reconcile_rust_listing(self, receipt, *, profile):
+                if receipt != {'fixture': True} or profile != 'fixture-profile':
+                    raise ValueError('fixture source/profile changed')
+                return {'tests_discovered': 3, 'ignored_tests_discovered': 1, 'binaries': [{}]}
+        class FixtureRegistry:
+            def catalog(self):
+                return FixtureCatalog()
+            def read_source(self, source):
+                return b'{"fixture": true}'
+        view = module.render_catalog_navigation(FixtureRegistry())
+        self.assertIn('3 IDs in the archived native listing; 1 ignored; 1 binary entrypoints', view)
+        self.assertNotIn('0 registered methods', view)
+
+    def test_fast_metadata_consumer_accepts_the_complete_generated_view(self):
+        self.catalog_fixture()
+        data = self.root / 'evas/capabilities/data'
+        result = self.run_cli('--catalog-data', str(data))
+        self.assertEqual(result.returncode, 0, result.stderr)
+        spec = importlib.util.spec_from_file_location('fast_metadata_consumer', SCRIPT.parent / 'ci_lint.py')
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        command = next(cmd for cmd in module.commands([], maintenance=True)
+                       if 'scripts/traceability.py' in cmd)
+        checked = subprocess.run(command, cwd=self.root, capture_output=True, text=True)
+        self.assertEqual(checked.returncode, 0, checked.stderr)
 
 
 if __name__ == "__main__":

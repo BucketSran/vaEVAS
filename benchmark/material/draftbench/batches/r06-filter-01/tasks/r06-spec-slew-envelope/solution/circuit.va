@@ -1,0 +1,44 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module slew_envelope_tracker(vin, clk, mode, rst, out, metric);
+    input vin, clk, mode, rst;
+    output out, metric;
+    electrical vin, clk, mode, rst, out, metric;
+
+    parameter real vth = 0.45;
+    parameter real rise_rate = 8.0e8 from [1e8:4e9];
+    parameter real fall_rate = 3.0e8 from [1e8:4e9];
+
+    real env;  // envelope: changes only at reset and sample events
+
+    analog begin
+        @(initial_step)
+            env = 0.0;
+
+        // A rising rst crossing clears the envelope at once.
+        @(cross(V(rst) - vth, +1))
+            env = 0.0;
+
+        // Sample event: peak hold (mode low) or release (mode high), then clamp.
+        @(cross(V(clk) - vth, +1)) begin
+            if (V(rst) > vth)
+                env = 0.0;
+            else begin
+                if (V(mode) > vth)
+                    env = V(vin);
+                else if (V(vin) > env)
+                    env = V(vin);
+                if (env < 0.0)
+                    env = 0.0;
+                if (env > 0.8)
+                    env = 0.8;
+            end
+        end
+
+        // Each output follows its own target with the limited rising and falling
+        // slopes. slew() takes the falling limit as a negative rate.
+        V(out) <+ slew(env, rise_rate, -fall_rate);
+        V(metric) <+ slew(env / 0.8, rise_rate, -fall_rate);
+    end
+endmodule

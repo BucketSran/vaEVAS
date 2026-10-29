@@ -1,0 +1,12 @@
+simulator lang=spectre
+global 0
+
+ahdl_include "/app/circuit.va"
+
+Vsig (sig 0) vsource type=pwl wave=[0 0 4.97n 0 5.07n 0.9 29.97n 0.9 30.07n 0 34.97n 0 35.07n 0.9 59.97n 0.9 60.07n 0 64.97n 0 65.07n 0.9 69.97n 0.9 70.07n 0 72.97n 0 73.07n 0.9 73.72n 0.9 73.82n 0 74.22n 0 74.32n 0.9 114.97n 0.9 115.07n 0 119.97n 0 120.07n 0.9 144.97n 0.9 145.07n 0 149.97n 0 150.07n 0.9 161.67n 0.9 161.77n 0 164.97n 0 165.07n 0.9 177.27n 0.9 177.37n 0 179.97n 0 180.07n 0.9 200n 0.9]
+Vrst (rst_n 0) vsource type=pwl wave=[0 0 9.97n 0 10.07n 0.9 94.97n 0.9 95.07n 0 97.97n 0 98.07n 0.9 124.97n 0.9 125.07n 0 126.97n 0 127.07n 0.9 200n 0.9]
+
+XDUT (sig rst_n out) debounce_latch
+
+tran tran stop=200n maxstep=25p strobeperiod=25p
+save sig rst_n out

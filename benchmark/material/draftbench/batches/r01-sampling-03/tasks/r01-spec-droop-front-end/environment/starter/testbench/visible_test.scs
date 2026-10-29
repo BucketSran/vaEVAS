@@ -1,0 +1,15 @@
+simulator lang=spectre
+global 0
+
+ahdl_include "/app/circuit.va"
+
+Vvdd (vdd 0) vsource type=pwl wave=[0 0.9 70n 0.9 70.1n 0.8 110n 0.8 110.1n 0.9 169.8n 0.9]
+Vvss (vss 0) vsource type=dc dc=0
+Vclk (clk 0) vsource type=pwl wave=[0 0 5.028n 0 5.078n 0.9 13.028n 0.9 13.078n 0 25.084n 0 25.134n 0.9 31.084n 0.9 31.134n 0 45.132n 0 45.182n 0.9 53.132n 0.9 53.182n 0 65.18n 0 65.23n 0.9 67.18n 0.9 67.23n 0 85.028n 0 85.078n 0.9 93.028n 0.9 93.078n 0 105.084n 0 105.134n 0.9 113.084n 0.9 113.134n 0 125.132n 0 125.182n 0.9 126.636n 0.9 126.686n 0 145.18n 0 145.23n 0.9 153.18n 0.9 153.23n 0 169.8n 0]
+Vvin (vin 0) vsource type=pwl wave=[0 0.18 5.104n 0.18 5.152n 0.72 15n 0.72 15.008n 0.3 25.08n 0.3 25.088n 0.72 25.16n 0.72 25.208n 0.47 45.208n 0.47 45.256n 1.05 53n 1.05 53.008n 0.95 65.176n 0.95 65.184n 1.05 65.256n 1.05 65.304n -0.15 85.104n -0.15 85.152n 1.05 95n 1.05 95.008n 0.1 105.08n 0.1 105.088n 1.05 105.16n 1.05 105.208n 0.32 125.208n 0.32 125.256n 0.78 130n 0.78 130.008n 0.55 145.176n 0.55 145.184n 0.78 145.256n 0.78 145.304n 0.4 169.8n 0.4]
+
+XDUT (vdd vss clk vin vout valid coarse) sample_hold_droop
+
+simulatorOptions options reltol=1e-6 vabstol=1e-8 iabstol=1e-12
+tran tran stop=169.8n maxstep=8p strobeperiod=8p errpreset=moderate strobeoutput=strobeonly
+save vdd vss clk vin vout valid coarse

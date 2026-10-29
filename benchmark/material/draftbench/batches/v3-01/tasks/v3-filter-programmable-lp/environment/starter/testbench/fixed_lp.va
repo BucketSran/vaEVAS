@@ -1,0 +1,11 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module fixed_lp(u,reset,y);
+inout u,reset,y;
+electrical u,reset,y;
+parameter real base=1000,initval=0;
+
+analog begin
+V(y) <+ idt(2*`M_PI*base*(V(u)-V(y)),initval,V(reset)>0.5);
+end
+endmodule

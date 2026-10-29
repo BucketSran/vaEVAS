@@ -28,11 +28,14 @@ JOB_FLAGS = {
     'provenance-support': ('provenance',),
     'regression': ('regression',),
     'rust-regression': ('regression',),
+    'regression-admission': ('regression',),
     'properties-and-ngspice': ('differential',),
     'fuzz-smoke': ('fuzz',),
     'package': ('package',),
     'benchmark': ('benchmark',),
 }
+# Inventory construction/reconciliation is required for every declared CI mode.
+ALWAYS_REQUIRED_JOBS = ('catalog-inventory',)
 CHILD_RESULTS = {'package': ('install_result',),
                  'benchmark': ('identity_result', 'first_batch_result')}
 MAINTENANCE_FILES = {
@@ -54,7 +57,8 @@ MAINTENANCE_FILES = {
 }
 PACKAGE_FILES = {'scripts/check_installed_evas.py',
                  'scripts/tests/test_installed_evas_package.py'}
-PROVENANCE_PREFIXES = ('evas/validation/paper/', 'evas/validation/support/',
+PROVENANCE_PREFIXES = ('experiments/backends/comparison/',
+                       'evas/validation/adapters/', 'evas/validation/paper/', 'evas/validation/support/',
                        'experiments/backends/paper/', 'experiments/backends/support/')
 CALIBRATION_PREFIXES = (
     'experiments/backends/evidence/', 'experiments/backends/dvs2-spectre-validation/',
@@ -221,6 +225,10 @@ def classify(paths):
         elif path.startswith('evas/'):
             # Unfamiliar package/build inputs must not bypass installation.
             selected.update(CHECKS[:-1])
+        elif path == 'scripts/capabilities/generate_catalog.py':
+            # scripts/tests catalog fixtures and evas/capabilities generation
+            # checks both run in maintenance. Inventory stays unconditional.
+            selected.add('maintenance')
         else:
             # Unknown scripts/experiments may introduce a shared dependency.
             return flags(*CHECKS)
@@ -402,6 +410,9 @@ def execution_plan(repo, paths, required, stage, *, iteration_paths=None):
 
 def gate_errors(needs):
     errors = []
+    for job in ALWAYS_REQUIRED_JOBS:
+        if needs.get(job, {}).get('result') != 'success':
+            errors.append(f'{job}: always required success, got {needs.get(job, {}).get("result")!r}')
     selection = needs.get('selection', {})
     if selection.get('result') != 'success':
         errors.append('selection did not succeed')

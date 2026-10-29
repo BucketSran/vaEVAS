@@ -1,0 +1,9 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module dt_lowpass_sampler(vin,clk,rst,out);
+input vin,clk,rst;
+output out;
+electrical vin,clk,rst,out;
+// TODO: implement the public contract.
+endmodule
