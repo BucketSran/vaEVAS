@@ -1,0 +1,9 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module dfe_rx_top(vin,clk,rst,tap1_1,tap1_0,tap2_1,tap2_0,decision,fb_metric,slicer_in_dbg);
+input vin,clk,rst,tap1_1,tap1_0,tap2_1,tap2_0;
+output decision,fb_metric,slicer_in_dbg;
+electrical vin,clk,rst,tap1_1,tap1_0,tap2_1,tap2_0,decision,fb_metric,slicer_in_dbg;
+// TODO: implement the public contract.
+endmodule
