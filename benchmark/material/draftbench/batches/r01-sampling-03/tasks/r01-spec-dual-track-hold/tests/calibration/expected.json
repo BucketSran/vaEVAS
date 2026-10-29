@@ -1,0 +1,645 @@
+{
+ "task": "r01-spec-dual-track-hold",
+ "cases": [
+  "base",
+  "grid-phase",
+  "start-high",
+  "rails-offset",
+  "rail-droop",
+  "param-override",
+  "param-endpoints-low",
+  "param-endpoints-high"
+ ],
+ "checker_failure": "a saved point of V(vout) - V(vss) more than atol (2 mV) from the expected output-stage value b, outside 1.25*tedge after a tick that changes b by more than the threshold 0.1 mV of the instruction, or of phase more than atol from the rail it should show (vdd while the clock is high, vss while it is low), outside 1.25*tedge after a crossing; the row at t = 0 is always scored against vinit",
+ "semantics": "Verilog-A LRM 2.4 5.10.3.3 timer (events at start_time and every period after it), 5.10.3.1 cross (the event follows the threshold crossing within its tolerances), 5.10.2 initial_step, 4.5.8 transition (an output starts moving at the event that changes its target; an interrupted transition keeps the slope from its start point); to be recorded on Spectre",
+ "conditions": {
+  "alt_latched_span_phase": "phase drives the span latched at the latest tick, so while a rail moves each tick retargets the running phase transition by at most 1 mV. Under LRM 2.4 4.5.8 (an interrupted transition keeps the slope from its start point to the new target) every phase ramp still ends within tedge and all cases pass; a simulator that restarts a full tedge ramp from the current value at each retarget rejects rail-droop, where some ticks fall less than tedge after a crossing (synthetic control latched_span_phase_restart). rail-droop is therefore listed in must_accept only under the LRM rule; to be recorded on Spectre",
+  "original_v4_236_gold": "the released v4:236 gold, read from historyref at generation time and not stored in the package; same module name and ports, phase level latched at ticks like alt_latched_span_phase, so the same LRM 2.4 4.5.8 condition applies to rail-droop; its acceptance means that a model that reproduces the public gold passes this task (memory contamination, see SOURCE.md)",
+  "alt_two_modules": "input and output stage in two helper modules joined by an internal node driven with transition(a, 0, 1p); both instances tick at the same instants, but the output stage reads the node only on high-clock ticks, when the input stage only applies the rail limit, which moves a by at most 1 mV per tick in the legal domain, and the node settles within 1 ps of each low-clock update, far less than the 50 ps crossing guard. Accepted provided the node already carries vinit when the output stage reads it at the tick at t = 0 with the clock high (start-high): the DC operating point solves the node from the initial_step value. Legacy EVAS 0.8.7 reads 0 V there (vout 0.135 V instead of 0.3 V at t = 0) and rejects start-high; to be recorded on Spectre",
+  "initial_from_vin": "not listed for param-endpoints-high: there vin(0) - vss = 1.9 V lies above the 1.5 V span, so the tick at t = 0 limits both stored values to vinit = 1.5 V and only the output value at t = 0 itself differs. Whether that row shows the initial_step value (1.9 V) or the value after the tick (1.5 V) depends on how a backend treats a transition target changed at t = 0 (legacy EVAS 0.8.7 shows 1.5 V and passes); the reference never changes a transition target at t = 0, because vinit lies inside the span",
+  "late_arrival_1p3tedge": "must be rejected only in param-override and param-endpoints-high, where saved rows lie strictly inside (1.25*tedge, 1.3*tedge) after events (70 ps after every vout tick and 69.5 ps after every crossing of param-override, where the late phase is visible at all 13 crossings and the late vout at 6 of 20 changes; 1611 ps after the 6 rising crossings of param-endpoints-high, where the late phase is visible at all 6); the 10 ps, 20 ps, 2 ps and 250 ps grids of the other cases put no row in that window and none on its ends, so the late arrival is not visible there by construction (rail-droop shows it at 2 of 55 crossings that the vss ramp moves off the grid; not required)",
+  "margin_arrival_1p2tedge": "not a correct model: it arrives after the tedge deadline but before the 1.25*tedge scoring start; accepted under the user-confirmed observation rule (F01, 2026-10-28)",
+  "fixed_tedge": "a 50 ps transition is slower than the contract only in param-endpoints-low (tedge = 10 ps); the other cases use tedge >= 50 ps, where a faster transition is allowed",
+  "clamp_rails_at_start": "rejected only in rail-droop, the case with a moving rail",
+  "clamp_updated_stage_only": "rejected only in rail-droop, where the span falls while a stage holds",
+  "vss_at_start": "rejected only in rail-droop, the case with a moving vss",
+  "no_tick_at_zero": "the missing tick at t = 0 matters only when the clock starts low and the first low phase is short; start-high starts with the clock high, rail-droop and param-endpoints-high have long first phases or alpha = 1",
+  "interrupted_transitions": "not in the legal domain of the reference: ticks are at least 4*tedge apart (tedge <= tick/4) and crossings at least 4*tedge apart; only tick-latched phase levels retarget a running ramp (alt_latched_span_phase, original_v4_236_gold)"
+ },
+ "candidates": [
+  {
+   "name": "alphas_swapped",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "grid-phase",
+    "start-high",
+    "rails-offset",
+    "rail-droop",
+    "param-override",
+    "param-endpoints-low"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "alphas_swapped"
+  },
+  {
+   "name": "clamp_fixed_0p9",
+   "group": "wrong",
+   "must_reject": [
+    "rails-offset",
+    "rail-droop",
+    "param-endpoints-low",
+    "param-endpoints-high"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "clamp_fixed_0p9"
+  },
+  {
+   "name": "clamp_input_first",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "rails-offset",
+    "param-endpoints-low"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "clamp_input_first"
+  },
+  {
+   "name": "clamp_lower_only",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "rails-offset",
+    "rail-droop",
+    "param-endpoints-low",
+    "param-endpoints-high"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "clamp_lower_only"
+  },
+  {
+   "name": "clamp_output_only",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "rails-offset",
+    "rail-droop",
+    "param-endpoints-low"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "clamp_output_only"
+  },
+  {
+   "name": "clamp_rails_at_start",
+   "group": "wrong",
+   "must_reject": [
+    "rail-droop"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "clamp_rails_at_start"
+  },
+  {
+   "name": "clamp_updated_stage_only",
+   "group": "wrong",
+   "must_reject": [
+    "rail-droop"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "clamp_updated_stage_only"
+  },
+  {
+   "name": "clamp_upper_only",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "rails-offset",
+    "param-endpoints-low",
+    "param-endpoints-high"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "clamp_upper_only"
+  },
+  {
+   "name": "edge_extra_update",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "grid-phase",
+    "start-high",
+    "rails-offset",
+    "rail-droop",
+    "param-override",
+    "param-endpoints-low",
+    "param-endpoints-high"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "edge_extra_update"
+  },
+  {
+   "name": "fixed_alpha_in",
+   "group": "wrong",
+   "must_reject": [
+    "param-override",
+    "param-endpoints-low",
+    "param-endpoints-high"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "fixed_alpha_in"
+  },
+  {
+   "name": "fixed_alpha_out",
+   "group": "wrong",
+   "must_reject": [
+    "param-override",
+    "param-endpoints-low",
+    "param-endpoints-high"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "fixed_alpha_out"
+  },
+  {
+   "name": "fixed_tedge",
+   "group": "wrong",
+   "must_reject": [
+    "param-endpoints-low"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "fixed_tedge"
+  },
+  {
+   "name": "fixed_tick",
+   "group": "wrong",
+   "must_reject": [
+    "param-override",
+    "param-endpoints-low",
+    "param-endpoints-high"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "fixed_tick"
+  },
+  {
+   "name": "fixed_vinit",
+   "group": "wrong",
+   "must_reject": [
+    "start-high",
+    "param-override",
+    "param-endpoints-high"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "fixed_vinit"
+  },
+  {
+   "name": "fixed_vth",
+   "group": "wrong",
+   "must_reject": [
+    "param-override",
+    "param-endpoints-low",
+    "param-endpoints-high"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "fixed_vth"
+  },
+  {
+   "name": "grid_half_offset",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "grid-phase",
+    "start-high",
+    "rails-offset",
+    "rail-droop",
+    "param-override",
+    "param-endpoints-low",
+    "param-endpoints-high"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "grid_half_offset"
+  },
+  {
+   "name": "grid_restart_at_edges",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "grid-phase",
+    "start-high",
+    "rails-offset",
+    "rail-droop",
+    "param-override",
+    "param-endpoints-low",
+    "param-endpoints-high"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "grid_restart_at_edges"
+  },
+  {
+   "name": "ground_referenced",
+   "group": "wrong",
+   "must_reject": [
+    "rails-offset",
+    "rail-droop",
+    "param-endpoints-low",
+    "param-endpoints-high"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "ground_referenced"
+  },
+  {
+   "name": "initial_from_vin",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "grid-phase",
+    "start-high",
+    "rails-offset",
+    "rail-droop",
+    "param-override",
+    "param-endpoints-low"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "initial_from_vin"
+  },
+  {
+   "name": "initial_input_vin",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "grid-phase",
+    "start-high",
+    "rails-offset",
+    "param-override",
+    "param-endpoints-low"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "initial_input_vin"
+  },
+  {
+   "name": "initial_output_zero",
+   "group": "wrong",
+   "must_reject": [
+    "start-high",
+    "param-override",
+    "param-endpoints-high"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "initial_output_zero"
+  },
+  {
+   "name": "input_sample_at_rising_edge",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "grid-phase",
+    "start-high",
+    "rails-offset",
+    "param-override",
+    "param-endpoints-low",
+    "param-endpoints-high"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "input_sample_at_rising_edge"
+  },
+  {
+   "name": "input_stage_ideal",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "grid-phase",
+    "start-high",
+    "rails-offset",
+    "param-override",
+    "param-endpoints-low"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "input_stage_ideal"
+  },
+  {
+   "name": "input_tracks_both_phases",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "grid-phase",
+    "start-high",
+    "rails-offset",
+    "rail-droop",
+    "param-override",
+    "param-endpoints-low",
+    "param-endpoints-high"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "input_tracks_both_phases"
+  },
+  {
+   "name": "late_arrival_1p3tedge",
+   "group": "wrong",
+   "must_reject": [
+    "param-override",
+    "param-endpoints-high"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "late_arrival_1p3tedge"
+  },
+  {
+   "name": "no_clamp",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "rails-offset",
+    "rail-droop",
+    "param-endpoints-low",
+    "param-endpoints-high"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "no_clamp"
+  },
+  {
+   "name": "no_output_hold",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "grid-phase",
+    "start-high",
+    "rails-offset",
+    "rail-droop",
+    "param-override",
+    "param-endpoints-low",
+    "param-endpoints-high"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "no_output_hold"
+  },
+  {
+   "name": "no_tick_at_zero",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "grid-phase",
+    "rails-offset",
+    "param-override",
+    "param-endpoints-low"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "no_tick_at_zero"
+  },
+  {
+   "name": "output_copy_at_rising_edge",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "grid-phase",
+    "start-high",
+    "rails-offset",
+    "rail-droop",
+    "param-override",
+    "param-endpoints-low",
+    "param-endpoints-high"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "output_copy_at_rising_edge"
+  },
+  {
+   "name": "output_reads_vin",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "grid-phase",
+    "start-high",
+    "rails-offset",
+    "rail-droop",
+    "param-override",
+    "param-endpoints-low",
+    "param-endpoints-high"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "output_reads_vin"
+  },
+  {
+   "name": "output_stage_ideal",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "grid-phase",
+    "start-high",
+    "rails-offset",
+    "rail-droop",
+    "param-override",
+    "param-endpoints-low"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "output_stage_ideal"
+  },
+  {
+   "name": "phase_fixed_levels",
+   "group": "wrong",
+   "must_reject": [
+    "rails-offset",
+    "rail-droop",
+    "param-endpoints-low",
+    "param-endpoints-high"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "phase_fixed_levels"
+  },
+  {
+   "name": "phase_from_ticks",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "grid-phase",
+    "start-high",
+    "rails-offset",
+    "rail-droop",
+    "param-override",
+    "param-endpoints-low",
+    "param-endpoints-high"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "phase_from_ticks"
+  },
+  {
+   "name": "phase_inverted",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "grid-phase",
+    "start-high",
+    "rails-offset",
+    "rail-droop",
+    "param-override",
+    "param-endpoints-low",
+    "param-endpoints-high"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "phase_inverted"
+  },
+  {
+   "name": "single_edge_sampler",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "grid-phase",
+    "start-high",
+    "rails-offset",
+    "rail-droop",
+    "param-override",
+    "param-endpoints-low",
+    "param-endpoints-high"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "single_edge_sampler"
+  },
+  {
+   "name": "transparent_output",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "grid-phase",
+    "start-high",
+    "rails-offset",
+    "rail-droop",
+    "param-override",
+    "param-endpoints-low",
+    "param-endpoints-high"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "transparent_output"
+  },
+  {
+   "name": "vss_at_start",
+   "group": "wrong",
+   "must_reject": [
+    "rail-droop"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "vss_at_start"
+  },
+  {
+   "name": "wrong_track_phase",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "grid-phase",
+    "start-high",
+    "rails-offset",
+    "rail-droop",
+    "param-override",
+    "param-endpoints-low",
+    "param-endpoints-high"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "wrong_track_phase"
+  },
+  {
+   "name": "alt_fast_transition",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "base",
+    "grid-phase",
+    "start-high",
+    "rails-offset",
+    "rail-droop",
+    "param-override",
+    "param-endpoints-low",
+    "param-endpoints-high"
+   ],
+   "author_synthetic_control": "fast_transitions_0p5tedge"
+  },
+  {
+   "name": "alt_latched_span_phase",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "base",
+    "grid-phase",
+    "start-high",
+    "rails-offset",
+    "rail-droop",
+    "param-override",
+    "param-endpoints-low",
+    "param-endpoints-high"
+   ],
+   "author_synthetic_control": "latched_span_phase"
+  },
+  {
+   "name": "alt_level_at_tick",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "base",
+    "grid-phase",
+    "start-high",
+    "rails-offset",
+    "rail-droop",
+    "param-override",
+    "param-endpoints-low",
+    "param-endpoints-high"
+   ],
+   "author_synthetic_control": "reference"
+  },
+  {
+   "name": "alt_limit_then_update",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "base",
+    "grid-phase",
+    "start-high",
+    "rails-offset",
+    "rail-droop",
+    "param-override",
+    "param-endpoints-low",
+    "param-endpoints-high"
+   ],
+   "author_synthetic_control": "limit_then_update"
+  },
+  {
+   "name": "alt_two_modules",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "base",
+    "grid-phase",
+    "start-high",
+    "rails-offset",
+    "rail-droop",
+    "param-override",
+    "param-endpoints-low",
+    "param-endpoints-high"
+   ],
+   "author_synthetic_control": "reference"
+  },
+  {
+   "name": "margin_arrival_1p2tedge",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "base",
+    "grid-phase",
+    "start-high",
+    "rails-offset",
+    "rail-droop",
+    "param-override",
+    "param-endpoints-low",
+    "param-endpoints-high"
+   ],
+   "author_synthetic_control": "margin_arrival_1p2tedge"
+  },
+  {
+   "name": "original_v4_236_gold",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "base",
+    "grid-phase",
+    "start-high",
+    "rails-offset",
+    "rail-droop",
+    "param-override",
+    "param-endpoints-low",
+    "param-endpoints-high"
+   ],
+   "author_synthetic_control": "latched_span_phase"
+  }
+ ]
+}

@@ -1,0 +1,7 @@
+simulator lang=spectre
+ahdl_include "/app/circuit.va"
+ahdl_include "healthy.va"
+X (drive sense gain phase valid) sweep_meter slot=0.02 settle=0.004 window=0.008
+D (drive sense) healthy_lowpass fc=1500 g=1.0
+tran tran stop=0.0799 maxstep=2e-06 errpreset=conservative
+save drive sense gain phase valid

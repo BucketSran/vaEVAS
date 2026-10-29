@@ -1,0 +1,387 @@
+{
+ "task": "r04-spec-fine-coarse-tdc",
+ "cases": [
+  "base",
+  "phase-sweep",
+  "reset-warmup",
+  "param-override",
+  "two-ref-short"
+ ],
+ "checker_failure": "an output sample more than atol from the expected level of code_7..code_0, valid or overflow",
+ "semantics": "Verilog-A LRM 2.4 5.10.3.1 cross (event within its time tolerance, 1 ps in the reference), 5.10.3.3 timer, 4.5.8 transition (interrupted transitions), 4.2 floor; event-time precision of cross() on Spectre to be recorded",
+ "conditions": {
+  "alt_timestamp_overflow_timer": "accepted provided the overflow timer, placed at the computed 16th reference crossing, fires within the 20 ps fine-code margin of that crossing (LRM 5.10.3.3)",
+  "all": "every expectation assumes cross() events located within a few ps of the threshold crossing; the reference sets time_tol = 1 ps, other candidates inherit it",
+  "two_ref_short": "p0-fix-b F07: two-ref-short has only two rising ref_clk crossings; T_ref is their spacing, so a candidate must take its fine step from the first two crossings"
+ },
+ "candidates": [
+  {
+   "name": "stop_phase_only",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "phase-sweep",
+    "reset-warmup",
+    "param-override",
+    "two-ref-short"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "stop-phase-only"
+  },
+  {
+   "name": "concatenated_no_borrow",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "phase-sweep",
+    "reset-warmup",
+    "param-override"
+   ],
+   "must_accept": [
+    "two-ref-short"
+   ],
+   "author_synthetic_control": "concatenated-no-borrow"
+  },
+  {
+   "name": "clamped_fine_difference",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "phase-sweep",
+    "reset-warmup",
+    "param-override"
+   ],
+   "must_accept": [
+    "two-ref-short"
+   ],
+   "author_synthetic_control": "clamped-fine-difference"
+  },
+  {
+   "name": "time_based_coarse_count",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "phase-sweep",
+    "reset-warmup",
+    "param-override"
+   ],
+   "must_accept": [
+    "two-ref-short"
+   ],
+   "author_synthetic_control": "time-based-coarse-count"
+  },
+  {
+   "name": "rounded_fine_codes",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "phase-sweep",
+    "reset-warmup",
+    "param-override"
+   ],
+   "must_accept": [
+    "two-ref-short"
+   ],
+   "author_synthetic_control": "rounded-fine-codes"
+  },
+  {
+   "name": "next_edge_sign_error",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "phase-sweep",
+    "reset-warmup",
+    "param-override",
+    "two-ref-short"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "next-edge-fine-sign-error"
+  },
+  {
+   "name": "extra_coarse_edge",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "phase-sweep",
+    "reset-warmup",
+    "param-override",
+    "two-ref-short"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "extra-coarse-edge"
+  },
+  {
+   "name": "fixed_period_4ns",
+   "group": "wrong",
+   "must_reject": [
+    "reset-warmup",
+    "param-override",
+    "two-ref-short"
+   ],
+   "must_accept": [
+    "base",
+    "phase-sweep"
+   ],
+   "author_synthetic_control": "fixed-period-4ns"
+  },
+  {
+   "name": "no_warm_up",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "reset-warmup",
+    "two-ref-short"
+   ],
+   "must_accept": [
+    "phase-sweep",
+    "param-override"
+   ],
+   "author_synthetic_control": "no-warm-up"
+  },
+  {
+   "name": "warm_up_survives_reset",
+   "group": "wrong",
+   "must_reject": [
+    "reset-warmup"
+   ],
+   "must_accept": [
+    "base",
+    "phase-sweep",
+    "param-override",
+    "two-ref-short"
+   ],
+   "author_synthetic_control": "warm-up-survives-reset"
+  },
+  {
+   "name": "overflow_only_at_stop",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "reset-warmup",
+    "param-override"
+   ],
+   "must_accept": [
+    "phase-sweep",
+    "two-ref-short"
+   ],
+   "author_synthetic_control": "overflow-only-at-stop"
+  },
+  {
+   "name": "overflow_code_zero",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "reset-warmup",
+    "param-override"
+   ],
+   "must_accept": [
+    "phase-sweep",
+    "two-ref-short"
+   ],
+   "author_synthetic_control": "overflow-code-zero"
+  },
+  {
+   "name": "overflow_flag_missing",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "reset-warmup",
+    "param-override"
+   ],
+   "must_accept": [
+    "phase-sweep",
+    "two-ref-short"
+   ],
+   "author_synthetic_control": "overflow-flag-missing"
+  },
+  {
+   "name": "restart_ignored",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "reset-warmup"
+   ],
+   "must_accept": [
+    "phase-sweep",
+    "param-override",
+    "two-ref-short"
+   ],
+   "author_synthetic_control": "restart-ignored"
+  },
+  {
+   "name": "stop_keeps_measurement",
+   "group": "wrong",
+   "must_reject": [
+    "base"
+   ],
+   "must_accept": [
+    "phase-sweep",
+    "reset-warmup",
+    "param-override",
+    "two-ref-short"
+   ],
+   "author_synthetic_control": "stop-keeps-measurement"
+  },
+  {
+   "name": "start_keeps_result",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "phase-sweep",
+    "reset-warmup",
+    "param-override"
+   ],
+   "must_accept": [
+    "two-ref-short"
+   ],
+   "author_synthetic_control": "start-keeps-result"
+  },
+  {
+   "name": "reset_keeps_measurement",
+   "group": "wrong",
+   "must_reject": [
+    "reset-warmup"
+   ],
+   "must_accept": [
+    "base",
+    "phase-sweep",
+    "param-override",
+    "two-ref-short"
+   ],
+   "author_synthetic_control": "reset-keeps-measurement"
+  },
+  {
+   "name": "ref_falling_edges",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "phase-sweep",
+    "reset-warmup",
+    "param-override",
+    "two-ref-short"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "ref-falling-edges"
+  },
+  {
+   "name": "bit_order_reversed",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "phase-sweep",
+    "reset-warmup",
+    "param-override",
+    "two-ref-short"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "bit-order-reversed"
+  },
+  {
+   "name": "hardcoded_vth_045",
+   "group": "wrong",
+   "must_reject": [
+    "param-override"
+   ],
+   "must_accept": [
+    "base",
+    "phase-sweep",
+    "reset-warmup",
+    "two-ref-short"
+   ],
+   "author_synthetic_control": "hardcoded-vth-0.45"
+  },
+  {
+   "name": "hardcoded_vdd_09",
+   "group": "wrong",
+   "must_reject": [
+    "param-override"
+   ],
+   "must_accept": [
+    "base",
+    "phase-sweep",
+    "reset-warmup",
+    "two-ref-short"
+   ],
+   "author_synthetic_control": "hardcoded-vdd-0.9"
+  },
+  {
+   "name": "hardcoded_tr_200p",
+   "group": "wrong",
+   "must_reject": [
+    "param-override"
+   ],
+   "must_accept": [
+    "base",
+    "phase-sweep",
+    "reset-warmup",
+    "two-ref-short"
+   ],
+   "author_synthetic_control": "hardcoded-tr-200p"
+  },
+  {
+   "name": "slow_output_1p3tr",
+   "group": "wrong",
+   "must_reject": [
+    "base",
+    "phase-sweep",
+    "reset-warmup",
+    "param-override",
+    "two-ref-short"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "arrival-1.3tr"
+  },
+  {
+   "name": "alt_nutt_complement",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "base",
+    "phase-sweep",
+    "reset-warmup",
+    "param-override",
+    "two-ref-short"
+   ],
+   "author_synthetic_control": "contract"
+  },
+  {
+   "name": "alt_timestamp_overflow_timer",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "base",
+    "phase-sweep",
+    "reset-warmup",
+    "param-override",
+    "two-ref-short"
+   ],
+   "author_synthetic_control": "contract"
+  },
+  {
+   "name": "alt_fast_output",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "base",
+    "phase-sweep",
+    "reset-warmup",
+    "param-override",
+    "two-ref-short"
+   ],
+   "author_synthetic_control": "alt-fast-output-0.2tr"
+  },
+  {
+   "name": "alt_delayed_within_tr",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "base",
+    "phase-sweep",
+    "reset-warmup",
+    "param-override",
+    "two-ref-short"
+   ],
+   "author_synthetic_control": "alt-delayed-start-within-tr"
+  }
+ ]
+}

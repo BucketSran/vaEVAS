@@ -1,0 +1,259 @@
+{
+ "schema_version": 1,
+ "purpose": "第二批：首批30以外的23道v2/v3纯Verilog-A草稿的Harbor迁移集合；保留原ID和唯一活跃题包目录，不增加独立题目计数。",
+ "source_baseline": "c485de860c6005f451133e8cdc05fe923da29206",
+ "recorded_at_utc": "2026-10-28T01:05:00Z",
+ "authorization": "user speed-up request relayed ~2026-10-27T17:45Z: passing tasks migrate without confirmation, doubtful tasks wait for the user",
+ "triage": {
+  "file": "../../../../../runs/t3-batch2-20261027/triage.json",
+  "sha256": "58cfaf2fb025e09caa9c37a3f66607096ffe1d000c5da2b7fe9bc6b32b453a2e",
+  "disposition": "../../../../../runs/t3-batch2-20261027/triage-disposition.json"
+ },
+ "tasks": [
+  {
+   "task_id": "v2-repair-debounce-latch",
+   "path": "../v2-01/tasks/v2-repair-debounce-latch",
+   "group": "A",
+   "engineering_action": "diagnosis-repair",
+   "source_group": "v4-family-005",
+   "triage": "通过",
+   "status": "migrated (implementation, 未仿真); Astra A r1 12 findings -> F02-F12 fixed (fix-a-r1); Astra A r2: all closed except F08 (308 vcm range, fixed by main, closed in the B r2 review as R2-01); F01 user-confirmed 2026-10-28 (state the actual observation start, checker unchanged, add late/early negatives); contract sync pending"
+  },
+  {
+   "task_id": "v2-repair-reset-sequencer",
+   "path": "../v2-01/tasks/v2-repair-reset-sequencer",
+   "group": "A",
+   "engineering_action": "diagnosis-repair",
+   "source_group": "v4-family-272",
+   "triage": "通过",
+   "status": "migrated (implementation, 未仿真); Astra A r1 12 findings -> F02-F12 fixed (fix-a-r1); Astra A r2: all closed except F08 (308 vcm range, fixed by main, closed in the B r2 review as R2-01); F01 user-confirmed 2026-10-28 (state the actual observation start, checker unchanged, add late/early negatives); contract sync pending"
+  },
+  {
+   "task_id": "v2-repair-uvlo-brownout",
+   "path": "../v2-01/tasks/v2-repair-uvlo-brownout",
+   "group": "A",
+   "engineering_action": "diagnosis-repair",
+   "source_group": "v4-family-046",
+   "triage": "通过",
+   "status": "migrated (implementation, 未仿真); Astra A r1 12 findings -> F02-F12 fixed (fix-a-r1); Astra A r2: all closed except F08 (308 vcm range, fixed by main, closed in the B r2 review as R2-01); F01 user-confirmed 2026-10-28 (state the actual observation start, checker unchanged, add late/early negatives); contract sync pending; author-r2 (2026-10-29): thresholds stated as the binary64 values of 0.65 and 0.55 (coordinator option A); exemption from the A-narrowed touch rule checked condition by condition"
+  },
+  {
+   "task_id": "v2-spec-038-programmable-gain-amplifier",
+   "path": "../v2-01/tasks/v2-spec-038-programmable-gain-amplifier",
+   "group": "A",
+   "engineering_action": "spec-modeling",
+   "source_group": "v4-038",
+   "triage": "通过",
+   "status": "migrated (implementation, 未仿真); Astra A r1 12 findings -> F02-F12 fixed (fix-a-r1); Astra A r2: all closed except F08 (308 vcm range, fixed by main, closed in the B r2 review as R2-01); F01 user-confirmed 2026-10-28 (state the actual observation start, checker unchanged, add late/early negatives); contract sync pending"
+  },
+  {
+   "task_id": "v2-spec-047-window-comparator-detector",
+   "path": "../v2-01/tasks/v2-spec-047-window-comparator-detector",
+   "group": "A",
+   "engineering_action": "spec-modeling",
+   "source_group": "v4-047",
+   "triage": "通过",
+   "status": "migrated (implementation, 未仿真); Astra A r1 12 findings -> F02-F12 fixed (fix-a-r1); Astra A r2: all closed except F08 (308 vcm range, fixed by main, closed in the B r2 review as R2-01); F01 user-confirmed 2026-10-28 (state the actual observation start, checker unchanged, add late/early negatives); contract sync pending"
+  },
+  {
+   "task_id": "v2-spec-071-acquisition-limited-sample-and-hold",
+   "path": "../v2-01/tasks/v2-spec-071-acquisition-limited-sample-and-hold",
+   "group": "A",
+   "engineering_action": "spec-modeling",
+   "source_group": "v4-071",
+   "triage": "有疑点",
+   "status": "migrated (implementation, 未仿真) per the 2026-10-28 user decision (decisions-r1): stretched-case sample delay 6.15n -> 6.4n (crossings >= 50 ps from ticks); C055-S1 contract items written from the checker; F01 sentence and calibration added; C055-R1 independence check -> design note, not built (user decided 2026-10-29, decision sheet item 3); Astra review pending; open: D071-1 reference resets on a sample edge while rst high (untriggered)"
+  },
+  {
+   "task_id": "v2-spec-183-foreground-rdac-calibrator",
+   "path": "../v2-01/tasks/v2-spec-183-foreground-rdac-calibrator",
+   "group": "A",
+   "engineering_action": "spec-modeling",
+   "source_group": "v4-183",
+   "triage": "通过",
+   "status": "migrated (implementation, 未仿真); Astra A r1 12 findings -> F02-F12 fixed (fix-a-r1); Astra A r2: all closed except F08 (308 vcm range, fixed by main, closed in the B r2 review as R2-01); F01 user-confirmed 2026-10-28 (state the actual observation start, checker unchanged, add late/early negatives); contract sync pending"
+  },
+  {
+   "task_id": "v2-spec-308-correlated-double-sampler-offset-cancel",
+   "path": "../v2-01/tasks/v2-spec-308-correlated-double-sampler-offset-cancel",
+   "group": "A",
+   "engineering_action": "spec-modeling",
+   "source_group": "v4-308",
+   "triage": "通过",
+   "status": "migrated (implementation, 未仿真); Astra A r1 12 findings -> F02-F12 fixed (fix-a-r1); Astra A r2: all closed except F08 (308 vcm range, fixed by main, closed in the B r2 review as R2-01); F01 user-confirmed 2026-10-28 (state the actual observation start, checker unchanged, add late/early negatives); contract sync pending"
+  },
+  {
+   "task_id": "v2-spec-370-opamp-feedback-settling-monitor",
+   "path": "../v2-01/tasks/v2-spec-370-opamp-feedback-settling-monitor",
+   "group": "A",
+   "engineering_action": "spec-modeling",
+   "source_group": "v4-370",
+   "triage": "有疑点",
+   "status": "migrated (implementation, 未仿真) per the 2026-10-28 user decision (decisions-r1): first clk ramp 9.1-10.1 ns, public bench synced, global k*tick polling stated; legacy 1/2 -> 2/2; F01 sentence and calibration added; Astra review pending; open: D370-1 stretched-case clk crossing 3 ps after a tick; decision sheet item 8: 0 < alpha <= 1, vss <= vcm <= vdd confirmed by the user 2026-10-29 as recommended"
+  },
+  {
+   "task_id": "v2-spec-375-nonoverlap-clock-generator",
+   "path": "../v2-01/tasks/v2-spec-375-nonoverlap-clock-generator",
+   "group": "A",
+   "engineering_action": "spec-modeling",
+   "source_group": "v4-375",
+   "triage": "通过",
+   "status": "migrated (implementation, 未仿真); Astra A r1 12 findings -> F02-F12 fixed (fix-a-r1); Astra A r2: all closed except F08 (308 vcm range, fixed by main, closed in the B r2 review as R2-01); F01 user-confirmed 2026-10-28 (state the actual observation start, checker unchanged, add late/early negatives); contract sync pending; decision sheet item 12: option B chosen by the user 2026-10-29 (final; rollback_375.py retired); B2PC: B side ref 4/4, 110 ps accepted, 130/260 ps rejected, 220 ps rejected on B and accepted on A"
+  },
+  {
+   "task_id": "v2-spec-396-quadrature-lo-generator-divided-clock",
+   "path": "../v2-01/tasks/v2-spec-396-quadrature-lo-generator-divided-clock",
+   "group": "A",
+   "engineering_action": "spec-modeling",
+   "source_group": "v4-396",
+   "triage": "通过",
+   "status": "migrated (implementation, 未仿真); Astra A r1 12 findings -> F02-F12 fixed (fix-a-r1); Astra A r2: all closed except F08 (308 vcm range, fixed by main, closed in the B r2 review as R2-01); F01 user-confirmed 2026-10-28 (state the actual observation start, checker unchanged, add late/early negatives); contract sync pending"
+  },
+  {
+   "task_id": "v2-test-duty-cycle",
+   "path": "../v2-01/tasks/v2-test-duty-cycle",
+   "group": "B",
+   "engineering_action": "testing-characterization",
+   "source_group": "v4-060",
+   "triage": "通过",
+   "status": "migrated (implementation, 未仿真); Astra B r1 11 findings fixed (fix-b-r1), Astra B r2: this task's r1 findings closed; F01 user-confirmed 2026-10-28 (state the two-sided guard, add late and early negatives); contract sync pending"
+  },
+  {
+   "task_id": "v2-test-hysteresis",
+   "path": "../v2-01/tasks/v2-test-hysteresis",
+   "group": "B",
+   "engineering_action": "testing-characterization",
+   "source_group": "v4-111",
+   "triage": "通过",
+   "status": "migrated (implementation, 未仿真); Astra B r1 11 findings fixed (fix-b-r1), Astra B r2: this task's r1 findings closed; F01 user-confirmed 2026-10-28 (state the two-sided guard, add late and early negatives); contract sync pending"
+  },
+  {
+   "task_id": "v2-test-online-gain",
+   "path": "../v2-01/tasks/v2-test-online-gain",
+   "group": "B",
+   "engineering_action": "testing-characterization",
+   "source_group": "v4-093+v4-038",
+   "triage": "有疑点",
+   "status": "migrated (implementation, 未仿真) per the 2026-10-28 user decision (decisions-r1): inclusive start sample stated, reference margin start_time - 0.5*sample_period, 350 ps two-sided guard stated; legacy 2/6 -> 6/6; Astra review pending; open: DOG-1 public begin_round crossing 50 ps from a sample point; author-r2 (2026-10-29): strict_start_no_margin moved from wrong to a backend-dependent probe (probe/, conditions only; Spectre B2PC rec-02/opt-01 pass, legacy 4/6 reject); reference, checker and cases unchanged"
+  },
+  {
+   "task_id": "v2-test-sampled-rms",
+   "path": "../v2-01/tasks/v2-test-sampled-rms",
+   "group": "B",
+   "engineering_action": "testing-characterization",
+   "source_group": "v4-074",
+   "triage": "通过",
+   "status": "migrated (implementation, 未仿真); Astra B r1 11 findings fixed (fix-b-r1), Astra B r2: this task's r1 findings closed; F01 user-confirmed 2026-10-28 (state the two-sided guard, add late and early negatives); contract sync pending"
+  },
+  {
+   "task_id": "v2-test-time-protocol",
+   "path": "../v2-01/tasks/v2-test-time-protocol",
+   "group": "B",
+   "engineering_action": "testing-characterization",
+   "source_group": "v4-346",
+   "triage": "通过",
+   "status": "migrated (implementation, 未仿真); Astra B r1 11 findings fixed (fix-b-r1), Astra B r2: this task's r1 findings closed; F01 user-confirmed 2026-10-28 (state the two-sided guard, add late and early negatives); contract sync pending"
+  },
+  {
+   "task_id": "v3-calibration-common-mode-servo",
+   "path": "../v3-01/tasks/v3-calibration-common-mode-servo",
+   "group": "B",
+   "engineering_action": "extension-integration",
+   "source_group": "calibration-frontends-306-369-390",
+   "triage": "通过",
+   "status": "migrated (implementation, 未仿真); Astra B r1 11 findings fixed (fix-b-r1); r2/r3 follow-up P1s fixed (fix-b-r2, fix-b-r3); Astra B r4: all closed, no actionable findings; main applied the r4 wording suggestions; saved-point spacing (<= 20 ns) to be verified on Spectre; author-r2 (2026-10-29): case netlists state reltol=1e-6 vabstol=1e-8 iabstol=1e-12 (the B2PC job line; tolerance step byte-identical to the accepted must-02 jobs), VN type=dc; item-20 lower bound 6.41e-5 code (1.282e-4 for two samples) vs the stated 0.01"
+  },
+  {
+   "task_id": "v3-calibration-continuous-offset",
+   "path": "../v3-01/tasks/v3-calibration-continuous-offset",
+   "group": "B",
+   "engineering_action": "extension-integration",
+   "source_group": "calibration-frontends-306-369-390",
+   "triage": "有疑点",
+   "status": "migrated (implementation, 未仿真); Astra B r1 11 findings fixed (fix-b-r1); r2/r3 follow-up P1s fixed (fix-b-r2, fix-b-r3); Astra B r4: all closed, no actionable findings; main applied the r4 wording suggestions; saved-point spacing (<= 20 ns) to be verified on Spectre; author-r2 (2026-10-29): case netlists state reltol=1e-6 vabstol=1e-8 iabstol=1e-12 (the B2PC job line; tolerance step byte-identical to the accepted must-02 jobs), VN type=dc; item-20 lower bound 6.41e-5 code (1.282e-4 for two samples) vs the stated 0.01"
+  },
+  {
+   "task_id": "v3-converter-nonideal",
+   "path": "../v3-01/tasks/v3-converter-nonideal",
+   "group": "B",
+   "engineering_action": "spec-modeling",
+   "source_group": "v4-025",
+   "triage": "有疑点",
+   "status": "user decided 2026-10-28 (all as recommended): recorded as a variant of v3-converter-segmented (same template and responsibility, different weights); not migrated, package unchanged"
+  },
+  {
+   "task_id": "v3-converter-segmented",
+   "path": "../v3-01/tasks/v3-converter-segmented",
+   "group": "B",
+   "engineering_action": "spec-modeling",
+   "source_group": "v4-014",
+   "triage": "有疑点",
+   "status": "migrated (implementation, 未仿真) per the 2026-10-28 user decision (decisions-r1) as the representative of the four converter drafts; boilerplate removed; observation start (1 ns) already stated, late negative added; Astra review pending; author-r2 (2026-10-29): decision sheet item 9 option A (user): data inputs stay more than 1 mV from 0.45 V within 1 ns of each rising clk crossing, equality outside the domain, >= no longer a negative; checker bench check (both copies, kind dac only); bench tolerances as the B2PC jobs plus scan A (k); 24 accepted B2PC jobs re-judged unchanged"
+  },
+  {
+   "task_id": "v3-converter-subradix",
+   "path": "../v3-01/tasks/v3-converter-subradix",
+   "group": "B",
+   "engineering_action": "spec-modeling",
+   "source_group": "v4-243",
+   "triage": "有疑点",
+   "status": "user decided 2026-10-28 (all as recommended): recorded as a variant of v3-converter-segmented (same template and responsibility, different weights); not migrated, package unchanged"
+  },
+  {
+   "task_id": "v3-converter-thermometer",
+   "path": "../v3-01/tasks/v3-converter-thermometer",
+   "group": "B",
+   "engineering_action": "spec-modeling",
+   "source_group": "v4-018",
+   "triage": "有疑点",
+   "status": "user decided 2026-10-28 (all as recommended): recorded as a variant of v3-converter-segmented (same template and responsibility, different weights); not migrated, package unchanged"
+  },
+  {
+   "task_id": "v3-filter-envelope",
+   "path": "../v3-01/tasks/v3-filter-envelope",
+   "group": "B",
+   "engineering_action": "spec-modeling",
+   "source_group": "v4-336",
+   "triage": "通过",
+   "status": "migrated (implementation, 未仿真); Astra B r1 11 findings fixed (fix-b-r1), Astra B r2: this task's r1 findings closed"
+  }
+ ],
+ "excluded": {
+  "r01": "r01-spec-acquisition and r01-spec-ideal keep their own identity",
+  "spice_route": [
+   "v2-test-por-sequence",
+   "v3-ldo-response-experiment",
+   "v3-ldo-startup-measurement"
+  ]
+ },
+ "same_source_planning_candidates_not_built_separately": {
+  "C060-S1": "v2-spec-308",
+  "C312-S1": "v2-spec-375",
+  "C203-S1": "v2-test-sampled-rms",
+  "C328-S1": "v2-test-time-protocol",
+  "C055-S1": "v2-spec-071 (user confirmed 2026-10-28: not built separately; its contract items written into 071 from the checker by decisions-r1)"
+ },
+ "notes": {
+  "continuous-offset": "task.toml metadata.source_record = MIGRATION.md (frozen SOURCE.md byte-identical to HEAD); scripts/benchmark_package.py accepts the field (behavior test added)"
+ },
+ "user_decisions": {
+  "2026-10-28": {
+   "relay": "coordinator ~02:40Z, user answered 'all as recommended'",
+   "items": [
+    "071 +0.25 ns stretched-case sample delay",
+    "370 first clk ramp 9.1-10.1 ns + global k*tick polling sentence",
+    "online-gain inclusive start sample + reference half-period margin + 350 ps guard",
+    "converters: segmented kept as representative, nonideal/subradix/thermometer recorded as variants, boilerplate cleaned",
+    "F01: state the actual observation start, checker unchanged, late negatives (measurement tasks also early negatives)"
+   ]
+  }
+ },
+ "variants_recorded": {
+  "v3-converter-nonideal": "variant of v3-converter-segmented (planning C130 -> C131)",
+  "v3-converter-thermometer": "variant of v3-converter-segmented (planning C132 -> C131)",
+  "v3-converter-subradix": "variant of v3-converter-segmented (planning C161 -> C131)"
+ },
+ "repair_candidates_not_built": {
+  "C055-R1": "design note runs/t3-batch2-20261027/decisions-r1/c055-r1/design-note.md: v1 fixed version byte-identical to the 071 reference, contract locates the fault directly; user decided 2026-10-29: not built (C055 counts once); the W2-25 rec-03 buggy job is a record only"
+ }
+}

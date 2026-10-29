@@ -1,0 +1,50 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module dual_track_sample_hold(vdd, vss, clk, vin, vout, phase);
+    inout vdd, vss;
+    input clk, vin;
+    output vout, phase;
+    electrical vdd, vss, clk, vin, vout, phase;
+
+    parameter real vth = 0.45 from [0.1:0.8];
+    parameter real tick = 0.5n from [0.25n:5n];
+    parameter real alpha_in = 0.45 from (0:1];
+    parameter real alpha_out = 0.55 from (0:1];
+    parameter real tedge = 50p from [10p:1.25n];
+    parameter real vinit = 0.0 from [0:1.5];
+
+    real a;        // input stage, measured from vss
+    real b;        // output stage, measured from vss
+    real s;        // rail span read at the latest tick
+    real tracks;   // 1 while the clock is high and the output stage tracks
+
+    analog begin
+        @(initial_step) begin
+            a = vinit;
+            b = vinit;
+            tracks = (V(clk, vss) > vth) ? 1.0 : 0.0;
+        end
+
+        @(cross(V(clk, vss) - vth, +1))
+            tracks = 1.0;
+        @(cross(V(clk, vss) - vth, -1))
+            tracks = 0.0;
+
+        // Ticks at k*tick from t = 0. Only the stage of the current phase acquires; the
+        // output stage reads the input stage as it was before this tick. Both stored
+        // values are then limited to the rail span read at the same tick.
+        @(timer(0, tick)) begin
+            s = V(vdd, vss);
+            if (tracks > 0.5)
+                b = b + alpha_out * (a - b);
+            else
+                a = a + alpha_in * (V(vin, vss) - a);
+            a = min(max(a, 0.0), s);
+            b = min(max(b, 0.0), s);
+        end
+
+        V(vout, vss) <+ transition(b, 0.0, tedge, tedge);
+        V(phase, vss) <+ V(vdd, vss) * transition(tracks, 0.0, tedge, tedge);
+    end
+endmodule

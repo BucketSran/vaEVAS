@@ -1,0 +1,18 @@
+[
+  {
+    "name": "base",
+    "source_id": "v3-437",
+    "purpose": "regular 20 ns clock; vin steps between samples, slow ramps and a negative excursion; a three-sample reset while vin steps; a short rst pulse that covers no sample",
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVvin (vin 0) vsource type=pwl wave=[0 0 135.5n 0 136.5n 0.8 300n 0.8 380n 0.3 461.5n 0.3 462.5n 0.9 600n 0.9 601n -0.5 700n -0.5 760n 0.5 820n -0.2 857.5n -0.2 858.5n 0.7 950n 0.7 951n 0 1000n 0 1100n 1 1200n 1]\nVclk (clk 0) vsource type=pulse val0=0 val1=0.9 period=20n width=9.9n delay=9.95n rise=100p fall=100p\nVrst (rst 0) vsource type=pwl wave=[0 0 451.95n 0 452.05n 0.9 512.95n 0.9 513.05n 0 852.95n 0 853.05n 0.9 866.95n 0.9 867.05n 0 1200n 0]\n\nXDUT (vin clk rst out) ct_lowpass_sampler\n\ntran tran stop=1200n maxstep=50p strobeperiod=50p\nsave vin clk rst out\n",
+    "signals": [
+      "vin",
+      "clk",
+      "rst",
+      "out"
+    ],
+    "stop": 1.2000000000000002e-06,
+    "resolution": 5e-11,
+    "atol": 0.002,
+    "params": {}
+  }
+]

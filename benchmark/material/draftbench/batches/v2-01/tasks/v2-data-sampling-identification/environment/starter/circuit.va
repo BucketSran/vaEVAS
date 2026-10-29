@@ -1,0 +1,8 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module sampling_model(vin,clock,vhold);
+inout vin,clock,vhold;
+electrical vin,clock,vhold;
+// TODO: implement the public contract.
+endmodule

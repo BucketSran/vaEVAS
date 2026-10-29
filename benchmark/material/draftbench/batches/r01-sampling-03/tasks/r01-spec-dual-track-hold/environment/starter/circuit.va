@@ -1,0 +1,10 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module dual_track_sample_hold(vdd,vss,clk,vin,vout,phase);
+inout vdd,vss;
+input clk,vin;
+output vout,phase;
+electrical vdd,vss,clk,vin,vout,phase;
+// TODO: implement the public contract.
+endmodule

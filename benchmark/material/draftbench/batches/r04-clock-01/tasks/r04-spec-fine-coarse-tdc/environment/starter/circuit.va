@@ -1,0 +1,9 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module fine_coarse_tdc(start,stop,ref_clk,rst,code_7,code_6,code_5,code_4,code_3,code_2,code_1,code_0,valid,overflow);
+input start,stop,ref_clk,rst;
+output code_7,code_6,code_5,code_4,code_3,code_2,code_1,code_0,valid,overflow;
+electrical start,stop,ref_clk,rst,code_7,code_6,code_5,code_4,code_3,code_2,code_1,code_0,valid,overflow;
+// TODO: implement the public contract.
+endmodule

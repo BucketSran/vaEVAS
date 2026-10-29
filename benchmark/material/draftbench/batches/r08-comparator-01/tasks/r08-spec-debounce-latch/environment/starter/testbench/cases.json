@@ -1,0 +1,17 @@
+[
+  {
+    "name": "base",
+    "source_id": "v4-005",
+    "purpose": "reset at power-up with a sig rise inside it and a release while sig is high (no qualification); a plain 12 ns qualification and a falling clear; a glitch burst whose cancelled qualifications end while sig is high again (stale completions at 77.02 and 85.02 ns must not fire); reset while the output is high and a release with sig high; a 2 ns reset pulse inside a qualification; falls 0.3 ns before and 0.3 ns after a completion (the second interrupts the rising output)",
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVsig (sig 0) vsource type=pwl wave=[0 0 4.97n 0 5.07n 0.9 29.97n 0.9 30.07n 0 34.97n 0 35.07n 0.9 59.97n 0.9 60.07n 0 64.97n 0 65.07n 0.9 69.97n 0.9 70.07n 0 72.97n 0 73.07n 0.9 73.72n 0.9 73.82n 0 74.22n 0 74.32n 0.9 114.97n 0.9 115.07n 0 119.97n 0 120.07n 0.9 144.97n 0.9 145.07n 0 149.97n 0 150.07n 0.9 161.67n 0.9 161.77n 0 164.97n 0 165.07n 0.9 177.27n 0.9 177.37n 0 179.97n 0 180.07n 0.9 200n 0.9]\nVrst (rst_n 0) vsource type=pwl wave=[0 0 9.97n 0 10.07n 0.9 94.97n 0.9 95.07n 0 97.97n 0 98.07n 0.9 124.97n 0.9 125.07n 0 126.97n 0 127.07n 0.9 200n 0.9]\n\nXDUT (sig rst_n out) debounce_latch\n\ntran tran stop=200n maxstep=25p strobeperiod=25p\nsave sig rst_n out\n",
+    "signals": [
+      "sig",
+      "rst_n",
+      "out"
+    ],
+    "stop": 2.0000000000000002e-07,
+    "resolution": 2.5000000000000004e-11,
+    "atol": 0.01,
+    "params": {}
+  }
+]

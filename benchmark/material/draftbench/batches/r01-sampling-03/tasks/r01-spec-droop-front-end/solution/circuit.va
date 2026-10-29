@@ -1,0 +1,82 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+// Sampling front end. A rising clk crossing schedules one sample taperture later; at that
+// instant vin is read, clamped to the rails of that instant, held on vout, decided on
+// coarse and flagged by a valid pulse of valid_width. While clk is low the held value
+// droops toward vss on a fixed update grid k*dt, by exp(-dt/tau) per update.
+module sample_hold_droop(vdd, vss, clk, vin, vout, valid, coarse);
+    inout vdd, vss;
+    input clk, vin;
+    output vout, valid, coarse;
+    electrical vdd, vss, clk, vin, vout, valid, coarse;
+
+    parameter real vth = 0.45 from [0.2:0.7];
+    parameter real trf = 40p from [10p:200p];
+    parameter real tau = 90n from [10n:1u];
+    parameter real dt = 0.5n from [0.2n:5n];
+    parameter real taperture = 200p from [20p:2n];
+    parameter real valid_width = 2n from [0.5n:10n];
+
+    real held;          // held value relative to vss
+    real span;          // V(vdd, vss) at the sample instant
+    real valid_level;   // valid and coarse levels relative to vss
+    real coarse_level;
+    real alpha;         // droop factor per update
+    real t_sample;      // pending sample instant
+    real t_valid_off;   // end of the valid pulse
+    integer pending;
+    integer valid_on;
+
+    analog begin
+        @(initial_step) begin
+            held = 0.0;
+            valid_level = 0.0;
+            coarse_level = 0.0;
+            alpha = exp(-dt / tau);
+            t_sample = -1.0;
+            t_valid_off = -1.0;
+            pending = 0;
+            valid_on = 0;
+        end
+
+        // The clock edge only schedules the sample; vin is read at the aperture instant.
+        @(cross(V(clk, vss) - vth, +1)) begin
+            t_sample = $abstime + taperture;
+            pending = 1;
+        end
+
+        @(timer(t_sample)) begin
+            if (pending) begin
+                span = V(vdd, vss);
+                held = V(vin, vss);
+                if (held < 0.0)
+                    held = 0.0;
+                if (held > span)
+                    held = span;
+                coarse_level = (held > vth) ? span : 0.0;
+                valid_level = span;
+                valid_on = 1;
+                t_valid_off = $abstime + valid_width;
+                pending = 0;
+            end
+        end
+
+        @(timer(t_valid_off)) begin
+            if (valid_on) begin
+                valid_level = 0.0;
+                valid_on = 0;
+            end
+        end
+
+        // Droop updates on the grid k*dt from t = 0, skipped while clk is high.
+        @(timer(0, dt)) begin
+            if (V(clk, vss) < vth)
+                held = held * alpha;
+        end
+
+        V(vout, vss) <+ transition(held, 0, trf, trf);
+        V(valid, vss) <+ transition(valid_level, 0, trf, trf);
+        V(coarse, vss) <+ transition(coarse_level, 0, trf, trf);
+    end
+endmodule

@@ -1,0 +1,10 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module sample_hold_droop(vdd,vss,clk,vin,vout,valid,coarse);
+inout vdd,vss;
+input clk,vin;
+output vout,valid,coarse;
+electrical vdd,vss,clk,vin,vout,valid,coarse;
+// TODO: implement the public contract.
+endmodule

@@ -1,0 +1,37 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module dt_lowpass_sampler(vin, clk, rst, out);
+    input vin, clk, rst;
+    output out;
+    electrical vin, clk, rst, out;
+
+    parameter real tupdate = 100n from [20n:1u];
+    parameter real vth = 0.45;
+    parameter real tr = 200p from [10p:1n];
+
+    real filtered;
+    real held;
+
+    analog begin
+        // H(z) = 0.25/(1 - 0.75 z^-1): numerator 0.25 and a real pole at 0.75, unity DC
+        // gain, sampled every tupdate from t = 0. Zero transition time keeps the value
+        // constant between update instants. The operator runs outside any event, so
+        // clock and reset never touch its updates. It starts from the DC operating
+        // point, H(1)*V(vin) = V(vin).
+        filtered = zi_np(V(vin), {0.25}, {0.75, 0.0}, tupdate, 0.0);
+
+        @(initial_step)
+            held = 0.0;
+
+        // Synchronous sampler: a reset sample clears only the held value.
+        @(cross(V(clk) - vth, +1)) begin
+            if (V(rst) > vth)
+                held = 0.0;
+            else
+                held = filtered;
+        end
+
+        V(out) <+ transition(held, 0.0, tr, tr);
+    end
+endmodule

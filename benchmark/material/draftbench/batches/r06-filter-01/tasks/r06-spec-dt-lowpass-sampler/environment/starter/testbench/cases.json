@@ -1,0 +1,18 @@
+[
+  {
+    "name": "base",
+    "source_id": "v3-441",
+    "purpose": "regular 30 ns clock, three or four samples per 100 ns update; vin steps between updates; a 36 ns pulse between two updates that the filter must not see; slow ramps; a long negative input that drives the held value negative; a four-sample reset while vin steps; a short rst pulse that covers no sample",
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVvin (vin 0) vsource type=pwl wave=[0 0 135.5n 0 136.5n 0.8 305n 0.8 385n 0.3 421.5n 0.3 422.5n -0.6 457.5n -0.6 458.5n 0.3 561.5n 0.3 562.5n 0.9 705.5n 0.9 706.5n -0.9 1040n -0.9 1150n 0.5 1200n 0.5]\nVclk (clk 0) vsource type=pulse val0=0 val1=0.9 period=30n width=14.9n delay=11.95n rise=100p fall=100p\nVrst (rst 0) vsource type=pwl wave=[0 0 540.95n 0 541.05n 0.9 656.95n 0.9 657.05n 0 855.95n 0 856.05n 0.9 877.95n 0.9 878.05n 0 1200n 0]\n\nXDUT (vin clk rst out) dt_lowpass_sampler\n\ntran tran stop=1200n maxstep=50p strobeperiod=50p\nsave vin clk rst out\n",
+    "signals": [
+      "vin",
+      "clk",
+      "rst",
+      "out"
+    ],
+    "stop": 1.2000000000000002e-06,
+    "resolution": 5e-11,
+    "atol": 0.002,
+    "params": {}
+  }
+]

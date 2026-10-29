@@ -1,0 +1,71 @@
+[
+  {
+    "name": "base",
+    "source_id": "v3-441",
+    "purpose": "regular 30 ns clock, three or four samples per 100 ns update; vin steps between updates; a 36 ns pulse between two updates that the filter must not see; slow ramps; a long negative input that drives the held value negative; a four-sample reset while vin steps; a short rst pulse that covers no sample",
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVvin (vin 0) vsource type=pwl wave=[0 0 135.5n 0 136.5n 0.8 305n 0.8 385n 0.3 421.5n 0.3 422.5n -0.6 457.5n -0.6 458.5n 0.3 561.5n 0.3 562.5n 0.9 705.5n 0.9 706.5n -0.9 1040n -0.9 1150n 0.5 1200n 0.5]\nVclk (clk 0) vsource type=pulse val0=0 val1=0.9 period=30n width=14.9n delay=11.95n rise=100p fall=100p\nVrst (rst 0) vsource type=pwl wave=[0 0 540.95n 0 541.05n 0.9 656.95n 0.9 657.05n 0 855.95n 0 856.05n 0.9 877.95n 0.9 878.05n 0 1200n 0]\n\nXDUT (vin clk rst out) dt_lowpass_sampler\n\ntran tran stop=1200n maxstep=50p strobeperiod=50p\nsave vin clk rst out\n",
+    "signals": [
+      "vin",
+      "clk",
+      "rst",
+      "out"
+    ],
+    "stop": 1.2000000000000002e-06,
+    "resolution": 5e-11,
+    "atol": 0.002,
+    "params": {}
+  },
+  {
+    "name": "dc-start",
+    "source_id": "v3-441",
+    "purpose": "vin starts at 0.6 V so the filter starts in equilibrium (first sample at 6 ns); irregular clock with bursts inside one update interval, a 229 ns gap across two updates, and samples 0.6 ns before or after an update instant; a two-sample reset during a ramp, a one-sample reset pulse, reset held to the end",
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVvin (vin 0) vsource type=pwl wave=[0 0.6 63.25n 0.6 64.25n -0.6 205n -0.6 285n 0.8 401.5n 0.8 402.5n 0.1 450n 0.1 520n 0.7 590n -0.3 610n 0.4 845.5n 0.4 846.5n -0.4 900n -0.4]\nVclk (clk 0) vsource type=pwl wave=[0 0 5.95n 0 6.05n 0.9 8.95n 0.9 9.05n 0 13.45n 0 13.55n 0.9 15.95n 0.9 16.05n 0 30.95n 0 31.05n 0.9 39.95n 0.9 40.05n 0 46.95n 0 47.05n 0.9 49.95n 0.9 50.05n 0 66.45n 0 66.55n 0.9 68.95n 0.9 69.05n 0 99.35n 0 99.45n 0.9 101.95n 0.9 102.05n 0 120.45n 0 120.55n 0.9 139.95n 0.9 140.05n 0 150.95n 0 151.05n 0.9 154.95n 0.9 155.05n 0 200.55n 0 200.65n 0.9 204.95n 0.9 205.05n 0 229.95n 0 230.05n 0.9 232.95n 0.9 233.05n 0 299.35n 0 299.45n 0.9 301.95n 0.9 302.05n 0 329.95n 0 330.05n 0.9 334.95n 0.9 335.05n 0 364.95n 0 365.05n 0.9 369.95n 0.9 370.05n 0 400.55n 0 400.65n 0.9 403.95n 0.9 404.05n 0 409.95n 0 410.05n 0.9 412.45n 0.9 412.55n 0 639.95n 0 640.05n 0.9 649.95n 0.9 650.05n 0 699.35n 0 699.45n 0.9 701.95n 0.9 702.05n 0 704.95n 0 705.05n 0.9 707.95n 0.9 708.05n 0 800.55n 0 800.65n 0.9 805.95n 0.9 806.05n 0 811.95n 0 812.05n 0.9 814.95n 0.9 815.05n 0 849.95n 0 850.05n 0.9 854.95n 0.9 855.05n 0 879.95n 0 880.05n 0.9 884.95n 0.9 885.05n 0 900n 0]\nVrst (rst 0) vsource type=pwl wave=[0 0 209.95n 0 210.05n 0.9 319.95n 0.9 320.05n 0 695.95n 0 696.05n 0.9 700.95n 0.9 701.05n 0 839.95n 0 840.05n 0.9 900n 0.9]\n\nXDUT (vin clk rst out) dt_lowpass_sampler\n\ntran tran stop=900n maxstep=50p strobeperiod=50p\nsave vin clk rst out\n",
+    "signals": [
+      "vin",
+      "clk",
+      "rst",
+      "out"
+    ],
+    "stop": 9.000000000000001e-07,
+    "resolution": 5e-11,
+    "atol": 0.002,
+    "params": {}
+  },
+  {
+    "name": "tupdate-override",
+    "source_id": "v3-441",
+    "purpose": "tupdate = 130 ns; regular 45 ns clock; vin starts at -0.3 V; a full-scale step 80 ns before an update; a six-sample reset across a step and a slow ramp",
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVvin (vin 0) vsource type=pwl wave=[0 -0.3 50.5n -0.3 51.5n 1 350.5n 1 351.5n -0.8 700n -0.8 1000n 0.6 1199.5n 0.6 1200.5n -0.2 1500n -0.2]\nVclk (clk 0) vsource type=pulse val0=0 val1=0.9 period=45n width=19.9n delay=12.45n rise=100p fall=100p\nVrst (rst 0) vsource type=pwl wave=[0 0 299.95n 0 300.05n 0.9 589.95n 0.9 590.05n 0 1500n 0]\n\nXDUT (vin clk rst out) dt_lowpass_sampler tupdate=130n\n\ntran tran stop=1500n maxstep=50p strobeperiod=50p\nsave vin clk rst out\n",
+    "signals": [
+      "vin",
+      "clk",
+      "rst",
+      "out"
+    ],
+    "stop": 1.5e-06,
+    "resolution": 5e-11,
+    "atol": 0.002,
+    "params": {
+      "tupdate": 1.3e-07
+    }
+  },
+  {
+    "name": "vth-tr-override",
+    "source_id": "v3-441",
+    "purpose": "vth 0.8 V and tr 100 ps with 180 ps clock edges: every sample crossing lies 2.5 ps before a 25 ps grid row, so a scored row falls 127.5 ps after each event, inside (1.25*tr, 1.3*tr), and a 0.45 V threshold samples 70 ps early; vin starts at 0.5 V; negative held values; a two-sample reset across an update, a one-sample reset pulse, a short rst pulse between samples, reset held to the end; 25 ps grid",
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVvin (vin 0) vsource type=pwl wave=[0 0.5 60.5n 0.5 61.5n -0.7 340.5n -0.7 341.5n 0.9 480.5n 0.9 481.5n -0.4 660n -0.4 760n 0.6 900n 0.6]\nVclk (clk 0) vsource type=pulse val0=0 val1=0.9 period=30n width=14.9n delay=11.8625n rise=0.18n fall=0.18n\nVrst (rst 0) vsource type=pwl wave=[0 0 289.95n 0 290.05n 0.9 344.95n 0.9 345.05n 0 524.95n 0 525.05n 0.9 529.95n 0.9 530.05n 0 639.95n 0 640.05n 0.9 644.95n 0.9 645.05n 0 849.95n 0 850.05n 0.9 900n 0.9]\n\nXDUT (vin clk rst out) dt_lowpass_sampler vth=0.8 tr=100p\n\ntran tran stop=900n maxstep=25p strobeperiod=25p\nsave vin clk rst out\n",
+    "signals": [
+      "vin",
+      "clk",
+      "rst",
+      "out"
+    ],
+    "stop": 9e-07,
+    "resolution": 2.5e-11,
+    "atol": 0.002,
+    "params": {
+      "vth": 0.8,
+      "tr": 1e-10
+    }
+  }
+]

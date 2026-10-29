@@ -1,0 +1,129 @@
+[
+ {
+  "name": "base",
+  "source_id": "v4-042",
+  "purpose": "default parameters (10 ps grid). vin changes before the first capture; a capture of 0.8 V at phase 0.32 of the 1 ns leak period, held 30 periods while sample stays high for 10 ns and vin steps twice under it; a negative capture (-0.6 V) that leaks toward 0 V from below; a capture 72.5 ps after a leak instant and one 52.5 ps before the next instant, so the leak acts on it after 52.5 ps; a 0.525 ns rst pulse that clears a nonzero value at phase 0.17, 0.83 ns before the next leak instant; a reset that spans a rising sample crossing and is released while sample is still high, with vin at -0.3 V there; two later captures and long holds.",
+  "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVsample (sample 0) vsource type=pwl wave=[0 0 5.2725n 0 5.3725n 0.9 15.2725n 0.9 15.3725n 0 35.5725n 0 35.6725n 0.9 36.1225n 0.9 36.2225n 0 55.0225n 0 55.1225n 0.9 55.5475n 0.9 55.6475n 0 60.8975n 0 60.9975n 0.9 61.8975n 0.9 61.9975n 0 75.3725n 0 75.4725n 0.9 75.9225n 0.9 76.0225n 0 87.2725n 0 87.3725n 0.9 90.2725n 0.9 90.3725n 0 95.7225n 0 95.8225n 0.9 96.7225n 0.9 96.8225n 0 110.2225n 0 110.3225n 0.9 110.7725n 0.9 110.8725n 0 130.8n 0]\nVrst (rst 0) vsource type=pwl wave=[0 0 70.1225n 0 70.2225n 0.9 70.6475n 0.9 70.7475n 0 85.1725n 0 85.2725n 0.9 89.7725n 0.9 89.8725n 0 130.8n 0]\nVvin (vin 0) vsource type=pwl wave=[0 0.3 2n 0.3 2.1n 0.55 4n 0.55 4.1n 0.8 8n 0.8 8.1n 0.2 12n 0.2 12.1n 0.65 30n 0.65 30.1n -0.6 45n -0.6 45.1n 0.95 58n 0.95 58.1n 0.7 73n 0.7 73.1n 0.4 86n 0.4 86.1n -0.3 94n -0.3 94.1n 0.85 100n 0.85 100.1n 0.5 108n 0.5 108.1n 0.1 130.8n 0.1]\n\nXDUT (sample rst vin vout) leaky_hold\n\nsimulatorOptions options reltol=1e-6 vabstol=1e-8 iabstol=1e-12\ntran tran stop=130.8n maxstep=10p strobeperiod=10p errpreset=moderate strobeoutput=strobeonly\nsave sample rst vin vout\n",
+  "signals": [
+   "sample",
+   "rst",
+   "vin",
+   "vout"
+  ],
+  "stop": 1.308e-07,
+  "resolution": 1e-11,
+  "atol": 0.002,
+  "params": {}
+ },
+ {
+  "name": "phase-grid",
+  "source_id": "v4-042",
+  "purpose": "default parameters (10 ps grid). Ten captures whose crossings lie at phases 0.07, 0.17, ..., 0.87 and 0.95 of the 1 ns leak period (72.5 ps after and 52.5 ps before a leak instant at the ends), each followed by a hold of two to four leak periods, with alternating signs; then two captures 1.05 ns apart (0.525 ns high, 0.525 ns low between them) and a final 11 ns hold. A model that restarts the leak grid at each capture, leaks continuously, or leaks only while sample is low is wrong on most of them.",
+  "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVsample (sample 0) vsource type=pwl wave=[0 0 3.0225n 0 3.1225n 0.9 3.5725n 0.9 3.6725n 0 5.1225n 0 5.2225n 0.9 5.6725n 0.9 5.7725n 0 8.2225n 0 8.3225n 0.9 8.7725n 0.9 8.8725n 0 12.3225n 0 12.4225n 0.9 12.8725n 0.9 12.9725n 0 14.4225n 0 14.5225n 0.9 14.9725n 0.9 15.0725n 0 17.5225n 0 17.6225n 0.9 18.0725n 0.9 18.1725n 0 21.6225n 0 21.7225n 0.9 22.1725n 0.9 22.2725n 0 23.7225n 0 23.8225n 0.9 24.2725n 0.9 24.3725n 0 26.8225n 0 26.9225n 0.9 27.3725n 0.9 27.4725n 0 30.8975n 0 30.9975n 0.9 31.4475n 0.9 31.5475n 0 32.4725n 0 32.5725n 0.9 32.9975n 0.9 33.0975n 0 33.5225n 0 33.6225n 0.9 34.0475n 0.9 34.1475n 0 45.8n 0]\nVrst (rst 0) vsource type=pwl wave=[0 0 45.8n 0]\nVvin (vin 0) vsource type=pwl wave=[0 0 2.45n 0 2.55n 0.9 4.55n 0.9 4.65n -0.8 7.65n -0.8 7.75n 0.5 11.75n 0.5 11.85n -0.3 13.85n -0.3 13.95n 0.75 16.95n 0.75 17.05n 0.2 21.05n 0.2 21.15n -0.95 23.15n -0.95 23.25n 0.6 26.25n 0.6 26.35n 0.35 30.325n 0.35 30.425n -0.5 31.9n -0.5 32n 0.85 32.95n 0.85 33.05n -0.7 45.8n -0.7]\n\nXDUT (sample rst vin vout) leaky_hold\n\nsimulatorOptions options reltol=1e-6 vabstol=1e-8 iabstol=1e-12\ntran tran stop=45.8n maxstep=10p strobeperiod=10p errpreset=moderate strobeoutput=strobeonly\nsave sample rst vin vout\n",
+  "signals": [
+   "sample",
+   "rst",
+   "vin",
+   "vout"
+  ],
+  "stop": 4.58e-08,
+  "resolution": 1e-11,
+  "atol": 0.002,
+  "params": {}
+ },
+ {
+  "name": "reset-release",
+  "source_id": "v4-042",
+  "purpose": "default parameters (10 ps grid). rst is high at t = 0 and a rising sample crossing passes in reset (vin 0.65 V); after the release the value stays 0 V until a capture; a 0.525 ns rst pulse between two leak instants that clears 0.68 V and covers no leak instant and no sample crossing; a double reset whose second rising crossing finds 0 V; a reset that rises while sample is high and is released 2 ns before sample falls, so no capture happens at the release; a reset held to the end with two sample pulses in it.",
+  "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVsample (sample 0) vsource type=pwl wave=[0 0 2.2725n 0 2.3725n 0.9 3.2725n 0.9 3.3725n 0 6.3725n 0 6.4725n 0.9 7.3725n 0.9 7.4725n 0 15.3225n 0 15.4225n 0.9 15.8725n 0.9 15.9725n 0 25.4725n 0 25.5725n 0.9 30.4725n 0.9 30.5725n 0 33.7725n 0 33.8725n 0.9 34.7725n 0.9 34.8725n 0 42.5725n 0 42.6725n 0.9 43.5725n 0.9 43.6725n 0 45.5725n 0 45.6725n 0.9 46.5725n 0.9 46.6725n 0 50.8n 0]\nVrst (rst 0) vsource type=pwl wave=[0 0.9 4.8725n 0.9 4.9725n 0 12.0725n 0 12.1725n 0.9 12.5975n 0.9 12.6975n 0 20.1725n 0 20.2725n 0.9 20.7225n 0.9 20.8225n 0 21.4225n 0 21.5225n 0.9 22.1725n 0.9 22.2725n 0 26.9725n 0 27.0725n 0.9 28.4725n 0.9 28.5725n 0 40.0725n 0 40.1725n 0.9 50.8n 0.9]\nVvin (vin 0) vsource type=pwl wave=[0 0.65 5n 0.65 5.1n 0.75 14n 0.75 14.1n -0.4 24n -0.4 24.1n 0.55 26n 0.55 26.1n 0.25 32n 0.25 32.1n 0.9 41n 0.9 41.1n -0.85 44n -0.85 44.1n 0.45 50.8n 0.45]\n\nXDUT (sample rst vin vout) leaky_hold\n\nsimulatorOptions options reltol=1e-6 vabstol=1e-8 iabstol=1e-12\ntran tran stop=50.8n maxstep=10p strobeperiod=10p errpreset=moderate strobeoutput=strobeonly\nsave sample rst vin vout\n",
+  "signals": [
+   "sample",
+   "rst",
+   "vin",
+   "vout"
+  ],
+  "stop": 5.08e-08,
+  "resolution": 1e-11,
+  "atol": 0.002,
+  "params": {}
+ },
+ {
+  "name": "param-override",
+  "source_id": "v4-042",
+  "purpose": "vth 0.2 V, decay 0.9, leak_period 10 ns (the longest legal period), tr 100 ps (2 ps grid). Control edges last 180 ps, so a 0.45 V threshold acts 50 ps late on rising edges. A capture at phase 0.30 of the 10 ns period held over two 10 % leak steps, a negative capture 57.5 ps before a leak instant, two captures inside one leak period, a rst pulse that clears a nonzero value, a capture 72.5 ps after a leak instant, and a final hold over three leak steps.",
+  "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVsample (sample 0) vsource type=pwl wave=[0 0 2.9825n 0 3.1625n 0.9 7.8825n 0.9 8.0625n 0 29.9025n 0 30.0825n 0.9 30.8025n 0.9 30.9825n 0 34.4825n 0 34.6625n 0.9 35.3825n 0.9 35.5625n 0 36.9825n 0 37.1625n 0.9 37.8825n 0.9 38.0625n 0 60.0325n 0 60.2125n 0.9 60.9325n 0.9 61.1125n 0 81.6825n 0 81.8625n 0.9 82.5825n 0.9 82.7625n 0 118n 0]\nVrst (rst 0) vsource type=pwl wave=[0 0 52.0825n 0 52.2625n 0.9 53.4825n 0.9 53.6625n 0 118n 0]\nVvin (vin 0) vsource type=pwl wave=[0 0.1 2n 0.1 2.1n 0.7 25n 0.7 25.1n -0.8 32n -0.8 32.1n 0.45 36n 0.45 36.1n 0.85 58n 0.85 58.1n -0.55 75n -0.55 75.1n 0.35 118n 0.35]\n\nXDUT (sample rst vin vout) leaky_hold vth=0.2 decay=0.9 leak_period=10n tr=100p\n\nsimulatorOptions options reltol=1e-6 vabstol=1e-8 iabstol=1e-12\ntran tran stop=118n maxstep=2p strobeperiod=2p errpreset=moderate strobeoutput=strobeonly\nsave sample rst vin vout\n",
+  "signals": [
+   "sample",
+   "rst",
+   "vin",
+   "vout"
+  ],
+  "stop": 1.18e-07,
+  "resolution": 2e-12,
+  "atol": 0.002,
+  "params": {
+   "vth": 0.2,
+   "decay": 0.9,
+   "leak_period": 1e-08,
+   "tr": 1e-10
+  }
+ },
+ {
+  "name": "param-endpoints-low",
+  "source_id": "v4-042",
+  "purpose": "vth 0.1 V, decay 0.5, leak_period 0.5 ns, tr 10 ps (the lower ends of the legal ranges), 0.8 ps grid; 90 ps control edges, so a 0.45 V threshold acts 35 ps late on rising edges. Captures at phases 0.21, 0.49, 0.89 and 0.90 of the leak period (56.75 ps and 50.35 ps before a leak instant), each halving every 0.5 ns; the shortest legal sample pulse and gap (0.5008 ns between crossings, one 0.8 ps grid step above the 0.5 ns minimum) before a capture; negative captures; a 0.5008 ns rst pulse that clears a nonzero value.",
+  "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVsample (sample 0) vsource type=pwl wave=[0 0 1.09325n 0 1.18325n 0.9 1.52405n 0.9 1.61405n 0 2.09485n 0 2.18485n 0.9 2.57485n 0.9 2.66485n 0 3.23325n 0 3.32325n 0.9 3.76325n 0.9 3.85325n 0 5.43325n 0 5.52325n 0.9 5.96325n 0.9 6.05325n 0 6.93965n 0 7.02965n 0.9 7.37045n 0.9 7.46045n 0 8.09325n 0 8.18325n 0.9 8.62325n 0.9 8.71325n 0 11.8n 0]\nVrst (rst 0) vsource type=pwl wave=[0 0 4.19325n 0 4.28325n 0.9 4.62405n 0.9 4.71405n 0 11.8n 0]\nVvin (vin 0) vsource type=pwl wave=[0 0.2 0.8n 0.2 0.9n 0.8 2.8n 0.8 2.9n -0.9 4.8n -0.9 4.9n 0.6 6n 0.6 6.1n 0.95 7.5n 0.95 7.6n -0.5 11.8n -0.5]\n\nXDUT (sample rst vin vout) leaky_hold vth=0.1 decay=0.5 leak_period=0.5n tr=10p\n\nsimulatorOptions options reltol=1e-6 vabstol=1e-8 iabstol=1e-12\ntran tran stop=11.8n maxstep=0.8p strobeperiod=0.8p errpreset=moderate strobeoutput=strobeonly\nsave sample rst vin vout\n",
+  "signals": [
+   "sample",
+   "rst",
+   "vin",
+   "vout"
+  ],
+  "stop": 1.18e-08,
+  "resolution": 8e-13,
+  "atol": 0.002,
+  "params": {
+   "vth": 0.1,
+   "decay": 0.5,
+   "leak_period": 5e-10,
+   "tr": 1e-11
+  }
+ },
+ {
+  "name": "param-endpoints-high",
+  "source_id": "v4-042",
+  "purpose": "vth 0.8 V, decay 1 (no leakage), leak_period 2 ns, tr 1 ns (the upper ends of the vth, decay and tr ranges; tr = leak_period/2), 20 ps grid; 180 ps control edges, so a 0.45 V threshold acts 70 ps early on rising edges. Captures held for up to 10 leak instants without change, a negative capture, and a rst pulse that clears it.",
+  "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVsample (sample 0) vsource type=pwl wave=[0 0 4.858n 0 5.038n 0.9 6.998n 0.9 7.178n 0 15.058n 0 15.238n 0.9 16.198n 0.9 16.378n 0 30.258n 0 30.438n 0.9 31.398n 0.9 31.578n 0 40.658n 0 40.838n 0.9 41.798n 0.9 41.978n 0 51.5n 0]\nVrst (rst 0) vsource type=pwl wave=[0 0 22.258n 0 22.438n 0.9 24.398n 0.9 24.578n 0 51.5n 0]\nVvin (vin 0) vsource type=pwl wave=[0 0.4 3n 0.4 3.1n 0.75 12n 0.75 12.1n -0.65 27n -0.65 27.1n 0.3 37n 0.3 37.1n 0.9 51.5n 0.9]\n\nXDUT (sample rst vin vout) leaky_hold vth=0.8 decay=1 leak_period=2n tr=1n\n\nsimulatorOptions options reltol=1e-6 vabstol=1e-8 iabstol=1e-12\ntran tran stop=51.5n maxstep=20p strobeperiod=20p errpreset=moderate strobeoutput=strobeonly\nsave sample rst vin vout\n",
+  "signals": [
+   "sample",
+   "rst",
+   "vin",
+   "vout"
+  ],
+  "stop": 5.15e-08,
+  "resolution": 2e-11,
+  "atol": 0.002,
+  "params": {
+   "vth": 0.8,
+   "decay": 1.0,
+   "leak_period": 2e-09,
+   "tr": 1e-09
+  }
+ },
+ {
+  "name": "start-high",
+  "source_id": "v4-042",
+  "purpose": "default parameters (10 ps grid). sample is above vth at t = 0 while vin = 0.6 V and rst is low: a level at t = 0 is no capture, so h stays 0 V through the first falling crossing at 2.7225 ns and until the first rising crossing at 5.3225 ns, with three leak instants on 0 V in between; then captures of 0.35 V and -0.45 V, a 0.525 ns rst pulse that clears the negative value, and a hold to the end.",
+  "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVsample (sample 0) vsource type=pwl wave=[0 0.9 2.6725n 0.9 2.7725n 0 5.2725n 0 5.3725n 0.9 6.2725n 0.9 6.3725n 0 10.2725n 0 10.3725n 0.9 11.2725n 0.9 11.3725n 0 20.8n 0]\nVrst (rst 0) vsource type=pwl wave=[0 0 12.9725n 0 13.0725n 0.9 13.4975n 0.9 13.5975n 0 20.8n 0]\nVvin (vin 0) vsource type=pwl wave=[0 0.6 4n 0.6 4.1n 0.35 9n 0.35 9.1n -0.45 14n -0.45 14.1n 0.8 20.8n 0.8]\n\nXDUT (sample rst vin vout) leaky_hold\n\nsimulatorOptions options reltol=1e-6 vabstol=1e-8 iabstol=1e-12\ntran tran stop=20.8n maxstep=10p strobeperiod=10p errpreset=moderate strobeoutput=strobeonly\nsave sample rst vin vout\n",
+  "signals": [
+   "sample",
+   "rst",
+   "vin",
+   "vout"
+  ],
+  "stop": 2.08e-08,
+  "resolution": 1e-11,
+  "atol": 0.002,
+  "params": {}
+ }
+]
