@@ -15,7 +15,9 @@
     "stop": 7.6e-08,
     "resolution": 2e-12,
     "atol": 0.002,
-    "params": {}
+    "params": {
+      "tr": 1e-10
+    }
   },
   {
     "name": "contract-stretched-input",
@@ -33,12 +35,14 @@
     "stop": 9.348e-08,
     "resolution": 2e-12,
     "atol": 0.002,
-    "params": {}
+    "params": {
+      "tr": 1e-10
+    }
   },
   {
     "name": "sub-tick-cancel-and-next-edge-restart",
     "source_id": "375",
-    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVclk (clk_in 0) vsource type=pulse val0=0 val1=0.9 period=8n width=4n delay=1.5n rise=60p fall=60p\nVrst (rst 0) vsource type=pwl wave=[0 0.9 1.8n 0.9 1.9n 0 76n 0]\nVen (enable 0) vsource type=pwl wave=[0 0 6n 0 6.1n .9 9.65n .9 9.66n 0 9.69n 0 9.7n .9 76n .9]\n\nXDUT (clk_in rst enable phi1 phi2 deadtime_metric valid) nonoverlap_clock_generator\n\n\ntran tran stop=76n maxstep=2p strobeperiod=2p\nsave clk_in rst enable phi1 phi2 deadtime_metric valid\n",
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVclk (clk_in 0) vsource type=pulse val0=0 val1=0.9 period=8n width=4n delay=1.5n rise=60p fall=60p\nVrst (rst 0) vsource type=pwl wave=[0 0.9 1.8n 0.9 1.9n 0 76n 0]\nVen (enable 0) vsource type=pwl wave=[0 0 6n 0 6.1n .9 9.85n .9 9.86n 0 9.89n 0 9.9n .9 76n .9]\n\nXDUT (clk_in rst enable phi1 phi2 deadtime_metric valid) nonoverlap_clock_generator\n\n\ntran tran stop=76n maxstep=2p strobeperiod=2p\nsave clk_in rst enable phi1 phi2 deadtime_metric valid\n",
     "signals": [
       "clk_in",
       "rst",
@@ -51,6 +55,8 @@
     "stop": 7.6e-08,
     "resolution": 2e-12,
     "atol": 0.002,
-    "params": {}
+    "params": {
+      "tr": 1e-10
+    }
   }
 ]

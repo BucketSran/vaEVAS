@@ -1,0 +1,45 @@
+{
+ "task": "v2-spec-307-switched-capacitor-integrator-phase-pair",
+ "cases": [
+  "contract-base",
+  "contract-stretched-input",
+  "architecture-component-producer",
+  "architecture-component-consumer",
+  "architecture-producer",
+  "architecture-consumer"
+ ],
+ "checker_failure": "a scored output sample more than atol (2 mV) from the expected value (tests/v2_spec.py:205-208)",
+ "semantics": "F01 scoring start, user-confirmed 2026-10-28 (option A): tests/v2_spec.py:188 skips points less than 1.15*tr after t = 0 or after an event that changes any expected output; v2_structure.py scores every point of the consumer-substitute case; the instruction states this rule and the checker is unchanged. Candidates differ from solution/ only in output delay or transition time.",
+ "conditions": {},
+ "candidates": [
+  {
+   "name": "late_integrator_transition_1p3tr",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "contract-stretched-input",
+    "architecture-component-consumer",
+    "architecture-producer"
+   ],
+   "must_accept": [
+    "architecture-component-producer",
+    "architecture-consumer"
+   ],
+   "author_synthetic_control": "late-shift-0.3tr"
+  },
+  {
+   "name": "inwindow_integrator_transition_1p1tr",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "contract-base",
+    "contract-stretched-input",
+    "architecture-component-producer",
+    "architecture-component-consumer",
+    "architecture-producer",
+    "architecture-consumer"
+   ],
+   "author_synthetic_control": "inwindow-shift-0.1tr"
+  }
+ ]
+}

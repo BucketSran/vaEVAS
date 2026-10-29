@@ -1,68 +1,49 @@
-# SAR Front-End Logic 4b
+# 4-bit SAR front-end logic
 
-## Task Contract
+Build only the 4-bit SAR front-end controller that handshakes with a fixed comparator and trial DAC, publishes DAC controls, and emits the previous conversion word.
 
-- Form: `dut`.
-- Level: `L2`.
-- Category: SAR ADC control logic.
-- Target artifact: `dut.va`.
-- Role: 4-bit SAR front-end handshake, test override, and DAC-control publisher.
-- Output boundary: implement only the requested public Verilog-A DUT artifact.
+## Spec
 
-## Public Verilog-A Interface
+Use the starter declaration of `sarfend_logic_4b`. Every port is electrical. The positional order is `clks`, `dcomp`, `dcompb`, `test`, `dtest0`, `dtest1`, `dtest2`, `dtest3`, `clkc`, `dp1`, `dp2`, `dp3`, `dp4`, `dm1`, `dm2`, `dm3`, `dm4`, `dout0`, `dout1`, `dout2`, `dout3`.
 
-Declare the public module exactly as:
+`clks` is the sample and reset clock. `test` enables the captured override bits `dtest0` through `dtest3`. The model reads those eight ports. `dcomp` and `dcompb` are the comparator's decision pair. The interface sentence calls them comparator outputs because they are outputs of the comparator. This module consumes them. It does not drive them. The model drives `clkc`, `dp1` through `dp4`, `dm1` through `dm4`, and `dout0` through `dout3`. `clkc` requests comparator activity. Each `dp`/`dm` pair is a differential DAC control. `dout0` through `dout3` publish the previous conversion word.
 
-```verilog
-module sarfend_logic_4b(clks, dcomp, dcompb, test, dtest0, dtest1, dtest2, dtest3, clkc, dp1, dp2, dp3, dp4, dm1, dm2, dm3, dm4, dout0, dout1, dout2, dout3);
-```
+No overrideable public parameters are required. Use a 0.45 V threshold and 0 V / 1 V voltage-coded controls. Every digital output change of this controller completes within 200 ps of the triggering control or comparator event. Choose smoothing inside that limit. The 200 ps limit belongs to this controller. It is separate from the fixed comparator delay below.
 
-`clks` is the sample/reset clock, `dcomp/dcompb` are comparator outputs, `test` enables test override bits `dtest0..dtest3`, `clkc` requests comparator activity, `dp1..dp4`/`dm1..dm4` are differential DAC controls, and `dout0..dout3` publish the previous conversion word. All ports are electrical.
+At the initial time, `dp4` and `dm4` are 0 V, `dp3`, `dm3`, `dp2`, `dm2`, `dp1`, and `dm1` are 1 V, and `dout0` through `dout3` and `clkc` are 0 V. The conversion pointer is waiting for the MSB pair `dp4`/`dm4`. All four bits are still undecided. `clks` starts low. Until the first rising `clks` edge, a both-low comparator pair is not a valid decision and `clkc` stays 0 V. Capture of the test override starts at that first rising edge.
 
-## Public Parameter Contract
+On each rising `clks` crossing, first publish the previous P-side word: `dout3 = dp4`, `dout2 = dp3`, `dout1 = dp2`, and `dout0 = dp1`. The first rising edge therefore publishes `dout3:dout0` as 0111 from the power-on P-side state. After that publish, reset the pointer, initialize the new conversion to `dp4 = dm4 = 0` and `dp3 = dm3 = dp2 = dm2 = dp1 = dm1 = 1`, capture `dtest3` through `dtest0`, and clear `clkc`. Equal values on a pair are an undecided trial state. Only an accepted decision makes that pair complementary.
 
-No overrideable public parameters are required. Use 0.45 V thresholds and 0/1 V voltage-coded controls. All digital output changes must complete within 200 ps of the triggering control or comparator event; choose output smoothing within this limit. This limit applies to the controller outputs, separately from the fixed comparator response delay.
+On the falling `clks` edge, assert `clkc` to start comparison. While `clks` is low and decisions remain, a comparator reset that leaves both comparator outputs low reasserts `clkc`. Accept decisions in the order `dp4`/`dm4`, `dp3`/`dm3`, `dp2`/`dm2`, then `dp1`/`dm1`. A `dcomp`-high and `dcompb`-low pair writes P/M as 1/0. A `dcomp`-low and `dcompb`-high pair writes P/M as 0/1. Clear `clkc` when a decision is accepted. Stop requesting comparisons after four accepted decisions.
 
-## Required Behavior
+While `test` is low, use the live comparator decision. While `test` is high, use the bits captured at the rising `clks` edge, in the order `dtest3`, `dtest2`, `dtest1`, `dtest0`, for those four decisions. `test` itself is read at the decision. The override bits are the captured word.
 
-On each rising `clks` crossing, publish the previous cycle DAC-P word,
-reset the conversion pointer, initialize the DAC controls for a new conversion,
-capture the test override word, and clear `clkc`.
+The public system bench connects this controller to the fixed module `sar_fixed_frontend` in [testbench/sar_support.va](testbench/sar_support.va). Do not modify that module or [testbench/system_test.scs](testbench/system_test.scs). On each rising `clkc`, the fixed frontend builds the next trial level from the `dp` bits already decided, compares `vin`, and returns a complementary decision after 100 ps. A falling `clkc` resets that comparator. After both of its outputs are low, this controller requests the next decision. The conversion is four cooperating decisions. The next rising `clks` publishes the saved whole word. Public tests may change `vin` and the frame period. The local public bench also keeps the test-override path and does not treat an extra decision after the four accepted decisions as another request.
 
-- Publish the previous P-side state as `dout3=dp4`, `dout2=dp3`,
-  `dout1=dp2`, and `dout0=dp1` before reinitializing the DAC controls.
-- Initialize the new conversion to `dp4=dm4=0` and to
-  `dp3=dm3=dp2=dm2=dp1=dm1=1`. These equal-valued pairs are intentional
-  undecided/trial states; only an accepted decision makes that pair
-  complementary.
-- On falling `clks`, assert `clkc` to start comparison. While `clks` is low,
-  comparator reset/recovery with both comparator outputs low reasserts `clkc`.
-- Accept decisions in the order `dp4/dm4`, `dp3/dm3`, `dp2/dm2`, then
-  `dp1/dm1`. A `dcomp`-high/`dcompb`-low decision produces P/M=`1/0`;
-  `dcomp`-low/`dcompb`-high produces P/M=`0/1`.
-- With `test` low, use the live comparator decision. With `test` high, use
-  captured `dtest3`, `dtest2`, `dtest1`, then `dtest0` for the four decisions.
-- Clear `clkc` when a decision is accepted and stop requesting comparisons
-  after four decisions.
+Initial levels and edges are unambiguous. `clks`, `dcomp`, `dcompb`, `test`, and `dtest0` through `dtest3` never rest at the 0.45 V threshold. Each of them that reaches the threshold always crosses it; it never touches the threshold and returns to the same side. Independent control edges are at least two controller output-transition times apart. Supplies stay fixed. The control threshold is 0.45 V. Simultaneous events that this contract does not define are not scored.
 
-## 实现与修改边界
+Voltage error is at most 2 mV. Every saved point is scored, for all thirteen outputs, except points less than 230 ps (`1.15*200 ps`) after t = 0 or after a `clks`, `dcomp`, or `dcompb` crossing that changes an output target. A scored waveform uses a time step no coarser than one quarter of the shortest output transition. Final evaluation may change inputs and parameters inside this contract.
 
-按公开接口建立电压域行为模型。实现方法与合法Verilog-A表达方式由求解者选择。不得读取评分材料或重放固定测试答案。只修改交付源码，固定激励及评分程序保持不变。
+An executed attempt that fails a required check scores 0. The failure cause is recorded separately. A zero that comes from the simulator, the bench, or other infrastructure does not by itself show that the submitted Verilog-A behavior is wrong. Acceptance uses the fixed Spectre backend.
 
-## Output Contract
+## Deliverable
 
-Return exactly one complete Verilog-A source file named `dut.va`. Do not generate a testbench, checker, waveform postprocessor, companion support module, or explanatory prose outside the requested source artifact.
+- Edit `/app/circuit.va` and implement `sarfend_logic_4b` on the module and positional ports in the starter.
+- Deliver only that controller. Keep the fixed comparator and weighted trial DAC as the public module `sar_fixed_frontend`. The controller's handshake, publish-before-reinitialize order, test capture, and four-decision stop are required behavior. Any Verilog-A organization that meets those external duties is acceptable. A particular state name or event operator is not required.
+- The submitted model must not read grading files, replay stored answers, or start external processes. You may read this instruction, the starter, and the public testbench, and you may run the public check. Do not edit the public testbench.
 
-## 固定评测合同
+From `/app`, run `python3 testbench/check.py --output /app/output/public-check`.
 
-后端固定为Spectre，运行版本和容器身份随校准记录保存。公开自测是public/visible_test.scs，交付物位于/work/dut.va及声明的其他源码。初态、输入范围和同时刻事件遵循下面补充合同。终评可以改变同一合同内的输入和参数。电压误差不超过2mV，输出过渡结束后的保持区间逐点检查；时间分辨率不超过最短过渡的四分之一。
+[testbench/README.md](testbench/README.md) describes that check. The public bench sources stay visible, including [testbench/visible_test.scs](testbench/visible_test.scs), [testbench/system_test.scs](testbench/system_test.scs), and [testbench/sar_support.va](testbench/sar_support.va). Tool version, timeouts, and diagnostics are in that README.
 
-输入初态及边沿保持明确，控制不恰好停在门限，独立控制边沿互相至少隔开两倍输出过渡时间。模拟输入在采样时连续。电源固定，控制门限采用题面注明的参考轨。未规定的同刻事件不评分。各模块的初态以本题补充合同为准。
+This is an implementation task, not a repository-audit task.
+Work in /app and modify only the declared deliverable; do not edit public development benches, model libraries, or external fixtures.
+Make one bounded inspection pass over this instruction, the declared deliverable, supplied starter material, and public development benches.
+As the task solver, create a runnable candidate in the file named in the Deliverable section before beginning detailed exploration, and keep that file updated as you work.
+If your working time expires, the evaluator copies that file exactly as it exists at that moment and runs the verifier on it.
+If the file is missing or empty, the result is zero reward.
+Temporary files are not submitted.
 
-## 固定SAR工程内补逻辑
-
-除局部公开时序外，system_test.scs将你的控制器与固定4-bit加权trial DAC和比较器连接。只能补控制逻辑，不能改固定系统模块。每次clkc上升，系统按已决定的dp高位构造下一个trial电平并比较vin，经过100ps延迟返回互补比较决定；clkc下降使比较器复位，恢复双低后控制器请求下一判决。必须四次依次协作，下一clks上升发布已保存的整码。固定环境源码公开，测试可改变vin和帧周期。局部测试保留test override与异常第五判决保护。
-
-## 上电初态与首帧
-
-从初始时刻起，dp4=dm4=0V，dp3=dm3=dp2=dm2=dp1=dm1=1V，dout0至dout3和clkc均为0V。转换指针等待MSB的dp4/dm4判决，共四位尚未完成。首个clks上升沿仍按一般发布规则发布上电P字，因此dout3:dout0首次变为0111，再初始化新转换并捕获dtest3至dtest0。clks初始为低；首个clks上升沿之前比较器双低，不提供有效决定，test override的捕获从该上升沿开始。
+If a concrete model, tool, or execution problem appears, investigate it as needed before continuing.
+Iterate by editing the declared deliverable and using public development benches to diagnose observed behavior.
+Do not repeatedly enumerate files, reread unchanged references, or retry unchanged discovery commands instead of editing and simulating.

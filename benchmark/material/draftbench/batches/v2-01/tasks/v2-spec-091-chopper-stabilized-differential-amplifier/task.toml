@@ -1,4 +1,5 @@
 schema_version = "1.4"
+artifacts = ["/app/circuit.va", "/app/chopper_gain_core.va", "/app/synchronous_lp_state.va"]
 [metadata]
 name = "v2-spec-091-chopper-stabilized-differential-amplifier"
 category = "verilog-a"
@@ -6,9 +7,16 @@ engineering_action = "spec-modeling"
 source_group = "v4-091"
 context_level = "multi-module-system"
 architecture_version = "system-interfaces-v2"
+circuit_route = "all-va"
+starter_kind = "new-model"
+stage = "implementation"
+review_status = "pending"
+pending = ["grading", "runtime"]
+
 [agent]
 timeout_sec = 900
 [verifier]
+environment_mode = "separate"
 timeout_sec = 600
 [environment]
 build_timeout_sec = 600

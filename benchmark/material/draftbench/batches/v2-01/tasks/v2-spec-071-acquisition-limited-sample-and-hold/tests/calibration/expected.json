@@ -1,0 +1,129 @@
+{
+ "task": "v2-spec-071-acquisition-limited-sample-and-hold",
+ "cases": [
+  "contract-base",
+  "contract-stretched-input",
+  "contract-midrun-reset"
+ ],
+ "checker_failure": "a scored vout or metric sample more than atol (2 mV) from the expected value (tests/v2_spec.py:205-208)",
+ "semantics": "F01 scoring start, user-confirmed 2026-10-28 (option A): tests/v2_spec.py:188 skips points less than 1.15*tr after t = 0 or after an event that changes any expected output; the instruction states this rule and the checker is unchanged. Acquisition rules as tests/v2_spec.py:48-53 and 72-77 fix them: ticks at k*tick from t = 0; at a tick rst high returns vinit and closes the window, otherwise an open window updates v + alpha*(vin - v); a rising sample crossing opens the window unless rst is high there and changes no held value; rst is read just after the instant (1e-16 s look-ahead, line 68); a sample crossing on a tick is applied first (event sort, line 51). Candidates differ from solution/ in one rule each. contract-midrun-reset (fix-dec-r1) raises rst twice while the held value differs from vinit: at 13.5 ns with the window open (reset tick 14 ns, release at 16.5 ns with sample still high) and at 27.3 ns with a rising sample crossing at 27.75 ns before the 28 ns reset tick (release at 29.6 ns with sample high).",
+ "conditions": {
+  "alt_timer_before_cross": "accepted while no sample crossing falls exactly on a tick, which holds for all three cases (every sample and rst crossing is at least 50 ps from a tick); on a coincident crossing, LRM source order would skip one update (replay of the c485de86 stretched stimulus in the decisions-r1 author evidence)"
+ },
+ "candidates": [
+  {
+   "name": "late_transition_1p3tr",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "contract-stretched-input",
+    "contract-midrun-reset"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "F01-late-transition-1.3tr"
+  },
+  {
+   "name": "inwindow_transition_1p1tr",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "contract-base",
+    "contract-stretched-input",
+    "contract-midrun-reset"
+   ],
+   "author_synthetic_control": "F01-inwindow-transition-1.1tr"
+  },
+  {
+   "name": "v1_bugfix_buggy",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "contract-stretched-input",
+    "contract-midrun-reset"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "fail-v1-buggy"
+  },
+  {
+   "name": "ideal_sampler_alpha_one",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "contract-stretched-input",
+    "contract-midrun-reset"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "fail-alpha-one"
+  },
+  {
+   "name": "local_tick_grid",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "contract-stretched-input",
+    "contract-midrun-reset"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "fail-local-grid"
+  },
+  {
+   "name": "prefix_reference_sample_edge_reset",
+   "group": "wrong",
+   "must_reject": [
+    "contract-midrun-reset"
+   ],
+   "must_accept": [
+    "contract-base",
+    "contract-stretched-input"
+   ],
+   "author_synthetic_control": "fail-sample-edge-reset"
+  },
+  {
+   "name": "async_reset_on_rst_edge",
+   "group": "wrong",
+   "must_reject": [
+    "contract-midrun-reset"
+   ],
+   "must_accept": [
+    "contract-base",
+    "contract-stretched-input"
+   ],
+   "author_synthetic_control": "fail-async-reset"
+  },
+  {
+   "name": "reopen_on_rst_release",
+   "group": "wrong",
+   "must_reject": [
+    "contract-midrun-reset"
+   ],
+   "must_accept": [
+    "contract-base",
+    "contract-stretched-input"
+   ],
+   "author_synthetic_control": "fail-reopen-on-release"
+  },
+  {
+   "name": "reset_keeps_window",
+   "group": "wrong",
+   "must_reject": [
+    "contract-midrun-reset"
+   ],
+   "must_accept": [
+    "contract-base",
+    "contract-stretched-input"
+   ],
+   "author_synthetic_control": "fail-reset-keeps-window"
+  },
+  {
+   "name": "alt_timer_before_cross",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "contract-base",
+    "contract-stretched-input",
+    "contract-midrun-reset"
+   ],
+   "author_synthetic_control": "pass-contract"
+  }
+ ]
+}

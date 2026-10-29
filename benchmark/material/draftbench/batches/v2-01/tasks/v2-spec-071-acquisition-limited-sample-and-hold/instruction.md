@@ -1,62 +1,47 @@
-# Acquisition Limited Sample And Hold
+# Acquisition-limited sample-and-hold
 
-## Task Contract
+Build a sample-and-hold whose held value approaches its input in discrete acquisition updates on a global tick grid while a sample window is open, instead of copying the input at once.
 
-Implement the requested Verilog-A artifact for `Acquisition Limited Sample And Hold`.
-- Form: `dut`
-- Level: `L1`
-- Category: `sampling_analog_memory`
-- Target artifact(s): `dut.va`
+## Spec
 
-Implement `dut.va` in Verilog-A.
+Use the starter declaration of `acquisition_limited_sample_hold`. Every port is electrical. The positional order is `sample`, `rst`, `vin`, `vout`, `metric`. `sample` is the voltage-coded acquisition-window control, `rst` is an active-high voltage-coded reset, and `vin` is the analog input. The model drives `vout`, the acquired and held voltage, and `metric`, a monitor that is 0.9 V while acquisition is active and 0 V while the model is holding or in reset. Helper modules may be defined in the same file.
 
-## Public Verilog-A Interface
+Declare these overrideable real parameters.
 
-Declare module `acquisition_limited_sample_hold(sample, rst, vin, vout, metric)`
-with scalar electrical voltage-domain ports.
+- `vth` = 0.45 V. Logic threshold for `sample` and `rst`.
+- `vinit` = 0.45 V. Initial and reset held voltage.
+- `alpha` = 0.42. Acquisition fraction per update.
+- `tick` = 1 ns. Acquisition update interval.
+- `tr` = 200 ps. Transition time of `vout` and `metric`.
 
-- `sample`: voltage-coded acquisition-window control.
-- `rst`: active-high voltage-coded reset.
-- `vin`: analog input voltage.
-- `vout`: acquired and held output voltage.
-- `metric`: voltage-coded monitor that is high while the model is actively
-  acquiring and low while it is holding or reset. Its high level is 0.9 V and
-  its low level is 0 V.
+Ticks are the global times `k*tick`, `k = 0, 1, ...`; the first tick is at t = 0. Initially the held value is `vinit` and acquisition is inactive. A rising crossing of `sample` through `vth` opens the acquisition window, unless `rst` is high at that crossing. A falling crossing of `sample` closes the window. At each tick, if `rst` is above `vth`, the held value returns to `vinit` and the window closes. Otherwise, if the window is open, the held value `v` updates once to `v + alpha*(V(vin) - v)`, with `V(vin)` read at that tick. The held value changes only at ticks; a closed window holds the last acquired value. `rst` acts only at ticks: an `rst` crossing by itself changes no output, and the reset takes effect at the next tick. Releasing `rst` does not reopen a window; acquisition resumes at the next rising `sample` crossing. `vout` is the held value. `metric` is 0.9 V exactly while the window is open, so it rises at the `sample` crossing that opens the window and falls at the `sample` crossing or the reset tick that closes it. Each `rst` high interval lasts at least `2*tick`; shorter reset pulses are not legal inputs.
 
-## Public Parameter Contract
+If a `sample` crossing falls exactly on a tick, the crossing takes effect first: a rising crossing opens the window and that tick already updates, and a falling crossing closes the window before that tick. Wherever `rst` is read, at a tick or at a `sample` crossing, its level just after that instant is used. These rules settle every coincidence of `sample` crossings, `rst` crossings, and ticks. In the cases, every `sample` and `rst` crossing is at least 50 ps away from the nearest tick.
 
-- `vth`: logic threshold, default `0.45`.
-- `vinit`: reset and initial held voltage, default `0.45`.
-- `alpha`: acquisition fraction per update, default `0.42`.
-- `tick`: acquisition update interval, default `1n`.
-- `tr`: output and monitor transition smoothing time, default `200p`.
+Initial levels and edges are unambiguous. `sample` and `rst` never rest at `vth`. Each of them that reaches `vth` always crosses it; it never touches `vth` and returns to the same side. Independent control edges are at least `2*tr` apart. `vin` is continuous at each tick where it is read. Supplies stay fixed. The control threshold is `vth`.
 
-## Required Behavior
+Voltage error is at most 2 mV. Each output reaches its new value within `tr` after the instant that changes it. Every saved point is scored, for both outputs, except points less than `1.15*tr` after t = 0 or after an instant that changes the expected value of either output: a tick that updates or resets the held value, or a `sample` crossing that opens or closes the window. A scored waveform uses a time step no coarser than one quarter of the shortest output transition. Final evaluation may change inputs and parameters inside this contract.
 
-Model finite acquisition bandwidth rather than an ideal instantaneous sampler:
+An executed attempt that fails a required check scores 0. The failure cause is recorded separately. A zero that comes from the simulator, the bench, or other infrastructure does not by itself show that the submitted Verilog-A behavior is wrong. Acceptance uses the fixed Spectre backend.
 
-- A high `sample` level opens a tracking/acquisition window.
-- While acquiring, `vout` moves toward the current `vin` voltage in discrete
-  updates separated by `tick`.
-- A falling `sample` crossing freezes the last acquired value.
-- High `rst` returns the held output to `vinit` and clears the acquisition
-  monitor.
-- `metric` is high only while acquisition is active.
+## Deliverable
 
-## 实现与修改边界
+- Edit `/app/circuit.va` and implement `acquisition_limited_sample_hold` on the module and positional ports in the starter, including the parameter defaults above.
+- Any Verilog-A implementation is acceptable when it meets that interface and the external behavior in Spec. The tick grid, the window rules, and the update law define the observable outputs. They do not require a particular state name or event operator.
+- The submitted model must not read grading files, replay stored answers, or start external processes. You may read this instruction, the starter, and the public testbench, and you may run the public check. Do not edit the public testbench.
 
-按公开接口建立电压域行为模型。实现方法与合法Verilog-A表达方式由求解者选择。不得读取评分材料或重放固定测试答案。只修改交付源码，固定激励及评分程序保持不变。
+From `/app`, run `python3 testbench/check.py --output /app/output/public-check`.
 
-## Output Contract
+[testbench/README.md](testbench/README.md) describes that check. The public bench sources stay visible, including [testbench/visible_test.scs](testbench/visible_test.scs). Tool version, timeouts, and diagnostics are in that README.
 
-Return exactly one complete source artifact named `dut.va`. Do not include explanatory prose outside the source artifact contents.
+This is an implementation task, not a repository-audit task.
+Work in /app and modify only the declared deliverable; do not edit public development benches, model libraries, or external fixtures.
+Make one bounded inspection pass over this instruction, the declared deliverable, supplied starter material, and public development benches.
+As the task solver, create a runnable candidate in the file named in the Deliverable section before beginning detailed exploration, and keep that file updated as you work.
+If your working time expires, the evaluator copies that file exactly as it exists at that moment and runs the verifier on it.
+If the file is missing or empty, the result is zero reward.
+Temporary files are not submitted.
 
-## 固定评测合同
-
-后端固定为Spectre，运行版本和容器身份随校准记录保存。公开自测是public/visible_test.scs，交付物位于/work/dut.va及声明的其他源码。初态、输入范围和同时刻事件遵循下面补充合同。终评可以改变同一合同内的输入和参数。电压误差不超过2mV，输出过渡结束后的保持区间逐点检查；时间分辨率不超过最短过渡的四分之一。
-
-输入初态及边沿保持明确，控制不恰好停在门限，独立控制边沿互相至少隔开两倍输出过渡时间。模拟输入在采样时连续。电源固定，控制门限采用题面注明的参考轨。未规定的同刻事件不评分。各模块的初态以本题补充合同为准。
-
-## 本轮冻结的数值合同
-
-全局k*tick离散更新，初态tracking=0；sample上升打开窗口，下降关闭。reset在tick读取并回到vinit，短reset脉冲不属于合法输入。每个rst高区间至少2*tick。
+If a concrete model, tool, or execution problem appears, investigate it as needed before continuing.
+Iterate by editing the declared deliverable and using public development benches to diagnose observed behavior.
+Do not repeatedly enumerate files, reread unchanged references, or retry unchanged discovery commands instead of editing and simulating.

@@ -1,0 +1,9 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module integrator_state_cell(phi1,phi2,rst,enable,sample_node,sample_valid,vout,phase_metric,valid);
+input phi1,phi2,rst,enable,sample_node,sample_valid;
+output vout,phase_metric,valid;
+electrical phi1,phi2,rst,enable,sample_node,sample_valid,vout,phase_metric,valid;
+// TODO: implement the public contract.
+endmodule

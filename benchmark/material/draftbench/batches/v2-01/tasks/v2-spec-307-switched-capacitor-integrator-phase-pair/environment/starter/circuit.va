@@ -1,0 +1,9 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module switched_cap_integrator_phase_pair_top(vin,phi1,phi2,rst,enable,vout,phase_metric,valid);
+input vin,phi1,phi2,rst,enable;
+output vout,phase_metric,valid;
+electrical vin,phi1,phi2,rst,enable,vout,phase_metric,valid;
+// TODO: implement the public contract.
+endmodule

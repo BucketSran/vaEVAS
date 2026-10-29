@@ -1,0 +1,45 @@
+{
+ "task": "v2-spec-091-chopper-stabilized-differential-amplifier",
+ "cases": [
+  "contract-base",
+  "contract-stretched-input",
+  "architecture-component-producer",
+  "architecture-component-consumer",
+  "architecture-producer",
+  "architecture-consumer"
+ ],
+ "checker_failure": "a scored output sample more than atol (2 mV) from the expected value (tests/v2_spec.py:205-208)",
+ "semantics": "F01 scoring start, user-confirmed 2026-10-28 (option A): tests/v2_spec.py:188 skips points less than 4.1*tr after t = 0 or after an event that changes any expected output; v2_structure.py scores every point of the consumer-substitute case; the instruction states this rule and the checker is unchanged. Candidates differ from solution/ only in output delay or transition time.",
+ "conditions": {},
+ "candidates": [
+  {
+   "name": "late_lp_output_delay_0p8tr",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "contract-stretched-input",
+    "architecture-component-consumer",
+    "architecture-producer"
+   ],
+   "must_accept": [
+    "architecture-component-producer",
+    "architecture-consumer"
+   ],
+   "author_synthetic_control": "late-shift-0.8tr"
+  },
+  {
+   "name": "inwindow_lp_output_delay_0p55tr",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "contract-base",
+    "contract-stretched-input",
+    "architecture-component-producer",
+    "architecture-component-consumer",
+    "architecture-producer",
+    "architecture-consumer"
+   ],
+   "author_synthetic_control": "inwindow-shift-0.55tr"
+  }
+ ]
+}

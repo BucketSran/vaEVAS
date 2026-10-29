@@ -1,0 +1,9 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module ffe_tx_3tap(data,clk,rst,pre_1,pre_0,post_1,post_0,vout,main_dbg,pre_dbg,post_dbg);
+input data,clk,rst,pre_1,pre_0,post_1,post_0;
+output vout,main_dbg,pre_dbg,post_dbg;
+electrical data,clk,rst,pre_1,pre_0,post_1,post_0,vout,main_dbg,pre_dbg,post_dbg;
+// TODO: implement the public contract.
+endmodule

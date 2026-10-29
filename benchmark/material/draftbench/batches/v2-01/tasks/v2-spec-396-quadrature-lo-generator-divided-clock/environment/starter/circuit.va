@@ -1,0 +1,9 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module quadrature_lo_generator_divided_clock(clk_in,rst,enable,lo_i,lo_q,div_metric,quad_ok);
+input clk_in,rst,enable;
+output lo_i,lo_q,div_metric,quad_ok;
+electrical clk_in,rst,enable,lo_i,lo_q,div_metric,quad_ok;
+// TODO: implement the public contract.
+endmodule

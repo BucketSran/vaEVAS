@@ -1,0 +1,9 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module sarfend_logic_4b(clks,dcomp,dcompb,test,dtest0,dtest1,dtest2,dtest3,clkc,dp1,dp2,dp3,dp4,dm1,dm2,dm3,dm4,dout0,dout1,dout2,dout3);
+input clks,dcomp,dcompb,test,dtest0,dtest1,dtest2,dtest3;
+output clkc,dp1,dp2,dp3,dp4,dm1,dm2,dm3,dm4,dout0,dout1,dout2,dout3;
+electrical clks,dcomp,dcompb,test,dtest0,dtest1,dtest2,dtest3,clkc,dp1,dp2,dp3,dp4,dm1,dm2,dm3,dm4,dout0,dout1,dout2,dout3;
+// TODO: implement the public contract.
+endmodule

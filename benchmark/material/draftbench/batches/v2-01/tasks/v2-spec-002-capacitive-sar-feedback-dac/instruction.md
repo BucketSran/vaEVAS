@@ -1,61 +1,53 @@
-# Capacitive SAR Feedback DAC
+# Capacitive SAR feedback DAC
 
-## Task Contract
+Build a clocked capacitive feedback DAC that samples a 10-bit word and a two-bit calibration code, then drives a complementary differential output.
 
-Implement the requested Verilog-A artifact for `Capacitive Weighted SAR Feedback DAC`.
-- Form: `dut`
-- Level: `L1`
-- Category: `data_converter`
-- Target artifact(s): `dut.va`
+## Spec
 
-Implement a clocked capacitive feedback DAC for a SAR ADC.
+Use the starter declaration of `cdac_cal`. Every port is electrical. The positional order is `VDD`, `VSS`, `CLK`, `D9`, `D8`, `D7`, `D6`, `D5`, `D4`, `D3`, `D2`, `D1`, `D0`, `CAL0`, `CAL1`, `VDAC_P`, `VDAC_N`.
 
-## Public Verilog-A Interface
+`VDAC_P` and `VDAC_N` are the complementary differential outputs. `VDD` and `VSS` are supply and reference nodes. `CLK` is the sampling clock. `D9` through `D0` are the main DAC controls, and `CAL0` and `CAL1` are the calibration controls. The interface sentence names the two outputs and does not say whether the supply ports are inputs or inouts. The output equations use `V(VSS)` as the reference for the stated common mode.
 
-Declare module `cdac_cal` with positional ports `VDD, VSS, CLK, D9, D8, D7,
-D6, D5, D4, D3, D2, D1, D0, CAL0, CAL1, VDAC_P, VDAC_N`. All ports are
-electrical. `VDD` and `VSS` are supply/reference nodes; `VDAC_P` and `VDAC_N`
-are complementary differential outputs.
+Declare these overrideable parameters. No legal range is stated beyond the values and equations here.
 
-## Public Parameter Contract
+- `vcm` = 0.45 V. Output common-mode voltage above `VSS`.
+- `swing` = 0.6 V. Differential output swing scale.
+- `tt` = 20 ps. Output transition smoothing time.
 
-Provide these overrideable public parameters:
+Use a 0.45 V logic threshold for `CLK`, `D9` through `D0`, `CAL0`, and `CAL1`.
 
-- `vcm = 0.45 V`: output common-mode voltage.
-- `swing = 0.6 V`: differential output swing scale.
-- `tt = 20 ps`: output transition smoothing time.
+At the initial time, both outputs are `vcm` above `VSS`: `V(VDAC_P) = V(VSS) + vcm` and `V(VDAC_N) = V(VSS) + vcm`.
 
-Use a 0.45 V logic threshold for the sampled clock, DAC control bits, and
-calibration bits.
+On each rising `CLK` edge, sample `D9` through `D0`, `CAL0`, and `CAL1`. `D9` is the most significant bit and `D0` is the least significant bit of an unsigned 10-bit word, `code`. `CAL0` contributes one unit and `CAL1` contributes two units of an unsigned calibration code, `cal`. Each calibration unit adds 32 main DAC codes. The effective code is `code + 32*cal`.
 
-## Required Behavior
+The differential voltage is `swing * ((code + 32*cal) / 1023 - 0.5)`. A higher effective code raises `VDAC_P` relative to `VDAC_N`. The two outputs, measured from `VSS`, are `vcm + differential/2` and `vcm - differential/2`. Do not clamp either output.
 
-On each rising `CLK` edge, sample `D9..D0`, `CAL0`, and `CAL1`. Interpret
-`D9..D0` as an unsigned 10-bit binary word with `D9` as the most significant
-bit and `D0` as the least significant bit. Interpret the calibration pins as a
-small unsigned code where `CAL0` contributes one unit and `CAL1` contributes
-two units.
+The outputs hold until the next rising `CLK` edge. Each uses a smooth voltage transition of length `tt`.
 
-Model the redundant calibration contribution as an additive offset of 32 main
-DAC codes per calibration unit. Higher effective code should raise `VDAC_P`
-relative to `VDAC_N`; lower effective code should lower it. Drive complementary
-outputs around `vcm`, with the output differential proportional to the centered
-effective code over the full 10-bit main-code range.
+Initial levels and edges are unambiguous. `CLK`, `D9` through `D0`, `CAL0`, and `CAL1` never rest at the 0.45 V threshold. Each of them that reaches the threshold always crosses it; it never touches the threshold and returns to the same side. Independent control edges are at least `2*tt` apart. Supplies stay fixed. The logic threshold is the stated 0.45 V. Simultaneous events that this contract does not define are not scored.
 
-## 实现与修改边界
+Voltage error is at most 2 mV. Each output reaches its new value within `tt` after the rising `CLK` crossing that sets it. Every saved point is scored, for both outputs, except points less than `1.15*tt` after t = 0 or after a rising `CLK` crossing that changes an output target. A scored waveform uses a time step no coarser than one quarter of the shortest output transition. Final evaluation may change inputs and parameters inside this contract.
 
-按公开接口建立电压域行为模型。实现方法与合法Verilog-A表达方式由求解者选择。不得读取评分材料或重放固定测试答案。只修改交付源码，固定激励及评分程序保持不变。
+An executed attempt that fails a required check scores 0. The failure cause is recorded separately. A zero that comes from the simulator, the bench, or other infrastructure does not by itself show that the submitted Verilog-A behavior is wrong. Acceptance uses the fixed Spectre backend.
 
-## Output Contract
+## Deliverable
 
-Return exactly one complete source artifact named `dut.va`. Do not include explanatory prose outside the source artifact contents.
+- Edit `/app/circuit.va` and implement `cdac_cal` on the module and positional ports in the starter.
+- Any Verilog-A implementation is acceptable when it meets that interface and the external behavior in Spec. The code equation defines the observable voltages. It does not require a particular state name or event operator.
+- The submitted model must not read grading files, replay stored answers, or start external processes. You may read this instruction, the starter, and the public testbench, and you may run the public check. Do not edit the public testbench.
 
-## 固定评测合同
+From `/app`, run `python3 testbench/check.py --output /app/output/public-check`.
 
-后端固定为Spectre，运行版本和容器身份随校准记录保存。公开自测是public/visible_test.scs，交付物位于/work/dut.va及声明的其他源码。初态、输入范围和同时刻事件遵循下面补充合同。终评可以改变同一合同内的输入和参数。电压误差不超过2mV，输出过渡结束后的保持区间逐点检查；时间分辨率不超过最短过渡的四分之一。
+[testbench/README.md](testbench/README.md) describes that check. The public bench sources stay visible, including [testbench/visible_test.scs](testbench/visible_test.scs). Tool version, timeouts, and diagnostics are in that README.
 
-输入初态及边沿保持明确，控制不恰好停在门限，独立控制边沿互相至少隔开两倍输出过渡时间。模拟输入在采样时连续。电源固定，控制门限采用题面注明的参考轨。未规定的同刻事件不评分。各模块的初态以本题补充合同为准。
+This is an implementation task, not a repository-audit task.
+Work in /app and modify only the declared deliverable; do not edit public development benches, model libraries, or external fixtures.
+Make one bounded inspection pass over this instruction, the declared deliverable, supplied starter material, and public development benches.
+As the task solver, create a runnable candidate in the file named in the Deliverable section before beginning detailed exploration, and keep that file updated as you work.
+If your working time expires, the evaluator copies that file exactly as it exists at that moment and runs the verifier on it.
+If the file is missing or empty, the result is zero reward.
+Temporary files are not submitted.
 
-## 本轮冻结的数值合同
-
-初始双输出对VSS为vcm；差分=swing*((code+32*cal)/1023-.5)，两个对VSS输出为vcm±差分/2，不夹位。
+If a concrete model, tool, or execution problem appears, investigate it as needed before continuing.
+Iterate by editing the declared deliverable and using public development benches to diagnose observed behavior.
+Do not repeatedly enumerate files, reread unchanged references, or retry unchanged discovery commands instead of editing and simulating.

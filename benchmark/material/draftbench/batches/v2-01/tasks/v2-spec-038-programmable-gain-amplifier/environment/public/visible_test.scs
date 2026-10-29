@@ -4,7 +4,7 @@ global 0
 ahdl_include "/work/dut.va"
 
 Vclk (clk 0) vsource type=pulse val0=0 val1=0.9 period=8n width=4n delay=2n rise=80p fall=80p
-Vrst (rst 0) vsource type=pwl wave=[0 0.9 2.2n 0.9 2.3n 0 86n 0]
+Vrst (rst 0) vsource type=pwl wave=[0 0.9 2.6n 0.9 2.7n 0 86n 0]
 Vgain (gain_sel 0) vsource type=pwl wave=[ \
 0 0 \
 21n 0 21.2n 0.9 \

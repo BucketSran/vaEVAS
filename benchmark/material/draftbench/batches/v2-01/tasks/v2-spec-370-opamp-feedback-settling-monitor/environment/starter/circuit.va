@@ -1,0 +1,9 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module opamp_feedback_settling(vin,clk,rst,enable,gain_2,gain_1,gain_0,vout,error_metric,settled);
+input vin,clk,rst,enable,gain_2,gain_1,gain_0;
+output vout,error_metric,settled;
+electrical vin,clk,rst,enable,gain_2,gain_1,gain_0,vout,error_metric,settled;
+// TODO: implement the public contract.
+endmodule

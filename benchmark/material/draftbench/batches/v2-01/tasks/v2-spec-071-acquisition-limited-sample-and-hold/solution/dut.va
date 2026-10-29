@@ -23,7 +23,6 @@ module acquisition_limited_sample_hold(sample, rst, vin, vout, metric);
 
         @(cross(V(sample) - vth, +1)) begin
             if (V(rst) > vth) begin
-                held = vinit;
                 tracking = 0.0;
             end else begin
                 tracking = 1.0;

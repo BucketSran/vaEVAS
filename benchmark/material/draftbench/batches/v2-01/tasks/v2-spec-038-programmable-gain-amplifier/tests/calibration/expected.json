@@ -1,0 +1,32 @@
+{
+ "task": "v2-spec-038-programmable-gain-amplifier",
+ "cases": [
+  "contract-base",
+  "contract-stretched-input"
+ ],
+ "checker_failure": "a scored output sample more than atol (2 mV) from the expected value (tests/v2_spec.py:205-208); inside the unscored interval of metric, a metric sample below -2 mV or above 0.902 V (kind=metric_overshoot, tests/v2_spec.py:202-203)",
+ "semantics": "F01 scoring start, user-confirmed 2026-10-28 (option A): tests/v2_spec.py:188 does not apply to source 038; out is scored at every saved point from t = 0 (:196, :205-208); metric is not scored for 1.15*tr after each change of its target (:154-181 build the change list from the vmin/vmax crossings of the unclamped target, the rst crossings and the rising clk crossings; :197-201 skip it); the instruction states this rule and the checker is unchanged. Candidates differ from solution/ only in output delay or transition time.",
+ "conditions": {},
+ "candidates": [
+  {
+   "name": "late_metric_transition_1p3tr",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "contract-stretched-input"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "late-shift-60ps"
+  },
+  {
+   "name": "inwindow_metric_transition_1p1tr",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "contract-base",
+    "contract-stretched-input"
+   ],
+   "author_synthetic_control": "inwindow-shift-20ps"
+  }
+ ]
+}

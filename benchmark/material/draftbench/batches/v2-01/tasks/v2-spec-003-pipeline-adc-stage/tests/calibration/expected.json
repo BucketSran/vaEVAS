@@ -1,0 +1,32 @@
+{
+ "task": "v2-spec-003-pipeline-adc-stage",
+ "cases": [
+  "contract-base",
+  "contract-stretched-input"
+ ],
+ "checker_failure": "a scored output sample more than atol (2 mV) from the expected value (tests/v2_spec.py:205-208)",
+ "semantics": "F01 scoring start, user-confirmed 2026-10-28 (option A): tests/v2_spec.py:188 skips points less than 1.15*tedge after t = 0 or after an event that changes any expected output; the instruction states this rule and the checker is unchanged. Candidates differ from solution/ only in output delay or transition time.",
+ "conditions": {},
+ "candidates": [
+  {
+   "name": "late_transition_1p3tedge",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "contract-stretched-input"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "late-shift-0.3tr"
+  },
+  {
+   "name": "inwindow_transition_1p1tedge",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "contract-base",
+    "contract-stretched-input"
+   ],
+   "author_synthetic_control": "inwindow-shift-0.1tr"
+  }
+ ]
+}

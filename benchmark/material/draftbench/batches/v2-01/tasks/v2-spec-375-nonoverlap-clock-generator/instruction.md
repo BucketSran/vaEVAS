@@ -1,56 +1,52 @@
-# Non-overlapping Clock Generator
+# Non-overlapping clock generator
 
-## Task Contract
+Build a two-phase non-overlapping clock generator that turns input clock edges into phase requests and enforces a dead time on a global tick grid.
 
-Implement one Verilog-A DUT artifact for `Non-overlapping Clock Generator`.
+## Spec
 
-- Target artifact: `dut.va`
-- Public top module: `nonoverlap_clock_generator`
-- Task level: `L1`
-- Circuit category: `clock_timing`
+Use the starter declaration of `nonoverlap_clock_generator`. Every port is electrical. The positional order is `clk_in`, `rst`, `enable`, `phi1`, `phi2`, `deadtime_metric`, `valid`.
 
-## Public Verilog-A Interface
+`clk_in`, `rst`, and `enable` are voltage-coded control inputs. `phi1` and `phi2` are the generated non-overlapping phase outputs. `deadtime_metric` marks the enforced both-low handoff interval, and `valid` marks that at least one active phase handoff has completed.
 
-Declare module `nonoverlap_clock_generator` with positional electrical ports `clk_in, rst, enable, phi1, phi2, deadtime_metric, valid`. All ports are electrical.
+Declare these overrideable parameters.
 
-`clk_in`, `rst`, and `enable` are voltage-coded controls. `phi1` and `phi2` are generated non-overlapping phase outputs. `deadtime_metric` marks the enforced both-low handoff interval, and `valid` marks that at least one active phase handoff has completed.
+- `vdd` = 0.9 V. Logic-high output level.
+- `vss` = 0.0 V. Logic-low output level.
+- `vth` = 0.45 V. Logic threshold for the input controls.
+- `dead_ticks` = 5. Number of internal timer ticks held both-low after a phase request.
+- `tick` = 200 ps. Internal discrete update interval for dead-time scheduling.
+- `tr` = 100 ps. Output transition smoothing time, with `0 < tr <= tick/2`. The defaults meet that range, including the equality.
 
-## Public Parameter Contract
+Reset or a low `enable` clears both phases, `deadtime_metric`, and `valid`. A rising `clk_in` request eventually enables `phi1`; a falling `clk_in` request eventually enables `phi2`. During each handoff, both `phi1` and `phi2` stay low for the configured dead time, and `deadtime_metric` is high only while a pending phase request is in that enforced both-low interval. `valid` becomes high after the first enabled handoff completes and stays high until reset or disable.
 
-Provide these overrideable public parameters:
+The dead time is counted on the global tick grid `k*tick`. After an edge requests a phase at time `t`, the new phase is enabled only at the `dead_ticks`-th global `k*tick` event after `t`, so the dead time lies in `((dead_ticks-1)*tick, dead_ticks*tick]`. Edges do not coincide with ticks. Each new edge cancels the old request and restarts the count. A rising `rst` or a falling `enable` immediately clears the active phase, the pending request, the counter, and `valid`, including for a control pulse shorter than one tick. Releasing the controls does not request a phase by itself; the generator waits for the next `clk_in` edge. Adjacent `clk_in` edges are at least `dead_ticks*tick + 4*tr` apart. Every output uses a `tr` transition.
 
-- `vdd = 0.9 V`: logic-high output level
-- `vss = 0.0 V`: logic-low output level
-- `vth = 0.45 V`: logic threshold for input controls
-- `dead_ticks = 5`: number of internal timer ticks held both-low after a phase request
-- `tick = 200 ps`: internal discrete update interval for dead-time scheduling
-- `tr = 100 ps`: output transition smoothing time
+`phi1` and `phi2` must never be high at the same time. The mutual-exclusion check covers every output transition and hold interval. A phase counts as high above `(vdd+vss)/2`, and the two phases are never above that level together.
 
-## Required Behavior
+Initial levels and edges are unambiguous. `clk_in`, `rst`, and `enable` never rest at `vth`. Each of them that reaches `vth` always crosses it; it never touches `vth` and returns to the same side. Independent control edges are at least `2*tr` apart. The two edges of one `rst` or `enable` clearing pulse are not independent of each other, so such a pulse may be narrower than `2*tr` and shorter than one tick. Each edge of that pulse is still at least `2*tr` away from every `clk_in` edge. Supplies stay fixed. The control threshold is `vth`. Simultaneous events that this contract does not define are not scored.
 
-- Reset or a low `enable` clears both phases, `deadtime_metric`, and `valid`.
-- A rising `clk_in` request eventually enables `phi1`; a falling `clk_in` request eventually enables `phi2`.
-- During each handoff, both `phi1` and `phi2` remain low for the configured dead-time interval.
-- `phi1` and `phi2` must never be high at the same time.
-- `deadtime_metric` is high only while a pending phase request is in the enforced both-low interval.
-- `valid` becomes high after the first enabled handoff completes and remains high until reset or disable.
+Voltage error is at most 2 mV. Each output reaches its new value within `tr` after the event that changes it. Every saved point is scored, for all four outputs, except points less than 115 ps after t = 0 or after an event that changes an output target: a `clk_in` crossing in either direction while enabled and not in reset, the `dead_ticks`-th tick after it, at which the requested phase starts, or a clear by a rising `rst` or a falling `enable`. The mutual-exclusion check applies at every saved point, including the unscored ones. A scored waveform uses a time step no coarser than one quarter of the shortest output transition. Final evaluation may change inputs and parameters inside this contract.
 
-## 实现与修改边界
+An executed attempt that fails a required check scores 0. The failure cause is recorded separately. A zero that comes from the simulator, the bench, or other infrastructure does not by itself show that the submitted Verilog-A behavior is wrong. Acceptance uses the fixed Spectre backend.
 
-按公开接口建立电压域行为模型。实现方法与合法Verilog-A表达方式由求解者选择。不得读取评分材料或重放固定测试答案。只修改交付源码，固定激励及评分程序保持不变。
+## Deliverable
 
-## Output Contract
+- Edit `/app/circuit.va` and implement `nonoverlap_clock_generator` on the module and positional ports in the starter.
+- Any Verilog-A implementation is acceptable when it meets that interface and the external behavior in Spec. The tick grid, cancel, and clear rules define the observable outputs. They do not require a particular state name or event operator.
+- The submitted model must not read grading files, replay stored answers, or start external processes. You may read this instruction, the starter, and the public testbench, and you may run the public check. Do not edit the public testbench.
 
-Return exactly one complete source artifact named `dut.va`.
+From `/app`, run `python3 testbench/check.py --output /app/output/public-check`.
 
-## 固定评测合同
+[testbench/README.md](testbench/README.md) describes that check. The public bench sources stay visible, including [testbench/visible_test.scs](testbench/visible_test.scs). Tool version, timeouts, and diagnostics are in that README.
 
-后端固定为Spectre，运行版本和容器身份随校准记录保存。公开自测是public/visible_test.scs，交付物位于/work/dut.va及声明的其他源码。初态、输入范围和同时刻事件遵循下面补充合同。终评可以改变同一合同内的输入和参数。电压误差不超过2mV，输出过渡结束后的保持区间逐点检查；时间分辨率不超过最短过渡的四分之一。
+This is an implementation task, not a repository-audit task.
+Work in /app and modify only the declared deliverable; do not edit public development benches, model libraries, or external fixtures.
+Make one bounded inspection pass over this instruction, the declared deliverable, supplied starter material, and public development benches.
+As the task solver, create a runnable candidate in the file named in the Deliverable section before beginning detailed exploration, and keep that file updated as you work.
+If your working time expires, the evaluator copies that file exactly as it exists at that moment and runs the verifier on it.
+If the file is missing or empty, the result is zero reward.
+Temporary files are not submitted.
 
-输入初态及边沿保持明确，控制不恰好停在门限，独立控制边沿互相至少隔开两倍输出过渡时间。模拟输入在采样时连续。电源固定，控制门限采用题面注明的参考轨。未规定的同刻事件不评分。各模块的初态以本题补充合同为准。
-
-## 全局tick的准确死区与取消
-
-边沿在t请求相位后，未来第dead_ticks个全局k*tick事件才启用新相位，死区在((dead_ticks-1)*tick,dead_ticks*tick]。边沿不与tick同时发生。每次新边沿取消旧请求，重新计数。rst上升或enable下降立即清除active、pending、counter、valid，包括短于tick的控制脉冲。释放控制不自动请求，等下次clk边沿再启动。输出用tr过渡，0<tr<=tick/2。相邻clk边沿至少dead_ticks*tick+4*tr。
-
-互斥检查贯穿所有输出过渡和保持阶段。两相“高”按(vdd+vss)/2判定，不允许同时高于该门限。默认tr=100ps、tick=200ps满足包含等号的合法范围。
+If a concrete model, tool, or execution problem appears, investigate it as needed before continuing.
+Iterate by editing the declared deliverable and using public development benches to diagnose observed behavior.
+Do not repeatedly enumerate files, reread unchanged references, or retry unchanged discovery commands instead of editing and simulating.

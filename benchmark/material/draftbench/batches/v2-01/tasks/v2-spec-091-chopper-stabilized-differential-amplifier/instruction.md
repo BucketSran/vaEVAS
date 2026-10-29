@@ -1,81 +1,72 @@
-# Chopper-Stabilized Differential Amplifier
+# Chopper-stabilized differential amplifier
 
-## Task Contract
+Build the three-module chopper-stabilized differential amplifier. The gain core chops, adds offset, amplifies, and demodulates. The low-pass module keeps the synchronous state. The top module only connects those two helpers.
 
-Implement a three-module L2 behavioral model of a chopper-stabilized differential amplifier. The circuit must compose input chopping and offset-bearing gain with a separate synchronous event-driven low-pass stage. This is a complete signal-flow model, not a bare sign chopper, sampled auto-zero store, or trim servo.
+## Spec
 
-Target artifacts: `dut.va`, `chopper_gain_core.va`, and `synchronous_lp_state.va`.
+This is a signal-flow model with those two helper duties. It is not a bare sign chopper, a sampled auto-zero store, or a trim servo. Instance names, internal node names, and legal Verilog-A expression style are free. The helper port order, port roles, and which module performs which duty are not free.
 
-## Public Verilog-A Interface
+`/app/circuit.va` declares the top module `chopper_stabilized_differential_amplifier`. Every top port is electrical. The positional order is `vinp`, `vinn`, `chop_clk`, `rst`, `enable`, `hold`, `voutp`, `voutn`, `settled`, `offset_residual`. `vinp`, `vinn`, `chop_clk`, `rst`, `enable`, and `hold` are inputs. `voutp`, `voutn`, `settled`, and `offset_residual` are outputs.
 
-Declare this positional electrical interface exactly:
+`/app/chopper_gain_core.va` declares `chopper_gain_core`. `/app/synchronous_lp_state.va` declares `synchronous_lp_state`. Helper ports are electrical. Positional order and role are fixed. Local port identifiers may differ. The published names below are the roles.
 
-```verilog
-module chopper_stabilized_differential_amplifier(
-    vinp, vinn, chop_clk, rst, enable, hold,
-    voutp, voutn, settled, offset_residual
-);
-```
+`chopper_gain_core` ports, in order: `vinp`, `vinn`, `chop_clk`, `rst`, `enable`, `hold`, `demod_sample`, `baseband_ref`, `event_strobe`. The first six are inputs and match the top inputs. The last three are outputs. On both chop edges, this module forms the demodulated sample and the baseband reference, then notifies the low-pass. `demod_sample = gain*(vinp-vinn) + polarity*gain*vos_amp`. `baseband_ref = gain*(vinp-vinn)`. Reset or disable clears the samples and the notification. Hold blocks an update. The samples are established before the notification starts. `event_strobe` toggles once per valid sample. The toggle is delayed by `2*tr` and uses a transition of length `tr`. Its public parameters are `vdd`, `vss`, `vth`, `gain`, `vos_amp`, and `tr`, with the same defaults as the top.
 
-`vinp`, `vinn`, `chop_clk`, `rst`, `enable`, and `hold` are inputs. `voutp`, `voutn`, `settled`, and `offset_residual` are outputs.
+`synchronous_lp_state` ports, in order: `demod_sample`, `baseband_ref`, `event_strobe`, `rst`, `enable`, `hold`, `voutp`, `voutn`, `settled`, `offset_residual`. It consumes the two samples and both directions of the `event_strobe` crossing. It drives the four public outputs. Its public parameters are `vdd`, `vss`, `vcm`, `vth`, `gain`, `lp_alpha`, `settle_tol`, `settle_cycles`, and `tr`, with the same defaults as the top.
 
-Also declare helper modules `chopper_gain_core` and `synchronous_lp_state`. The top module must instantiate both helpers and connect them through electrical internal demodulated-sample and event-strobe nodes.
+The top instantiates both public helpers, passes compatible values of only those public parameters, connects the core outputs to the low-pass inputs, and connects the low-pass outputs to the public outputs. Do not redo a helper duty in the top, or in a private copy, while leaving the public helper unused or empty. Extra private modules are allowed when they do not bypass a public helper. A delivered file must not include another delivered `.va` file. `constants.vams` and `disciplines.vams` remain available. The verifier loads the three files independently.
 
-## Public Parameter Contract
+Declare these overrideable parameters on the top and pass the matching subset to each helper.
 
-- `vdd = 0.9 V`, `vss = 0.0 V`, and `vcm = 0.45 V` define the output rails and common mode.
-- `vth = 0.45 V` is the control threshold.
-- `gain = 3.0` is the differential baseband gain.
-- `vos_amp = 20 mV` is the internal offset added after input chopping and before amplification.
-- `lp_alpha = 0.25` is the low-pass update fraction, with `0 < lp_alpha <= 1`.
-- `settle_tol = 20 mV` and integer `settle_cycles = 3` define convergence qualification.
-- `tr = 100 ps` is output transition smoothing time.
+- `vdd` = 0.9 V, `vss` = 0.0 V, and `vcm` = 0.45 V. Output rails and common mode.
+- `vth` = 0.45 V. Control threshold.
+- `gain` = 3.0. Differential baseband gain.
+- `vos_amp` = 20 mV. Internal offset added after input chopping and before amplification.
+- `lp_alpha` = 0.25. Low-pass update fraction. The legal domain is `0 < lp_alpha <= 1`.
+- `settle_tol` = 20 mV and integer `settle_cycles` = 3. Convergence qualification.
+- `tr` = 100 ps. Output transition smoothing time.
 
-## Required Behavior
+No other parameter range is stated.
 
-At every rising and falling `chop_clk` threshold crossing while enabled, not reset, and not held:
+At every rising and falling `chop_clk` threshold crossing, while enabled, not in reset, and not held:
 
-1. Multiply `vinp-vinn` by the current chopper polarity.
+1. Multiply `vinp - vinn` by the current chopper polarity.
 2. Add `vos_amp` inside the amplifier and apply `gain`.
-3. Synchronously demodulate by the same polarity. The desired differential input therefore returns to baseband with gain, while amplifier offset alternates polarity.
-4. Update the retained low-pass state by `lp_alpha` toward that demodulated sample.
+3. Demodulate by that same polarity. The desired differential input returns to baseband with gain. The amplifier offset alternates polarity.
+4. Move the retained low-pass state a fraction `lp_alpha` of the way from its previous value to that demodulated sample: `state = (1-lp_alpha)*state + lp_alpha*demod_sample`.
 
-Drive `voutp-voutn` from the retained low-pass state, centered on `vcm` and limited to the `vss`/`vdd` rails. Drive `offset_residual` to the retained state minus `gain*(vinp-vinn)` sampled at the most recent active update. Assert `settled` after `settle_cycles` consecutive active updates whose absolute residual is at most `settle_tol`.
+`voutp` and `voutn` are that retained state, centered on `vcm` and limited to `[vss, vdd]`: `voutp = clamp(vcm + state/2, vss, vdd)` and `voutn = clamp(vcm - state/2, vss, vdd)`. `offset_residual` is the retained state minus `gain*(vinp-vinn)` sampled at the most recent active update. It is not given a separate clamp. `settled` is asserted after `settle_cycles` consecutive active updates whose absolute residual is at most `settle_tol`. An active update whose absolute residual is greater than `settle_tol` clears that consecutive count.
 
-Active-high `rst` or low `enable` asynchronously clears the retained differential state, residual, convergence count, and `settled`; the differential outputs return to zero around `vcm`. While `hold` is high, preserve all retained state and outputs exactly. Resume event-driven filtering on later chopper edges after hold is released.
+`rst` high or `enable` low asynchronously clears the retained differential state, the residual, the convergence count, and `settled`. The differential outputs return to zero around `vcm`, so both sit at `vcm`. This clear also applies while `hold` is high. While `hold` is high and the circuit is enabled and not in reset, keep every retained state and every output exactly as it is. Later chopper edges resume the filter after hold is released.
 
-## 实现与修改边界
+The core builds the ideal `demod_sample` and `baseband_ref` first. The public outputs may finish within `4*tr` after the chop crossing. Final evaluation has six conditions: two original behavior conditions, one producer-component condition, one consumer-component condition, and two top-level substitute conditions. A component test uses a fixed top and a known-conforming partner component. A top substitute test keeps the submitted top and the other submitted helper.
 
-按公开接口建立电压域行为模型。实现方法与合法Verilog-A表达方式由求解者选择。不得读取评分材料或重放固定测试答案。只修改交付源码，固定激励及评分程序保持不变。
+The producer substitute keeps the control, notification, and reset contract, and on every valid sample supplies `demod_sample = baseband_ref = 0.16 V`. The low-pass must consume those values. The consumer substitute directly supplies `voutp = 0.22 V`, `voutn = 0.67 V`, `settled = 0.9 V`, and `offset_residual = 0.14 V`. The top must present those values on the matching ports. Those consumer voltages are direct contributions from the start of simulation. Do not rewrite them with the normal reset equations. The producer substitute still follows the control and reset timing. Do not recompute a substitute port from the original `vin` and ignore the substitute.
 
-## Output Contract
+Initial levels and edges are unambiguous. `chop_clk`, `rst`, `enable`, and `hold` never rest at `vth`. Each of them that reaches `vth` always crosses it; it never touches `vth` and returns to the same side. Independent control edges are at least `2*tr` apart. The analog inputs are continuous at a sample. Supplies stay fixed. The control threshold is `vth`. Simultaneous events that this contract does not define are not scored.
 
-Return exactly these complete source files and no other artifact:
+Voltage error is at most 2 mV. Every saved point is scored, for all four public outputs, except points less than `4.1*tr` after t = 0 or after an event that changes the target of any public output: a `chop_clk` crossing while enabled, not in reset, and not held, or a clear by `rst` or `enable`. In the consumer-substitute condition, every saved point from t = 0 is scored against the substitute voltages. A scored waveform uses a time step no coarser than one quarter of the shortest output transition. Final evaluation may change inputs and parameters inside this contract.
 
-- `dut.va`
-- `chopper_gain_core.va`
-- `synchronous_lp_state.va`
+An executed attempt that fails a required check scores 0. The failure cause is recorded separately. A zero that comes from the simulator, the bench, or other infrastructure does not by itself show that the submitted Verilog-A behavior is wrong. Acceptance uses the fixed Spectre backend.
 
-## 固定评测合同
+## Deliverable
 
-后端固定为Spectre，运行版本和容器身份随校准记录保存。公开自测是public/visible_test.scs，交付物位于/work/dut.va及声明的其他源码。初态、输入范围和同时刻事件遵循下面补充合同。终评可以改变同一合同内的输入和参数。电压误差不超过2mV，输出过渡结束后的保持区间逐点检查；时间分辨率不超过最短过渡的四分之一。
+- Edit `/app/circuit.va`, `/app/chopper_gain_core.va`, and `/app/synchronous_lp_state.va`. The evaluator collects each of these files. It does not collect only one file.
+- `/app/circuit.va` defines `chopper_stabilized_differential_amplifier` and instantiates the two helpers. `/app/chopper_gain_core.va` defines `chopper_gain_core`. `/app/synchronous_lp_state.va` defines `synchronous_lp_state`. You may rewrite a helper body. You still have to keep its port roles and its duty.
+- The submitted models must not read grading files, replay stored answers, or start external processes. You may read this instruction, the starter, and the public testbench, and you may run the public check. Do not edit the public testbench.
 
-输入初态及边沿保持明确，控制不恰好停在门限，独立控制边沿互相至少隔开两倍输出过渡时间。模拟输入在采样时连续。电源固定，控制门限采用题面注明的参考轨。未规定的同刻事件不评分。各模块的初态以本题补充合同为准。
+From `/app`, run `python3 testbench/check.py --output /app/output/public-check`.
 
-内部core先建立理想demod_sample和baseband_ref，再经2*tr延迟加tr过渡的event_strobe通知LP；最终输出允许在输入chop交点后4*tr内完成。内部职责及传递必须保留。
+[testbench/README.md](testbench/README.md) describes that check. The public bench sources stay visible, including [testbench/visible_test.scs](testbench/visible_test.scs). Tool version, timeouts, and diagnostics are in that README.
 
-## 固定系统连接合同 system-interfaces-v2
+This is an implementation task, not a repository-audit task.
+Work in /app and modify only the declared deliverables; do not edit public development benches, model libraries, or external fixtures.
+Make one bounded inspection pass over this instruction, the declared deliverables, supplied starter material, and public development benches.
+As the task solver, create a runnable candidate in every file named in the Deliverable section before beginning detailed exploration, and keep those files updated as you work.
+If your working time expires, the evaluator copies those files exactly as they exist at that moment and runs the verifier on them.
+If any declared file is missing or empty, the result is zero reward.
+Temporary files are not submitted.
 
-本版本固定 helper 的接口角色、职责及可替换性，用独立组件和顶层消费实验验收真实模块协作。实现中的实例名、内部节点名、状态表达式和合法 Verilog-A 写法由你选择。下列 helper 端口全部为 electrical，顺序与角色固定；局部端口变量名可以不同。
-
-`chopper_gain_core(vinp,vinn,chop_clk,rst,enable,hold,demod_sample,baseband_ref,event_strobe)` 负责两种 chop 边沿的斩波、带 offset 的增益及同步解调。demod_sample 为 gain*(vinp-vinn)+polarity*gain*vos_amp，baseband_ref 为 gain*(vinp-vinn)；reset/disable 清零样本与通知，hold 禁止更新。样本在通知开始前建立，event_strobe 每次有效样本翻转，延迟 2*tr 后以 tr 过渡通知。公开参数为 vdd、vss、vth、gain、vos_amp、tr，默认值与顶层一致。
-
-`synchronous_lp_state(demod_sample,baseband_ref,event_strobe,rst,enable,hold,voutp,voutn,settled,offset_residual)` 消费 core 的两个样本及两方向通知 crossing，以公开 lp_alpha 递推低通；残差为低通状态减实际 baseband_ref，settled 按公开次数累计。它驱动四个公开输出并按原合同复位。公开参数为 vdd、vss、vcm、vth、gain、lp_alpha、settle_tol、settle_cycles、tr，默认值与顶层一致。顶层将实际 core 输出连接到 LP 输入，并将实际 LP 输出连接到公开输出。
-
-producer 替身保持控制及通知合同，但每次有效采样提供 demod_sample=baseband_ref=0.16 V。LP 必须消费这些值。consumer 替身直接提供 voutp=0.22 V、voutn=0.67 V、settled=0.9 V、offset_residual=0.14 V；顶层必须将这些值呈现在对应端口。
-
-顶层必须实例化上述两个 public helper，传递兼容的公开参数，并真实使用其连接值。不得在顶层或另一套私有副本中重做 helper 的职责、同时只保留无关或空的 public helper。每个 public helper 定义放在对应同名 .va 交付文件中；dut.va 定义公开顶层。评分器独立载入这些文件，源码不得 include 另一份交付 .va。标准 constants.vams、disciplines.vams 不受影响。额外私有模块可以使用，但不得绕过 public helper 职责。顶层对 helper 的参数覆盖只使用上列公开参数，保证公开兼容替身可独立替换。
-
-终评共六个条件：两组原行为条件，分别独立测试 producer/consumer 的两个组件条件，以及两个顶层替身条件。组件测试使用固定顶层和已知合规的另一组件。顶层替身测试保留你的真实顶层及另一真实 helper；替身仅改变上述公开边界值，检查消费关系，不能用原始 vin 重算而忽略替身。consumer 替身的数值是直接电压贡献，从仿真初态起就应呈现在公开输出，不按正常电路复位公式重写。producer 的替身输出仍遵循原有控制及复位时序。
-
-此版本升级公开 helper 接口及验收方式。旧版只有顶层波形评分，旧 prompt 和成绩保留为旧版本，不能作为本版本通过证据。
+If a concrete model, tool, or execution problem appears, investigate it as needed before continuing.
+Iterate by editing the declared deliverables and using public development benches to diagnose observed behavior.
+Do not repeatedly enumerate files, reread unchanged references, or retry unchanged discovery commands instead of editing and simulating.

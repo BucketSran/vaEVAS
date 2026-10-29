@@ -1,0 +1,35 @@
+{
+ "task": "v2-spec-396-quadrature-lo-generator-divided-clock",
+ "cases": [
+  "contract-base",
+  "contract-stretched-input",
+  "running-reset-reassert"
+ ],
+ "checker_failure": "a scored output sample more than atol (2 mV) from the expected value (tests/v2_spec.py:205-208)",
+ "semantics": "F01 scoring start, user-confirmed 2026-10-28 (option A): tests/v2_spec.py:188 skips points less than 1.15*tr after t = 0 or after an event that changes an output target (a qualified rising clk_in crossing or a clear by rst or enable, :105-108); the instruction states this rule and the checker is unchanged. Candidates differ from solution/ only in output delay or transition time.",
+ "conditions": {},
+ "candidates": [
+  {
+   "name": "late_transition_1p3tr",
+   "group": "wrong",
+   "must_reject": [
+    "contract-base",
+    "contract-stretched-input",
+    "running-reset-reassert"
+   ],
+   "must_accept": [],
+   "author_synthetic_control": "late-shift-60ps"
+  },
+  {
+   "name": "inwindow_transition_1p1tr",
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
+    "contract-base",
+    "contract-stretched-input",
+    "running-reset-reassert"
+   ],
+   "author_synthetic_control": "inwindow-shift-20ps"
+  }
+ ]
+}

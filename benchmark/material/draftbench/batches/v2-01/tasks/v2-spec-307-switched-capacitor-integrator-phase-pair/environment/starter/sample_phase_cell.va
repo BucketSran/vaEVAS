@@ -1,0 +1,9 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module sample_phase_cell(vin,phi1,phi2,rst,enable,sample_node,sample_valid);
+input vin,phi1,phi2,rst,enable;
+output sample_node,sample_valid;
+electrical vin,phi1,phi2,rst,enable,sample_node,sample_valid;
+// TODO: implement the public contract.
+endmodule

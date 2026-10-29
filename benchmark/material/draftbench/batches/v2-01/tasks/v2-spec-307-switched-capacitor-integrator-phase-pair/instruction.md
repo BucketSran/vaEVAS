@@ -1,74 +1,62 @@
-# Switched-capacitor Integrator Phase Pair
+# Switched-capacitor integrator phase pair
 
-## Task Contract
+Build the three-module switched-capacitor integrator. One helper samples on `phi1`. The other consumes that sample on `phi2` and integrates it. The top module only connects those two helpers.
 
-Implement a Verilog-A DUT source package for a multi-module mixed-signal behavioral system.
+## Spec
 
-- Target artifacts: `dut.va`, `sample_phase_cell.va`, `integrator_state_cell.va`
-- Public top module: `switched_cap_integrator_phase_pair_top`
-- Required public modules: `switched_cap_integrator_phase_pair_top`, `sample_phase_cell`, `integrator_state_cell`
+`/app/circuit.va` declares the top module `switched_cap_integrator_phase_pair_top`. Every top port is electrical. The positional order is `vin`, `phi1`, `phi2`, `rst`, `enable`, `vout`, `phase_metric`, `valid`. The top sentence says the ports are electrical and gives this order. It does not itself print the words input and output. The system contract below says the integrator drives the three public outputs, and the top reads `vin` and the controls into the sampler.
 
-The submitted package may include helper modules, but it must include the target artifacts and public modules listed above. The public top module is the top-level DUT entry point; helper modules must be part of the returned DUT source package, not verification harness code.
+`/app/sample_phase_cell.va` declares `sample_phase_cell`. `/app/integrator_state_cell.va` declares `integrator_state_cell`. Helper ports are electrical. Positional order and role are fixed. Local port identifiers may differ. The published names below are the roles.
 
-## Public Verilog-A Interface
+`sample_phase_cell` ports, in order: `vin`, `phi1`, `phi2`, `rst`, `enable`, `sample_node`, `sample_valid`. The first five are inputs. `sample_node` and `sample_valid` are outputs. On a legal rising `phi1`, store the actual `vin` on `sample_node` and drive `sample_valid` to `vdd`. If `phi2` is already above `vth` at that edge, do not accept the sample. Reset or disable sets `sample_node` to `vcm` and `sample_valid` to `vss`. The `sample_node` transition finishes before the following normal `phi2`. Its public parameters are `vdd`, `vss`, `vcm`, `vth`, and `tr`, with the same defaults as the top.
 
-Declare top module `switched_cap_integrator_phase_pair_top` with positional electrical ports `vin, phi1, phi2, rst, enable, vout, phase_metric, valid`. All top-level ports are electrical.
+`integrator_state_cell` ports, in order: `phi1`, `phi2`, `rst`, `enable`, `sample_node`, `sample_valid`, `vout`, `phase_metric`, `valid`. The first six are inputs. `vout`, `phase_metric`, and `valid` are the three public outputs this module drives. On a legal rising `phi2` it consumes the actual `sample_node` and `sample_valid`. One accepted `phi1` may be consumed only once. The increment is `k_int*(sample_node-vcm)`. Overlap, a repeated `phi2`, and reset follow the rules below. Its public parameters are `vdd`, `vss`, `vcm`, `vth`, `tr`, and `k_int`, with the same defaults as the top.
 
-Each required public helper module must be declared in one of the returned source artifacts. The helper interfaces and responsibilities are fixed by the versioned system contract below. The top module must expose exactly the public top-level port order above.
+The top instantiates both public helpers, passes compatible values of only those public parameters, connects the sampler outputs to the integrator inputs, and connects the integrator outputs to the public outputs. Do not redo a helper duty in the top, or in a private copy, while leaving the public helper unused or empty. Extra private modules are allowed when they do not bypass a public helper. A delivered file must not include another delivered `.va` file. `constants.vams` and `disciplines.vams` remain available. The verifier loads the three files independently. Use voltage-domain state and voltage contributions on the public electrical outputs. Do not add a pass or fail flag. The only public results are the named ports.
 
-## Public Parameter Contract
+Declare these overrideable parameters on the top and pass the matching subset to each helper. No legal range is stated beyond the values and equations here.
 
-Provide these overrideable public parameters on the top module and propagate compatible values to helper modules where needed:
+- `vdd` = 0.9 V. Logic high and upper output rail.
+- `vss` = 0.0 V. Logic low and lower output rail.
+- `vcm` = 0.45 V. Signal common-mode reference.
+- `vth` = 0.45 V. Threshold for a voltage-coded control.
+- `tr` = 200 ps. Output transition smoothing time.
+- `k_int` = 0.2. Integration increment per accepted phase pair.
 
-- `vdd = 0.9 V`: logic high and upper output rail.
-- `vss = 0.0 V`: logic low and lower output rail.
-- `vcm = 0.45 V`: signal common-mode reference.
-- `vth = 0.45 V`: threshold for voltage-coded control inputs.
-- `tr = 200 ps`: output transition smoothing time.
-- `k_int = 0.2`: integration increment per phase pair.
+`phase_metric` starts at `vcm`. While `rst` is high or `enable` is low, clear the sample validity, set the integrator state to `vcm`, drive `vout` to `vcm`, drive `phase_metric` to `vcm`, and drive `valid` to `vss`. This clear is asynchronous. The sampler uses the same clear for `sample_node` and `sample_valid`.
 
-## Required Behavior
+On a rising `phi1` edge, while enabled and not in reset, sample `vin` when `phi2` is not above `vth`. That saved voltage is `vin` itself. The deviation from `vcm` is applied later, at the integrator. On the following rising `phi2` edge, when `phi1` is not above `vth` and a new sample is still valid, update the integrator state `q` to `q_next = clamp(q + k_int*(sample_node-vcm), vss, vdd)`, where `clamp(x, vss, vdd)` limits `x` to `[vss, vdd]`. Drive `vout` to `q_next`. The clamped value is the stored state, so the integrator keeps no accumulation beyond a rail. After it saturates, the first accepted pair with an opposite-direction increment moves `vout` away from that rail. On an accepted pair, `phase_metric` is the most recent accepted `phi1` sample, clamped to `[vss, vdd]`, and `valid` is `vdd`. Then that sample is spent.
 
-- On reset or when disabled, clear the integration state, drive `vout` to `vcm`, and clear `valid`.
-- On a rising `phi1` crossing, sample the input deviation from `vcm` into the sampling state.
-- On the following rising `phi2` crossing, add `k_int` times the sampled deviation to the integrator state.
-- Reject overlapping `phi1` and `phi2` updates by holding the previous state and lowering `valid` for that cycle.
-- Expose the most recent accepted phase pair on `phase_metric` and clamp `vout` to the rails.
-- Use only voltage-domain behavioral state and voltage contributions on public electrical outputs.
-- Do not expose pass/fail flags; expose only the public observable metrics named in the interface.
+If the two phases overlap, or a rising `phi2` arrives without a new accepted `phi1`, hold the previous integrator state and `phase_metric`, and drive `valid` to `vss` for that cycle. A normal pair keeps the phases at least `4*tr` apart, and the sample transition has finished before that `phi2`.
 
-## 实现与修改边界
+Final evaluation has six conditions: two original behavior conditions, one producer-component condition, one consumer-component condition, and two top-level substitute conditions. A component test uses a fixed top and a known-conforming partner component. A top substitute test keeps the submitted top and the other submitted helper.
 
-按公开接口建立电压域行为模型。实现方法与合法Verilog-A表达方式由求解者选择。不得读取评分材料或重放固定测试答案。只修改交付源码，固定激励及评分程序保持不变。
+The producer substitute keeps the sample-valid, control, and reset contract, and on every valid `phi1` supplies `sample_node = 0.62 V`. The integrator must consume that value. The consumer substitute directly supplies `vout = 0.63 V`, `phase_metric = 0.22 V`, and `valid = 0 V`. The top must present those values on the matching ports. Those consumer voltages are direct contributions from the start of simulation. Do not rewrite them with the normal reset equations. The producer substitute still follows the control and reset timing. Do not recompute a substitute port from the original `vin` and ignore the substitute.
 
-## Output Contract
+Initial levels and edges are unambiguous. `phi1`, `phi2`, `rst`, and `enable` never rest at `vth`. Each of them that reaches `vth` always crosses it; it never touches `vth` and returns to the same side. Independent control edges are at least `2*tr` apart. `vin` is continuous at a sample. Supplies stay fixed. The control threshold is `vth`. Simultaneous events that this contract does not define are not scored.
 
-Return exactly these complete source artifacts:
+Voltage error is at most 2 mV. Each public output reaches its new value within `tr` after the event that changes it. Every saved point is scored, for all three public outputs, except points less than `1.15*tr` after t = 0 or after an event that changes the target of any public output: a rising `phi2` crossing, or a clear by `rst` or `enable`. In the consumer-substitute condition, every saved point from t = 0 is scored against the substitute voltages. A scored waveform uses a time step no coarser than one quarter of the shortest output transition. Final evaluation may change inputs and parameters inside this contract.
 
-- `dut.va`
-- `sample_phase_cell.va`
-- `integrator_state_cell.va`
+An executed attempt that fails a required check scores 0. The failure cause is recorded separately. A zero that comes from the simulator, the bench, or other infrastructure does not by itself show that the submitted Verilog-A behavior is wrong. Acceptance uses the fixed Spectre backend.
 
-## 固定评测合同
+## Deliverable
 
-后端固定为Spectre，运行版本和容器身份随校准记录保存。公开自测是public/visible_test.scs，交付物位于/work/dut.va及声明的其他源码。初态、输入范围和同时刻事件遵循下面补充合同。终评可以改变同一合同内的输入和参数。电压误差不超过2mV，输出过渡结束后的保持区间逐点检查；时间分辨率不超过最短过渡的四分之一。
+- Edit `/app/circuit.va`, `/app/sample_phase_cell.va`, and `/app/integrator_state_cell.va`. The evaluator collects each of these files. It does not collect only one file.
+- `/app/circuit.va` defines `switched_cap_integrator_phase_pair_top` and instantiates the two helpers. `/app/sample_phase_cell.va` defines `sample_phase_cell`. `/app/integrator_state_cell.va` defines `integrator_state_cell`. You may rewrite a helper body. You still have to keep its port roles and its duty.
+- The submitted models must not read grading files, replay stored answers, or start external processes. You may read this instruction, the starter, and the public testbench, and you may run the public check. Do not edit the public testbench.
 
-输入初态及边沿保持明确，控制不恰好停在门限，独立控制边沿互相至少隔开两倍输出过渡时间。模拟输入在采样时连续。电源固定，控制门限采用题面注明的参考轨。未规定的同刻事件不评分。各模块的初态以本题补充合同为准。
+From `/app`, run `python3 testbench/check.py --output /app/output/public-check`.
 
-phase_metric初态与复位值为vcm，接受时编码最近phi1的采样值夹到电源轨。一次phi1只能供一次phi2积分，缺少新phi1的重复phi2必须拒绝。reset/disable异步清空采样有效性与积分。内部sample节点过渡必须在phi2之前完成，正常两相间隔至少4*tr。
+[testbench/README.md](testbench/README.md) describes that check. The public bench sources stay visible, including [testbench/visible_test.scs](testbench/visible_test.scs). Tool version, timeouts, and diagnostics are in that README.
 
-## 固定系统连接合同 system-interfaces-v2
+This is an implementation task, not a repository-audit task.
+Work in /app and modify only the declared deliverables; do not edit public development benches, model libraries, or external fixtures.
+Make one bounded inspection pass over this instruction, the declared deliverables, supplied starter material, and public development benches.
+As the task solver, create a runnable candidate in every file named in the Deliverable section before beginning detailed exploration, and keep those files updated as you work.
+If your working time expires, the evaluator copies those files exactly as they exist at that moment and runs the verifier on them.
+If any declared file is missing or empty, the result is zero reward.
+Temporary files are not submitted.
 
-本版本固定 helper 的接口角色、职责及可替换性，用独立组件和顶层消费实验验收真实模块协作。实现中的实例名、内部节点名、状态表达式和合法 Verilog-A 写法由你选择。下列 helper 端口全部为 electrical，顺序与角色固定；局部端口变量名可以不同。
-
-`sample_phase_cell(vin,phi1,phi2,rst,enable,sample_node,sample_valid)` 在合法 phi1 保存实际 vin 到 sample_node，sample_valid 按有效性编码到 vdd/vss；重叠 phi2 时不得接受，reset/disable 将 sample_node 清为 vcm、sample_valid 清为 vss。sample_node 的过渡在后续正常 phi2 前完成。公开参数为 vdd、vss、vcm、vth、tr，默认值与顶层一致。
-
-`integrator_state_cell(phi1,phi2,rst,enable,sample_node,sample_valid,vout,phase_metric,valid)` 在合法 phi2 消费实际 sample_node/sample_valid，一次 phi1 只允许一次消费，以 k_int*(sample_node-vcm) 增量积分，驱动三个公开输出；重叠、重复 phi2 及复位行为遵循原合同。公开参数为 vdd、vss、vcm、vth、tr、k_int，默认值与顶层一致。顶层将采样模块的真实输出连接到积分模块输入，并将积分模块的输出连接到公开输出。
-
-producer 替身保持采样有效性、控制及复位合同，但每次有效 phi1 提供 sample_node=0.62 V。积分模块必须消费该值。consumer 替身直接提供 vout=0.63 V、phase_metric=0.22 V、valid=0 V；顶层必须将这些值呈现在对应端口。
-
-顶层必须实例化上述两个 public helper，传递兼容的公开参数，并真实使用其连接值。不得在顶层或另一套私有副本中重做 helper 的职责、同时只保留无关或空的 public helper。每个 public helper 定义放在对应同名 .va 交付文件中；dut.va 定义公开顶层。评分器独立载入这些文件，源码不得 include 另一份交付 .va。标准 constants.vams、disciplines.vams 不受影响。额外私有模块可以使用，但不得绕过 public helper 职责。顶层对 helper 的参数覆盖只使用上列公开参数，保证公开兼容替身可独立替换。
-
-终评共六个条件：两组原行为条件，分别独立测试 producer/consumer 的两个组件条件，以及两个顶层替身条件。组件测试使用固定顶层和已知合规的另一组件。顶层替身测试保留你的真实顶层及另一真实 helper；替身仅改变上述公开边界值，检查消费关系，不能用原始 vin 重算而忽略替身。consumer 替身的数值是直接电压贡献，从仿真初态起就应呈现在公开输出，不按正常电路复位公式重写。producer 的替身输出仍遵循原有控制及复位时序。
-
-此版本升级公开 helper 接口及验收方式。旧版只有顶层波形评分，旧 prompt 和成绩保留为旧版本，不能作为本版本通过证据。
+If a concrete model, tool, or execution problem appears, investigate it as needed before continuing.
+Iterate by editing the declared deliverables and using public development benches to diagnose observed behavior.
+Do not repeatedly enumerate files, reread unchanged references, or retry unchanged discovery commands instead of editing and simulating.
