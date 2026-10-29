@@ -371,7 +371,7 @@ python3 -B scripts/regression_gate.py compare runs/<task>/complete.json --repo .
 
 `regression_context_registration.py` 校验一个预先授权的追加事务。新 loader
 支持 `--registration-bundle <directory>`；该目录只提供不可信数据，不能指定代码
-或审批来源。`report.json` 保存新判据在旧 DUT 上的完整实际报告，另外九个固定
+或审批来源。`report.json` 保存新判据的完整实际报告（E1），另外九个固定
 文件名为 `composition_recipe`、`snapshot_manifest`、`dut_build`、`kernel_binary`、
 `collector_manifest`、`artifact_manifest`、`stdout`、`stderr` 和 `shard_reports`。
 各文件的原始 bytes 由先前可信主线的授权记录锁定。完整快照、所有分片、实际
@@ -379,7 +379,7 @@ DUT/kernel、环境及旧新义务映射均参与核验；夹具测试不能替�
 每个原始分片的 `input_identity` 须与实际元数据、来源和所选方法的摘要一致，
 执行环境中的分片标签须匹配该报告的分片序号及总数；精确预授权不能豁免这两项检查。
 
-登记顺序是先在已审主线安装校验器，再取得新判据/旧 DUT 的完整证据并独审，
+登记顺序是先在已审主线安装校验器，再取得新判据的完整证据并独审，
 将精确授权追加到既有 `regression-v1.review.json` 的
 `context_registration_authorizations`，最后另提一个只改固定 baseline 的追加事务。
 授权须先进入事件选择的可信 base；HEAD 的授权、同名源码和未提交修改不能授予权限。
@@ -387,9 +387,54 @@ DUT/kernel、环境及旧新义务映射均参与核验；夹具测试不能替�
 CI，不得沿用旧 criteria/collector ID，也不得在未知 context 失败后改用 HEAD 基线。
 
 普通可信比较先执行，拒绝时不读取 HEAD 或新证据。追加流程还要求旧 context 的
-改进保留检查通过、旧新 DUT/binary 和语言/runtime/invocation 相同，全部旧义务有
-精确映射。新 skip/xfail、丢失义务、非通过身份不全或任意证据哈希不符均拒绝。
+改进保留检查通过、语言/runtime/invocation 相同、旧新 DUT/binary 相同（例外见下一节），
+全部旧义务有精确映射。新 skip/xfail、丢失义务、非通过身份不全或任意证据哈希不符均拒绝。
 JSON 中的 reviewer 字段仅记录已审主线的决定，不认证独立审查者身份。
+
+#### E1 在另一个 DUT 上运行
+
+登记运行在 main 的 DUT 上，记为 D0，由授权的 `current_dut` 绑定。批次 PR 改了 DUT 时，
+E1 在批次自己的 DUT 上运行，记为 D1。这时 D0 只绑登记运行，E1 绑它自己的执行主体。
+这是对“E1 必须在旧 DUT 上运行”的放松，只在以下条件全部满足时生效：
+
+- 授权的 `e1.execution_subject` 的 DUT 清单或内核与 `current_dut` 不同；
+- E1 的实际执行主体等于授权的主体；
+- `kernel_binary` 角色的哈希等于该主体的内核；
+- E1 的 DUT 清单等于快照中的 DUT 范围（`evas/src`、`evas/rust_core`）。
+
+任一条不满足，E1 仍按原规则绑到 D0：预期的数据或形状异常也退回 D0，未处理的异常中止登记。
+环境照旧逐项比较，只去掉 `kernel_sha256`。
+这一项是 DUT 内核的哈希（`ci_evidence.py` 的 `environment()`）。两边的这一项须各自等于
+自己 DUT 的内核。`kernel_mode`、`kernel_overrides` 等其余键仍须相同。
+
+D0 与 D1 不同时，映射只接受两种：
+- 旧义务全部为 `preserved`，即结果相同；
+- 未配对的新增义务全部为 passed。
+
+新增的 failed 或 error 拒绝，新增 skip、xfail、unexpected-success 照旧拒绝。
+`criterion-correction-reveals-old-dut-defect` 只在 D0 与 D1 相同时接受：DUT 变了以后，
+结果变化不能再归给判据更正。授权中的 E1 DUT 对与 `current_dut` 相等时，规则、检查顺序和
+拒绝消息都与此前相同。授权写错时可能不同：实际是同一 DUT，但 `current_dut` 写错，两版都会拒绝，
+只是消息不同。
+登记结果的 `registration_dut` 记下 D0（`current`）、D1（`e1`）和两者是否不同（`changed`）。
+
+这次放松附带三道约束，以后各批照此执行：
+1. 在本节只接受 `preserved` 与新增通过。`preserved` 只按已经独立审核的配对保持结果标签，
+   并不证明新旧义务是同一个问题。签名或身份变化的配对，要在审核时逐条呈现；
+   非空的理由文字或测试文件的字节变化，都不能当作变化原因的证明。
+   以后的 DUT 修复类别只能把 failed 或 error 变成 passed，且判据逐字节相同；
+   通过变失败或判据有改动的，走带标准线认可编号的期望改动类别。
+2. 放松单独成一个提交，送审时列为第一审查点：D0 与 D1 分开以后，能否让未经认可的
+   结果变化进入可信基线，或让一个 DUT 认证它自己。
+3. PR 正文和登记记录写明这次放松与这些约束。
+
+批次 PR 合入时，它的运行须与新登记的 context 逐条一致，由以下比较保证：
+- `regression_gate.py:549-569`（`compare_report`）要求原通过条件仍通过且签名不变，
+  本次出现的非通过条件须与已登记的条件逐条相同；`:543-548`、`:571-575` 另核对方法清单与夹具；
+- `regression_gate.py:781-796`（`validate_baseline_transition`）把多出来的通过和消失的
+  已登记非通过观察，都当作需要审核刷新的基线。
+
+比较按观察进行，不比较 DUT 身份。
 
 workflow 将引导锁定到已审主线 `72f1c2e4c22d8a2f743da8ec23101d022a3096d5`
 及 loader 的独立 SHA256。loader 只选择一次事件可信 base。普通 C0 比较允许且

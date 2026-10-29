@@ -114,8 +114,47 @@ def authorization(auth):
         sha(review[key], key)
 
 
+# The kernel hash in a run's environment is the DUT kernel (ci_evidence.environment()). E1 may run
+# on another DUT than D0; every other environment field still has to match the registration run.
+DUT_ENVIRONMENT = ('kernel_sha256',)
+
+
+def dut_pair(subject):
+    return {'manifest_sha256': subject['dut_files_sha256'], 'kernel_sha256': subject['kernel_sha256']}
+
+
+def backed_e1_dut(auth, blobs, payload, gate, e1):
+    """E1's own DUT when it differs from D0 and E1's evidence backs it, else None.
+
+    Backed means: E1's actual execution subject is the authorized one, the kernel_binary role is
+    that subject's kernel, and E1's DUT manifest is the snapshot's DUT scope. With None, every D0
+    binding in evidence() applies exactly as it did before E1 could run on another DUT. Expected
+    data or shape errors return None too; any other exception stops the registration.
+    """
+    try:
+        declared = auth['e1']['execution_subject']
+        dut = dut_pair(declared)
+        if dut == auth['current_dut'] or any(
+                not isinstance(value, str) or not re.fullmatch('[0-9a-f]{64}', value) for value in dut.values()):
+            return None
+        files = {row[0]: row[3] for row in payload['snapshot_manifest']['entries']}
+        scope = {path: checksum for path, checksum in files.items()
+                 if path.startswith(('evas/src/', 'evas/rust_core/'))
+                 and not {'__pycache__', 'target', 'baselines', '.git', 'runs'}.intersection(path.split('/'))}
+        if (raw_digest(blobs['kernel_binary']) != dut['kernel_sha256']
+                or encoded(gate.execution_subject(e1)) != encoded(declared)
+                or dict(e1['source_identity']['dut_files']) != scope):
+            return None
+    except (KeyError, TypeError, ValueError, IndexError, AttributeError, OverflowError):
+        return None
+    return dut
+
+
 def evidence(auth, blobs, gate, e1, entry, current_subject):
-    """Verify bound bytes/projections, not that a human or machine truly ran them."""
+    """Verify bound bytes/projections, not that a human or machine truly ran them.
+
+    Returns E1's own DUT (D1) when E1 ran on another DUT than the registration run's D0, else None.
+    """
     payload = {}
     for role, reference in auth['artifacts'].items():
         raw = blobs.get(role)
@@ -123,7 +162,8 @@ def evidence(auth, blobs, gate, e1, entry, current_subject):
             raise ValueError('missing or changed artifact bytes: ' + role)
         if role not in ('kernel_binary', 'stdout', 'stderr'):
             payload[role] = json.loads(raw)
-    if raw_digest(blobs['kernel_binary']) != auth['current_dut']['kernel_sha256']:
+    e1_dut = backed_e1_dut(auth, blobs, payload, gate, e1)
+    if e1_dut is None and raw_digest(blobs['kernel_binary']) != auth['current_dut']['kernel_sha256']:
         raise ValueError('retrievable binary differs from D0')
     provenance = entry['source_identity']
     exact(provenance, ['schema_version', 'snapshot_revision', 'snapshot_reference',
@@ -137,11 +177,22 @@ def evidence(auth, blobs, gate, e1, entry, current_subject):
     equal(provenance['artifact_manifest_sha256'], auth['artifacts']['artifact_manifest']['sha256'], 'provenance capture')
     subject = gate.execution_subject(e1)
     equal(subject, auth['e1']['execution_subject'], 'E1 actual execution subject')
-    for actual in (current_subject, subject):
-        equal({'manifest_sha256': actual['dut_files_sha256'], 'kernel_sha256': actual['kernel_sha256']},
-              auth['current_dut'], 'actual DUT/kernel against authorized D0')
-    equal(current_subject['comparison_subject']['environment'],
-          subject['comparison_subject']['environment'], 'actual environment profile')
+    if e1_dut is None:
+        for actual in (current_subject, subject):
+            equal({'manifest_sha256': actual['dut_files_sha256'], 'kernel_sha256': actual['kernel_sha256']},
+                  auth['current_dut'], 'actual DUT/kernel against authorized D0')
+        equal(current_subject['comparison_subject']['environment'],
+              subject['comparison_subject']['environment'], 'actual environment profile')
+    else:
+        # D0 binds only the registration run; E1 is bound to its own backed subject (D1).
+        equal(dut_pair(current_subject), auth['current_dut'], 'actual DUT/kernel against authorized D0')
+        before = current_subject['comparison_subject']['environment']
+        after = subject['comparison_subject']['environment']
+        equal({k: v for k, v in before.items() if k not in DUT_ENVIRONMENT},
+              {k: v for k, v in after.items() if k not in DUT_ENVIRONMENT}, 'actual environment profile')
+        equal(before.get('kernel_sha256'), auth['current_dut']['kernel_sha256'],
+              'registration run environment kernel against D0')
+        equal(after.get('kernel_sha256'), e1_dut['kernel_sha256'], 'E1 environment kernel against its own DUT')
     source = e1['source_identity']
     checked_manifest(source['criteria_files'], 'criteria manifest')
     if digest(source['criteria_files']) != e1['metadata']['criteria_id']:
@@ -267,9 +318,13 @@ def evidence(auth, blobs, gate, e1, entry, current_subject):
         equal([{key: shard[key] for key in keys} for shard in shards], e1['parts'], 'merged original parts')
     else:
         equal(shards[0], e1, 'whole single-shard raw')
+    return e1_dut
 
 
-def mapped_obligations(auth, gate, old, e1):
+def mapped_obligations(auth, gate, old, e1, dut_changed=False):
+    """Check the explicit old-to-new mapping. With E1 on another DUT than D0 (dut_changed), only
+    preserved old obligations and new passing obligations register: a changed outcome can no
+    longer be attributed to the criteria alone."""
     before, after = observations(gate, old), observations(gate, e1)
     mapping = auth['obligation_mapping']
     if not isinstance(mapping, list):
@@ -292,6 +347,8 @@ def mapped_obligations(auth, gate, old, e1):
             if before[a]['outcome'] != after[b]['outcome'] or item['attribution'] is not None:
                 raise ValueError('preserved obligation changed outcome')
         elif item['classification'] == 'criterion-correction-reveals-old-dut-defect':
+            if dut_changed:
+                raise ValueError('false-pass attribution needs E1 on the authorized D0')
             if before[a]['outcome'] != 'passed' or after[b]['outcome'] not in ('failed', 'error'):
                 raise ValueError('false-pass attribution has wrong outcomes')
             exact(item['attribution'], ['finding_id', 'counterexample', 'manual_reason'], 'false-pass attribution')
@@ -306,6 +363,8 @@ def mapped_obligations(auth, gate, old, e1):
     for key, condition in after.items():
         if condition['outcome'] in ('skipped', 'expected_failure', 'unexpected_success') and key not in seen_new:
             raise ValueError('new skip/xfail/unexpected-success observation')
+        if dut_changed and condition['outcome'] != 'passed' and key not in seen_new:
+            raise ValueError('new obligation on another DUT must pass: ' + key[0] + ':' + key[1])
 
 
 def validate_context_registration(gate, report, trusted_baseline, head_proposal,
@@ -406,8 +465,12 @@ def validate_context_registration(gate, report, trusted_baseline, head_proposal,
             raise ValueError('new entry structure or review invalid')
         equal(entry['execution_subject'], gate.execution_subject(e1), 'entry actual execution subject')
         current_subject = gate.execution_subject(current)
-        evidence(auth, artifact_blobs, gate, e1, entry, current_subject)
-        mapped_obligations(auth, gate, old, e1)
+        e1_dut = evidence(auth, artifact_blobs, gate, e1, entry, current_subject)
+        # D0 is the registration run's DUT, D1 the DUT that E1 actually ran on.
+        result['registration_dut'] = dict(current=copy.deepcopy(auth['current_dut']),
+                                          e1=copy.deepcopy(e1_dut or auth['current_dut']),
+                                          changed=e1_dut is not None)
+        mapped_obligations(auth, gate, old, e1, dut_changed=e1_dut is not None)
         review = auth['independent_review']
         equal(review['entry_sha256'], entry_hash, 'manual review exact entry')
         equal(review['evidence_sha256'], digest(auth['e1']), 'manual review exact evidence')
