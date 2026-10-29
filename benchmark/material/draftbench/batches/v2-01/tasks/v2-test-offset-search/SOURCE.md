@@ -49,7 +49,7 @@
 | `tests/cases.json` | `7d62fedd35e8527017610e86f4557c5094436175305ff0fdce6b5aa06bc12d02` | `98dde635b7a8f74b852f0f3e3b45a6b0dfb5d1f50b0851d55b27850f897d1a90` |
 
 - 本文件删去了改写写进来的一节“用例改动（NF-12a），待 Spectre 新旧对照”（含其中的状态行），改前全文存 `runs/t3-harbor30-20261027/first30-fix-r4/orig/v2-test-offset-search/SOURCE.md`；那一节之外的文字未改。
-- 依据：批次 D2 在 Spectre 21.1 上对照原件作业与改写版作业（D2 四包，2026-10-29 已正式核收；执行身份 `spectre-D2-must-public-v1（结果包 sha256 f0bbe69eb210f9ca…）`、`spectre-D2-must-private-a-v1（结果包 sha256 86f7892ab6d1302f…）`、`spectre-D2-must-private-b-v1（结果包 sha256 ed546a857219b69f…）`、`spectre-D2-must-alt-v1（结果包 sha256 e369364972507acf…）`）。本题 42 组（用例、候选）两版判决全部相同（24 组都通过、18 组都被拒）；14 题共 156 组两版判决相同。原件参考解在 Spectre 上可解。见 `runs/t3-spectre-batchD-20261028/preread-sui01-d2/PREREAD.md` 第 3 节与同目录 `decision1.json`。
+- 依据：批次 D2 在 Spectre 21.1 上对照原件作业与改写版作业（D2 四包，2026-10-29 已正式核收；执行身份 `spectre-D2-must-public-v1（结果包 sha256 f0bbe69eb210f9ca…）`、`spectre-D2-must-private-a-v1（结果包 sha256 86f7892ab6d1302f…）`、`spectre-D2-must-private-b-v1（结果包 sha256 ed546a857219b69f…）`、`spectre-D2-must-alt-v1（结果包 sha256 e369364972507acf…）`）。本题 42 组（用例、候选）两版判决全部相同（24 组都通过、18 组都被拒）；14 题共 156 组两版判决相同。原件参考解在 Spectre 上可解。见 Benchmark 的 D2 预读记录（本地 runs/ 下，未公开）第 3 节与同目录的 decision1.json。
 - 退回后的 1 个文件与 D2 快照原件 `runs/t3-spectre-batchD-20261028/d2/snapshot/original/16-v2-test-offset-search/` 逐字节相同，D2 的原件作业跑的就是这份。本轮没有为退回跑旧版 EVAS。
 - 这些写法回到 EVAS 一侧；#270、#276 的公开说明由主控转总协调，交 EVAS 线更新。
 - 上面 first30-fix-r1 一节的区间核验用的是 NF-12a 之后的用例。退回只把 `terminal-normal-negative` 的 offset 由 −0.0361 改回 −0.036；请求与响应的时刻由用例的 first_request、gap 与比较器 td 决定，与 offset 无关，所以那一节的区间表不受影响（推断，本轮未重测）。

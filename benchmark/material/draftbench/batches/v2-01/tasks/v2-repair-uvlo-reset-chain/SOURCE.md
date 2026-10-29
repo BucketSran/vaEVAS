@@ -35,7 +35,7 @@
 | `solution/files/enable.va` | `2e2ae744b28cb2d63ca4cbe14df7c83d987942ce20cb2ce7c825bf931939cac4` | `6b01e99a70c76df919158e06305f05b6bdb45f6e54e67cd69bf2b737329b0aea` |
 
 - 本文件删去了改写写进来的一节“改写（#270 NF-02 / NF-13），待 Spectre 新旧对照”（含其中的状态行），改前全文存 `runs/t3-harbor30-20261027/first30-fix-r4/orig/v2-repair-uvlo-reset-chain/SOURCE.md`；那一节之外的文字未改。
-- 依据：批次 D2 在 Spectre 21.1 上对照原件作业与改写版作业（D2 四包，2026-10-29 已正式核收；执行身份 `spectre-D2-must-public-v1（结果包 sha256 f0bbe69eb210f9ca…）`、`spectre-D2-must-private-a-v1（结果包 sha256 86f7892ab6d1302f…）`、`spectre-D2-must-private-b-v1（结果包 sha256 ed546a857219b69f…）`、`spectre-D2-must-alt-v1（结果包 sha256 e369364972507acf…）`）。本题 6 组（用例、候选）两版判决全部相同（3 组都通过、3 组都被拒）；14 题共 156 组两版判决相同。原件参考解在 Spectre 上可解。见 `runs/t3-spectre-batchD-20261028/preread-sui01-d2/PREREAD.md` 第 3 节与同目录 `decision1.json`。
+- 依据：批次 D2 在 Spectre 21.1 上对照原件作业与改写版作业（D2 四包，2026-10-29 已正式核收；执行身份 `spectre-D2-must-public-v1（结果包 sha256 f0bbe69eb210f9ca…）`、`spectre-D2-must-private-a-v1（结果包 sha256 86f7892ab6d1302f…）`、`spectre-D2-must-private-b-v1（结果包 sha256 ed546a857219b69f…）`、`spectre-D2-must-alt-v1（结果包 sha256 e369364972507acf…）`）。本题 6 组（用例、候选）两版判决全部相同（3 组都通过、3 组都被拒）；14 题共 156 组两版判决相同。原件参考解在 Spectre 上可解。见 Benchmark 的 D2 预读记录（本地 runs/ 下，未公开）第 3 节与同目录的 decision1.json。
 - 退回后的 4 个文件与 D2 快照原件 `runs/t3-spectre-batchD-20261028/d2/snapshot/original/28-v2-repair-uvlo-reset-chain/` 逐字节相同，D2 的原件作业跑的就是这份。本轮没有为退回跑旧版 EVAS。
 - 这些写法回到 EVAS 一侧；#270、#276 的公开说明由主控转总协调，交 EVAS 线更新。
 - `enable.va` 的四份副本（参考解 2 份、候选可见的起始模型 `environment/starter/enable.va` 与 `environment/input/enable.va`）回到原写法；`release.va` 未动。

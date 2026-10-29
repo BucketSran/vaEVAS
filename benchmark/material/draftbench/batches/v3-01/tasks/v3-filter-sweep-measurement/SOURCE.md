@@ -32,7 +32,7 @@
 | `solution/dut.va` | `6988d7d4254b68978243b91a04d177fd55b2e651182ca3363b4138e6b1af4338` | `3a774882ca3eab7d15d8fb44d43d19044d8f383596e0afe71cabd16b46235212` |
 
 - 本文件删去了改写写进来的一节“改写（#270 第13项续），待 Spectre 新旧对照”（含其中的状态行），改前全文存 `runs/t3-harbor30-20261027/first30-fix-r4/orig/v3-filter-sweep-measurement/SOURCE.md`；那一节之外的文字未改。
-- 依据：批次 D2 在 Spectre 21.1 上对照原件作业与改写版作业（D2 四包，2026-10-29 已正式核收；执行身份 `spectre-D2-must-public-v1（结果包 sha256 f0bbe69eb210f9ca…）`、`spectre-D2-must-private-a-v1（结果包 sha256 86f7892ab6d1302f…）`、`spectre-D2-must-private-b-v1（结果包 sha256 ed546a857219b69f…）`、`spectre-D2-must-alt-v1（结果包 sha256 e369364972507acf…）`）。14 题共 156 组（用例、候选）两版判决相同。本题两版带容差（reltol 1e-6、vabstol 1e-8、iabstol 1e-12）的参考解作业都写满单文件上限被截断，4 组两版都判不了，正在补跑；缺省容差的原件对照 4/4 通过。见 `runs/t3-spectre-batchD-20261028/preread-sui01-d2/PREREAD.md` 第 3 节与同目录 `decision1.json`。
+- 依据：批次 D2 在 Spectre 21.1 上对照原件作业与改写版作业（D2 四包，2026-10-29 已正式核收；执行身份 `spectre-D2-must-public-v1（结果包 sha256 f0bbe69eb210f9ca…）`、`spectre-D2-must-private-a-v1（结果包 sha256 86f7892ab6d1302f…）`、`spectre-D2-must-private-b-v1（结果包 sha256 ed546a857219b69f…）`、`spectre-D2-must-alt-v1（结果包 sha256 e369364972507acf…）`）。14 题共 156 组（用例、候选）两版判决相同。本题两版带容差（reltol 1e-6、vabstol 1e-8、iabstol 1e-12）的参考解作业都写满单文件上限被截断，4 组两版都判不了，正在补跑；缺省容差的原件对照 4/4 通过。见 Benchmark 的 D2 预读记录（本地 runs/ 下，未公开）第 3 节与同目录的 decision1.json。
 - 退回后的 2 个文件与 D2 快照原件 `runs/t3-spectre-batchD-20261028/d2/snapshot/original/26-v3-filter-sweep-measurement/` 逐字节相同，D2 的原件作业跑的就是这份。本轮没有为退回跑旧版 EVAS。
 - 这些写法回到 EVAS 一侧；#270、#276 的公开说明由主控转总协调，交 EVAS 线更新。
 

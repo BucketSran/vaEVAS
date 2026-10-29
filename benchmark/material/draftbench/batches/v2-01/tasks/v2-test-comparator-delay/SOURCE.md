@@ -51,7 +51,7 @@
 | `tests/cases.json` | `b04befc7b379e408c57643a17dd86358bb9dae9ca6523fe72df3130b5820478d` | `366c07f69266aa1e825c8dd8d728c7f6f9e1953d47927004f78f8e1ce2c44134` |
 
 - 本文件删去了改写写进来的两节“改写（#270 第4项 / NF-09），待 Spectre 新旧对照”、“改写（#270 NF-10），待 Spectre 新旧对照”（含其中的状态行与主控在审核后补记的规范依据），改前全文存 `runs/t3-harbor30-20261027/first30-fix-r4/orig/v2-test-comparator-delay/SOURCE.md`；那两节之外的文字未改。
-- 依据：批次 D2 在 Spectre 21.1 上对照原件作业与改写版作业（D2 四包，2026-10-29 已正式核收；执行身份 `spectre-D2-must-public-v1（结果包 sha256 f0bbe69eb210f9ca…）`、`spectre-D2-must-private-a-v1（结果包 sha256 86f7892ab6d1302f…）`、`spectre-D2-must-private-b-v1（结果包 sha256 ed546a857219b69f…）`、`spectre-D2-must-alt-v1（结果包 sha256 e369364972507acf…）`）。本题 18 组（用例、候选）两版判决全部相同（12 组都通过、6 组都被拒）；14 题共 156 组两版判决相同。原件参考解在 Spectre 上可解。见 `runs/t3-spectre-batchD-20261028/preread-sui01-d2/PREREAD.md` 第 3 节与同目录 `decision1.json`。
+- 依据：批次 D2 在 Spectre 21.1 上对照原件作业与改写版作业（D2 四包，2026-10-29 已正式核收；执行身份 `spectre-D2-must-public-v1（结果包 sha256 f0bbe69eb210f9ca…）`、`spectre-D2-must-private-a-v1（结果包 sha256 86f7892ab6d1302f…）`、`spectre-D2-must-private-b-v1（结果包 sha256 ed546a857219b69f…）`、`spectre-D2-must-alt-v1（结果包 sha256 e369364972507acf…）`）。本题 18 组（用例、候选）两版判决全部相同（12 组都通过、6 组都被拒）；14 题共 156 组两版判决相同。原件参考解在 Spectre 上可解。见 Benchmark 的 D2 预读记录（本地 runs/ 下，未公开）第 3 节与同目录的 decision1.json。
 - 退回后的 7 个文件与 D2 快照原件 `runs/t3-spectre-batchD-20261028/d2/snapshot/original/29-v2-test-comparator-delay/` 逐字节相同，D2 的原件作业跑的就是这份。本轮没有为退回跑旧版 EVAS。
 - 这些写法回到 EVAS 一侧；#270、#276 的公开说明由主控转总协调，交 EVAS 线更新。
 - 本题有 rewrite-r2a（第4项 R09-1、NF-09 NF09-29-1r）与 rewrite-r2b（NF-10 NF10-29-1-alt2）两组。代码文件按 revert_notes 从 rewrite-r2a/orig 取（rewrite-r2b/orig 是 r2a 改后的状态）。参考解两文件只含 r2a 的行，第一步退回；固定比较器 2 份与 3 个 `cases.json`（内嵌 9 份）叠着两组的改动，原件早于两组，单退 r2a 做不到逐字节，所以第二步与 r2b 一起退回。
@@ -80,7 +80,7 @@
 ## 2026-10-29 核对：固定比较器在 clk 下降沿把 out_delay 改回 0（first30-fix-r5 第 3 项，M9）
 
 - 写法：固定比较器 `support_cmp.va`（`environment/public/dut/`、`environment/starter/testbench/dut/` 两份文件，与三份 `cases.json` 里内嵌的 9 份副本）第 53 行在 clk 下降沿把 `out_delay` 改回 0。对输出本来就是 0 的那一路，这是“输入不变、只把 td 改成 0”。
-  - 这与 U15 同类：Spectre 21.1 在 U15 上删掉了全部待发沿（预读）；LRM 2023 第 4.5.8 节的澄清是保留；2.4 没有规定（标准线 `runs/standard-line-20261028/spectre-results-20261029/JUDGMENT-U15-TRANSITION-TD.md`，sha256 `d968fb4ee720f7ac55e89567b1abd770e2a18fc113b0783eb3e5ee2d85e0dd1e`）。
+  - 这与 U15 同类：Spectre 21.1 在 U15 上删掉了全部待发沿（预读）；LRM 2023 第 4.5.8 节的澄清是保留；2.4 没有规定（标准线判读（本地记录），sha256 `d968fb4ee720f7ac55e89567b1abd770e2a18fc113b0783eb3e5ee2d85e0dd1e`）。
 - 核对（精确有理数重放比较器的事件逻辑，`runs/t3-harbor30-20261027/first30-fix-r5/scripts/slot29_pending.py` → `runs/t3-harbor30-20261027/first30-fix-r5/slot29/pending-check.json`）：
   - 6 个用例（私有 3、公开 3；starter 的 `cases.json` 与公开的相同）共有 64 次“值不变、td 改变”的写入，其中把 td 改成 0 的 32 次。
   - 每一次都没有按非零延迟排着、还没开始的过渡，也没有正在进行的过渡。保留、删除两种读法下，outp、outn 逐沿相同。
