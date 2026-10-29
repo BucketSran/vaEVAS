@@ -201,6 +201,51 @@ struct IntervalValue {
     gradient: Vec<I>,
 }
 
+// Unknown columns read by a bound waveform expression, and whether it has a
+// rounding step. False for a leaf the interval evaluator does not certify;
+// such a system keeps its refusal.
+fn read_columns(
+    expr: &Expression,
+    columns: &[Option<usize>],
+    out: &mut Vec<usize>,
+    rounded: &mut bool,
+    work: &crate::transition_source_plan::Work,
+) -> Result<bool, Error> {
+    work.step()?;
+    match expr {
+        Expression::Affine { terms, .. } => {
+            work.debit(2, (terms.len() * 16) as u64)?;
+            out.extend(terms.iter().filter_map(|t| columns[t.node]));
+            Ok(true)
+        }
+        Expression::RealBinary { left, right, .. } => {
+            *rounded = true;
+            Ok(read_columns(left, columns, out, rounded, work)?
+                && read_columns(right, columns, out, rounded, work)?)
+        }
+        Expression::Add { left, right }
+        | Expression::Multiply { left, right }
+        | Expression::Divide { left, right } => {
+            Ok(read_columns(left, columns, out, rounded, work)?
+                && read_columns(right, columns, out, rounded, work)?)
+        }
+        Expression::RealBoundary { value, .. } => {
+            *rounded = true;
+            read_columns(value, columns, out, rounded, work)
+        }
+        Expression::Power { base, .. } => read_columns(base, columns, out, rounded, work),
+        Expression::EventMath { args, .. } => {
+            for arg in args {
+                if !read_columns(arg, columns, out, rounded, work)? {
+                    return Ok(false);
+                }
+            }
+            Ok(true)
+        }
+        _ => Ok(false),
+    }
+}
+
 fn finite_interval(value: I, what: &str) -> Result<I, Error> {
     if value.finite() {
         Ok(value)
@@ -558,6 +603,156 @@ impl Circuit {
                 }
             })
             .collect()
+    }
+
+    /// Substitution order of a system with a rounding step in which every
+    /// unknown is defined by exactly one grounded relation: (column, equation,
+    /// sign) per unknown, each column after every column it reads. None for a
+    /// cycle, a missing or repeated definition, or no rounding step.
+    fn substitution_order(
+        &self,
+        work: &crate::transition_source_plan::Work,
+    ) -> Result<Option<Vec<(usize, usize, f64)>>, Error> {
+        let n = self.unknown.len();
+        if self.equations.len() != n {
+            return Ok(None);
+        }
+        // Definitions, pending counts, reader lists, order and the copied
+        // value vector; read entries are paid where they are collected.
+        work.debit(2, ((self.nodes.len() + 6 * n + 1) * 64) as u64)?;
+        let mut definition = vec![None; n];
+        for (index, eq) in self.equations.iter().enumerate() {
+            work.step()?;
+            let (node, sign) = if eq.negative == 0 {
+                (eq.positive, 1.)
+            } else if eq.positive == 0 {
+                (eq.negative, -1.)
+            } else {
+                return Ok(None);
+            };
+            let Some(column) = self.unknown_columns[node] else {
+                return Ok(None);
+            };
+            if definition[column].replace((index, sign)).is_some() {
+                return Ok(None);
+            }
+        }
+        let Some(definition) = definition.into_iter().collect::<Option<Vec<_>>>() else {
+            return Ok(None);
+        };
+        let mut pending = vec![0_usize; n];
+        let mut readers = vec![Vec::new(); n];
+        let mut reads = Vec::new();
+        let mut rounded = false;
+        for (column, &(index, _)) in definition.iter().enumerate() {
+            reads.clear();
+            for rhs in &self.equations[index].original_rhs {
+                if !read_columns(rhs, &self.unknown_columns, &mut reads, &mut rounded, work)? {
+                    return Ok(None);
+                }
+            }
+            work.debit(2, (reads.len() * 16) as u64)?;
+            for &read in &reads {
+                pending[column] += 1;
+                readers[read].push(column);
+            }
+        }
+        if !rounded {
+            return Ok(None);
+        }
+        // Kahn order: a column is evaluated after every column it reads. A
+        // column left over lies on a cycle and has no substitution order.
+        let mut ready = (0..n).filter(|&c| pending[c] == 0).collect::<Vec<_>>();
+        let mut order = Vec::with_capacity(n);
+        while let Some(column) = ready.pop() {
+            work.step()?;
+            let (index, sign) = definition[column];
+            order.push((column, index, sign));
+            for &reader in &readers[column] {
+                work.step()?;
+                pending[reader] -= 1;
+                if pending[reader] == 0 {
+                    ready.push(reader);
+                }
+            }
+        }
+        Ok((order.len() == n).then_some(order))
+    }
+
+    /// A rounded program value has no derivative the Krawczyk test can use:
+    /// an image of several binary64 values has no finite slope enclosure, and
+    /// a one-value image has slope zero while the Newton preconditioner passes
+    /// the operand derivative through. When such a value is in the system and
+    /// every unknown is defined by exactly one grounded relation, with no
+    /// cycle among these definitions, substitution in dependency order gives
+    /// one root for every input in the box, and the interval image of that
+    /// substitution encloses all of them. Each rounded image is the exact set
+    /// of binary64 values of its operand image (ADR-006); no derivative, error
+    /// model or representative input is used. A system without a rounding
+    /// step, and every cyclic system, keeps the original refusal.
+    fn substitution_fallback(
+        &self,
+        refusal: Error,
+        solution: &Solution,
+        base: &[I],
+    ) -> Result<Vec<I>, Error> {
+        if refusal.kind != "waveform_accuracy" {
+            return Err(refusal);
+        }
+        match self.substituted_waveform_bounds(solution, base)? {
+            Some(bounds) => Ok(bounds),
+            None => Err(refusal),
+        }
+    }
+
+    fn substituted_waveform_bounds(
+        &self,
+        solution: &Solution,
+        base: &[I],
+    ) -> Result<Option<Vec<I>>, Error> {
+        let Some(view) = &self.procedure_view else {
+            return Ok(None);
+        };
+        let work = &view.plan.work;
+        let Some(order) = self.substitution_order(work)? else {
+            return Ok(None);
+        };
+        let mut values = base.to_vec();
+        for (column, index, sign) in order {
+            let eq = &self.equations[index];
+            let mut image = I::ZERO;
+            for rhs in &eq.original_rhs {
+                image = image
+                    + interval_evaluate(rhs, &values, Some(work))
+                        .map_err(|mut error| {
+                            error
+                                .message
+                                .push_str(&format!(" at {}", eq.origins.join(", ")));
+                            error
+                        })?
+                        .value;
+            }
+            values[self.unknown[column]] =
+                finite_interval(I::point(sign) * image, "substituted waveform value")?;
+        }
+        // The same voltage budget as the Krawczyk distance test, here as a
+        // bound on every root for the complete input box.
+        for &node in &self.unknown {
+            work.step()?;
+            let center = solution.voltages[node];
+            let budget = self.voltage_budget_lower(center)?;
+            let bound = (values[node] - I::point(center)).magnitude();
+            if !bound.is_finite() || bound > budget {
+                return Err(Error::new(
+                    "waveform_accuracy",
+                    format!(
+                        "cannot certify same-time forward error at {}: bound {bound:e}, budget {budget:e}",
+                        self.nodes[node]
+                    ),
+                ));
+            }
+        }
+        Ok(Some(values))
     }
 
     fn voltage_budget_lower(&self, voltage: f64) -> Result<f64, Error> {
@@ -937,7 +1132,10 @@ impl Circuit {
         // splitting a relation into several contributions does not bypass or
         // disable its proof. The nominal Jacobian is only a preconditioner.
         let scalar_jacobian = if n == 1 {
-            let jacobian = self.interval_jacobian(&box_values)?;
+            let jacobian = match self.interval_jacobian(&box_values) {
+                Ok(jacobian) => jacobian,
+                Err(error) => return self.substitution_fallback(error, solution, &point_values),
+            };
             let node = self.unknown[0];
             if contract
                 && scalar_root_box(
@@ -957,32 +1155,44 @@ impl Circuit {
         } else {
             None
         };
-        let jacobian = self.waveform_jacobian_rows(solution)?;
-        let factor = linear::Factorization::new(jacobian, n).map_err(|error| {
-            Error::new(
-                "waveform_accuracy",
-                format!(
-                    "cannot build Krawczyk waveform preconditioner from local Jacobian: {}",
-                    error.message
-                ),
-            )
-        })?;
+        // Every refusal of the derivative-based proof below may still be
+        // answered by substitution; its own refusals are accuracy refusals.
+        let refuse = |error| self.substitution_fallback(error, solution, &point_values);
+        let jacobian = match self.waveform_jacobian_rows(solution) {
+            Ok(jacobian) => jacobian,
+            Err(error) => return refuse(error),
+        };
+        let factor = match linear::Factorization::new(jacobian, n) {
+            Ok(factor) => factor,
+            Err(error) => {
+                return refuse(Error::new(
+                    "waveform_accuracy",
+                    format!(
+                        "cannot build Krawczyk waveform preconditioner from local Jacobian: {}",
+                        error.message
+                    ),
+                ))
+            }
+        };
         let mut preconditioner = vec![vec![0.0; n]; n];
         for row_index in 0..n {
             let mut rhs = vec![0.0; n];
             rhs[row_index] = 1.0;
-            let column = factor.solve(rhs).map_err(|error| {
-                Error::new(
-                    "waveform_accuracy",
-                    format!(
-                        "cannot solve Krawczyk waveform preconditioner column: {}",
-                        error.message
-                    ),
-                )
-            })?;
+            let column = match factor.solve(rhs) {
+                Ok(column) => column,
+                Err(error) => {
+                    return refuse(Error::new(
+                        "waveform_accuracy",
+                        format!(
+                            "cannot solve Krawczyk waveform preconditioner column: {}",
+                            error.message
+                        ),
+                    ))
+                }
+            };
             for (column_index, value) in column.into_iter().enumerate() {
                 if !value.is_finite() {
-                    return Err(Error::new(
+                    return refuse(Error::new(
                         "waveform_accuracy",
                         "nonfinite Krawczyk waveform preconditioner",
                     ));
@@ -992,7 +1202,10 @@ impl Circuit {
         }
         let interval_jacobian = match scalar_jacobian {
             Some(jacobian) => jacobian,
-            None => self.interval_jacobian(&box_values)?,
+            None => match self.interval_jacobian(&box_values) {
+                Ok(jacobian) => jacobian,
+                Err(error) => return refuse(error),
+            },
         };
         let mut max_norm = 0.0_f64;
         let mut krawczyk = vec![I::ZERO; n];
@@ -1012,7 +1225,7 @@ impl Circuit {
                 image = image + entry * deltas[k];
             }
             if !row_norm.finite() || !image.finite() {
-                return Err(Error::new(
+                return refuse(Error::new(
                     "waveform_accuracy",
                     "nonfinite Krawczyk waveform image",
                 ));
@@ -1021,7 +1234,7 @@ impl Circuit {
             krawczyk[j] = image;
         }
         if max_norm.partial_cmp(&1.0) != Some(std::cmp::Ordering::Less) {
-            return Err(Error::new(
+            return refuse(Error::new(
                 "waveform_accuracy",
                 format!("Krawczyk waveform contraction bound {max_norm:e} is not below 1"),
             ));
@@ -1039,7 +1252,7 @@ impl Circuit {
                         return self.waveform_bounds_attempt(solution, input_bounds, false);
                     }
                 }
-                return Err(Error::new(
+                return refuse(Error::new(
                     "waveform_accuracy",
                     format!(
                         "Krawczyk waveform image [{:e}, {:e}] V is not strictly inside [{:e}, {:e}] V at node {}",
@@ -1054,7 +1267,7 @@ impl Circuit {
             let budget = self.voltage_budget_lower(solution.voltages[node])?;
             let distance = (image - I::point(solution.voltages[node])).magnitude();
             if !distance.is_finite() || distance > budget {
-                return Err(Error::new(
+                return refuse(Error::new(
                     "waveform_accuracy",
                     format!(
                         "Krawczyk waveform distance {distance:e} V exceeds budget {budget:e} V at node {}",
@@ -1130,7 +1343,30 @@ impl Circuit {
                 max_voltage_correction_ratio: None,
             }
         } else {
-            self.solve_complete(inputs, initial_expanded.as_deref())?
+            match self.solve_complete(inputs, initial_expanded.as_deref()) {
+                Err(error)
+                    if initial_expanded.is_none()
+                        && matches!(error.kind, "nonfinite_arithmetic" | "real_arithmetic") =>
+                {
+                    match self.procedure_seed(inputs) {
+                        Ok(Some(seed)) => self.solve_complete(inputs, Some(&seed))?,
+                        Err(seed_error) if seed_error.kind == "step_budget" => {
+                            return Err(seed_error)
+                        }
+                        Ok(None) | Err(_) => return Err(error),
+                    }
+                }
+                Err(error) if error.kind == "singular_jacobian" => {
+                    match self.substitution_solve(inputs) {
+                        Ok(Some(solution)) => solution,
+                        Err(order_error) if order_error.kind == "step_budget" => {
+                            return Err(order_error)
+                        }
+                        Ok(None) | Err(_) => return Err(error),
+                    }
+                }
+                result => result?,
+            }
         };
         if let Some(view) = &self.procedure_view {
             solution.voltages.truncate(view.node_count);
@@ -1139,6 +1375,93 @@ impl Circuit {
             }
         }
         Ok(solution)
+    }
+    /// The default Newton seed is zero for every unknown, including the values
+    /// of executed program reals, so a relation that divides by such a value
+    /// fails at the seed although the activation never produced zero. The
+    /// activation's own values at these inputs are a valid seed instead; the
+    /// root found from it still needs the unchanged waveform certificate.
+    fn procedure_seed(&self, inputs: &[f64]) -> Result<Option<Vec<f64>>, Error> {
+        let Some(view) = &self.procedure_view else {
+            return Ok(None);
+        };
+        view.plan.work.debit(2, (view.node_count * 8 + 32) as u64)?;
+        let mut voltages = vec![0.0; view.node_count];
+        for (&node, &value) in self.driven.iter().zip(inputs) {
+            if node < view.node_count {
+                voltages[node] = value;
+            }
+        }
+        view.expand(&voltages).map(Some)
+    }
+    /// Newton checks the local rank of every unknown, including program
+    /// values whose relation reads only earlier values. A rounded value scaled
+    /// far beyond its operand, as in 1e16*(V(u)-c), makes the row-scaled
+    /// factorization call such a triangular system singular although
+    /// substitution determines every unknown. The substituted values still
+    /// need the unchanged waveform certificate.
+    fn substitution_solve(&self, inputs: &[f64]) -> Result<Option<Solution>, Error> {
+        let Some(view) = &self.procedure_view else {
+            return Ok(None);
+        };
+        let work = &view.plan.work;
+        let Some(order) = self.substitution_order(work)? else {
+            return Ok(None);
+        };
+        let complete = inputs
+            .iter()
+            .copied()
+            .chain(self.procedure_parameters.iter().map(|(v, _)| *v))
+            .collect::<Vec<_>>();
+        let inputs = if complete.len() == self.driven.len() {
+            &complete
+        } else {
+            inputs
+        };
+        if inputs.len() != self.driven.len() {
+            return Ok(None);
+        }
+        let mut values = vec![0.0; self.nodes.len()];
+        for (&node, &value) in self.driven.iter().zip(inputs) {
+            values[node] = value;
+        }
+        let point_rhs = |eq: &Equation, values: &[f64]| -> Result<f64, Error> {
+            work.step()?;
+            let mut rhs = eq.rhs_constant
+                + eq.rhs_terms
+                    .iter()
+                    .map(|&(node, coefficient)| coefficient * values[node])
+                    .sum::<f64>();
+            for expr in &eq.nonlinear {
+                rhs += expression::evaluate(expr, values)?.value;
+            }
+            Ok(rhs)
+        };
+        for (column, index, sign) in order {
+            values[self.unknown[column]] = sign * point_rhs(&self.equations[index], &values)?;
+        }
+        let (mut residual_v, mut ratio) = (0.0_f64, 0.0_f64);
+        for eq in &self.equations {
+            let lhs = values[eq.positive] - values[eq.negative];
+            let rhs = point_rhs(eq, &values)?;
+            let bound =
+                self.tolerances.absolute + self.tolerances.relative * lhs.abs().max(rhs.abs());
+            let residual = (lhs - rhs).abs();
+            if !(residual.is_finite() && bound.is_finite() && residual <= bound) {
+                return Ok(None);
+            }
+            residual_v = residual_v.max(residual);
+            ratio = ratio.max(residual / bound);
+        }
+        Ok(Some(Solution {
+            certified_voltage_bounds: None,
+            voltages: values,
+            max_residual_v: residual_v,
+            max_residual_ratio: ratio,
+            max_scaled_residual_ratio: None,
+            max_voltage_correction_v: None,
+            max_voltage_correction_ratio: None,
+        }))
     }
     fn solve_complete(
         &self,
@@ -2097,6 +2420,270 @@ mod strict_budget_retry_tests {
                 "step_budget"
             );
             assert_eq!(w.spent(), failed);
+        }
+    }
+}
+
+#[cfg(test)]
+mod rounded_substitution_tests {
+    use super::*;
+    use crate::{events::EventModel, transition_source_plan::Work};
+    use serde_json::{json, Value};
+
+    const LOW: f64 = 0.39699999999999996;
+    const HIGH: f64 = 0.3970000000000001;
+
+    fn sample(node: usize) -> Value {
+        let o = json!({"source":"rounded.va","line":1,"column":1,"instance":"dut"});
+        json!({"op":"real_boundary","kind":"sample","origin":o,
+            "value":{"op":"affine","constant":0.0,"terms":[{"node":node,"coefficient":1.0}]}})
+    }
+    // den = (V(d) < 0.25) ? <then> : <else>; V(y) <+ <rhs reading den>,
+    // stored in the canonical branch order as V(0,y) <+ -<rhs>.
+    fn program(then_value: Value, else_value: Value, rhs: Value) -> Program {
+        let o = json!({"source":"rounded.va","line":1,"column":1,"instance":"dut"});
+        let select = json!({"op":"select","relation":"lt","left":sample(1),
+            "right":{"op":"affine","constant":0.25,"terms":[]},
+            "then_value":then_value,"else_value":else_value,"origin":o});
+        let negated =
+            json!({"op":"multiply","left":{"op":"affine","constant":-1.0,"terms":[]},"right":rhs});
+        serde_json::from_value(json!({"schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","d","y"],
+            "contributions":[{"branch":{"instance":"dut","local_positive":"0","local_negative":"y","kind":"voltage"},
+                "positive":0,"negative":2,"rhs":negated,"origin":o}],
+            "procedures":[{"procedure_id":0,"instance":"dut","body":[
+                {"expanded_statement_ordinal":0,"action":{"kind":"real_bind","binding":0,"origin":o,
+                    "value":{"op":"real_boundary","kind":"snapshot","origin":o,"value":select}}},
+                {"expanded_statement_ordinal":1,"action":{"kind":"contribution_capture","contribution":0}}]}],
+            "real_bindings":[{"procedure_id":0,"name":"den","origin":o,"lifetime":"occurrence"}]}))
+        .unwrap()
+    }
+    fn both_arms() -> Program {
+        let o = json!({"source":"rounded.va","line":1,"column":1,"instance":"dut"});
+        program(
+            json!({"op":"real_binary","operation":"multiply","origin":o,
+                "left":{"op":"affine","constant":0.5,"terms":[]},"right":sample(1)}),
+            sample(1),
+            json!({"op":"real_local","binding":0}),
+        )
+    }
+    fn circuit(p: Program, absolute: f64, w: &Work, domain: I) -> Circuit {
+        let model = EventModel::new_with_procedure_work(
+            p,
+            vec!["d".into()],
+            Tolerances {
+                absolute,
+                relative: 0.,
+            },
+            w.clone(),
+        )
+        .unwrap();
+        model.circuit_at(&[], &[], &[domain]).unwrap()
+    }
+    fn moving() -> I {
+        I { lo: LOW, hi: HIGH }
+    }
+
+    #[test]
+    fn selected_real_over_a_moving_input_box_is_enclosed_by_substitution() {
+        let w = Work::default();
+        let c = circuit(both_arms(), 1e-12, &w, moving());
+        let s = c.solve(&[0.397]).unwrap();
+        let b = c.waveform_bounds(&s, &[moving()]).unwrap();
+        // V(d) >= 0.25 on the whole box, so y = RN(V(d)): every binary64 in
+        // [LOW, HIGH] is a possible answer and each must be enclosed.
+        assert!(b[2].lo <= LOW && HIGH <= b[2].hi);
+        assert!((b[2] - I::point(s.voltages[2])).magnitude() <= 1e-12);
+    }
+    #[test]
+    fn substitution_reports_the_forward_error_beyond_the_budget() {
+        // V(y) <+ 1000*(den - 0.396): every relation's residual fits 1e-15 V,
+        // but the amplified set of possible rounded values does not.
+        let o = json!({"source":"rounded.va","line":1,"column":1,"instance":"dut"});
+        let p = program(
+            json!({"op":"real_binary","operation":"multiply","origin":o,
+                "left":{"op":"affine","constant":0.5,"terms":[]},"right":sample(1)}),
+            sample(1),
+            json!({"op":"multiply","left":{"op":"affine","constant":1000.0,"terms":[]},
+                "right":{"op":"add","left":{"op":"real_local","binding":0},
+                    "right":{"op":"affine","constant":-0.396,"terms":[]}}}),
+        );
+        let w = Work::default();
+        let c = circuit(p, 1e-15, &w, moving());
+        let s = c.solve(&[0.397]).unwrap();
+        let error = c.waveform_bounds(&s, &[moving()]).unwrap_err();
+        assert_eq!(error.kind, "waveform_accuracy");
+        assert!(
+            error
+                .message
+                .starts_with("cannot certify same-time forward error at y: bound "),
+            "{}",
+            error.message
+        );
+    }
+    #[test]
+    fn rounded_value_read_by_its_own_relation_keeps_the_jacobian_refusal() {
+        // den = V(y) on the selected arm and y = 0.5*den + V(d): the rounded
+        // value feeds its own operand, so there is no substitution order.
+        let p = program(
+            sample(1),
+            sample(2),
+            json!({"op":"add","left":{"op":"multiply","left":{"op":"affine","constant":0.5,"terms":[]},
+                "right":{"op":"real_local","binding":0}},
+                "right":{"op":"affine","constant":0.0,"terms":[{"node":1,"coefficient":1.0}]}}),
+        );
+        let w = Work::default();
+        let c = circuit(p, 1e-12, &w, moving());
+        let s = c.solve(&[0.397]).unwrap();
+        let error = c.waveform_bounds(&s, &[moving()]).unwrap_err();
+        assert_eq!(error.kind, "waveform_accuracy");
+        assert!(error.message.starts_with("nonfinite interval Jacobian at "));
+    }
+    #[test]
+    fn scaled_rounded_value_with_a_singular_local_rank_is_solved_by_substitution() {
+        // V(y) <+ 1e16*(den - 0.397): row scaling calls the local rank
+        // singular, substitution solves it, and the amplified set of rounded
+        // values is refused by its forward error.
+        let p = program(
+            sample(1),
+            sample(1),
+            json!({"op":"multiply","left":{"op":"affine","constant":1e16,"terms":[]},
+                "right":{"op":"add","left":{"op":"real_local","binding":0},
+                    "right":{"op":"affine","constant":-0.397,"terms":[]}}}),
+        );
+        let w = Work::default();
+        let c = circuit(p, 1e-9, &w, moving());
+        let s = c.solve(&[0.397]).unwrap();
+        assert_eq!(s.voltages[2], 0.);
+        let error = c.waveform_bounds(&s, &[moving()]).unwrap_err();
+        assert!(
+            error
+                .message
+                .starts_with("cannot certify same-time forward error at y: bound "),
+            "{}",
+            error.message
+        );
+    }
+    #[test]
+    fn substitution_spends_the_original_owner_and_stays_exhausted() {
+        let probe = Work::default();
+        let c = circuit(both_arms(), 1e-12, &probe, moving());
+        let s = c.solve(&[0.397]).unwrap();
+        let prefix = probe.spent();
+        c.waveform_bounds(&s, &[moving()]).unwrap();
+        let total = probe.spent();
+        assert!(total > prefix);
+        let w = Work::limited([128, 8192, total - 1]);
+        let c = circuit(both_arms(), 1e-12, &w, moving());
+        let s = c.solve(&[0.397]).unwrap();
+        assert_eq!(w.spent(), prefix);
+        assert_eq!(
+            c.waveform_bounds(&s, &[moving()]).unwrap_err().kind,
+            "step_budget"
+        );
+        let failed = w.spent();
+        for _ in 0..2 {
+            assert_eq!(
+                c.waveform_bounds(&s, &[moving()]).unwrap_err().kind,
+                "step_budget"
+            );
+            assert_eq!(w.spent(), failed);
+        }
+    }
+    #[test]
+    fn division_by_a_selected_real_starts_newton_from_the_activation() {
+        // den = (V(d) < 0.25) ? 0.25 : V(d); V(y) <+ 0.2/den. The zero seed
+        // would divide by zero although den is never below 0.25.
+        let p = program(
+            json!({"op":"affine","constant":0.25,"terms":[]}),
+            sample(1),
+            json!({"op":"divide","left":{"op":"affine","constant":0.2,"terms":[]},
+                "right":{"op":"real_local","binding":0}}),
+        );
+        let w = Work::default();
+        let c = circuit(p, 1e-12, &w, moving());
+        let s = c.solve(&[0.397]).unwrap();
+        let b = c.waveform_bounds(&s, &[moving()]).unwrap();
+        assert!((b[2] - I::point(s.voltages[2])).magnitude() <= 1e-12);
+        let exact = |d: f64| {
+            num_rational::BigRational::from_float(0.2).unwrap()
+                / num_rational::BigRational::from_float(d).unwrap()
+        };
+        let lo = num_rational::BigRational::from_float(b[2].lo).unwrap();
+        let hi = num_rational::BigRational::from_float(b[2].hi).unwrap();
+        assert!(lo <= exact(HIGH) && exact(LOW) <= hi);
+    }
+    #[test]
+    fn reset_sample_with_a_one_value_rounded_image_is_certified() {
+        // @(timer(0.5)) begin rst=1; q=V(z); end  @(timer(0.75)) rst=0;
+        // V(z) <+ idt(q,1,rst); V(y) <+ laplace_nd(V(z),{1},{1,1}); V(held) <+ q.
+        // After the reset q = RN(V(z)) has a one-value image: its interval
+        // slope is zero while the Newton preconditioner passes the operand
+        // derivative through, so the Krawczyk contraction bound is 2.
+        // Each operator, event and contribution has its own call site.
+        let at =
+            |column: u32| json!({"source":"reset.va","line":1,"column":column,"instance":"dut"});
+        let constant = |value: f64| json!({"op":"affine","constant":value,"terms":[]});
+        let z = json!({"op":"affine","constant":0.0,"terms":[{"node":1,"coefficient":1.0}]});
+        let branch = |positive: &str, negative: &str| json!({"instance":"dut","local_positive":positive,"local_negative":negative,"kind":"voltage"});
+        let timer = |start: f64| json!({"kind":"timer","start":start,"period":0.0,"time_tolerance":1e-12,"enabled":true});
+        let gate = |ordinal: usize, action: Value| json!({"expanded_statement_ordinal":ordinal,"action":action});
+        let request: crate::ir::Request = serde_json::from_value(json!({
+            "program":{"schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","z","held","u","y"],
+                "contributions":[
+                    {"branch":branch("r","z"),"positive":0,"negative":1,"origin":at(1),
+                        "rhs":{"op":"multiply","left":constant(-1.0),"right":{"op":"operator","operator":0}}},
+                    {"branch":branch("r","y"),"positive":0,"negative":4,"origin":at(2),
+                        "rhs":{"op":"multiply","left":constant(-1.0),"right":{"op":"operator","operator":1}}},
+                    {"branch":branch("held","r"),"positive":2,"negative":0,"origin":at(3),
+                        "rhs":{"op":"state","state":0}}],
+                "states":[{"instance":"dut","name":"q","kind":"real","initial":0.0},
+                    {"instance":"dut","name":"rst","kind":"integer","initial":0.0}],
+                "events":[
+                    {"trigger":timer(0.5),"origin":at(4),"procedure_id":0,"expanded_statement_ordinal":1,"body":[
+                        {"kind":"assign","state":1,"rhs":constant(1.0)},
+                        {"kind":"assign","state":0,"rhs":{"op":"real_boundary","kind":"store","origin":at(5),
+                            "value":{"op":"real_boundary","kind":"sample","origin":at(6),"value":z}}}]},
+                    {"trigger":timer(0.75),"origin":at(7),"procedure_id":0,"expanded_statement_ordinal":2,"body":[
+                        {"kind":"assign","state":1,"rhs":constant(0.0)}]},
+                    {"trigger":{"kind":"initial_step"},"origin":at(8),"procedure_id":0,"expanded_statement_ordinal":0,"body":[
+                        {"kind":"assign","state":0,"rhs":{"op":"real_boundary","kind":"store","origin":at(9),
+                            "value":constant(1.0)}},
+                        {"kind":"assign","state":1,"rhs":constant(0.0)}]}],
+                "operators":[
+                    {"kind":"idt","input":{"op":"state","state":0},"ic":1.0,"reset":{"op":"state","state":1},"origin":at(10)},
+                    {"kind":"laplace_nd","input":z,"numerator":[1.0],"denominator":[1.0,1.0],"origin":at(11)}],
+                "step_bounds":[],
+                "procedures":[{"procedure_id":0,"instance":"dut","body":[
+                    gate(0,json!({"kind":"event_gate","event":2})),
+                    gate(1,json!({"kind":"event_gate","event":0})),
+                    gate(2,json!({"kind":"event_gate","event":1})),
+                    gate(3,json!({"kind":"contribution_capture","contribution":0})),
+                    gate(4,json!({"kind":"contribution_capture","contribution":1})),
+                    gate(5,json!({"kind":"contribution_capture","contribution":2}))]}],
+                "real_bindings":[]},
+            "driven":["u"],"samples":[],
+            "transient":{"pwl":[[[0,0],[1,1]]],"output_times":[0,0.25,0.5,0.625,0.75,0.875,1],
+                "stop":1,"max_step":1},
+            "tolerances":{"absolute":1e-7,"relative":1e-7}}))
+        .unwrap();
+        let response = serde_json::to_value(crate::run(request).unwrap()).unwrap();
+        let at_reset = 0.5 + (-0.5_f64).exp();
+        let at_release = 1. + (at_reset - 1.) * (-0.25_f64).exp();
+        let times: [f64; 7] = [0., 0.25, 0.5, 0.625, 0.75, 0.875, 1.];
+        let rows = response["solutions"].as_array().unwrap();
+        assert_eq!(rows.len(), times.len());
+        for (row, t) in rows.iter().zip(times) {
+            let (z, y) = if t < 0.5 {
+                (1. + t, t + (-t).exp())
+            } else if t <= 0.75 {
+                (1., 1. + (at_reset - 1.) * (-(t - 0.5)).exp())
+            } else {
+                (1. + t - 0.75, (t - 0.75) + at_release * (-(t - 0.75)).exp())
+            };
+            let v = |node: usize| row["voltages"][node].as_f64().unwrap();
+            assert!((v(1) - z).abs() <= 1e-7, "z at {t}: {row}");
+            assert!((v(4) - y).abs() <= 1e-7, "y at {t}: {row}");
+            assert!((v(2) - 1.).abs() <= 1e-7, "held at {t}: {row}");
         }
     }
 }

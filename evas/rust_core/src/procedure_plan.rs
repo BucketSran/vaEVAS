@@ -2115,7 +2115,10 @@ impl Plan {
                 let budget = tolerances.absolute
                     + tolerances.relative * point.abs().max(bound.lo.abs()).max(bound.hi.abs());
                 if !bound.finite() || point - bound.lo > budget || bound.hi - point > budget {
-                    return Err(Error::new("waveform_accuracy",format!("procedure affine image [{:e},{:e}] excludes native {:e} within original voltage budget; {} fired gates",bound.lo,bound.hi,point,self.actions.len())));
+                    // Name the node whose same-time value the image cannot bound.
+                    let name = &layout.program.nodes[node];
+                    w.debit(2, (name.len() + 256) as u64)?;
+                    return Err(Error::new("waveform_accuracy",format!("same-time forward error at {name} is not certified: procedure affine image [{:e},{:e}] excludes native {:e} within original voltage budget {budget:e}; {} fired gates",bound.lo,bound.hi,point,self.actions.len())));
                 }
             }
             projected
