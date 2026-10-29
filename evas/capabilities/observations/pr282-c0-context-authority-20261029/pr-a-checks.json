@@ -1,0 +1,387 @@
+{
+  "checked_at_utc": "2026-10-29T10:33:26.849988+00:00",
+  "new_main": "6fed3c820b6eaecdfabd6d5dcacf8febdd197e4c",
+  "tree": "38ee802ae85703e070812d7dfedd7af0bf7d4043",
+  "parents": [
+    "d6b7543fc815aaa584c886108691b6f2c01eb220",
+    "e59bf81f063159e29c379623a98928d73786aa45"
+  ],
+  "merge_commit_rebuilt_from_api": {
+    "source": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/r2/gh/commit-6fed3c82-r2.json",
+    "object_sha1": "6fed3c820b6eaecdfabd6d5dcacf8febdd197e4c",
+    "equals_main": true,
+    "bytes": 1245,
+    "raw_sha256": "35287bb70d0f4a49e9508ee5f13f710e93ec2186f3caf0fed1c3ac3e037fd283",
+    "signature_verified_by_github": true
+  },
+  "pr_a_head_tree_equals_main_tree": true,
+  "old_main_is_ancestor_of_pr_a": true,
+  "diff_d6b7543f_to_new_main": {
+    "paths": 27,
+    "kinds": {
+      "derived-catalog": 21,
+      "scripts": 6
+    },
+    "rows": [
+      {
+        "status": "M",
+        "path": "evas/capabilities/data/asset-index.json",
+        "kind": "derived-catalog"
+      },
+      {
+        "status": "M",
+        "path": "evas/capabilities/data/catalog-sources.json",
+        "kind": "derived-catalog"
+      },
+      {
+        "status": "M",
+        "path": "evas/capabilities/data/entrypoint-index.json",
+        "kind": "derived-catalog"
+      },
+      {
+        "status": "M",
+        "path": "evas/capabilities/data/method-index-00.json",
+        "kind": "derived-catalog"
+      },
+      {
+        "status": "M",
+        "path": "evas/capabilities/data/method-index-01.json",
+        "kind": "derived-catalog"
+      },
+      {
+        "status": "M",
+        "path": "evas/capabilities/data/method-index-02.json",
+        "kind": "derived-catalog"
+      },
+      {
+        "status": "M",
+        "path": "evas/capabilities/data/method-index-03.json",
+        "kind": "derived-catalog"
+      },
+      {
+        "status": "M",
+        "path": "evas/capabilities/data/method-index-04.json",
+        "kind": "derived-catalog"
+      },
+      {
+        "status": "M",
+        "path": "evas/capabilities/data/method-index-05.json",
+        "kind": "derived-catalog"
+      },
+      {
+        "status": "M",
+        "path": "evas/capabilities/data/method-index-06.json",
+        "kind": "derived-catalog"
+      },
+      {
+        "status": "M",
+        "path": "evas/capabilities/data/method-index-07.json",
+        "kind": "derived-catalog"
+      },
+      {
+        "status": "M",
+        "path": "evas/capabilities/data/method-index-08.json",
+        "kind": "derived-catalog"
+      },
+      {
+        "status": "M",
+        "path": "evas/capabilities/data/method-index-09.json",
+        "kind": "derived-catalog"
+      },
+      {
+        "status": "M",
+        "path": "evas/capabilities/data/method-index-10.json",
+        "kind": "derived-catalog"
+      },
+      {
+        "status": "M",
+        "path": "evas/capabilities/data/method-index-11.json",
+        "kind": "derived-catalog"
+      },
+      {
+        "status": "M",
+        "path": "evas/capabilities/data/method-index-12.json",
+        "kind": "derived-catalog"
+      },
+      {
+        "status": "M",
+        "path": "evas/capabilities/data/method-index-13.json",
+        "kind": "derived-catalog"
+      },
+      {
+        "status": "M",
+        "path": "evas/capabilities/data/method-index-14.json",
+        "kind": "derived-catalog"
+      },
+      {
+        "status": "M",
+        "path": "evas/capabilities/data/method-index-15.json",
+        "kind": "derived-catalog"
+      },
+      {
+        "status": "M",
+        "path": "evas/capabilities/data/registry.json",
+        "kind": "derived-catalog"
+      },
+      {
+        "status": "M",
+        "path": "evas/docs/development/TRACEABILITY.md",
+        "kind": "derived-catalog"
+      },
+      {
+        "status": "M",
+        "path": "scripts/README.md",
+        "kind": "scripts"
+      },
+      {
+        "status": "M",
+        "path": "scripts/regression_context_registration.py",
+        "kind": "scripts"
+      },
+      {
+        "status": "M",
+        "path": "scripts/regression_gate.py",
+        "kind": "scripts"
+      },
+      {
+        "status": "M",
+        "path": "scripts/tests/regression_registration_fixtures.py",
+        "kind": "scripts"
+      },
+      {
+        "status": "A",
+        "path": "scripts/tests/test_registration_split_dut.py",
+        "kind": "scripts"
+      },
+      {
+        "status": "A",
+        "path": "scripts/tests/test_regression_vanished_nonpass.py",
+        "kind": "scripts"
+      }
+    ],
+    "forbidden": []
+  },
+  "check_0_1": {
+    "registration_module_sha256_new_main": "098f0f4afd5c3434555f8510093b1ac91932b36a48ab42bd7e8d3fd2c4fe04af",
+    "equals_pr_a_head": true,
+    "note": "new main tree == PR-A head tree, so every blob is PR-A's"
+  },
+  "check_0_2": {
+    "ok": true
+  },
+  "files": {
+    "scripts/regression_context_registration.py": {
+      "d6b7543f": {
+        "sha256": "138ca3036008c8f0616d0e21019f1e434ab1cd1b6498694cd2613c275c261a22",
+        "bytes": 25700
+      },
+      "new_main": {
+        "sha256": "098f0f4afd5c3434555f8510093b1ac91932b36a48ab42bd7e8d3fd2c4fe04af",
+        "bytes": 29511
+      },
+      "pr282_head": {
+        "sha256": "138ca3036008c8f0616d0e21019f1e434ab1cd1b6498694cd2613c275c261a22",
+        "bytes": 25700
+      },
+      "changed_by_pr_a": true,
+      "pr282_equals_new_main": false
+    },
+    "scripts/regression_gate.py": {
+      "d6b7543f": {
+        "sha256": "65e3542fa4989b35d31ee6998c9dc14f8975524e4b30a23b76539abf7317b38e",
+        "bytes": 45735
+      },
+      "new_main": {
+        "sha256": "7a88c2596cba6d7036679be65076dbdf8bcdef4aebc03f6e76940a7aba10b7c1",
+        "bytes": 46640
+      },
+      "pr282_head": {
+        "sha256": "65e3542fa4989b35d31ee6998c9dc14f8975524e4b30a23b76539abf7317b38e",
+        "bytes": 45735
+      },
+      "changed_by_pr_a": true,
+      "pr282_equals_new_main": false
+    },
+    "scripts/run_trusted_regression_gate.py": {
+      "d6b7543f": {
+        "sha256": "30cb19e469db4ea26b00ca4959e68c4aa1196be15a9051452ff491210619aa63",
+        "bytes": 13237
+      },
+      "new_main": {
+        "sha256": "30cb19e469db4ea26b00ca4959e68c4aa1196be15a9051452ff491210619aa63",
+        "bytes": 13237
+      },
+      "pr282_head": {
+        "sha256": "30cb19e469db4ea26b00ca4959e68c4aa1196be15a9051452ff491210619aa63",
+        "bytes": 13237
+      },
+      "changed_by_pr_a": false,
+      "pr282_equals_new_main": true
+    },
+    "scripts/materialize_registration_bundle.py": {
+      "d6b7543f": {
+        "sha256": "b3e821f65ef738d8611c0b021066a4b4b4bbd1632bbbcc48336d7e750d6ea305",
+        "bytes": 11648
+      },
+      "new_main": {
+        "sha256": "b3e821f65ef738d8611c0b021066a4b4b4bbd1632bbbcc48336d7e750d6ea305",
+        "bytes": 11648
+      },
+      "pr282_head": {
+        "sha256": "b3e821f65ef738d8611c0b021066a4b4b4bbd1632bbbcc48336d7e750d6ea305",
+        "bytes": 11648
+      },
+      "changed_by_pr_a": false,
+      "pr282_equals_new_main": true
+    },
+    "scripts/run_regression.py": {
+      "d6b7543f": {
+        "sha256": "dc2ed03b722fd35e9a20f6eda424ac2ff39b3c22f2081a29c5f0777a9b148985",
+        "bytes": 41753
+      },
+      "new_main": {
+        "sha256": "dc2ed03b722fd35e9a20f6eda424ac2ff39b3c22f2081a29c5f0777a9b148985",
+        "bytes": 41753
+      },
+      "pr282_head": {
+        "sha256": "dc2ed03b722fd35e9a20f6eda424ac2ff39b3c22f2081a29c5f0777a9b148985",
+        "bytes": 41753
+      },
+      "changed_by_pr_a": false,
+      "pr282_equals_new_main": true
+    },
+    "scripts/ci_evidence.py": {
+      "d6b7543f": {
+        "sha256": "c64a7b268f2a8615ac257a19a5edb9fdbe399ad4d577e6c2fe65f6e2a86fc5cc",
+        "bytes": 12699
+      },
+      "new_main": {
+        "sha256": "c64a7b268f2a8615ac257a19a5edb9fdbe399ad4d577e6c2fe65f6e2a86fc5cc",
+        "bytes": 12699
+      },
+      "pr282_head": {
+        "sha256": "c64a7b268f2a8615ac257a19a5edb9fdbe399ad4d577e6c2fe65f6e2a86fc5cc",
+        "bytes": 12699
+      },
+      "changed_by_pr_a": false,
+      "pr282_equals_new_main": true
+    },
+    "scripts/regression_reason_identity.py": {
+      "d6b7543f": {
+        "sha256": "3b7969bbefb3a7d89d4015871200b33d2ef63d7baaf897a4bc0b44a009adc718",
+        "bytes": 23095
+      },
+      "new_main": {
+        "sha256": "3b7969bbefb3a7d89d4015871200b33d2ef63d7baaf897a4bc0b44a009adc718",
+        "bytes": 23095
+      },
+      "pr282_head": {
+        "sha256": "3b7969bbefb3a7d89d4015871200b33d2ef63d7baaf897a4bc0b44a009adc718",
+        "bytes": 23095
+      },
+      "changed_by_pr_a": false,
+      "pr282_equals_new_main": true
+    },
+    "scripts/regression_observation_policy.json": {
+      "d6b7543f": {
+        "sha256": "42ea0b232286934c1af0905dbc89a15e6fa6eebacd641890b69c047fc78e7d93",
+        "bytes": 3912
+      },
+      "new_main": {
+        "sha256": "42ea0b232286934c1af0905dbc89a15e6fa6eebacd641890b69c047fc78e7d93",
+        "bytes": 3912
+      },
+      "pr282_head": {
+        "sha256": "42ea0b232286934c1af0905dbc89a15e6fa6eebacd641890b69c047fc78e7d93",
+        "bytes": 3912
+      },
+      "changed_by_pr_a": false,
+      "pr282_equals_new_main": true
+    },
+    "evas/capabilities/data/language-profile.json": {
+      "d6b7543f": {
+        "sha256": "cb96d837943af90db29d359f57cc6e3a2f6f37fcf3956ed8163486f33d6111c1",
+        "bytes": 1959
+      },
+      "new_main": {
+        "sha256": "cb96d837943af90db29d359f57cc6e3a2f6f37fcf3956ed8163486f33d6111c1",
+        "bytes": 1959
+      },
+      "pr282_head": {
+        "sha256": "cb96d837943af90db29d359f57cc6e3a2f6f37fcf3956ed8163486f33d6111c1",
+        "bytes": 1959
+      },
+      "changed_by_pr_a": false,
+      "pr282_equals_new_main": true
+    },
+    "evas/validation/baselines/regression-v1.json": {
+      "d6b7543f": {
+        "sha256": "6b1a58754c81b938d036ad71a2a42ef75c06a4da2972d325fb5508e183b5b343",
+        "bytes": 50578629
+      },
+      "new_main": {
+        "sha256": "6b1a58754c81b938d036ad71a2a42ef75c06a4da2972d325fb5508e183b5b343",
+        "bytes": 50578629
+      },
+      "pr282_head": {
+        "sha256": "6b1a58754c81b938d036ad71a2a42ef75c06a4da2972d325fb5508e183b5b343",
+        "bytes": 50578629
+      },
+      "changed_by_pr_a": false,
+      "pr282_equals_new_main": true
+    },
+    "evas/validation/baselines/regression-v1.review.json": {
+      "d6b7543f": {
+        "sha256": "f72d3c725db7edf85007d1e0b2086e93e8f911c39a69d0f47ca99cc0061c880c",
+        "bytes": 26663148
+      },
+      "new_main": {
+        "sha256": "f72d3c725db7edf85007d1e0b2086e93e8f911c39a69d0f47ca99cc0061c880c",
+        "bytes": 26663148
+      },
+      "pr282_head": {
+        "sha256": "f72d3c725db7edf85007d1e0b2086e93e8f911c39a69d0f47ca99cc0061c880c",
+        "bytes": 26663148
+      },
+      "changed_by_pr_a": false,
+      "pr282_equals_new_main": true
+    },
+    "scripts/context-registration-bundle.json": {
+      "d6b7543f": {
+        "sha256": "66c0cb64cbab4c12fcf227ef4549717882b7cbab10213b13e0192a18237f0f9e",
+        "bytes": 339
+      },
+      "new_main": {
+        "sha256": "66c0cb64cbab4c12fcf227ef4549717882b7cbab10213b13e0192a18237f0f9e",
+        "bytes": 339
+      },
+      "pr282_head": {
+        "sha256": "66c0cb64cbab4c12fcf227ef4549717882b7cbab10213b13e0192a18237f0f9e",
+        "bytes": 339
+      },
+      "changed_by_pr_a": false,
+      "pr282_equals_new_main": true
+    }
+  },
+  "collector_pr282_equals_new_main": true,
+  "collector_hashes_new_main": {
+    "scripts/run_regression.py": "dc2ed03b722fd35e9a20f6eda424ac2ff39b3c22f2081a29c5f0777a9b148985",
+    "scripts/ci_evidence.py": "c64a7b268f2a8615ac257a19a5edb9fdbe399ad4d577e6c2fe65f6e2a86fc5cc",
+    "scripts/regression_reason_identity.py": "3b7969bbefb3a7d89d4015871200b33d2ef63d7baaf897a4bc0b44a009adc718",
+    "scripts/regression_observation_policy.json": "42ea0b232286934c1af0905dbc89a15e6fa6eebacd641890b69c047fc78e7d93"
+  },
+  "archive": {
+    "tip_parents": [
+      "0b485dd319e46058bd78672943458e025183baea"
+    ],
+    "old_tip_is_ancestor_of_new_tip": true,
+    "bundle_archive_parents": [
+      "0b485dd319e46058bd78672943458e025183baea"
+    ],
+    "bundle_archive_tree": "226ce970aaa17849b135945145c557f2c42573d4"
+  },
+  "object_sources": {
+    "pr_a_repository": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/registration-rule-dut-fix-impl-opus-20261029/r2a2/repo/.git",
+    "round1_private_repository": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/c0/source/.git"
+  }
+}

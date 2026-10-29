@@ -1,0 +1,37 @@
+{
+  "base": "b4a072959d55fa3b23e34dfcadd92103ec89f2a3",
+  "source_capture": "2bf44c02875bdf863326b5b57d68c89db4fe1be8",
+  "paths": [
+    "evas/validation/baselines/regression-v1.review.json",
+    "scripts/context-registration-bundle.json"
+  ],
+  "criteria_id": "7d70e5b5ab69abf428a2ab06d47999ec6aa9193e1f038d5248c1c92f2f5f8400",
+  "criteria_files": 3610,
+  "dut_id": "5e9bf28ad121569a6975811f0b5ea9e60423e676e6dfcf88048948bfd19ba056",
+  "dut_files": 327,
+  "criteria_DUT_equal_main_push_CI_40857285671": true,
+  "compared_report": {
+    "run": 40857285671,
+    "head": "6fed3c820b6eaecdfabd6d5dcacf8febdd197e4c",
+    "head_is_base": false,
+    "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/r2/runs/main-push-40857285671-catalog/python-regression-timings/python-regression.json",
+    "sha256": "ab35087fe4aa79eb4538c0054822cc82334b9112a484353e770c9bd5a3d9c137"
+  },
+  "note": "push CI 40857285671 ran on 6fed3c82, not on BASE b4a07295; #294 changes no criteria, DUT, language-profile or collector file (proceed-checks.json context_key_diff is empty), and the manifests computed on this tree equal that report's",
+  "unchanged_execution_and_trust_paths": [
+    ".github/workflows/numerical-assurance.yml",
+    "evas/validation/baselines/regression-v1.json",
+    "scripts/run_trusted_regression_gate.py",
+    "scripts/regression_gate.py",
+    "scripts/regression_context_registration.py",
+    "scripts/materialize_registration_bundle.py",
+    "scripts/run_regression.py",
+    "scripts/ci_evidence.py",
+    "scripts/regression_reason_identity.py",
+    "scripts/regression_observation_policy.json"
+  ],
+  "baseline_unchanged": true,
+  "proposal": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/c0-r3/governance-draft/receipt.json",
+  "scientific_execution": false,
+  "scientific_qualification": false
+}

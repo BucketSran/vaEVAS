@@ -1,0 +1,618 @@
+{
+  "round": 3,
+  "base": "b4a072959d55fa3b23e34dfcadd92103ec89f2a3",
+  "base_tree": "fa40153a848827cdac08f71147dda24fc1d30b6d",
+  "previous_main": "6fed3c820b6eaecdfabd6d5dcacf8febdd197e4c",
+  "started_at_utc": "2026-10-29T13:10:34.257575+00:00",
+  "decision": "main session option A (2026-10-29T12:01:32Z): proceed from source to inventory on b4a07295",
+  "ci_gate": {
+    "run": 40864041959,
+    "event": "push",
+    "head_sha": "b4a072959d55fa3b23e34dfcadd92103ec89f2a3",
+    "run_attempt": 1,
+    "status": "completed",
+    "conclusion": "success",
+    "jobs_total": 16,
+    "jobs": {
+      "selection": "success",
+      "fast-checks": "success",
+      "catalog-inventory": "success",
+      "benchmark / first-batch": "success",
+      "benchmark / identity": "success",
+      "provenance-support": "skipped",
+      "regression": "skipped",
+      "static-checks": "skipped",
+      "rust-regression": "skipped",
+      "provenance-paper": "skipped",
+      "fuzz-smoke": "skipped",
+      "properties-and-ngspice": "skipped",
+      "regression-coverage": "skipped",
+      "package": "skipped",
+      "regression-admission": "skipped",
+      "ci-result": "success"
+    },
+    "counts": {
+      "skipped": 10,
+      "success": 6
+    },
+    "failures": 0,
+    "jobs_not_success_or_skipped": {},
+    "skipped_equal_round3_stop_note": true,
+    "coordinator_gate": {
+      "text": "等它的 catalog-inventory 绿了再继续 C0；万一不绿，先停下报我",
+      "catalog_inventory_conclusion": "success",
+      "met": true
+    },
+    "relaxed_condition": {
+      "text": "每个 job 都 success",
+      "added_by": "main session (not the coordinator)",
+      "relaxed_by": "main session decision, option A",
+      "relaxed_at_utc": "2026-10-29T12:01:32Z",
+      "relaxed_at_source": "T3 thread record: requestedAt of run 3, the main session message evas-pr282-c0-r3-proceed-a-20261029",
+      "reason": "the 10 skipped jobs are the CI selector's intended skips for a benchmark/-only push (Selected: benchmark)"
+    }
+  },
+  "ci_gate_ok": true,
+  "observed": {
+    "listed": {
+      "id": 12893047382,
+      "bytes": 7769113,
+      "digest": "sha256:1a617dea5941b80943256a2068a516e37adda27caa7ff6e3b5a2cf8aa3da5ff9",
+      "expired": false,
+      "workflow_run_head_sha": "b4a072959d55fa3b23e34dfcadd92103ec89f2a3"
+    },
+    "downloaded": {
+      "returncode": 0,
+      "bytes": 7769113,
+      "sha256": "1a617dea5941b80943256a2068a516e37adda27caa7ff6e3b5a2cf8aa3da5ff9"
+    },
+    "members": 40,
+    "member_files": [
+      {
+        "path": "assets-after.json",
+        "bytes": 22247616,
+        "sha256": "dc068352da4d7fe947d3094ef4bfac9c31ca21815b2fcac79ad7a8dd1749ff34"
+      },
+      {
+        "path": "entry-000.json",
+        "bytes": 57449,
+        "sha256": "5c9620ae756ac1fb2ef2b4f12c52520c629827952c6da3c802ba2904597faf15"
+      },
+      {
+        "path": "assets-before.json",
+        "bytes": 22247616,
+        "sha256": "dc068352da4d7fe947d3094ef4bfac9c31ca21815b2fcac79ad7a8dd1749ff34"
+      },
+      {
+        "path": "entry-001.json",
+        "bytes": 22386,
+        "sha256": "8d5e79295c193b6c42d6e8027c50de14f3ac00b3b3a86461b84b59ffc84ff3de"
+      },
+      {
+        "path": "entry-002.json",
+        "bytes": 25006,
+        "sha256": "94909f10d2f734abe2d42c18082b6f5c0573436365207a4e4e50c84329b12235"
+      },
+      {
+        "path": "entry-003.json",
+        "bytes": 15543,
+        "sha256": "e4d8e4071aa4a39563af84365ce38a0853302467905d4c0bd7ea4641a357efee"
+      },
+      {
+        "path": "entry-004.json",
+        "bytes": 41782,
+        "sha256": "ea7b883041c9dc928876fb495681871caaea7488a1fe48c01c5ebc4c03bab2e2"
+      },
+      {
+        "path": "entry-005.json",
+        "bytes": 949900,
+        "sha256": "bb8cc2851b2e55fff5a42eb5d2bf94d7f1a216e89050271addc080e92f352f03"
+      },
+      {
+        "path": "entry-006.json",
+        "bytes": 145877,
+        "sha256": "98761e4f4dfbc7f774eac3cb2300d8e71f1a16f57e36acfc823f81b9de404706"
+      },
+      {
+        "path": "entry-007.json",
+        "bytes": 27905,
+        "sha256": "84e328ebcb6eb9c320a3d2ce69bb2b75dca207c3de5ed08e1c87942783f7ead1"
+      },
+      {
+        "path": "entry-008.json",
+        "bytes": 151299,
+        "sha256": "26ef3483ef8485047b5eeb3f341be891faa119bfcf3b900a77e43f831df9d963"
+      },
+      {
+        "path": "entry-009.json",
+        "bytes": 33129,
+        "sha256": "2de4f4ff2b3edf02215beedf9873bbd1850845b676a13dec17abef71997f5e01"
+      },
+      {
+        "path": "entry-010.json",
+        "bytes": 31616,
+        "sha256": "b665c214644ae9f9db1e56d3802fef9c9cd378b4e647455abfb622b87cd080cd"
+      },
+      {
+        "path": "entry-011.json",
+        "bytes": 12181,
+        "sha256": "e748cc590fa9eadfead3bdd98d7e50e8d0ec3bcb8790c1660e2136d2615cd80b"
+      },
+      {
+        "path": "entry-012.json",
+        "bytes": 57149,
+        "sha256": "8cc4b51609cb05a16d99036414f906a9c959c832dfad58ecc97f8c59cc73f677"
+      },
+      {
+        "path": "entry-013.json",
+        "bytes": 11081,
+        "sha256": "be6c125d556c4b24ef2a0e72591324a17a9bb27676833067c51623ca7ddc34ef"
+      },
+      {
+        "path": "entry-014.json",
+        "bytes": 57952,
+        "sha256": "1c78dc8427f7eaa525bf4a3ae9806d3ccf986e1fb032768339abbcca976ab467"
+      },
+      {
+        "path": "entry-016.json",
+        "bytes": 12088,
+        "sha256": "413dae7cfc35e610f86d2a41e693f9fe1a00991658b135283d6e15aa79175b1e"
+      },
+      {
+        "path": "entry-015.json",
+        "bytes": 42098,
+        "sha256": "ff1c65fa2a5e35c59a2878acb75e25977e33d6ad6b4594ee45a61c285d44a213"
+      },
+      {
+        "path": "entry-017.json",
+        "bytes": 43194,
+        "sha256": "f33185187708cfc3698c56befa49fba910ea943e1e20d95003b14f856a1f6920"
+      },
+      {
+        "path": "entry-018.json",
+        "bytes": 54552,
+        "sha256": "7e1f69f54a1137414bfbeaae1e98bc9085d1030187929d48a79bd747583827ff"
+      },
+      {
+        "path": "entry-019.json",
+        "bytes": 35478,
+        "sha256": "8284ac5d1a3a720eb7a59772100a1dbe970aa0e39c37489788ef4f2c915da5e9"
+      },
+      {
+        "path": "entry-020.json",
+        "bytes": 9907,
+        "sha256": "eced30bb37bc999509e1e2db75b735dbcf2affdf2415ebf724b6a9558b36b63c"
+      },
+      {
+        "path": "entry-021.json",
+        "bytes": 21083,
+        "sha256": "07b5b85122e954bee9cc3b8bac0049d4901f24c6d5e1895541c9db67af941f85"
+      },
+      {
+        "path": "entry-022.json",
+        "bytes": 12197,
+        "sha256": "2331bdf9b2e9a80b5753fff166e1a8bda3b086b5f500950682ea6616c9e74fe7"
+      },
+      {
+        "path": "entry-023.json",
+        "bytes": 27164,
+        "sha256": "67818423ecf5e59b495a7ab253ebf6e04abeb0921fbfce9f59c17af1d00b1e18"
+      },
+      {
+        "path": "entry-024.json",
+        "bytes": 19646,
+        "sha256": "06b05f225f5d3b77a96e0df56ab688d15343f4ca370ca8b83413769372ba486c"
+      },
+      {
+        "path": "entry-025.json",
+        "bytes": 194286,
+        "sha256": "e418b8463a51239a07396cbc52457d700178c1b6237ee778650f1516fd11901d"
+      },
+      {
+        "path": "entry-026.json",
+        "bytes": 115195,
+        "sha256": "c9b7960c6f54f4e3f62479f165af46cf4cfcf9f79594738fb49301307db69a67"
+      },
+      {
+        "path": "entry-027.json",
+        "bytes": 9189,
+        "sha256": "e392dd0870539d1a24327da45cc80df8e2a2cd24d577b9ede0a0947609384f36"
+      },
+      {
+        "path": "entry-028.json",
+        "bytes": 333438,
+        "sha256": "b1f29f5782a1c891167aea8d710dbb3ca43e6c1ef86271e5cdb4f9abb2a4b6d8"
+      },
+      {
+        "path": "entry-029.json",
+        "bytes": 18160,
+        "sha256": "8db922c1ad8fd0eda87f4ad0f729778667639008f8427c8c861f4ce4dc91f065"
+      },
+      {
+        "path": "entry-030.json",
+        "bytes": 4547278,
+        "sha256": "5cebe773c0554b8d64181394e2afb46dc7289030f37c85d1d480731bbb31d483"
+      },
+      {
+        "path": "entrypoints.json",
+        "bytes": 45840,
+        "sha256": "9c655250d906aa73d7fe01109a45cee9acbf1d00b15c64714506633ef42343bd"
+      },
+      {
+        "path": "namespaces.json",
+        "bytes": 5275375,
+        "sha256": "8144ab69f75d5d1e9ab5dccf1dbd53e10a1722bb3e22505245496fa17f7151e0"
+      },
+      {
+        "path": "observer-after-transport.json",
+        "bytes": 35,
+        "sha256": "6c0d2677629d87bb4004ae9112b764af608741e6fc41a2dde48455ae0de264b6"
+      },
+      {
+        "path": "observer-before-transport.json",
+        "bytes": 35,
+        "sha256": "6c0d2677629d87bb4004ae9112b764af608741e6fc41a2dde48455ae0de264b6"
+      },
+      {
+        "path": "script-entrypoints.json",
+        "bytes": 20099,
+        "sha256": "5d40c4124f08512b1609e1f44f568de5be0620c62f7bf5801cb089372e4521e6"
+      },
+      {
+        "path": "summary.json",
+        "bytes": 7550255,
+        "sha256": "13d9c626a12b3dcd4023dff1a224ce33c5532793700766bec469a03969ac5fb6"
+      },
+      {
+        "path": "unrouted-paper.json",
+        "bytes": 120,
+        "sha256": "b2e4ff12cc23e93153b7f23c2a99aa39f14067a2958bdca4f0c8d2cd3bd8a4e0"
+      }
+    ],
+    "observation": {
+      "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/r2/runs/main-push-40864041959-catalog-inventory/catalog-inventory/assets-before.json",
+      "sha256": "dc068352da4d7fe947d3094ef4bfac9c31ca21815b2fcac79ad7a8dd1749ff34",
+      "source_commit": "b4a072959d55fa3b23e34dfcadd92103ec89f2a3",
+      "source_tree": "fa40153a848827cdac08f71147dda24fc1d30b6d",
+      "dirty_paths": [],
+      "assets": 50456,
+      "assets_after_equal_before": true
+    },
+    "checks": {
+      "download_returncode_0": true,
+      "bytes_equal_list_and_instruction": true,
+      "sha256_equal_list_and_instruction": true,
+      "artifact_from_this_head": true,
+      "source_commit_is_base": true,
+      "source_tree_is_base_tree": true,
+      "no_dirty_paths": true
+    },
+    "ok": true
+  },
+  "context_key_diff": {
+    "paths_checked": {
+      "criteria": [
+        "evas/tests",
+        "evas/validation",
+        "evas/examples",
+        "experiments"
+      ],
+      "dut": [
+        "evas/src",
+        "evas/rust_core"
+      ],
+      "language_profile": "evas/capabilities/data/language-profile.json",
+      "collector": [
+        "scripts/run_regression.py",
+        "scripts/ci_evidence.py",
+        "scripts/regression_reason_identity.py",
+        "scripts/regression_observation_policy.json"
+      ]
+    },
+    "runs": {
+      "default": {
+        "command": "/usr/bin/git --no-lazy-fetch diff --name-only 6fed3c820b6eaecdfabd6d5dcacf8febdd197e4c b4a072959d55fa3b23e34dfcadd92103ec89f2a3 -- evas/tests evas/validation evas/examples experiments evas/src evas/rust_core evas/capabilities/data/language-profile.json scripts/run_regression.py scripts/ci_evidence.py scripts/regression_reason_identity.py scripts/regression_observation_policy.json",
+        "output_bytes": 0,
+        "paths": []
+      },
+      "no_renames": {
+        "command": "/usr/bin/git --no-lazy-fetch diff --name-only --no-renames 6fed3c820b6eaecdfabd6d5dcacf8febdd197e4c b4a072959d55fa3b23e34dfcadd92103ec89f2a3 -- evas/tests evas/validation evas/examples experiments evas/src evas/rust_core evas/capabilities/data/language-profile.json scripts/run_regression.py scripts/ci_evidence.py scripts/regression_reason_identity.py scripts/regression_observation_policy.json",
+        "output_bytes": 0,
+        "paths": []
+      }
+    },
+    "empty": true,
+    "also_checked_workflow_dir_.github": []
+  },
+  "registration_run_standin": {
+    "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/r2/runs/main-push-40857285671-catalog/python-regression-timings/python-regression.json",
+    "sha256": "ab35087fe4aa79eb4538c0054822cc82334b9112a484353e770c9bd5a3d9c137",
+    "run": 40857285671,
+    "head": "6fed3c820b6eaecdfabd6d5dcacf8febdd197e4c",
+    "head_is_base": false,
+    "pool": "new (7.0.0-1017, ImageVersion 20261026.354.1)",
+    "second_positive": 40614646318,
+    "use": "local positive validation only; not part of the C0 bytes",
+    "basis": "replacement_basis below (main session section 2), re-verified here"
+  },
+  "replacement_basis": {
+    "diff_6fed3c82_b4a07295": {
+      "paths": 988,
+      "status_counts": {
+        "M": 144,
+        "A": 844
+      },
+      "all_under_benchmark/material/draftbench/": true,
+      "under_benchmark/material/historyref/": [],
+      "python_files_added_or_modified": 281
+    },
+    "standin_criteria_files": {
+      "criteria_files": 3610,
+      "under_benchmark/": []
+    },
+    "counter_example_historyref": {
+      "evas/tests .py files containing \"historyref\"": [
+        "evas/tests/test_directed_triangle_endpoint.py",
+        "evas/tests/test_original079_contract.py",
+        "evas/tests/test_static_loops.py"
+      ],
+      "expected_three_modules": [
+        "test_directed_triangle_endpoint",
+        "test_original079_contract",
+        "test_static_loops"
+      ],
+      "equal_expected": true,
+      "their_methods_in_standin_regression": 21,
+      "standin_report_contains_\"historyref\"": false,
+      "standin_report_contains_\"benchmark/\"": false,
+      "conclusion": "a regression report does not record which files a test reads, so the absence of benchmark/ strings in it does not show that benchmark/ is not a regression input (correction of r2/STOP-r3-ci-gate.md section 2)"
+    },
+    "draftbench_readers": {
+      "python_files_outside_benchmark": 1108,
+      "python_files_outside_benchmark_referencing_draftbench_or_DRAFT_BATCHES": [
+        "experiments/benchmark_next/calibration/build_tasks.py",
+        "experiments/benchmark_next/calibration/collect_calibration.py",
+        "experiments/benchmark_next/calibration/reanalyze_archives.py",
+        "experiments/benchmark_next/converter/audit_delivery.py",
+        "experiments/benchmark_next/converter/build_tasks.py",
+        "experiments/benchmark_next/converter/snapshot_tasks.py",
+        "experiments/benchmark_next/converter/test_checker.py",
+        "experiments/benchmark_next/filter/build.py",
+        "experiments/benchmark_next/filter/prepare_health.py",
+        "experiments/benchmark_next/filter/seal.py",
+        "experiments/benchmark_next/ldo/build_tasks.py",
+        "experiments/benchmark_next/ota/build_tasks.py",
+        "experiments/benchmark_next/ota/seal.py",
+        "experiments/benchmark_next/ota/test_contract.py",
+        "experiments/benchmark_next/ota/verify_reference_entries.py",
+        "experiments/benchmark_paths.py",
+        "experiments/benchmark_v2/data_modeling/audit_export.py",
+        "experiments/benchmark_v2/data_modeling/build_candidates.py",
+        "experiments/benchmark_v2/data_modeling/build_task.py",
+        "experiments/benchmark_v2/data_modeling/fit_table.py",
+        "experiments/benchmark_v2/data_modeling/generate_source.py",
+        "experiments/benchmark_v2/data_modeling/test_checker.py",
+        "experiments/benchmark_v2/diagnosis_repair/build_tasks.py",
+        "experiments/benchmark_v2/extension_integration/build_architecture.py",
+        "experiments/benchmark_v2/extension_integration/test_architecture.py",
+        "experiments/benchmark_v2/extension_integration/test_checker.py",
+        "experiments/benchmark_v2/spec_modeling/alternative_forms.py",
+        "experiments/benchmark_v2/spec_modeling/build_structure.py",
+        "experiments/benchmark_v2/spec_modeling/deepen_variants.py",
+        "experiments/benchmark_v2/spec_modeling/test_alternative_forms.py",
+        "experiments/benchmark_v2/spec_modeling/test_cds_repeated_signal.py",
+        "experiments/benchmark_v2/spec_modeling/test_structure.py",
+        "experiments/benchmark_v2/spec_modeling/variants.py",
+        "experiments/benchmark_v2/test_packaging.py",
+        "experiments/benchmark_v2/testing_characterization/build_por_task.py",
+        "experiments/benchmark_v2/testing_characterization/build_tasks.py",
+        "experiments/benchmark_v2/testing_characterization/test_frequency_guard_coverage.py",
+        "experiments/benchmark_v2/testing_characterization/test_por_public.py",
+        "experiments/benchmark_v2/testing_characterization/test_public_terminal_separation.py",
+        "experiments/test_benchmark_paths.py",
+        "scripts/benchmark_package.py",
+        "scripts/benchmark_workbench.py",
+        "scripts/tests/test_benchmark_package.py",
+        "scripts/tests/test_benchmark_workbench.py",
+        "scripts/tests/test_ci_selection.py"
+      ],
+      "test_modules_among_them": [
+        "experiments/benchmark_next/converter/test_checker.py",
+        "experiments/benchmark_next/ota/test_contract.py",
+        "experiments/benchmark_v2/data_modeling/test_checker.py",
+        "experiments/benchmark_v2/extension_integration/test_architecture.py",
+        "experiments/benchmark_v2/extension_integration/test_checker.py",
+        "experiments/benchmark_v2/spec_modeling/test_alternative_forms.py",
+        "experiments/benchmark_v2/spec_modeling/test_cds_repeated_signal.py",
+        "experiments/benchmark_v2/spec_modeling/test_structure.py",
+        "experiments/benchmark_v2/test_packaging.py",
+        "experiments/benchmark_v2/testing_characterization/test_frequency_guard_coverage.py",
+        "experiments/benchmark_v2/testing_characterization/test_por_public.py",
+        "experiments/benchmark_v2/testing_characterization/test_public_terminal_separation.py",
+        "experiments/test_benchmark_paths.py",
+        "scripts/tests/test_benchmark_package.py",
+        "scripts/tests/test_benchmark_workbench.py",
+        "scripts/tests/test_ci_selection.py"
+      ],
+      "test_modules_outside_the_27_and_scripts/tests": [],
+      "scripts/tests_modules_among_them": [
+        "scripts/tests/test_benchmark_package.py",
+        "scripts/tests/test_benchmark_workbench.py",
+        "scripts/tests/test_ci_selection.py"
+      ],
+      "files_under_evas/_among_them": [],
+      "non_test_modules_among_them": [
+        "experiments/benchmark_next/calibration/build_tasks.py",
+        "experiments/benchmark_next/calibration/collect_calibration.py",
+        "experiments/benchmark_next/calibration/reanalyze_archives.py",
+        "experiments/benchmark_next/converter/audit_delivery.py",
+        "experiments/benchmark_next/converter/build_tasks.py",
+        "experiments/benchmark_next/converter/snapshot_tasks.py",
+        "experiments/benchmark_next/filter/build.py",
+        "experiments/benchmark_next/filter/prepare_health.py",
+        "experiments/benchmark_next/filter/seal.py",
+        "experiments/benchmark_next/ldo/build_tasks.py",
+        "experiments/benchmark_next/ota/build_tasks.py",
+        "experiments/benchmark_next/ota/seal.py",
+        "experiments/benchmark_next/ota/verify_reference_entries.py",
+        "experiments/benchmark_paths.py",
+        "experiments/benchmark_v2/data_modeling/audit_export.py",
+        "experiments/benchmark_v2/data_modeling/build_candidates.py",
+        "experiments/benchmark_v2/data_modeling/build_task.py",
+        "experiments/benchmark_v2/data_modeling/fit_table.py",
+        "experiments/benchmark_v2/data_modeling/generate_source.py",
+        "experiments/benchmark_v2/diagnosis_repair/build_tasks.py",
+        "experiments/benchmark_v2/extension_integration/build_architecture.py",
+        "experiments/benchmark_v2/spec_modeling/alternative_forms.py",
+        "experiments/benchmark_v2/spec_modeling/build_structure.py",
+        "experiments/benchmark_v2/spec_modeling/deepen_variants.py",
+        "experiments/benchmark_v2/spec_modeling/variants.py",
+        "experiments/benchmark_v2/testing_characterization/build_por_task.py",
+        "experiments/benchmark_v2/testing_characterization/build_tasks.py",
+        "scripts/benchmark_package.py",
+        "scripts/benchmark_workbench.py"
+      ],
+      "evas/tests_mentions_of_benchmark_names": {
+        "draftbench": [],
+        "DRAFT_BATCHES": [],
+        "benchmark_v2": [],
+        "benchmark_next": [],
+        "benchmark_paths": [],
+        "benchmark_package": [],
+        "benchmark_workbench": []
+      },
+      "test_modules_in_benchmark_v2_benchmark_next_plus_test_benchmark_paths": 27,
+      "those_test_modules": [
+        "experiments/benchmark_next/calibration/test_checker.py",
+        "experiments/benchmark_next/converter/test_checker.py",
+        "experiments/benchmark_next/filter/test_checker.py",
+        "experiments/benchmark_next/ldo/test_bench.py",
+        "experiments/benchmark_next/ldo/test_checker.py",
+        "experiments/benchmark_next/ota/test_contract.py",
+        "experiments/benchmark_v2/data_modeling/test_checker.py",
+        "experiments/benchmark_v2/diagnosis_repair/test_repair.py",
+        "experiments/benchmark_v2/extension_integration/test_architecture.py",
+        "experiments/benchmark_v2/extension_integration/test_checker.py",
+        "experiments/benchmark_v2/spec_modeling/test_375_schedule.py",
+        "experiments/benchmark_v2/spec_modeling/test_alternative_forms.py",
+        "experiments/benchmark_v2/spec_modeling/test_cds_repeated_signal.py",
+        "experiments/benchmark_v2/spec_modeling/test_checker.py",
+        "experiments/benchmark_v2/spec_modeling/test_structure.py",
+        "experiments/benchmark_v2/test_packaging.py",
+        "experiments/benchmark_v2/test_pilot.py",
+        "experiments/benchmark_v2/test_runtime.py",
+        "experiments/benchmark_v2/test_runtime_support_files.py",
+        "experiments/benchmark_v2/testing_characterization/test_checker.py",
+        "experiments/benchmark_v2/testing_characterization/test_frequency_guard_coverage.py",
+        "experiments/benchmark_v2/testing_characterization/test_por_checker.py",
+        "experiments/benchmark_v2/testing_characterization/test_por_public.py",
+        "experiments/benchmark_v2/testing_characterization/test_por_timeout.py",
+        "experiments/benchmark_v2/testing_characterization/test_por_translation.py",
+        "experiments/benchmark_v2/testing_characterization/test_public_terminal_separation.py",
+        "experiments/test_benchmark_paths.py"
+      ],
+      "standin_regression_module_names": 332,
+      "overlap_with_standin_regression_modules": [],
+      "ci_coverage_in_40864041959": {
+        "first_batch_job_log": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/r2/gh/first-batch-job-40864041959-r1.log",
+        "unittest_runs": 14,
+        "first_run_is_discover_-s_experiments/benchmark_v2": [
+          "test_packaging",
+          "test_pilot",
+          "test_runtime",
+          "test_runtime_support_files"
+        ],
+        "benchmark_v2_top_level_test_modules": [
+          "test_packaging",
+          "test_pilot",
+          "test_runtime",
+          "test_runtime_support_files"
+        ],
+        "first_run_equals_top_level_modules": true,
+        "__init__.py_under_benchmark_v2_or_benchmark_next": [],
+        "benchmark_v2_subdirectory_test_modules_not_discovered": [
+          "experiments/benchmark_v2/data_modeling/test_checker.py",
+          "experiments/benchmark_v2/diagnosis_repair/test_repair.py",
+          "experiments/benchmark_v2/extension_integration/test_architecture.py",
+          "experiments/benchmark_v2/extension_integration/test_checker.py",
+          "experiments/benchmark_v2/spec_modeling/test_375_schedule.py",
+          "experiments/benchmark_v2/spec_modeling/test_alternative_forms.py",
+          "experiments/benchmark_v2/spec_modeling/test_cds_repeated_signal.py",
+          "experiments/benchmark_v2/spec_modeling/test_checker.py",
+          "experiments/benchmark_v2/spec_modeling/test_structure.py",
+          "experiments/benchmark_v2/testing_characterization/test_checker.py",
+          "experiments/benchmark_v2/testing_characterization/test_frequency_guard_coverage.py",
+          "experiments/benchmark_v2/testing_characterization/test_por_checker.py",
+          "experiments/benchmark_v2/testing_characterization/test_por_public.py",
+          "experiments/benchmark_v2/testing_characterization/test_por_timeout.py",
+          "experiments/benchmark_v2/testing_characterization/test_por_translation.py",
+          "experiments/benchmark_v2/testing_characterization/test_public_terminal_separation.py"
+        ],
+        "of_which_reference_draftbench": [
+          "experiments/benchmark_v2/data_modeling/test_checker.py",
+          "experiments/benchmark_v2/extension_integration/test_architecture.py",
+          "experiments/benchmark_v2/extension_integration/test_checker.py",
+          "experiments/benchmark_v2/spec_modeling/test_alternative_forms.py",
+          "experiments/benchmark_v2/spec_modeling/test_cds_repeated_signal.py",
+          "experiments/benchmark_v2/spec_modeling/test_structure.py",
+          "experiments/benchmark_v2/testing_characterization/test_frequency_guard_coverage.py",
+          "experiments/benchmark_v2/testing_characterization/test_por_public.py",
+          "experiments/benchmark_v2/testing_characterization/test_public_terminal_separation.py"
+        ],
+        "identity_job_log_contains_unittest_of": {
+          "experiments.test_benchmark_paths": true,
+          "scripts.tests.test_benchmark_package": true,
+          "scripts.tests.test_benchmark_workbench": true
+        },
+        "selection_job_ran_test_ci_selection": true,
+        "note": "unittest discover in Python 3.12 does not enter directories without __init__.py; the first-batch loop names experiments/benchmark_v2 itself and each experiments/benchmark_next/* directory"
+      }
+    },
+    "workflow_lines_static_reading": [
+      ".github/workflows/benchmark-evidence.yml:6: identity_result:",
+      ".github/workflows/benchmark-evidence.yml:7: value: ${{ jobs.identity.outputs.result }}",
+      ".github/workflows/benchmark-evidence.yml:8: first_batch_result:",
+      ".github/workflows/benchmark-evidence.yml:9: value: ${{ jobs.first-batch.outputs.result }}",
+      ".github/workflows/benchmark-evidence.yml:15: identity:",
+      ".github/workflows/benchmark-evidence.yml:28: run: python3 -B -m experiments.va_screen.identity --historical",
+      ".github/workflows/benchmark-evidence.yml:34: run: python3 -B -m unittest experiments.test_benchmark_paths -v",
+      ".github/workflows/benchmark-evidence.yml:36: run: python3 -B -m unittest experiments.va_screen.test_identity experiments.va_screen.test_summarize -v",
+      ".github/workflows/benchmark-evidence.yml:42: first-batch:",
+      ".github/workflows/benchmark-evidence.yml:54: python3 -B experiments/benchmark_first_batch/sync_runtime.py --check",
+      ".github/workflows/benchmark-evidence.yml:55: python3 -B experiments/benchmark_first_batch/sync_metadata.py --check",
+      ".github/workflows/benchmark-evidence.yml:58: for directory in experiments/benchmark_v2 experiments/benchmark_first_batch experiments/benchmark_first_batch/model_repair experiments/benchmark_first_batch/identification experiments/benchmark_first_batch/integration experiments/benchmark_first_batch/verification_measurement experiments/benchmark_first_batch/optimization experiments/benchmark_first_batch/legacy_va07 experiments/benchmark_first_batch/agentic; do",
+      ".github/workflows/benchmark-evidence.yml:61: if [ -d experiments/benchmark_next ]; then",
+      ".github/workflows/benchmark-evidence.yml:62: for directory in experiments/benchmark_next/*; do",
+      ".github/workflows/numerical-assurance.yml:16: description: Exact previous commit for iteration; missing/invalid identity runs delivery",
+      ".github/workflows/numerical-assurance.yml:350: python3 -B scripts/ci_evidence.py identity",
+      ".github/workflows/numerical-assurance.yml:351: --identity runs/regression-identity.json --shard ${{ matrix.shard }}-of-4",
+      ".github/workflows/numerical-assurance.yml:362: if python3 -B scripts/ci_evidence.py verify --identity runs/regression-identity.json --shard ${{ matrix.shard }}-of-4 --receipt runs/regression-evidence/receipt.json --report runs/regression-evidence/report.json; then",
+      ".github/workflows/numerical-assurance.yml:374: python3 -B scripts/run_regression.py --shard-count 4 --shard-index ${{ matrix.shard }} --weights scripts/regression-weights.json --input-identity runs/regression-identity.json --report runs/regression-evidence/report.json > runs/regression-evidence/stdout.txt 2> runs/regression-evidence/stderr.txt",
+      ".github/workflows/numerical-assurance.yml:377: python3 -B scripts/ci_evidence.py collect --identity runs/regression-identity.json --shard ${{ matrix.shard }}-of-4 --report runs/regression-evidence/report.json --raw-exit \"$raw_exit\" > runs/regression-evidence/collection.json",
+      ".github/workflows/numerical-assurance.yml:388: python3 -B scripts/ci_evidence.py record --identity runs/regression-identity.json",
+      ".github/workflows/numerical-assurance.yml:404: runs/regression-identity.json"
+    ],
+    "ok": true
+  },
+  "shared_store_objects_of_base": {
+    "command": "/usr/bin/git --no-lazy-fetch rev-list --objects --missing=print b4a072959d55fa3b23e34dfcadd92103ec89f2a3 (shared store)",
+    "objects": 63036,
+    "missing": []
+  },
+  "tips": {
+    "at_utc": "2026-10-29T13:11:01.064597+00:00",
+    "main": "b4a072959d55fa3b23e34dfcadd92103ec89f2a3",
+    "main_is_base": true,
+    "archive": "18a202cb00c0a040e504d6235c503f0a52f5ebd7",
+    "archive_is_18a202cb": true,
+    "codex/pr4-context-authority": "6e3801a2dc54771b831ba68ed0ae752287149a7d",
+    "codex/pr4-context-baseline": "b1730f91ef26a9670d0fbe077248fd1d590c46bf"
+  },
+  "earlier_stop_receipt": {
+    "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/c0-r3/base-checks.json",
+    "sha256": "f4790939d02a76baedb451daa846a6bbcca7bf82ed76998ee2b87edfde9ea6f7",
+    "note": "unchanged; its stop was the main session's every-job condition, relaxed above"
+  },
+  "proceed": true,
+  "finished_at_utc": "2026-10-29T13:11:05.012712+00:00"
+}

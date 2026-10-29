@@ -1,0 +1,124 @@
+{
+  "valid": true,
+  "raw_successful": false,
+  "merge_allowed": true,
+  "semantic_qualification": false,
+  "transition": {
+    "accepted": true,
+    "registration": true
+  },
+  "authorization_evaluated": true,
+  "head_evaluated": true,
+  "differences": [],
+  "trusted_comparison": {
+    "valid": true,
+    "raw_successful": false,
+    "merge_allowed": true,
+    "differences": [],
+    "semantic_qualification": false,
+    "host_runtime_difference": {
+      "trusted": {
+        "runtime_profile": {
+          "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+          "ImageVersion": "20261023.334.3"
+        },
+        "execution_toolchain": {
+          "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+          "ImageVersion": "20261023.334.3"
+        }
+      },
+      "actual": {
+        "runtime_profile": {
+          "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+          "ImageVersion": "20261026.354.1"
+        },
+        "execution_toolchain": {
+          "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+          "ImageVersion": "20261026.354.1"
+        }
+      }
+    }
+  },
+  "current_transition": {
+    "valid": true,
+    "raw_successful": false,
+    "merge_allowed": true,
+    "differences": [],
+    "semantic_qualification": false,
+    "trusted_comparison": {
+      "valid": true,
+      "raw_successful": false,
+      "merge_allowed": true,
+      "differences": [],
+      "semantic_qualification": false,
+      "host_runtime_difference": {
+        "trusted": {
+          "runtime_profile": {
+            "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+            "ImageVersion": "20261023.334.3"
+          },
+          "execution_toolchain": {
+            "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+            "ImageVersion": "20261023.334.3"
+          }
+        },
+        "actual": {
+          "runtime_profile": {
+            "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+            "ImageVersion": "20261026.354.1"
+          },
+          "execution_toolchain": {
+            "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+            "ImageVersion": "20261026.354.1"
+          }
+        }
+      }
+    },
+    "transition": {
+      "proposal_evaluated": false,
+      "refresh_required": false,
+      "accepted": true,
+      "differences": [],
+      "new_passed_observations": [],
+      "vanished_nonpassing_observations": [],
+      "reused_trusted_baseline": true
+    },
+    "host_runtime_difference": {
+      "trusted": {
+        "runtime_profile": {
+          "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+          "ImageVersion": "20261023.334.3"
+        },
+        "execution_toolchain": {
+          "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+          "ImageVersion": "20261023.334.3"
+        }
+      },
+      "actual": {
+        "runtime_profile": {
+          "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+          "ImageVersion": "20261026.354.1"
+        },
+        "execution_toolchain": {
+          "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+          "ImageVersion": "20261026.354.1"
+        }
+      }
+    }
+  },
+  "registration_dut": {
+    "current": {
+      "manifest_sha256": "5e9bf28ad121569a6975811f0b5ea9e60423e676e6dfcf88048948bfd19ba056",
+      "kernel_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe"
+    },
+    "e1": {
+      "manifest_sha256": "7713308b855e99f30f5979b3b93f80489f5f772eadd86d53d52497674a5bec9b",
+      "kernel_sha256": "3353bed859b7904de383e540d9efdc3b386ed90abceca77557c8119813214687"
+    },
+    "changed": true
+  },
+  "authorization_id": "pr282-capability-batch1-CI40762672880",
+  "added_entry_sha256": "556035ee859fd2976c8a602552a649c7cf9aed08ff65b4bc7203dd804ad37540",
+  "human_review_status": "trusted-main record only; JSON does not authenticate a human",
+  "opaque_passes": 59
+}

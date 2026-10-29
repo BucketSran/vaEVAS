@@ -1,0 +1,64 @@
+{
+  "stdout": {
+    "parts": [
+      {
+        "shard_index": 0,
+        "offset": 0,
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "shard_index": 1,
+        "offset": 0,
+        "bytes": 10654,
+        "sha256": "7fbf4501ff838d4a8f13bd8bb7606a550da7662a80692a83bf2a1616cc0c2c39"
+      },
+      {
+        "shard_index": 2,
+        "offset": 10654,
+        "bytes": 283,
+        "sha256": "4c2dd095776e2db69bd79310018da99fe9f260d946bae69708a7cf0a316d9cd0"
+      },
+      {
+        "shard_index": 3,
+        "offset": 10937,
+        "bytes": 610,
+        "sha256": "361b81dd18f58a8d84cbae56c18cb88481e969dbe2b50bb90dc3a6551bc2677f"
+      }
+    ],
+    "total_bytes": 11547,
+    "total_sha256": "bbe1734ac3bd84e86256dd4d30a528b02ef72b7252e692f1debb52be2ac8a1a3",
+    "order": "ascending shard_index 0..3, plain byte concatenation without separator"
+  },
+  "stderr": {
+    "parts": [
+      {
+        "shard_index": 0,
+        "offset": 0,
+        "bytes": 420226,
+        "sha256": "b3c64c8bbefad9536fddced782f71d28123667e478e7b9b24bc503a6e1b8d589"
+      },
+      {
+        "shard_index": 1,
+        "offset": 420226,
+        "bytes": 406080,
+        "sha256": "b09493ef95a6dcf70dfcc3078beff9147292dac991c214495db7ddff5d5ac9d4"
+      },
+      {
+        "shard_index": 2,
+        "offset": 826306,
+        "bytes": 374201,
+        "sha256": "d06191fc1ae4a8860384f1b86e500da75e81e6dcbb54061f5e2139f01d766749"
+      },
+      {
+        "shard_index": 3,
+        "offset": 1200507,
+        "bytes": 473819,
+        "sha256": "7863ba71cadb85e2438af84f64ce304b5e6c4842d630b1e5d267cdc26e5f41f8"
+      }
+    ],
+    "total_bytes": 1674326,
+    "total_sha256": "47c5332abee9f3f326c8b8a796a6d8115e56e63b667d420503d8bdbefadc251b",
+    "order": "ascending shard_index 0..3, plain byte concatenation without separator"
+  }
+}

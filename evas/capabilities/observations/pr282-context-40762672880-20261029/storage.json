@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "files": [
+    {
+      "name": "artifact_manifest",
+      "stored_bytes": 1132,
+      "stored_sha256": "43965750aeb74f37fcfc5f3928c3a009d4b98dc7a219bb8a6190f582018cc2d8",
+      "materialized_bytes": 1132,
+      "materialized_sha256": "43965750aeb74f37fcfc5f3928c3a009d4b98dc7a219bb8a6190f582018cc2d8",
+      "encoding": "identity"
+    },
+    {
+      "name": "collector_manifest",
+      "stored_bytes": 356,
+      "stored_sha256": "07c2295a3e878c283f6d0d1870b154303bc2038f4a3744ed3fdf27788ff25bcb",
+      "materialized_bytes": 356,
+      "materialized_sha256": "07c2295a3e878c283f6d0d1870b154303bc2038f4a3744ed3fdf27788ff25bcb",
+      "encoding": "identity"
+    },
+    {
+      "name": "composition_recipe",
+      "stored_bytes": 620,
+      "stored_sha256": "61c5b0a1ecd33ce32a6675901e7d426b6b088e84163a03dd31b1b42268a36d88",
+      "materialized_bytes": 620,
+      "materialized_sha256": "61c5b0a1ecd33ce32a6675901e7d426b6b088e84163a03dd31b1b42268a36d88",
+      "encoding": "identity"
+    },
+    {
+      "name": "dut_build",
+      "stored_bytes": 1661,
+      "stored_sha256": "10e612d7ccfd817f4d6e730cc605f437af45f3f7244bf4fd783e2f2456163fbb",
+      "materialized_bytes": 1661,
+      "materialized_sha256": "10e612d7ccfd817f4d6e730cc605f437af45f3f7244bf4fd783e2f2456163fbb",
+      "encoding": "identity"
+    },
+    {
+      "name": "kernel_binary",
+      "stored_bytes": 22913547,
+      "stored_sha256": "6339d7384308432f11c4c63596060a3ee514fe53fd96ca4772086414d52f03e9",
+      "materialized_bytes": 105916928,
+      "materialized_sha256": "3353bed859b7904de383e540d9efdc3b386ed90abceca77557c8119813214687",
+      "encoding": "gzip"
+    },
+    {
+      "name": "report.json",
+      "stored_bytes": 41609814,
+      "stored_sha256": "7cc4bd08613c01716c69d47eeb29e6e484781664a454aa1c8497b4259561c6ac",
+      "materialized_bytes": 41609814,
+      "materialized_sha256": "7cc4bd08613c01716c69d47eeb29e6e484781664a454aa1c8497b4259561c6ac",
+      "encoding": "identity"
+    },
+    {
+      "name": "shard_reports",
+      "stored_bytes": 44923195,
+      "stored_sha256": "82e77c75fd66107088f206a7ce9d1587569fd65053ca56abaa547348cdd3b2ec",
+      "materialized_bytes": 44923195,
+      "materialized_sha256": "82e77c75fd66107088f206a7ce9d1587569fd65053ca56abaa547348cdd3b2ec",
+      "encoding": "identity"
+    },
+    {
+      "name": "snapshot_manifest",
+      "stored_bytes": 12765888,
+      "stored_sha256": "8f67eb904f703d07e88039289e6b5f6a44fb3ac6de2092db10b874a3f12dc77b",
+      "materialized_bytes": 12765888,
+      "materialized_sha256": "8f67eb904f703d07e88039289e6b5f6a44fb3ac6de2092db10b874a3f12dc77b",
+      "encoding": "identity"
+    },
+    {
+      "name": "stderr",
+      "stored_bytes": 1674326,
+      "stored_sha256": "47c5332abee9f3f326c8b8a796a6d8115e56e63b667d420503d8bdbefadc251b",
+      "materialized_bytes": 1674326,
+      "materialized_sha256": "47c5332abee9f3f326c8b8a796a6d8115e56e63b667d420503d8bdbefadc251b",
+      "encoding": "identity"
+    },
+    {
+      "name": "stdout",
+      "stored_bytes": 11547,
+      "stored_sha256": "bbe1734ac3bd84e86256dd4d30a528b02ef72b7252e692f1debb52be2ac8a1a3",
+      "materialized_bytes": 11547,
+      "materialized_sha256": "bbe1734ac3bd84e86256dd4d30a528b02ef72b7252e692f1debb52be2ac8a1a3",
+      "encoding": "identity"
+    }
+  ],
+  "kernel_binary": {
+    "encoding": "gzip",
+    "decoded_bytes": 105916928,
+    "decoded_sha256": "3353bed859b7904de383e540d9efdc3b386ed90abceca77557c8119813214687"
+  },
+  "scientific_qualification": false,
+  "codec": "accepted schema 2: kernel_binary is one gzip member (mtime 0, no file name); the other nine roles keep their bytes"
+}

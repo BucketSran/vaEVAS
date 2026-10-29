@@ -1,0 +1,96 @@
+{
+  "run": 40762672880,
+  "attempt": 1,
+  "event": "workflow_dispatch",
+  "head": "84d6b71f8fbfd19b31f1696a88cb35643b375b3d",
+  "tree": "e2e9755ea7916b03144e27b553da3ef89562a034",
+  "trusted_base": "d6b7543fc815aaa584c886108691b6f2c01eb220",
+  "files": [
+    {
+      "path": "bundle/artifact_manifest",
+      "bytes": 1132,
+      "sha256": "43965750aeb74f37fcfc5f3928c3a009d4b98dc7a219bb8a6190f582018cc2d8"
+    },
+    {
+      "path": "bundle/collector_manifest",
+      "bytes": 356,
+      "sha256": "07c2295a3e878c283f6d0d1870b154303bc2038f4a3744ed3fdf27788ff25bcb"
+    },
+    {
+      "path": "bundle/composition_recipe",
+      "bytes": 620,
+      "sha256": "61c5b0a1ecd33ce32a6675901e7d426b6b088e84163a03dd31b1b42268a36d88"
+    },
+    {
+      "path": "bundle/dut_build",
+      "bytes": 1661,
+      "sha256": "10e612d7ccfd817f4d6e730cc605f437af45f3f7244bf4fd783e2f2456163fbb"
+    },
+    {
+      "path": "bundle/kernel_binary",
+      "bytes": 105916928,
+      "sha256": "3353bed859b7904de383e540d9efdc3b386ed90abceca77557c8119813214687"
+    },
+    {
+      "path": "bundle/report.json",
+      "bytes": 41609814,
+      "sha256": "7cc4bd08613c01716c69d47eeb29e6e484781664a454aa1c8497b4259561c6ac"
+    },
+    {
+      "path": "bundle/shard_reports",
+      "bytes": 44923195,
+      "sha256": "82e77c75fd66107088f206a7ce9d1587569fd65053ca56abaa547348cdd3b2ec"
+    },
+    {
+      "path": "bundle/snapshot_manifest",
+      "bytes": 12765888,
+      "sha256": "8f67eb904f703d07e88039289e6b5f6a44fb3ac6de2092db10b874a3f12dc77b"
+    },
+    {
+      "path": "bundle/stderr",
+      "bytes": 1674326,
+      "sha256": "47c5332abee9f3f326c8b8a796a6d8115e56e63b667d420503d8bdbefadc251b"
+    },
+    {
+      "path": "bundle/stdout",
+      "bytes": 11547,
+      "sha256": "bbe1734ac3bd84e86256dd4d30a528b02ef72b7252e692f1debb52be2ac8a1a3"
+    }
+  ],
+  "kernel_storage": {
+    "path": "storage/kernel_binary.gz",
+    "bytes": 22913547,
+    "sha256": "6339d7384308432f11c4c63596060a3ee514fe53fd96ca4772086414d52f03e9",
+    "descriptor": {
+      "encoding": "gzip",
+      "decoded_bytes": 105916928,
+      "decoded_sha256": "3353bed859b7904de383e540d9efdc3b386ed90abceca77557c8119813214687"
+    },
+    "decoder": "main materialize_registration_bundle._gunzip_member",
+    "gzip": "single member, mtime 0, no file name, level 9"
+  },
+  "snapshot_entries": 49608,
+  "snapshot_order": "git ls-tree order of the head, as ci_evidence.fingerprint lists it; reproduces 4 identity keys",
+  "entry_provenance_preview": {
+    "schema_version": 1,
+    "snapshot_revision": "84d6b71f8fbfd19b31f1696a88cb35643b375b3d",
+    "snapshot_reference": "https://github.com/BucketSran/vaEVAS/tree/84d6b71f8fbfd19b31f1696a88cb35643b375b3d; https://github.com/BucketSran/vaEVAS/actions/runs/40762672880 (workflow_dispatch) checked out this head; tree e2e9755ea7916b03144e27b553da3ef89562a034",
+    "raw_reference": "https://github.com/BucketSran/vaEVAS/actions/runs/40762672880 attempt 1, artifact python-regression-timings/python-regression.json",
+    "recipe_sha256": "61c5b0a1ecd33ce32a6675901e7d426b6b088e84163a03dd31b1b42268a36d88",
+    "artifact_manifest_sha256": "43965750aeb74f37fcfc5f3928c3a009d4b98dc7a219bb8a6190f582018cc2d8"
+  },
+  "role_sources": {
+    "report.json": "python-regression-timings/python-regression.json (byte copy)",
+    "shard_reports": "4 x python-regression-shard-N-attempt-1/regression-evidence/report.json as a JSON array",
+    "kernel_binary": "python-regression-shard-0-attempt-1/regression-build/evas-kernel (4 shards identical, never executed)",
+    "stdout": "shard-index-order concatenation",
+    "stderr": "shard-index-order concatenation",
+    "snapshot_manifest": "catalog-inventory/assets-before.json x git ls-tree order of 84d6b71f8fbfd19b31f1696a88cb35643b375b3d",
+    "collector_manifest": "four collector source SHA256 from the snapshot",
+    "composition_recipe": "derived",
+    "dut_build": "derived from shard build records and identities",
+    "artifact_manifest": "derived"
+  },
+  "authorization_created": false,
+  "semantic_qualification": false
+}

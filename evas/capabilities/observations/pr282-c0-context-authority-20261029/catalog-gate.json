@@ -1,0 +1,14 @@
+{
+  "at_utc": "2026-10-29T13:21:58.278545+00:00",
+  "main": "b4a072959d55fa3b23e34dfcadd92103ec89f2a3",
+  "archive_tip": "18a202cb00c0a040e504d6235c503f0a52f5ebd7",
+  "expected_main": "b4a072959d55fa3b23e34dfcadd92103ec89f2a3",
+  "expected_archive_tip": "18a202cb00c0a040e504d6235c503f0a52f5ebd7",
+  "ok": true,
+  "base_used": "b4a072959d55fa3b23e34dfcadd92103ec89f2a3",
+  "records": [
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/r2/gh/main-branch-r3-catalog-gate.json",
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/r2/gh/archive-ref-r3-catalog-gate.json"
+  ],
+  "rule": "before capture/discover/union/archive/generate: main must be b4a07295 and the archive tip 18a202cb, else stop and report"
+}

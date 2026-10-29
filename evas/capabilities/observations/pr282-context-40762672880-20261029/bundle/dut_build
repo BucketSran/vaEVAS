@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "dut_revision": "84d6b71f8fbfd19b31f1696a88cb35643b375b3d",
+  "dut_manifest_sha256": "7713308b855e99f30f5979b3b93f80489f5f772eadd86d53d52497674a5bec9b",
+  "kernel_sha256": "3353bed859b7904de383e540d9efdc3b386ed90abceca77557c8119813214687",
+  "toolchain_reference": "https://github.com/BucketSran/vaEVAS/actions/runs/40762672880 attempt 1; actual regression-identity.json environment of all four shards (sha256 04b7061660f479483e708273b01c9f9e928bc81754e9dfd5b7e71fbba1fc0a74, 962a28f011c39b2e6cf6f0b83104ae971c6251ea1e14521c773b502809c12b47, 029948020769440cf2c04cb55326aa6c50c50afe10296369024c53708afb68d1, 697846aec5ea5fdf5b9ead07ada1873d6c0119d5bb091c0e7b98cdbbda1fd9d8): python 3.12.15, rustc 1.99.1 (58cf8f9c3 2026-10-13), cargo 1.99.1 (5f94df478 2026-08-27), platform Linux-7.0.0-1017-azure-x86_64-with-glibc2.39, ImageVersion 20261026.354.1",
+  "build_reference": "https://github.com/BucketSran/vaEVAS/actions/runs/40762672880 attempt 1 (workflow_dispatch on codex/evas-capability-batch1), head 84d6b71f8fbfd19b31f1696a88cb35643b375b3d (tree e2e9755ea7916b03144e27b553da3ef89562a034); CI checked out the head itself; original regression-build/{stdout.txt,stderr.txt,evas-kernel} of all four shards retained and bound: kernel sha256 3353bed859b7904de383e540d9efdc3b386ed90abceca77557c8119813214687 identical in 4 shards; build stdout sha256 e3b0c44298fc1c14/e3b0c44298fc1c14/e3b0c44298fc1c14/e3b0c44298fc1c14; build stderr sha256 17ef7f4b2cf0c96c/71ae3d39ba390a19/9f5a654978aa496b/af533399f0ed821c; DUT manifest of 84d6b71f8fbfd19b31f1696a88cb35643b375b3d (it differs from main D0 5e9bf28ad121569a); kernel not executed here"
+}

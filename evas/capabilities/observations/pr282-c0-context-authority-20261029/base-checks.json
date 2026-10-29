@@ -1,0 +1,105 @@
+{
+  "round": 3,
+  "base": "b4a072959d55fa3b23e34dfcadd92103ec89f2a3",
+  "base_tree": "fa40153a848827cdac08f71147dda24fc1d30b6d",
+  "previous_main": "6fed3c820b6eaecdfabd6d5dcacf8febdd197e4c",
+  "started_at_utc": "2026-10-29T11:27:53.847249+00:00",
+  "diff": {
+    "command": "/usr/bin/git --no-lazy-fetch diff --name-only 6fed3c820b6eaecdfabd6d5dcacf8febdd197e4c b4a072959d55fa3b23e34dfcadd92103ec89f2a3 (shared store, read only)",
+    "exact_command_paths": 988,
+    "exact_listing_sha256": "6b72b8961890997e861a0df5723a15d78c6d2e8dce32c50bc9ea79b0483ac784",
+    "no_renames_paths": 988,
+    "no_renames_listing_sha256": "6b72b8961890997e861a0df5723a15d78c6d2e8dce32c50bc9ea79b0483ac784",
+    "paths": 988,
+    "all_under_benchmark": true,
+    "not_under_benchmark": [],
+    "bound_paths_changed": [],
+    "bound_paths_checked": [
+      "scripts/run_regression.py",
+      "scripts/ci_evidence.py",
+      "scripts/regression_reason_identity.py",
+      "scripts/regression_observation_policy.json",
+      "scripts/regression_context_registration.py",
+      "scripts/regression_gate.py",
+      "scripts/materialize_registration_bundle.py",
+      "evas/validation/baselines/regression-v1.json",
+      "evas/validation/baselines/regression-v1.review.json",
+      "scripts/context-registration-bundle.json"
+    ],
+    "same_as_earlier_listing": true
+  },
+  "commit_object": {
+    "tree": [
+      "fa40153a848827cdac08f71147dda24fc1d30b6d"
+    ],
+    "parents": [
+      "6fed3c820b6eaecdfabd6d5dcacf8febdd197e4c"
+    ],
+    "tree_matches": true,
+    "single_parent_previous_main": true
+  },
+  "main_tip": {
+    "record": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/r2/gh/main-branch-r5.json",
+    "sha": "b4a072959d55fa3b23e34dfcadd92103ec89f2a3",
+    "at_utc": "2026-10-29T11:27:55.098971+00:00",
+    "equals_base": true
+  },
+  "ci_gate": {
+    "run": 40864041959,
+    "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/r2/runs/main-push-40864041959-catalog/fetch-receipt.json",
+    "receipt_sha256": "2dedfdade734bce263779f406bf369c0936c7969fadc76e87adb492e7fc05e96",
+    "status": "completed",
+    "conclusion": "success",
+    "head_sha": "b4a072959d55fa3b23e34dfcadd92103ec89f2a3",
+    "jobs": {
+      "selection": "success",
+      "fast-checks": "success",
+      "catalog-inventory": "success",
+      "benchmark / first-batch": "success",
+      "benchmark / identity": "success",
+      "provenance-support": "skipped",
+      "regression": "skipped",
+      "static-checks": "skipped",
+      "rust-regression": "skipped",
+      "provenance-paper": "skipped",
+      "fuzz-smoke": "skipped",
+      "properties-and-ngspice": "skipped",
+      "regression-coverage": "skipped",
+      "package": "skipped",
+      "regression-admission": "skipped",
+      "ci-result": "success"
+    },
+    "jobs_not_success": {
+      "provenance-support": "skipped",
+      "regression": "skipped",
+      "static-checks": "skipped",
+      "rust-regression": "skipped",
+      "provenance-paper": "skipped",
+      "fuzz-smoke": "skipped",
+      "properties-and-ngspice": "skipped",
+      "regression-coverage": "skipped",
+      "package": "skipped",
+      "regression-admission": "skipped"
+    },
+    "all_jobs_success": false,
+    "selection_job_log": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/r2/gh/selection-job-40864041959-r1.log",
+    "selection_job_log_sha256": "09e8d463d51d4c5d1166e7250c18dfbeaea515bf37c6058ab650329d71fc2d1a",
+    "selection_lines": [
+      "Selected: benchmark",
+      "Changed paths: 988; base=6fed3c820b6eaecdfabd6d5dcacf8febdd197e4c; head=b4a072959d55fa3b23e34dfcadd92103ec89f2a3"
+    ],
+    "artifacts": [
+      "catalog-inventory",
+      "fast-feedback"
+    ]
+  },
+  "supporting_fact": {
+    "round2_standin": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/r2/runs/main-push-40857285671-catalog/python-regression-timings/python-regression.json",
+    "strings_starting_benchmark/": 0
+  },
+  "base_ok": true,
+  "stop": true,
+  "stop_reason": "push CI 40864041959: 10 job(s) not success (provenance-support=skipped, regression=skipped, static-checks=skipped, rust-regression=skipped, provenance-paper=skipped, fuzz-smoke=skipped, properties-and-ngspice=skipped, regression-coverage=skipped, package=skipped, regression-admission=skipped); the instruction says stop and report",
+  "stages_run": [],
+  "finished_at_utc": "2026-10-29T11:27:55.645978+00:00"
+}

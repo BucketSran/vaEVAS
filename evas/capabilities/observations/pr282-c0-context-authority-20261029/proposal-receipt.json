@@ -1,0 +1,148 @@
+{
+  "kind": "unadopted-exact-context-proposal (round 3, main b4a07295)",
+  "started_at_utc": "2026-10-29T13:19:27.510323+00:00",
+  "finished_at_utc": "2026-10-29T13:21:54.630969+00:00",
+  "candidate": "84d6b71f8fbfd19b31f1696a88cb35643b375b3d",
+  "e1_run": 40762672880,
+  "trusted_base": "b4a072959d55fa3b23e34dfcadd92103ec89f2a3",
+  "effective_authority": false,
+  "independent_exact_review": "pending",
+  "review_destination": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/night-coordination/pr282-exact-context-astra-r1-20261029/review-report.json",
+  "reviewer_text": "independent tcodex/gpt-6-astra, reasoningEffort max, serviceTier priority, fresh context",
+  "reviewer_and_destination_status": "confirmed by the main session 2026-10-29 (rounds 2 and 3)",
+  "mapping": "main session e1-mapping.json used unchanged (7737 preserved, attribution null, its own review_reference)",
+  "authorization_id": "pr282-capability-batch1-CI40762672880",
+  "context_count_before": 5,
+  "context_count_after": 6,
+  "old_baseline_canonical_sha256": "ee87e18aad3c64d8a63f0d2d65e6e656ce57b03a7932c547537de4178683de0b",
+  "previous_context_sha256": "29edd5bfcdb765b3ca7b11dcd7ba178b97879422757a4521d046dcafba16255c",
+  "previous_context": "context 4 with the new-pool host fields (stand-ins: main 6fed3c82 push CI 40857285671 and PR6 activation CI 40614646318); binds the baseline PR run to the new pool",
+  "entry_canonical_sha256": "556035ee859fd2976c8a602552a649c7cf9aed08ff65b4bc7203dd804ad37540",
+  "authority_canonical_sha256": "15259b95d19e920d16f575cb0fab9f7c7f06de95f9a5b1033ec56cdf144fd0d2",
+  "evidence_sha256": "b600658a3417c9a60915fa7f9ce56a1c4b07aac5a539db05fa9aa4a705063259",
+  "mapping_sha256": "3f9fc09e271f1564061f4ca8a0ff896605700cc90ceef6a12585f95c1d29bcd7",
+  "current_dut": {
+    "manifest_sha256": "5e9bf28ad121569a6975811f0b5ea9e60423e676e6dfcf88048948bfd19ba056",
+    "kernel_sha256": "b957460310caebac4a8c86710b1e35d8dc74fe63784bc06f1fe0319521337dbe"
+  },
+  "e1_dut": {
+    "manifest_sha256": "7713308b855e99f30f5979b3b93f80489f5f772eadd86d53d52497674a5bec9b",
+    "kernel_sha256": "3353bed859b7904de383e540d9efdc3b386ed90abceca77557c8119813214687"
+  },
+  "equal_to_round1_draft": {
+    "canonical": {
+      "old_baseline": true,
+      "entry": true,
+      "authority": true
+    },
+    "bytes": {
+      "entry.json": true,
+      "authority.json": true,
+      "review.json": true,
+      "bundle-pointer.json": true,
+      "baseline-append.json": true
+    },
+    "round1_draft": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/c0/governance-draft",
+    "round1_receipt_sha256": "b01ee04d46e18e18e50cc2e5365fe17ce27e713a83c1ff912093f2030e117812"
+  },
+  "production_validation": {
+    "module": "098f0f4afd5c3434555f8510093b1ac91932b36a48ab42bd7e8d3fd2c4fe04af",
+    "gate": "7a88c2596cba6d7036679be65076dbdf8bcdef4aebc03f6e76940a7aba10b7c1",
+    "revision": "b4a072959d55fa3b23e34dfcadd92103ec89f2a3",
+    "merge_allowed": true,
+    "transition": {
+      "accepted": true,
+      "registration": true
+    },
+    "differences": [],
+    "authorization_id": "pr282-capability-batch1-CI40762672880",
+    "added_entry_sha256": "556035ee859fd2976c8a602552a649c7cf9aed08ff65b4bc7203dd804ad37540",
+    "registration_run_standin": {
+      "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/r2/runs/main-push-40857285671-catalog/python-regression-timings/python-regression.json",
+      "sha256": "ab35087fe4aa79eb4538c0054822cc82334b9112a484353e770c9bd5a3d9c137",
+      "run": 40857285671,
+      "head": "6fed3c820b6eaecdfabd6d5dcacf8febdd197e4c",
+      "head_is_base": false,
+      "basis": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/c0-r3/proceed-checks.json (context_key_diff, replacement_basis)",
+      "pool": "new (7.0.0-1017, ImageVersion 20261026.354.1)"
+    },
+    "second_standin": {
+      "path": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/pr6/rebind-r8-20261027/activation-ci/ci-40614646318/artifacts/python-regression-timings/python-regression.json",
+      "sha256": "e75c71e11604fd2d84da6e3f53f226d2f23efee9060032ea9cfc2301dd4ffd1a",
+      "run": 40614646318,
+      "merge_allowed": true,
+      "differences": []
+    }
+  },
+  "negative_controls": 10,
+  "negative_controls_all_rejected": true,
+  "file_sizes": {
+    "regression-v1.json": {
+      "before_c0": 50578629,
+      "after_c0": 50578629,
+      "after_baseline_pr": 60804757
+    },
+    "regression-v1.review.json": {
+      "before_c0": 26663148,
+      "after_c0": 34101053,
+      "after_baseline_pr": 34101053
+    },
+    "limit_80MiB_bytes": 83886080
+  },
+  "collector_rule": {
+    "rule": "until PR-B merges, the four collector files of #282 must equal the new main byte for byte",
+    "files": {
+      "scripts/run_regression.py": {
+        "pr282_head_sha256": "dc2ed03b722fd35e9a20f6eda424ac2ff39b3c22f2081a29c5f0777a9b148985",
+        "new_main_sha256": "dc2ed03b722fd35e9a20f6eda424ac2ff39b3c22f2081a29c5f0777a9b148985",
+        "equal": true
+      },
+      "scripts/ci_evidence.py": {
+        "pr282_head_sha256": "c64a7b268f2a8615ac257a19a5edb9fdbe399ad4d577e6c2fe65f6e2a86fc5cc",
+        "new_main_sha256": "c64a7b268f2a8615ac257a19a5edb9fdbe399ad4d577e6c2fe65f6e2a86fc5cc",
+        "equal": true
+      },
+      "scripts/regression_reason_identity.py": {
+        "pr282_head_sha256": "3b7969bbefb3a7d89d4015871200b33d2ef63d7baaf897a4bc0b44a009adc718",
+        "new_main_sha256": "3b7969bbefb3a7d89d4015871200b33d2ef63d7baaf897a4bc0b44a009adc718",
+        "equal": true
+      },
+      "scripts/regression_observation_policy.json": {
+        "pr282_head_sha256": "42ea0b232286934c1af0905dbc89a15e6fa6eebacd641890b69c047fc78e7d93",
+        "new_main_sha256": "42ea0b232286934c1af0905dbc89a15e6fa6eebacd641890b69c047fc78e7d93",
+        "equal": true
+      }
+    },
+    "language_profile_equal": true
+  },
+  "baseline_layout": {
+    "module": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/baseline_layout.py",
+    "module_sha256": "418aa2c99c757f96ad427d0d60bf5cc7bd856a7e6db317b07dc5cf996e35e5ee",
+    "checks": {
+      "top_level_fields_unchanged": true,
+      "exactly_one_context_appended": true,
+      "old_contexts_equal_in_order": true,
+      "new_context_equals_authorized_entry": true,
+      "write_from_trusted_plus_entry_equals_head_bytes": true,
+      "rewrite_of_head_equals_head_bytes": true,
+      "repeated_write_identical": true
+    },
+    "trusted_bytes": 50578629,
+    "head_bytes": 60804757,
+    "head_sha256": "7feeafd791708130e54f5e50e2f69b97ae9e993f3ee0e1220138736f549159bb",
+    "head_above_50MiB_warning": true,
+    "head_below_100MiB_limit": true
+  },
+  "old_contexts_unchanged": true,
+  "scientific_qualification": false,
+  "files": {
+    "authority.json": "c4e38d518f7616c52cc1d9f426eddd7b4bb15eeb17b8ec8e36bb0c5d9367c00f",
+    "baseline-append.json": "7feeafd791708130e54f5e50e2f69b97ae9e993f3ee0e1220138736f549159bb",
+    "bundle-pointer.json": "0eeef8391bb14c8659a5473be7e5b21035b58d6f49edaefb61c74f4a2c090007",
+    "entry.json": "82e53d9bd8aa34d0eadd682260fa61b62b4d91e19c10b46cbca2b52e89ecf0b1",
+    "negative-controls.json": "9031a6ea84309e0fc441cd3bcb97403ad399ec7b3072520644059811350cbbbf",
+    "review.json": "f65c72b3ba20ceee41584c3f229ad4b2d7cb298298a1ac3411aad6faf4575360",
+    "validation-production-alt-standin.json": "83ae30c43e011ca0f8d9f8669658cee8b30f794ba0390317a8f9c5c87d9e332b",
+    "validation-production.json": "83ae30c43e011ca0f8d9f8669658cee8b30f794ba0390317a8f9c5c87d9e332b"
+  }
+}

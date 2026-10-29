@@ -1,0 +1,35 @@
+{
+  "prepared_at_utc": "2026-10-29T13:19:13.603386+00:00",
+  "base": "b4a072959d55fa3b23e34dfcadd92103ec89f2a3",
+  "base_tree": "fa40153a848827cdac08f71147dda24fc1d30b6d",
+  "base_parents": [
+    "6fed3c820b6eaecdfabd6d5dcacf8febdd197e4c"
+  ],
+  "export": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/c0-r3/source",
+  "private_git": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/c0-r3/source/.git",
+  "alternates": [
+    "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/.git/objects",
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/registration-rule-dut-fix-impl-opus-20261029/r2a2/repo/.git/objects",
+    "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/c0/source/.git/objects"
+  ],
+  "base_objects": "shared store: every object of b4a07295 present (proceed-checks.json shared_store_objects_of_base); no commit rebuilt",
+  "proceed_checks": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/c0-r3/proceed-checks.json",
+  "proceed_checks_sha256": "92c060ee5ed6aaa13802fa55d45ad2409986339e27f7da8f29910ffe45d8ab89",
+  "immutable_paths_equal_base_and_previous_main": [
+    ".github/workflows/numerical-assurance.yml",
+    "evas/validation/baselines/regression-v1.json",
+    "scripts/run_trusted_regression_gate.py",
+    "scripts/regression_gate.py",
+    "scripts/regression_context_registration.py",
+    "scripts/materialize_registration_bundle.py",
+    "scripts/run_regression.py",
+    "scripts/ci_evidence.py",
+    "scripts/regression_reason_identity.py",
+    "scripts/regression_observation_policy.json",
+    "evas/validation/baselines/regression-v1.review.json",
+    "scripts/context-registration-bundle.json"
+  ],
+  "guard_before": "2026-10-29T13:14:42+00:00",
+  "guard_after": "2026-10-29T13:19:14+00:00",
+  "scientific_execution": false
+}

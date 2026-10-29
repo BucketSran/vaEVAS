@@ -1,0 +1,267 @@
+{
+  "commit": "2b2569c4ededf5701446c29e9853c61a45457bad",
+  "tree": "226ce970aaa17849b135945145c557f2c42573d4",
+  "parent": "0b485dd319e46058bd78672943458e025183baea",
+  "archive_ref": "refs/heads/codex/evas-method-audit-archive-20261025",
+  "prefix": "evas/capabilities/observations/pr282-context-40762672880-20261029",
+  "files": [
+    {
+      "path": "evas/capabilities/observations/pr282-context-40762672880-20261029/README.md",
+      "sha256": "9c47c128babe3bc40d2ba23e70330c8a14cc485f48e1a48d4384a7bbbabce1fb",
+      "bytes": 896,
+      "blob": "0eef69d2efba94e84de1446160a618867fb9d54b"
+    },
+    {
+      "path": "evas/capabilities/observations/pr282-context-40762672880-20261029/bundle/artifact_manifest",
+      "sha256": "43965750aeb74f37fcfc5f3928c3a009d4b98dc7a219bb8a6190f582018cc2d8",
+      "bytes": 1132,
+      "blob": "b7e3d0f11baf6c8fd6c4325d4f59108ab6f12ee0"
+    },
+    {
+      "path": "evas/capabilities/observations/pr282-context-40762672880-20261029/bundle/collector_manifest",
+      "sha256": "07c2295a3e878c283f6d0d1870b154303bc2038f4a3744ed3fdf27788ff25bcb",
+      "bytes": 356,
+      "blob": "0d287c1669ea3a83c27181e76cc21ef1b0ebd30e"
+    },
+    {
+      "path": "evas/capabilities/observations/pr282-context-40762672880-20261029/bundle/composition_recipe",
+      "sha256": "61c5b0a1ecd33ce32a6675901e7d426b6b088e84163a03dd31b1b42268a36d88",
+      "bytes": 620,
+      "blob": "fb39c319c63bc977711d0ab60f3ab08bad248a22"
+    },
+    {
+      "path": "evas/capabilities/observations/pr282-context-40762672880-20261029/bundle/dut_build",
+      "sha256": "10e612d7ccfd817f4d6e730cc605f437af45f3f7244bf4fd783e2f2456163fbb",
+      "bytes": 1661,
+      "blob": "8f3b68126526fd54a6fc4b70a523abcf4b272bde"
+    },
+    {
+      "path": "evas/capabilities/observations/pr282-context-40762672880-20261029/bundle/kernel_binary",
+      "sha256": "6339d7384308432f11c4c63596060a3ee514fe53fd96ca4772086414d52f03e9",
+      "bytes": 22913547,
+      "blob": "bf08dfad0afce866f1b29e85a408792c6dd06a96"
+    },
+    {
+      "path": "evas/capabilities/observations/pr282-context-40762672880-20261029/bundle/report.json",
+      "sha256": "7cc4bd08613c01716c69d47eeb29e6e484781664a454aa1c8497b4259561c6ac",
+      "bytes": 41609814,
+      "blob": "6cbb6159c30f1580cbc3acfedc7be5b72a510c9a"
+    },
+    {
+      "path": "evas/capabilities/observations/pr282-context-40762672880-20261029/bundle/shard_reports",
+      "sha256": "82e77c75fd66107088f206a7ce9d1587569fd65053ca56abaa547348cdd3b2ec",
+      "bytes": 44923195,
+      "blob": "862ef3bb98868474837fcc2b63797d00920576b2"
+    },
+    {
+      "path": "evas/capabilities/observations/pr282-context-40762672880-20261029/bundle/snapshot_manifest",
+      "sha256": "8f67eb904f703d07e88039289e6b5f6a44fb3ac6de2092db10b874a3f12dc77b",
+      "bytes": 12765888,
+      "blob": "2cdd2ccb62d88e55c7a432e6975cd2ad219807bf"
+    },
+    {
+      "path": "evas/capabilities/observations/pr282-context-40762672880-20261029/bundle/stderr",
+      "sha256": "47c5332abee9f3f326c8b8a796a6d8115e56e63b667d420503d8bdbefadc251b",
+      "bytes": 1674326,
+      "blob": "c628a200cecfc7c2d0438e00e23607b588607c04"
+    },
+    {
+      "path": "evas/capabilities/observations/pr282-context-40762672880-20261029/bundle/stdout",
+      "sha256": "bbe1734ac3bd84e86256dd4d30a528b02ef72b7252e692f1debb52be2ac8a1a3",
+      "bytes": 11547,
+      "blob": "585d144dc19a2eddde87f7bad71acdb977f5b06b"
+    },
+    {
+      "path": "evas/capabilities/observations/pr282-context-40762672880-20261029/proof/build_mapping.py",
+      "sha256": "fe0072dda9637a36f825b767448003afdef4db2d137de0e4b0f1d13ef566f657",
+      "bytes": 7080,
+      "blob": "cbe3fc00e4df707022e9c24de350640aa387595c"
+    },
+    {
+      "path": "evas/capabilities/observations/pr282-context-40762672880-20261029/proof/bundle-byte-binding.json",
+      "sha256": "2937b208bdaf8d5b8ca074a19882c7a11417b96b4d4bab348369b97ae214360f",
+      "bytes": 4050,
+      "blob": "d2d28feb18d730d758183991e86fd90a7fee6e61"
+    },
+    {
+      "path": "evas/capabilities/observations/pr282-context-40762672880-20261029/proof/bundle-intake.json",
+      "sha256": "12dd7b3943189469562db0c2d30452376b5127112958d5836dfa48e0848e7458",
+      "bytes": 10373,
+      "blob": "05d63c567dda4ff8fbd6abf81d030b78325f8533"
+    },
+    {
+      "path": "evas/capabilities/observations/pr282-context-40762672880-20261029/proof/bundle_e1.py",
+      "sha256": "eaba2de1254146dc466da5b125d79b2b6787aabc45d6cf74c593e333dadf249c",
+      "bytes": 25674,
+      "blob": "821a66671ddca85ab350f081abff193eeb5cb718"
+    },
+    {
+      "path": "evas/capabilities/observations/pr282-context-40762672880-20261029/proof/common.py",
+      "sha256": "444b9530ba07a8cebc6e9c5b0424d91a57920d5244c1059d3ad2f23af74e753b",
+      "bytes": 12667,
+      "blob": "f4429691ab07fc6cbb42f68bf0c9cc8410bdfc05"
+    },
+    {
+      "path": "evas/capabilities/observations/pr282-context-40762672880-20261029/proof/context-diff-40762672880.json",
+      "sha256": "58d2fd51bfbe18f3e9d6097e1c3317112020394c9ff9730a4df56996702a71f0",
+      "bytes": 9242,
+      "blob": "8b147b0b7ff11d45c334519654c948e92603145b"
+    },
+    {
+      "path": "evas/capabilities/observations/pr282-context-40762672880-20261029/proof/download-manifest.json",
+      "sha256": "1bd2927a6397e126b9ed2dfe0cd02e9c235e753a72b767f29d24fa6b56d3ad89",
+      "bytes": 8172,
+      "blob": "71af181087872d4d416fc34287a1eb7fcde6f700"
+    },
+    {
+      "path": "evas/capabilities/observations/pr282-context-40762672880-20261029/proof/e1-mapping-summary.json",
+      "sha256": "911d9c26d38b6a98bfddfc113e3d629136922c0f0758a3cf67fc0e86c0305c79",
+      "bytes": 1795,
+      "blob": "81b5a60d1b96a83fe64b54ac474d278e21132a85"
+    },
+    {
+      "path": "evas/capabilities/observations/pr282-context-40762672880-20261029/proof/e1-mapping.json",
+      "sha256": "2c144950169c347721566f4530fdf3dd7daeca19303855b12f3d69fdb075a477",
+      "bytes": 6756005,
+      "blob": "aa41717de600b478ec42f549790c5651e77e1610"
+    },
+    {
+      "path": "evas/capabilities/observations/pr282-context-40762672880-20261029/proof/e1-new-only.json",
+      "sha256": "e53d1caccc9465523120e1ad238fd26ebc321e7e350b52676e82c1f78c9f6a79",
+      "bytes": 21225,
+      "blob": "3b14c3aae963bf9635a66cb6e302b48ae7447887"
+    },
+    {
+      "path": "evas/capabilities/observations/pr282-context-40762672880-20261029/proof/e1-registration-record.json",
+      "sha256": "885ce82e189a4c72894871025cd50c5f3c64649e0257bbae2e3878ce1740b8e2",
+      "bytes": 2961,
+      "blob": "c4bb0558874e140370e6319bef813ca8e23d9dd8"
+    },
+    {
+      "path": "evas/capabilities/observations/pr282-context-40762672880-20261029/proof/fetch_e1.py",
+      "sha256": "590532eef5a482b91842025123b2d2f39963d13cd60ff60bf5d2e923f2ed869f",
+      "bytes": 5203,
+      "blob": "9a54e8e5578110efde4849c39de32f0e73b805aa"
+    },
+    {
+      "path": "evas/capabilities/observations/pr282-context-40762672880-20261029/proof/members/catalog-inventory.members.json",
+      "sha256": "4448c440f8c14793c894e43692536af2957534ee70cf82c9e31dccbc3797aea0",
+      "bytes": 6927,
+      "blob": "5f19becda87113cd51d8dedd0ed2b4bde06969d2"
+    },
+    {
+      "path": "evas/capabilities/observations/pr282-context-40762672880-20261029/proof/members/explicit-checks.members.json",
+      "sha256": "89cb85a8b8803840269252ce5ce560a00138898bf1d94fd080c0794f22015440",
+      "bytes": 175,
+      "blob": "fbe17e96b474e8d2a291f3373b51f55183093e1b"
+    },
+    {
+      "path": "evas/capabilities/observations/pr282-context-40762672880-20261029/proof/members/fast-feedback.members.json",
+      "sha256": "44b4ccbff49448ecc358642be5bbb0320c7ffa281875013f95b9618ec141965a",
+      "bytes": 341,
+      "blob": "9b6d36433aeab5935290d6816401e3b8a992d833"
+    },
+    {
+      "path": "evas/capabilities/observations/pr282-context-40762672880-20261029/proof/members/git-fixture-isolation.members.json",
+      "sha256": "760e65a255dba4851773d3b0caae3ac423901ed65ac284168bfd955e6221e2f9",
+      "bytes": 35633,
+      "blob": "2e5a5be96984600f59c6b8507d0ba6f4b6558db1"
+    },
+    {
+      "path": "evas/capabilities/observations/pr282-context-40762672880-20261029/proof/members/ngspice-comparison.members.json",
+      "sha256": "2e25bfbc643d6c13fd30e166293f6dfbeb309a275ffaac0c8c97abb626304056",
+      "bytes": 13947,
+      "blob": "cdf87fa7684c338a379265e7952b790d48db279c"
+    },
+    {
+      "path": "evas/capabilities/observations/pr282-context-40762672880-20261029/proof/members/package-macos-14-arm64-py3.12.10.members.json",
+      "sha256": "0d29c8ac1c007a44f211b2fb09b9ff406d04388ab57d71f7bddcc726465c79cf",
+      "bytes": 9597,
+      "blob": "00e5b79f575998dd027fe3b15c043fd659e7f15c"
+    },
+    {
+      "path": "evas/capabilities/observations/pr282-context-40762672880-20261029/proof/members/package-ubuntu-24.04-x86_64-py3.10.22.members.json",
+      "sha256": "b241f598a39321a4eaca8388cbea6943905b3f82ca69fa7b4a26e3c9a58876b3",
+      "bytes": 9592,
+      "blob": "17ea5dafff041cfd83ab959f6cc71746d8620626"
+    },
+    {
+      "path": "evas/capabilities/observations/pr282-context-40762672880-20261029/proof/members/python-regression-admission.members.json",
+      "sha256": "37abb34853ba6ce29d1ae97ca7d1d01d401391888269cd185f078205e8e12ebe",
+      "bytes": 543,
+      "blob": "f632d79e879e026c2969e55c13612e3bf3530ee0"
+    },
+    {
+      "path": "evas/capabilities/observations/pr282-context-40762672880-20261029/proof/members/python-regression-shard-0-attempt-1.members.json",
+      "sha256": "59826752fe3766aac3e06446430628c455fa0b72b0a12dd55f84561e935acf9b",
+      "bytes": 1640,
+      "blob": "58c4afc156be54279600c9fa01fb00ba3d6296b3"
+    },
+    {
+      "path": "evas/capabilities/observations/pr282-context-40762672880-20261029/proof/members/python-regression-shard-1-attempt-1.members.json",
+      "sha256": "879e731eb78f83ef0eb1e091808029546f3cea15c949546fee22cd8a52b93fd7",
+      "bytes": 1644,
+      "blob": "cd1ab0728965029e2683363d61110cdf0d84a53d"
+    },
+    {
+      "path": "evas/capabilities/observations/pr282-context-40762672880-20261029/proof/members/python-regression-shard-2-attempt-1.members.json",
+      "sha256": "04e861ffe6fce38dcbe02b87f8c992ad1a0773b074ce65b76b08d2b7d74ad8e0",
+      "bytes": 1642,
+      "blob": "d853ccd2bd47f0e14268651d932eab647ec08cab"
+    },
+    {
+      "path": "evas/capabilities/observations/pr282-context-40762672880-20261029/proof/members/python-regression-shard-3-attempt-1.members.json",
+      "sha256": "9485ec741a4e5e733000dd64a5d20a3a88d7ad96c10d06f879eb1aa4ad76e78b",
+      "bytes": 1644,
+      "blob": "3ae45c1a1a2384dc5d7fd2625b64faa941d68cee"
+    },
+    {
+      "path": "evas/capabilities/observations/pr282-context-40762672880-20261029/proof/members/python-regression-timings.members.json",
+      "sha256": "1e3e66a68cc6600ef448ab476d8a83605813454ae0df316c9512ba960e26ade3",
+      "bytes": 541,
+      "blob": "cb7fd8e641280989a1c9576eda249ffbbcf6d7c7"
+    },
+    {
+      "path": "evas/capabilities/observations/pr282-context-40762672880-20261029/proof/members/rust-test-listing.members.json",
+      "sha256": "47cd7a325e4dab791e77406198016ea6bfd4319fd48d80e497a84d4fffc1458b",
+      "bytes": 5407,
+      "blob": "95d8a58d0e5c30156b051b145b4d41264d9bbdb8"
+    },
+    {
+      "path": "evas/capabilities/observations/pr282-context-40762672880-20261029/proof/stream-boundaries.json",
+      "sha256": "c8521b82c5f1fa23984e72b6e706ff377908c5dbea7aba515dce2983beefaf73",
+      "bytes": 1889,
+      "blob": "60773a316f25bb27ac5f835e48e4f7b1325e0ef7"
+    },
+    {
+      "path": "evas/capabilities/observations/pr282-context-40762672880-20261029/storage.json",
+      "sha256": "30c296a9687f3af30ee87a2c95080451f2e6b779121b9b2f4bf0ecd8921c1ca9",
+      "bytes": 3641,
+      "blob": "eb9b36026f433a6bce00616f7b293fef457fd1b8"
+    }
+  ],
+  "pointer": {
+    "schema_version": 2,
+    "commit": "2b2569c4ededf5701446c29e9853c61a45457bad",
+    "prefix": "evas/capabilities/observations/pr282-context-40762672880-20261029/bundle",
+    "kernel_binary": {
+      "encoding": "gzip",
+      "decoded_bytes": 105916928,
+      "decoded_sha256": "3353bed859b7904de383e540d9efdc3b386ed90abceca77557c8119813214687"
+    }
+  },
+  "materializer_check": {
+    "tool": "main b4a07295 scripts/materialize_registration_bundle.py",
+    "sha256": "b3e821f65ef738d8611c0b021066a4b4b4bbd1632bbbcc48336d7e750d6ea305",
+    "roles_equal_bundle": 10,
+    "receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/c0-r3/materialize-check"
+  },
+  "published": false,
+  "object_store": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/c0/source/.git",
+  "scientific_qualification": false,
+  "reused": true,
+  "original_receipt": "/Volumes/vaEVAS-runs/pr-review-20261025/grill-vams-2023/capability-batch1-registration-20261029/flow/c0/bundle-archive.json",
+  "original_receipt_sha256": "08063ee4aabf8db79799f843c094606c7fd3b0c7540a00e60ead21ee1236c9d5",
+  "archive_tip_now": "18a202cb00c0a040e504d6235c503f0a52f5ebd7",
+  "relation": "sibling of the archive tip (both children of 0b485dd3); the construction archive merges them"
+}
