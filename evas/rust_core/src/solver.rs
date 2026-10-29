@@ -253,11 +253,15 @@ enum Order {
     Unsupported,
     /// (column, equation, sign) per unknown, each after every column it reads.
     Acyclic(Vec<(usize, usize, f64)>),
-    /// A value reads its own result at the same time. `core` marks the
-    /// columns on a cycle or between two; `definition` is (equation, sign).
+    /// Some values read their own result at the same time. `components` are
+    /// the strongly connected components of "column reads column", each
+    /// after every component it reads, with whether it is a cycle (several
+    /// columns, or one column reading itself); `definition` is (equation,
+    /// sign) and `reads` the columns its relation reads, per column.
     Cyclic {
-        core: Vec<bool>,
+        components: Vec<(Vec<usize>, bool)>,
         definition: Vec<(usize, f64)>,
+        reads: Vec<Vec<usize>>,
     },
 }
 
@@ -385,6 +389,79 @@ fn marked_affine(
         }
         _ => (false, true),
     })
+}
+
+/// Strongly connected components of "column reads column" (Tarjan, without
+/// recursion), each emitted after every component it reads, with whether it
+/// is a cycle: several columns, or one column that reads itself.
+fn strong_components(
+    reads: &[Vec<usize>],
+    work: &crate::transition_source_plan::Work,
+) -> Result<Vec<(Vec<usize>, bool)>, Error> {
+    let n = reads.len();
+    // Index, low link, stack flag, the stack, the frame stack and the result.
+    work.debit(2, ((6 * n + 1) * 64) as u64)?;
+    let mut index = vec![usize::MAX; n];
+    let mut low = vec![0_usize; n];
+    let mut on_stack = vec![false; n];
+    let mut stack = Vec::with_capacity(n);
+    let mut components = Vec::new();
+    let mut next = 0;
+    for start in 0..n {
+        if index[start] != usize::MAX {
+            continue;
+        }
+        let mut frames = vec![(start, 0_usize)];
+        index[start] = next;
+        low[start] = next;
+        next += 1;
+        stack.push(start);
+        on_stack[start] = true;
+        while let Some(&(column, position)) = frames.last() {
+            work.step()?;
+            if let Some(&read) = reads[column].get(position) {
+                if let Some(top) = frames.last_mut() {
+                    top.1 += 1;
+                }
+                if index[read] == usize::MAX {
+                    index[read] = next;
+                    low[read] = next;
+                    next += 1;
+                    stack.push(read);
+                    on_stack[read] = true;
+                    frames.push((read, 0));
+                } else if on_stack[read] {
+                    low[column] = low[column].min(index[read]);
+                }
+                continue;
+            }
+            frames.pop();
+            if let Some(&(parent, _)) = frames.last() {
+                low[parent] = low[parent].min(low[column]);
+            }
+            if low[column] == index[column] {
+                let mut members = Vec::new();
+                loop {
+                    work.step()?;
+                    let Some(member) = stack.pop() else {
+                        return Err(Error::new(
+                            "invalid_ir",
+                            "strongly connected component stack underflow",
+                        ));
+                    };
+                    on_stack[member] = false;
+                    members.push(member);
+                    if member == column {
+                        break;
+                    }
+                }
+                let cyclic = members.len() > 1 || reads[column].contains(&column);
+                members.reverse();
+                components.push((members, cyclic));
+            }
+        }
+    }
+    Ok(components)
 }
 
 fn finite_interval(value: I, what: &str) -> Result<I, Error> {
@@ -824,32 +901,12 @@ impl Circuit {
         if order.len() == n {
             return Ok(Order::Acyclic(order));
         }
-        // Drop left-over columns that no left-over column reads: they only
-        // follow a cycle. What remains lies on a cycle or between two.
-        let mut core = pending.iter().map(|&p| p > 0).collect::<Vec<_>>();
-        let mut read_by = vec![0_usize; n];
-        for column in (0..n).filter(|&c| core[c]) {
-            for &read in &reads[column] {
-                work.step()?;
-                read_by[read] += usize::from(core[read]);
-            }
-        }
-        let mut sinks = (0..n)
-            .filter(|&c| core[c] && read_by[c] == 0)
-            .collect::<Vec<_>>();
-        while let Some(column) = sinks.pop() {
-            core[column] = false;
-            for &read in &reads[column] {
-                work.step()?;
-                if core[read] {
-                    read_by[read] -= 1;
-                    if read_by[read] == 0 {
-                        sinks.push(read);
-                    }
-                }
-            }
-        }
-        Ok(Order::Cyclic { core, definition })
+        let components = strong_components(&reads, work)?;
+        Ok(Order::Cyclic {
+            components,
+            definition,
+            reads,
+        })
     }
 
     /// A same-time cycle through a rounded program value in an event
@@ -866,52 +923,719 @@ impl Circuit {
         else {
             return Ok(None);
         };
+        if !self.same_time_cycle_shape() {
+            return Ok(None);
+        }
         let work = &view.plan.work;
-        let Order::Cyclic { core, definition } = self.substitution_order(work)? else {
+        let Order::Cyclic {
+            components,
+            definition,
+            ..
+        } = self.substitution_order(work)?
+        else {
             return Ok(None);
         };
-        for (column, &(index, _)) in definition.iter().enumerate() {
-            if !core[column] {
+        let mut member = vec![false; definition.len()];
+        for (columns, cyclic) in &components {
+            if !cyclic {
                 continue;
             }
-            let eq = &self.equations[index];
-            for rhs in &eq.original_rhs {
-                if !marked_affine(rhs, &self.unknown_columns, &core, work)?.1 {
-                    let origins = eq.origins.join(", ");
-                    work.debit(2, (origins.len() + 256) as u64)?;
-                    return Ok(Some(Error::new(
-                        "unsupported_transient",
-                        format!(
-                            "same-time feedback through a program real is nonlinear at {origins}: \
-                             its real-arithmetic equation is not certified to have exactly one solution"
-                        ),
-                    )));
+            for &column in columns {
+                member[column] = true;
+            }
+            for &column in columns {
+                let eq = &self.equations[definition[column].0];
+                for rhs in &eq.original_rhs {
+                    if !marked_affine(rhs, &self.unknown_columns, &member, work)?.1 {
+                        let origins = eq.origins.join(", ");
+                        work.debit(2, (origins.len() + 256) as u64)?;
+                        return Ok(Some(Error::new(
+                            "unsupported_transient",
+                            format!(
+                                "same-time feedback through a program real is nonlinear at {origins}: \
+                                 its real-arithmetic equation is not certified to have exactly one solution"
+                            ),
+                        )));
+                    }
                 }
+            }
+            for &column in columns {
+                member[column] = false;
             }
         }
         Ok(None)
     }
 
-    /// D-R2-1 option A (decision 22, an ADR-006 clarification): a rounded
-    /// program value that feeds its own operand at the same time is the root
-    /// of the real-arithmetic same-time equation, stored as its binary64
-    /// rounding. The unchanged Krawczyk certificate runs on the relations
-    /// without their rounding steps; its refusal is the refusal of that
-    /// equation. The contraction by rounded images does not apply to it.
-    fn unrounded_waveform_bounds(
+    /// D-R2-1 option A (decision 22, an ADR-006 clarification): a cycle of
+    /// same-time relations through rounded program values is the
+    /// real-arithmetic equation of that cycle. Components are taken in
+    /// dependency order: a value outside every cycle keeps its rounding and is
+    /// bounded by substitution (its complete rounded image), and each cycle is
+    /// certified by the unchanged Krawczyk test on its own relations without
+    /// their rounding steps, with every value it reads fixed to its enclosure.
+    /// A refusal of that test is the refusal of the cycle's equation.
+    fn component_waveform_bounds(
+        &self,
+        solution: &Solution,
+        base: &[I],
+        components: &[(Vec<usize>, bool)],
+        definition: &[(usize, f64)],
+    ) -> Result<Vec<I>, Error> {
+        let Some(view) = &self.procedure_view else {
+            return Err(Error::new(
+                "invalid_ir",
+                "same-time cycle certificate requires its procedure view",
+            ));
+        };
+        let work = &view.plan.work;
+        let mut values = base.to_vec();
+        for (columns, cyclic) in components {
+            if !cyclic {
+                for &column in columns {
+                    let (index, sign) = definition[column];
+                    values[self.unknown[column]] =
+                        self.substituted_value(index, sign, &values, work)?;
+                }
+                continue;
+            }
+            let bounds = self.cycle_bounds(solution, &values, columns, definition, work)?;
+            for &column in columns {
+                values[self.unknown[column]] = bounds[self.unknown[column]];
+            }
+        }
+        self.check_substituted_budget(solution, &values, work)?;
+        Ok(values)
+    }
+
+    /// The unchanged Krawczyk test of one cycle on its own relations without
+    /// their rounding steps, every value it reads fixed to `values`: node
+    /// bounds whose members enclose the cycle's one root for every value in
+    /// those enclosures.
+    fn cycle_bounds(
+        &self,
+        solution: &Solution,
+        values: &[I],
+        columns: &[usize],
+        definition: &[(usize, f64)],
+        work: &crate::transition_source_plan::Work,
+    ) -> Result<Vec<I>, Error> {
+        let cycle = self.cycle_circuit(columns, definition, work)?;
+        let inputs = cycle
+            .driven
+            .iter()
+            .map(|&node| values[node])
+            .collect::<Vec<_>>();
+        cycle.waveform_bounds_attempt(solution, &inputs, false)
+    }
+
+    /// One cycle's relations without their rounding steps as a circuit of its
+    /// own: its members are the unknowns and every other node is driven.
+    fn cycle_circuit(
+        &self,
+        columns: &[usize],
+        definition: &[(usize, f64)],
+        work: &crate::transition_source_plan::Work,
+    ) -> Result<Self, Error> {
+        let mut member = vec![false; self.nodes.len()];
+        for &column in columns {
+            member[self.unknown[column]] = true;
+        }
+        // The cycle's own circuit has no procedure view, so its attempt
+        // pays nothing per operation: prepay a complete retry of it, and
+        // the copied circuit, on the original owner.
+        self.reserve_waveform_retry(self.nodes.len(), columns.len(), work)?;
+        self.charge_history_copy(work)?;
+        let mut cycle = self.clone();
+        cycle.procedure_view = None;
+        cycle.procedure_occurrence = None;
+        cycle.procedure_parameters = Vec::new();
+        cycle.affine_factor = None;
+        cycle.driven_coefficients = Vec::new();
+        cycle.dense_residuals = Vec::new();
+        cycle.equations = Vec::with_capacity(columns.len());
+        for &column in columns {
+            work.step()?;
+            let mut eq = self.equations[definition[column].0].clone();
+            eq.original_rhs = eq.original_rhs.iter().map(unrounded).collect();
+            eq.nonlinear = eq.nonlinear.iter().map(unrounded).collect();
+            cycle.equations.push(eq);
+        }
+        cycle.unknown = columns.iter().map(|&column| self.unknown[column]).collect();
+        cycle.driven = (1..self.nodes.len())
+            .filter(|&node| !member[node])
+            .collect();
+        cycle.unknown_columns = vec![None; self.nodes.len()];
+        for (j, &node) in cycle.unknown.iter().enumerate() {
+            cycle.unknown_columns[node] = Some(j);
+        }
+        Ok(cycle)
+    }
+
+    /// Whether the system has a same-time cycle through a rounded program
+    /// value (decision 22).
+    pub(crate) fn has_same_time_cycle(&self) -> Result<bool, Error> {
+        let Some(view) = &self.procedure_view else {
+            return Ok(false);
+        };
+        if !self.same_time_cycle_shape() {
+            return Ok(false);
+        }
+        Ok(match self.substitution_order(&view.plan.work)? {
+            Order::Cyclic { components, .. } => components.iter().any(|(_, cyclic)| *cyclic),
+            _ => false,
+        })
+    }
+
+    /// Whether the structure is that of `Order::Cyclic` with a cycle: every
+    /// unknown defined by one grounded relation, a rounding step, and a column
+    /// that reads itself through the others. Only the assembled structure is
+    /// read, without values, so the check is not charged; the charged
+    /// substitution order then decides. Most systems with program reals have
+    /// no such cycle and never pay for that order.
+    fn same_time_cycle_shape(&self) -> bool {
+        fn reads(
+            e: &Expression,
+            columns: &[Option<usize>],
+            out: &mut Vec<usize>,
+            rounded: &mut bool,
+        ) -> bool {
+            match e {
+                Expression::Affine { terms, .. } => {
+                    out.extend(terms.iter().filter_map(|t| columns[t.node]));
+                    true
+                }
+                Expression::RealBinary { left, right, .. } => {
+                    *rounded = true;
+                    reads(left, columns, out, rounded) && reads(right, columns, out, rounded)
+                }
+                Expression::Add { left, right }
+                | Expression::Multiply { left, right }
+                | Expression::Divide { left, right } => {
+                    reads(left, columns, out, rounded) && reads(right, columns, out, rounded)
+                }
+                Expression::RealBoundary { value, .. } => {
+                    *rounded = true;
+                    reads(value, columns, out, rounded)
+                }
+                Expression::Power { base, .. } => reads(base, columns, out, rounded),
+                Expression::EventMath { args, .. } => {
+                    args.iter().all(|arg| reads(arg, columns, out, rounded))
+                }
+                _ => false,
+            }
+        }
+        let n = self.unknown.len();
+        if self.procedure_view.is_none() || self.equations.len() != n {
+            return false;
+        }
+        let mut definition = vec![None; n];
+        for (index, eq) in self.equations.iter().enumerate() {
+            let node = if eq.negative == 0 {
+                eq.positive
+            } else if eq.positive == 0 {
+                eq.negative
+            } else {
+                return false;
+            };
+            let Some(column) = self.unknown_columns[node] else {
+                return false;
+            };
+            if definition[column].replace(index).is_some() {
+                return false;
+            }
+        }
+        let mut pending = vec![0_usize; n];
+        let mut readers = vec![Vec::new(); n];
+        let mut rounded = false;
+        for column in 0..n {
+            let Some(index) = definition[column] else {
+                return false;
+            };
+            let mut read = Vec::new();
+            for rhs in &self.equations[index].original_rhs {
+                if !reads(rhs, &self.unknown_columns, &mut read, &mut rounded) {
+                    return false;
+                }
+            }
+            for other in read {
+                pending[column] += 1;
+                readers[other].push(column);
+            }
+        }
+        if !rounded {
+            return false;
+        }
+        let mut ready = (0..n).filter(|&c| pending[c] == 0).collect::<Vec<_>>();
+        let mut ordered = 0;
+        while let Some(column) = ready.pop() {
+            ordered += 1;
+            for &reader in &readers[column] {
+                pending[reader] -= 1;
+                if pending[reader] == 0 {
+                    ready.push(reader);
+                }
+            }
+        }
+        ordered < n
+    }
+
+    /// Decision 22 (D-R2-1 option A, an ADR-006 clarification): (node, value)
+    /// for every member of a same-time cycle through program reals, the value
+    /// being the binary64 rounding of the exact root of the cycle's equation;
+    /// None without such a cycle. `solution` is expanded.
+    ///
+    /// The exact equation reads each driven value as this activation's own
+    /// input (its exact source value where the activation has one), a value
+    /// outside every cycle with its rounding steps, and a program value of an
+    /// earlier cycle as its stored rounding. `input_bounds`, the certificate's
+    /// driven enclosures, only certify the root: each cycle is then certified
+    /// on them and its exact root must lie in that certificate. Without them
+    /// (the solve) an affine cycle needs no enclosure; any other is certified
+    /// on the activation's own inputs before it is refined.
+    fn same_time_roundings(
+        &self,
+        solution: &Solution,
+        input_bounds: Option<&[I]>,
+    ) -> Result<Option<Vec<(usize, f64)>>, Error> {
+        use crate::same_time_root::{self as root, Cycle, Relation, Q};
+        let Some(view) = &self.procedure_view else {
+            return Ok(None);
+        };
+        if !self.same_time_cycle_shape() {
+            return Ok(None);
+        }
+        let work = &view.plan.work;
+        let Order::Cyclic {
+            components,
+            definition,
+            reads,
+        } = self.substitution_order(work)?
+        else {
+            return Ok(None);
+        };
+        if !components.iter().any(|(_, cyclic)| *cyclic) {
+            return Ok(None);
+        }
+        if solution.voltages.len() != self.nodes.len() {
+            return Err(Error::new(
+                "invalid_ir",
+                "same-time roundings require the expanded activation solution",
+            ));
+        }
+        let n = self.unknown.len();
+        work.debit(
+            2,
+            ((self.nodes.len() + n) as u64)
+                .saturating_mul(96)
+                .saturating_add(64),
+        )?;
+        // Only cycles and the values they read need an exact value.
+        let mut needed = vec![false; n];
+        for (columns, cyclic) in components.iter().rev() {
+            for &column in columns {
+                work.step()?;
+                if *cyclic || needed[column] {
+                    needed[column] = true;
+                    for &read in &reads[column] {
+                        needed[read] = true;
+                    }
+                }
+            }
+        }
+        let bounds = match input_bounds {
+            Some(bounds)
+                if !self.procedure_parameters.is_empty()
+                    && bounds.len() + self.procedure_parameters.len() == self.driven.len() =>
+            {
+                Some(
+                    bounds
+                        .iter()
+                        .copied()
+                        .chain(self.procedure_parameters.iter().map(|(_, b)| *b))
+                        .collect::<Vec<_>>(),
+                )
+            }
+            Some(bounds) => Some(bounds.to_vec()),
+            None => None,
+        };
+        if bounds
+            .as_ref()
+            .is_some_and(|b| b.len() != self.driven.len())
+        {
+            return Err(Error::new(
+                "invalid_inputs",
+                "input bounds must contain one interval per driven node",
+            ));
+        }
+        let mut values = solution
+            .voltages
+            .iter()
+            .copied()
+            .map(I::point)
+            .collect::<Vec<_>>();
+        let mut exact: Vec<Option<Q>> = vec![None; self.nodes.len()];
+        exact[0] = Some(Q::point(num_rational::BigRational::from_integer(0.into())));
+        for (k, &node) in self.driven.iter().enumerate() {
+            work.step()?;
+            let point = root::binary(solution.voltages[node], work)?;
+            let enclosure = bounds.as_ref().map(|b| b[k]);
+            let own = match view.exact_input(node) {
+                Some(value) => {
+                    let inside = match enclosure {
+                        Some(b) => {
+                            let b = root::exact_interval(b, work)?;
+                            b.lo <= value && value <= b.hi
+                        }
+                        None => true,
+                    };
+                    inside.then_some(value)
+                }
+                None => None,
+            };
+            values[node] = match (enclosure, &own) {
+                (Some(b), _) => b,
+                (None, Some(value)) => {
+                    root::enclosure(&Q::point(value.clone()), "a source value", work)?
+                }
+                (None, None) => I::point(solution.voltages[node]),
+            };
+            exact[node] = Some(Q::point(own.unwrap_or(point)));
+        }
+        let mut result = Vec::new();
+        for (columns, cyclic) in &components {
+            if !cyclic {
+                for &column in columns {
+                    if !needed[column] {
+                        continue;
+                    }
+                    let (index, sign) = definition[column];
+                    let node = self.unknown[column];
+                    values[node] = self.substituted_value(index, sign, &values, work)?;
+                    let mut sum = Some(Q::point(num_rational::BigRational::from_integer(0.into())));
+                    for rhs in &self.equations[index].original_rhs {
+                        sum = match (sum, root::rounded_image(rhs, &exact, work)?) {
+                            (Some(a), Some(b)) => Some(root::sum(&a, &b, work)?),
+                            _ => None,
+                        };
+                    }
+                    exact[node] = Some(match sum {
+                        Some(value) => root::scaled(&value, sign, work)?,
+                        None => root::exact_interval(values[node], work)?,
+                    });
+                }
+                continue;
+            }
+            let relations = columns
+                .iter()
+                .map(|&column| {
+                    let eq = &self.equations[definition[column].0];
+                    Relation {
+                        sign: definition[column].1,
+                        rhs: eq.original_rhs.iter().map(unrounded).collect(),
+                    }
+                })
+                .collect::<Vec<_>>();
+            let mut column_of = vec![None; self.nodes.len()];
+            for (i, &column) in columns.iter().enumerate() {
+                column_of[self.unknown[column]] = Some(i);
+            }
+            let mut origins = Vec::new();
+            for &column in columns {
+                for origin in &self.equations[definition[column].0].origins {
+                    work.step()?;
+                    if !origins.contains(origin) {
+                        work.debit(2, (origin.len() + 2) as u64)?;
+                        origins.push(origin.clone());
+                    }
+                }
+            }
+            let name = origins.join(", ");
+            let start = columns
+                .iter()
+                .map(|&column| solution.voltages[self.unknown[column]])
+                .collect::<Vec<_>>();
+            let (rounded, certified) = {
+                let cycle = Cycle {
+                    relations: &relations,
+                    column: &column_of,
+                    values: &exact,
+                    name: &name,
+                };
+                let found = root::exact_root(&cycle, &start, work)?;
+                let certified = if bounds.is_some() || found.is_none() {
+                    Some(self.cycle_bounds(solution, &values, columns, &definition, work)?)
+                } else {
+                    None
+                };
+                let rounded = match found {
+                    Some(found) => {
+                        let mut rounded = Vec::with_capacity(columns.len());
+                        for (&column, value) in columns.iter().zip(found) {
+                            if let Some(all) = &certified {
+                                let b = root::exact_interval(all[self.unknown[column]], work)?;
+                                if value < b.lo || value > b.hi {
+                                    return Err(Error::new(
+                                        "invalid_ir",
+                                        format!("exact same-time root of {name} lies outside its certified enclosure"),
+                                    ));
+                                }
+                            }
+                            rounded.push((root::nearest(&value, &name, work)?, Q::point(value)));
+                        }
+                        rounded
+                    }
+                    None => {
+                        let all = certified.as_ref().ok_or_else(|| {
+                            Error::new("invalid_ir", "same-time refinement lost its certificate")
+                        })?;
+                        let start = columns
+                            .iter()
+                            .map(|&column| all[self.unknown[column]])
+                            .collect::<Vec<_>>();
+                        root::refine(&cycle, &start, work)?
+                    }
+                };
+                (rounded, certified)
+            };
+            for (&column, (value, enclosure)) in columns.iter().zip(rounded) {
+                let node = self.unknown[column];
+                values[node] = match &certified {
+                    Some(all) => all[node],
+                    None => root::enclosure(&enclosure, &name, work)?,
+                };
+                exact[node] = Some(if node >= view.node_count {
+                    Q::point(root::binary(value, work)?)
+                } else {
+                    enclosure
+                });
+                result.push((node, value));
+            }
+        }
+        Ok(Some(result))
+    }
+
+    /// Whether an RN cell can hold the decision 22 values of this system at
+    /// these inputs: every same-time cycle is affine with point inputs and
+    /// the roundings of its exact root are a binary64 fixed point of the
+    /// rounded relations. Otherwise the cell, a binary64 fixed point, can only
+    /// differ from them, and its search is not attempted.
+    fn cell_may_hold_same_time_roundings(&self, inputs: &[f64]) -> Result<bool, Error> {
+        use crate::same_time_root::{self as root, Cycle, Relation, Q};
+        let Some(view) = &self.procedure_view else {
+            return Ok(true);
+        };
+        let work = &view.plan.work;
+        let Order::Cyclic {
+            components,
+            definition,
+            ..
+        } = self.substitution_order(work)?
+        else {
+            return Ok(true);
+        };
+        let Some(mut values) = self.with_inputs(inputs, vec![0.0; self.nodes.len()]) else {
+            return Ok(false);
+        };
+        work.debit(
+            2,
+            (values.len() as u64).saturating_mul(64).saturating_add(64),
+        )?;
+        for (columns, cyclic) in &components {
+            if !cyclic {
+                for &column in columns {
+                    let (index, sign) = definition[column];
+                    values[self.unknown[column]] =
+                        sign * self.point_rhs(&self.equations[index], &values)?;
+                }
+                continue;
+            }
+            let relations = columns
+                .iter()
+                .map(|&column| Relation {
+                    sign: definition[column].1,
+                    rhs: self.equations[definition[column].0]
+                        .original_rhs
+                        .iter()
+                        .map(unrounded)
+                        .collect(),
+                })
+                .collect::<Vec<_>>();
+            let mut column_of = vec![None; self.nodes.len()];
+            for (i, &column) in columns.iter().enumerate() {
+                column_of[self.unknown[column]] = Some(i);
+            }
+            let mut exact = Vec::with_capacity(values.len());
+            for (node, &value) in values.iter().enumerate() {
+                work.step()?;
+                exact.push(match column_of[node] {
+                    Some(_) => None,
+                    None => Some(Q::point(match view.exact_input(node) {
+                        Some(value) if self.driven.contains(&node) => value,
+                        _ => root::binary(value, work)?,
+                    })),
+                });
+            }
+            let start = vec![0.0; columns.len()];
+            let cycle = Cycle {
+                relations: &relations,
+                column: &column_of,
+                values: &exact,
+                name: "a same-time cycle",
+            };
+            let Some(found) = root::exact_root(&cycle, &start, work)? else {
+                return Ok(false);
+            };
+            for (&column, value) in columns.iter().zip(found) {
+                values[self.unknown[column]] = root::nearest(&value, cycle.name, work)?;
+            }
+        }
+        for eq in &self.equations {
+            let rhs = self.point_rhs(eq, &values)?;
+            if values[eq.positive] - values[eq.negative] != rhs {
+                return Ok(false);
+            }
+        }
+        Ok(true)
+    }
+
+    /// Install the decision 22 roundings in an expanded solution and record
+    /// the program values among them for this activation's numeric values.
+    fn store_same_time(
+        &self,
+        solution: &mut Solution,
+        rounded: &[(usize, f64)],
+    ) -> Result<(), Error> {
+        let Some(view) = &self.procedure_view else {
+            return Ok(());
+        };
+        let work = &view.plan.work;
+        work.debit(
+            2,
+            (rounded.len() as u64).saturating_mul(32).saturating_add(32),
+        )?;
+        let mut values = Vec::new();
+        for &(node, value) in rounded {
+            solution.voltages[node] = value;
+            if node >= view.node_count {
+                let id = view
+                    .ids
+                    .get(node - view.node_count)
+                    .copied()
+                    .ok_or_else(|| {
+                        Error::new("invalid_ir", "same-time value has no procedure value")
+                    })?;
+                values.push((id, value));
+            }
+        }
+        view.plan
+            .record_same_time(&solution.voltages[..view.node_count], &view.before, values)
+    }
+
+    /// The certificate of the stored values: every member of a same-time cycle
+    /// holds the rounding of its exact root, which lies in the cycle's
+    /// certificate on the complete driven enclosures. A program value is
+    /// checked where this activation's solve recorded it: only those records
+    /// are read back as stored values; an activation rebuilt only for this
+    /// certificate stores nothing.
+    fn check_same_time_roundings(
         &self,
         solution: &Solution,
         input_bounds: &[I],
-        work: &crate::transition_source_plan::Work,
-    ) -> Result<Vec<I>, Error> {
-        self.charge_history_copy(work)?;
-        let mut exact = self.clone();
-        for eq in &mut exact.equations {
-            work.step()?;
-            eq.original_rhs = eq.original_rhs.iter().map(unrounded).collect();
-            eq.nonlinear = eq.nonlinear.iter().map(unrounded).collect();
+    ) -> Result<(), Error> {
+        let Some(view) = &self.procedure_view else {
+            return Ok(());
+        };
+        if !self.same_time_cycle_shape() {
+            return Ok(());
         }
-        exact.waveform_bounds_attempt(solution, input_bounds, false)
+        // A solution that is an RN cell's own root is that cell's certificate.
+        if view
+            .plan
+            .cell_bounds(input_bounds, &solution.voltages, self.nodes.len())?
+            .is_some()
+        {
+            return Ok(());
+        }
+        let Some(rounded) = self.same_time_roundings(solution, Some(input_bounds))? else {
+            return Ok(());
+        };
+        let recorded = view
+            .plan
+            .same_time_record(&solution.voltages[..view.node_count], &view.before)?;
+        for (node, value) in rounded {
+            let stored = if node < view.node_count {
+                Some(solution.voltages[node])
+            } else {
+                let id = view.ids.get(node - view.node_count).copied();
+                recorded.as_ref().map(|recorded| {
+                    recorded
+                        .iter()
+                        .find(|(given, _)| Some(*given) == id)
+                        .map_or(f64::NAN, |(_, v)| *v)
+                })
+            };
+            if let Some(stored) = stored.filter(|s| s.to_bits() != value.to_bits()) {
+                return Err(Error::new(
+                    "waveform_accuracy",
+                    format!(
+                        "same-time value {stored:e} at {} is not the binary64 rounding {value:e} of its exact root",
+                        self.nodes[node]
+                    ),
+                ));
+            }
+        }
+        Ok(())
+    }
+
+    /// One relation evaluated over the current enclosures: the complete image
+    /// of its right-hand side, rounding steps included.
+    fn substituted_value(
+        &self,
+        index: usize,
+        sign: f64,
+        values: &[I],
+        work: &crate::transition_source_plan::Work,
+    ) -> Result<I, Error> {
+        let eq = &self.equations[index];
+        let mut image = I::ZERO;
+        for rhs in &eq.original_rhs {
+            image = image
+                + interval_evaluate(rhs, values, Some(work))
+                    .map_err(|mut error| {
+                        error
+                            .message
+                            .push_str(&format!(" at {}", eq.origins.join(", ")));
+                        error
+                    })?
+                    .value;
+        }
+        finite_interval(I::point(sign) * image, "substituted waveform value")
+    }
+
+    /// The same voltage budget as the Krawczyk distance test, here as a bound
+    /// on every root for the complete input box.
+    fn check_substituted_budget(
+        &self,
+        solution: &Solution,
+        values: &[I],
+        work: &crate::transition_source_plan::Work,
+    ) -> Result<(), Error> {
+        for &node in &self.unknown {
+            work.step()?;
+            let center = solution.voltages[node];
+            let budget = self.voltage_budget_lower(center)?;
+            let bound = (values[node] - I::point(center)).magnitude();
+            if !bound.is_finite() || bound > budget {
+                return Err(Error::new(
+                    "waveform_accuracy",
+                    format!(
+                        "cannot certify same-time forward error at {}: bound {bound:e}, budget {budget:e}",
+                        self.nodes[node]
+                    ),
+                ));
+            }
+        }
+        Ok(())
     }
 
     /// A rounded program value has no derivative the Krawczyk test can use:
@@ -923,14 +1647,15 @@ impl Circuit {
     /// one root for every input in the box, and the interval image of that
     /// substitution encloses all of them. Each rounded image is the exact set
     /// of binary64 values of its operand image (ADR-006); no derivative, error
-    /// model or representative input is used. A system without a rounding
-    /// step, and every cyclic system, keeps the original refusal.
+    /// model or representative input is used. A same-time cycle among these
+    /// definitions is certified on its exact equation (decision 22,
+    /// `component_waveform_bounds`); a system without a rounding step keeps
+    /// the original refusal.
     fn substitution_fallback(
         &self,
         refusal: Error,
         solution: &Solution,
         base: &[I],
-        input_bounds: &[I],
     ) -> Result<Vec<I>, Error> {
         if refusal.kind != "waveform_accuracy" {
             return Err(refusal);
@@ -940,9 +1665,11 @@ impl Circuit {
         };
         match self.substitution_order(&view.plan.work)? {
             Order::Acyclic(order) => self.substituted_waveform_bounds(solution, base, order),
-            Order::Cyclic { .. } => {
-                self.unrounded_waveform_bounds(solution, input_bounds, &view.plan.work)
-            }
+            Order::Cyclic {
+                components,
+                definition,
+                ..
+            } => self.component_waveform_bounds(solution, base, &components, &definition),
             Order::Unsupported => Err(refusal),
         }
     }
@@ -962,39 +1689,9 @@ impl Circuit {
         let work = &view.plan.work;
         let mut values = base.to_vec();
         for (column, index, sign) in order {
-            let eq = &self.equations[index];
-            let mut image = I::ZERO;
-            for rhs in &eq.original_rhs {
-                image = image
-                    + interval_evaluate(rhs, &values, Some(work))
-                        .map_err(|mut error| {
-                            error
-                                .message
-                                .push_str(&format!(" at {}", eq.origins.join(", ")));
-                            error
-                        })?
-                        .value;
-            }
-            values[self.unknown[column]] =
-                finite_interval(I::point(sign) * image, "substituted waveform value")?;
+            values[self.unknown[column]] = self.substituted_value(index, sign, &values, work)?;
         }
-        // The same voltage budget as the Krawczyk distance test, here as a
-        // bound on every root for the complete input box.
-        for &node in &self.unknown {
-            work.step()?;
-            let center = solution.voltages[node];
-            let budget = self.voltage_budget_lower(center)?;
-            let bound = (values[node] - I::point(center)).magnitude();
-            if !bound.is_finite() || bound > budget {
-                return Err(Error::new(
-                    "waveform_accuracy",
-                    format!(
-                        "cannot certify same-time forward error at {}: bound {bound:e}, budget {budget:e}",
-                        self.nodes[node]
-                    ),
-                ));
-            }
-        }
+        self.check_substituted_budget(solution, &values, work)?;
         Ok(values)
     }
 
@@ -1049,6 +1746,9 @@ impl Circuit {
             solution
         };
         let mut bounds = self.waveform_bounds_complete(solution, input_bounds)?;
+        if self.procedure_view.is_some() && self.has_rounding() {
+            self.check_same_time_roundings(solution, input_bounds)?;
+        }
         if let Some(view) = &self.procedure_view {
             bounds.truncate(view.node_count);
         }
@@ -1186,6 +1886,26 @@ impl Circuit {
                 return Err(refusal);
             }
         }
+        // Decision 22: a same-time cycle through program reals is certified on
+        // its exact equation; the rounded relations certify a binary64 fixed
+        // point instead of the root it stores. An RN cell still certifies a
+        // solution that is its own root: the solve stores the cell only where
+        // the cell's values are the roundings of the exact root.
+        let cyclic = match &self.procedure_view {
+            Some(view) if contract && self.same_time_cycle_shape() => {
+                match self.substitution_order(&view.plan.work)? {
+                    Order::Cyclic {
+                        components,
+                        definition,
+                        ..
+                    } if components.iter().any(|(_, cyclic)| *cyclic) => {
+                        Some((components, definition))
+                    }
+                    _ => None,
+                }
+            }
+            _ => None,
+        };
         if let Some(view) = &self.procedure_view {
             if let Some(bounds) =
                 view.plan
@@ -1263,6 +1983,14 @@ impl Circuit {
                     ),
                 ));
             }
+        }
+        if let Some((components, definition)) = cyclic {
+            return self.component_waveform_bounds(
+                solution,
+                &point_values,
+                &components,
+                &definition,
+            );
         }
         // Exact residuals in a point-input affine system establish an exact
         // representable root; the already successful factorization proves
@@ -1382,9 +2110,7 @@ impl Circuit {
         let scalar_jacobian = if n == 1 {
             let jacobian = match self.interval_jacobian(&box_values) {
                 Ok(jacobian) => jacobian,
-                Err(error) => {
-                    return self.substitution_fallback(error, solution, &point_values, input_bounds)
-                }
+                Err(error) => return self.substitution_fallback(error, solution, &point_values),
             };
             let node = self.unknown[0];
             if contract
@@ -1407,8 +2133,7 @@ impl Circuit {
         };
         // Every refusal of the derivative-based proof below may still be
         // answered by substitution; its own refusals are accuracy refusals.
-        let refuse =
-            |error| self.substitution_fallback(error, solution, &point_values, input_bounds);
+        let refuse = |error| self.substitution_fallback(error, solution, &point_values);
         let jacobian = match self.waveform_jacobian_rows(solution) {
             Ok(jacobian) => jacobian,
             Err(error) => return refuse(error),
@@ -1557,26 +2282,20 @@ impl Circuit {
         // Acceptance still requires a distinct exact rational neighborhood on
         // which every executed RN node is constant and the frozen physical
         // affine system has one root. Ordinary captures with already-certified
-        // RN nodes do not enter this path.
+        // RN nodes do not enter this path. On a same-time cycle through program
+        // reals the cell is only a solve: its binary64 fixed point stands where
+        // it equals the rounding of the exact root (decision 22, below).
+        let cyclic =
+            self.procedure_view.is_some() && self.has_rounding() && self.has_same_time_cycle()?;
         let certified = if let Some(view) = &self.procedure_view {
-            if let Some(program) = &view.physical_program {
-                view.plan.work.debit(
-                    2,
-                    ((inputs.len() + self.procedure_parameters.len()) * 24 + 64) as u64,
-                )?;
-                let complete = inputs
-                    .iter()
-                    .copied()
-                    .chain(self.procedure_parameters.iter().map(|(v, _)| *v))
-                    .collect::<Vec<_>>();
-                view.plan.try_cell(
-                    program,
-                    &self.driven,
-                    &complete,
-                    inputs.len(),
-                    view.node_count,
-                    &view.ids,
-                )?
+            if let Some(program) = view.physical_program.as_ref().filter(|_| !cyclic) {
+                self.try_cell(view, program, inputs)?
+            } else if let Some(program) = view.physical_program.as_ref() {
+                if self.cell_may_hold_same_time_roundings(inputs)? {
+                    self.try_cell(view, program, inputs)?
+                } else {
+                    None
+                }
             } else {
                 None
             }
@@ -1598,16 +2317,71 @@ impl Circuit {
                 Err(error) if self.procedure_view.is_some() => {
                     self.recover_solution(inputs, initial_expanded.as_deref(), error)?
                 }
+                Ok(solution) if initial_expanded.is_none() => {
+                    self.with_consistent_activation(inputs, solution)?
+                }
                 result => result?,
             }
         };
         if let Some(view) = &self.procedure_view {
+            // Decision 22: a same-time cycle through program reals stores the
+            // rounding of its exact root, whichever route found the solution.
+            if cyclic {
+                if solution.voltages.len() == view.node_count {
+                    solution.voltages = view.expand(&solution.voltages)?;
+                }
+                if let Some(rounded) = self.same_time_roundings(&solution, None)? {
+                    self.store_same_time(&mut solution, &rounded)?;
+                }
+            }
             solution.voltages.truncate(view.node_count);
             if let Some(bounds) = solution.certified_voltage_bounds.as_mut() {
                 bounds.truncate(view.node_count);
             }
         }
         Ok(solution)
+    }
+    /// The RN cell route of `solve_with_initial`.
+    fn try_cell(
+        &self,
+        view: &crate::procedure::CircuitView,
+        program: &Program,
+        inputs: &[f64],
+    ) -> Result<Option<Vec<f64>>, Error> {
+        view.plan.work.debit(
+            2,
+            ((inputs.len() + self.procedure_parameters.len()) * 24 + 64) as u64,
+        )?;
+        let complete = inputs
+            .iter()
+            .copied()
+            .chain(self.procedure_parameters.iter().map(|(v, _)| *v))
+            .collect::<Vec<_>>();
+        view.plan.try_cell(
+            program,
+            &self.driven,
+            &complete,
+            inputs.len(),
+            view.node_count,
+            &view.ids,
+        )
+    }
+    /// Whether some relation has a rounding step (a program real).
+    fn has_rounding(&self) -> bool {
+        fn rounded(e: &Expression) -> bool {
+            match e {
+                Expression::RealBoundary { .. } | Expression::RealBinary { .. } => true,
+                Expression::Add { left, right }
+                | Expression::Multiply { left, right }
+                | Expression::Divide { left, right } => rounded(left) || rounded(right),
+                Expression::Power { base, .. } => rounded(base),
+                Expression::EventMath { args, .. } => args.iter().any(rounded),
+                _ => false,
+            }
+        }
+        self.equations
+            .iter()
+            .any(|eq| eq.original_rhs.iter().any(rounded))
     }
     /// Newton failed on a system with executed program reals. A singular
     /// local rank first tries substitution (an acyclic system is determined
@@ -1702,27 +2476,233 @@ impl Circuit {
         }
         view.expand(&voltages).map(Some)
     }
+    /// Newton accepts a point when every residual and its full correction fit
+    /// the residual tolerance. From the zero seed it can accept values of
+    /// executed program reals that the activation does not compute at the
+    /// accepted voltages: a product of samples has slope zero at zero, so its
+    /// correction there is zero, and a wide tolerance accepts the remaining
+    /// residual. Read with the activation's own values, a relation then misses
+    /// its residual bound and the waveform certificate refuses the point. Such
+    /// a point is solved once more from the activation's values (the nominal
+    /// seed); if that fails, the first point and its refusal are kept. Only a
+    /// program value Newton left at its zero seed while its own relation reads
+    /// a nonzero value can hide this way, so other points are kept unchecked.
+    /// On a same-time cycle through program reals
+    /// the values checked are the roundings of the cycle's exact root
+    /// (decision 22), not the activation's executed values; a point whose
+    /// roundings cannot be found is solved once more as well.
+    fn with_consistent_activation(
+        &self,
+        inputs: &[f64],
+        solution: Solution,
+    ) -> Result<Solution, Error> {
+        let budget = |e: &Error| e.kind == "step_budget";
+        let Some(view) = &self.procedure_view else {
+            return Ok(solution);
+        };
+        if solution.voltages.len() != self.nodes.len() {
+            return Ok(solution);
+        }
+        let cyclic = self.has_same_time_cycle()?;
+        let mut trapped = false;
+        for eq in &self.equations {
+            if !cyclic
+                && !trapped
+                && eq.negative == 0
+                && eq.positive >= view.node_count
+                && solution.voltages[eq.positive] == 0.
+            {
+                trapped = match self.point_rhs(eq, &solution.voltages) {
+                    Ok(value) => value != 0.,
+                    Err(error) if budget(&error) => return Err(error),
+                    Err(_) => true,
+                };
+            }
+        }
+        if !cyclic && !trapped {
+            return Ok(solution);
+        }
+        let mut activation = match view.expand(&solution.voltages[..view.node_count]) {
+            Ok(values) => values,
+            Err(error) if budget(&error) => return Err(error),
+            Err(_) => return Ok(solution),
+        };
+        let rounded = if cyclic {
+            match self.same_time_roundings(&solution, None) {
+                Ok(rounded) => Some(rounded),
+                Err(error) if budget(&error) => return Err(error),
+                Err(_) => None,
+            }
+        } else {
+            Some(None)
+        };
+        if let Some(rounded) = rounded {
+            for &(node, value) in rounded.iter().flatten() {
+                activation[node] = value;
+            }
+            match self.point_solution(inputs, activation) {
+                Ok(Some(_)) => return Ok(solution),
+                Err(error) if budget(&error) => return Err(error),
+                Ok(None) | Err(_) => {}
+            }
+        }
+        let seed = match self.procedure_seed(inputs, false) {
+            Ok(Some(seed)) => seed,
+            Err(error) if budget(&error) => return Err(error),
+            Ok(None) | Err(_) => return Ok(solution),
+        };
+        match self.solve_complete(inputs, Some(&seed)) {
+            Ok(resolved) => Ok(resolved),
+            Err(error) if budget(&error) => Err(error),
+            Err(_) => Ok(solution),
+        }
+    }
     /// Newton checks the local rank of every unknown, including program
     /// values whose relation reads only earlier values. A rounded value scaled
     /// far beyond its operand, as in 1e16*(V(u)-c), makes the row-scaled
     /// factorization call such a triangular system singular although
     /// substitution determines every unknown. The substituted values still
-    /// need the unchanged waveform certificate.
+    /// need the unchanged waveform certificate. With a same-time cycle the
+    /// components are taken in dependency order: substitution outside the
+    /// cycles, and Newton on each cycle's own relations without their rounding
+    /// steps (decision 22) with every value it reads fixed, in rationals where
+    /// binary64 Newton cannot meet the tolerance. Such a point starts the
+    /// decision 22 roundings and their certificate; the rounded relations need
+    /// not hold at it within the residual tolerance (an exact power of a large
+    /// value has no binary64 neighbour that close).
     fn substitution_solve(&self, inputs: &[f64]) -> Result<Option<Solution>, Error> {
         let Some(view) = &self.procedure_view else {
             return Ok(None);
         };
-        let Order::Acyclic(order) = self.substitution_order(&view.plan.work)? else {
-            return Ok(None);
-        };
+        let work = &view.plan.work;
         let Some(mut values) = self.with_inputs(inputs, vec![0.0; self.nodes.len()]) else {
             return Ok(None);
         };
-        for (column, index, sign) in order {
-            values[self.unknown[column]] =
-                sign * self.point_rhs(&self.equations[index], &values)?;
+        match self.substitution_order(work)? {
+            Order::Acyclic(order) => {
+                for (column, index, sign) in order {
+                    values[self.unknown[column]] =
+                        sign * self.point_rhs(&self.equations[index], &values)?;
+                }
+                self.point_solution(inputs, values)
+            }
+            Order::Cyclic {
+                components,
+                definition,
+                ..
+            } => {
+                for (columns, cyclic) in &components {
+                    if !cyclic {
+                        for &column in columns {
+                            let (index, sign) = definition[column];
+                            values[self.unknown[column]] =
+                                sign * self.point_rhs(&self.equations[index], &values)?;
+                        }
+                        continue;
+                    }
+                    let cycle = self.cycle_circuit(columns, &definition, work)?;
+                    let fixed = cycle
+                        .driven
+                        .iter()
+                        .map(|&node| values[node])
+                        .collect::<Vec<_>>();
+                    let solved = match cycle.solve_complete(&fixed, None) {
+                        Ok(solution) => Some(
+                            cycle
+                                .unknown
+                                .iter()
+                                .map(|&node| solution.voltages[node])
+                                .collect::<Vec<_>>(),
+                        ),
+                        Err(error) if error.kind == "step_budget" => return Err(error),
+                        Err(_) => self.exact_cycle_start(columns, &definition, &values, work)?,
+                    };
+                    let Some(solved) = solved else {
+                        return Ok(None);
+                    };
+                    for (&column, value) in columns.iter().zip(solved) {
+                        values[self.unknown[column]] = value;
+                    }
+                }
+                if values.iter().any(|v| !v.is_finite()) {
+                    return Ok(None);
+                }
+                let (mut residual_v, mut ratio) = (0.0_f64, 0.0_f64);
+                for eq in &self.equations {
+                    let lhs = values[eq.positive] - values[eq.negative];
+                    let rhs = self.point_rhs(eq, &values)?;
+                    let bound = self.tolerances.absolute
+                        + self.tolerances.relative * lhs.abs().max(rhs.abs());
+                    let residual = (lhs - rhs).abs();
+                    if !(residual.is_finite() && bound.is_finite() && bound > 0.) {
+                        return Ok(None);
+                    }
+                    residual_v = residual_v.max(residual);
+                    ratio = ratio.max(residual / bound);
+                }
+                Ok(Some(Solution {
+                    certified_voltage_bounds: None,
+                    voltages: values,
+                    max_residual_v: residual_v,
+                    max_residual_ratio: ratio,
+                    max_scaled_residual_ratio: None,
+                    max_voltage_correction_v: None,
+                    max_voltage_correction_ratio: None,
+                }))
+            }
+            Order::Unsupported => Ok(None),
         }
-        self.point_solution(inputs, values)
+    }
+    /// Exact Newton on one cycle's relations without their rounding steps,
+    /// every other value read as the exact binary64 it holds in `values`.
+    fn exact_cycle_start(
+        &self,
+        columns: &[usize],
+        definition: &[(usize, f64)],
+        values: &[f64],
+        work: &crate::transition_source_plan::Work,
+    ) -> Result<Option<Vec<f64>>, Error> {
+        use crate::same_time_root::{self as root, Cycle, Relation, Q};
+        let relations = columns
+            .iter()
+            .map(|&column| Relation {
+                sign: definition[column].1,
+                rhs: self.equations[definition[column].0]
+                    .original_rhs
+                    .iter()
+                    .map(unrounded)
+                    .collect(),
+            })
+            .collect::<Vec<_>>();
+        let mut column_of = vec![None; self.nodes.len()];
+        for (i, &column) in columns.iter().enumerate() {
+            column_of[self.unknown[column]] = Some(i);
+        }
+        work.debit(
+            2,
+            (values.len() as u64).saturating_mul(64).saturating_add(64),
+        )?;
+        let mut exact = Vec::with_capacity(values.len());
+        for (node, &value) in values.iter().enumerate() {
+            exact.push(match column_of[node] {
+                Some(_) => None,
+                None => Some(Q::point(root::binary(value, work)?)),
+            });
+        }
+        let start = columns
+            .iter()
+            .map(|&column| values[self.unknown[column]])
+            .collect::<Vec<_>>();
+        root::newton_start(
+            &Cycle {
+                relations: &relations,
+                column: &column_of,
+                values: &exact,
+                name: "a same-time cycle",
+            },
+            &start,
+            work,
+        )
     }
     /// The values completed with the driven inputs and procedure parameters.
     fn with_inputs(&self, inputs: &[f64], mut values: Vec<f64>) -> Option<Vec<f64>> {
@@ -2876,6 +3856,55 @@ mod rounded_substitution_tests {
             .solve(&[0.397])
             .and_then(|s| c.waveform_bounds(&s, &[moving()]));
         assert!(refused.is_err());
+    }
+    #[test]
+    fn values_outside_a_same_time_cycle_keep_their_rounding() {
+        // den = V(y) on both arms of a selection and V(y) <+ 2*den - 2: the
+        // rounded value feeds its own operand (root y = 2, not contractive).
+        // q = RN(RN(3*V(d)) - 0.3) and V(w) <+ 1e18*q lie outside the cycle;
+        // at V(d) = 0.1 the rounded q is 2^-54, while 3*0.1 - 0.3 is 2^-55 in
+        // real arithmetic, so w = 1e18*2^-54 only with q's rounding kept.
+        let at =
+            |column: u32| json!({"source":"rounded.va","line":1,"column":column,"instance":"dut"});
+        let constant = |v: f64| json!({"op":"affine","constant":v,"terms":[]});
+        let local = |binding: usize| json!({"op":"real_local","binding":binding});
+        let negated = |rhs: Value| json!({"op":"multiply","left":constant(-1.0),"right":rhs});
+        let select = json!({"op":"select","relation":"lt","left":sample(1),"right":constant(0.25),
+            "then_value":sample(2),"else_value":sample(2),"origin":at(1)});
+        let tripled = json!({"op":"real_binary","operation":"multiply","origin":at(2),
+            "left":sample(1),"right":constant(3.0)});
+        let difference = json!({"op":"real_binary","operation":"subtract","origin":at(3),
+            "left":tripled,"right":constant(0.3)});
+        let y_rhs = json!({"op":"add","left":{"op":"multiply","left":constant(2.0),"right":local(0)},
+            "right":constant(-2.0)});
+        let w_rhs = json!({"op":"multiply","left":constant(1e18),"right":local(1)});
+        let branch = |node: &str| json!({"instance":"dut","local_positive":"0","local_negative":node,"kind":"voltage"});
+        let bind = |ordinal: usize, binding: usize, value: Value, column: u32| {
+            json!({"expanded_statement_ordinal":ordinal,"action":{"kind":"real_bind","binding":binding,
+                "origin":at(column),"value":{"op":"real_boundary","kind":"snapshot","origin":at(column + 1),
+                "value":value}}})
+        };
+        let p: Program = serde_json::from_value(json!({"schema_version":crate::ir::SCHEMA_VERSION,
+            "nodes":["0","d","y","w"],
+            "contributions":[
+                {"branch":branch("y"),"positive":0,"negative":2,"rhs":negated(y_rhs),"origin":at(4)},
+                {"branch":branch("w"),"positive":0,"negative":3,"rhs":negated(w_rhs),"origin":at(5)}],
+            "procedures":[{"procedure_id":0,"instance":"dut","body":[
+                bind(0, 0, select, 6),
+                bind(1, 1, difference, 8),
+                {"expanded_statement_ordinal":2,"action":{"kind":"contribution_capture","contribution":0}},
+                {"expanded_statement_ordinal":3,"action":{"kind":"contribution_capture","contribution":1}}]}],
+            "real_bindings":[{"procedure_id":0,"name":"den","origin":at(10),"lifetime":"occurrence"},
+                {"procedure_id":0,"name":"q","origin":at(11),"lifetime":"occurrence"}]}))
+        .unwrap();
+        let w = Work::default();
+        let c = circuit(p, 1e-9, &w, I::point(0.1));
+        let s = c.solve(&[0.1]).unwrap();
+        let rounded = 1e18 * 2_f64.powi(-54);
+        assert_eq!(s.voltages[3], rounded);
+        let b = c.waveform_bounds(&s, &[I::point(0.1)]).unwrap();
+        assert!(b[3].lo <= rounded && rounded <= b[3].hi, "{:?}", b[3]);
+        assert!(b[2].lo <= 2. && 2. <= b[2].hi, "{:?}", b[2]);
     }
     #[test]
     fn scaled_rounded_value_with_a_singular_local_rank_is_solved_by_substitution() {

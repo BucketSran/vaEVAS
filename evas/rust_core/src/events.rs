@@ -2333,6 +2333,9 @@ impl EventModel {
                         None => false,
                     };
                 if !pending {
+                    if let Some((trajectory, time, _, _)) = observation {
+                        self.bind_exact_sources(&circuit, inputs, trajectory, time)?;
+                    }
                     return Ok(circuit);
                 }
             }
@@ -2356,6 +2359,58 @@ impl EventModel {
         .try_with_operators(bounds)?;
         context.set_candidate_frame(states, operators, &[], false)?;
         build(&context)
+    }
+
+    /// The exact source value of each driven node at an observation time,
+    /// installed in the Plan of a circuit with a same-time cycle through
+    /// program reals: its exact equation reads them (decision 22).
+    fn bind_exact_sources(
+        &self,
+        circuit: &Circuit,
+        inputs: &[I],
+        trajectory: &crate::pwl::Trajectory,
+        time: f64,
+    ) -> Result<(), Error> {
+        let Some(view) = circuit.procedure_view() else {
+            return Ok(());
+        };
+        if !circuit.has_same_time_cycle()? {
+            return Ok(());
+        }
+        let Some(root) = crate::exact_source::RootTime::point(time) else {
+            return Ok(());
+        };
+        let work = crate::real_expression::work(self);
+        work.debit(
+            2,
+            ((self.program.nodes.len() + self.driven.len()) * 64 + 64) as u64,
+        )?;
+        let mut exact = vec![None; self.program.nodes.len()];
+        for (k, (name, bound)) in self.driven.iter().zip(inputs).enumerate() {
+            work.debit(2, 200_000)?;
+            let Some(value) = trajectory
+                .exact_sources
+                .get(k)
+                .and_then(Option::as_ref)
+                .and_then(|curve| curve.at_root(&root))
+            else {
+                continue;
+            };
+            if !crate::exact_source::enclosure(&value)
+                .is_some_and(|e| bound.lo <= e.lo && e.hi <= bound.hi)
+            {
+                continue;
+            }
+            for (node, candidate) in self.program.nodes.iter().enumerate() {
+                work.debit(2, (candidate.len() + name.len() + 1) as u64)?;
+                if candidate == name {
+                    exact[node] = Some(value);
+                    break;
+                }
+            }
+        }
+        view.plan.set_exact_driven(exact);
+        Ok(())
     }
 
     pub(crate) fn circuit_at(

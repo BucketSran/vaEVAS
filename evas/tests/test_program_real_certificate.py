@@ -95,7 +95,7 @@ CONSTANT_INPUT = {"d-var-no-clamp", "e-direct-divide", "g-clamp-divide-constant"
 
 def rows(wave):
     """The SCS output grid: k*binary64(10 ps) below stop, stop and every knot."""
-    return sorted({k * 1e-11 for k in range(200)} | {STOP} | {t for t, _ in wave})
+    return sorted({k * 1e-11 for k in range(201) if k * 1e-11 < STOP} | {STOP} | {t for t, _ in wave})
 
 
 def program(body):

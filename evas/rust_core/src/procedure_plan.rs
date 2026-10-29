@@ -80,7 +80,22 @@ pub(crate) struct Plan {
     branched: bool,
     cell: Arc<std::sync::OnceLock<Arc<crate::procedure_cell::Certificate>>>,
     observation: Arc<std::sync::OnceLock<Vec<f64>>>,
+    // Decision 22: the roundings of program values on a same-time cycle,
+    // recorded by the activation solves of this Plan for their voltages and
+    // states. Numeric values read them for exactly these inputs.
+    same_time: Arc<std::sync::Mutex<Vec<SameTime>>>,
+    // Exact driven source values of an observation, by node, for the exact
+    // equation of a same-time cycle.
+    exact_driven: Arc<std::sync::OnceLock<Vec<Option<num_rational::BigRational>>>>,
     identity: Vec<u8>,
+}
+struct SameTime {
+    voltages: Vec<u64>,
+    before: Vec<u64>,
+    values: Vec<(Id, f64)>,
+}
+fn value_bits(values: &[f64]) -> Vec<u64> {
+    values.iter().map(|v| v.to_bits()).collect()
 }
 impl PartialEq for Plan {
     fn eq(&self, other: &Self) -> bool {
@@ -925,6 +940,71 @@ impl Plan {
     pub(crate) fn has_observation(&self) -> bool {
         self.observation.get().is_some()
     }
+    /// Record the decision 22 roundings an activation solve found for these
+    /// voltages and states, replacing an earlier record for the same inputs.
+    pub(crate) fn record_same_time(
+        &self,
+        voltages: &[f64],
+        before: &[f64],
+        values: Vec<(Id, f64)>,
+    ) -> Result<(), Error> {
+        self.work.debit(
+            2,
+            ((voltages.len() + before.len() + 2 * values.len()) * 16 + 64) as u64,
+        )?;
+        let record = SameTime {
+            voltages: value_bits(voltages),
+            before: value_bits(before),
+            values,
+        };
+        let mut records = self
+            .same_time
+            .lock()
+            .map_err(|_| invalid("same-time rounding record is poisoned"))?;
+        records.retain(|r| r.voltages != record.voltages || r.before != record.before);
+        if records.len() >= 8 {
+            records.remove(0);
+        }
+        records.push(record);
+        Ok(())
+    }
+    /// The decision 22 roundings recorded for these voltages and states.
+    pub(crate) fn same_time_record(
+        &self,
+        voltages: &[f64],
+        before: &[f64],
+    ) -> Result<Option<Vec<(Id, f64)>>, Error> {
+        let values = self.same_time_values(voltages, before, &self.work)?;
+        Ok((!values.is_empty()).then_some(values))
+    }
+    fn same_time_values(
+        &self,
+        voltages: &[f64],
+        before: &[f64],
+        w: &Work,
+    ) -> Result<Vec<(Id, f64)>, Error> {
+        let records = self
+            .same_time
+            .lock()
+            .map_err(|_| invalid("same-time rounding record is poisoned"))?;
+        if records.is_empty() {
+            return Ok(Vec::new());
+        }
+        w.debit(
+            2,
+            ((voltages.len() + before.len()) * records.len() * 2 + 32) as u64,
+        )?;
+        let (voltages, before) = (value_bits(voltages), value_bits(before));
+        Ok(records
+            .iter()
+            .find(|r| r.voltages == voltages && r.before == before)
+            .map(|r| r.values.clone())
+            .unwrap_or_default())
+    }
+    /// Exact driven source values of this observation, by node.
+    pub(crate) fn set_exact_driven(&self, values: Vec<Option<num_rational::BigRational>>) {
+        let _ = self.exact_driven.set(values);
+    }
     // Keep nominal/full boxes, source frame, and original Work explicit.
     #[allow(clippy::too_many_arguments)]
     fn evaluate(
@@ -938,6 +1018,30 @@ impl Plan {
         operators: &[Option<f64>],
         operator_bounds: &[I],
         context: Option<&Context<'_>>,
+        w: &Work,
+    ) -> Result<Vec<Cell>, Error> {
+        self.evaluate_with(
+            execute_effects,
+            roots,
+            (nodes, node_bounds),
+            (states, state_bounds),
+            (operators, operator_bounds),
+            context,
+            &[],
+            w,
+        )
+    }
+    // `evaluate` with the decision 22 rounding of some values given.
+    #[allow(clippy::too_many_arguments)]
+    fn evaluate_with(
+        &self,
+        execute_effects: bool,
+        roots: &[Id],
+        (nodes, node_bounds): (&[Option<f64>], &[I]),
+        (states, state_bounds): (&[Option<f64>], &[I]),
+        (operators, operator_bounds): (&[Option<f64>], &[I]),
+        context: Option<&Context<'_>>,
+        given: &[(Id, f64)],
         w: &Work,
     ) -> Result<Vec<Cell>, Error> {
         w.debit(2, ((roots.len() + self.effects.len()) * 16 + 64) as u64)?;
@@ -963,9 +1067,19 @@ impl Plan {
             Vec::new()
         };
         all.extend_from_slice(roots);
-        let mut values = arena(self.graph.evaluate(
+        let mut values = arena(self.graph.evaluate_indexed(
             &all,
-            &mut |op, args| {
+            &mut |id, op, args| {
+                if let Some(&(_, value)) = given.iter().find(|(given, _)| *given == id) {
+                    w.step()?;
+                    return Ok(Cell {
+                        source_domain: None,
+                        nominal: Some(value),
+                        image: Some(I::point(value)),
+                        mathematical: None,
+                        proof: None,
+                    });
+                }
                 let value = op.evaluate(args, &domain, w)?;
                 // Builder.add may postpone unknown electrical values. This final
                 // evaluation cannot discard an unresolved overwritten store merely
@@ -1028,16 +1142,17 @@ impl Plan {
                 })
             })
             .collect::<Vec<_>>();
-        self.evaluate(
+        // A same-time cycle's program values are the roundings its solve
+        // recorded for these inputs (decision 22), not their execution.
+        let given = self.same_time_values(nodes, before, w)?;
+        self.evaluate_with(
             execute_effects,
             roots,
-            &points,
-            &bounds,
-            &states,
-            &state_bounds,
-            &operators,
-            &operator_bounds,
+            (&points, &bounds),
+            (&states, &state_bounds),
+            (&operators, &operator_bounds),
             context,
+            &given,
             w,
         )?
         .iter()
@@ -1487,6 +1602,8 @@ pub(crate) fn execute(
         branched,
         cell: Arc::new(std::sync::OnceLock::new()),
         observation: Arc::new(std::sync::OnceLock::new()),
+        same_time: Arc::new(std::sync::Mutex::new(Vec::new())),
+        exact_driven: Arc::new(std::sync::OnceLock::new()),
         identity,
     })
 }
@@ -1555,6 +1672,16 @@ impl CircuitView {
             }
         }
         Ok(false)
+    }
+    /// The exact source value of a driven node at this activation, if known.
+    pub(crate) fn exact_input(&self, node: usize) -> Option<num_rational::BigRational> {
+        if node >= self.node_count {
+            return None;
+        }
+        if let Some(Some(value)) = self.plan.exact_driven.get().and_then(|v| v.get(node)) {
+            return Some(value.clone());
+        }
+        self.plan.base.floor_node(node).cloned()
     }
     pub(crate) fn expand(&self, voltages: &[f64]) -> Result<Vec<f64>, Error> {
         let w = &self.plan.work;
