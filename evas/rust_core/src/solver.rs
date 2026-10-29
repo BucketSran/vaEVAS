@@ -246,6 +246,147 @@ fn read_columns(
     }
 }
 
+/// Dependency structure of a system with a rounding step in which every
+/// unknown is defined by exactly one grounded relation.
+enum Order {
+    /// No rounding step, or an unknown without exactly one such definition.
+    Unsupported,
+    /// (column, equation, sign) per unknown, each after every column it reads.
+    Acyclic(Vec<(usize, usize, f64)>),
+    /// A value reads its own result at the same time. `core` marks the
+    /// columns on a cycle or between two; `definition` is (equation, sign).
+    Cyclic {
+        core: Vec<bool>,
+        definition: Vec<(usize, f64)>,
+    },
+}
+
+/// The same relation in real arithmetic: every rounding step is dropped.
+fn unrounded(expr: &Expression) -> Expression {
+    let boxed = |e: &Expression| Box::new(unrounded(e));
+    match expr {
+        Expression::RealBoundary { value, .. } => unrounded(value),
+        Expression::RealBinary {
+            operation,
+            left,
+            right,
+            ..
+        } => {
+            let (left, right) = (boxed(left), boxed(right));
+            match operation {
+                crate::ir::RealOperation::Add => Expression::Add { left, right },
+                crate::ir::RealOperation::Subtract => Expression::Add {
+                    left,
+                    right: Box::new(Expression::Multiply {
+                        left: Box::new(Expression::Affine {
+                            constant: -1.,
+                            terms: Vec::new(),
+                        }),
+                        right,
+                    }),
+                },
+                crate::ir::RealOperation::Multiply => Expression::Multiply { left, right },
+                crate::ir::RealOperation::Divide => Expression::Divide { left, right },
+            }
+        }
+        Expression::Add { left, right } => Expression::Add {
+            left: boxed(left),
+            right: boxed(right),
+        },
+        Expression::Multiply { left, right } => Expression::Multiply {
+            left: boxed(left),
+            right: boxed(right),
+        },
+        Expression::Divide { left, right } => Expression::Divide {
+            left: boxed(left),
+            right: boxed(right),
+        },
+        Expression::Power { base, exponent } => Expression::Power {
+            base: boxed(base),
+            exponent: *exponent,
+        },
+        Expression::EventMath {
+            function,
+            args,
+            origin,
+        } => Expression::EventMath {
+            function: *function,
+            args: args.iter().map(unrounded).collect(),
+            origin: origin.clone(),
+        },
+        other => other.clone(),
+    }
+}
+
+/// (reads a marked unknown column, affine in the marked columns) for the
+/// real-arithmetic reading of a bound waveform expression.
+fn marked_affine(
+    expr: &Expression,
+    columns: &[Option<usize>],
+    marked: &[bool],
+    work: &crate::transition_source_plan::Work,
+) -> Result<(bool, bool), Error> {
+    work.step()?;
+    let pair = |l: &Expression, r: &Expression| -> Result<_, Error> {
+        Ok((
+            marked_affine(l, columns, marked, work)?,
+            marked_affine(r, columns, marked, work)?,
+        ))
+    };
+    use crate::ir::RealOperation as Op;
+    Ok(match expr {
+        Expression::Affine { terms, .. } => (
+            terms
+                .iter()
+                .any(|t| columns[t.node].is_some_and(|c| marked[c])),
+            true,
+        ),
+        Expression::RealBoundary { value, .. } => marked_affine(value, columns, marked, work)?,
+        Expression::Add { left, right }
+        | Expression::RealBinary {
+            operation: Op::Add | Op::Subtract,
+            left,
+            right,
+            ..
+        } => {
+            let ((a, x), (b, y)) = pair(left, right)?;
+            (a || b, x && y)
+        }
+        Expression::Multiply { left, right }
+        | Expression::RealBinary {
+            operation: Op::Multiply,
+            left,
+            right,
+            ..
+        } => {
+            let ((a, x), (b, y)) = pair(left, right)?;
+            (a || b, x && y && !(a && b))
+        }
+        Expression::Divide { left, right }
+        | Expression::RealBinary {
+            operation: Op::Divide,
+            left,
+            right,
+            ..
+        } => {
+            let ((a, x), (b, y)) = pair(left, right)?;
+            (a || b, x && y && !b)
+        }
+        Expression::Power { base, .. } => {
+            let (a, x) = marked_affine(base, columns, marked, work)?;
+            (a, x && !a)
+        }
+        Expression::EventMath { args, .. } => {
+            let mut reads = false;
+            for arg in args {
+                reads |= marked_affine(arg, columns, marked, work)?.0;
+            }
+            (reads, !reads)
+        }
+        _ => (false, true),
+    })
+}
+
 fn finite_interval(value: I, what: &str) -> Result<I, Error> {
     if value.finite() {
         Ok(value)
@@ -605,21 +746,20 @@ impl Circuit {
             .collect()
     }
 
-    /// Substitution order of a system with a rounding step in which every
-    /// unknown is defined by exactly one grounded relation: (column, equation,
-    /// sign) per unknown, each column after every column it reads. None for a
-    /// cycle, a missing or repeated definition, or no rounding step.
+    /// How a system with a rounding step in which every unknown is defined by
+    /// exactly one grounded relation can be certified without differentiating
+    /// a rounding step.
     fn substitution_order(
         &self,
         work: &crate::transition_source_plan::Work,
-    ) -> Result<Option<Vec<(usize, usize, f64)>>, Error> {
+    ) -> Result<Order, Error> {
         let n = self.unknown.len();
         if self.equations.len() != n {
-            return Ok(None);
+            return Ok(Order::Unsupported);
         }
         // Definitions, pending counts, reader lists, order and the copied
         // value vector; read entries are paid where they are collected.
-        work.debit(2, ((self.nodes.len() + 6 * n + 1) * 64) as u64)?;
+        work.debit(2, ((self.nodes.len() + 8 * n + 1) * 64) as u64)?;
         let mut definition = vec![None; n];
         for (index, eq) in self.equations.iter().enumerate() {
             work.step()?;
@@ -628,40 +768,45 @@ impl Circuit {
             } else if eq.positive == 0 {
                 (eq.negative, -1.)
             } else {
-                return Ok(None);
+                return Ok(Order::Unsupported);
             };
             let Some(column) = self.unknown_columns[node] else {
-                return Ok(None);
+                return Ok(Order::Unsupported);
             };
             if definition[column].replace((index, sign)).is_some() {
-                return Ok(None);
+                return Ok(Order::Unsupported);
             }
         }
         let Some(definition) = definition.into_iter().collect::<Option<Vec<_>>>() else {
-            return Ok(None);
+            return Ok(Order::Unsupported);
         };
         let mut pending = vec![0_usize; n];
         let mut readers = vec![Vec::new(); n];
-        let mut reads = Vec::new();
+        let mut reads = vec![Vec::new(); n];
         let mut rounded = false;
         for (column, &(index, _)) in definition.iter().enumerate() {
-            reads.clear();
             for rhs in &self.equations[index].original_rhs {
-                if !read_columns(rhs, &self.unknown_columns, &mut reads, &mut rounded, work)? {
-                    return Ok(None);
+                if !read_columns(
+                    rhs,
+                    &self.unknown_columns,
+                    &mut reads[column],
+                    &mut rounded,
+                    work,
+                )? {
+                    return Ok(Order::Unsupported);
                 }
             }
-            work.debit(2, (reads.len() * 16) as u64)?;
-            for &read in &reads {
+            work.debit(2, (reads[column].len() * 32) as u64)?;
+            for &read in &reads[column] {
                 pending[column] += 1;
                 readers[read].push(column);
             }
         }
         if !rounded {
-            return Ok(None);
+            return Ok(Order::Unsupported);
         }
         // Kahn order: a column is evaluated after every column it reads. A
-        // column left over lies on a cycle and has no substitution order.
+        // column left over lies on a cycle or after one.
         let mut ready = (0..n).filter(|&c| pending[c] == 0).collect::<Vec<_>>();
         let mut order = Vec::with_capacity(n);
         while let Some(column) = ready.pop() {
@@ -676,7 +821,97 @@ impl Circuit {
                 }
             }
         }
-        Ok((order.len() == n).then_some(order))
+        if order.len() == n {
+            return Ok(Order::Acyclic(order));
+        }
+        // Drop left-over columns that no left-over column reads: they only
+        // follow a cycle. What remains lies on a cycle or between two.
+        let mut core = pending.iter().map(|&p| p > 0).collect::<Vec<_>>();
+        let mut read_by = vec![0_usize; n];
+        for column in (0..n).filter(|&c| core[c]) {
+            for &read in &reads[column] {
+                work.step()?;
+                read_by[read] += usize::from(core[read]);
+            }
+        }
+        let mut sinks = (0..n)
+            .filter(|&c| core[c] && read_by[c] == 0)
+            .collect::<Vec<_>>();
+        while let Some(column) = sinks.pop() {
+            core[column] = false;
+            for &read in &reads[column] {
+                work.step()?;
+                if core[read] {
+                    read_by[read] -= 1;
+                    if read_by[read] == 0 {
+                        sinks.push(read);
+                    }
+                }
+            }
+        }
+        Ok(Order::Cyclic { core, definition })
+    }
+
+    /// A same-time cycle through a rounded program value in an event
+    /// activation (D-R2-1 option A, decision 22): its relations are solved in
+    /// real arithmetic, and only a jointly affine system has a certified
+    /// unique solution. A cycle that is nonlinear in its own unknowns, such as
+    /// q = V(y)*V(y) with V(y) <+ q (y = y^2 has the solutions 0 and 1), is
+    /// refused before any local proof can select one of its roots.
+    fn nonlinear_same_time_feedback(&self) -> Result<Option<Error>, Error> {
+        let Some(view) = self
+            .procedure_view
+            .as_ref()
+            .filter(|v| !v.plan.actions.is_empty())
+        else {
+            return Ok(None);
+        };
+        let work = &view.plan.work;
+        let Order::Cyclic { core, definition } = self.substitution_order(work)? else {
+            return Ok(None);
+        };
+        for (column, &(index, _)) in definition.iter().enumerate() {
+            if !core[column] {
+                continue;
+            }
+            let eq = &self.equations[index];
+            for rhs in &eq.original_rhs {
+                if !marked_affine(rhs, &self.unknown_columns, &core, work)?.1 {
+                    let origins = eq.origins.join(", ");
+                    work.debit(2, (origins.len() + 256) as u64)?;
+                    return Ok(Some(Error::new(
+                        "unsupported_transient",
+                        format!(
+                            "same-time feedback through a program real is nonlinear at {origins}: \
+                             its real-arithmetic equation is not certified to have exactly one solution"
+                        ),
+                    )));
+                }
+            }
+        }
+        Ok(None)
+    }
+
+    /// D-R2-1 option A (decision 22, an ADR-006 clarification): a rounded
+    /// program value that feeds its own operand at the same time is the root
+    /// of the real-arithmetic same-time equation, stored as its binary64
+    /// rounding. The unchanged Krawczyk certificate runs on the relations
+    /// without their rounding steps; its refusal is the refusal of that
+    /// equation. The contraction by rounded images does not apply to it.
+    fn unrounded_waveform_bounds(
+        &self,
+        solution: &Solution,
+        input_bounds: &[I],
+        work: &crate::transition_source_plan::Work,
+    ) -> Result<Vec<I>, Error> {
+        self.charge_history_copy(work)?;
+        let mut exact = self.clone();
+        for eq in &mut exact.equations {
+            work.step()?;
+            eq.original_rhs = eq.original_rhs.iter().map(unrounded).collect();
+            eq.nonlinear = eq.nonlinear.iter().map(unrounded).collect();
+        }
+        exact.waveform_bounds_attempt(solution, input_bounds, false)
     }
 
     /// A rounded program value has no derivative the Krawczyk test can use:
@@ -695,13 +930,20 @@ impl Circuit {
         refusal: Error,
         solution: &Solution,
         base: &[I],
+        input_bounds: &[I],
     ) -> Result<Vec<I>, Error> {
         if refusal.kind != "waveform_accuracy" {
             return Err(refusal);
         }
-        match self.substituted_waveform_bounds(solution, base)? {
-            Some(bounds) => Ok(bounds),
-            None => Err(refusal),
+        let Some(view) = &self.procedure_view else {
+            return Err(refusal);
+        };
+        match self.substitution_order(&view.plan.work)? {
+            Order::Acyclic(order) => self.substituted_waveform_bounds(solution, base, order),
+            Order::Cyclic { .. } => {
+                self.unrounded_waveform_bounds(solution, input_bounds, &view.plan.work)
+            }
+            Order::Unsupported => Err(refusal),
         }
     }
 
@@ -709,14 +951,15 @@ impl Circuit {
         &self,
         solution: &Solution,
         base: &[I],
-    ) -> Result<Option<Vec<I>>, Error> {
+        order: Vec<(usize, usize, f64)>,
+    ) -> Result<Vec<I>, Error> {
         let Some(view) = &self.procedure_view else {
-            return Ok(None);
+            return Err(Error::new(
+                "invalid_ir",
+                "substitution requires its procedure view",
+            ));
         };
         let work = &view.plan.work;
-        let Some(order) = self.substitution_order(work)? else {
-            return Ok(None);
-        };
         let mut values = base.to_vec();
         for (column, index, sign) in order {
             let eq = &self.equations[index];
@@ -752,7 +995,7 @@ impl Circuit {
                 ));
             }
         }
-        Ok(Some(values))
+        Ok(values)
     }
 
     fn voltage_budget_lower(&self, voltage: f64) -> Result<f64, Error> {
@@ -937,6 +1180,11 @@ impl Circuit {
     ) -> Result<Vec<I>, Error> {
         if let Some(view) = &self.procedure_view {
             view.plan.work.debit(2, 0)?;
+        }
+        if contract {
+            if let Some(refusal) = self.nonlinear_same_time_feedback()? {
+                return Err(refusal);
+            }
         }
         if let Some(view) = &self.procedure_view {
             if let Some(bounds) =
@@ -1134,7 +1382,9 @@ impl Circuit {
         let scalar_jacobian = if n == 1 {
             let jacobian = match self.interval_jacobian(&box_values) {
                 Ok(jacobian) => jacobian,
-                Err(error) => return self.substitution_fallback(error, solution, &point_values),
+                Err(error) => {
+                    return self.substitution_fallback(error, solution, &point_values, input_bounds)
+                }
             };
             let node = self.unknown[0];
             if contract
@@ -1157,7 +1407,8 @@ impl Circuit {
         };
         // Every refusal of the derivative-based proof below may still be
         // answered by substitution; its own refusals are accuracy refusals.
-        let refuse = |error| self.substitution_fallback(error, solution, &point_values);
+        let refuse =
+            |error| self.substitution_fallback(error, solution, &point_values, input_bounds);
         let jacobian = match self.waveform_jacobian_rows(solution) {
             Ok(jacobian) => jacobian,
             Err(error) => return refuse(error),
@@ -1344,26 +1595,8 @@ impl Circuit {
             }
         } else {
             match self.solve_complete(inputs, initial_expanded.as_deref()) {
-                Err(error)
-                    if initial_expanded.is_none()
-                        && matches!(error.kind, "nonfinite_arithmetic" | "real_arithmetic") =>
-                {
-                    match self.procedure_seed(inputs) {
-                        Ok(Some(seed)) => self.solve_complete(inputs, Some(&seed))?,
-                        Err(seed_error) if seed_error.kind == "step_budget" => {
-                            return Err(seed_error)
-                        }
-                        Ok(None) | Err(_) => return Err(error),
-                    }
-                }
-                Err(error) if error.kind == "singular_jacobian" => {
-                    match self.substitution_solve(inputs) {
-                        Ok(Some(solution)) => solution,
-                        Err(order_error) if order_error.kind == "step_budget" => {
-                            return Err(order_error)
-                        }
-                        Ok(None) | Err(_) => return Err(error),
-                    }
+                Err(error) if self.procedure_view.is_some() => {
+                    self.recover_solution(inputs, initial_expanded.as_deref(), error)?
                 }
                 result => result?,
             }
@@ -1376,12 +1609,69 @@ impl Circuit {
         }
         Ok(solution)
     }
+    /// Newton failed on a system with executed program reals. A singular
+    /// local rank first tries substitution (an acyclic system is determined
+    /// by it). At a numerical limit (singular rank or no convergence) values
+    /// that already satisfy every relation within its residual tolerance are
+    /// kept; the waveform certificate still decides them. Without a caller
+    /// seed, Newton restarts from the activation's own values.
+    fn recover_solution(
+        &self,
+        inputs: &[f64],
+        initial: Option<&[f64]>,
+        error: Error,
+    ) -> Result<Solution, Error> {
+        let budget = |e: &Error| e.kind == "step_budget";
+        if error.kind == "singular_jacobian" {
+            match self.substitution_solve(inputs) {
+                Ok(Some(solution)) => return Ok(solution),
+                Err(order_error) if budget(&order_error) => return Err(order_error),
+                Ok(None) | Err(_) => {}
+            }
+        }
+        let numerical = matches!(error.kind, "nonconvergence" | "singular_jacobian");
+        if let Some(initial) = initial {
+            if numerical {
+                match self.point_solution(inputs, initial.to_vec()) {
+                    Ok(Some(solution)) => return Ok(solution),
+                    Err(point_error) if budget(&point_error) => return Err(point_error),
+                    Ok(None) | Err(_) => {}
+                }
+            }
+            return Err(error);
+        }
+        if !(numerical || matches!(error.kind, "nonfinite_arithmetic" | "real_arithmetic")) {
+            return Err(error);
+        }
+        let seed = match self.procedure_seed(inputs, numerical) {
+            Ok(Some(seed)) => seed,
+            Err(seed_error) if budget(&seed_error) => return Err(seed_error),
+            Ok(None) | Err(_) => return Err(error),
+        };
+        match self.solve_complete(inputs, Some(&seed)) {
+            Ok(solution) => Ok(solution),
+            Err(retry)
+                if numerical && matches!(retry.kind, "nonconvergence" | "singular_jacobian") =>
+            {
+                match self.point_solution(inputs, seed) {
+                    Ok(Some(solution)) => Ok(solution),
+                    Err(point_error) if budget(&point_error) => Err(point_error),
+                    Ok(None) | Err(_) => Err(error),
+                }
+            }
+            Err(retry) => Err(retry),
+        }
+    }
     /// The default Newton seed is zero for every unknown, including the values
     /// of executed program reals, so a relation that divides by such a value
-    /// fails at the seed although the activation never produced zero. The
-    /// activation's own values at these inputs are a valid seed instead; the
-    /// root found from it still needs the unchanged waveform certificate.
-    fn procedure_seed(&self, inputs: &[f64]) -> Result<Option<Vec<f64>>, Error> {
+    /// fails at the seed although the activation never produced zero, and a
+    /// value scaled far beyond its operands can stop the line search there.
+    /// The activation's own values at these inputs are a valid seed instead;
+    /// the root found from it still needs the unchanged waveform certificate.
+    /// With `settle`, each solved voltage defined by one grounded relation is
+    /// first set to that relation read at the activation, which is then
+    /// executed again from these voltages.
+    fn procedure_seed(&self, inputs: &[f64], settle: bool) -> Result<Option<Vec<f64>>, Error> {
         let Some(view) = &self.procedure_view else {
             return Ok(None);
         };
@@ -1391,6 +1681,24 @@ impl Circuit {
             if node < view.node_count {
                 voltages[node] = value;
             }
+        }
+        let seed = view.expand(&voltages)?;
+        if !settle {
+            return Ok(Some(seed));
+        }
+        for eq in &self.equations {
+            let (node, sign) = match (eq.positive, eq.negative) {
+                (node, 0) => (node, 1.),
+                (0, node) => (node, -1.),
+                _ => continue,
+            };
+            if node >= view.node_count || self.unknown_columns[node].is_none() {
+                continue;
+            }
+            voltages[node] = sign * self.point_rhs(eq, &seed)?;
+        }
+        if voltages.iter().any(|v| !v.is_finite()) {
+            return Ok(Some(seed));
         }
         view.expand(&voltages).map(Some)
     }
@@ -1404,10 +1712,20 @@ impl Circuit {
         let Some(view) = &self.procedure_view else {
             return Ok(None);
         };
-        let work = &view.plan.work;
-        let Some(order) = self.substitution_order(work)? else {
+        let Order::Acyclic(order) = self.substitution_order(&view.plan.work)? else {
             return Ok(None);
         };
+        let Some(mut values) = self.with_inputs(inputs, vec![0.0; self.nodes.len()]) else {
+            return Ok(None);
+        };
+        for (column, index, sign) in order {
+            values[self.unknown[column]] =
+                sign * self.point_rhs(&self.equations[index], &values)?;
+        }
+        self.point_solution(inputs, values)
+    }
+    /// The values completed with the driven inputs and procedure parameters.
+    fn with_inputs(&self, inputs: &[f64], mut values: Vec<f64>) -> Option<Vec<f64>> {
         let complete = inputs
             .iter()
             .copied()
@@ -1418,32 +1736,38 @@ impl Circuit {
         } else {
             inputs
         };
-        if inputs.len() != self.driven.len() {
-            return Ok(None);
+        if inputs.len() != self.driven.len() || values.len() != self.nodes.len() {
+            return None;
         }
-        let mut values = vec![0.0; self.nodes.len()];
         for (&node, &value) in self.driven.iter().zip(inputs) {
             values[node] = value;
         }
-        let point_rhs = |eq: &Equation, values: &[f64]| -> Result<f64, Error> {
-            work.step()?;
-            let mut rhs = eq.rhs_constant
-                + eq.rhs_terms
-                    .iter()
-                    .map(|&(node, coefficient)| coefficient * values[node])
-                    .sum::<f64>();
-            for expr in &eq.nonlinear {
-                rhs += expression::evaluate(expr, values)?.value;
-            }
-            Ok(rhs)
-        };
-        for (column, index, sign) in order {
-            values[self.unknown[column]] = sign * point_rhs(&self.equations[index], &values)?;
+        Some(values)
+    }
+    fn point_rhs(&self, eq: &Equation, values: &[f64]) -> Result<f64, Error> {
+        if let Some(view) = &self.procedure_view {
+            view.plan.work.step()?;
         }
+        let mut rhs = eq.rhs_constant
+            + eq.rhs_terms
+                .iter()
+                .map(|&(node, coefficient)| coefficient * values[node])
+                .sum::<f64>();
+        for expr in &eq.nonlinear {
+            rhs += expression::evaluate(expr, values)?.value;
+        }
+        Ok(rhs)
+    }
+    /// These values as a solution when every relation already holds within
+    /// its residual tolerance; None otherwise.
+    fn point_solution(&self, inputs: &[f64], values: Vec<f64>) -> Result<Option<Solution>, Error> {
+        let Some(values) = self.with_inputs(inputs, values) else {
+            return Ok(None);
+        };
         let (mut residual_v, mut ratio) = (0.0_f64, 0.0_f64);
         for eq in &self.equations {
             let lhs = values[eq.positive] - values[eq.negative];
-            let rhs = point_rhs(eq, &values)?;
+            let rhs = self.point_rhs(eq, &values)?;
             let bound =
                 self.tolerances.absolute + self.tolerances.relative * lhs.abs().max(rhs.abs());
             let residual = (lhs - rhs).abs();
@@ -2521,9 +2845,10 @@ mod rounded_substitution_tests {
         );
     }
     #[test]
-    fn rounded_value_read_by_its_own_relation_keeps_the_jacobian_refusal() {
+    fn rounded_value_read_by_its_own_relation_is_the_root_of_the_real_equation() {
         // den = V(y) on the selected arm and y = 0.5*den + V(d): the rounded
-        // value feeds its own operand, so there is no substitution order.
+        // value feeds its own operand, so there is no substitution order. The
+        // real-arithmetic equation y = 0.5*y + V(d) has the root 2*V(d).
         let p = program(
             sample(1),
             sample(2),
@@ -2534,9 +2859,23 @@ mod rounded_substitution_tests {
         let w = Work::default();
         let c = circuit(p, 1e-12, &w, moving());
         let s = c.solve(&[0.397]).unwrap();
-        let error = c.waveform_bounds(&s, &[moving()]).unwrap_err();
-        assert_eq!(error.kind, "waveform_accuracy");
-        assert!(error.message.starts_with("nonfinite interval Jacobian at "));
+        let b = c.waveform_bounds(&s, &[moving()]).unwrap();
+        let rational = |v: f64| num_rational::BigRational::from_float(v).unwrap();
+        let two = rational(2.);
+        assert!(rational(b[2].lo) <= two.clone() * rational(LOW));
+        assert!(two * rational(HIGH) <= rational(b[2].hi));
+        assert!((b[2] - I::point(s.voltages[2])).magnitude() <= 1e-12);
+    }
+    #[test]
+    fn a_rounded_value_that_only_reads_itself_is_refused() {
+        // den = V(y) and V(y) <+ den: every real value solves y = y.
+        let p = program(sample(2), sample(2), json!({"op":"real_local","binding":0}));
+        let w = Work::default();
+        let c = circuit(p, 1e-12, &w, moving());
+        let refused = c
+            .solve(&[0.397])
+            .and_then(|s| c.waveform_bounds(&s, &[moving()]));
+        assert!(refused.is_err());
     }
     #[test]
     fn scaled_rounded_value_with_a_singular_local_rank_is_solved_by_substitution() {

@@ -96,6 +96,10 @@ struct Builder<'a> {
     graph: Graph<O>,
     values: Vec<Cell>,
     physical_values: Vec<bool>,
+    // Values that read a node without an input bound (a solved voltage).
+    solved_values: Vec<bool>,
+    // Depth of statements and values selected by a condition of this activation.
+    selected: usize,
     // Values stored by an assignment of this activation (latched reads).
     stored: Vec<bool>,
     states: Vec<Id>,
@@ -123,6 +127,9 @@ impl Builder<'_> {
         self.w.debit(2, (operands.len() * 32 + 72) as u64)?;
         let physical = matches!(&operation,O::Affine{terms,..} if terms.iter().any(|t|t.node!=0&&t.coefficient!=0.))
             || operands.iter().any(|&id| self.physical_values[id]);
+        let solved = matches!(&operation,O::Affine{terms,..} if terms.iter().any(|t|t.node!=0&&t.coefficient!=0.
+                &&self.domain.node_bounds.get(t.node).is_none_or(|b|!b.finite())))
+            || operands.iter().any(|&id| self.solved_values[id]);
         let args = operands
             .iter()
             .map(|&id| {
@@ -147,6 +154,7 @@ impl Builder<'_> {
         }
         self.w.debit(2, 16)?;
         self.physical_values.push(physical);
+        self.solved_values.push(solved);
         self.stored.push(false);
         self.values.push(value);
         Ok(id)
@@ -307,6 +315,14 @@ impl Builder<'_> {
             }
             E::Power { base, exponent } => {
                 let a = self.resolve(base)?;
+                // A selected polynomial of a solved voltage stays outside the
+                // condition contract of an ordinary analog activation.
+                if self.selected > 0 && self.event == usize::MAX && self.solved_values[a] {
+                    return Err(Error::new(
+                        "unsupported_transient",
+                        "polynomial transient equations are not supported: a power of a solved voltage is selected by an analog condition",
+                    ));
+                }
                 self.add(O::Power(*exponent), vec![a])
             }
             E::Select {
@@ -317,11 +333,11 @@ impl Builder<'_> {
                 else_value,
                 origin,
             } => {
-                if self.condition(*relation, left, right, origin)? {
-                    self.resolve(then_value)
-                } else {
-                    self.resolve(else_value)
-                }
+                let yes = self.condition(*relation, left, right, origin)?;
+                self.selected += 1;
+                let value = self.resolve(if yes { then_value } else { else_value });
+                self.selected -= 1;
+                value
             }
             E::ArrayRead {
                 states,
@@ -659,12 +675,14 @@ impl Builder<'_> {
                     };
                     let start = *index;
                     let yes_count = count(then_body, self.w)?;
+                    self.selected += 1;
                     if yes {
                         self.statements(then_body, index)?;
                     } else {
                         *index = start + yes_count;
                         self.statements(else_body, index)?;
                     }
+                    self.selected -= 1;
                     *index = start + yes_count + count(else_body, self.w)?;
                 }
                 S::Loop {
@@ -752,8 +770,11 @@ impl Builder<'_> {
                     origin,
                 }) => {
                     match self.condition(*relation, left, right, origin) {
-                        Ok(true) => self.steps(then_body)?,
-                        Ok(false) => self.steps(else_body)?,
+                        Ok(yes) => {
+                            self.selected += 1;
+                            self.steps(if yes { then_body } else { else_body })?;
+                            self.selected -= 1;
+                        }
                         Err(error)
                             if error.kind == "event_condition"
                                 && mesh_only(then_body, self.w)?
@@ -1344,6 +1365,8 @@ pub(crate) fn execute(
         graph: Graph::new(),
         values: Vec::new(),
         physical_values: Vec::new(),
+        solved_values: Vec::new(),
+        selected: 0,
         stored: Vec::new(),
         states: Vec::new(),
         initial: Vec::new(),
