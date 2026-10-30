@@ -15912,6 +15912,51 @@
       "consumers": [],
       "content": {
         "algorithm": "sha256",
+        "value": "0dffdbdafcf79a1bb5cbfc6208ac9d9c4923bc45b07673121e3e9bef5ade2814"
+      },
+      "current_path": "evas/docs/UPDATE.md",
+      "dependencies": [
+        {
+          "id": "source:903b469ebcf7979517d53442",
+          "sha256": "4090691f5c0d84825ebad591aea44c0d0323b44610c49097144cb111700b8a2a",
+          "version": "47afed60557c28c962869ffae083146b602cd4b6333e631490c091f7401ed16c"
+        }
+      ],
+      "id": "asset:05a98a2263d4f09df6001796",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "prior_readiness": {
+        "confirmed_fact_count": 0,
+        "current_blob_matches_prior": false,
+        "git_blob": "7516d959883573c37209f0dc6f198559598a965a",
+        "row_canonical_sha256": "461bd5a48e055e9bb8c4b95391f7bbbb8742089dc2cd7da4387c06fcfea09281",
+        "row_pointer": "/items/100",
+        "source": {
+          "id": "source:903b469ebcf7979517d53442",
+          "sha256": "4090691f5c0d84825ebad591aea44c0d0323b44610c49097144cb111700b8a2a",
+          "version": "47afed60557c28c962869ffae083146b602cd4b6333e631490c091f7401ed16c"
+        },
+        "source_revision": "380e7a4e12e428b9776417d9d8a7792848aed6e7",
+        "status": "prior limited facts only; underlying evidence availability and current semantic/consumer closure remain unverified"
+      },
+      "qualification_status": "not-granted",
+      "role": {
+        "reason": "responsibility awaits source review; path does not infer semantics",
+        "status": "pending",
+        "value": null
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "048daec1a181b600ec94bc00e2d88db75ef2561b0774545ec001debbd9090765"
+    },
+    {
+      "consumer_status": "pending",
+      "consumers": [],
+      "content": {
+        "algorithm": "sha256",
         "value": "23d7d53b4ed28568c7c6d460acf0be18128f88365262acc11f47f9f118f33166"
       },
       "current_path": "evas/docs/UPDATE.md",
@@ -191957,6 +192002,51 @@
       "consumers": [],
       "content": {
         "algorithm": "sha256",
+        "value": "6dfb98927e61f2fab55ca1c1e0de1d7ab2dcb2fb70292e7da36580ffe38cc2de"
+      },
+      "current_path": "evas/docs/development/DECISIONS.md",
+      "dependencies": [
+        {
+          "id": "source:903b469ebcf7979517d53442",
+          "sha256": "4090691f5c0d84825ebad591aea44c0d0323b44610c49097144cb111700b8a2a",
+          "version": "47afed60557c28c962869ffae083146b602cd4b6333e631490c091f7401ed16c"
+        }
+      ],
+      "id": "asset:54168e5088622127d71e39dc",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "prior_readiness": {
+        "confirmed_fact_count": 0,
+        "current_blob_matches_prior": false,
+        "git_blob": "0ddeab07de256b1276000635c37077e0e18acd60",
+        "row_canonical_sha256": "051cfdb388812334e8ac35a91d61fa67b91d9d3e89b0caea7ab87b366db8e308",
+        "row_pointer": "/items/102",
+        "source": {
+          "id": "source:903b469ebcf7979517d53442",
+          "sha256": "4090691f5c0d84825ebad591aea44c0d0323b44610c49097144cb111700b8a2a",
+          "version": "47afed60557c28c962869ffae083146b602cd4b6333e631490c091f7401ed16c"
+        },
+        "source_revision": "380e7a4e12e428b9776417d9d8a7792848aed6e7",
+        "status": "prior limited facts only; underlying evidence availability and current semantic/consumer closure remain unverified"
+      },
+      "qualification_status": "not-granted",
+      "role": {
+        "reason": "responsibility awaits source review; path does not infer semantics",
+        "status": "pending",
+        "value": null
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "412b633f47f2f685158252350fd7f06aa6d88d63c11dcbcfcf205867f8b92101"
+    },
+    {
+      "consumer_status": "pending",
+      "consumers": [],
+      "content": {
+        "algorithm": "sha256",
         "value": "1884cd854cb75287679ee43b1ed10b7b5dadcdaa8524240c23996d42ed44f486"
       },
       "current_path": "evas/docs/development/DECISIONS.md",
@@ -313668,6 +313758,31 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "c2ab111cc0fe715f2c12f4a6720426753edd0acf44d3b4255ca05f7459f4ec7a"
+    },
+    {
+      "consumer_status": "pending",
+      "consumers": [],
+      "content": {
+        "algorithm": "sha256",
+        "value": "67fe0af7c89621923e0104b4fc932f382b34e15e848e15d5164d592f318f4d2a"
+      },
+      "current_path": "evas/README.md",
+      "dependencies": [],
+      "id": "asset:87b1793e490f36efe8f7b3ef",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "qualification_status": "not-granted",
+      "role": {
+        "reason": "responsibility awaits source review; path does not infer semantics",
+        "status": "pending",
+        "value": null
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "01f9fefdab907c646c5e1eb1e017418f600878668637e381496875bf098bea41"
     },
     {
       "consumer_status": "pending",
@@ -442161,6 +442276,51 @@
       "consumers": [],
       "content": {
         "algorithm": "sha256",
+        "value": "63a069a49b433d866f7979dd05a0c84314f95586e2360a21481cf85714251d16"
+      },
+      "current_path": "evas/docs/COMPARISON.md",
+      "dependencies": [
+        {
+          "id": "source:903b469ebcf7979517d53442",
+          "sha256": "4090691f5c0d84825ebad591aea44c0d0323b44610c49097144cb111700b8a2a",
+          "version": "47afed60557c28c962869ffae083146b602cd4b6333e631490c091f7401ed16c"
+        }
+      ],
+      "id": "asset:c32a4fda7f072fda87d2279a",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "prior_readiness": {
+        "confirmed_fact_count": 0,
+        "current_blob_matches_prior": false,
+        "git_blob": "e88d6c4fcbacfce3ae36cacbd51dacebf8f145da",
+        "row_canonical_sha256": "5d5361646f40c18991320a1d05333dab48aeeb761cee28aeffd1a65b341e8891",
+        "row_pointer": "/items/98",
+        "source": {
+          "id": "source:903b469ebcf7979517d53442",
+          "sha256": "4090691f5c0d84825ebad591aea44c0d0323b44610c49097144cb111700b8a2a",
+          "version": "47afed60557c28c962869ffae083146b602cd4b6333e631490c091f7401ed16c"
+        },
+        "source_revision": "380e7a4e12e428b9776417d9d8a7792848aed6e7",
+        "status": "prior limited facts only; underlying evidence availability and current semantic/consumer closure remain unverified"
+      },
+      "qualification_status": "not-granted",
+      "role": {
+        "reason": "responsibility awaits source review; path does not infer semantics",
+        "status": "pending",
+        "value": null
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "b27ff5b21c8ae94f5a22ba7a252a564370b345001168477c66c9756b830b5d71"
+    },
+    {
+      "consumer_status": "pending",
+      "consumers": [],
+      "content": {
+        "algorithm": "sha256",
         "value": "8c260945647147a1512eb9c2a1947c5faddb561989d55db98e65baf1895e11a9"
       },
       "current_path": "evas/docs/COMPARISON.md",
@@ -512935,6 +513095,51 @@
       "consumers": [],
       "content": {
         "algorithm": "sha256",
+        "value": "d024dd5eb04e8b5b797c77301fab2a272b8f11351223ad8f663512b7ad4c025e"
+      },
+      "current_path": "evas/docs/README.md",
+      "dependencies": [
+        {
+          "id": "source:903b469ebcf7979517d53442",
+          "sha256": "4090691f5c0d84825ebad591aea44c0d0323b44610c49097144cb111700b8a2a",
+          "version": "47afed60557c28c962869ffae083146b602cd4b6333e631490c091f7401ed16c"
+        }
+      ],
+      "id": "asset:e331a40d7b559855bd31ad8c",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "prior_readiness": {
+        "confirmed_fact_count": 0,
+        "current_blob_matches_prior": false,
+        "git_blob": "bc099ba47312b15c9c7993d2aa26640e9c747241",
+        "row_canonical_sha256": "88e4121df8101456fd19d222ecb4aee880045642985eea8b71f53d6ce1d205b4",
+        "row_pointer": "/items/99",
+        "source": {
+          "id": "source:903b469ebcf7979517d53442",
+          "sha256": "4090691f5c0d84825ebad591aea44c0d0323b44610c49097144cb111700b8a2a",
+          "version": "47afed60557c28c962869ffae083146b602cd4b6333e631490c091f7401ed16c"
+        },
+        "source_revision": "380e7a4e12e428b9776417d9d8a7792848aed6e7",
+        "status": "prior limited facts only; underlying evidence availability and current semantic/consumer closure remain unverified"
+      },
+      "qualification_status": "not-granted",
+      "role": {
+        "reason": "responsibility awaits source review; path does not infer semantics",
+        "status": "pending",
+        "value": null
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "88959bd8f7a4d7966397a5ac62cea14af8806dd8bbb0083c04457a5629aa7558"
+    },
+    {
+      "consumer_status": "pending",
+      "consumers": [],
+      "content": {
+        "algorithm": "sha256",
         "value": "47580acfa2440b918c176cd1ddfa0b235a87e0d762102c6deaf51ac88ec12c20"
       },
       "current_path": "experiments/backends/support/scs-save-time/originals.json",
@@ -525522,6 +525727,31 @@
       "semantic_status": "pending",
       "status": "active",
       "version": "4dd346e2aa6d0a8d3110ba8d8252801650ddf04d570651ab24be236a7678d2e1"
+    },
+    {
+      "consumer_status": "pending",
+      "consumers": [],
+      "content": {
+        "algorithm": "sha256",
+        "value": "c3e1021631c099c245305d6167afd6df48631a46752b3c3f8cff7a9f2a30e8ff"
+      },
+      "current_path": "GLOSSARY.md",
+      "dependencies": [],
+      "id": "asset:e76bd6f4d59f7e55fe3ce2f0",
+      "kind": "asset",
+      "location_history": [],
+      "location_history_status": "pending-per-file-lineage",
+      "namespace": "EVAS-assets",
+      "qualification_status": "not-granted",
+      "role": {
+        "reason": "responsibility awaits source review; path does not infer semantics",
+        "status": "pending",
+        "value": null
+      },
+      "schema_version": 1,
+      "semantic_status": "pending",
+      "status": "active",
+      "version": "55eb9bc281d7dc2597578143c64e74be7b6a900659a385bdfa4aeb64d952de19"
     },
     {
       "consumer_status": "pending",
