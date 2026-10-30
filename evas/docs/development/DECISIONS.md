@@ -226,6 +226,10 @@ IR33 为这些语义保留显式运算、边界、局部绑定和过程顺序。
 其余程序 real 仍按本节第一段逐次舍入。细节留在要求卡
 `requirement:program-real-values-in-waveform-certificate` v3 与 `requirement:same-time-event-feedback-through-node` v5。
 
+修复目前覆盖的结构类是：每个未知量恰由一条接地关系定义；事件激活里的环还须联合仿射。
+这之外的同刻反馈以能力上限具名拒答，不给值，也不说成精确方程组无解或不唯一。
+“不止一个解”指整个精确方程组，不限于预算盒内。覆盖范围以要求卡 `requirement:program-real-values-in-waveform-certificate` 为准。
+
 **澄清二：带精确时间证明的将来 timer 按面值触发（D-M3-2 = T）。**
 状态：标准审核与 EVAS 维护方于 2026-10-29 商定。修复尚未合入，跟踪见 [#290](https://github.com/BucketSran/vaEVAS/issues/290)。
 
@@ -233,7 +237,10 @@ IR33 为这些语义保留显式运算、边界、局部绑定和过程顺序。
 将来的 timer 按面值 F 触发；精确时间证明只用来判定 timer 起点相对当前事件边界属于过去、当前还是将来。
 不采用 U3（按精确时刻触发）：那样 timer 的事件体会读到小于自己起点的 `$abstime`，
 等于重开本节“状态、条件、timer 和显示读取同一份已舍入值”的合同。
-细节留在要求卡 `requirement:abstime-time-proof-and-same-time-timer-closure`（审核中）。
+由本时刻的语句创建或启用、发生时刻恰为当前时刻的 timer，在创建它的语句之后、于本时刻内触发一次
+（决定单第 37 项，D-M3-1 = closure，项目协调方 2026-10-30 按用户授权依推荐定）；
+在本时刻里的位置和 OR 体的规则（D-M3-3 = P1、D-M3-4 = OR-1）由标准审核方定。尚未实现。
+细节留在要求卡 `requirement:abstime-time-proof-and-same-time-timer-closure` v8。
 
 <a id="adr-007"></a>
 
@@ -268,11 +275,12 @@ IR33 为这些语义保留显式运算、边界、局部绑定和过程顺序。
 
 ### 修订（2026-10-29）：语言配置 v2 选入 Mantis 7922
 
-状态：项目协调方于 2026-10-29 按标准审核的建议选定（D-C08）。依据是用户 2026-10-28 的条件指示：
-Spectre 能接受的写法，EVAS 也要接受，是否告警由实现决定。
-[#283](https://github.com/BucketSran/vaEVAS/issues/283) 批次 C 第 8 项的 Spectre 21.1 实测满足这一条件：
-向 `input` 端口的贡献被静默接受，按正常支路计算。规范依据仍是 LRM 本身，实测只说明这一条件已经成立。
-选入不表示实现或验证已完成。
+状态：项目协调方于 2026-10-29 按标准审核的建议选定（D-C08）。
+经过：用户 2026-10-28 指出：“往声明为 input 的端口上加贡献其实是可以实际运行的，spectre里面也可以的，但是会报warning，你可以把这个加入Spectre待验证”。
+随后的 Spectre 21.1 实测（[#283](https://github.com/BucketSran/vaEVAS/issues/283) 的外部运行）显示：
+向 `input` 端口的贡献被静默接受，按正常支路计算，没有报警告。
+项目协调方据此，并按“参考解以 Spectre 可解为准”（[ADR-010](#adr-010)）的原则，定 D-C08：选入 Mantis 7922。
+规范依据仍是 LRM 本身；实测只说明 Spectre 的行为与选入后的规则相符。选入不表示实现或验证已完成。
 
 语言配置由 `evas-va-2.4-plus-2023-v1`（选入 7780、7920）改为 `evas-va-2.4-plus-2023-v2`，
 即 v1 加 Mantis 7922（2023 的 Table G.7，PDF 第 436 页；正文 §5.6.1）。
@@ -280,16 +288,17 @@ LRM 2.4 §5.6.1（PDF 第 119 页）写的是“Contributions cannot be made to 
 2023 §5.6.1（PDF 第 121 页）改为“Implementations may issue a warning if a contribution is made to an analog port declared with an input direction”。
 因此向 `input` 端口贡献合法，实现可以告警。
 
-- EVAS 的行为不变：不检查端口方向，按正常支路计算。非致命的可移植性提示可选，排在最后。
+- EVAS 的行为不变：不检查端口方向，按正常支路计算。非致命的可移植性提示可选，优先级最低。
 - 7780、7920 的选入范围不变。
 - 仓库里的 [language-profile.json](../../capabilities/data/language-profile.json) 仍是 v1。
   它是可信回归 context 的一部分，本次文档同步不改；配置文件随下一次登记更新。
 
-### 状态说明（未定）：transition 写 0 或省略上升、下降时间时的缺省边沿
+### 状态说明（规则未定）：transition 写 0 或省略上升、下降时间时的缺省边沿
 
-决定单第 17 项还没有定成决定，这里只记状态。上升、下降时间写 0 或省略，又没有 `default_transition` 时，
+上升、下降时间写 0 或省略，又没有 `default_transition` 时，
 LRM 2.4 §4.5.8（PDF 第 87 页）只规定“a negligible, but non-zero, transition time is used”，没有给出具体取值。
-方向是与 Spectre 统一，规则等 Spectre 补测后确定。在此之前 EVAS 继续拒答，实现不变。
+决定单第 17 项：用户 2026-10-29 定了方向——与 Spectre 统一；具体规则等 Spectre 补测后确定，
+所以这里只记状态。在此之前 EVAS 继续拒答，实现不变。
 
 <a id="adr-008"></a>
 
@@ -392,7 +401,7 @@ Spectre 的静默偏差仍按偏差记录，不变成 EVAS 的要求，例如[�
 
 测试台用的 Spectre 网表语言没有独立的语言标准，LRM 也不管它，唯一的定义是 Spectre 手册。
 因此在 LRM 不管的这一侧，包括源的公式与缺省值、数值写法和 tran 选项，EVAS 按 Spectre 手册和 Spectre 21.1 的实测执行；
-手册没有写清的地方以实测为准；每条规则都写进要求卡，并注明实测依据。模块里的 Verilog-A 部分仍按 [ADR-007](#adr-007) 的语言配置。
+手册没有写清、或与实测不符的地方以实测为准；每条规则都写进要求卡，并注明实测依据。模块里的 Verilog-A 部分仍按 [ADR-007](#adr-007) 的语言配置。
 
 同日的收窄只涉及显式写参数：测试台只在缺省值文档不明、或会影响结果时，才必须显式写出参数。
 “以 Spectre 手册为准”这一半不变。
@@ -408,12 +417,13 @@ Spectre 的静默偏差仍按偏差记录，不变成 EVAS 的要求，例如[�
 后果：
 
 - 按本条执行的实例，本页只记编号：pulse 源的构造（D-FU04）、PWL 源在 binary64 时刻的取值（EV-D1，即 PWL F1）、
-  SCS 数值的比例后缀（[#289](https://github.com/BucketSran/vaEVAS/issues/289) 的 SCS 一侧，Spectre 的读法待 #283 实测确认）。
+  SCS 数值的比例后缀（[#289](https://github.com/BucketSran/vaEVAS/issues/289) 的 SCS 一侧，Spectre 的读法已有实测：#283 的外部运行，2026-10-29 核收）。
 - 细则留在要求卡里：PWL F1 的 D-PWLF1-1 至 5（`requirement:pwl-source-value-f1`）；
   pulse 的构造与省略参数，即 D-FU04、D-C05、D-PV4-4、D-PV7-1（`requirement:periodic-pulse-source-exact-corners`、
-  `requirement:spectre-pulse-default-width`）；sine 省略 `sinedc` 时的缺省值（`requirement:spectre-sine-omitted-sinedc`）；
+  `requirement:spectre-pulse-default-width`）；sine 省略 `sinedc` 时的缺省值与 `delay` 的写法（`requirement:spectre-sine-omitted-sinedc`）；
   比例后缀只舍入一次（`requirement:scaled-real-literal-single-rounding`）。
-- 只按已有实测的写法执行；文档不明、又还没有实测的写法继续拒答，例如 pulse 省略参数里尚未实测的组合。
+- 文档写清的照文档执行；文档不明的，只按已有的实测执行；文档不明又还没有实测的写法，以及实测结果不能作为规则的写法，继续拒答。
+  例如 pulse 省略参数里尚未实测的组合，比例符号接在指数后面的数。
 - 这些实例会改动已有的测试期望；每项改动经标准审核认可，并附独立答案。
 
 <a id="adr-012"></a>
@@ -421,7 +431,7 @@ Spectre 的静默偏差仍按偏差记录，不变成 EVAS 的要求，例如[�
 ## ADR-012：结果须与语言规定一致，证明不了就拒答；拒答不是错答
 
 状态：用户于 2026-10-29 在决定单第 2 项选定（NF-14，选项 B）。决定成立不表示实现或验证已完成：
-按此改写的要求卡还在审核，相应实现尚未排期。
+按此改写的要求卡 `requirement:integrator-input-state-feedback` 已于 2026-10-29 过审；相应实现已于 2026-10-29 开工，尚未合入。
 
 决定：EVAS 给出的结果须与语言规定一致。EVAS 证明不了一致时拒答，不给值。
 拒答说明 EVAS 的能力还不够，不是错答；没有诊断就给出与语言规定不一致的值，才是错答。

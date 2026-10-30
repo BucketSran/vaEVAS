@@ -23,20 +23,19 @@ EVAS相关内容统一从本页进入。源码、模型和原始结果仍保留�
 
 <a id="current-status"></a>
 
-### 当前状态与计划（2026-10-29）
+### 当前状态与计划（2026-10-30）
 
 - **能力目标**：首批30题的参考解在 EVAS 上跑完全部公开与私有用例，并通过各题自己的 checker。
-  这是 [#270](https://github.com/BucketSran/vaEVAS/issues/270) 的关闭条件。按逐题归因估计，#282 合入后能跑通 11 题，
+  这是 [#270](https://github.com/BucketSran/vaEVAS/issues/270) 的关闭条件。#282 已合入；按逐题归因估计能跑通 11 题，
   以合入后的复跑为准（[#270 的说明](https://github.com/BucketSran/vaEVAS/issues/270#issuecomment-6491345349)）。
   后续候选会用到的写法在 [#276](https://github.com/BucketSran/vaEVAS/issues/276)。
-- **批次次序**：第一批能力修复是 [#282](https://github.com/BucketSran/vaEVAS/pull/282)。合入前先完成它的可信回归登记：
-  登记授权 [#296](https://github.com/BucketSran/vaEVAS/pull/296) 合入，再追加基线，最后跑 #282 的激活 CI 并合入。
+- **批次次序**：第一批能力修复 [#282](https://github.com/BucketSran/vaEVAS/pull/282) 已合入，合入前完成了它的可信回归登记：
+  登记授权 [#296](https://github.com/BucketSran/vaEVAS/pull/296)、追加基线 [#297](https://github.com/BucketSran/vaEVAS/pull/297)、#282 的激活 CI。
   第二批能力修复从 [#281](https://github.com/BucketSran/vaEVAS/issues/281) 开始，同样经过一次登记；
   [#286](https://github.com/BucketSran/vaEVAS/issues/286)、[#289](https://github.com/BucketSran/vaEVAS/issues/289) 排在第三批能力修复。
   批次内的先后随审核与实现进度调整，以各 issue 为准。
-- **要求卡与用例**：每项修复以标准审核起草并审过的要求卡为验收依据，卡随修复登记进[规范与能力目录](capabilities/README.md)。
+- **要求卡与测试期望**：每项修复以标准审核起草并审过的要求卡为验收依据，卡随修复登记进[规范与能力目录](capabilities/README.md)。
   改动已有测试的期望须先经标准审核认可，规则见 [#288](https://github.com/BucketSran/vaEVAS/issues/288)。
-  标准审核还按 LRM 条款编写语言一致性用例，尚未入库，也不计入任何支持结论。
 - **可信回归登记**：判据、采集器或语言配置变化时，按 [ADR-009](docs/development/DECISIONS.md#adr-009) 和
   [登记说明](../scripts/README.md#新判据和采集器的可信-context-登记)追加可信 context，每次只追加一个。
 - **外部 Spectre 运行**：本地已无 Spectre，待跑作业列在 [#283](https://github.com/BucketSran/vaEVAS/issues/283)，
