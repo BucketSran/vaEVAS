@@ -154,7 +154,8 @@ class GroupMathSampledDomain(unittest.TestCase):
     def test_uncertain_math_result_survives_transition_and_future_amplification(self):
         # sqrt(1/4 +- 1e-4) keeps a ~1e-4 band; gain 1000 makes it ~0.1, far
         # above the 1e-3 budget. The band must survive and be refused.
-        with self.assertRaisesRegex(KernelError, 'event_accuracy.*at y'):
+        # SL-SO-20261030-002 (EC-4): retain the named forward-error refusal.
+        with self.assertRaisesRegex(KernelError, r'waveform_accuracy: cannot certify same-time forward error at y:'):
             run('q=sqrt(V(u));', [0, .5, 1], u=[[0, .25], [1, .25]], errors={'u': .0001},
                 gain=1000, timer=True, direct=True, vabstol=1e-3)
         # Without amplification the same band fits and is reported, not erased.
@@ -162,8 +163,10 @@ class GroupMathSampledDomain(unittest.TestCase):
                      timer=True, direct=True, vabstol=1e-3)
         y = result['nodes'].index('y')
         low, high = result['observation_evidence']['voltage_bounds_V'][-1][y]
-        self.assertLessEqual(F(low) ** 2, F(1, 4) - F(.0001))
-        self.assertGreaterEqual(F(high) ** 2, F(1, 4) + F(.0001))
+        # SL-SO-20261030-002 (EC-4): independently certified RN-image endpoints.
+        # L = 9005397634710021/2**54; H = 4504500257241987/2**53.
+        self.assertLessEqual(F(low), F(0.4998999899979995))  # SL-SO-20261030-002
+        self.assertGreaterEqual(F(high), F(0.5000999900019995))  # SL-SO-20261030-002
         # The transition consumer has no uncertain-source time-shape bound yet:
         # that exact gate refuses it before any nominal value could be used.
         with self.assertRaisesRegex(KernelError, 'unsupported_source_uncertainty'):
