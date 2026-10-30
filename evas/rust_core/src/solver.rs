@@ -1136,14 +1136,6 @@ impl Circuit {
             return Ok(None);
         }
         let work = &view.plan.work;
-        if let Some(view) = &self.procedure_view {
-            if !view
-                .plan
-                .total_activation_domain(&self.unknown_columns, work)?
-            {
-                return Ok(false);
-            }
-        }
         let Order::Cyclic {
             components,
             definition,
@@ -1382,6 +1374,14 @@ impl Circuit {
         &self,
         work: &crate::transition_source_plan::Work,
     ) -> Result<bool, Error> {
+        if let Some(view) = &self.procedure_view {
+            if !view
+                .plan
+                .total_activation_domain(&self.unknown_columns, work)?
+            {
+                return Ok(false);
+            }
+        }
         fn total(
             e: &Expression,
             work: &crate::transition_source_plan::Work,
