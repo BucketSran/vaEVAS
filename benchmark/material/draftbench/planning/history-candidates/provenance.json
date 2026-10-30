@@ -1,0 +1,222 @@
+{
+  "inputs": [
+    {
+      "ref": "history-batch1/plan.json",
+      "sha256": "834e046a81fda8c570ba05ae89e0d7a9c03cb206a7b48ab68655d5a76340484e",
+      "availability": "local-only"
+    },
+    {
+      "ref": "history-batch1/cases/screening/plan.json",
+      "sha256": "5c48bd421453b470fce4f1ade26100c5db45e6e922180933fba5543d8953ce0d",
+      "availability": "local-only"
+    },
+    {
+      "ref": "history-batch1/cases/screening/omission-audit/current-pool.json",
+      "sha256": "6f2b3f0b931e512f3fd69a2664e0829f198d7ab5e5d4b1194d682cbe6f6ad55f",
+      "availability": "local-only"
+    },
+    {
+      "ref": "history-batch1/cases/screening/omission-audit/remaining-review.json",
+      "sha256": "c7f51db889bc37f2bf45b0cbbf5a161683c7e69a49c1942322c23bb8d722f608",
+      "availability": "local-only"
+    },
+    {
+      "ref": "history-batch1/cases/screening/omission-audit/plan.json",
+      "sha256": "6aadcdde2b108f31f74c16e4ab8da7d3d8195c8eb3ed420dcbb93daca34bb88b",
+      "availability": "local-only"
+    },
+    {
+      "ref": "history-batch1/cases/screening/extension-upgrades/candidate-review.json",
+      "sha256": "1e3be033ece569589a8c7e9e5223aa814f808914adab2b856a4d0bf6098c4d24",
+      "availability": "local-only"
+    },
+    {
+      "ref": "history-batch1/cases/screening/medium-review/reassessment/plan.json",
+      "sha256": "7f3dc66ea04d972e77c1493e0d91b0f1b24c938693167f9afad04950a6f2bb54",
+      "availability": "local-only"
+    }
+  ],
+  "source_files_verified_locally": 1269,
+  "sources": 1269,
+  "availability": {
+    "repository-contained": 676,
+    "local-only": 593
+  },
+  "artifact_policy": "只保存选题登记、来源身份和公开行为摘录；不复制完整源码树、波形或历史运行成绩。",
+  "final_review_scope": {
+    "required_behavior_rows": 92,
+    "remaining_historical_T_assessments": 39,
+    "remaining_historical_I_assessments": 2,
+    "reused_previous_tb_review": 57,
+    "reused_previous_R_review": 52,
+    "implementation_files_reread": 5,
+    "merged_source_mappings_rechecked": 40
+  },
+  "independent_review": "Initial screening had no independent second review; current planning delta has two fresh-context reviews, scoped in full_grok_review_20261026.",
+  "runtime_executed": false,
+  "construction_review_20261026": {
+    "baseline_commit": "5bc76496079860e56597a1d01340492c06f30772",
+    "external_comment": {
+      "url": "https://github.com/BucketSran/vaEVAS/issues/159#issuecomment-6401348069",
+      "id": 6401348069,
+      "github_author": "BucketSran",
+      "reviewer_attribution": "用户称为Grok审查；GitHub发布者是用户账号",
+      "updated_at": "2026-10-25T18:16:42Z",
+      "body_sha256": "8166a70fbf01d2148124ba07c0d872920a747105c79319fc0c34281bc12b534c",
+      "count_scope": "342个摘录完整来源 + 101个规格缺口来源 + 12个观测量不匹配来源；与任务数不直接相加",
+      "availability": "原评论公开链接；这里只保留与109登记项关联的意见，不声称逐份深审其余来源"
+    },
+    "response_file": "review-response.json",
+    "coverage": {
+      "main_candidates": 108,
+      "conditional_reserves": 1,
+      "primary_contract_identities_verified": 109,
+      "selected_comment_sources": 107,
+      "source_availability": {
+        "repository-contained": 73,
+        "local-only": 36
+      },
+      "runtime_executed": false,
+      "full_implementation_audit": false,
+      "new_independent_review": false
+    },
+    "method": "逐项核对首选合同的任务、参数、行为段及重点接口/全文，按工程责任、规格成熟度和作者建设成本重排；保留历史摘录和初次终审记录。",
+    "changes": "仅规划登记、候选说明和静态校验；108主候选/103单元与1后备不变，基础层仍6项。",
+    "independent_review": "Grok历史来源评论作为外部输入；本轮回复由作者整理，未新增独立二审。"
+  },
+  "full_grok_review_20261026": {
+    "baseline_commit": "6b1270f063c14724b185019e9123bd80056f8c66",
+    "review_file": "pool-review.json",
+    "counts": {
+      "grok_sources": 455,
+      "grok_groups": {
+        "complete": 342,
+        "spec_gap": 101,
+        "observation_gap": 12
+      },
+      "baseline_mapped_sources": 107,
+      "outside_reviewed": 348,
+      "dispositions": {
+        "existing": 107,
+        "support": 185,
+        "variant": 129,
+        "add": 30,
+        "defer": 4
+      },
+      "new_tasks": 30,
+      "baseline_tasks": 108,
+      "current_tasks": 138,
+      "current_units": 133,
+      "conditional_reserves": 1,
+      "by_family": {
+        "BASE": {
+          "support": 16,
+          "defer": 1
+        },
+        "LOGIC": {
+          "support": 38,
+          "existing": 1,
+          "variant": 4
+        },
+        "R01": {
+          "existing": 9,
+          "support": 8,
+          "variant": 9,
+          "defer": 1,
+          "add": 1
+        },
+        "R09": {
+          "support": 10,
+          "variant": 13,
+          "existing": 13,
+          "add": 3
+        },
+        "R10": {
+          "existing": 9,
+          "variant": 18,
+          "support": 26,
+          "add": 2
+        },
+        "R07": {
+          "support": 28,
+          "existing": 7,
+          "add": 4,
+          "variant": 11,
+          "defer": 1
+        },
+        "R08": {
+          "variant": 11,
+          "add": 3,
+          "support": 10,
+          "existing": 7,
+          "defer": 1
+        },
+        "R04": {
+          "existing": 29,
+          "variant": 31,
+          "support": 15,
+          "add": 7
+        },
+        "R06": {
+          "support": 10,
+          "existing": 10,
+          "variant": 11,
+          "add": 3
+        },
+        "R05": {
+          "add": 2,
+          "support": 9,
+          "variant": 2,
+          "existing": 3
+        },
+        "R03": {
+          "existing": 12,
+          "variant": 10,
+          "support": 8,
+          "add": 2
+        },
+        "TOOL": {
+          "support": 1
+        },
+        "FILTER": {
+          "variant": 9,
+          "support": 6,
+          "existing": 7,
+          "add": 3
+        }
+      },
+      "source_availability": {
+        "repository-contained": 290,
+        "local-only": 165
+      },
+      "distinct_source_identities": 455
+    },
+    "method": "348池外来源逐项阅读公开合同并手工判定；107已关联来源复用上一轮逐项判断，重新核对来源身份与关联；来源SHA逐份核对。",
+    "runtime_executed": false,
+    "full_implementation_audit": false,
+    "independent_review": {
+      "baseline_commit": "6b1270f063c14724b185019e9123bd80056f8c66",
+      "method": "two fresh-context read-only reviewers under code-review workflow",
+      "reviewers": [
+        {
+          "axis": "standards",
+          "task": "/root/standards_review",
+          "model": "gpt-6.1-sol",
+          "reasoning": "medium",
+          "result": "no actionable standards/evidence findings",
+          "scope": "complete 455-source identity/comment mapping, prior109 preservation, case identity/assessment, generated views, verifier and query behavior"
+        },
+        {
+          "axis": "spec",
+          "task": "/root/spec_review",
+          "model": "gpt-6.1-sol",
+          "reasoning": "medium",
+          "result": "one source-scope wording finding corrected; no change requested to 30 additions or 4 deferrals",
+          "scope": "all30 additions, all4 deferrals, complete source-set checks and sampled variant/support relations; decision trail latest grok-full rows"
+        }
+      ],
+      "fixed_finding": "C124 only promises immediate partial-sum output; removed unsupported claim of a comparator feedback consumer.",
+      "limits": "Not a second exhaustive 348-item value judgment; no full gold/checker audit, simulation, difficulty validation or formal task acceptance."
+    }
+  }
+}

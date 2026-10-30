@@ -1,0 +1,3443 @@
+{
+ "schema_version": 2,
+ "decision": {
+  "date": "2026-10-27",
+  "by": "user",
+  "text": "题目候选按评测时需要的仿真能力分为需要SPICE器件求解与纯Verilog-A两类；建设优先纯Verilog-A；纯VA能力EVAS不支持的提issue推动EVAS改动，台架默认不改。",
+  "record": "runs/t3-harbor30-20261027/user-decision-route-split.json"
+ },
+ "definitions": {
+  "spice": "评测台架或交付物需要SPICE器件求解：晶体管、二极管等器件实例或模型（含PDK/sky130 include、model卡），作为电路元件的R/L/C，独立或受控电流源，simulator lang=spice器件网表，含器件的subckt，或交付物本身是器件网表。",
+  "pure-va": "评测只含Verilog-A模块（候选及固定的支持或DUT模块）和独立电压源。真值可以来自已存的晶体管仿真数据，此时stored_device_truth=true。",
+  "blocks_all_candidates": "缺口状态为rejected或rejected-resource，且位于台架或台架实例化的固定支持模块；起始模型、参考解与未实例化的公开材料中的写法不算。",
+  "basis": {
+   "bench-scanned": "bench files of the candidate itself were scanned",
+   "proxy-bench": "bench of the released task with the same v4 family ID was scanned",
+   "excerpt-only": "no in-repo bench; inventory excerpt, title and label only"
+  },
+  "gap_status": {
+   "rejected": "EVAS source or docs reject the construct before simulation",
+   "rejected-resource": "a documented EVAS resource budget is exceeded",
+   "conditional": "documented rejection that applies only when the source has a cross/held-timer/operator consumer; no direct consumer was found (indirect uses are not traced)",
+   "conditional-consumer-found": "documented consumer boundary with a direct consumer found in the VA",
+   "named-by-label": "construct named only by a title or source label (excerpt-only items)",
+   "possible": "LRM item that depends on the include structure",
+   "doc-conflict": "README says rejected, source at the same commit accepts",
+   "needs-evas-confirmation": "documented boundary whose application to this form EVAS should confirm"
+  },
+  "roles": {
+   "hidden_bench": "tests/ or evaluator scoring deck",
+   "public_bench": "published visible deck",
+   "starter_bench_copy": "copy under environment/starter/testbench",
+   "replay_bench": "v4 trusted replay deck",
+   "reference_deliverable": "gold deliverable testbench",
+   "reference_solution": "gold or reference VA (non-prescriptive)",
+   "fixed_support": "fixed VA module used by the bench",
+   "fixed_support_copy": "copy of a fixed module for the candidate",
+   "starter": "candidate starting file (modules also in the reference solution)",
+   "repair_input": "buggy input to repair",
+   "public_material": "non-candidate VA published with the task but not instantiated by any scanned netlist",
+   "calibration_variant": "checker calibration variant (scanned, excluded from gaps)"
+  }
+ },
+ "method": {
+  "evas_commit": "ac1b6e8d8de743b8da3f862c0f50bdf0a1a1ca14",
+  "bench_head": "c485de860c6005f451133e8cdc05fe923da29206",
+  "selection_sha256_at_classification": "468debe1f9cb3f3b018dbc11fe1edd9415480c5f0a838d1cc5916350e40bc689",
+  "scope": "Static reading only. EVAS gaps list only constructs that EVAS docs or source at the commit reject, place out of scope or limit by a resource budget. No EVAS, Spectre or VA run. An item without a listed gap is not shown to run on EVAS.",
+  "corrections": [
+   "runs/t3-harbor30-20261027/route-split/main-verify/corrections-r1.json",
+   "runs/t3-harbor30-20261027/route-split/main-verify/corrections-r2.json",
+   "runs/t3-harbor30-20261027/route-split/main-verify/corrections-r3.json"
+  ]
+ },
+ "evas_issue": "https://github.com/BucketSran/vaEVAS/issues/270",
+ "summary": {
+  "drafts": {
+   "total": 58,
+   "route": {
+    "pure-va": 55,
+    "spice": 3
+   }
+  },
+  "first30": {
+   "total": 30,
+   "route": {
+    "pure-va": 30
+   },
+   "with_evas_gaps": 14,
+   "blocked_for_every_candidate": 11
+  },
+  "planning": {
+   "total": 139,
+   "route": {
+    "pure-va": 139
+   },
+   "basis": {
+    "bench-scanned": 91,
+    "excerpt-only": 10,
+    "proxy-bench": 38
+   }
+  },
+  "spice": [
+   "v2-test-por-sequence",
+   "v3-ldo-response-experiment",
+   "v3-ldo-startup-measurement"
+  ],
+  "stored_device_truth": [
+   "v2-data-sampling-identification",
+   "v3-ota-data-model"
+  ]
+ },
+ "spice_evidence": {
+  "v2-test-por-sequence": [
+   {
+    "path": "benchmark/material/draftbench/batches/v2-01/tasks/v2-test-por-sequence/environment/public/cases.json#/0/netlist",
+    "line": 10,
+    "text": ".include \"models.spice\""
+   },
+   {
+    "path": "benchmark/material/draftbench/batches/v2-01/tasks/v2-test-por-sequence/environment/public/cases.json#/0/netlist",
+    "line": 11,
+    "text": ".include \"cells.spice\""
+   },
+   {
+    "path": "benchmark/material/draftbench/batches/v2-01/tasks/v2-test-por-sequence/environment/public/cases.json#/0/netlist",
+    "line": 12,
+    "text": ".include \"analog.spice\""
+   },
+   {
+    "path": "benchmark/material/draftbench/batches/v2-01/tasks/v2-test-por-sequence/environment/public/cases.json#/0/netlist",
+    "line": 16,
+    "text": "Ibias vbp GND 200n"
+   },
+   {
+    "path": "benchmark/material/draftbench/batches/v2-01/tasks/v2-test-por-sequence/environment/public/cases.json#/0/netlist",
+    "line": 17,
+    "text": "XM1 ibg_200n vbp avdd_bg avdd_bg sky130_fd_pr__pfet_g5v0d10v5 L=4 W=1 nf=1 ad='int(((1)+1)/2) * (1)/(1) * 0.29' as='int(((1)+2)/2) * (1)/(1) * 0.29' pd='2*int(((1)+1)/2) * ((1)/(1) + 0.29)' ps='2*int(((1)+2)/2) * ((1)/(1) + 0.29)' nrd='0.29"
+   },
+   {
+    "path": "benchmark/material/draftbench/batches/v2-01/tasks/v2-test-por-sequence/environment/public/cases.json#/0/netlist",
+    "line": 18,
+    "text": "XM0 vbp vbp avdd_bg avdd_bg sky130_fd_pr__pfet_g5v0d10v5 L=4 W=1 nf=1 ad='int(((1)+1)/2) * (1)/(1) * 0.29' as='int(((1)+2)/2) * (1)/(1) * 0.29' pd='2*int(((1)+1)/2) * ((1)/(1) + 0.29)' ps='2*int(((1)+2)/2) * ((1)/(1) + 0.29)' nrd='0.29 / (1"
+   },
+   {
+    "path": "benchmark/material/draftbench/batches/v2-01/tasks/v2-test-por-sequence/environment/public/cases.json#/0/netlist",
+    "line": 19,
+    "text": "R1 itest GND 1e6 m=1"
+   },
+   {
+    "path": "benchmark/material/draftbench/batches/v2-01/tasks/v2-test-por-sequence/environment/public/cases.json#/0/netlist",
+    "line": 41,
+    "text": "xIpor avdd porb_h porb avss dvdd por_raw dvss osc vbg_1v2 dcomp otrip[2] otrip[1] otrip[0] itest force_pdn power vin force_ena_rc_osc force_dis_rc_osc startup_timed_out por_timed_out force_short_oneshot isrc_sel ibg_200n sky130_ajc_ip__por"
+   }
+  ],
+  "v3-ldo-response-experiment": [
+   {
+    "path": "benchmark/material/draftbench/batches/v3-01/tasks/v3-ldo-response-experiment/environment/public/public.scs",
+    "line": 6,
+    "text": ".include \"models.spice\""
+   },
+   {
+    "path": "benchmark/material/draftbench/batches/v3-01/tasks/v3-ldo-response-experiment/environment/public/public.scs",
+    "line": 7,
+    "text": ".include \"ldo_ota5.spi\""
+   },
+   {
+    "path": "benchmark/material/draftbench/batches/v3-01/tasks/v3-ldo-response-experiment/environment/public/public.scs",
+    "line": 9,
+    "text": "EADAPTER vin 0 line_cmd 0 1"
+   },
+   {
+    "path": "benchmark/material/draftbench/batches/v3-01/tasks/v3-ldo-response-experiment/environment/public/public.scs",
+    "line": 11,
+    "text": "IBIAS vin ibias 50u"
+   },
+   {
+    "path": "benchmark/material/draftbench/batches/v3-01/tasks/v3-ldo-response-experiment/environment/public/public.scs",
+    "line": 12,
+    "text": "RLOAD vout 0 120"
+   },
+   {
+    "path": "benchmark/material/draftbench/batches/v3-01/tasks/v3-ldo-response-experiment/environment/public/public.scs",
+    "line": 13,
+    "text": "XLDO vin vout 0 vref ibias fb gate_drive gate ldo_ota5"
+   },
+   {
+    "path": "benchmark/material/draftbench/batches/v3-01/tasks/v3-ldo-response-experiment/environment/public/public.scs",
+    "line": 14,
+    "text": "RFBTOP vout fb 300k"
+   },
+   {
+    "path": "benchmark/material/draftbench/batches/v3-01/tasks/v3-ldo-response-experiment/environment/public/public.scs",
+    "line": 15,
+    "text": "RFBBOT fb 0 600k"
+   }
+  ],
+  "v3-ldo-startup-measurement": [
+   {
+    "path": "benchmark/material/draftbench/batches/v3-01/tasks/v3-ldo-startup-measurement/environment/public/public.scs",
+    "line": 5,
+    "text": ".include \"models.spice\""
+   },
+   {
+    "path": "benchmark/material/draftbench/batches/v3-01/tasks/v3-ldo-startup-measurement/environment/public/public.scs",
+    "line": 6,
+    "text": ".include \"ldo_ota5.spi\""
+   },
+   {
+    "path": "benchmark/material/draftbench/batches/v3-01/tasks/v3-ldo-startup-measurement/environment/public/public.scs",
+    "line": 10,
+    "text": "IBIAS vin ibias 50u"
+   },
+   {
+    "path": "benchmark/material/draftbench/batches/v3-01/tasks/v3-ldo-startup-measurement/environment/public/public.scs",
+    "line": 11,
+    "text": "RLOAD vout 0 120"
+   },
+   {
+    "path": "benchmark/material/draftbench/batches/v3-01/tasks/v3-ldo-startup-measurement/environment/public/public.scs",
+    "line": 12,
+    "text": "XLDO vin vout 0 vref ibias fb gate_drive gate ldo_ota5"
+   },
+   {
+    "path": "benchmark/material/draftbench/batches/v3-01/tasks/v3-ldo-startup-measurement/environment/public/public.scs",
+    "line": 13,
+    "text": "RFBTOP vout fb 300k"
+   },
+   {
+    "path": "benchmark/material/draftbench/batches/v3-01/tasks/v3-ldo-startup-measurement/environment/public/public.scs",
+    "line": 14,
+    "text": "RFBBOT fb 0 600k"
+   },
+   {
+    "path": "benchmark/material/draftbench/batches/v3-01/tasks/v3-ldo-startup-measurement/environment/public/public.scs",
+    "line": 16,
+    "text": "RESR vout vcap 50m"
+   }
+  ]
+ },
+ "drafts": [
+  {
+   "id": "r01-spec-acquisition",
+   "batch": "r01-sampling-01",
+   "first30_slot": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "r01-spec-ideal",
+   "batch": "r01-sampling-01",
+   "first30_slot": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [
+    {
+     "feature": "scs-options-setting",
+     "status": "rejected",
+     "roles": [
+      "generated_bench_template"
+     ],
+     "blocks_all_candidates": false
+    },
+    {
+     "feature": "scs-tran-setting",
+     "status": "rejected",
+     "roles": [
+      "generated_bench_template"
+     ],
+     "blocks_all_candidates": false
+    }
+   ],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v2-data-sampling-identification",
+   "batch": "v2-01",
+   "first30_slot": 2,
+   "route": "pure-va",
+   "stored_device_truth": true,
+   "evas_gaps": [
+    {
+     "feature": "va-operator-setting-dependency",
+     "status": "rejected",
+     "roles": [
+      "reference_solution"
+     ],
+     "blocks_all_candidates": false
+    }
+   ],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v2-integrate-349-multichannel-readout",
+   "batch": "v2-01",
+   "first30_slot": 3,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v2-integrate-case0007-adpll-fine-tdc",
+   "batch": "v2-01",
+   "first30_slot": 18,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [
+    {
+     "feature": "scs-output-point-budget",
+     "status": "rejected-resource",
+     "roles": [
+      "hidden_bench"
+     ],
+     "blocks_all_candidates": true
+    },
+    {
+     "feature": "scs-pulse-magnitude-only",
+     "status": "conditional-consumer-found",
+     "roles": [
+      "public_bench",
+      "starter_bench_copy"
+     ],
+     "blocks_all_candidates": false
+    },
+    {
+     "feature": "va-floor-unproven-range",
+     "status": "rejected",
+     "roles": [
+      "reference_solution"
+     ],
+     "blocks_all_candidates": false
+    },
+    {
+     "feature": "va-idt-reset-dependency",
+     "status": "rejected",
+     "roles": [
+      "fixed_support",
+      "fixed_support_copy"
+     ],
+     "blocks_all_candidates": true
+    },
+    {
+     "feature": "va-unsupported-system-function",
+     "status": "rejected",
+     "roles": [
+      "fixed_support",
+      "fixed_support_copy",
+      "reference_solution"
+     ],
+     "blocks_all_candidates": true
+    }
+   ],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v2-repair-debounce-latch",
+   "batch": "v2-01",
+   "first30_slot": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v2-repair-pfd-reset",
+   "batch": "v2-01",
+   "first30_slot": 19,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v2-repair-reset-sequencer",
+   "batch": "v2-01",
+   "first30_slot": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v2-repair-uvlo-brownout",
+   "batch": "v2-01",
+   "first30_slot": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v2-repair-uvlo-reset-chain",
+   "batch": "v2-01",
+   "first30_slot": 28,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v2-spec-001-bang-bang-phase-detector",
+   "batch": "v2-01",
+   "first30_slot": 17,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v2-spec-002-capacitive-sar-feedback-dac",
+   "batch": "v2-01",
+   "first30_slot": 7,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v2-spec-003-pipeline-adc-stage",
+   "batch": "v2-01",
+   "first30_slot": 4,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v2-spec-024-clocked-sample-and-hold",
+   "batch": "v2-01",
+   "first30_slot": 1,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [
+    {
+     "feature": "scs-output-point-budget",
+     "status": "rejected-resource",
+     "roles": [
+      "hidden_bench",
+      "public_bench",
+      "starter_bench_copy"
+     ],
+     "blocks_all_candidates": true
+    },
+    {
+     "feature": "scs-strobe-point-budget",
+     "status": "rejected-resource",
+     "roles": [
+      "hidden_bench",
+      "public_bench",
+      "starter_bench_copy"
+     ],
+     "blocks_all_candidates": true
+    }
+   ],
+   "evas_doc_conflict_only": [
+    "floating-vsource-accepted-by-source"
+   ]
+  },
+  {
+   "id": "v2-spec-038-programmable-gain-amplifier",
+   "batch": "v2-01",
+   "first30_slot": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v2-spec-047-window-comparator-detector",
+   "batch": "v2-01",
+   "first30_slot": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v2-spec-055-first-order-sigma-delta-modulator",
+   "batch": "v2-01",
+   "first30_slot": 5,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v2-spec-071-acquisition-limited-sample-and-hold",
+   "batch": "v2-01",
+   "first30_slot": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v2-spec-082-agc-receiver-leveling-loop",
+   "batch": "v2-01",
+   "first30_slot": 11,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v2-spec-091-chopper-stabilized-differential-amplifier",
+   "batch": "v2-01",
+   "first30_slot": 10,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [
+    {
+     "feature": "scs-save-hierarchical-node",
+     "status": "rejected",
+     "roles": [
+      "hidden_bench"
+     ],
+     "blocks_all_candidates": true
+    }
+   ],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v2-spec-183-foreground-rdac-calibrator",
+   "batch": "v2-01",
+   "first30_slot": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v2-spec-186-sarfend-logic-4b",
+   "batch": "v2-01",
+   "first30_slot": 6,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [
+    {
+     "feature": "va-runtime-shift-count",
+     "status": "rejected",
+     "roles": [
+      "fixed_support"
+     ],
+     "blocks_all_candidates": true
+    }
+   ],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v2-spec-307-switched-capacitor-integrator-phase-pair",
+   "batch": "v2-01",
+   "first30_slot": 23,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v2-spec-308-correlated-double-sampler-offset-cancel",
+   "batch": "v2-01",
+   "first30_slot": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v2-spec-314-hysteretic-window-comparator",
+   "batch": "v2-01",
+   "first30_slot": 15,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v2-spec-353-ffe-transmitter-3tap",
+   "batch": "v2-01",
+   "first30_slot": 22,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v2-spec-370-opamp-feedback-settling-monitor",
+   "batch": "v2-01",
+   "first30_slot": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v2-spec-375-nonoverlap-clock-generator",
+   "batch": "v2-01",
+   "first30_slot": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v2-spec-396-quadrature-lo-generator-divided-clock",
+   "batch": "v2-01",
+   "first30_slot": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v2-test-clock-frequency",
+   "batch": "v2-01",
+   "first30_slot": 21,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v2-test-comparator-delay",
+   "batch": "v2-01",
+   "first30_slot": 29,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [
+    {
+     "feature": "va-transition-timing-dependency",
+     "status": "rejected",
+     "roles": [
+      "fixed_support",
+      "fixed_support_copy"
+     ],
+     "blocks_all_candidates": true
+    }
+   ],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v2-test-duty-cycle",
+   "batch": "v2-01",
+   "first30_slot": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v2-test-gain-settling",
+   "batch": "v2-01",
+   "first30_slot": 30,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v2-test-hysteresis",
+   "batch": "v2-01",
+   "first30_slot": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v2-test-offset-search",
+   "batch": "v2-01",
+   "first30_slot": 16,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v2-test-online-gain",
+   "batch": "v2-01",
+   "first30_slot": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v2-test-por-sequence",
+   "batch": "v2-01",
+   "first30_slot": null,
+   "route": "spice",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v2-test-sampled-rms",
+   "batch": "v2-01",
+   "first30_slot": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v2-test-time-protocol",
+   "batch": "v2-01",
+   "first30_slot": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [
+    {
+     "feature": "scs-pulse-magnitude-only",
+     "status": "conditional-consumer-found",
+     "roles": [
+      "hidden_bench",
+      "public_bench"
+     ],
+     "blocks_all_candidates": false
+    }
+   ],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v3-calibration-common-mode-servo",
+   "batch": "v3-01",
+   "first30_slot": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [
+    {
+     "feature": "va-unsupported-system-function",
+     "status": "rejected",
+     "roles": [
+      "reference_solution",
+      "starter"
+     ],
+     "blocks_all_candidates": false
+    }
+   ],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v3-calibration-continuous-offset",
+   "batch": "v3-01",
+   "first30_slot": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [
+    {
+     "feature": "va-unsupported-system-function",
+     "status": "rejected",
+     "roles": [
+      "reference_solution",
+      "starter"
+     ],
+     "blocks_all_candidates": false
+    }
+   ],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v3-calibration-fractional-pll",
+   "batch": "v3-01",
+   "first30_slot": 20,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [
+    {
+     "feature": "scs-output-point-budget",
+     "status": "rejected-resource",
+     "roles": [
+      "hidden_bench",
+      "public_bench",
+      "starter_bench_copy"
+     ],
+     "blocks_all_candidates": true
+    },
+    {
+     "feature": "scs-pulse-magnitude-only",
+     "status": "conditional-consumer-found",
+     "roles": [
+      "hidden_bench",
+      "public_bench",
+      "starter_bench_copy"
+     ],
+     "blocks_all_candidates": false
+    },
+    {
+     "feature": "va-idt-reset-dependency",
+     "status": "rejected",
+     "roles": [
+      "fixed_support",
+      "fixed_support_copy"
+     ],
+     "blocks_all_candidates": true
+    },
+    {
+     "feature": "va-unsupported-system-function",
+     "status": "rejected",
+     "roles": [
+      "reference_solution",
+      "starter"
+     ],
+     "blocks_all_candidates": false
+    }
+   ],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v3-converter-adc-spectrum",
+   "batch": "v3-01",
+   "first30_slot": 9,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [
+    {
+     "feature": "scs-pulse-magnitude-only",
+     "status": "conditional-consumer-found",
+     "roles": [
+      "hidden_bench"
+     ],
+     "blocks_all_candidates": false
+    },
+    {
+     "feature": "va-event-dynamic-math",
+     "status": "rejected",
+     "roles": [
+      "reference_solution"
+     ],
+     "blocks_all_candidates": false
+    },
+    {
+     "feature": "va-floor-partition-budget",
+     "status": "rejected-resource",
+     "roles": [
+      "reference_solution"
+     ],
+     "blocks_all_candidates": false
+    }
+   ],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v3-converter-dac-linearity",
+   "batch": "v3-01",
+   "first30_slot": 8,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [
+    {
+     "feature": "va-floor-unproven-range",
+     "status": "rejected",
+     "roles": [
+      "fixed_support"
+     ],
+     "blocks_all_candidates": true
+    }
+   ],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v3-converter-nonideal",
+   "batch": "v3-01",
+   "first30_slot": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v3-converter-segmented",
+   "batch": "v3-01",
+   "first30_slot": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v3-converter-subradix",
+   "batch": "v3-01",
+   "first30_slot": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v3-converter-thermometer",
+   "batch": "v3-01",
+   "first30_slot": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v3-filter-ctle",
+   "batch": "v3-01",
+   "first30_slot": 24,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [
+    {
+     "feature": "scs-sine-consumer-boundary",
+     "status": "conditional-consumer-found",
+     "roles": [
+      "hidden_bench",
+      "public_bench",
+      "starter_bench_copy"
+     ],
+     "blocks_all_candidates": false
+    },
+    {
+     "feature": "scs-sine-floating",
+     "status": "rejected",
+     "roles": [
+      "hidden_bench",
+      "public_bench",
+      "starter_bench_copy"
+     ],
+     "blocks_all_candidates": true
+    },
+    {
+     "feature": "scs-sine-missing-sinedc",
+     "status": "rejected",
+     "roles": [
+      "hidden_bench",
+      "public_bench",
+      "starter_bench_copy"
+     ],
+     "blocks_all_candidates": true
+    }
+   ],
+   "evas_doc_conflict_only": [
+    "floating-vsource-accepted-by-source"
+   ]
+  },
+  {
+   "id": "v3-filter-envelope",
+   "batch": "v3-01",
+   "first30_slot": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [
+    {
+     "feature": "va-idt-reset-dependency",
+     "status": "rejected",
+     "roles": [
+      "reference_solution"
+     ],
+     "blocks_all_candidates": false
+    }
+   ],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v3-filter-iq-conversion",
+   "batch": "v3-01",
+   "first30_slot": 25,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [
+    {
+     "feature": "scs-sine-consumer-boundary",
+     "status": "conditional-consumer-found",
+     "roles": [
+      "hidden_bench",
+      "public_bench",
+      "starter_bench_copy"
+     ],
+     "blocks_all_candidates": false
+    },
+    {
+     "feature": "scs-sine-missing-sinedc",
+     "status": "rejected",
+     "roles": [
+      "hidden_bench",
+      "public_bench",
+      "starter_bench_copy"
+     ],
+     "blocks_all_candidates": true
+    }
+   ],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v3-filter-programmable-lp",
+   "batch": "v3-01",
+   "first30_slot": 27,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [
+    {
+     "feature": "scs-sine-consumer-boundary",
+     "status": "conditional-consumer-found",
+     "roles": [
+      "hidden_bench",
+      "public_bench",
+      "starter_bench_copy"
+     ],
+     "blocks_all_candidates": false
+    },
+    {
+     "feature": "scs-sine-missing-sinedc",
+     "status": "rejected",
+     "roles": [
+      "hidden_bench",
+      "public_bench",
+      "starter_bench_copy"
+     ],
+     "blocks_all_candidates": true
+    },
+    {
+     "feature": "va-floor-unproven-range",
+     "status": "rejected",
+     "roles": [
+      "reference_solution"
+     ],
+     "blocks_all_candidates": false
+    },
+    {
+     "feature": "va-idt-reset-dependency",
+     "status": "rejected",
+     "roles": [
+      "public_material",
+      "reference_solution"
+     ],
+     "blocks_all_candidates": false
+    }
+   ],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v3-filter-sweep-measurement",
+   "batch": "v3-01",
+   "first30_slot": 26,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [
+    {
+     "feature": "va-event-dynamic-math",
+     "status": "rejected",
+     "roles": [
+      "reference_solution"
+     ],
+     "blocks_all_candidates": false
+    },
+    {
+     "feature": "va-floor-unproven-range",
+     "status": "rejected",
+     "roles": [
+      "reference_solution"
+     ],
+     "blocks_all_candidates": false
+    },
+    {
+     "feature": "va-idt-reset-dependency",
+     "status": "rejected",
+     "roles": [
+      "reference_solution"
+     ],
+     "blocks_all_candidates": false
+    },
+    {
+     "feature": "va-math-function-unsupported",
+     "status": "rejected",
+     "roles": [
+      "reference_solution"
+     ],
+     "blocks_all_candidates": false
+    }
+   ],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v3-ldo-response-experiment",
+   "batch": "v3-01",
+   "first30_slot": null,
+   "route": "spice",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v3-ldo-startup-measurement",
+   "batch": "v3-01",
+   "first30_slot": null,
+   "route": "spice",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v3-ota-continuous",
+   "batch": "v3-01",
+   "first30_slot": 12,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v3-ota-data-model",
+   "batch": "v3-01",
+   "first30_slot": 13,
+   "route": "pure-va",
+   "stored_device_truth": true,
+   "evas_gaps": [
+    {
+     "feature": "scs-output-point-budget",
+     "status": "rejected-resource",
+     "roles": [
+      "hidden_bench",
+      "public_bench",
+      "starter_bench_copy"
+     ],
+     "blocks_all_candidates": true
+    }
+   ],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "id": "v3-ota-step-measurement",
+   "batch": "v3-01",
+   "first30_slot": 14,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  }
+ ],
+ "planning": [
+  {
+   "task_id": "C055-R1",
+   "title": "Acquisition Limited Sample And Hold",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C055-S1",
+   "title": "Acquisition Limited Sample And Hold",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C056-R1",
+   "title": "Aperture Delay Track And Hold",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C056-S1",
+   "title": "Aperture Delay Track And Hold",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C057-S1",
+   "title": "Sample And Hold With Droop Leakage",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C060-S1",
+   "title": "Correlated Double Sampler Offset-cancel Macro",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C061-S1",
+   "title": "Dual Track Sample Hold",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C064-S1",
+   "title": "Multi-channel Sample/Mux/Readout",
+   "basis": "proxy-bench",
+   "proxy": {
+    "label": "v4:349-multichannel-sample-readout",
+    "dir": "benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/349-multichannel-sample-readout",
+    "relation": "released r53 task with the same v4 family ID; the local-only source is a later historical revision"
+   },
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C066-S1",
+   "title": "上升沿模拟采样保持",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": [
+    "floating-vsource-accepted-by-source"
+   ]
+  },
+  {
+   "task_id": "C067-S1",
+   "title": "Sample Hold Droop Front End",
+   "basis": "proxy-bench",
+   "proxy": {
+    "label": "v4:100-sample-hold-droop-front-end",
+    "dir": "benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/100-sample-hold-droop-front-end",
+    "relation": "released r53 task with the same v4 family ID; the local-only source is a later historical revision"
+   },
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C068-S1",
+   "title": "跟踪保持切换与累计下垂监控",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C083-S1",
+   "title": "时钟采样均匀二进制ADC",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C089-S1",
+   "title": "Pipeline ADC Stage",
+   "basis": "proxy-bench",
+   "proxy": {
+    "label": "v4:003-pipeline-adc-stage",
+    "dir": "benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/003-pipeline-adc-stage",
+    "relation": "released r53 task with the same v4 family ID; the local-only source is a later historical revision"
+   },
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C094-S1",
+   "title": "Cyclic Decoder 10b",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C097-T1",
+   "title": "Flash ADC抽头、温度码与最终编码一致性验证",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C100-S1",
+   "title": "比较器双边沿握手SAR控制",
+   "basis": "excerpt-only",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C102-S1",
+   "title": "Pipe15 Data Align",
+   "basis": "proxy-bench",
+   "proxy": {
+    "label": "v4:181-pipe15-data-align",
+    "dir": "benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/181-pipe15-data-align",
+    "relation": "released r53 task with the same v4 family ID; the local-only source is a later historical revision"
+   },
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C103-S1",
+   "title": "Pipe ADC Gain Control Loop",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C105-S1",
+   "title": "Two-stage Pipeline ADC Mini Chain",
+   "basis": "proxy-bench",
+   "proxy": {
+    "label": "v4:343-pipeline-adc-two-stage",
+    "dir": "benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/343-pipeline-adc-two-stage",
+    "relation": "released r53 task with the same v4 family ID; the local-only source is a later historical revision"
+   },
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C109-S1",
+   "title": "4-bit SAR ADC System",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C111-S1",
+   "title": "SAR Front-End Logic 4b",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C112-S1",
+   "title": "4-bit Self-Timed SAR Logic",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C113-S1",
+   "title": "Sigma-delta Modulator Mini Loop",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C114-S1",
+   "title": "Synchronous 8-bit DFF Chain V2",
+   "basis": "proxy-bench",
+   "proxy": {
+    "label": "v4:177-sync-8b-dffs-v2",
+    "dir": "benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/177-sync-8b-dffs-v2",
+    "relation": "released r53 task with the same v4 family ID; the local-only source is a later historical revision"
+   },
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C118-S1",
+   "title": "DWA DEM Encoder",
+   "basis": "proxy-bench",
+   "proxy": {
+    "label": "v4:027-dwa-dem-encoder",
+    "dir": "benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/027-dwa-dem-encoder",
+    "relation": "released r53 task with the same v4 family ID; the local-only source is a later historical revision"
+   },
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C124-S1",
+   "title": "DAC Serial Accumulator",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C128-S1",
+   "title": "连续端点归一化二进制DAC",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C154-T1",
+   "title": "外部PAM4发射输出的电平间距表征",
+   "basis": "proxy-bench",
+   "proxy": {
+    "label": "v4:328-pam4-linearity-monitor",
+    "dir": "benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/328-pam4-linearity-monitor",
+    "relation": "released r53 task with the same v4 family ID; the local-only source is a later historical revision"
+   },
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C155-S1",
+   "title": "SAR CDAC Residue",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C169-T1",
+   "title": "Linearity RDAC Offset Sweep",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C170-T1",
+   "title": "Offset RDAC Search Flow",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C176-S1",
+   "title": "Debounce Latch",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C179-S1",
+   "title": "Propagation Delay Comparator",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [
+    {
+     "feature": "va-transition-timing-dependency",
+     "status": "rejected",
+     "roles": [
+      "reference_solution"
+     ],
+     "blocks_all_candidates": false
+    }
+   ],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C183-S1",
+   "title": "Auto-zero Comparator Preamplifier",
+   "basis": "proxy-bench",
+   "proxy": {
+    "label": "v4:309-autozero-comparator-preamplifier",
+    "dir": "benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/309-autozero-comparator-preamplifier",
+    "relation": "released r53 task with the same v4 family ID; the local-only source is a later historical revision"
+   },
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C184-S1",
+   "title": "Clocked Comparator Reset Low",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C191-S1",
+   "title": "Hysteretic Window Comparator",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C193-S1",
+   "title": "Offset-calibrated Comparator System",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C196-T1",
+   "title": "Comparator Delay Overdrive Meter",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [
+    {
+     "feature": "va-transition-timing-dependency",
+     "status": "rejected",
+     "roles": [
+      "fixed_support"
+     ],
+     "blocks_all_candidates": true
+    }
+   ],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C202-T1",
+   "title": "Start Gated Offset Search",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C203-S1",
+   "title": "Sampled True-RMS-to-DC Converter",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C213-S1",
+   "title": "有记忆的迟滞限幅通路",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C214-S1",
+   "title": "Amplifier Filter Chain",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C219-S1",
+   "title": "Chopper-Stabilized Differential Amplifier",
+   "basis": "proxy-bench",
+   "proxy": {
+    "label": "v4:091-chopper-stabilized-differential-amplifier",
+    "dir": "benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/091-chopper-stabilized-differential-amplifier",
+    "relation": "released r53 task with the same v4 family ID; the local-only source is a later historical revision"
+   },
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C221-S1",
+   "title": "Common-mode Feedback Loop",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C228-S1",
+   "title": "For Loop Windowed Peak",
+   "basis": "excerpt-only",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C244-S1",
+   "title": "电压编码接收前端的限幅、判决与有效资格",
+   "basis": "proxy-bench",
+   "proxy": {
+    "label": "v4:368-tia-limiting-receiver-macro",
+    "dir": "benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/368-tia-limiting-receiver-macro",
+    "relation": "released r53 task with the same v4 family ID; the local-only source is a later historical revision"
+   },
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C245-S1",
+   "title": "Two-stage Op-amp Slew Macromodel",
+   "basis": "proxy-bench",
+   "proxy": {
+    "label": "v4:398-two-stage-opamp-slew-macromodel",
+    "dir": "benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/398-two-stage-opamp-slew-macromodel",
+    "relation": "released r53 task with the same v4 family ID; the local-only source is a later historical revision"
+   },
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C248-T1",
+   "title": "Settling Window Detector",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C250-S1",
+   "title": "First Order Lowpass",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C251-S1",
+   "title": "Clocked Cascaded Two-Pole Filter",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C260-S1",
+   "title": "连续一阶低通加输出采样",
+   "basis": "excerpt-only",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C261-S1",
+   "title": "连续高通记忆与外部输出采样",
+   "basis": "excerpt-only",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [
+    {
+     "feature": "va-laplace-zp-zd",
+     "status": "named-by-label",
+     "roles": [
+      "task-requirement-text"
+     ],
+     "blocks_all_candidates": false
+    }
+   ],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C263-S1",
+   "title": "Switched-capacitor Integrator Phase Pair",
+   "basis": "proxy-bench",
+   "proxy": {
+    "label": "v4:307-switched-capacitor-integrator-phase-pair",
+    "dir": "benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/307-switched-capacitor-integrator-phase-pair",
+    "relation": "released r53 task with the same v4 family ID; the local-only source is a later historical revision"
+   },
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C264-S1",
+   "title": "离散一阶低通加输出采样",
+   "basis": "excerpt-only",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [
+    {
+     "feature": "va-zi-discrete-filter",
+     "status": "named-by-label",
+     "roles": [
+      "task-requirement-text"
+     ],
+     "blocks_all_candidates": false
+    }
+   ],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C265-S1",
+   "title": "离散高通状态与外部输出采样",
+   "basis": "excerpt-only",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [
+    {
+     "feature": "va-zi-discrete-filter",
+     "status": "named-by-label",
+     "roles": [
+      "task-requirement-text"
+     ],
+     "blocks_all_candidates": false
+    }
+   ],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C266-S1",
+   "title": "Slew Limited Envelope",
+   "basis": "excerpt-only",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C268-S1",
+   "title": "Bang-Bang Phase Detector",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C270-S1",
+   "title": "PLL Feedback Clock Divider",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C273-S1",
+   "title": "Lock Detector",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C275-S1",
+   "title": "即时互清三态PFD",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C278-S1",
+   "title": "ADPLL Ratio Hop Timer",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [
+    {
+     "feature": "scs-pulse-magnitude-only",
+     "status": "conditional-consumer-found",
+     "roles": [
+      "hidden_bench",
+      "public_bench",
+      "replay_bench"
+     ],
+     "blocks_all_candidates": false
+    },
+    {
+     "feature": "va-bound-step-context",
+     "status": "rejected",
+     "roles": [
+      "reference_solution"
+     ],
+     "blocks_all_candidates": false
+    }
+   ],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C279-S1",
+   "title": "BBPD Data Edge Alignment",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C282-S1",
+   "title": "Charge Pump PFD State Machine",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C284-S1",
+   "title": "Configurable Pulse Train Generator",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C286-S1",
+   "title": "Differential VCO With Clip And Idtmod",
+   "basis": "proxy-bench",
+   "proxy": {
+    "label": "v4:300-differential-vco-clip-idtmod",
+    "dir": "benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/300-differential-vco-clip-idtmod",
+    "relation": "released r53 task with the same v4 family ID; the local-only source is a later historical revision"
+   },
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C290-S1",
+   "title": "DLL Delay-line Lock",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C292-S1",
+   "title": "Edge Delay Line with Deglitch Window",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C299-S1",
+   "title": "Fractional-N Divider Accumulator Flow",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [
+    {
+     "feature": "va-bound-step-context",
+     "status": "rejected",
+     "roles": [
+      "reference_solution"
+     ],
+     "blocks_all_candidates": false
+    },
+    {
+     "feature": "va-while-loop",
+     "status": "rejected",
+     "roles": [
+      "reference_solution"
+     ],
+     "blocks_all_candidates": false
+    }
+   ],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C300-S1",
+   "title": "Fractional-N Synthesizer Mini Loop",
+   "basis": "proxy-bench",
+   "proxy": {
+    "label": "v4:363-fractional-n-synthesizer-mini-loop",
+    "dir": "benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/363-fractional-n-synthesizer-mini-loop",
+    "relation": "released r53 task with the same v4 family ID; the local-only source is a later historical revision"
+   },
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [
+    {
+     "feature": "scs-pulse-magnitude-only",
+     "status": "conditional-consumer-found",
+     "roles": [
+      "hidden_bench",
+      "public_bench",
+      "replay_bench"
+     ],
+     "blocks_all_candidates": false
+    }
+   ],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C301-S1",
+   "title": "Frequency-word DCO with Divider Monitor",
+   "basis": "proxy-bench",
+   "proxy": {
+    "label": "v4:362-frequency-word-dco-divider-monitor",
+    "dir": "benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/362-frequency-word-dco-divider-monitor",
+    "relation": "released r53 task with the same v4 family ID; the local-only source is a later historical revision"
+   },
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C302-S1",
+   "title": "Glitchless Clock Mux Selector",
+   "basis": "proxy-bench",
+   "proxy": {
+    "label": "v4:322-glitchless-clock-mux-selector",
+    "dir": "benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/322-glitchless-clock-mux-selector",
+    "relation": "released r53 task with the same v4 family ID; the local-only source is a later historical revision"
+   },
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C308-S1",
+   "title": "Deterministic Jittered Clock Source",
+   "basis": "proxy-bench",
+   "proxy": {
+    "label": "v4:070-jittered-clock-source-deterministic",
+    "dir": "benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/070-jittered-clock-source-deterministic",
+    "relation": "released r53 task with the same v4 family ID; the local-only source is a later historical revision"
+   },
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C309-S1",
+   "title": "Ready/Valid Latency Counter 12b",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C310-S1",
+   "title": "LC VCO Behavioral Source",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C312-S1",
+   "title": "Non-overlapping Clock Generator",
+   "basis": "proxy-bench",
+   "proxy": {
+    "label": "v4:375-nonoverlap-clock-generator",
+    "dir": "benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/375-nonoverlap-clock-generator",
+    "relation": "released r53 task with the same v4 family ID; the local-only source is a later historical revision"
+   },
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C316-S1",
+   "title": "时钟先后序列累计监控系统",
+   "basis": "proxy-bench",
+   "proxy": {
+    "label": "v4:351-pll-timing-monitor-system",
+    "dir": "benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/351-pll-timing-monitor-system",
+    "relation": "released r53 task with the same v4 family ID; the local-only source is a later historical revision"
+   },
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C321-S1",
+   "title": "实际I/Q边沿的正交相位误差监控",
+   "basis": "proxy-bench",
+   "proxy": {
+    "label": "v4:335-quadrature-oscillator-phase-error-monitor",
+    "dir": "benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/335-quadrature-oscillator-phase-error-monitor",
+    "relation": "released r53 task with the same v4 family ID; the local-only source is a later historical revision"
+   },
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C326-S1",
+   "title": "Single-Shot Pulse",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C328-S1",
+   "title": "TDC Event Measurement System",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [
+    {
+     "feature": "scs-pulse-magnitude-only",
+     "status": "conditional-consumer-found",
+     "roles": [
+      "hidden_bench",
+      "public_bench",
+      "replay_bench"
+     ],
+     "blocks_all_candidates": false
+    }
+   ],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C331-T1",
+   "title": "Duty-cycle Window Monitor",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C335-S1",
+   "title": "Last Crossing Edge Age",
+   "basis": "excerpt-only",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [
+    {
+     "feature": "va-last-crossing",
+     "status": "named-by-label",
+     "roles": [
+      "task-requirement-text"
+     ],
+     "blocks_all_candidates": false
+    },
+    {
+     "feature": "va-unsupported-event",
+     "status": "rejected",
+     "roles": [
+      "task-requirement-text"
+     ],
+     "blocks_all_candidates": false
+    }
+   ],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C339-T1",
+   "title": "Time Difference Detector",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C341-S1",
+   "title": "Switched-cap Phase Sequencer",
+   "basis": "proxy-bench",
+   "proxy": {
+    "label": "v4:385-switched-cap-phase-sequencer",
+    "dir": "benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/385-switched-cap-phase-sequencer",
+    "relation": "released r53 task with the same v4 family ID; the local-only source is a later historical revision"
+   },
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C343-S1",
+   "title": "PFD With External Active Low Reset",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C348-S1",
+   "title": "AGC Receiver Leveling Loop",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C353-S1",
+   "title": "Deserializer DEMUX Alignment Macro",
+   "basis": "proxy-bench",
+   "proxy": {
+    "label": "v4:393-deserializer-demux-alignment-macro",
+    "dir": "benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/393-deserializer-demux-alignment-macro",
+    "relation": "released r53 task with the same v4 family ID; the local-only source is a later historical revision"
+   },
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C354-S1",
+   "title": "DFE Error-proxy Loop",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C358-S1",
+   "title": "3-tap FFE Transmitter",
+   "basis": "proxy-bench",
+   "proxy": {
+    "label": "v4:353-ffe-transmitter-3tap",
+    "dir": "benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/353-ffe-transmitter-3tap",
+    "relation": "released r53 task with the same v4 family ID; the local-only source is a later historical revision"
+   },
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C360-S1",
+   "title": "IQ Downconversion Chain",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C361-I1",
+   "title": "I/Q上变频链集成与边带极性",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [
+    {
+     "feature": "scs-sine-consumer-boundary",
+     "status": "conditional-consumer-found",
+     "roles": [
+      "hidden_bench",
+      "public_bench",
+      "replay_bench"
+     ],
+     "blocks_all_candidates": false
+    }
+   ],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C366-I1",
+   "title": "Gray映射、DAC与预加重的PAM4发射链集成",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C367-S1",
+   "title": "输入控制的多模式刺激与连续切换",
+   "basis": "proxy-bench",
+   "proxy": {
+    "label": "v4:097-programmable-stimulus-sequencer",
+    "dir": "benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/097-programmable-stimulus-sequencer",
+    "relation": "released r53 task with the same v4 family ID; the local-only source is a later historical revision"
+   },
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C371-S1",
+   "title": "Clocked Sine Source",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [
+    {
+     "feature": "va-random-system-function",
+     "status": "rejected",
+     "roles": [
+      "reference_solution"
+     ],
+     "blocks_all_candidates": false
+    }
+   ],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C379-S1",
+   "title": "Adaptive Threshold Tracker",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C384-S1",
+   "title": "Complete Calibration Loop",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C385-S1",
+   "title": "Instrumentation Amplifier Offset-trim System",
+   "basis": "proxy-bench",
+   "proxy": {
+    "label": "v4:306-instrumentation-amplifier-offset-trim",
+    "dir": "benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/306-instrumentation-amplifier-offset-trim",
+    "relation": "released r53 task with the same v4 family ID; the local-only source is a later historical revision"
+   },
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C387-S1",
+   "title": "Residue Amplifier Gain-calibration Loop",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C396-S1",
+   "title": "异步断言、两拍释放的复位同步器",
+   "basis": "excerpt-only",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C399-S1",
+   "title": "Charge-pump Voltage Multiplier Controller",
+   "basis": "proxy-bench",
+   "proxy": {
+    "label": "v4:373-charge-pump-voltage-multiplier-controller",
+    "dir": "benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/373-charge-pump-voltage-multiplier-controller",
+    "relation": "released r53 task with the same v4 family ID; the local-only source is a later historical revision"
+   },
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C400-S1",
+   "title": "Clock-and-data Valid Qualifier",
+   "basis": "proxy-bench",
+   "proxy": {
+    "label": "v4:395-clock-data-valid-qualifier",
+    "dir": "benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/395-clock-data-valid-qualifier",
+    "relation": "released r53 task with the same v4 family ID; the local-only source is a later historical revision"
+   },
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C401-S1",
+   "title": "Current-limited Regulator Macro",
+   "basis": "proxy-bench",
+   "proxy": {
+    "label": "v4:378-current-limited-regulator-macro",
+    "dir": "benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/378-current-limited-regulator-macro",
+    "relation": "released r53 task with the same v4 family ID; the local-only source is a later historical revision"
+   },
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C402-S1",
+   "title": "Dynamic Supply Level Driver",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C403-S1",
+   "title": "LDO Load-Step Recovery Flow",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C408-S1",
+   "title": "Power and Reset Sequencer",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C411-S1",
+   "title": "Rail Ramp Rate Startup Monitor",
+   "basis": "proxy-bench",
+   "proxy": {
+    "label": "v4:297-rail-ramp-rate-startup-monitor",
+    "dir": "benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/297-rail-ramp-rate-startup-monitor",
+    "relation": "released r53 task with the same v4 family ID; the local-only source is a later historical revision"
+   },
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C413-S1",
+   "title": "Reference Startup Enable Flow",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C417-S1",
+   "title": "Supply Supervisor with Brownout POR",
+   "basis": "proxy-bench",
+   "proxy": {
+    "label": "v4:399-supply-supervisor-brownout-por",
+    "dir": "benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/399-supply-supervisor-brownout-por",
+    "relation": "released r53 task with the same v4 family ID; the local-only source is a later historical revision"
+   },
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "C421-S1",
+   "title": "Bandgap Startup and Trim System",
+   "basis": "proxy-bench",
+   "proxy": {
+    "label": "v4:371-bandgap-startup-trim-system",
+    "dir": "benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/371-bandgap-startup-trim-system",
+    "relation": "released r53 task with the same v4 family ID; the local-only source is a later historical revision"
+   },
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "G001-I1",
+   "title": "滤波输出反馈的基带AGC链集成",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "U01-I1",
+   "title": "模拟配置的原子提交与生效时刻",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "U02-I1",
+   "title": "共享采集通路的串扰与吞吐预算",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "U03-T1",
+   "title": "交织采样的增益、偏置和时间失配分离",
+   "basis": "proxy-bench",
+   "proxy": {
+    "label": "v4:312-interleaved-adc-skew-monitor",
+    "dir": "benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/312-interleaved-adc-skew-monitor",
+    "relation": "released r53 task with the same v4 family ID; the local-only source is a later historical revision"
+   },
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "U04-T1",
+   "title": "外部ADC静态线性度的独立表征",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "U05-I1",
+   "title": "DEM选元驱动失配分段DAC的集成",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "U06-T1",
+   "title": "DAC建立时间与毛刺冲量测量",
+   "basis": "proxy-bench",
+   "proxy": {
+    "label": "v4:319-unary-dac-glitch-energy-metric",
+    "dir": "benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/319-unary-dac-glitch-energy-metric",
+    "relation": "released r53 task with the same v4 family ID; the local-only source is a later historical revision"
+   },
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "U07-T1",
+   "title": "比较器本征迟滞与延迟影响的分离表征",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "U08-T1",
+   "title": "滤波与放大通路的幅相响应测量流程",
+   "basis": "excerpt-only",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "U09-I1",
+   "title": "由实际接收质量驱动的均衡闭环",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "U10-I1",
+   "title": "双电源域的信号隔离与安全恢复",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "U11-T1",
+   "title": "有噪声比较器的失调与判决概率表征",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [
+    {
+     "feature": "va-random-system-function",
+     "status": "rejected",
+     "roles": [
+      "reference_solution"
+     ],
+     "blocks_all_candidates": false
+    }
+   ],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "U12-I1",
+   "title": "实际镜像观测驱动的I/Q校准集成",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "U13-T1",
+   "title": "有时间预算和不确定度的频率测量",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "U14-S1",
+   "title": "具有幅相非线性和有限记忆的PA包络模型",
+   "basis": "proxy-bench",
+   "proxy": {
+    "label": "v4:339-pa-ampm-memory-tap-macro",
+    "dir": "benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/339-pa-ampm-memory-tap-macro",
+    "relation": "released r53 task with the same v4 family ID; the local-only source is a later historical revision"
+   },
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "U15-S1",
+   "title": "可编程延迟单元的脉冲保持与待发事件管理",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [
+    {
+     "feature": "va-transition-timing-dependency",
+     "status": "rejected",
+     "roles": [
+      "reference_solution"
+     ],
+     "blocks_all_candidates": false
+    }
+   ],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "U16-S1",
+   "title": "含两端细时间的细粗TDC行为模型",
+   "basis": "proxy-bench",
+   "proxy": {
+    "label": "v4:325-fine-coarse-tdc-encoder",
+    "dir": "benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/325-fine-coarse-tdc-encoder",
+    "relation": "released r53 task with the same v4 family ID; the local-only source is a later historical revision"
+   },
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "U17-S1",
+   "title": "使用历史判决反馈的两抽头DFE接收器",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "U18-S1",
+   "title": "带软启动、载波和资格状态的Buck控制器",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "U19-T1",
+   "title": "采样边沿前后时间裕量的因果观测",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "U20-I1",
+   "title": "失配CDAC权重辨识与校正路径集成",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "U21-R1",
+   "title": "CPPLL反馈方向与重锁定故障诊断",
+   "basis": "proxy-bench",
+   "proxy": {
+    "label": "v4:088-cppll-tracking-reacquire-timer",
+    "dir": "benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/088-cppll-tracking-reacquire-timer",
+    "relation": "released r53 task with the same v4 family ID; the local-only source is a later historical revision"
+   },
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [
+    {
+     "feature": "va-bound-step-context",
+     "status": "rejected",
+     "roles": [
+      "reference_solution"
+     ],
+     "blocks_all_candidates": false
+    },
+    {
+     "feature": "va-while-loop",
+     "status": "rejected",
+     "roles": [
+      "reference_solution"
+     ],
+     "blocks_all_candidates": false
+    }
+   ],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "U22-I1",
+   "title": "输出占空比驱动的校正闭环",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "U23-S1",
+   "title": "完整四象限的相位插值模型",
+   "basis": "proxy-bench",
+   "proxy": {
+    "label": "v4:358-quadrature-phase-interpolator",
+    "dir": "benchmark/material/historyref/v4/release/benchmarkv4-r53/tasks/358-quadrature-phase-interpolator",
+    "relation": "released r53 task with the same v4 family ID; the local-only source is a later historical revision"
+   },
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [
+    {
+     "feature": "va-transition-timing-dependency",
+     "status": "rejected",
+     "roles": [
+      "reference_solution"
+     ],
+     "blocks_all_candidates": false
+    }
+   ],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "U24-I1",
+   "title": "稀疏数据边沿驱动的相位恢复闭环",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "U25-T1",
+   "title": "LDO负载阶跃与恢复的独立表征",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "U26-T1",
+   "title": "ADPLL变频比与伪锁定的独立验证",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [
+    {
+     "feature": "scs-pulse-magnitude-only",
+     "status": "conditional-consumer-found",
+     "roles": [
+      "reference_deliverable"
+     ],
+     "blocks_all_candidates": false
+    },
+    {
+     "feature": "va-bound-step-context",
+     "status": "rejected",
+     "roles": [
+      "reference_solution"
+     ],
+     "blocks_all_candidates": false
+    }
+   ],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "U27-T1",
+   "title": "SAR转换协议与内部观测一致性验证",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [
+    {
+     "feature": "scs-vsource-missing-setting",
+     "status": "rejected",
+     "roles": [
+      "reference_deliverable"
+     ],
+     "blocks_all_candidates": false
+    }
+   ],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "U28-T1",
+   "title": "AGC捕获、过载与恢复的独立表征",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "U29-T1",
+   "title": "欠压复位断言与释放资格验证",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  },
+  {
+   "task_id": "U30-R1",
+   "title": "SAR完成握手导致结果提前捕获的诊断修复",
+   "basis": "bench-scanned",
+   "proxy": null,
+   "route": "pure-va",
+   "stored_device_truth": false,
+   "evas_gaps": [],
+   "evas_doc_conflict_only": []
+  }
+ ],
+ "features": {
+  "scs-options-setting": {
+   "title": "Unknown options settings",
+   "class": [
+    "evas-gap"
+   ],
+   "evas_refs": [
+    "origin/main:evas/README.md:284",
+    "origin/main:evas/README.md:302-303",
+    "origin/main:evas/src/evas/scs.py:306-308"
+   ],
+   "issue_270_item": "section-3",
+   "affected": {
+    "first30": [],
+    "other_drafts": [
+     "r01-spec-ideal"
+    ],
+    "planning": []
+   }
+  },
+  "scs-output-point-budget": {
+   "title": "Output point budget 100000 (stop/maxstep, or grid plus source corners)",
+   "class": [
+    "evas-gap"
+   ],
+   "evas_refs": [
+    "origin/main:evas/README.md:360",
+    "origin/main:evas/src/evas/scs.py:359-361"
+   ],
+   "issue_270_item": 3,
+   "affected": {
+    "first30": [
+     "v2-integrate-case0007-adpll-fine-tdc",
+     "v2-spec-024-clocked-sample-and-hold",
+     "v3-calibration-fractional-pll",
+     "v3-ota-data-model"
+    ],
+    "other_drafts": [],
+    "planning": []
+   }
+  },
+  "scs-pulse-magnitude-only": {
+   "title": "Pulse beyond the 512-point physical-shape budget (magnitude bound only)",
+   "class": [
+    "evas-gap"
+   ],
+   "evas_refs": [
+    "origin/main:evas/README.md:352-353",
+    "origin/main:evas/docs/math/events.md:1060",
+    "origin/main:evas/docs/math/events.md:1100-1102",
+    "origin/main:evas/src/evas/scs_sources.py:64"
+   ],
+   "issue_270_item": 8,
+   "affected": {
+    "first30": [
+     "v2-integrate-case0007-adpll-fine-tdc",
+     "v3-calibration-fractional-pll",
+     "v3-converter-adc-spectrum"
+    ],
+    "other_drafts": [
+     "v2-test-time-protocol"
+    ],
+    "planning": [
+     "C278-S1",
+     "C300-S1",
+     "C328-S1",
+     "U26-T1"
+    ]
+   }
+  },
+  "scs-save-hierarchical-node": {
+   "title": "save of hierarchical internal nodes (inst.node)",
+   "class": [
+    "evas-gap"
+   ],
+   "evas_refs": [
+    "origin/main:evas/README.md:287",
+    "origin/main:evas/src/evas/scs.py:265",
+    "origin/main:evas/src/evas/scs.py:43"
+   ],
+   "issue_270_item": 7,
+   "affected": {
+    "first30": [
+     "v2-spec-091-chopper-stabilized-differential-amplifier"
+    ],
+    "other_drafts": [],
+    "planning": []
+   }
+  },
+  "scs-sine-consumer-boundary": {
+   "title": "Front-end-accepted sine used directly by cross or analog operators",
+   "class": [
+    "evas-gap"
+   ],
+   "evas_refs": [
+    "origin/main:evas/docs/COMPARISON.md:144",
+    "origin/main:evas/docs/math/events.md:2444",
+    "origin/main:evas/docs/math/events.md:2457-2460",
+    "origin/main:evas/docs/math/events.md:2508-2509"
+   ],
+   "issue_270_item": 9,
+   "affected": {
+    "first30": [
+     "v3-filter-ctle",
+     "v3-filter-iq-conversion",
+     "v3-filter-programmable-lp"
+    ],
+    "other_drafts": [],
+    "planning": [
+     "C361-I1"
+    ]
+   }
+  },
+  "scs-sine-floating": {
+   "title": "Sine source with no grounded terminal (series/floating)",
+   "class": [
+    "evas-gap"
+   ],
+   "evas_refs": [
+    "origin/main:evas/docs/math/events.md:2479",
+    "origin/main:evas/src/evas/scs_sources.py:116",
+    "origin/main:evas/tests/test_scs_closure.py:81-85"
+   ],
+   "issue_270_item": 2,
+   "affected": {
+    "first30": [
+     "v3-filter-ctle"
+    ],
+    "other_drafts": [],
+    "planning": []
+   }
+  },
+  "scs-sine-missing-sinedc": {
+   "title": "Sine source without explicit sinedc",
+   "class": [
+    "evas-gap"
+   ],
+   "evas_refs": [
+    "origin/main:evas/docs/math/events.md:2473-2490",
+    "origin/main:evas/docs/math/events.md:2479",
+    "origin/main:evas/src/evas/scs_sources.py:117-120"
+   ],
+   "issue_270_item": 1,
+   "affected": {
+    "first30": [
+     "v3-filter-ctle",
+     "v3-filter-iq-conversion",
+     "v3-filter-programmable-lp"
+    ],
+    "other_drafts": [],
+    "planning": []
+   }
+  },
+  "scs-strobe-point-budget": {
+   "title": "Periodic strobe point budget 100000",
+   "class": [
+    "evas-gap"
+   ],
+   "evas_refs": [
+    "origin/main:evas/README.md:360",
+    "origin/main:evas/src/evas/strobe.py:51"
+   ],
+   "issue_270_item": 3,
+   "affected": {
+    "first30": [
+     "v2-spec-024-clocked-sample-and-hold"
+    ],
+    "other_drafts": [],
+    "planning": []
+   }
+  },
+  "scs-tran-setting": {
+   "title": "Unknown tran settings or values",
+   "class": [
+    "evas-gap"
+   ],
+   "evas_refs": [
+    "origin/main:evas/README.md:282",
+    "origin/main:evas/README.md:302-303",
+    "origin/main:evas/src/evas/scs.py:306-308"
+   ],
+   "issue_270_item": "section-3",
+   "affected": {
+    "first30": [],
+    "other_drafts": [
+     "r01-spec-ideal"
+    ],
+    "planning": []
+   }
+  },
+  "scs-vsource-missing-setting": {
+   "title": "vsource missing required explicit settings",
+   "class": [
+    "evas-gap"
+   ],
+   "evas_refs": [
+    "origin/main:evas/README.md:280",
+    "origin/main:evas/src/evas/scs_sources.py:34"
+   ],
+   "issue_270_item": "section-3",
+   "affected": {
+    "first30": [],
+    "other_drafts": [],
+    "planning": [
+     "U27-T1"
+    ]
+   }
+  },
+  "va-bound-step-context": {
+   "title": "$bound_step inside an event, initialization or function body",
+   "class": [
+    "evas-gap"
+   ],
+   "evas_refs": [
+    "origin/main:evas/docs/reference/frontend-admission.md:174-175",
+    "origin/main:evas/docs/reference/frontend-admission.md:274-286",
+    "origin/main:evas/src/evas/errors.py:41"
+   ],
+   "issue_270_item": "section-3",
+   "affected": {
+    "first30": [],
+    "other_drafts": [],
+    "planning": [
+     "C278-S1",
+     "C299-S1",
+     "U21-R1",
+     "U26-T1"
+    ]
+   }
+  },
+  "va-idt-reset-dependency": {
+   "title": "idt reset argument depending on a voltage or operator",
+   "class": [
+    "evas-gap"
+   ],
+   "evas_refs": [
+    "origin/main:evas/docs/math/operators.md:890-892",
+    "origin/main:evas/docs/math/operators.md:949"
+   ],
+   "issue_270_item": 6,
+   "affected": {
+    "first30": [
+     "v2-integrate-case0007-adpll-fine-tdc",
+     "v3-calibration-fractional-pll",
+     "v3-filter-programmable-lp",
+     "v3-filter-sweep-measurement"
+    ],
+    "other_drafts": [
+     "v3-filter-envelope"
+    ],
+    "planning": []
+   }
+  },
+  "va-laplace-zp-zd": {
+   "title": "laplace_zp/laplace_zd",
+   "class": [
+    "evas-gap"
+   ],
+   "evas_refs": [
+    "origin/main:evas/docs/COMPARISON.md:292",
+    "origin/main:evas/docs/math/operators.md:1472"
+   ],
+   "issue_270_item": "section-3",
+   "affected": {
+    "first30": [],
+    "other_drafts": [],
+    "planning": [
+     "C261-S1"
+    ]
+   }
+  },
+  "va-last-crossing": {
+   "title": "last_crossing",
+   "class": [
+    "evas-gap"
+   ],
+   "evas_refs": [
+    "origin/main:evas/docs/COMPARISON.md:285"
+   ],
+   "issue_270_item": "section-3",
+   "affected": {
+    "first30": [],
+    "other_drafts": [],
+    "planning": [
+     "C335-S1"
+    ]
+   }
+  },
+  "va-math-function-unsupported": {
+   "title": "Math function outside the implemented set (sin/cos/exp/ln/sqrt/tanh, abs/min/max, floor, pow)",
+   "class": [
+    "evas-gap"
+   ],
+   "evas_refs": [
+    "origin/main:evas/docs/COMPARISON.md:292",
+    "origin/main:evas/docs/math/operators.md:1471",
+    "origin/main:evas/docs/math/operators.md:1488",
+    "origin/main:evas/docs/math/operators.md:1496-1500",
+    "origin/main:evas/src/evas/syntax.py:38-40"
+   ],
+   "issue_270_item": 12,
+   "affected": {
+    "first30": [
+     "v3-filter-sweep-measurement"
+    ],
+    "other_drafts": [],
+    "planning": []
+   }
+  },
+  "va-operator-setting-dependency": {
+   "title": "absdelay/slew/idtmod/idt setting argument that is not instance-constant",
+   "class": [
+    "evas-gap"
+   ],
+   "evas_refs": [
+    "origin/main:evas/docs/math/continuous.md:167",
+    "origin/main:evas/docs/math/operators.md:890-892",
+    "origin/main:evas/src/evas/instance_compiler.py:2195-2203"
+   ],
+   "issue_270_item": 10,
+   "affected": {
+    "first30": [
+     "v2-data-sampling-identification"
+    ],
+    "other_drafts": [],
+    "planning": []
+   }
+  },
+  "va-pow-exponent": {
+   "title": "pow exponent outside the 1..32 integers or 0.5",
+   "class": [
+    "evas-gap"
+   ],
+   "evas_refs": [
+    "origin/main:evas/docs/reference/frontend-admission.md:194-195"
+   ],
+   "issue_270_item": 11,
+   "withdrawn": "EVAS has a finite runtime-integer pow entry (origin/main:evas/docs/math/events.md:714-718, evas/src/evas/lowering.py:676-685, evas/src/evas/finite_math.py:14-41); c is a source integer clamped to [0,3]. The reference is blocked earlier by floor without a range proved before the call (va-floor-unproven-range).",
+   "affected": {
+    "first30": [],
+    "other_drafts": [],
+    "planning": []
+   }
+  },
+  "va-random-system-function": {
+   "title": "Random-distribution system function",
+   "class": [
+    "evas-gap"
+   ],
+   "evas_refs": [
+    "origin/main:evas/docs/math/operators.md:1474",
+    "origin/main:evas/src/evas/deferred_system_calls.py:3-4",
+    "origin/main:evas/src/evas/deferred_system_calls.py:57-58"
+   ],
+   "issue_270_item": "section-3",
+   "affected": {
+    "first30": [],
+    "other_drafts": [],
+    "planning": [
+     "C371-S1",
+     "U11-T1"
+    ]
+   }
+  },
+  "va-transition-timing-dependency": {
+   "title": "transition delay/rise/fall that is not instance-constant",
+   "class": [
+    "evas-gap"
+   ],
+   "evas_refs": [
+    "origin/main:evas/docs/COMPARISON.md:144",
+    "origin/main:evas/src/evas/errors.py:30",
+    "origin/main:evas/src/evas/instance_compiler.py:2195-2203"
+   ],
+   "issue_270_item": 4,
+   "affected": {
+    "first30": [
+     "v2-test-comparator-delay"
+    ],
+    "other_drafts": [],
+    "planning": [
+     "C179-S1",
+     "C196-T1",
+     "U15-S1",
+     "U23-S1"
+    ]
+   }
+  },
+  "va-unsupported-event": {
+   "title": "Event leaf other than cross/timer/initial_step/final_step",
+   "class": [
+    "evas-gap"
+   ],
+   "evas_refs": [
+    "origin/main:evas/docs/COMPARISON.md:285",
+    "origin/main:evas/src/evas/syntax.py:759"
+   ],
+   "issue_270_item": "section-3",
+   "affected": {
+    "first30": [],
+    "other_drafts": [],
+    "planning": [
+     "C335-S1"
+    ]
+   }
+  },
+  "va-unsupported-system-function": {
+   "title": "System function outside $abstime/$floor/$tanh/$bound_step/$display/$strobe",
+   "class": [
+    "evas-gap"
+   ],
+   "evas_refs": [
+    "origin/main:evas/src/evas/errors.py:40",
+    "origin/main:evas/src/evas/lowering.py:367",
+    "origin/main:evas/src/evas/syntax.py:31",
+    "origin/main:evas/src/evas/syntax.py:464"
+   ],
+   "issue_270_item": 5,
+   "affected": {
+    "first30": [
+     "v2-integrate-case0007-adpll-fine-tdc",
+     "v3-calibration-fractional-pll"
+    ],
+    "other_drafts": [
+     "v3-calibration-common-mode-servo",
+     "v3-calibration-continuous-offset"
+    ],
+    "planning": []
+   }
+  },
+  "va-while-loop": {
+   "title": "while loop outside an event body or with a real-valued condition",
+   "class": [
+    "evas-gap"
+   ],
+   "evas_refs": [
+    "origin/main:evas/docs/reference/frontend-admission.md:274-286",
+    "origin/main:evas/src/evas/errors.py:39"
+   ],
+   "issue_270_item": "section-3",
+   "affected": {
+    "first30": [],
+    "other_drafts": [],
+    "planning": [
+     "C299-S1",
+     "U21-R1"
+    ]
+   }
+  },
+  "va-zi-discrete-filter": {
+   "title": "zi_* discrete filters",
+   "class": [
+    "evas-gap"
+   ],
+   "evas_refs": [
+    "origin/main:evas/docs/COMPARISON.md:290",
+    "origin/main:evas/docs/math/operators.md:1473"
+   ],
+   "issue_270_item": "section-3",
+   "affected": {
+    "first30": [],
+    "other_drafts": [],
+    "planning": [
+     "C264-S1",
+     "C265-S1"
+    ]
+   }
+  },
+  "va-floor-unproven-range": {
+   "title": "floor without a finite range proved by source clamps before the call",
+   "class": [
+    "evas-gap"
+   ],
+   "evas_refs": [
+    "origin/main:evas/docs/math/events.md:848-849",
+    "origin/main:evas/src/evas/finite_floor.py:214-218",
+    "origin/main:evas/docs/math/events.md:858",
+    "origin/main:evas/docs/math/events.md:897"
+   ],
+   "issue_270_item": 13,
+   "affected": {
+    "first30": [
+     "v2-integrate-case0007-adpll-fine-tdc",
+     "v3-converter-dac-linearity",
+     "v3-filter-programmable-lp",
+     "v3-filter-sweep-measurement"
+    ],
+    "other_drafts": [],
+    "planning": []
+   },
+   "scope_note": "Added by the main controller for the first 30 only; other drafts and planning candidates were not rescanned for this construct."
+  },
+  "va-event-dynamic-math": {
+   "title": "math functions in event bodies other than sampled sqrt/ln",
+   "class": [
+    "evas-gap"
+   ],
+   "evas_refs": [
+    "origin/main:evas/docs/math/events.md:1156-1164",
+    "origin/main:evas/src/evas/lowering.py:535-559"
+   ],
+   "issue_270_item": 14,
+   "affected": {
+    "first30": [
+     "v3-converter-adc-spectrum",
+     "v3-filter-sweep-measurement"
+    ],
+    "other_drafts": [],
+    "planning": []
+   },
+   "scope_note": "Added by the main controller for the first 30 only; other drafts and planning candidates were not rescanned for this construct."
+  },
+  "va-floor-partition-budget": {
+   "title": "floor whose proven range needs more than the 256-partition budget",
+   "class": [
+    "evas-gap"
+   ],
+   "evas_refs": [
+    "origin/main:evas/docs/math/events.md:848-849",
+    "origin/main:evas/src/evas/finite_floor.py:219-223",
+    "origin/main:evas/src/evas/instance_compiler.py:1372-1381"
+   ],
+   "issue_270_item": 13,
+   "affected": {
+    "first30": [
+     "v3-converter-adc-spectrum"
+    ],
+    "other_drafts": [],
+    "planning": []
+   },
+   "scope_note": "Added by the main controller for the first 30 only; other drafts and planning candidates were not rescanned for this construct."
+  },
+  "va-runtime-shift-count": {
+   "title": "integer shift whose shift count is runtime state",
+   "class": [
+    "evas-gap"
+   ],
+   "evas_refs": [
+    "origin/main:evas/docs/math/events.md:669-670",
+    "origin/main:evas/src/evas/instance_compiler.py:1652-1655"
+   ],
+   "issue_270_item": 15,
+   "affected": {
+    "first30": [
+     "v2-spec-186-sarfend-logic-4b"
+    ],
+    "other_drafts": [],
+    "planning": []
+   },
+   "scope_note": "Added by the main controller for the first 30 only; other drafts and planning candidates were not rescanned for this construct."
+  }
+ },
+ "evidence": {
+  "classifier": "runs/t3-harbor30-20261027/route-split/routes.json",
+  "classifier_sha256": "b941537d92625d7f1a3684d7d2cab38c554b2841d13cb0ffbf70625398dcca9f",
+  "gaps": "runs/t3-harbor30-20261027/route-split/evas-gaps.json",
+  "gaps_sha256": "2e662205bb3f3105377be91a4f0c9b426a46c5e99a6b390234bf266eb0007c5f",
+  "corrections_sha256": [
+   "4834a0e2351e46155fe4d98ba0f1403b488f0bf858250084d60f0fef49d4673c",
+   "9f9d07f534d2338326fb834e9b44b6f5fa5f6d1f6ba18b13fd62a30a31d548bd",
+   "f0bf1e98ac5f877bde6dfa8631fed5824deffff9c16c52916689bbb4e4ad4bb1"
+  ],
+  "main_verification": [
+   "runs/t3-harbor30-20261027/route-split/main-verify/verify-first30.json",
+   "runs/t3-harbor30-20261027/route-split/main-verify/floor-eventmath-hits.json"
+  ],
+  "reviews": [
+   "runs/t3-harbor30-20261027/route-split/astra-review-r1.json",
+   "runs/t3-harbor30-20261027/route-split/astra-review-r2.json",
+   "runs/t3-harbor30-20261027/route-split/astra-review-r3.json"
+  ],
+  "worker": "tclaude/claude-opus-5-5 effort=max fastMode=false, task benchmark-route-split-classify-20261027-opus-r1"
+ }
+}
