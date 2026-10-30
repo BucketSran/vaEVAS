@@ -4808,7 +4808,11 @@ mod activation_selection_tests {
         assert_eq!(selection.actions, vec![(0, vec![3, 5]), (2, vec![11, 13])]);
         assert_eq!(actions, original.actions);
         selection.actions = actions;
-        assert!(selection == original);
+        assert_eq!(selection.actions, original.actions);
+        assert!(selection.ordered_steps == original.ordered_steps);
+        assert_eq!(selection.decisions, original.decisions);
+        assert_eq!(selection.procedure_groups, original.procedure_groups);
+        assert!(selection.plan.is_none() && original.plan.is_none());
         let owner = crate::transition_source_plan::Work::limited([128, 8192, 1]);
         // Natural traversal exceeds the same owner before replacing any action storage.
         assert_eq!(
@@ -4828,7 +4832,11 @@ mod activation_selection_tests {
                 "step_budget"
             );
             assert_eq!(owner.spent(), spent);
-            assert!(selection == original);
+            assert_eq!(selection.actions, original.actions);
+            assert!(selection.ordered_steps == original.ordered_steps);
+            assert_eq!(selection.decisions, original.decisions);
+            assert_eq!(selection.procedure_groups, original.procedure_groups);
+            assert!(selection.plan.is_none() && original.plan.is_none());
         }
     }
 }

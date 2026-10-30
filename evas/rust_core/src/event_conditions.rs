@@ -6,7 +6,7 @@ use crate::events::{affine, AffineState};
 use crate::interval::Interval as I;
 use crate::ir::{Error, EventTrigger, Expression, Origin, Program, Relation, Statement};
 
-#[derive(Clone, Default, PartialEq, Eq)]
+#[derive(Clone, Default)]
 pub(crate) struct Selection {
     pub(crate) actions: Vec<(usize, Vec<usize>)>,
     pub(crate) ordered_steps: Vec<(usize, Vec<SelectedStep>)>,
@@ -16,6 +16,66 @@ pub(crate) struct Selection {
     // Group identifiers exist only after one exact occurrence was proved.
     pub(crate) procedure_groups: Vec<Option<usize>>,
     pub(crate) plan: Option<std::sync::Arc<crate::procedure::Plan>>,
+}
+
+impl Selection {
+    // Reserve the outer metadata walk first, then each nested payload. Fixed
+    // factors cover two comparisons and a cache clone including Vec headers.
+    // No payload is visited until all reservations have succeeded.
+    fn reserve_comparison(&self, w: &crate::transition_source_plan::Work) -> Result<(), Error> {
+        w.debit(2, 64)?;
+        if let Some(plan) = &self.plan {
+            plan.same_activation(plan, w)?;
+        }
+        let outer = (self.actions.len() as u64)
+            .saturating_add(self.ordered_steps.len() as u64)
+            .saturating_add(self.decisions.len() as u64)
+            .saturating_add(self.procedure_groups.len() as u64);
+        w.debit(2, outer.saturating_mul(128).saturating_add(64))?;
+        for (_, indices) in &self.actions {
+            w.debit(
+                2,
+                (indices.len() as u64).saturating_mul(32).saturating_add(64),
+            )?;
+        }
+        for (_, steps) in &self.ordered_steps {
+            // SelectedStep contains only a discriminant and usize, no payload vectors.
+            w.debit(
+                2,
+                (steps.len() as u64).saturating_mul(64).saturating_add(64),
+            )?;
+        }
+        Ok(())
+    }
+
+    /// The sole fallible equality entry; callers must pass their original Work.
+    pub(crate) fn same_path(
+        &self,
+        other: &Self,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<bool, Error> {
+        self.reserve_comparison(w)?;
+        other.reserve_comparison(w)?;
+        let same_plan = match (&self.plan, &other.plan) {
+            (Some(a), Some(b)) => a.same_activation(b, w)?,
+            (None, None) => true,
+            _ => false,
+        };
+        Ok(same_plan
+            && self.actions == other.actions
+            && self.ordered_steps == other.ordered_steps
+            && self.decisions == other.decisions
+            && self.procedure_groups == other.procedure_groups)
+    }
+
+    /// Cache insertion uses the same preflight before copying nested vectors.
+    pub(crate) fn try_clone_path(
+        &self,
+        w: &crate::transition_source_plan::Work,
+    ) -> Result<Self, Error> {
+        self.reserve_comparison(w)?;
+        Ok(self.clone())
+    }
 }
 
 #[cfg(test)]
@@ -192,9 +252,23 @@ mod tests {
         let mut conditions = Conditions::new(&program).unwrap();
         conditions.prepare(&program, &["u".into()]).unwrap();
         // No reachable event used these inputs/bounds before the optimization.
-        assert!(conditions.select_at_roots(&[], &[], &[], &[]).unwrap() == Selection::default());
+        assert!(conditions
+            .select_at_roots(&[], &[], &[], &[])
+            .unwrap()
+            .same_path(
+                &Selection::default(),
+                &crate::transition_source_plan::Work::default()
+            )
+            .unwrap());
         conditions.restrict_events(&[false]);
-        assert!(conditions.select_at_roots(&[0], &[], &[], &[]).unwrap() == Selection::default());
+        assert!(conditions
+            .select_at_roots(&[0], &[], &[], &[])
+            .unwrap()
+            .same_path(
+                &Selection::default(),
+                &crate::transition_source_plan::Work::default()
+            )
+            .unwrap());
         assert_eq!(
             conditions
                 .select_at_roots(&[1], &[], &[], &[])
@@ -2301,3 +2375,71 @@ fn validate_loop(
 #[cfg(test)]
 #[path = "event_procedure_voltage_tests.rs"]
 mod procedure_voltage_tests;
+
+#[cfg(test)]
+mod budgeted_selection_tests {
+    use super::*;
+    use crate::transition_source_plan::Work;
+
+    fn populated(n: usize) -> Selection {
+        Selection {
+            actions: vec![(3, vec![7; n])],
+            ordered_steps: vec![(3, vec![SelectedStep::Assign(7); n])],
+            decisions: vec![(5, true); n],
+            procedure_groups: vec![Some(3); n],
+            plan: None,
+        }
+    }
+
+    #[test]
+    fn all_variable_fields_and_step_variants_participate_in_equality() {
+        let w = Work::default();
+        let a = populated(4);
+        assert!(a.same_path(&a.try_clone_path(&w).unwrap(), &w).unwrap());
+        for field in 0..9 {
+            let mut b = a.try_clone_path(&w).unwrap();
+            match field {
+                0 => b.actions[0].0 += 1,
+                1 => b.actions[0].1[3] += 1,
+                2 => b.actions[0].1.push(7),
+                3 => b.ordered_steps[0].0 += 1,
+                4 => b.ordered_steps[0].1[3] = SelectedStep::Display(7),
+                5 => b.ordered_steps[0].1.push(SelectedStep::Assign(7)),
+                6 => b.decisions[3].1 = false,
+                7 => b.procedure_groups[3] = None,
+                _ => b.decisions.push((5, true)),
+            }
+            assert!(!a.same_path(&b, &w).unwrap());
+        }
+    }
+
+    #[test]
+    fn insufficient_metadata_or_nested_payload_budget_preserves_cache_and_inputs() {
+        for field in 0..4 {
+            let w = Work::for_limit(20_000_000);
+            let mut a = Selection::default();
+            match field {
+                0 => a.actions = vec![(0, vec![0; 32768])],
+                1 => a.ordered_steps = vec![(0, vec![SelectedStep::Display(0); 32768])],
+                2 => a.decisions = vec![(0, true); 32768],
+                _ => a.procedure_groups = vec![Some(0); 32768],
+            }
+            let cache = Some(a.try_clone_path(&w).unwrap());
+            let cached = cache.as_ref().unwrap();
+            let actions_ptr = cached.actions.as_ptr();
+            let steps_ptr = cached.ordered_steps.as_ptr();
+            let decisions_ptr = cached.decisions.as_ptr();
+            let groups_ptr = cached.procedure_groups.as_ptr();
+            w.debit(2, 20_000_000 - w.spent() - 8192).unwrap();
+            for _ in 0..3 {
+                assert_eq!(cached.same_path(&a, &w).unwrap_err().kind, "step_budget");
+                assert!(cache.is_some());
+                assert_eq!(cached.actions.as_ptr(), actions_ptr);
+                assert_eq!(cached.ordered_steps.as_ptr(), steps_ptr);
+                assert_eq!(cached.decisions.as_ptr(), decisions_ptr);
+                assert_eq!(cached.procedure_groups.as_ptr(), groups_ptr);
+                assert_eq!(a.try_clone_path(&w).err().unwrap().kind, "step_budget");
+            }
+        }
+    }
+}

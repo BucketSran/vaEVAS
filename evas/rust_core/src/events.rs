@@ -1497,13 +1497,13 @@ impl EventModel {
             .any(|(a, b)| a.rhs != b.rhs);
         // Linear operator outputs remain live forcing. A sampled coefficient
         // may reuse its map only with the same full interval endpoint bits.
-        let cached = self
-            .certificate
-            .borrow()
-            .as_ref()
-            .is_some_and(|(path, bounds)| {
-                path == selection && bounds.matches_operator_bindings(operators)
-            });
+        let cached = match self.certificate.borrow().as_ref() {
+            Some((path, bounds)) => {
+                path.same_path(selection, crate::real_expression::work(self))?
+                    && bounds.matches_operator_bindings(operators)
+            }
+            None => false,
+        };
         if resolved {
             let bounds = Bounds::for_program_with_operators(self, selection, &selected, operators)?;
             let result =
@@ -1536,7 +1536,10 @@ impl EventModel {
             } else {
                 Bounds::for_program_with_operators(self, selection, &selected, operators)?
             };
-            *cache = Some((selection.clone(), bounds));
+            *cache = Some((
+                selection.try_clone_path(crate::real_expression::work(self))?,
+                bounds,
+            ));
         } else {
             crate::diagnostics::counter("certificate_cache_hits", 1);
         }
@@ -1657,13 +1660,13 @@ impl EventModel {
             .any(|(a, b)| a.rhs != b.rhs);
         // Linear operator outputs remain live forcing. A sampled coefficient
         // may reuse its map only with the same full interval endpoint bits.
-        let cached = self
-            .certificate
-            .borrow()
-            .as_ref()
-            .is_some_and(|(path, bounds)| {
-                path == selection && bounds.matches_operator_bindings(operators)
-            });
+        let cached = match self.certificate.borrow().as_ref() {
+            Some((path, bounds)) => {
+                path.same_path(selection, crate::real_expression::work(self))?
+                    && bounds.matches_operator_bindings(operators)
+            }
+            None => false,
+        };
         if resolved {
             let bounds = Bounds::for_program_with_operators(self, selection, &selected, operators)?;
             let result = bounds.check_states(self, inputs, before, operators, voltages, states)?;
@@ -1695,7 +1698,10 @@ impl EventModel {
             } else {
                 Bounds::for_program_with_operators(self, selection, &selected, operators)?
             };
-            *cache = Some((selection.clone(), bounds));
+            *cache = Some((
+                selection.try_clone_path(crate::real_expression::work(self))?,
+                bounds,
+            ));
         } else {
             crate::diagnostics::counter("certificate_cache_hits", 1);
         }

@@ -234,12 +234,6 @@ struct SameTimeMarks {
     ids: Vec<Id>,
     reads: Vec<usize>,
 }
-impl PartialEq for Plan {
-    fn eq(&self, other: &Self) -> bool {
-        self.identity == other.identity
-    }
-}
-impl Eq for Plan {}
 
 struct Builder<'a> {
     p: &'a Program,
@@ -1378,30 +1372,40 @@ impl Plan {
         }
         Ok(false)
     }
-    /// Decision 22: take over the same-time roundings that a later solve of the
-    /// same activation path (equal identity: a closure iteration of the same
-    /// event) recorded, so this Plan's readers at that solve's voltages read
-    /// them. A key this Plan recorded with different values is then read as
-    /// missing.
-    pub(crate) fn adopt_same_time(&self, other: &Plan) -> Result<(), Error> {
-        // Sticky entry check precedes even an identity comparison or fast path.
-        self.work.debit(2, 64)?;
-        if !self.work.same_owner(&other.work) {
+    /// Compare complete activation identities only on the original request ledger.
+    /// The entry guard and owner checks precede even the pointer fast path.
+    /// Both byte lengths are O(1) metadata; twice their sum bounds byte reads.
+    pub(crate) fn same_activation(&self, other: &Plan, w: &Work) -> Result<bool, Error> {
+        w.debit(2, 64)?;
+        self.work.debit(2, 0)?;
+        other.work.debit(2, 0)?;
+        if !self.work.same_owner(w) || !other.work.same_owner(w) {
             return Err(invalid(
-                "same-time records have different request proof accounts",
+                "activation comparison has different request proof accounts",
             ));
         }
-        if Arc::ptr_eq(&self.same_time, &other.same_time) {
-            return Ok(());
+        if std::ptr::eq(self, other) {
+            return Ok(true);
         }
-        self.work.debit(
+        w.debit(
             2,
             (self.identity.len() as u64)
                 .saturating_add(other.identity.len() as u64)
                 .saturating_mul(2)
                 .saturating_add(64),
         )?;
-        if self.identity != other.identity {
+        Ok(self.identity == other.identity)
+    }
+    /// Decision 22: take over the same-time roundings that a later solve of the
+    /// same activation path (equal identity: a closure iteration of the same
+    /// event) recorded, so this Plan's readers at that solve's voltages read
+    /// them. A key this Plan recorded with different values is then read as
+    /// missing.
+    pub(crate) fn adopt_same_time(&self, other: &Plan) -> Result<(), Error> {
+        if !self.same_activation(other, &self.work)? {
+            return Ok(());
+        }
+        if Arc::ptr_eq(&self.same_time, &other.same_time) {
             return Ok(());
         }
         // Lock both owners in a fixed address order. Reserve the complete
@@ -3435,5 +3439,117 @@ mod activation_transfer_tests {
         w.debit(2, limit - w.spent() - (n as u64) * 2).unwrap();
         assert_eq!(b.adopt_same_time(&a).unwrap_err().kind, "step_budget");
         assert!(b.same_time.lock().unwrap().records.is_empty());
+    }
+    #[test]
+    fn outer_identity_comparison_uses_original_owner_before_payload_or_fast_path() {
+        const LIMIT: u64 = 20_000_000;
+        for unequal in [false, true] {
+            let w = Work::for_limit(LIMIT);
+            let mut a = marked(&w);
+            let mut b = marked(&w);
+            let n = 1 << 20;
+            w.debit(2, 4 * n as u64 + 4096).unwrap();
+            a.identity = vec![1; n];
+            b.identity = vec![1; n];
+            if unequal {
+                b.identity[n - 1] = 2;
+            }
+            let marks = b.same_time_marks.get().unwrap().ids.clone();
+            w.debit(2, LIMIT - w.spent() - 8192).unwrap();
+            for _ in 0..3 {
+                assert_eq!(a.same_activation(&b, &w).unwrap_err().kind, "step_budget");
+                assert_eq!(b.same_activation(&b, &w).unwrap_err().kind, "step_budget");
+                assert_eq!(b.same_time_marks.get().unwrap().ids, marks);
+                assert!(b.same_time.lock().unwrap().records.is_empty());
+                assert!(b.same_time.lock().unwrap().conflicting.is_empty());
+            }
+        }
+    }
+
+    #[test]
+    fn outer_identity_preserves_equal_unequal_and_owner_semantics() {
+        let w = Work::default();
+        let a = marked(&w);
+        let mut b = marked(&w);
+        assert!(a.same_activation(&a, &w).unwrap());
+        assert!(a.same_activation(&b, &w).unwrap());
+        b.identity.push(9);
+        assert!(!a.same_activation(&b, &w).unwrap());
+        let other = Work::default();
+        assert!(a.same_activation(&a, &other).is_err());
+        let c = marked(&other);
+        assert!(a.same_activation(&c, &w).is_err());
+    }
+
+    #[test]
+    fn selection_plan_presence_and_nested_identity_use_the_same_owner() {
+        use crate::event_conditions::Selection;
+        let w = Work::default();
+        let a = Selection {
+            plan: Some(Arc::new(marked(&w))),
+            ..Selection::default()
+        };
+        let b = Selection {
+            plan: Some(Arc::new(marked(&w))),
+            ..Selection::default()
+        };
+        assert!(a.same_path(&b, &w).unwrap());
+        assert!(!a.same_path(&Selection::default(), &w).unwrap());
+        let other = Work::default();
+        let c = Selection {
+            plan: Some(Arc::new(marked(&other))),
+            ..Selection::default()
+        };
+        assert!(a.same_path(&c, &w).is_err());
+        assert!(a.same_path(&Selection::default(), &other).is_err());
+    }
+    #[test]
+    fn nested_selection_identity_reserves_before_cached_or_replay_comparison() {
+        use crate::event_conditions::Selection;
+        const LIMIT: u64 = 20_000_000;
+        for unequal in [false, true] {
+            let w = Work::for_limit(LIMIT);
+            let mut a = marked(&w);
+            let mut b = marked(&w);
+            let n = 1 << 20;
+            w.debit(2, 4 * n as u64 + 4096).unwrap();
+            a.identity = vec![1; n];
+            b.identity = vec![1; n];
+            if unequal {
+                b.identity[n - 1] = 2;
+            }
+            let cached = Some(Selection {
+                plan: Some(Arc::new(a)),
+                ..Selection::default()
+            });
+            let replay = Selection {
+                plan: Some(Arc::new(b)),
+                ..Selection::default()
+            };
+            let path = cached.as_ref().unwrap();
+            let cached_plan = path.plan.as_ref().unwrap();
+            let plan_ptr = Arc::as_ptr(cached_plan);
+            let marks_ptr = cached_plan.same_time_marks.get().unwrap().ids.as_ptr();
+            w.debit(2, LIMIT - w.spent() - 8192).unwrap();
+            for _ in 0..3 {
+                assert_eq!(path.same_path(&replay, &w).unwrap_err().kind, "step_budget");
+                assert_eq!(Arc::as_ptr(path.plan.as_ref().unwrap()), plan_ptr);
+                assert_eq!(
+                    cached_plan.same_time_marks.get().unwrap().ids.as_ptr(),
+                    marks_ptr
+                );
+                assert!(cached_plan.same_time.lock().unwrap().records.is_empty());
+                assert!(cached_plan.same_time.lock().unwrap().conflicting.is_empty());
+                assert!(replay
+                    .plan
+                    .as_ref()
+                    .unwrap()
+                    .same_time
+                    .lock()
+                    .unwrap()
+                    .records
+                    .is_empty());
+            }
+        }
     }
 }
