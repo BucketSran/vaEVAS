@@ -977,6 +977,381 @@ pub(crate) fn rounded_image(
     })
 }
 
+/// How many real solutions the exact equation of a same-time cycle has,
+/// where that is proven here (D_R2_1 refuses no solution and more than one).
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) enum Solutions {
+    None,
+    One,
+    Several,
+    /// Not proven: outside what `affine_solutions` and
+    /// `polynomial_solutions` can count.
+    Unproven,
+}
+
+/// Whether every value the relations read outside the cycle is an exact point.
+pub(crate) fn reads_known(cycle: &Cycle) -> bool {
+    fn known(e: &Expression, cycle: &Cycle) -> bool {
+        match e {
+            Expression::Affine { terms, .. } => terms.iter().all(|t| {
+                cycle.column.get(t.node).copied().flatten().is_some()
+                    || cycle
+                        .values
+                        .get(t.node)
+                        .and_then(Option::as_ref)
+                        .is_some_and(Q::is_point)
+            }),
+            Expression::Add { left, right }
+            | Expression::Multiply { left, right }
+            | Expression::Divide { left, right }
+            | Expression::RealBinary { left, right, .. } => {
+                known(left, cycle) && known(right, cycle)
+            }
+            Expression::Power { base, .. } => known(base, cycle),
+            Expression::RealBoundary { value, .. } => known(value, cycle),
+            Expression::EventMath { args, .. } => args.iter().all(|a| known(a, cycle)),
+            _ => false,
+        }
+    }
+    cycle
+        .relations
+        .iter()
+        .all(|relation| relation.rhs.iter().all(|e| known(e, cycle)))
+}
+
+/// The solutions of a cycle whose relations are affine in its members and
+/// whose reads are exact points: F(x) = J x + F(0), so the exact ranks of J
+/// and of [J | -F(0)] decide them (one, none, or a whole affine set).
+pub(crate) fn affine_solutions(cycle: &Cycle, w: &Work) -> Result<Solutions, Error> {
+    let n = cycle.relations.len();
+    let at = residual(cycle, &zeros(n), n, w)?;
+    if at
+        .iter()
+        .any(|v| !v.exact || !v.value.is_point() || v.gradient.iter().any(|g| !g.is_point()))
+    {
+        return Ok(Solutions::Unproven);
+    }
+    let zero = R::zero();
+    let mut rows = Vec::with_capacity(n);
+    for v in &at {
+        let mut row = v.gradient.iter().map(|g| g.lo.clone()).collect::<Vec<_>>();
+        row.push(sub(&zero, &v.value.lo, w)?);
+        rows.push(row);
+    }
+    let mut rank = 0;
+    for column in 0..n {
+        w.step()?;
+        let Some(pivot) = (rank..n).find(|&r| !rows[r][column].is_zero()) else {
+            continue;
+        };
+        rows.swap(rank, pivot);
+        let top = rows[rank].clone();
+        for row in rows.iter_mut().skip(rank + 1) {
+            w.step()?;
+            if row[column].is_zero() {
+                continue;
+            }
+            let factor = div(&row[column], &top[column], w)?;
+            for (entry, value) in row.iter_mut().zip(&top).skip(column) {
+                let product = mul(&factor, value, w)?;
+                *entry = sub(entry, &product, w)?;
+            }
+        }
+        rank += 1;
+    }
+    Ok(if rows[rank..].iter().any(|row| !row[n].is_zero()) {
+        Solutions::None
+    } else if rank == n {
+        Solutions::One
+    } else {
+        Solutions::Several
+    })
+}
+
+/// A polynomial with exact coefficients, constant term first, without a
+/// trailing zero coefficient (the zero polynomial is empty).
+type Poly = Vec<R>;
+
+/// The largest degree `polynomial_solutions` composes.
+const MAX_DEGREE: usize = 64;
+
+fn trimmed(mut p: Poly) -> Poly {
+    while p.last().is_some_and(Zero::is_zero) {
+        p.pop();
+    }
+    p
+}
+fn p_add(a: &Poly, b: &Poly, w: &Work) -> Result<Poly, Error> {
+    let zero = R::zero();
+    let mut out = Vec::with_capacity(a.len().max(b.len()));
+    for k in 0..a.len().max(b.len()) {
+        out.push(add(
+            a.get(k).unwrap_or(&zero),
+            b.get(k).unwrap_or(&zero),
+            w,
+        )?);
+    }
+    Ok(trimmed(out))
+}
+fn p_scale(a: &Poly, factor: &R, w: &Work) -> Result<Poly, Error> {
+    let mut out = Vec::with_capacity(a.len());
+    for c in a {
+        out.push(mul(c, factor, w)?);
+    }
+    Ok(trimmed(out))
+}
+fn p_mul(a: &Poly, b: &Poly, w: &Work) -> Result<Option<Poly>, Error> {
+    if a.is_empty() || b.is_empty() {
+        return Ok(Some(Vec::new()));
+    }
+    if a.len() + b.len() - 2 > MAX_DEGREE {
+        return Ok(None);
+    }
+    let mut out = vec![R::zero(); a.len() + b.len() - 1];
+    for (i, x) in a.iter().enumerate() {
+        for (j, y) in b.iter().enumerate() {
+            let product = mul(x, y, w)?;
+            out[i + j] = add(&out[i + j], &product, w)?;
+        }
+    }
+    Ok(Some(trimmed(out)))
+}
+fn p_derivative(a: &Poly, w: &Work) -> Result<Poly, Error> {
+    let mut out = Vec::with_capacity(a.len().saturating_sub(1));
+    for (k, c) in a.iter().enumerate().skip(1) {
+        out.push(mul(c, &R::from_integer(k.into()), w)?);
+    }
+    Ok(trimmed(out))
+}
+/// The remainder of `a` divided by the nonzero `b`.
+fn p_rem(a: &Poly, b: &Poly, w: &Work) -> Result<Poly, Error> {
+    let mut r = a.clone();
+    let lead = b
+        .last()
+        .ok_or_else(|| Error::new("invalid_ir", "division by the zero polynomial"))?;
+    while r.len() >= b.len() && !r.is_empty() {
+        w.step()?;
+        let factor = div(r.last().unwrap_or(lead), lead, w)?;
+        let shift = r.len() - b.len();
+        for (k, c) in b.iter().enumerate() {
+            let product = mul(&factor, c, w)?;
+            r[shift + k] = sub(&r[shift + k], &product, w)?;
+        }
+        r.pop();
+        r = trimmed(r);
+    }
+    Ok(r)
+}
+
+/// One right-hand side as a polynomial in the tear member, every member it
+/// reads already composed (`members`); None outside +, -, *, integer powers,
+/// division by a nonzero constant and exact point reads.
+fn polynomial(
+    e: &Expression,
+    cycle: &Cycle,
+    members: &[Option<Poly>],
+    w: &Work,
+) -> Result<Option<Poly>, Error> {
+    w.step()?;
+    let pair = |l: &Expression, r: &Expression| -> Result<Option<(Poly, Poly)>, Error> {
+        Ok(polynomial(l, cycle, members, w)?.zip(polynomial(r, cycle, members, w)?))
+    };
+    Ok(match e {
+        Expression::Affine { constant, terms } => {
+            let mut sum = trimmed(vec![binary(*constant, w)?]);
+            for term in terms {
+                w.step()?;
+                let coefficient = binary(term.coefficient, w)?;
+                let read = match cycle.column.get(term.node).copied().flatten() {
+                    Some(j) => match members.get(j).and_then(Option::as_ref) {
+                        Some(p) => p.clone(),
+                        None => return Ok(None),
+                    },
+                    None => match cycle.values.get(term.node).and_then(Option::as_ref) {
+                        Some(value) if value.is_point() => trimmed(vec![value.lo.clone()]),
+                        _ => return Ok(None),
+                    },
+                };
+                sum = p_add(&sum, &p_scale(&read, &coefficient, w)?, w)?;
+            }
+            Some(sum)
+        }
+        Expression::Add { left, right } => match pair(left, right)? {
+            Some((a, b)) => Some(p_add(&a, &b, w)?),
+            None => None,
+        },
+        Expression::Multiply { left, right } => match pair(left, right)? {
+            Some((a, b)) => p_mul(&a, &b, w)?,
+            None => None,
+        },
+        Expression::Divide { left, right } => match pair(left, right)? {
+            Some((a, b)) if b.len() == 1 => Some(p_scale(&a, &div(&R::one(), &b[0], w)?, w)?),
+            _ => None,
+        },
+        Expression::Power { base, exponent } => {
+            let Some(base) = polynomial(base, cycle, members, w)? else {
+                return Ok(None);
+            };
+            let mut power = vec![R::one()];
+            for _ in 0..*exponent {
+                match p_mul(&power, &base, w)? {
+                    Some(next) => power = next,
+                    None => return Ok(None),
+                }
+            }
+            Some(power)
+        }
+        _ => None,
+    })
+}
+
+/// The number of distinct real roots of a polynomial of degree at least one
+/// (Sturm's theorem: the sign changes of f, f', -rem, ... at -inf less those
+/// at +inf; also for multiple roots).
+fn real_roots(f: &Poly, w: &Work) -> Result<usize, Error> {
+    let mut sequence = vec![f.clone(), p_derivative(f, w)?];
+    loop {
+        let k = sequence.len();
+        let remainder = p_rem(&sequence[k - 2], &sequence[k - 1], w)?;
+        if remainder.is_empty() {
+            break;
+        }
+        sequence.push(p_scale(&remainder, &R::from_integer((-1).into()), w)?);
+    }
+    let changes = |at_minus: bool| {
+        let mut count = 0_usize;
+        let mut last: Option<bool> = None;
+        for p in &sequence {
+            let Some(lead) = p.last() else {
+                continue;
+            };
+            let positive = lead.is_positive() != (at_minus && p.len() % 2 == 0);
+            if last.is_some_and(|l| l != positive) {
+                count += 1;
+            }
+            last = Some(positive);
+        }
+        count
+    };
+    w.debit(2, (sequence.len() * 16 + 32) as u64)?;
+    Ok(changes(true).saturating_sub(changes(false)))
+}
+
+/// The solutions of a cycle whose reads are exact points, where one member
+/// (the tear) leaves the others acyclic and every relation is a polynomial:
+/// each other member is then a polynomial in the tear, and the tear's own
+/// relation gives F(x) = x - sign * rhs(x), whose distinct real roots are the
+/// solutions (Sturm). Unproven otherwise.
+pub(crate) fn polynomial_solutions(cycle: &Cycle, w: &Work) -> Result<Solutions, Error> {
+    fn member_reads(e: &Expression, cycle: &Cycle, out: &mut Vec<usize>) {
+        match e {
+            Expression::Affine { terms, .. } => out.extend(
+                terms
+                    .iter()
+                    .filter_map(|t| cycle.column.get(t.node).copied().flatten()),
+            ),
+            Expression::Add { left, right }
+            | Expression::Multiply { left, right }
+            | Expression::Divide { left, right }
+            | Expression::RealBinary { left, right, .. } => {
+                member_reads(left, cycle, out);
+                member_reads(right, cycle, out);
+            }
+            Expression::Power { base, .. } => member_reads(base, cycle, out),
+            Expression::RealBoundary { value, .. } => member_reads(value, cycle, out),
+            Expression::EventMath { args, .. } => {
+                for a in args {
+                    member_reads(a, cycle, out);
+                }
+            }
+            _ => {}
+        }
+    }
+    let n = cycle.relations.len();
+    w.debit(2, ((n * n + n) * 16 + 64) as u64)?;
+    let reads = cycle
+        .relations
+        .iter()
+        .map(|relation| {
+            let mut out = Vec::new();
+            for e in &relation.rhs {
+                member_reads(e, cycle, &mut out);
+            }
+            out
+        })
+        .collect::<Vec<_>>();
+    // A tear whose removal leaves the other members in dependency order.
+    let mut found = None;
+    for tear in 0..n {
+        w.step()?;
+        let mut pending = (0..n)
+            .map(|c| reads[c].iter().filter(|&&j| j != tear && c != tear).count())
+            .collect::<Vec<_>>();
+        let mut ready = (0..n)
+            .filter(|&c| c != tear && pending[c] == 0)
+            .collect::<Vec<_>>();
+        let mut order = Vec::with_capacity(n);
+        while let Some(c) = ready.pop() {
+            w.step()?;
+            order.push(c);
+            for (reader, read) in reads.iter().enumerate() {
+                if reader == tear || reader == c {
+                    continue;
+                }
+                for _ in read.iter().filter(|&&j| j == c) {
+                    pending[reader] -= 1;
+                    if pending[reader] == 0 {
+                        ready.push(reader);
+                    }
+                }
+            }
+        }
+        if order.len() + 1 == n {
+            found = Some((tear, order));
+            break;
+        }
+    }
+    let Some((tear, order)) = found else {
+        return Ok(Solutions::Unproven);
+    };
+    let mut members: Vec<Option<Poly>> = vec![None; n];
+    members[tear] = Some(vec![R::zero(), R::one()]);
+    let sum = |c: usize, members: &[Option<Poly>]| -> Result<Option<Poly>, Error> {
+        let relation = &cycle.relations[c];
+        let mut total = Vec::new();
+        for e in &relation.rhs {
+            match polynomial(e, cycle, members, w)? {
+                Some(p) => total = p_add(&total, &p, w)?,
+                None => return Ok(None),
+            }
+        }
+        Ok(Some(p_scale(&total, &binary(relation.sign, w)?, w)?))
+    };
+    for &c in &order {
+        match sum(c, &members)? {
+            Some(p) => members[c] = Some(p),
+            None => return Ok(Solutions::Unproven),
+        }
+    }
+    let Some(image) = sum(tear, &members)? else {
+        return Ok(Solutions::Unproven);
+    };
+    let f = p_add(
+        &vec![R::zero(), R::one()],
+        &p_scale(&image, &R::from_integer((-1).into()), w)?,
+        w,
+    )?;
+    Ok(match f.len() {
+        0 => Solutions::Several,
+        1 => Solutions::None,
+        _ => match real_roots(&f, w)? {
+            0 => Solutions::None,
+            1 => Solutions::One,
+            _ => Solutions::Several,
+        },
+    })
+}
+
 #[cfg(test)]
 mod tests {
     //! Expected values were computed independently with Python's
@@ -1295,5 +1670,177 @@ mod tests {
         };
         let image = rounded_image(&difference, &values, &w).unwrap().unwrap();
         assert_eq!(image, Q::point(two_to(-54)));
+    }
+
+    #[test]
+    fn solution_counts_of_affine_cycles_by_exact_ranks() {
+        let w = Work::default();
+        let column = [None, Some(0)];
+        let values = [Some(Q::point(R::zero())), None];
+        let count = |rhs: Expression| {
+            let relations = [Relation {
+                sign: 1.,
+                rhs: vec![rhs],
+            }];
+            let cycle = Cycle {
+                relations: &relations,
+                column: &column,
+                values: &values,
+                name: "test",
+            };
+            affine_solutions(&cycle, &w).unwrap()
+        };
+        // y = -y/2 + 1 has one solution; y = y + 1 none; y = y every y.
+        assert_eq!(count(affine(1., &[(1, -0.5)])), Solutions::One);
+        assert_eq!(count(affine(1., &[(1, 1.)])), Solutions::None);
+        assert_eq!(count(affine(0., &[(1, 1.)])), Solutions::Several);
+        // y = z, z = y (singular, consistent): every y = z; y = z + 1, z = y: none.
+        let column = [None, Some(0), Some(1)];
+        let values = [Some(Q::point(R::zero())), None, None];
+        for (shift, expected) in [(0., Solutions::Several), (1., Solutions::None)] {
+            let relations = [
+                Relation {
+                    sign: 1.,
+                    rhs: vec![affine(shift, &[(2, 1.)])],
+                },
+                Relation {
+                    sign: 1.,
+                    rhs: vec![affine(0., &[(1, 1.)])],
+                },
+            ];
+            let cycle = Cycle {
+                relations: &relations,
+                column: &column,
+                values: &values,
+                name: "test",
+            };
+            assert_eq!(affine_solutions(&cycle, &w).unwrap(), expected);
+        }
+        // A read that is not an exact point is not counted.
+        let column = [None, Some(0), None];
+        let values = [
+            Some(Q::point(R::zero())),
+            None,
+            Some(Q {
+                lo: R::zero(),
+                hi: R::one(),
+            }),
+        ];
+        let relations = [Relation {
+            sign: 1.,
+            rhs: vec![affine(0., &[(1, 1.), (2, 1.)])],
+        }];
+        let cycle = Cycle {
+            relations: &relations,
+            column: &column,
+            values: &values,
+            name: "test",
+        };
+        assert_eq!(affine_solutions(&cycle, &w).unwrap(), Solutions::Unproven);
+    }
+
+    #[test]
+    fn solution_counts_of_polynomial_cycles_by_sturm_sequences() {
+        let w = Work::default();
+        // Member 0 is q (node 2) = f(y), member 1 is y (node 1) = q; the roots
+        // of y = f(y) are listed with each case (hand algebra).
+        let column = [None, Some(1), Some(0)];
+        let values = [Some(Q::point(R::zero())), None, None];
+        let y = || affine(0., &[(1, 1.)]);
+        let square = || product(y(), y());
+        let count = |f: Expression| {
+            let relations = [
+                Relation {
+                    sign: 1.,
+                    rhs: vec![f],
+                },
+                Relation {
+                    sign: 1.,
+                    rhs: vec![affine(0., &[(2, 1.)])],
+                },
+            ];
+            let cycle = Cycle {
+                relations: &relations,
+                column: &column,
+                values: &values,
+                name: "test",
+            };
+            polynomial_solutions(&cycle, &w).unwrap()
+        };
+        // y = y^2: 0 and 1. y = y^2 - 2: -1 and 2. y = 2y - y^3: -1, 0 and 1.
+        assert_eq!(count(square()), Solutions::Several);
+        assert_eq!(count(sum(square(), affine(-2., &[]))), Solutions::Several);
+        assert_eq!(
+            count(sum(
+                affine(0., &[(1, 2.)]),
+                product(affine(-1., &[]), cube(1))
+            )),
+            Solutions::Several
+        );
+        // y = 1 - y^3/4: F'(y) = 1 + 3y^2/4 > 0, one root. y = y^2 + 1: no
+        // real root. y = y^2 + 1/4: the double root 1/2, one solution.
+        assert_eq!(
+            count(sum(affine(1., &[]), product(affine(-0.25, &[]), cube(1)))),
+            Solutions::One
+        );
+        assert_eq!(count(sum(square(), affine(1., &[]))), Solutions::None);
+        assert_eq!(count(sum(square(), affine(0.25, &[]))), Solutions::One);
+        // y = y^2/2: 0 and 2 (division by a constant stays a polynomial).
+        let halved = Expression::Divide {
+            left: Box::new(square()),
+            right: Box::new(affine(2., &[])),
+        };
+        assert_eq!(count(halved), Solutions::Several);
+        // y = 1/y (division by a member) and a transcendental relation are not
+        // counted here.
+        let inverse = Expression::Divide {
+            left: Box::new(affine(1., &[])),
+            right: Box::new(y()),
+        };
+        assert_eq!(count(inverse), Solutions::Unproven);
+        let exp = Expression::EventMath {
+            function: crate::operators::Function::Exp.internal(),
+            args: vec![y()],
+            origin: crate::ir::Origin {
+                source: "test.va".into(),
+                line: 1,
+                column: 1,
+                instance: "dut".into(),
+                expansion: Vec::new(),
+            },
+        };
+        assert_eq!(count(exp), Solutions::Unproven);
+        // Two coupled squares (q = y*z, h = y + z, y = q, z = h) need two
+        // tears: not counted.
+        let column = [None, Some(2), Some(3), Some(0), Some(1)];
+        let values = [Some(Q::point(R::zero())), None, None, None, None];
+        let relations = [
+            Relation {
+                sign: 1.,
+                rhs: vec![product(affine(0., &[(1, 1.)]), affine(0., &[(2, 1.)]))],
+            },
+            Relation {
+                sign: 1.,
+                rhs: vec![affine(0., &[(1, 1.), (2, 1.)])],
+            },
+            Relation {
+                sign: 1.,
+                rhs: vec![affine(0., &[(3, 1.)])],
+            },
+            Relation {
+                sign: 1.,
+                rhs: vec![affine(0., &[(4, 1.)])],
+            },
+        ];
+        let cycle = Cycle {
+            relations: &relations,
+            column: &column,
+            values: &values,
+            name: "test",
+        };
+        assert_eq!(
+            polynomial_solutions(&cycle, &w).unwrap(),
+            Solutions::Unproven
+        );
     }
 }

@@ -1170,6 +1170,213 @@ impl Circuit {
         Ok(None)
     }
 
+    /// D_R2_1 before any RN cell or numeric solve. The exact equation of each
+    /// same-time cycle through a program real reads what its roundings read
+    /// (this activation's inputs, the values outside the cycles with their
+    /// rounding steps, earlier cycles' roundings), here from the inputs of the
+    /// solve; `same_time_solutions` then counts its solutions. A cycle whose
+    /// reads are not known exactly here (a transcendental value outside it, a
+    /// value of an earlier nonlinear cycle) is counted after the solve, in
+    /// `same_time_roundings`, except an event cycle that is not jointly
+    /// affine, which is refused at once.
+    fn same_time_admission(&self, inputs: &[f64]) -> Result<Option<Error>, Error> {
+        use crate::same_time_root::{self as root, Cycle, Relation, Q};
+        let Some(view) = &self.procedure_view else {
+            return Ok(None);
+        };
+        if !self.same_time_cycle_shape() {
+            return Ok(None);
+        }
+        let work = &view.plan.work;
+        let Order::Cyclic {
+            components,
+            definition,
+            ..
+        } = self.substitution_order(work)?
+        else {
+            return Ok(None);
+        };
+        let Some(values) = self.with_inputs(inputs, vec![0.0; self.nodes.len()]) else {
+            return Ok(None);
+        };
+        work.debit(
+            2,
+            (self.nodes.len() as u64)
+                .saturating_mul(64)
+                .saturating_add(64),
+        )?;
+        let event = !view.plan.actions.is_empty();
+        let mut exact: Vec<Option<Q>> = vec![None; self.nodes.len()];
+        exact[0] = Some(Q::point(num_rational::BigRational::from_integer(0.into())));
+        for &node in &self.driven {
+            work.step()?;
+            exact[node] = Some(Q::point(match view.exact_input(node) {
+                Some(value) => value,
+                None => root::binary(values[node], work)?,
+            }));
+        }
+        for (columns, cyclic) in &components {
+            if !cyclic {
+                for &column in columns {
+                    let (index, sign) = definition[column];
+                    let mut sum = Some(Q::point(num_rational::BigRational::from_integer(0.into())));
+                    for rhs in &self.equations[index].original_rhs {
+                        sum = match (sum, root::rounded_image(rhs, &exact, work)?) {
+                            (Some(a), Some(b)) => Some(root::sum(&a, &b, work)?),
+                            _ => None,
+                        };
+                    }
+                    exact[self.unknown[column]] = match sum {
+                        Some(value) => Some(root::scaled(&value, sign, work)?),
+                        None => None,
+                    };
+                }
+                continue;
+            }
+            if !self.through_program_real(columns, &definition) {
+                continue;
+            }
+            let relations = columns
+                .iter()
+                .map(|&column| Relation {
+                    sign: definition[column].1,
+                    rhs: self.equations[definition[column].0]
+                        .original_rhs
+                        .iter()
+                        .map(unrounded)
+                        .collect(),
+                })
+                .collect::<Vec<_>>();
+            let mut column_of = vec![None; self.nodes.len()];
+            for (i, &column) in columns.iter().enumerate() {
+                column_of[self.unknown[column]] = Some(i);
+            }
+            let name = self.cycle_origins(columns, &definition, work)?;
+            let affine = self.cycle_affine(columns, &definition, work)?;
+            let cycle = Cycle {
+                relations: &relations,
+                column: &column_of,
+                values: &exact,
+                name: &name,
+            };
+            let known = root::reads_known(&cycle);
+            if let Some(refusal) =
+                self.same_time_solutions(&cycle, affine, event, known, false, work)?
+            {
+                return Ok(Some(refusal));
+            }
+            // Later cycles read this one's roundings: an affine cycle with
+            // exact reads has its root here; any other is read after the solve.
+            let found = if affine && known {
+                root::exact_root(&cycle, &vec![0.0; columns.len()], work)?
+            } else {
+                None
+            };
+            let mut stored = Vec::with_capacity(columns.len());
+            for (k, &column) in columns.iter().enumerate() {
+                let node = self.unknown[column];
+                stored.push(match &found {
+                    Some(root_values) => Some(if node >= view.node_count {
+                        Q::point(root::binary(
+                            root::nearest(&root_values[k], &name, work)?,
+                            work,
+                        )?)
+                    } else {
+                        Q::point(root_values[k].clone())
+                    }),
+                    None => None,
+                });
+            }
+            for (&column, value) in columns.iter().zip(stored) {
+                exact[self.unknown[column]] = value;
+            }
+        }
+        Ok(None)
+    }
+
+    /// The D_R2_1 count of one same-time cycle through a program real: Some
+    /// refusal, or None to go on. A proven count other than one is refused
+    /// with that wording. Otherwise an affine cycle goes on (its Krawczyk
+    /// certificate proves the one root on the whole input box); a cycle that
+    /// is not jointly affine is refused as a capability limit in an event
+    /// activation, and in an ordinary one where exactly one solution is not
+    /// proven. Before the solve (`decided` false) an ordinary nonlinear cycle
+    /// whose reads are not known exactly waits for the solve.
+    fn same_time_solutions(
+        &self,
+        cycle: &crate::same_time_root::Cycle,
+        affine: bool,
+        event: bool,
+        known: bool,
+        decided: bool,
+        work: &crate::transition_source_plan::Work,
+    ) -> Result<Option<Error>, Error> {
+        use crate::same_time_root::{self as root, Solutions};
+        let count = match (known, affine) {
+            (false, _) => Solutions::Unproven,
+            (true, true) => root::affine_solutions(cycle, work)?,
+            (true, false) => root::polynomial_solutions(cycle, work)?,
+        };
+        let name = cycle.name;
+        work.debit(2, (name.len() + 256) as u64)?;
+        Ok(match count {
+            Solutions::None => Some(Error::new(
+                "unsupported_transient",
+                format!(
+                    "same-time feedback through a program real at {name}: its exact equation \
+                     has no solution"
+                ),
+            )),
+            Solutions::Several => Some(Error::new(
+                "unsupported_transient",
+                format!(
+                    "same-time feedback through a program real at {name}: its exact equation \
+                     has more than one solution"
+                ),
+            )),
+            _ if affine => None,
+            _ if event => Some(Error::new(
+                "unsupported_transient",
+                format!(
+                    "certification of same-time feedback through a program real at {name} that \
+                     is not jointly affine is not implemented in an event activation (capability \
+                     limit)"
+                ),
+            )),
+            Solutions::One => None,
+            Solutions::Unproven if !known && !decided => None,
+            Solutions::Unproven => Some(Error::new(
+                "unsupported_transient",
+                format!(
+                    "same-time feedback through a program real at {name} is not affine, and a \
+                     proof that its exact equation has exactly one solution is not implemented \
+                     for it (capability limit)"
+                ),
+            )),
+        })
+    }
+
+    /// Whether a cycle's relations are jointly affine in its own unknowns.
+    fn cycle_affine(
+        &self,
+        columns: &[usize],
+        definition: &[(usize, f64)],
+        work: &crate::transition_source_plan::Work,
+    ) -> Result<bool, Error> {
+        let mut member = vec![false; self.unknown.len()];
+        for &column in columns {
+            member[column] = true;
+        }
+        for &column in columns {
+            for rhs in &self.equations[definition[column].0].original_rhs {
+                if !marked_affine(rhs, &self.unknown_columns, &member, work)?.1 {
+                    return Ok(false);
+                }
+            }
+        }
+        Ok(true)
+    }
+
     /// Whether some relation of a cycle has a rounding step: the cycle runs
     /// through a program real (decision 22).
     fn through_program_real(&self, columns: &[usize], definition: &[(usize, f64)]) -> bool {
@@ -1770,6 +1977,16 @@ impl Circuit {
                     values: &exact,
                     name: &name,
                 };
+                if self.through_program_real(columns, &definition) {
+                    let affine = self.cycle_affine(columns, &definition, work)?;
+                    let event = !view.plan.actions.is_empty();
+                    let known = root::reads_known(&cycle);
+                    if let Some(refusal) =
+                        self.same_time_solutions(&cycle, affine, event, known, true, work)?
+                    {
+                        return Err(refusal);
+                    }
+                }
                 let found = root::exact_root(&cycle, &start, work)?;
                 let certified = if bounds.is_some() || found.is_none() {
                     Some(self.cycle_bounds(solution, &values, columns, &definition, work)?)
@@ -2713,11 +2930,12 @@ impl Circuit {
         initial_voltages: Option<&[f64]>,
     ) -> Result<Solution, Error> {
         // Decision 22 scope: a same-time cycle through a program real outside
-        // the implemented class is refused before any RN cell or numeric solve.
+        // the implemented class, or without exactly one solution, is refused
+        // before any RN cell or numeric solve.
         if let Some(refusal) = self.same_time_capability_refusal()? {
             return Err(refusal);
         }
-        if let Some(refusal) = self.nonlinear_same_time_feedback()? {
+        if let Some(refusal) = self.same_time_admission(inputs)? {
             return Err(refusal);
         }
         let initial_expanded = initial_voltages

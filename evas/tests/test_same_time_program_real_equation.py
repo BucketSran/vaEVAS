@@ -3,9 +3,12 @@
 A rounded program value that feeds the equation it is computed from at the same time point
 (an event sample q=f(V(y)) with V(y) <+ q) is the root of that equation in real arithmetic,
 stored as the binary64 rounding of the root (decision 22, D-R2-1 option A, a clarification of
-ADR-006), even where the rounded map has no binary64 fixed point or another one. An event
-equation that is not jointly affine is refused before a local proof can select one of its
-roots: y = y*y has the two real roots 0 and 1. y = y + 1 has no real root and stays refused.
+ADR-006), even where the rounded map has no binary64 fixed point or another one. A cycle
+whose exact equation is proven to have no solution or more than one is refused with that
+wording (D_R2_1): y = y*y has the two real roots 0 and 1, y = y + 1 none, y = y every y. An
+ordinary nonlinear cycle is answered only where exactly one solution is proven for the whole
+real line (a local root box does not show it); an event cycle that is not jointly affine is not
+certified at all.
 
 Decision 22 is implemented where every unknown of the activation is defined by exactly one
 grounded relation. A same-time cycle through a program real across a relation to a driven
@@ -36,6 +39,23 @@ CAPABILITY = (r'^unsupported_transient: same-time feedback through a program rea
 NONAFFINE_EVENT = (r'^unsupported_transient: certification of same-time feedback through a program '
                    r'real at .+ that is not jointly affine is not implemented in an event '
                    r'activation \(capability limit\)$')
+SEVERAL = (r'^unsupported_transient: same-time feedback through a program real at .+: its exact '
+           r'equation has more than one solution$')
+NONE = (r'^unsupported_transient: same-time feedback through a program real at .+: its exact '
+        r'equation has no solution$')
+
+
+def rounded_root(f, lo, hi):
+    """RN of the one root of the increasing f in (lo, hi), by Fraction bisection until both ends
+    round alike (an irrational root is never a rounding tie)."""
+    lo, hi = Q(lo), Q(hi)
+    while float(lo) != float(hi):
+        middle = (lo + hi) / 2
+        if f(middle) > 0:
+            hi = middle
+        else:
+            lo = middle
+    return float(lo)
 
 
 def budget(target):
@@ -94,8 +114,29 @@ class SameTimeProgramRealEquation(unittest.TestCase):
                                      [rn] * 3)
 
     def test_nonlinear_event_feedback_with_two_real_roots_is_refused(self):
-        with self.assertRaisesRegex(KernelError, NONAFFINE_EVENT):
+        # y = y*y: F(y) = y - y^2 has the roots 0 and 1.
+        with self.assertRaisesRegex(KernelError, SEVERAL):
             run('@(initial_step) q=0.1; @(timer(0.25)) q=V(y,r)*V(y,r); V(y,r)<+q;', 0.5)
+
+    def test_ordinary_same_time_cycle_with_several_roots_is_refused(self):
+        # Review r1 R2-R3: y = y^2 - 2 (roots -1 and 2), y = y^2 (0 and 1, also with pow and
+        # under an empty condition) and y = 2y - y^3 (-1, 0 and 1); a root box around the Newton
+        # point does not show that a root is the only one.
+        for body in ('q=V(y)*V(y)-2;', 'q=V(y)*V(y);', 'q=pow(V(y),2);',
+                     'q=V(y)*V(y); if(V(u)>-2) begin end', 'q=2*V(y)-V(y)*V(y)*V(y);'):
+            with self.subTest(body=body):
+                self.assertRegex(self.refusal(body + ' V(y)<+q;', 'real q;'), SEVERAL)
+
+    def test_ordinary_same_time_cycle_with_one_root_on_the_real_line(self):
+        # F(y) = y + y^3/4 - 1 is increasing (F'(y) = 1 + 3y^2/4 > 0): one root, stored as its
+        # rounding RN(root) = 0.8477075981395665 (no rational root, so no tie).
+        rn = rounded_root(lambda y: y + y ** 3 / 4 - 1, 0, 1)
+        self.assertEqual(rn, 0.8477075981395665)
+        for cube in ('pow(V(y),3)', 'V(y)*V(y)*V(y)'):
+            with self.subTest(cube=cube):
+                p, result = self.answer(f'q=1-0.25*{cube}; V(y)<+q;', 'real q;')
+                y = p.nodes.index('y')
+                self.assertEqual([row['voltages'][y] for row in result['solutions']], [rn] * 5)
 
     def test_ungrounded_same_time_cycle_is_a_capability_limit(self):
         # Each exact system has exactly one solution: det 21/32 for the coupled pair, root
@@ -127,8 +168,11 @@ class SameTimeProgramRealEquation(unittest.TestCase):
                 self.assertRegex(self.refusal(body, 'real q;'), NONAFFINE_EVENT)
 
     def test_event_feedback_without_a_real_root_is_refused(self):
-        with self.assertRaises(KernelError):
+        # y = y + 1 has no solution; y = y has every y.
+        with self.assertRaisesRegex(KernelError, NONE):
             run('@(initial_step) q=0; @(timer(0.5)) q=V(y,r)+1; V(y,r)<+q;', 1.0)
+        with self.assertRaisesRegex(KernelError, SEVERAL):
+            run('@(initial_step) q=0; @(timer(0.5)) q=V(y,r); V(y,r)<+q;', 1.0)
 
     def test_affine_event_feedback_answers_the_real_root(self):
         # (body, stop, event time, y before, real root of the same-time equation after)
