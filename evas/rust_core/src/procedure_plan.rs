@@ -3089,8 +3089,8 @@ mod immutable_plan_owner_tests {
         let (p, first, before) = fixture(0.1, &w);
         let (_, same_number, other_before) = fixture(0.1, &w);
         let (_, changed, changed_before) = fixture(0.2, &w);
-        assert!(first.as_ref() == same_number.as_ref());
-        assert!(first.as_ref() == changed.as_ref());
+        assert!(first.same_activation(&same_number, &w).unwrap());
+        assert!(first.same_activation(&changed, &w).unwrap());
         for (plan, current) in [
             (&first, &before),
             (&same_number, &other_before),
