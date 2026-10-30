@@ -53,9 +53,9 @@ class SameTimeActivationScope(unittest.TestCase):
 
     def test_driven_constraint_and_original_terminal_classes_ignore_instance_order(self):
         source = ('`include "disciplines.vams"\n'
-                  'module pin(y); inout y; electrical y; analog V(y)<+1; endmodule\n'
+                  'module pin(y); inout y; electrical y; analog begin V(y)<+1; end endmodule\n'
                   'module loop(u,y); inout u,y; electrical u,y; real q; '
-                  'analog begin q=.5*V(y)+.5; V(u)<+q-V(y); end endmodule')
+                  'analog begin q=0.5*V(y)+0.5; V(u)<+q-V(y); end endmodule')
         instances = [Instance('A', 'pin', {'y': 'y'}),
                      Instance('Z', 'loop', {'u': 'u', 'y': 'y'})]
         for order in permutations(instances):
@@ -66,10 +66,10 @@ class SameTimeActivationScope(unittest.TestCase):
                     execute(source, list(order))
 
         source = ('`include "disciplines.vams"\n'
-                  'module one(y); inout y; electrical y; analog V(y)<+1; endmodule\n'
-                  'module zero(z); inout z; electrical z; analog V(z)<+0; endmodule\n'
+                  'module one(y); inout y; electrical y; analog begin V(y)<+1; end endmodule\n'
+                  'module zero(z); inout z; electrical z; analog begin V(z)<+0; end endmodule\n'
                   'module loop(u,y,z); inout u,y,z; electrical u,y,z; real q; '
-                  'analog begin q=.5*V(y,z)+.5; V(y,z)<+q; end endmodule')
+                  'analog begin q=0.5*V(y,z)+0.5; V(y,z)<+q; end endmodule')
         instances = [Instance('A', 'one', {'y': 'y'}), Instance('B', 'zero', {'z': 'z'}),
                      Instance('Z', 'loop', {'u': 'u', 'y': 'y', 'z': 'z'})]
         for order in permutations(instances):
