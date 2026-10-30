@@ -1081,7 +1081,11 @@ impl Plan {
     /// Builder emits only selected branches, but retains overwritten effects,
     /// unused RealBind values, displays, updates and condition operands here.
     /// A guard depending on candidate voltages needs a global branch proof.
-    pub(crate) fn total_activation_domain(&self, w: &Work) -> Result<bool, Error> {
+    pub(crate) fn total_activation_domain(
+        &self,
+        unknown_columns: &[Option<usize>],
+        w: &Work,
+    ) -> Result<bool, Error> {
         w.debit(2, (self.count as u64).saturating_mul(8).saturating_add(64))?;
         let mut voltage = vec![false; self.count];
         for id in 0..self.count {
@@ -1102,7 +1106,13 @@ impl Plan {
                         2,
                         (terms.len() as u64).saturating_mul(16).saturating_add(32),
                     )?;
-                    terms.iter().any(|t| t.node != 0 && t.coefficient != 0.)
+                    // Driven inputs are fixed for every root candidate. They
+                    // may occur in a certified selected condition (EC5 extras).
+                    terms.iter().any(|t| {
+                        t.node != 0
+                            && t.coefficient != 0.
+                            && unknown_columns.get(t.node).is_none_or(Option::is_some)
+                    })
                 }
                 _ => node.operands.iter().any(|&i| voltage[i]),
             };

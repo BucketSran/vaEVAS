@@ -1137,7 +1137,10 @@ impl Circuit {
         }
         let work = &view.plan.work;
         if let Some(view) = &self.procedure_view {
-            if !view.plan.total_activation_domain(work)? {
+            if !view
+                .plan
+                .total_activation_domain(&self.unknown_columns, work)?
+            {
                 return Ok(false);
             }
         }

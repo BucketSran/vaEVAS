@@ -88,3 +88,13 @@ class SameTimeActivationScope(unittest.TestCase):
                 with self.assertRaisesRegex(KernelError, r'^unsupported_transient: .*'
                                            r'its exact equation has more than one solution$'):
                     execute(source)
+
+    def test_selected_driven_input_guards_do_not_vary_between_root_candidates(self):
+        for extra in ('if(V(u)>-2) begin end', 'unused=0; if(V(u)>-2) unused=1;'):
+            source = ('`include "disciplines.vams"\n'
+                      'module m(u,y); input u; output y; electrical u,y; real q,unused; '
+                      'analog begin q=V(y)*V(y); ' + extra + ' V(y)<+q; end endmodule')
+            with self.subTest(extra=extra):
+                with self.assertRaisesRegex(KernelError, r'^unsupported_transient: .*'
+                                           r'its exact equation has more than one solution$'):
+                    execute(source)
