@@ -418,6 +418,12 @@ pub(crate) struct SameTimeStructure {
     /// The activation is in the implemented class and has a same-time cycle
     /// (`Order::Cyclic` with a cycle).
     cyclic: bool,
+    /// Procedure value nodes whose stored values are decision 22 roundings.
+    pub(crate) values: Vec<usize>,
+    /// Physical nodes, ground excluded, whose values those roundings read:
+    /// the cycles' own physical members, and every physical node a cycle
+    /// reads directly or through procedure values outside the cycles.
+    pub(crate) reads: Vec<usize>,
 }
 
 /// Dependency structure of a system with a rounding step in which every
@@ -1340,7 +1346,10 @@ impl Circuit {
     }
 
     fn read_same_time_structure(&self) -> SameTimeStructure {
-        if self.procedure_view.is_none() || !self.has_rounding() {
+        let Some(view) = &self.procedure_view else {
+            return SameTimeStructure::default();
+        };
+        if !self.has_rounding() {
             return SameTimeStructure::default();
         }
         let n = self.unknown.len();
@@ -1478,9 +1487,58 @@ impl Circuit {
                 ..SameTimeStructure::default()
             };
         }
+        // Decision 22 stores the roundings of every cycle's members; they
+        // read the physical nodes of the cycle and every physical node its
+        // relations read, through procedure values outside the cycles.
+        let mut member = vec![false; n];
+        for (columns, is_cycle) in &components {
+            if *is_cycle {
+                for &column in columns {
+                    member[column] = true;
+                }
+            }
+        }
+        let mut values = Vec::new();
+        let mut key = vec![false; view.node_count];
+        let mut visited = vec![false; n];
+        let mut stack = Vec::new();
+        for column in 0..n {
+            if !member[column] {
+                continue;
+            }
+            let node = self.unknown[column];
+            if node >= view.node_count {
+                values.push(node);
+            } else if node != 0 {
+                key[node] = true;
+            }
+            visited[column] = true;
+            stack.push(column);
+        }
+        while let Some(column) = stack.pop() {
+            let Some(row) = owner[column] else {
+                continue;
+            };
+            for &node in &reads[row].nodes {
+                if node == 0 {
+                    continue;
+                }
+                if node < view.node_count {
+                    key[node] = true;
+                } else if let Some(read) = self.unknown_columns[node] {
+                    if !visited[read] {
+                        visited[read] = true;
+                        stack.push(read);
+                    }
+                }
+            }
+        }
+        values.sort_unstable();
         SameTimeStructure {
             outside: None,
             cyclic: true,
+            values,
+            reads: (0..view.node_count).filter(|&node| key[node]).collect(),
         }
     }
 
@@ -1885,9 +1943,10 @@ impl Circuit {
     /// The certificate of the stored values: every member of a same-time cycle
     /// holds the rounding of its exact root, which lies in the cycle's
     /// certificate on the complete driven enclosures. A program value is
-    /// checked where this activation's solve recorded it: only those records
-    /// are read back as stored values; an activation rebuilt only for this
-    /// certificate stores nothing.
+    /// checked against the record its activation's solve made for these
+    /// voltages and states; without that record the value was never stored,
+    /// and the certificate is refused (an activation rebuilt only for this
+    /// certificate stores nothing).
     fn check_same_time_roundings(
         &self,
         solution: &Solution,
@@ -1899,33 +1958,46 @@ impl Circuit {
         if !self.same_time_cycle_shape() {
             return Ok(());
         }
-        // A solution that is an RN cell's own root is that cell's certificate.
-        if view
+        let recorded = view
             .plan
-            .cell_bounds(input_bounds, &solution.voltages, self.nodes.len())?
-            .is_some()
+            .same_time_record(&solution.voltages[..view.node_count], &view.before)?;
+        // A solution that is an RN cell's own root is that cell's certificate:
+        // the solve keeps a cell only where it holds the decision 22 values,
+        // and records them.
+        if recorded.is_some()
+            && view
+                .plan
+                .cell_bounds(input_bounds, &solution.voltages, self.nodes.len())?
+                .is_some()
         {
             return Ok(());
         }
         let Some(rounded) = self.same_time_roundings(solution, Some(input_bounds))? else {
             return Ok(());
         };
-        let recorded = view
-            .plan
-            .same_time_record(&solution.voltages[..view.node_count], &view.before)?;
         for (node, value) in rounded {
             let stored = if node < view.node_count {
-                Some(solution.voltages[node])
+                solution.voltages[node]
             } else {
                 let id = view.ids.get(node - view.node_count).copied();
-                recorded.as_ref().map(|recorded| {
-                    recorded
-                        .iter()
-                        .find(|(given, _)| Some(*given) == id)
-                        .map_or(f64::NAN, |(_, v)| *v)
-                })
+                match recorded
+                    .as_ref()
+                    .and_then(|r| r.iter().find(|(given, _)| Some(*given) == id))
+                {
+                    Some(&(_, value)) => value,
+                    None => {
+                        return Err(Error::new(
+                            "waveform_accuracy",
+                            format!(
+                                "cannot certify same-time value at {}: its activation stored no \
+                                 rounding for these voltages and states",
+                                self.nodes[node]
+                            ),
+                        ))
+                    }
+                }
             };
-            if let Some(stored) = stored.filter(|s| s.to_bits() != value.to_bits()) {
+            if stored.to_bits() != value.to_bits() {
                 return Err(Error::new(
                     "waveform_accuracy",
                     format!(
@@ -2085,6 +2157,20 @@ impl Circuit {
         let expanded;
         let solution = if let Some(view) = &self.procedure_view {
             if solution.voltages.len() == view.node_count {
+                // Decision 22: the program values of a same-time cycle are
+                // certified only where the activation's solve stored them.
+                if self.same_time_cycle_shape()
+                    && view
+                        .plan
+                        .same_time_record(&solution.voltages, &view.before)?
+                        .is_none()
+                {
+                    return Err(Error::new(
+                        "waveform_accuracy",
+                        "cannot certify same-time program values: their activation stored no \
+                         rounding for these voltages and states",
+                    ));
+                }
                 expanded = Solution {
                     voltages: view.expand(&solution.voltages)?,
                     ..solution.clone()
@@ -2636,7 +2722,7 @@ impl Circuit {
         }
         let initial_expanded = initial_voltages
             .map(|v| match &self.procedure_view {
-                Some(view) if v.len() == view.node_count => view.expand(v),
+                Some(view) if v.len() == view.node_count => view.expand_executed(v),
                 _ => Ok(v.to_vec()),
             })
             .transpose()?;
@@ -2690,7 +2776,7 @@ impl Circuit {
             // rounding of its exact root, whichever route found the solution.
             if cyclic {
                 if solution.voltages.len() == view.node_count {
-                    solution.voltages = view.expand(&solution.voltages)?;
+                    solution.voltages = view.expand_executed(&solution.voltages)?;
                 }
                 if let Some(rounded) = self.same_time_roundings(&solution, None)? {
                     self.store_same_time(&mut solution, &rounded)?;
@@ -2807,7 +2893,7 @@ impl Circuit {
                 voltages[node] = value;
             }
         }
-        let seed = view.expand(&voltages)?;
+        let seed = view.expand_executed(&voltages)?;
         if !settle {
             return Ok(Some(seed));
         }
@@ -2825,7 +2911,7 @@ impl Circuit {
         if voltages.iter().any(|v| !v.is_finite()) {
             return Ok(Some(seed));
         }
-        view.expand(&voltages).map(Some)
+        view.expand_executed(&voltages).map(Some)
     }
     /// Newton accepts a point when every residual and its full correction fit
     /// the residual tolerance. From the zero seed it can accept values of
@@ -2873,7 +2959,7 @@ impl Circuit {
         if !cyclic && !trapped {
             return Ok(solution);
         }
-        let mut activation = match view.expand(&solution.voltages[..view.node_count]) {
+        let mut activation = match view.expand_executed(&solution.voltages[..view.node_count]) {
             Ok(values) => values,
             Err(error) if budget(&error) => return Err(error),
             Err(_) => return Ok(solution),

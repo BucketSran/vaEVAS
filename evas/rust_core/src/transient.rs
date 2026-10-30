@@ -998,6 +998,18 @@ fn prepare_root_window_selected_phase(
         }
         observation = (values, bounds);
         prepared = settle(&observation.0, &observation.1, false)?;
+        // Decision 22: readers of this event's selection at the latest closed
+        // solution read the same-time roundings that solve stored (the event
+        // circuit is kept as the occurrence of the ordinary one after it).
+        if let (Some(plan), Some(view)) = (
+            physical_selection.plan.as_deref(),
+            prepared
+                .circuit
+                .procedure_occurrence()
+                .or_else(|| prepared.circuit.procedure_view()),
+        ) {
+            plan.adopt_same_time(&view.plan)?;
+        }
     }
     if !closed {
         return Err(Error::new(
@@ -2812,14 +2824,23 @@ pub(crate) fn run_inner(mut request: Request) -> Result<Response, Error> {
             )?;
         }
     }
+    let observation = model.observation_selection(
+        &inputs,
+        &accepted.states,
+        &accepted.state_bounds,
+        &accepted.operators.values(0.0)?,
+        &accepted.operators.bounds(0.0)?,
+    )?;
+    // Decision 22: the observation certifies the accepted solution with the
+    // same-time roundings its solve stored.
+    if let (Some(plan), Some(view)) = (
+        observation.plan.as_deref(),
+        accepted.circuit.procedure_view(),
+    ) {
+        plan.adopt_same_time(&view.plan)?;
+    }
     let (state_bounds, node_bounds) = model.certify_observation(
-        &model.observation_selection(
-            &inputs,
-            &accepted.states,
-            &accepted.state_bounds,
-            &accepted.operators.values(0.0)?,
-            &accepted.operators.bounds(0.0)?,
-        )?,
+        &observation,
         &inputs,
         &accepted.state_bounds,
         &accepted.operators.bounds(0.0)?,

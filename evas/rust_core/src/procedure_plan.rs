@@ -81,21 +81,30 @@ pub(crate) struct Plan {
     cell: Arc<std::sync::OnceLock<Arc<crate::procedure_cell::Certificate>>>,
     observation: Arc<std::sync::OnceLock<Vec<f64>>>,
     // Decision 22: the roundings of program values on a same-time cycle,
-    // recorded by the activation solves of this Plan for their voltages and
-    // states. Numeric values read them for exactly these inputs.
-    same_time: Arc<std::sync::Mutex<Vec<SameTime>>>,
+    // recorded by the activation solves of this Plan, or taken over from a
+    // later closure solve of the same activation, keyed by what they read:
+    // the voltages of the marked nodes and the states before. Numeric values
+    // read them for exactly these inputs; a marked value without its record
+    // is refused, never executed.
+    same_time: Arc<std::sync::Mutex<SameTimeRecords>>,
+    // The procedure values on same-time cycles of this Plan's circuit and the
+    // physical nodes their roundings read, from the circuit's structure.
+    same_time_marks: Arc<std::sync::OnceLock<SameTimeMarks>>,
     // Exact driven source values of an observation, by node, for the exact
     // equation of a same-time cycle.
     exact_driven: Arc<std::sync::OnceLock<Vec<Option<num_rational::BigRational>>>>,
     identity: Vec<u8>,
 }
-struct SameTime {
-    voltages: Vec<u64>,
-    before: Vec<u64>,
-    values: Vec<(Id, f64)>,
+#[derive(Default)]
+struct SameTimeRecords {
+    records: std::collections::HashMap<Vec<u64>, Vec<(Id, f64)>>,
+    // Keys taken over with values different from this Plan's own record;
+    // they are read as missing.
+    conflicting: std::collections::HashSet<Vec<u64>>,
 }
-fn value_bits(values: &[f64]) -> Vec<u64> {
-    values.iter().map(|v| v.to_bits()).collect()
+struct SameTimeMarks {
+    ids: Vec<Id>,
+    reads: Vec<usize>,
 }
 impl PartialEq for Plan {
     fn eq(&self, other: &Self) -> bool {
@@ -940,32 +949,48 @@ impl Plan {
     pub(crate) fn has_observation(&self) -> bool {
         self.observation.get().is_some()
     }
+    /// Mark the procedure values on same-time cycles of this Plan's circuit
+    /// and the physical nodes their roundings read (decision 22), once.
+    pub(crate) fn mark_same_time(&self, ids: Vec<Id>, reads: Vec<usize>) -> Result<(), Error> {
+        self.work
+            .debit(2, ((ids.len() + reads.len()) * 8 + 64) as u64)?;
+        let _ = self.same_time_marks.set(SameTimeMarks { ids, reads });
+        Ok(())
+    }
+    /// The record key of these inputs: the bits of the marked voltages
+    /// (ground excluded) and of the states before.
+    fn same_time_key(&self, voltages: &[f64], before: &[f64], w: &Work) -> Result<Vec<u64>, Error> {
+        let reads = self.same_time_marks.get().map(|m| m.reads.as_slice());
+        let length = reads.map_or(voltages.len(), <[usize]>::len) + before.len();
+        w.debit(2, (length * 16 + 32) as u64)?;
+        let mut key = match reads {
+            Some(reads) => reads
+                .iter()
+                .map(|&node| voltages.get(node).map_or(u64::MAX, |v| v.to_bits()))
+                .collect::<Vec<_>>(),
+            None => voltages.iter().skip(1).map(|v| v.to_bits()).collect(),
+        };
+        key.extend(before.iter().map(|v| v.to_bits()));
+        Ok(key)
+    }
     /// Record the decision 22 roundings an activation solve found for these
-    /// voltages and states, replacing an earlier record for the same inputs.
+    /// voltages and states, replacing an earlier record of the same inputs.
+    /// Records are kept for the life of the Plan; each is paid.
     pub(crate) fn record_same_time(
         &self,
         voltages: &[f64],
         before: &[f64],
         values: Vec<(Id, f64)>,
     ) -> Result<(), Error> {
-        self.work.debit(
-            2,
-            ((voltages.len() + before.len() + 2 * values.len()) * 16 + 64) as u64,
-        )?;
-        let record = SameTime {
-            voltages: value_bits(voltages),
-            before: value_bits(before),
-            values,
-        };
+        let key = self.same_time_key(voltages, before, &self.work)?;
+        self.work
+            .debit(2, ((key.len() + 2 * values.len()) * 16 + 64) as u64)?;
         let mut records = self
             .same_time
             .lock()
             .map_err(|_| invalid("same-time rounding record is poisoned"))?;
-        records.retain(|r| r.voltages != record.voltages || r.before != record.before);
-        if records.len() >= 8 {
-            records.remove(0);
-        }
-        records.push(record);
+        records.conflicting.remove(&key);
+        records.records.insert(key, values);
         Ok(())
     }
     /// The decision 22 roundings recorded for these voltages and states.
@@ -974,32 +999,130 @@ impl Plan {
         voltages: &[f64],
         before: &[f64],
     ) -> Result<Option<Vec<(Id, f64)>>, Error> {
-        let values = self.same_time_values(voltages, before, &self.work)?;
-        Ok((!values.is_empty()).then_some(values))
+        self.same_time_values(voltages, before, &self.work)
     }
     fn same_time_values(
         &self,
         voltages: &[f64],
         before: &[f64],
         w: &Work,
-    ) -> Result<Vec<(Id, f64)>, Error> {
+    ) -> Result<Option<Vec<(Id, f64)>>, Error> {
+        let key = self.same_time_key(voltages, before, w)?;
         let records = self
             .same_time
             .lock()
             .map_err(|_| invalid("same-time rounding record is poisoned"))?;
-        if records.is_empty() {
-            return Ok(Vec::new());
+        if records.conflicting.contains(&key) {
+            return Ok(None);
         }
-        w.debit(
-            2,
-            ((voltages.len() + before.len()) * records.len() * 2 + 32) as u64,
-        )?;
-        let (voltages, before) = (value_bits(voltages), value_bits(before));
-        Ok(records
+        let found = records.records.get(&key).cloned();
+        if let Some(values) = &found {
+            w.debit(2, (values.len() * 16 + 32) as u64)?;
+        }
+        Ok(found)
+    }
+    /// The decision 22 values a numeric read of `roots` uses (`stored`): the
+    /// record of these inputs, and, when the roots read a marked value it does
+    /// not hold, the marked values to refuse. An unmarked Plan, or an executed
+    /// read, uses neither. Effect roots without a record are checked with
+    /// executed values; they are never published.
+    fn stored_same_time(
+        &self,
+        stored: bool,
+        roots: &[Id],
+        nodes: &[f64],
+        before: &[f64],
+        w: &Work,
+    ) -> Result<(Vec<(Id, f64)>, Vec<Id>), Error> {
+        let Some(marks) = self
+            .same_time_marks
+            .get()
+            .filter(|m| stored && !m.ids.is_empty())
+        else {
+            return Ok((Vec::new(), Vec::new()));
+        };
+        let given = self.same_time_values(nodes, before, w)?.unwrap_or_default();
+        w.debit(2, (marks.ids.len() * 16 + 32) as u64)?;
+        let missing = marks
+            .ids
             .iter()
-            .find(|r| r.voltages == voltages && r.before == before)
-            .map(|r| r.values.clone())
-            .unwrap_or_default())
+            .copied()
+            .filter(|id| !given.iter().any(|(given, _)| given == id))
+            .collect::<Vec<_>>();
+        if missing.is_empty() || !self.reaches(roots, &missing, w)? {
+            return Ok((given, Vec::new()));
+        }
+        Ok((given, missing))
+    }
+    /// Whether some root reads one of `targets` (itself or through operands).
+    fn reaches(&self, roots: &[Id], targets: &[Id], w: &Work) -> Result<bool, Error> {
+        w.debit(2, (self.count * 8 + 64) as u64)?;
+        let mut seen = vec![false; self.count];
+        let mut stack = roots.to_vec();
+        while let Some(id) = stack.pop() {
+            w.step()?;
+            if id >= self.count || std::mem::replace(&mut seen[id], true) {
+                continue;
+            }
+            if targets.contains(&id) {
+                return Ok(true);
+            }
+            if let Some(node) = self.graph.node(id) {
+                stack.extend_from_slice(&node.operands);
+            }
+        }
+        Ok(false)
+    }
+    /// Decision 22: take over the same-time roundings that a later solve of the
+    /// same activation path (equal identity: a closure iteration of the same
+    /// event) recorded, so this Plan's readers at that solve's voltages read
+    /// them. A key this Plan recorded with different values is then read as
+    /// missing.
+    pub(crate) fn adopt_same_time(&self, other: &Plan) -> Result<(), Error> {
+        if Arc::ptr_eq(&self.same_time, &other.same_time) || self.identity != other.identity {
+            return Ok(());
+        }
+        let theirs = other
+            .same_time
+            .lock()
+            .map_err(|_| invalid("same-time rounding record is poisoned"))?
+            .records
+            .iter()
+            .map(|(key, values)| (key.clone(), values.clone()))
+            .collect::<Vec<_>>();
+        // Equal identity means the same graph, so the same marked values.
+        if self.same_time_marks.get().is_none() {
+            if let Some(marks) = other.same_time_marks.get() {
+                self.mark_same_time(marks.ids.clone(), marks.reads.clone())?;
+            }
+        }
+        let mut ours = self
+            .same_time
+            .lock()
+            .map_err(|_| invalid("same-time rounding record is poisoned"))?;
+        for (key, values) in theirs {
+            self.work
+                .debit(2, ((key.len() + 2 * values.len()) * 16 + 64) as u64)?;
+            let same = |old: &Vec<(Id, f64)>| {
+                old.len() == values.len()
+                    && old
+                        .iter()
+                        .zip(&values)
+                        .all(|(a, b)| a.0 == b.0 && a.1.to_bits() == b.1.to_bits())
+            };
+            match ours.records.get(&key) {
+                Some(old) if same(old) => {}
+                Some(_) => {
+                    ours.records.remove(&key);
+                    ours.conflicting.insert(key);
+                }
+                None if ours.conflicting.contains(&key) => {}
+                None => {
+                    ours.records.insert(key, values);
+                }
+            }
+        }
+        Ok(())
     }
     /// Exact driven source values of this observation, by node.
     pub(crate) fn set_exact_driven(&self, values: Vec<Option<num_rational::BigRational>>) {
@@ -1027,11 +1150,12 @@ impl Plan {
             (states, state_bounds),
             (operators, operator_bounds),
             context,
-            &[],
+            (&[], &[]),
             w,
         )
     }
-    // `evaluate` with the decision 22 rounding of some values given.
+    // `evaluate` with the decision 22 rounding of some values given and the
+    // marked values without a record (`missing`) refused.
     #[allow(clippy::too_many_arguments)]
     fn evaluate_with(
         &self,
@@ -1041,7 +1165,7 @@ impl Plan {
         (states, state_bounds): (&[Option<f64>], &[I]),
         (operators, operator_bounds): (&[Option<f64>], &[I]),
         context: Option<&Context<'_>>,
-        given: &[(Id, f64)],
+        (given, missing): (&[(Id, f64)], &[Id]),
         w: &Work,
     ) -> Result<Vec<Cell>, Error> {
         w.debit(2, ((roots.len() + self.effects.len()) * 16 + 64) as u64)?;
@@ -1080,6 +1204,16 @@ impl Plan {
                         proof: None,
                     });
                 }
+                if missing.contains(&id) {
+                    return Err(Error::new(
+                        "unsupported_transient",
+                        format!(
+                            "procedure value {id} on a same-time cycle through a program real has no \
+                             stored rounding for these voltages and states: reading it where its \
+                             activation was not solved is not implemented (capability limit)"
+                        ),
+                    ));
+                }
                 let value = op.evaluate(args, &domain, w)?;
                 // Builder.add may postpone unknown electrical values. This final
                 // evaluation cannot discard an unresolved overwritten store merely
@@ -1109,11 +1243,24 @@ impl Plan {
         context: Option<&Context<'_>>,
         w: &Work,
     ) -> Result<Vec<f64>, Error> {
-        self.numeric_selected(true, roots, nodes, before, context, w)
+        self.numeric_selected(true, true, roots, nodes, before, context, w)
     }
+    /// `numeric_values` executed: the activation's own values at these
+    /// voltages, for a solve that has not stored its decision 22 roundings.
+    pub(crate) fn executed_values(
+        &self,
+        roots: &[Id],
+        nodes: &[f64],
+        before: &[f64],
+        w: &Work,
+    ) -> Result<Vec<f64>, Error> {
+        self.numeric_selected(true, false, roots, nodes, before, None, w)
+    }
+    #[allow(clippy::too_many_arguments)]
     fn numeric_selected(
         &self,
         execute_effects: bool,
+        stored: bool,
         roots: &[Id],
         nodes: &[f64],
         before: &[f64],
@@ -1143,8 +1290,8 @@ impl Plan {
             })
             .collect::<Vec<_>>();
         // A same-time cycle's program values are the roundings its solve
-        // recorded for these inputs (decision 22), not their execution.
-        let given = self.same_time_values(nodes, before, w)?;
+        // recorded for these inputs (decision 22), never their execution.
+        let (given, missing) = self.stored_same_time(stored, roots, nodes, before, w)?;
         self.evaluate_with(
             execute_effects,
             roots,
@@ -1152,7 +1299,7 @@ impl Plan {
             (&states, &state_bounds),
             (&operators, &operator_bounds),
             context,
-            &given,
+            (&given, &missing),
             w,
         )?
         .iter()
@@ -1202,16 +1349,16 @@ impl Plan {
             .copied()
             .map(Some)
             .collect::<Vec<_>>();
-        let values = self.evaluate(
+        // A reset that reads a same-time cycle reads its stored roundings.
+        let (given, missing) = self.stored_same_time(true, &ids, nodes, before, w)?;
+        let values = self.evaluate_with(
             true,
             &ids,
-            &points,
-            node_bounds,
-            &states,
-            before_bounds,
-            &ops,
-            operator_bounds,
+            (&points, node_bounds),
+            (&states, before_bounds),
+            (&ops, operator_bounds),
             context,
+            (&given, &missing),
             w,
         )?;
         let mut values = values.iter();
@@ -1602,7 +1749,8 @@ pub(crate) fn execute(
         branched,
         cell: Arc::new(std::sync::OnceLock::new()),
         observation: Arc::new(std::sync::OnceLock::new()),
-        same_time: Arc::new(std::sync::Mutex::new(Vec::new())),
+        same_time: Arc::new(std::sync::Mutex::new(SameTimeRecords::default())),
+        same_time_marks: Arc::new(std::sync::OnceLock::new()),
         exact_driven: Arc::new(std::sync::OnceLock::new()),
         identity,
     })
@@ -1683,6 +1831,8 @@ impl CircuitView {
         }
         self.plan.base.floor_node(node).cloned()
     }
+    /// The voltages with the activation's procedure values: on a same-time
+    /// cycle the roundings the solve stored for them (decision 22).
     pub(crate) fn expand(&self, voltages: &[f64]) -> Result<Vec<f64>, Error> {
         let w = &self.plan.work;
         w.debit(2, ((self.node_count + self.plan.count) * 16 + 64) as u64)?;
@@ -1690,6 +1840,18 @@ impl CircuitView {
         values.extend(
             self.plan
                 .numeric_values(&self.ids, &values, &self.before, None, w)?,
+        );
+        Ok(values)
+    }
+    /// `expand` with every procedure value executed, for a solve's own
+    /// iterates before it stores its roundings.
+    pub(crate) fn expand_executed(&self, voltages: &[f64]) -> Result<Vec<f64>, Error> {
+        let w = &self.plan.work;
+        w.debit(2, ((self.node_count + self.plan.count) * 16 + 64) as u64)?;
+        let mut values = voltages[..self.node_count].to_vec();
+        values.extend(
+            self.plan
+                .executed_values(&self.ids, &values, &self.before, w)?,
         );
         Ok(values)
     }
@@ -2063,6 +2225,25 @@ impl Plan {
             ids: layout.ids,
             physical_program,
         }));
+        // Decision 22: the procedure values on same-time cycles of this
+        // circuit and the nodes their roundings read key this Plan's records.
+        let structure = circuit.same_time_structure();
+        if !structure.values.is_empty() {
+            let view = circuit
+                .procedure_view()
+                .ok_or_else(|| invalid("procedure circuit lost its view"))?;
+            let ids = structure
+                .values
+                .iter()
+                .map(|&node| {
+                    view.ids
+                        .get(node.wrapping_sub(view.node_count))
+                        .copied()
+                        .ok_or_else(|| invalid("same-time value has no procedure value"))
+                })
+                .collect::<Result<Vec<_>, Error>>()?;
+            self.mark_same_time(ids, structure.reads.clone())?;
+        }
         Ok(circuit)
     }
     // Keep nominal/full boxes, source frame, and original Work explicit.
@@ -2213,6 +2394,20 @@ impl Plan {
             .map(Cell::bound)
             .collect::<Result<Vec<_>, _>>()?;
         circuit.set_procedure_parameter_bounds(&parameter_bounds)?;
+        // Decision 22: the program values of a same-time cycle are certified
+        // only where the activation's solve stored them.
+        if self
+            .same_time_marks
+            .get()
+            .is_some_and(|m| !m.ids.is_empty())
+            && self.same_time_values(voltages, &before, w)?.is_none()
+        {
+            return Err(Error::new(
+                "waveform_accuracy",
+                "cannot certify same-time program values: their activation stored no rounding for \
+                 these voltages and states",
+            ));
+        }
         let mut values = voltages[..p.nodes.len()].to_vec();
         values.extend(self.numeric_values(&layout.ids, &values, &before, context, w)?);
         let solution = ir::Solution {
@@ -2560,5 +2755,100 @@ mod immutable_plan_owner_tests {
             assert_eq!(w.spent(), spent);
             assert_eq!(Arc::strong_count(&plan), strong);
         }
+    }
+}
+
+#[cfg(test)]
+mod same_time_record_tests {
+    use super::*;
+    use crate::ir::{EventTrigger, Request, Solution, Tolerances};
+
+    // @(timer(0.5)) q = -0.5*V(y) + V(u) + 1 with V(y) <+ q: the same-time
+    // equation y = -y/2 + u + 1 has the root 2(u + 1)/3, so decision 22 stores
+    // RN(2/3) at u = 0 (testdata/same_time_record.va).
+    fn fixture(w: &Work) -> (Program, Arc<Plan>, Vec<f64>) {
+        let request: Request =
+            serde_json::from_str(include_str!("testdata/same_time_record.json")).unwrap();
+        let p = request.program;
+        let before = vec![0.; p.states.len()];
+        let old = before.iter().map(|&v| I::point(v)).collect::<Vec<_>>();
+        let mut nodes = vec![
+            I {
+                lo: f64::NEG_INFINITY,
+                hi: f64::INFINITY
+            };
+            p.nodes.len()
+        ];
+        nodes[0] = I::ZERO;
+        nodes[1] = I { lo: 0., hi: 16. };
+        let timer = p
+            .events
+            .iter()
+            .position(|e| matches!(e.trigger, EventTrigger::Timer { .. }))
+            .unwrap();
+        let plan = execute(&p, &[timer], &nodes, &old, None, w).unwrap();
+        (p, Arc::new(plan), before)
+    }
+
+    #[test]
+    fn stored_roundings_outlive_later_solves_and_ignore_the_ground_zero_sign() {
+        let w = Work::default();
+        let (p, plan, before) = fixture(&w);
+        let c = plan
+            .circuit(&p, &["u".into()], &before, &[], Tolerances::default(), &w)
+            .unwrap();
+        let first = c.solve(&[0.]).unwrap();
+        let rn = 2.0_f64 / 3.0;
+        assert_eq!(first.voltages[2].to_bits(), rn.to_bits());
+        // More solves of the same activation than the eight records it kept
+        // before (review r1 R2-R1): the first record is still read.
+        for u in 1..=12 {
+            c.solve(&[f64::from(u)]).unwrap();
+        }
+        let q = |nodes: &[f64]| {
+            plan.numeric_states(&p, nodes, &before, None, &w)
+                .map(|s| s[0])
+        };
+        assert_eq!(q(&first.voltages).unwrap().to_bits(), rn.to_bits());
+        // The sign of the ground zero is not an input of the record.
+        let mut negative_ground = first.voltages.clone();
+        negative_ground[0] = -0.0;
+        assert_eq!(q(&negative_ground).unwrap().to_bits(), rn.to_bits());
+    }
+
+    #[test]
+    fn a_missing_stored_rounding_is_refused_never_executed() {
+        let w = Work::default();
+        let (p, plan, before) = fixture(&w);
+        let c = plan
+            .circuit(&p, &["u".into()], &before, &[], Tolerances::default(), &w)
+            .unwrap();
+        let first = c.solve(&[0.]).unwrap();
+        // Voltages this activation was never solved at have no record: the
+        // executed value of the rounded map is not read in its place.
+        let mut other = first.voltages.clone();
+        other[2] = 0.5;
+        let error = plan
+            .numeric_states(&p, &other, &before, None, &w)
+            .unwrap_err();
+        assert_eq!(error.kind, "unsupported_transient");
+        assert!(
+            error.message.contains("has no stored rounding"),
+            "{}",
+            error.message
+        );
+        // Nor is the certificate of such a point given by execution: it is
+        // refused as a certificate.
+        let unsolved = Solution {
+            voltages: other,
+            ..first.clone()
+        };
+        let error = c.waveform_bounds(&unsolved, &[I::point(0.)]).unwrap_err();
+        assert_eq!(error.kind, "waveform_accuracy");
+        assert!(
+            error.message.contains("stored no rounding"),
+            "{}",
+            error.message
+        );
     }
 }

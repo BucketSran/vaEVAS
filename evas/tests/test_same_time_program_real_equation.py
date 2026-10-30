@@ -13,6 +13,10 @@ node instead of ground, or between two unknown nodes, and an event cycle that is
 affine, are refused as a capability limit even where the exact system has one solution; the
 refusal does not claim that it has none or several.
 
+Every reader of a stored value (the event store, $display, the reset and observation paths)
+reads the rounding the activation's solve recorded for its inputs, also after a same-time
+reset changed values the cycle does not read; it never executes the rounded map in its place.
+
 The expected values are exact rational roots computed here, not EVAS output. Rows are scored
 within the EVAS default budget, 1e-12 V + 1e-10*|y|, and the row at the event instant is not
 scored; stored values and the members of a cycle are the rounding of the root bit for bit.
@@ -54,6 +58,40 @@ class SameTimeProgramRealEquation(unittest.TestCase):
         with self.assertRaises(KernelError) as caught:
             transient(p, {'u': [[0, 0], [1, 0]]}, [0, .75, 1], stop=1, max_step=.25, kernel=KERNEL)
         return str(caught.exception)
+
+    def answer(self, body, declarations):
+        source = ('`include "disciplines.vams"\nmodule m(u,y); input u; output y; electrical u,y; '
+                  f'{declarations} analog begin {body} end endmodule')
+        p = compile_sources({'deck.va': source}, [Instance('M', 'm', dict(u='u', y='y'))])
+        return p, transient(p, {'u': [[0, 0], [1, 0]]}, [0, .25, .5, .75, 1], stop=1, max_step=.25,
+                            kernel=KERNEL)
+
+    def test_same_time_program_value_readers_get_the_stored_rounding(self):
+        # Review r1 R2-R1. The event that solves q = -0.5*V(y) + 1 also resets an idt: with a
+        # cycle that does not read it, one that reads it (after the reset z = 0, the same
+        # equation), and with q computed by the ordinary block and printed by the event. The
+        # stored q, V(y) from the event on and the display all read RN(2/3), never the executed
+        # map RN(1 - RN(2/3)/2) = 0.66666666666666674; %.17g prints RN(2/3) as
+        # 0.66666666666666663.
+        rn = float(Q(2, 3))
+        self.assertEqual(f'{rn:.17g}', '0.66666666666666663')
+        display = '$display("q=%.17g y=%.17g z=%.17g",q,V(y),V(z));'
+        event = ('@(initial_step) begin rst=0; q=0; end @(timer(0.5)) begin rst=1; '
+                 'q=-0.5*V(y){z}+1; ' + display + ' end V(y)<+q; V(z)<+idt(1,0,rst);')
+        ordinary = ('@(initial_step) rst=0; q=-0.5*V(y)+1; @(timer(0.5)) begin rst=1; ' + display +
+                    ' end V(y)<+q; V(z)<+idt(1,0,rst);')
+        for body in (event.format(z=''), event.format(z='+V(z)'), ordinary):
+            with self.subTest(body=body):
+                p, result = self.answer(body, 'real q; integer rst; electrical z;')
+                records = result['transient']['display_records']
+                self.assertEqual([(r['time'], r['text'].split(' z=')[0]) for r in records],
+                                 [(.5, 'q=0.66666666666666663 y=0.66666666666666663')])
+                y = p.nodes.index('y')
+                self.assertEqual([row['voltages'][y] for row in result['solutions'][2:]], [rn] * 3)
+                names = [name.split(':')[-1] for name in result['transient']['state_names']]
+                if 'q' in names:  # a state where the event assigns it
+                    self.assertEqual([row[names.index('q')] for row in result['transient']['states'][2:]],
+                                     [rn] * 3)
 
     def test_nonlinear_event_feedback_with_two_real_roots_is_refused(self):
         with self.assertRaisesRegex(KernelError, NONAFFINE_EVENT):
@@ -150,6 +188,42 @@ class SameTimeProgramRealEquation(unittest.TestCase):
         y = ordinary.nodes.index('y')
         self.assertEqual([row['voltages'][y] for row in result['solutions']],
                          [rounded_root(Q(4, 3)), rounded_root(Q(2))])
+
+
+    def test_same_activation_physical_voltage_read_after_cycle(self):
+        # Card A v5 proposed test 12 (the decided reading (甲) of
+        # D_R2_1.reads_after_a_same_time_cycle; that card version is under review). The cycle
+        # q = 1 - 0.5*V(y), V(y) <+ 5*q has the exact root q = 2/7, y = 10/7. A program value
+        # that reads V(y) later in the same activation reads the exact voltage of the cycle,
+        # p = RN(10/7); the rows after the event solve the circuit with the stored q, V(y) =
+        # RN(5*RN(2/7)), and 5*RN(2/7) = 12867427506772845/2^53 is a midpoint that rounds to
+        # even. The stored-value reading (乙), p = RN(5*RN(2/7)), fails here. Expected values
+        # are Fraction arithmetic; float(Fraction) rounds once, ties to even.
+        q, y = Q(2, 7), Q(10, 7)
+        self.assertEqual((1 - y / 2, 5 * q), (q, y))
+        stored_q, stored_p = float(q), float(y)
+        after = float(5 * Q(stored_q))
+        self.assertEqual(5 * Q(stored_q), Q(12867427506772845, 2 ** 53))
+        self.assertEqual([v.hex() for v in (stored_q, stored_p, after)],
+                         ['0x1.2492492492492p-2', '0x1.6db6db6db6db7p+0', '0x1.6db6db6db6db6p+0'])
+        body = ('@(initial_step) begin q=0; p=0; end @(timer(0.5)) begin q=1-0.5*V(y); p=V(y); '
+                '$display("q=%.17g p=%.17g y=%.17g",q,p,V(y)); end V(y)<+5*q; V(w)<+p;')
+        program, result = self.answer(body, 'real q,p; electrical w;')
+        records = result['transient']['display_records']
+        self.assertEqual([r['time'] for r in records], [.5])
+        # The three printed values read back; their %.17g spelling is not checked.
+        shown = dict(field.split('=') for field in records[0]['text'].split())
+        self.assertEqual({name: float(text) for name, text in shown.items()},
+                         {'q': stored_q, 'p': stored_p, 'y': stored_p})
+        states = [name.split(':')[-1] for name in result['transient']['state_names']]
+        for name, value in (('q', stored_q), ('p', stored_p)):
+            self.assertEqual([row[states.index(name)] for row in result['transient']['states'][2:]],
+                             [value] * 3, name)
+        nodes = [name.split(':')[-1] for name in program.nodes]
+        voltages = [row['voltages'] for row in result['solutions']]
+        # Zeros of either sign compare equal (SL-SO-20261030-001).
+        self.assertEqual([v[nodes.index('y')] for v in voltages], [0, 0, stored_p, after, after])
+        self.assertEqual([v[nodes.index('w')] for v in voltages[2:]], [stored_p] * 3)
 
 
 if __name__ == '__main__':

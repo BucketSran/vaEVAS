@@ -240,6 +240,12 @@ pub fn run_with_threads(mut request: Request, static_threads: usize) -> Result<R
                 error
             })?;
             let selection = model.observation_selection(&bounds, &[], &[], &[], &[])?;
+            // Decision 22: the observation certifies this solution with the
+            // same-time roundings its solve stored.
+            if let (Some(plan), Some(view)) = (selection.plan.as_deref(), circuit.procedure_view())
+            {
+                plan.adopt_same_time(&view.plan)?;
+            }
             let (_, nodes) = model.certify_observation(
                 &selection,
                 &bounds,
