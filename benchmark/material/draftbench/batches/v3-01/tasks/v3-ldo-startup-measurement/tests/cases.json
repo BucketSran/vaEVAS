@@ -16,7 +16,7 @@
       "settle_us": 0.075,
       "overshoot_mv": 0.3
     },
-    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nsimulator lang=spice\n.include \"models.spice\"\n.include \"ldo_ota5.spi\"\n.temp 27\nVIN vin 0 PWL(0 0 1u 0 2.1e-05 1.8 7.1e-05 1.8)\nVREF vref 0 0.8\nIBIAS vin ibias 50u\nRLOAD vout 0 120\nXLDO vin vout 0 vref ibias fb gate_drive gate ldo_ota5\nRFBTOP vout fb 300k\nRFBBOT fb 0 600k\nVLOOP gate_drive gate 0\nRESR vout vcap 50m\nCOUT vcap 0 1e-06\nsimulator lang=spectre\nVOBSIN (vin vin_read) vsource dc=0\nVOBSOUT (vout vout_read) vsource dc=0\nXM (vin_read vout_read t90_us overshoot_mv settle_us reached settled status done) ldo_startup_meter ramp_end=2.1e-05 window=7e-05\ntran tran stop=7.1e-05 maxstep=5n errpreset=conservative\nsave VOBSIN:p VOBSOUT:p vin vout t90_us overshoot_mv settle_us reached settled status done\n",
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nsimulator lang=spice\n.include \"models.spice\"\n.include \"ldo_ota5.spi\"\n.temp 27\nVIN vin 0 PWL(0 0 1u 0 2.1e-05 1.8 7.1e-05 1.8)\nVREF vref 0 0.8\nIBIAS vin ibias 50u\nRLOAD vout 0 120\nXLDO vin vout 0 vref ibias fb gate_drive gate ldo_ota5\nRFBTOP vout fb 300k\nRFBBOT fb 0 600k\nVLOOP gate_drive gate 0\nRESR vout vcap 50m\nCOUT vcap 0 1e-06\nsimulator lang=spectre\nVOBSIN (vin vin_read) vsource type=dc dc=0\nVOBSOUT (vout vout_read) vsource type=dc dc=0\nXM (vin_read vout_read t90_us overshoot_mv settle_us reached settled status done) ldo_startup_meter ramp_end=2.1e-05 window=7e-05\ntran tran stop=7.1e-05 maxstep=5n errpreset=conservative\nsave VOBSIN:p VOBSOUT:p vin vout t90_us overshoot_mv settle_us reached settled status done\n",
     "signals": [
       "VOBSIN:p",
       "VOBSOUT:p",
@@ -64,7 +64,7 @@
       "settle_us": 0.075,
       "overshoot_mv": 0.3
     },
-    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nsimulator lang=spice\n.include \"models.spice\"\n.include \"ldo_ota5.spi\"\n.temp 27\nVIN vin 0 PWL(0 0 1u 0 1.7e-05 1 6.1e-05 1)\nVREF vref 0 0.8\nIBIAS vin ibias 50u\nRLOAD vout 0 120\nXLDO vin vout 0 vref ibias fb gate_drive gate ldo_ota5\nRFBTOP vout fb 300k\nRFBBOT fb 0 600k\nVLOOP gate_drive gate 0\nRESR vout vcap 50m\nCOUT vcap 0 1e-06\nsimulator lang=spectre\nVOBSIN (vin vin_read) vsource dc=0\nVOBSOUT (vout vout_read) vsource dc=0\nXM (vin_read vout_read t90_us overshoot_mv settle_us reached settled status done) ldo_startup_meter ramp_end=1.7e-05 window=6e-05\ntran tran stop=6.1e-05 maxstep=5n errpreset=conservative\nsave VOBSIN:p VOBSOUT:p vin vout t90_us overshoot_mv settle_us reached settled status done\n",
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nsimulator lang=spice\n.include \"models.spice\"\n.include \"ldo_ota5.spi\"\n.temp 27\nVIN vin 0 PWL(0 0 1u 0 1.7e-05 1 6.1e-05 1)\nVREF vref 0 0.8\nIBIAS vin ibias 50u\nRLOAD vout 0 120\nXLDO vin vout 0 vref ibias fb gate_drive gate ldo_ota5\nRFBTOP vout fb 300k\nRFBBOT fb 0 600k\nVLOOP gate_drive gate 0\nRESR vout vcap 50m\nCOUT vcap 0 1e-06\nsimulator lang=spectre\nVOBSIN (vin vin_read) vsource type=dc dc=0\nVOBSOUT (vout vout_read) vsource type=dc dc=0\nXM (vin_read vout_read t90_us overshoot_mv settle_us reached settled status done) ldo_startup_meter ramp_end=1.7e-05 window=6e-05\ntran tran stop=6.1e-05 maxstep=5n errpreset=conservative\nsave VOBSIN:p VOBSOUT:p vin vout t90_us overshoot_mv settle_us reached settled status done\n",
     "signals": [
       "VOBSIN:p",
       "VOBSOUT:p",
@@ -112,7 +112,7 @@
       "settle_us": 0.075,
       "overshoot_mv": 0.3
     },
-    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nsimulator lang=spice\n.include \"models.spice\"\n.include \"ldo_ota5.spi\"\n.temp 27\nVIN vin 0 PWL(0 0 1u 0 2.5e-05 1.8 8.1e-05 1.8)\nVREF vref 0 0.8\nIBIAS vin ibias 50u\nRLOAD vout 0 60\nXLDO vin vout 0 vref ibias fb gate_drive gate ldo_ota5\nRFBTOP vout fb 300k\nRFBBOT fb 0 600k\nVLOOP gate_drive gate 0\nRESR vout vcap 50m\nCOUT vcap 0 2e-06\nsimulator lang=spectre\nVOBSIN (vin vin_read) vsource dc=0\nVOBSOUT (vout vout_read) vsource dc=0\nXM (vin_read vout_read t90_us overshoot_mv settle_us reached settled status done) ldo_startup_meter ramp_end=2.5e-05 window=8e-05\ntran tran stop=8.1e-05 maxstep=5n errpreset=conservative\nsave VOBSIN:p VOBSOUT:p vin vout t90_us overshoot_mv settle_us reached settled status done\n",
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nsimulator lang=spice\n.include \"models.spice\"\n.include \"ldo_ota5.spi\"\n.temp 27\nVIN vin 0 PWL(0 0 1u 0 2.5e-05 1.8 8.1e-05 1.8)\nVREF vref 0 0.8\nIBIAS vin ibias 50u\nRLOAD vout 0 60\nXLDO vin vout 0 vref ibias fb gate_drive gate ldo_ota5\nRFBTOP vout fb 300k\nRFBBOT fb 0 600k\nVLOOP gate_drive gate 0\nRESR vout vcap 50m\nCOUT vcap 0 2e-06\nsimulator lang=spectre\nVOBSIN (vin vin_read) vsource type=dc dc=0\nVOBSOUT (vout vout_read) vsource type=dc dc=0\nXM (vin_read vout_read t90_us overshoot_mv settle_us reached settled status done) ldo_startup_meter ramp_end=2.5e-05 window=8e-05\ntran tran stop=8.1e-05 maxstep=5n errpreset=conservative\nsave VOBSIN:p VOBSOUT:p vin vout t90_us overshoot_mv settle_us reached settled status done\n",
     "signals": [
       "VOBSIN:p",
       "VOBSOUT:p",
