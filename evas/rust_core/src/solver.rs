@@ -36,6 +36,9 @@ pub struct Circuit {
     dense_residuals: Vec<Option<DenseResidual>>,
     // Only coefficients are cached; inputs, solutions and physical state are not.
     affine_factor: Option<AffineFactor>,
+    // The structure of same-time feedback through program reals, read once
+    // from the assembled relations of this procedure circuit.
+    same_time: Arc<OnceLock<Arc<SameTimeStructure>>>,
 }
 
 // Cache dense spans only when they occupy at most twice the actual terms.
@@ -68,6 +71,7 @@ impl Circuit {
         view: std::sync::Arc<crate::procedure::CircuitView>,
     ) {
         self.procedure_view = Some(view);
+        self.same_time = Arc::new(OnceLock::new());
     }
     pub(crate) fn set_procedure_parameters(&mut self, values: Vec<f64>) {
         self.procedure_parameters = values.into_iter().map(|v| (v, I::point(v))).collect();
@@ -246,6 +250,176 @@ fn read_columns(
     }
 }
 
+/// What the same-time structure reads from one bound waveform expression,
+/// without values: every node it reads, whether it has a rounding step,
+/// whether `read_columns` can read it, and whether every operation has an
+/// exact real-arithmetic form (`same_time_root` evaluates it).
+struct StructureRead {
+    nodes: Vec<usize>,
+    rounded: bool,
+    walkable: bool,
+    exact: bool,
+}
+
+impl StructureRead {
+    fn new() -> Self {
+        Self {
+            nodes: Vec::new(),
+            rounded: false,
+            walkable: true,
+            exact: true,
+        }
+    }
+    fn read(&mut self, e: &Expression) {
+        match e {
+            Expression::Affine { terms, .. } => self.nodes.extend(terms.iter().map(|t| t.node)),
+            Expression::RealBinary { left, right, .. } => {
+                self.rounded = true;
+                self.read(left);
+                self.read(right);
+            }
+            Expression::RealBoundary { value, .. } => {
+                self.rounded = true;
+                self.read(value);
+            }
+            Expression::Add { left, right }
+            | Expression::Multiply { left, right }
+            | Expression::Divide { left, right } => {
+                self.read(left);
+                self.read(right);
+            }
+            Expression::Power { base, .. } => self.read(base),
+            Expression::EventMath { function, args, .. } => {
+                self.exact &= args.len() == 1
+                    && crate::operators::Function::from_internal(*function).is_some();
+                for arg in args {
+                    self.read(arg);
+                }
+            }
+            other => {
+                self.walkable = false;
+                self.exact = false;
+                match other {
+                    Expression::IntegerRound { value, .. }
+                    | Expression::CheckedInteger { value, .. }
+                    | Expression::Forcing { value, .. } => self.read(value),
+                    Expression::CheckedIndex { index, .. }
+                    | Expression::ArrayRead { index, .. } => self.read(index),
+                    Expression::Select {
+                        left,
+                        right,
+                        then_value,
+                        else_value,
+                        ..
+                    } => {
+                        for e in [left, right, then_value, else_value] {
+                            self.read(e);
+                        }
+                    }
+                    Expression::UnsupportedSystemCall { args, .. } => {
+                        for arg in args {
+                            self.read(arg);
+                        }
+                    }
+                    Expression::RealCall { result, .. } => self.read(result),
+                    _ => {}
+                }
+            }
+        }
+    }
+}
+
+/// A maximum matching of relations to the unknown columns each involves
+/// (Kuhn's augmenting paths after a greedy start in candidate order, which
+/// lists a relation's terminals first): the matched column of each relation.
+fn relation_matching(candidates: &[Vec<usize>], n: usize) -> Vec<Option<usize>> {
+    let mut owner: Vec<Option<usize>> = vec![None; n];
+    let mut matched: Vec<Option<usize>> = vec![None; candidates.len()];
+    for (row, columns) in candidates.iter().enumerate() {
+        if let Some(&column) = columns.iter().find(|&&c| owner[c].is_none()) {
+            owner[column] = Some(row);
+            matched[row] = Some(column);
+        }
+    }
+    let mut seen = vec![usize::MAX; n];
+    for start in 0..candidates.len() {
+        if matched[start].is_some() {
+            continue;
+        }
+        // Rows on the search path with their next candidate, and the column
+        // by which each row after the first was reached.
+        let mut path = vec![(start, 0_usize)];
+        let mut via = Vec::new();
+        let mut free = None;
+        while let Some(&(row, position)) = path.last() {
+            let Some(&column) = candidates[row].get(position) else {
+                path.pop();
+                via.pop();
+                continue;
+            };
+            if let Some(top) = path.last_mut() {
+                top.1 += 1;
+            }
+            if seen[column] == start {
+                continue;
+            }
+            seen[column] = start;
+            match owner[column] {
+                None => {
+                    free = Some(column);
+                    break;
+                }
+                Some(next) => {
+                    via.push(column);
+                    path.push((next, 0));
+                }
+            }
+        }
+        if let Some(mut column) = free {
+            for k in (0..path.len()).rev() {
+                let row = path[k].0;
+                owner[column] = Some(row);
+                matched[row] = Some(column);
+                if k > 0 {
+                    column = via[k - 1];
+                }
+            }
+        }
+    }
+    matched
+}
+
+/// Why a same-time cycle through a program real lies outside the class
+/// decision 22 implements: every unknown of the activation defined by
+/// exactly one grounded relation, every operation of the cycle with an exact
+/// real-arithmetic form.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+enum OutsideClass {
+    /// A relation of the cycle between two unknown nodes.
+    TwoUnknownNodes,
+    /// A relation of the cycle to a driven node instead of ground.
+    DrivenTerminal,
+    /// An operation of the cycle without an exact real-arithmetic form.
+    InexactOperation,
+    /// Another unknown of the activation is not defined by one grounded relation.
+    Layout,
+}
+
+/// Same-time feedback through program reals in one procedure circuit, read
+/// once from its assembled relations without values (decision 22). Cycles
+/// are those of "unknown reads unknown" under a maximum matching of the
+/// relations to the unknowns they involve, whatever their terminals; a cycle
+/// is through a program real when one of its relations has a rounding step.
+#[derive(Default)]
+pub(crate) struct SameTimeStructure {
+    /// The first cycle through a program real outside the implemented class:
+    /// why, and the origins of its relations.
+    outside: Option<(OutsideClass, String)>,
+    /// The activation is in the implemented class and has a same-time cycle
+    /// (`Order::Cyclic` with a cycle).
+    cyclic: bool,
+}
+
 /// Dependency structure of a system with a rounding step in which every
 /// unknown is defined by exactly one grounded relation.
 enum Order {
@@ -263,6 +437,19 @@ enum Order {
         definition: Vec<(usize, f64)>,
         reads: Vec<Vec<usize>>,
     },
+}
+
+/// Whether a bound waveform expression has a rounding step (a program real).
+fn rounding_step(e: &Expression) -> bool {
+    match e {
+        Expression::RealBoundary { .. } | Expression::RealBinary { .. } => true,
+        Expression::Add { left, right }
+        | Expression::Multiply { left, right }
+        | Expression::Divide { left, right } => rounding_step(left) || rounding_step(right),
+        Expression::Power { base, .. } => rounding_step(base),
+        Expression::EventMath { args, .. } => args.iter().any(rounding_step),
+        _ => false,
+    }
 }
 
 /// The same relation in real arithmetic: every rounding step is dropped.
@@ -398,9 +585,18 @@ fn strong_components(
     reads: &[Vec<usize>],
     work: &crate::transition_source_plan::Work,
 ) -> Result<Vec<(Vec<usize>, bool)>, Error> {
-    let n = reads.len();
     // Index, low link, stack flag, the stack, the frame stack and the result.
-    work.debit(2, ((6 * n + 1) * 64) as u64)?;
+    work.debit(2, ((6 * reads.len() + 1) * 64) as u64)?;
+    strong_components_with(reads, &mut || work.step())
+}
+
+/// `strong_components` with each visit reported to `step` (the charged order
+/// pays one step per visit; the structural identification pays nothing).
+fn strong_components_with(
+    reads: &[Vec<usize>],
+    step: &mut dyn FnMut() -> Result<(), Error>,
+) -> Result<Vec<(Vec<usize>, bool)>, Error> {
+    let n = reads.len();
     let mut index = vec![usize::MAX; n];
     let mut low = vec![0_usize; n];
     let mut on_stack = vec![false; n];
@@ -418,7 +614,7 @@ fn strong_components(
         stack.push(start);
         on_stack[start] = true;
         while let Some(&(column, position)) = frames.last() {
-            work.step()?;
+            step()?;
             if let Some(&read) = reads[column].get(position) {
                 if let Some(top) = frames.last_mut() {
                     top.1 += 1;
@@ -442,7 +638,7 @@ fn strong_components(
             if low[column] == index[column] {
                 let mut members = Vec::new();
                 loop {
-                    work.step()?;
+                    step()?;
                     let Some(member) = stack.pop() else {
                         return Err(Error::new(
                             "invalid_ir",
@@ -713,6 +909,7 @@ impl Circuit {
             unknown_columns,
             driven_coefficients,
             dense_residuals,
+            same_time: Arc::new(OnceLock::new()),
         })
     }
 
@@ -909,12 +1106,13 @@ impl Circuit {
         })
     }
 
-    /// A same-time cycle through a rounded program value in an event
-    /// activation (D-R2-1 option A, decision 22): its relations are solved in
-    /// real arithmetic, and only a jointly affine system has a certified
-    /// unique solution. A cycle that is nonlinear in its own unknowns, such as
-    /// q = V(y)*V(y) with V(y) <+ q (y = y^2 has the solutions 0 and 1), is
-    /// refused before any local proof can select one of its roots.
+    /// A same-time cycle through a program real in an event activation
+    /// (D-R2-1 option A, decision 22): EVAS certifies only a cycle whose
+    /// relations are jointly affine in its own unknowns; any other is refused
+    /// as a capability limit before a local proof could select one of its
+    /// roots, also where its exact equation has exactly one solution (q =
+    /// 1 - 0.25*V(y)^3 with V(y) <+ q). A cycle without a rounding step is a
+    /// continuous relation and keeps the original contract.
     fn nonlinear_same_time_feedback(&self) -> Result<Option<Error>, Error> {
         let Some(view) = self
             .procedure_view
@@ -937,23 +1135,23 @@ impl Circuit {
         };
         let mut member = vec![false; definition.len()];
         for (columns, cyclic) in &components {
-            if !cyclic {
+            if !cyclic || !self.through_program_real(columns, &definition) {
                 continue;
             }
             for &column in columns {
                 member[column] = true;
             }
             for &column in columns {
-                let eq = &self.equations[definition[column].0];
-                for rhs in &eq.original_rhs {
+                for rhs in &self.equations[definition[column].0].original_rhs {
                     if !marked_affine(rhs, &self.unknown_columns, &member, work)?.1 {
-                        let origins = eq.origins.join(", ");
+                        let origins = self.cycle_origins(columns, &definition, work)?;
                         work.debit(2, (origins.len() + 256) as u64)?;
                         return Ok(Some(Error::new(
                             "unsupported_transient",
                             format!(
-                                "same-time feedback through a program real is nonlinear at {origins}: \
-                                 its real-arithmetic equation is not certified to have exactly one solution"
+                                "certification of same-time feedback through a program real at \
+                                 {origins} that is not jointly affine is not implemented in an \
+                                 event activation (capability limit)"
                             ),
                         )));
                     }
@@ -964,6 +1162,41 @@ impl Circuit {
             }
         }
         Ok(None)
+    }
+
+    /// Whether some relation of a cycle has a rounding step: the cycle runs
+    /// through a program real (decision 22).
+    fn through_program_real(&self, columns: &[usize], definition: &[(usize, f64)]) -> bool {
+        columns.iter().any(|&column| {
+            self.equations[definition[column].0]
+                .original_rhs
+                .iter()
+                .any(rounding_step)
+        })
+    }
+
+    /// The origins of a cycle's relations, each once, in member order.
+    fn cycle_origins(
+        &self,
+        columns: &[usize],
+        definition: &[(usize, f64)],
+        work: &crate::transition_source_plan::Work,
+    ) -> Result<String, Error> {
+        let mut origins: Vec<&String> = Vec::new();
+        for &column in columns {
+            for origin in &self.equations[definition[column].0].origins {
+                work.step()?;
+                if !origins.contains(&origin) {
+                    work.debit(2, (origin.len() + 2) as u64)?;
+                    origins.push(origin);
+                }
+            }
+        }
+        Ok(origins
+            .iter()
+            .map(|o| o.as_str())
+            .collect::<Vec<_>>()
+            .join(", "))
     }
 
     /// D-R2-1 option A (decision 22, an ADR-006 clarification): a cycle of
@@ -1052,6 +1285,7 @@ impl Circuit {
         cycle.affine_factor = None;
         cycle.driven_coefficients = Vec::new();
         cycle.dense_residuals = Vec::new();
+        cycle.same_time = Arc::new(OnceLock::new());
         cycle.equations = Vec::with_capacity(columns.len());
         for &column in columns {
             work.step()?;
@@ -1086,97 +1320,214 @@ impl Circuit {
         })
     }
 
-    /// Whether the structure is that of `Order::Cyclic` with a cycle: every
-    /// unknown defined by one grounded relation, a rounding step, and a column
-    /// that reads itself through the others. Only the assembled structure is
-    /// read, without values, so the check is not charged; the charged
-    /// substitution order then decides. Most systems with program reals have
+    /// Whether the activation is in the implemented class of decision 22 and
+    /// has a same-time cycle: every unknown defined by one grounded relation,
+    /// a rounding step, and a column that reads itself through the others
+    /// (the structure of `Order::Cyclic` with a cycle). The charged
+    /// substitution order then decides; most systems with program reals have
     /// no such cycle and never pay for that order.
     fn same_time_cycle_shape(&self) -> bool {
-        fn reads(
-            e: &Expression,
-            columns: &[Option<usize>],
-            out: &mut Vec<usize>,
-            rounded: &mut bool,
-        ) -> bool {
-            match e {
-                Expression::Affine { terms, .. } => {
-                    out.extend(terms.iter().filter_map(|t| columns[t.node]));
-                    true
-                }
-                Expression::RealBinary { left, right, .. } => {
-                    *rounded = true;
-                    reads(left, columns, out, rounded) && reads(right, columns, out, rounded)
-                }
-                Expression::Add { left, right }
-                | Expression::Multiply { left, right }
-                | Expression::Divide { left, right } => {
-                    reads(left, columns, out, rounded) && reads(right, columns, out, rounded)
-                }
-                Expression::RealBoundary { value, .. } => {
-                    *rounded = true;
-                    reads(value, columns, out, rounded)
-                }
-                Expression::Power { base, .. } => reads(base, columns, out, rounded),
-                Expression::EventMath { args, .. } => {
-                    args.iter().all(|arg| reads(arg, columns, out, rounded))
-                }
-                _ => false,
-            }
+        self.same_time_structure().cyclic
+    }
+
+    /// The same-time structure of this circuit (`SameTimeStructure`). Only the
+    /// assembled relations are read, without values, so the read is not
+    /// charged; it is kept with the circuit.
+    pub(crate) fn same_time_structure(&self) -> Arc<SameTimeStructure> {
+        self.same_time
+            .get_or_init(|| Arc::new(self.read_same_time_structure()))
+            .clone()
+    }
+
+    fn read_same_time_structure(&self) -> SameTimeStructure {
+        if self.procedure_view.is_none() || !self.has_rounding() {
+            return SameTimeStructure::default();
         }
         let n = self.unknown.len();
-        if self.procedure_view.is_none() || self.equations.len() != n {
-            return false;
-        }
-        let mut definition = vec![None; n];
-        for (index, eq) in self.equations.iter().enumerate() {
+        // Per relation: the unknown columns at its terminals and those it
+        // reads, and what it reads without values.
+        let mut terminals = Vec::with_capacity(self.equations.len());
+        let mut read_columns = Vec::with_capacity(self.equations.len());
+        let mut reads = Vec::with_capacity(self.equations.len());
+        let mut grounded = true;
+        let mut defined = vec![false; n];
+        for eq in &self.equations {
+            let mut ends = Vec::new();
+            for node in [eq.positive, eq.negative] {
+                if let Some(column) = self.unknown_columns[node] {
+                    if !ends.contains(&column) {
+                        ends.push(column);
+                    }
+                }
+            }
+            let mut read = StructureRead::new();
+            for rhs in &eq.original_rhs {
+                read.read(rhs);
+            }
+            let mut columns = Vec::new();
+            for &node in &read.nodes {
+                if let Some(column) = self.unknown_columns[node] {
+                    if !columns.contains(&column) {
+                        columns.push(column);
+                    }
+                }
+            }
             let node = if eq.negative == 0 {
                 eq.positive
             } else if eq.positive == 0 {
                 eq.negative
             } else {
-                return false;
+                0
             };
-            let Some(column) = self.unknown_columns[node] else {
-                return false;
-            };
-            if definition[column].replace(index).is_some() {
-                return false;
+            match self.unknown_columns[node] {
+                Some(column) if !defined[column] && read.walkable => defined[column] = true,
+                _ => grounded = false,
+            }
+            terminals.push(ends);
+            read_columns.push(columns);
+            reads.push(read);
+        }
+        grounded &= self.equations.len() == n;
+        let candidates = terminals
+            .iter()
+            .zip(&read_columns)
+            .map(|(ends, columns)| {
+                let mut all = ends.clone();
+                all.extend(columns.iter().filter(|c| !ends.contains(c)));
+                all
+            })
+            .collect::<Vec<_>>();
+        let matched = relation_matching(&candidates, n);
+        let mut owner = vec![None; n];
+        for (row, column) in matched.iter().enumerate() {
+            if let Some(column) = *column {
+                owner[column] = Some(row);
             }
         }
-        let mut pending = vec![0_usize; n];
-        let mut readers = vec![Vec::new(); n];
-        let mut rounded = false;
-        for column in 0..n {
-            let Some(index) = definition[column] else {
-                return false;
+        // Column c reads every other unknown its relation involves, and
+        // itself only where its right-hand side reads it.
+        let depends = (0..n)
+            .map(|column| match owner[column] {
+                Some(row) => candidates[row]
+                    .iter()
+                    .copied()
+                    .filter(|&c| c != column || read_columns[row].contains(&c))
+                    .collect(),
+                None => Vec::new(),
+            })
+            .collect::<Vec<Vec<usize>>>();
+        let Ok(components) = strong_components_with(&depends, &mut || Ok(())) else {
+            return SameTimeStructure {
+                outside: Some((OutsideClass::Layout, String::new())),
+                ..SameTimeStructure::default()
             };
-            let mut read = Vec::new();
-            for rhs in &self.equations[index].original_rhs {
-                if !reads(rhs, &self.unknown_columns, &mut read, &mut rounded) {
-                    return false;
+        };
+        let origins = |columns: &[usize]| {
+            let mut all: Vec<&str> = Vec::new();
+            for &column in columns {
+                for origin in owner[column]
+                    .map(|row| self.equations[row].origins.as_slice())
+                    .unwrap_or_default()
+                {
+                    if !all.contains(&origin.as_str()) {
+                        all.push(origin.as_str());
+                    }
                 }
             }
-            for other in read {
-                pending[column] += 1;
-                readers[other].push(column);
+            all.join(", ")
+        };
+        let mut outside: Option<(OutsideClass, String)> = None;
+        let mut cyclic = false;
+        for (columns, is_cycle) in &components {
+            if !is_cycle {
+                continue;
             }
-        }
-        if !rounded {
-            return false;
-        }
-        let mut ready = (0..n).filter(|&c| pending[c] == 0).collect::<Vec<_>>();
-        let mut ordered = 0;
-        while let Some(column) = ready.pop() {
-            ordered += 1;
-            for &reader in &readers[column] {
-                pending[reader] -= 1;
-                if pending[reader] == 0 {
-                    ready.push(reader);
+            cyclic = true;
+            let rows = columns
+                .iter()
+                .filter_map(|&column| owner[column])
+                .collect::<Vec<_>>();
+            if !rows.iter().any(|&row| reads[row].rounded) {
+                continue;
+            }
+            let mut why = OutsideClass::Layout;
+            let mut found = !grounded;
+            for &row in &rows {
+                let eq = &self.equations[row];
+                let reason = if terminals[row].len() == 2 {
+                    Some(OutsideClass::TwoUnknownNodes)
+                } else if eq.positive != 0 && eq.negative != 0 {
+                    Some(OutsideClass::DrivenTerminal)
+                } else if !reads[row].exact {
+                    Some(OutsideClass::InexactOperation)
+                } else {
+                    None
+                };
+                if let Some(reason) = reason {
+                    why = why.min(reason);
+                    found = true;
                 }
             }
+            if found && outside.as_ref().is_none_or(|(old, _)| why < *old) {
+                outside = Some((why, origins(columns)));
+            }
         }
-        ordered < n
+        if outside.is_some() || !grounded || !cyclic {
+            return SameTimeStructure {
+                outside,
+                ..SameTimeStructure::default()
+            };
+        }
+        SameTimeStructure {
+            outside: None,
+            cyclic: true,
+        }
+    }
+
+    /// Decision 22 scope (D_R2_1): a same-time cycle through a program real
+    /// outside the implemented class is refused as a capability limit before
+    /// any RN cell, numeric solve or derivative certificate, even where its
+    /// exact equation has exactly one solution. The refusal states no fact
+    /// about the solutions of that equation.
+    fn same_time_capability_refusal(&self) -> Result<Option<Error>, Error> {
+        let structure = self.same_time_structure();
+        let Some((outside, origins)) = &structure.outside else {
+            return Ok(None);
+        };
+        if let Some(view) = &self.procedure_view {
+            view.plan.work.debit(2, (origins.len() + 256) as u64)?;
+        }
+        Ok(Some(match outside {
+            OutsideClass::TwoUnknownNodes => Error::new(
+                "unsupported_transient",
+                format!(
+                    "same-time feedback through a program real at {origins} through a relation \
+                     between two unknown nodes is not implemented (capability limit)"
+                ),
+            ),
+            OutsideClass::DrivenTerminal => Error::new(
+                "unsupported_transient",
+                format!(
+                    "same-time feedback through a program real at {origins} through a relation \
+                     to a driven node instead of ground is not implemented (capability limit)"
+                ),
+            ),
+            OutsideClass::InexactOperation => Error::new(
+                "unsupported_transient",
+                format!(
+                    "same-time feedback through a program real at {origins} through an operation \
+                     without an exact real-arithmetic form is not implemented (capability limit)"
+                ),
+            ),
+            OutsideClass::Layout => Error::new(
+                "unsupported_transient",
+                format!(
+                    "same-time feedback through a program real at {origins} in an activation whose \
+                     unknowns are not each defined by one grounded relation is not implemented \
+                     (capability limit)"
+                ),
+            ),
+        }))
     }
 
     /// Decision 22 (D-R2-1 option A, an ADR-006 clarification): (node, value)
@@ -1882,6 +2233,9 @@ impl Circuit {
             view.plan.work.debit(2, 0)?;
         }
         if contract {
+            if let Some(refusal) = self.same_time_capability_refusal()? {
+                return Err(refusal);
+            }
             if let Some(refusal) = self.nonlinear_same_time_feedback()? {
                 return Err(refusal);
             }
@@ -2272,6 +2626,14 @@ impl Circuit {
         inputs: &[f64],
         initial_voltages: Option<&[f64]>,
     ) -> Result<Solution, Error> {
+        // Decision 22 scope: a same-time cycle through a program real outside
+        // the implemented class is refused before any RN cell or numeric solve.
+        if let Some(refusal) = self.same_time_capability_refusal()? {
+            return Err(refusal);
+        }
+        if let Some(refusal) = self.nonlinear_same_time_feedback()? {
+            return Err(refusal);
+        }
         let initial_expanded = initial_voltages
             .map(|v| match &self.procedure_view {
                 Some(view) if v.len() == view.node_count => view.expand(v),
@@ -2368,20 +2730,9 @@ impl Circuit {
     }
     /// Whether some relation has a rounding step (a program real).
     fn has_rounding(&self) -> bool {
-        fn rounded(e: &Expression) -> bool {
-            match e {
-                Expression::RealBoundary { .. } | Expression::RealBinary { .. } => true,
-                Expression::Add { left, right }
-                | Expression::Multiply { left, right }
-                | Expression::Divide { left, right } => rounded(left) || rounded(right),
-                Expression::Power { base, .. } => rounded(base),
-                Expression::EventMath { args, .. } => args.iter().any(rounded),
-                _ => false,
-            }
-        }
         self.equations
             .iter()
-            .any(|eq| eq.original_rhs.iter().any(rounded))
+            .any(|eq| eq.original_rhs.iter().any(rounding_step))
     }
     /// Newton failed on a system with executed program reals. A singular
     /// local rank first tries substitution (an acyclic system is determined
@@ -4053,5 +4404,32 @@ mod rounded_substitution_tests {
             assert!((v(4) - y).abs() <= 1e-7, "y at {t}: {row}");
             assert!((v(2) - 1.).abs() <= 1e-7, "held at {t}: {row}");
         }
+    }
+}
+
+#[cfg(test)]
+mod same_time_structure_tests {
+    use super::relation_matching;
+
+    #[test]
+    fn relation_matching_moves_a_greedy_choice_along_an_augmenting_path() {
+        // Relation 0 may define column 0 or 1, relation 1 only column 0: the
+        // greedy start gives column 0 to relation 0, the augmenting path then
+        // moves relation 0 to column 1.
+        assert_eq!(
+            relation_matching(&[vec![0, 1], vec![0]], 2),
+            vec![Some(1), Some(0)]
+        );
+        // Two relations that can only define the same column: one stays free.
+        assert_eq!(
+            relation_matching(&[vec![0], vec![0]], 1),
+            vec![Some(0), None]
+        );
+        // A longer path: relation 2 takes column 0 from relation 1, which takes
+        // column 1 from relation 0, which moves to column 2.
+        assert_eq!(
+            relation_matching(&[vec![1, 2], vec![0, 1], vec![0]], 3),
+            vec![Some(2), Some(1), Some(0)]
+        );
     }
 }

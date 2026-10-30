@@ -7,6 +7,12 @@ ADR-006), even where the rounded map has no binary64 fixed point or another one.
 equation that is not jointly affine is refused before a local proof can select one of its
 roots: y = y*y has the two real roots 0 and 1. y = y + 1 has no real root and stays refused.
 
+Decision 22 is implemented where every unknown of the activation is defined by exactly one
+grounded relation. A same-time cycle through a program real across a relation to a driven
+node instead of ground, or between two unknown nodes, and an event cycle that is not jointly
+affine, are refused as a capability limit even where the exact system has one solution; the
+refusal does not claim that it has none or several.
+
 The expected values are exact rational roots computed here, not EVAS output. Rows are scored
 within the EVAS default budget, 1e-12 V + 1e-10*|y|, and the row at the event instant is not
 scored; stored values and the members of a cycle are the rounding of the root bit for bit.
@@ -16,10 +22,16 @@ GUARDS = ["EVENT-ORDER", "ANALOG"]
 from fractions import Fraction as Q
 import unittest
 
-from evas import KernelError, compile_sources, transient
+from evas import Instance, KernelError, compile_sources, transient
 from test_affine import KERNEL, instance, model
 
 STEP = 0.0625
+CAPABILITY = (r'^unsupported_transient: same-time feedback through a program real at .+ through '
+              r'a relation (between two unknown nodes|to a driven node instead of ground) is not '
+              r'implemented \(capability limit\)$')
+NONAFFINE_EVENT = (r'^unsupported_transient: certification of same-time feedback through a program '
+                   r'real at .+ that is not jointly affine is not implemented in an event '
+                   r'activation \(capability limit\)$')
 
 
 def budget(target):
@@ -34,10 +46,47 @@ def run(body, stop):
 
 
 class SameTimeProgramRealEquation(unittest.TestCase):
+    def refusal(self, body, declarations):
+        # The review r1 shape: module m(u,y), u driven at 0, default budget.
+        source = ('`include "disciplines.vams"\nmodule m(u,y); input u; output y; electrical u,y; '
+                  f'{declarations} analog begin {body} end endmodule')
+        p = compile_sources({'deck.va': source}, [Instance('M', 'm', dict(u='u', y='y'))])
+        with self.assertRaises(KernelError) as caught:
+            transient(p, {'u': [[0, 0], [1, 0]]}, [0, .75, 1], stop=1, max_step=.25, kernel=KERNEL)
+        return str(caught.exception)
+
     def test_nonlinear_event_feedback_with_two_real_roots_is_refused(self):
-        with self.assertRaisesRegex(KernelError, 'unsupported_transient: same-time feedback through a '
-                                                 'program real is nonlinear'):
+        with self.assertRaisesRegex(KernelError, NONAFFINE_EVENT):
             run('@(initial_step) q=0.1; @(timer(0.25)) q=V(y,r)*V(y,r); V(y,r)<+q;', 0.5)
+
+    def test_ungrounded_same_time_cycle_is_a_capability_limit(self):
+        # Each exact system has exactly one solution: det 21/32 for the coupled pair, root
+        # (-2/21, 34/21) of the relative voltages; 3/2 for the scalar one, root 2/3. A refusal
+        # stating no solution or several, or only a numeric symptom, would be wrong.
+        a, b, c, d = Q(-1, 8), Q(-3, 8), Q(-1, 8), Q(3, 8)
+        self.assertEqual((1 - a) * (1 - d) - b * c, Q(21, 32))
+        coupled = ('@(initial_step) begin q=0; h=0; end @(timer(0.5)) begin '
+                   'q=-0.125*V(y,{r})-0.375*V(z,{r})+0.5; h=-0.125*V(y,{r})+0.375*V(z,{r})+1; end '
+                   'V(y,{r})<+q; V(z,{r})<+h;')
+        scalar = '@(initial_step) q=0; @(timer(0.5)) q=-0.5*V(y,{r})+1; V(y,{r})<+q;'
+        driven, unknown = 'to a driven node instead of ground', 'between two unknown nodes'
+        cases = [(coupled.format(r='u'), 'real q,h; electrical z;', driven),
+                 (coupled.format(r='r') + ' V(r)<+0.125;', 'real q,h; electrical z,r;', unknown),
+                 (scalar.format(r='u'), 'real q;', driven),
+                 (scalar.format(r='r') + ' V(r)<+0.125;', 'real q; electrical r;', unknown)]
+        for body, declarations, structure in cases:
+            with self.subTest(body=body):
+                message = self.refusal(body, declarations)
+                self.assertRegex(message, CAPABILITY)
+                self.assertIn(structure, message)
+
+    def test_nonaffine_event_same_time_cycle_with_one_root(self):
+        # F(y) = y + y^3/4 - 1 has F'(y) = 1 + 3y^2/4 > 0 and F(0) < 0 < F(1): one root, but
+        # an event cycle that is not jointly affine is not certified (capability limit).
+        for cube in ('pow(V(y),3)', 'V(y)*V(y)*V(y)'):
+            with self.subTest(cube=cube):
+                body = f'@(initial_step) q=0; @(timer(0.5)) q=1-0.25*{cube}; V(y)<+q;'
+                self.assertRegex(self.refusal(body, 'real q;'), NONAFFINE_EVENT)
 
     def test_event_feedback_without_a_real_root_is_refused(self):
         with self.assertRaises(KernelError):
