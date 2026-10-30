@@ -138,7 +138,8 @@ fn sampled_binding_cache_uses_interval_bits_and_rechecks_failed_trials() {
                     .borrow()
                     .as_ref()
                     .is_some_and(|(path, bounds)| {
-                        path.same_path(&selection, crate::real_expression::work(&model)).unwrap()
+                        path.same_path(&selection, crate::real_expression::work(&model))
+                            .unwrap()
                             && bounds.matches_operator_bindings(&[I::ZERO])
                     }));
             }
@@ -403,11 +404,9 @@ fn ordered_feedback_selection_changes_the_cache_key() {
         .unwrap();
     assert_eq!(bits(&actual.0), bits(&expected.0));
     assert_eq!(bits(&actual.1), bits(&expected.1));
-    assert!(model
-        .certificate
-        .borrow()
-        .as_ref()
-        .is_some_and(|(s, _)| s.same_path(&selection, crate::real_expression::work(&model)).unwrap()));
+    assert!(model.certificate.borrow().as_ref().is_some_and(|(s, _)| s
+        .same_path(&selection, crate::real_expression::work(&model))
+        .unwrap()));
 }
 
 #[test]
@@ -509,11 +508,9 @@ fn branch_review_cache_distinguishes_ambiguous_equivalent_and_proved_no_selectio
             .unwrap();
         assert_eq!(bits(&actual.0), bits(&expected.0));
         assert_eq!(bits(&actual.1), bits(&expected.1));
-        assert!(model
-            .certificate
-            .borrow()
-            .as_ref()
-            .is_some_and(|(s, _)| s.same_path(selection, crate::real_expression::work(&model)).unwrap()));
+        assert!(model.certificate.borrow().as_ref().is_some_and(|(s, _)| s
+            .same_path(selection, crate::real_expression::work(&model))
+            .unwrap()));
         assert!(model
             .certify_observation_at_roots(
                 selection,
