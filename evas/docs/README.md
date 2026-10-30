@@ -11,6 +11,12 @@
 | 为什么选择当前架构与语义？ | [架构决定](development/DECISIONS.md) |
 | 如何修改 EVAS、选择测试？ | [开发流程](development/PROCESS.md) |
 
+## 当前状态
+
+当前开发基线、能力目标、批次次序、可信回归登记和外部 Spectre 运行，统一见
+[EVAS统一入口的当前状态与计划](../README.md#current-status)。2026-10-26 以后新定的原则见
+[架构决定 ADR-010 至 ADR-012](development/DECISIONS.md#adr-010)。本页只组织技术说明，不另维护进度。
+
 ## 接口参考
 
 | 操作 | 文档 |

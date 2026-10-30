@@ -2,7 +2,25 @@
 
 本页记录版本变化与[历史执行身份](#检查点身份)。当前支持结论见[四后端支持范围](COMPARISON.md)，
 逐项证据见[证据索引](development/capability-evidence.md)。单 PR 的细节以 PR/commit 描述为准，本页只留摘要。
+当前开发状态与计划不在本页维护，见 [EVAS统一入口的当前状态与计划](../README.md#current-status)。
 
+
+## 开发基线 0.25.0 / IR33：程序 real 逐次舍入与同过程顺序（尚未验收）
+
+0.25.0 / IR33 按 [ADR-006](development/DECISIONS.md#adr-006) 的合同开发：程序 `real` 逐次 binary64 舍入，
+同一 analog 过程在已证明属于同一次逻辑事件发生时按源码顺序执行。IR33 为此保留显式运算、边界、局部绑定和过程顺序；
+IR32 可执行载荷须从原始 VA 与 manifest 重编译。开发基线由 [#243](https://github.com/BucketSran/vaEVAS/pull/243)
+合入 main（合并提交 `5ab52780`）。
+
+完整组合验收尚未完成。跟踪入口是 [#229](https://github.com/BucketSran/vaEVAS/issues/229)；
+#243 带来的能力回退在 [#287](https://github.com/BucketSran/vaEVAS/issues/287)，测试期望的迁移在
+[#288](https://github.com/BucketSran/vaEVAS/issues/288)。本基线没有新增原400或 Spectre 执行，
+也不把 0.24.1 的验收结果转授给 IR33，见[统一功能缺口](COMPARISON.md#engineering-status)。
+
+## 正式验收检查点 0.24.1 / IR32
+
+最近一次正式验收（同源400收据、完整CI与安装）的检查点，生产源码 `0a8dc512`。成绩、CI 与收据见
+[EVAS统一入口的版本检查点](../README.md#verification-checkpoints)与[功能进度总览](COMPARISON.md#progress-board)。
 
 ## 本地候选 0.24.0 / IR32：普通历史消费者与显式解析源值
 
