@@ -1009,13 +1009,17 @@ impl Plan {
         let reads = self.same_time_marks.get().map(|m| m.reads.as_slice());
         let length = reads.map_or(voltages.len(), <[usize]>::len) + before.len();
         w.debit(2, (length * 16 + 32) as u64)?;
-        let mut key = match reads {
-            Some(reads) => reads
-                .iter()
-                .map(|&node| voltages.get(node).map_or(u64::MAX, |v| v.to_bits()))
-                .collect::<Vec<_>>(),
-            None => voltages.iter().skip(1).map(|v| v.to_bits()).collect(),
-        };
+        // Reserve the complete key once. Collecting reads first and then
+        // appending states could allocate a second, larger buffer.
+        let mut key = Vec::with_capacity(length);
+        match reads {
+            Some(reads) => key.extend(
+                reads
+                    .iter()
+                    .map(|&node| voltages.get(node).map_or(u64::MAX, |v| v.to_bits())),
+            ),
+            None => key.extend(voltages.iter().skip(1).map(|v| v.to_bits())),
+        }
         key.extend(before.iter().map(|v| v.to_bits()));
         Ok(key)
     }
