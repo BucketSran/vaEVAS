@@ -4,7 +4,7 @@ from itertools import permutations
 import struct
 import unittest
 
-from evas import Instance, KernelError, compile_sources, transient
+from evas import CompileError, Instance, KernelError, compile_sources, transient
 from test_affine import KERNEL
 
 
@@ -47,9 +47,25 @@ class SameTimeActivationScope(unittest.TestCase):
                               'module m(u,y); input u; output y; electrical u,y; real q,p; '
                               'analog begin ' + body + ' V(y)<+q; end endmodule')
                     with self.subTest(expression=expression, tail=tail, event=event):
-                        with self.assertRaisesRegex(KernelError, r'^unsupported_transient: .*'
-                                                   r'component-root extension .*capability limit'):
-                            execute(source)
+                        if not event and tail == '$display("p=%.17g",p);':
+                            # SL-R2-ORDINARY-DISPLAY-APPLICABILITY-20261030-01
+                            with self.assertRaises(CompileError) as caught:
+                                execute(source)
+                            diagnostic = caught.exception.diagnostic
+                            self.assertEqual(diagnostic['code'], 'unsupported_event_context')
+                            self.assertEqual(diagnostic['category'], 'unsupported')
+                            self.assertEqual(diagnostic['stage'], 'binding')
+                            self.assertEqual(
+                                diagnostic['message'],
+                                'ordinary procedure step requires executable capture support')
+                            self.assertEqual(diagnostic['instance'], 'M')
+                            self.assertEqual(diagnostic['location'], {
+                                'source': 'scope.va', 'line': 2,
+                                'column': source.splitlines()[1].index('$display') + 1})
+                        else:
+                            with self.assertRaisesRegex(KernelError, r'^unsupported_transient: .*'
+                                                       r'component-root extension .*capability limit'):
+                                execute(source)
 
     def test_driven_constraint_and_original_terminal_classes_ignore_instance_order(self):
         source = ('`include "disciplines.vams"\n'
