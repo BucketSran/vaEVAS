@@ -98,10 +98,92 @@ pub(crate) struct Plan {
 }
 #[derive(Default)]
 struct SameTimeRecords {
-    records: std::collections::HashMap<Vec<u64>, ActivationRecord>,
+    records: std::collections::BTreeMap<Vec<u64>, ActivationRecord>,
     // Keys taken over with values different from this Plan's own record;
     // they are read as missing.
-    conflicting: std::collections::HashSet<Vec<u64>>,
+    conflicting: std::collections::BTreeSet<Vec<u64>>,
+}
+impl SameTimeRecords {
+    /// Upper bound on B-tree levels. The pinned Rust B-tree has at least six
+    /// children per non-root internal node. The extra level covers root splits.
+    fn levels(len: usize) -> u64 {
+        let mut size = len;
+        let mut levels = 2u64;
+        while size >= 6 {
+            size /= 6;
+            levels += 1;
+        }
+        levels
+    }
+    /// One tree access compares at most eleven keys per level. A u64 word
+    /// comparison is one work unit. The 16 units per level fund moving fixed
+    /// key/value handles and allocating/splitting a node; this is a work bound,
+    /// not a claim that work units equal malloc bytes. No old key is rehashed.
+    fn reserve_key(&self, words: usize, map_ops: u64, set_ops: u64, w: &Work) -> Result<(), Error> {
+        self.reserve_key_for(words, map_ops, set_ops, 0, w)
+    }
+    fn reserve_key_for(
+        &self,
+        words: usize,
+        map_ops: u64,
+        set_ops: u64,
+        growth: usize,
+        w: &Work,
+    ) -> Result<(), Error> {
+        let levels = Self::levels(self.records.len().saturating_add(growth))
+            .saturating_mul(map_ops)
+            .saturating_add(
+                Self::levels(self.conflicting.len().saturating_add(growth)).saturating_mul(set_ops),
+            );
+        w.debit(
+            2,
+            (words as u64)
+                .saturating_mul(11)
+                .saturating_add(16)
+                .saturating_mul(levels)
+                .saturating_add(64),
+        )
+    }
+    /// Reserve the whole transfer before changing marks, entries or tombstones.
+    /// Entry-count metadata funds the iterator walk before it begins. Every
+    /// source key then buys its bounded target lookup and tree mutation. Q limb
+    /// traversal/copy/destruction uses the immutable record's O(1) cost summary.
+    fn reserve_adoption(&self, source: &Self, mark_cost: u64, w: &Work) -> Result<(), Error> {
+        w.debit(
+            2,
+            (source.records.len() as u64)
+                .saturating_add(source.conflicting.len() as u64)
+                .saturating_mul(64)
+                .saturating_add(mark_cost)
+                .saturating_add(128),
+        )?;
+        let growth = source
+            .records
+            .len()
+            .saturating_add(source.conflicting.len());
+        for key in &source.conflicting {
+            self.reserve_key_for(key.len(), 1, 1, growth, w)?;
+            w.debit(2, (key.len() as u64).saturating_mul(16).saturating_add(64))?;
+            if let Some(old) = self.records.get(key) {
+                w.debit(2, old.copy_cost())?;
+            }
+        }
+        for (key, record) in &source.records {
+            self.reserve_key_for(key.len(), 3, 2, growth, w)?;
+            w.debit(
+                2,
+                (key.len() as u64)
+                    .saturating_mul(16)
+                    .saturating_add(record.copy_cost())
+                    .saturating_add(64),
+            )?;
+            // The lookup itself was paid above, before accessing the old entry.
+            if let Some(old) = self.records.get(key) {
+                w.debit(2, old.copy_cost())?;
+            }
+        }
+        Ok(())
+    }
 }
 type SharedPhysical = Arc<PhysicalFrame>;
 /// One certified activation. Program values are stored RN values; physical
@@ -995,6 +1077,76 @@ impl Plan {
     pub(crate) fn has_observation(&self) -> bool {
         self.observation.get().is_some()
     }
+    /// A sufficient total-domain proof for every active source-position node.
+    /// Builder emits only selected branches, but retains overwritten effects,
+    /// unused RealBind values, displays, updates and condition operands here.
+    /// A guard depending on candidate voltages needs a global branch proof.
+    pub(crate) fn total_activation_domain(&self, w: &Work) -> Result<bool, Error> {
+        w.debit(2, (self.count as u64).saturating_mul(8).saturating_add(64))?;
+        let mut voltage = vec![false; self.count];
+        for id in 0..self.count {
+            w.step()?;
+            let node = self
+                .graph
+                .node(id)
+                .ok_or_else(|| invalid("missing activation node"))?;
+            w.debit(
+                2,
+                (node.operands.len() as u64)
+                    .saturating_mul(16)
+                    .saturating_add(32),
+            )?;
+            let live = match &node.operation {
+                O::Affine { terms, .. } => {
+                    w.debit(
+                        2,
+                        (terms.len() as u64).saturating_mul(16).saturating_add(32),
+                    )?;
+                    terms.iter().any(|t| t.node != 0 && t.coefficient != 0.)
+                }
+                _ => node.operands.iter().any(|&i| voltage[i]),
+            };
+            voltage[id] = live;
+            let total = match &node.operation {
+                O::Literal(_)
+                | O::Affine { .. }
+                | O::State(_)
+                | O::Operator(_)
+                | O::Add
+                | O::Multiply
+                | O::Power(_)
+                | O::Boundary(..) => true,
+                O::Real(op, _) if !matches!(op, ir::RealOperation::Divide) => true,
+                O::Divide | O::Real(ir::RealOperation::Divide, _) => {
+                    node.operands.get(1).is_some_and(|&i| {
+                        !voltage[i]
+                            && self.captured[i]
+                                .image
+                                .is_some_and(|b| b.lo > 0. || b.hi < 0.)
+                    })
+                }
+                // Candidate-independent partial operations were certified while
+                // constructing this active path. No candidate can change them.
+                _ => !live && self.captured[id].image.is_some(),
+            };
+            if !total {
+                return Ok(false);
+            }
+        }
+        for guard in &self.guards {
+            w.step()?;
+            if voltage[guard.left] || voltage[guard.right] {
+                return Ok(false);
+            }
+        }
+        for selector in &self.selectors {
+            w.step()?;
+            if voltage[selector.index] {
+                return Ok(false);
+            }
+        }
+        Ok(true)
+    }
     /// Mark the procedure values on same-time cycles of this Plan's circuit
     /// and the physical nodes their roundings read (decision 22), once.
     pub(crate) fn mark_same_time(&self, ids: Vec<Id>, reads: Vec<usize>) -> Result<(), Error> {
@@ -1006,6 +1158,12 @@ impl Plan {
     /// The record key of these inputs: the bits of the marked voltages
     /// (ground excluded) and of the states before.
     fn same_time_key(&self, voltages: &[f64], before: &[f64], w: &Work) -> Result<Vec<u64>, Error> {
+        self.work.debit(2, 0)?;
+        if !self.work.same_owner(w) {
+            return Err(invalid(
+                "same-time key has a different request proof account",
+            ));
+        }
         let reads = self.same_time_marks.get().map(|m| m.reads.as_slice());
         let length = reads.map_or(voltages.len(), <[usize]>::len) + before.len();
         w.debit(2, (length * 16 + 32) as u64)?;
@@ -1034,12 +1192,18 @@ impl Plan {
         physical: PhysicalFrame,
     ) -> Result<(), Error> {
         let key = self.same_time_key(voltages, before, &self.work)?;
-        self.work
-            .debit(2, ((key.len() + 2 * values.len()) * 16 + 64) as u64)?;
         let mut records = self
             .same_time
             .lock()
             .map_err(|_| invalid("same-time rounding record is poisoned"))?;
+        // Buy the cost calculation before traversing variable-sized proof slots.
+        self.work.debit(
+            2,
+            (physical.values.len() as u64)
+                .saturating_mul(128)
+                .saturating_add(physical.exact_reads.len() as u64)
+                .saturating_add(16),
+        )?;
         // This certified solve is the sole entry that clears a tombstone.
         let mut physical_cost = (physical.values.len() as u64)
             .saturating_mul(128)
@@ -1051,14 +1215,28 @@ impl Plan {
                     physical_cost.saturating_add((r.numer().bits() + r.denom().bits()).div_ceil(8));
             }
         }
+        records.reserve_key(key.len(), 1, 1, &self.work)?;
         self.work.debit(2, physical_cost.saturating_add(64))?;
         let record = ActivationRecord {
             values,
             physical: Arc::new(physical),
             physical_cost,
         };
-        records.conflicting.remove(&key);
-        records.records.insert(key, record);
+        let SameTimeRecords {
+            records,
+            conflicting,
+        } = &mut *records;
+        match records.entry(key) {
+            std::collections::btree_map::Entry::Occupied(mut entry) => {
+                self.work.debit(2, entry.get().copy_cost())?;
+                conflicting.remove(entry.key());
+                entry.insert(record);
+            }
+            std::collections::btree_map::Entry::Vacant(entry) => {
+                conflicting.remove(entry.key());
+                entry.insert(record);
+            }
+        }
         Ok(())
     }
     /// The decision 22 roundings recorded for these voltages and states.
@@ -1082,6 +1260,7 @@ impl Plan {
             .same_time
             .lock()
             .map_err(|_| invalid("same-time rounding record is poisoned"))?;
+        records.reserve_key(key.len(), 1, 1, w)?;
         if records.conflicting.contains(&key) {
             return Ok(None);
         }
@@ -1116,7 +1295,13 @@ impl Plan {
             Some(r) => (r.values, Some(r.physical)),
             None => (Vec::new(), None),
         };
-        w.debit(2, (marks.ids.len() * 16 + 32) as u64)?;
+        w.debit(
+            2,
+            (marks.ids.len() as u64)
+                .saturating_mul((given.len() as u64).saturating_add(1))
+                .saturating_mul(16)
+                .saturating_add(32),
+        )?;
         let missing = marks
             .ids
             .iter()
@@ -1161,13 +1346,25 @@ impl Plan {
     /// them. A key this Plan recorded with different values is then read as
     /// missing.
     pub(crate) fn adopt_same_time(&self, other: &Plan) -> Result<(), Error> {
-        if Arc::ptr_eq(&self.same_time, &other.same_time) || self.identity != other.identity {
-            return Ok(());
-        }
+        // Sticky entry check precedes even an identity comparison or fast path.
+        self.work.debit(2, 64)?;
         if !self.work.same_owner(&other.work) {
             return Err(invalid(
                 "same-time records have different request proof accounts",
             ));
+        }
+        if Arc::ptr_eq(&self.same_time, &other.same_time) {
+            return Ok(());
+        }
+        self.work.debit(
+            2,
+            (self.identity.len() as u64)
+                .saturating_add(other.identity.len() as u64)
+                .saturating_mul(2)
+                .saturating_add(64),
+        )?;
+        if self.identity != other.identity {
+            return Ok(());
         }
         // Lock both owners in a fixed address order. Reserve the complete
         // transfer before cloning keys/values or changing either marks or
@@ -1190,46 +1387,14 @@ impl Plan {
         } else {
             (first, second)
         };
-        self.work.debit(
-            2,
-            ((source.records.capacity() + source.conflicting.capacity() + ours.records.capacity())
-                as u64)
-                .saturating_mul(32)
-                .saturating_add(128),
-        )?;
         let marks = other.same_time_marks.get();
-        if let Some(m) = marks {
-            self.work.debit(
-                2,
-                ((m.ids.len() + m.reads.len()) as u64)
-                    .saturating_mul(16)
-                    .saturating_add(64),
-            )?;
-        }
-        for (key, record) in &source.records {
-            self.work.debit(
-                2,
-                (key.len() as u64)
-                    .saturating_mul(32)
-                    .saturating_add(record.copy_cost())
-                    .saturating_add(192),
-            )?;
-        }
-        for key in &source.conflicting {
-            self.work
-                .debit(2, (key.len() as u64).saturating_mul(32).saturating_add(192))?;
-        }
-        // Destination comparisons can involve a larger old proof than the
-        // incoming one. Reserve those limbs before any target mutation too.
-        for (key, record) in &ours.records {
-            self.work.debit(
-                2,
-                (key.len() as u64)
-                    .saturating_mul(16)
-                    .saturating_add(record.copy_cost())
-                    .saturating_add(64),
-            )?;
-        }
+        let mark_cost = marks.map_or(0, |m| {
+            (m.ids.len() as u64)
+                .saturating_add(m.reads.len() as u64)
+                .saturating_mul(16)
+                .saturating_add(64)
+        });
+        ours.reserve_adoption(&source, mark_cost, &self.work)?;
         if self.same_time_marks.get().is_none() {
             if let Some(m) = marks {
                 let _ = self.same_time_marks.set(SameTimeMarks {
@@ -1877,12 +2042,29 @@ pub(crate) fn execute(
             }
         }
     }
+    // Fixed-width identity encoding has an O(1) size bound before any walk or
+    // allocation. Length prefixes distinguish the three ordered sequences.
+    let identity_len = updates
+        .len()
+        .saturating_add(builder.effects.len())
+        .saturating_mul(8)
+        .saturating_add(builder.decisions.len())
+        .saturating_add(24);
     w.debit(
         2,
-        ((updates.len() + builder.effects.len() + builder.decisions.len()) * 16 + 64) as u64,
+        (identity_len as u64).saturating_mul(2).saturating_add(64),
     )?;
-    let identity = serde_json::to_vec(&(&updates, &builder.effects, &builder.decisions))
-        .map_err(|e| invalid(&e.to_string()))?;
+    let mut identity = Vec::with_capacity(identity_len);
+    identity.extend_from_slice(&(updates.len() as u64).to_le_bytes());
+    for &id in &updates {
+        identity.extend_from_slice(&(id as u64).to_le_bytes());
+    }
+    identity.extend_from_slice(&(builder.effects.len() as u64).to_le_bytes());
+    for &id in &builder.effects {
+        identity.extend_from_slice(&(id as u64).to_le_bytes());
+    }
+    identity.extend_from_slice(&(builder.decisions.len() as u64).to_le_bytes());
+    identity.extend(builder.decisions.iter().map(|&v| u8::from(v)));
     let count = builder.values.len();
     w.debit(2, (count * 16 + 32) as u64)?;
     let mut foldable = Vec::with_capacity(count);
@@ -3140,6 +3322,66 @@ mod activation_transfer_tests {
             let guard = b.same_time.lock().unwrap();
             assert_eq!(guard.records.len(), 1);
             assert!(guard.conflicting.is_empty());
+        }
+    }
+    #[test]
+    fn exhausted_identity_lengths_and_equal_buffers_are_guarded() {
+        for n in [0, 1, 1024, 1 << 20] {
+            let limit = 20_000_000;
+            let w = Work::for_limit(limit);
+            let mut a = marked(&w);
+            let mut b = marked(&w);
+            w.debit(2, 4 * n as u64 + 4096).unwrap();
+            a.identity = vec![1; n];
+            b.identity = vec![1; n];
+            w.debit(2, limit - w.spent()).unwrap();
+            for _ in 0..3 {
+                let spent = w.spent();
+                assert_eq!(b.adopt_same_time(&a).unwrap_err().kind, "step_budget");
+                assert_eq!(w.spent() - spent, 64);
+            }
+        }
+    }
+    #[test]
+    fn positive_low_remainder_transfer_is_atomic_with_many_tombstones() {
+        const LIMIT: u64 = 1_000_000_000;
+        for remaining in [0, 1, 8192] {
+            let w = Work::for_limit(LIMIT);
+            let a = marked(&w);
+            let b = marked(&w);
+            for k in 0..1792 {
+                let x = marked(&w);
+                let y = marked(&w);
+                let key = [0., k as f64];
+                x.record_same_time(&key, &[], vec![(7, 0.)], PhysicalFrame::default())
+                    .unwrap();
+                y.record_same_time(&key, &[], vec![(7, 1.)], PhysicalFrame::default())
+                    .unwrap();
+                x.adopt_same_time(&y).unwrap();
+                a.adopt_same_time(&x).unwrap();
+            }
+            let x = marked(&w);
+            let key = [0., 1792.];
+            b.record_same_time(&key, &[], vec![(7, 0.)], PhysicalFrame::default())
+                .unwrap();
+            x.record_same_time(&key, &[], vec![(7, 1.)], PhysicalFrame::default())
+                .unwrap();
+            b.adopt_same_time(&x).unwrap();
+            let before = {
+                let g = a.same_time.lock().unwrap();
+                (g.records.len(), g.conflicting.clone())
+            };
+            w.debit(2, LIMIT - w.spent() - remaining).unwrap();
+            let result = a.adopt_same_time(&b);
+            if result.is_err() {
+                let g = a.same_time.lock().unwrap();
+                assert_eq!(g.records.len(), before.0);
+                assert_eq!(g.conflicting, before.1);
+            } else {
+                let g = a.same_time.lock().unwrap();
+                assert_eq!(g.conflicting.len(), 1793);
+            }
+            // This structure no longer reallocates or rehashes all target keys at 1792.
         }
     }
 }

@@ -1136,6 +1136,11 @@ impl Circuit {
             return Ok(None);
         }
         let work = &view.plan.work;
+        if let Some(view) = &self.procedure_view {
+            if !view.plan.total_activation_domain(work)? {
+                return Ok(false);
+            }
+        }
         let Order::Cyclic {
             components,
             definition,
@@ -1201,7 +1206,7 @@ impl Circuit {
         else {
             return Ok(None);
         };
-        let scope = self.physical_read_scope(&components, &reads, work)?;
+        let scope = self.physical_read_scope(&components, &definition, &reads, work)?;
         let Some(values) = self.with_inputs(inputs, vec![0.0; self.nodes.len()]) else {
             return Ok(None);
         };
@@ -1708,16 +1713,13 @@ impl Circuit {
             // An unmatched constraint can complete a feedback cycle. For an
             // unsupported layout use the incidence of ALL original relations,
             // rather than interpreting one maximum matching as the system.
-            for (row, ends) in terminals.iter().enumerate() {
-                for &end in ends {
-                    for &read in &read_columns[row] {
-                        if !depends[end].contains(&read) {
-                            depends[end].push(read);
-                        }
-                    }
-                    for &other in ends {
-                        if other != end && !depends[end].contains(&other) {
-                            depends[end].push(other);
+            for (row, incident) in candidates.iter().enumerate() {
+                for &column in incident {
+                    for &other in incident {
+                        if (column != other || read_columns[row].contains(&column))
+                            && !depends[column].contains(&other)
+                        {
+                            depends[column].push(other);
                         }
                     }
                 }
@@ -1729,18 +1731,22 @@ impl Circuit {
                 ..SameTimeStructure::default()
             };
         };
-        let origins = |columns: &[usize]| {
-            let mut all: Vec<&str> = Vec::new();
-            for &column in columns {
-                for origin in owner[column]
-                    .map(|row| self.equations[row].origins.as_slice())
-                    .unwrap_or_default()
-                {
-                    if !all.contains(&origin.as_str()) {
-                        all.push(origin.as_str());
-                    }
-                }
-            }
+        let relevant_rows = |columns: &[usize]| {
+            candidates
+                .iter()
+                .enumerate()
+                .filter(|(_, incident)| incident.iter().any(|c| columns.contains(c)))
+                .map(|(row, _)| row)
+                .collect::<Vec<_>>()
+        };
+        let origins = |rows: &[usize]| {
+            let mut all = rows
+                .iter()
+                .flat_map(|&row| self.equations[row].origins.iter())
+                .map(String::as_str)
+                .collect::<Vec<_>>();
+            all.sort_unstable();
+            all.dedup();
             all.join(", ")
         };
         let mut outside: Option<(OutsideClass, String)> = None;
@@ -1750,10 +1756,7 @@ impl Circuit {
                 continue;
             }
             cyclic = true;
-            let rows = columns
-                .iter()
-                .filter_map(|&column| owner[column])
-                .collect::<Vec<_>>();
+            let rows = relevant_rows(columns);
             let rounded_relation = rows.iter().any(|&row| reads[row].rounded)
                 || (!grounded
                     && reads.iter().enumerate().any(|(row, read)| {
@@ -1781,7 +1784,7 @@ impl Circuit {
                 }
             }
             if found && outside.as_ref().is_none_or(|(old, _)| why < *old) {
-                outside = Some((why, origins(columns)));
+                outside = Some((why, origins(&rows)));
             }
         }
         if outside.is_some() || !grounded || !cyclic {
@@ -1897,6 +1900,7 @@ impl Circuit {
     fn physical_read_scope(
         &self,
         components: &[(Vec<usize>, bool)],
+        definition: &[(usize, f64)],
         reads: &[Vec<usize>],
         work: &crate::transition_source_plan::Work,
     ) -> Result<Vec<bool>, Error> {
@@ -1913,9 +1917,20 @@ impl Circuit {
             return Ok(scope);
         };
         for (columns, cyclic) in components {
+            // SCCs arrive in dependency order. A component has one scope owner:
+            // a program-real cycle, or an already scoped predecessor. Pure
+            // physical cycles do not grant program consumers deferred sampling.
+            let seeded = *cyclic && self.through_program_real(columns, definition);
+            let mut inherited = false;
+            for &column in columns {
+                for &read in &reads[column] {
+                    work.step()?;
+                    inherited |= dependent[read];
+                }
+            }
             for &column in columns {
                 work.step()?;
-                dependent[column] = *cyclic || reads[column].iter().any(|&c| dependent[c]);
+                dependent[column] = seeded || inherited;
                 let node = self.unknown[column];
                 let physical = node < view.node_count
                     || view
@@ -1973,7 +1988,7 @@ impl Circuit {
         else {
             return Ok(None);
         };
-        let scope = self.physical_read_scope(&components, &reads, work)?;
+        let scope = self.physical_read_scope(&components, &definition, &reads, work)?;
         if !components.iter().any(|(_, cyclic)| *cyclic) {
             return Ok(None);
         }
