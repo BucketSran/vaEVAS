@@ -1323,18 +1323,46 @@ impl Plan {
     }
     /// Whether some root reads one of `targets` (itself or through operands).
     fn reaches(&self, roots: &[Id], targets: &[Id], w: &Work) -> Result<bool, Error> {
-        w.debit(2, (self.count * 8 + 64) as u64)?;
+        self.work.debit(2, 0)?;
+        if !self.work.same_owner(w) {
+            return Err(invalid(
+                "same-time reachability has a different request proof account",
+            ));
+        }
+        // Buy both bitmap construction and all source-list reads first. A
+        // target membership check in the traversal is then O(1), never a scan
+        // of every marked target for each graph node.
+        w.debit(
+            2,
+            (self.count as u64)
+                .saturating_mul(16)
+                .saturating_add((roots.len() as u64).saturating_mul(32))
+                .saturating_add((targets.len() as u64).saturating_mul(16))
+                .saturating_add(64),
+        )?;
         let mut seen = vec![false; self.count];
+        let mut wanted = vec![false; self.count];
+        for &target in targets {
+            if let Some(slot) = wanted.get_mut(target) {
+                *slot = true;
+            }
+        }
         let mut stack = roots.to_vec();
         while let Some(id) = stack.pop() {
             w.step()?;
             if id >= self.count || std::mem::replace(&mut seen[id], true) {
                 continue;
             }
-            if targets.contains(&id) {
+            if wanted[id] {
                 return Ok(true);
             }
             if let Some(node) = self.graph.node(id) {
+                w.debit(
+                    2,
+                    (node.operands.len() as u64)
+                        .saturating_mul(32)
+                        .saturating_add(64),
+                )?;
                 stack.extend_from_slice(&node.operands);
             }
         }
