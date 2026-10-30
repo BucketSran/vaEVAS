@@ -9,5 +9,6 @@ Vrst (rst 0) vsource type=pwl wave=[0 0 451.95n 0 452.05n 0.9 512.95n 0.9 513.05
 
 XDUT (vin clk rst out) ct_lowpass_sampler
 
-tran tran stop=1200n maxstep=50p strobeperiod=50p
+simulatorOptions options reltol=1e-6 vabstol=1e-8 iabstol=1e-12
+tran tran stop=1200n maxstep=50p strobeperiod=50p errpreset=moderate strobeoutput=strobeonly
 save vin clk rst out

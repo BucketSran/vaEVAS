@@ -2,7 +2,7 @@
 
 Spectre 校准待做。`mutants.py` 从 `solution/circuit.va` 生成具体 VA 候选：`wrong/` 应被拒，`correct/` 应被同一 checker 在 `../cases.json` 的固定用例上接受。它们是作者校准样本，不属于终评材料，也不进入解题环境。在任意目录运行 `python3 -B mutants.py <空输出目录>`。`expected.json` 是同一张被拒矩阵的机器可读版本。
 
-checker 只有一类失败：某个评分点的 `V(out)` 与理想电平相差超过 10 mV。失败记录里的 `level_change`、`change_time` 和 `cause` 指出它属于哪一次理想电平变化（初态、哪次资格的完成、哪次 `sig` 或 `rst_n` 下降）。`tr` 内的输出形状由作者证据中的 Python 合成轨迹覆盖。
+checker 只有一类失败：某个评分点的 `V(out)` 与理想电平相差超过 10 mV。失败记录里的 `level_change`、`change_time` 和 `cause` 指出它属于哪一次理想电平变化（初态、哪次资格的完成、哪次 `sig` 或 `rst_n` 下降）。`tr` 内的输出形状由作者证据中的 Python 合成轨迹覆盖。台架义务不满足时 checker 抛出异常，记 checker_error，不判分；修正 r7a 加了一条：同一输入相邻两次穿越之间离 `vth` 不足 49 mV（合同写 50 mV）。这一条与输入的起点、停留、碰到都按用例网表的激励定义判（2026-10-30 修正 v417），碰到报台架错误。
 
 预期判决按 Verilog-A LRM 2.4 的 5.10.3.1 `cross`、5.10.3.2 `above`、5.10.3.3 `timer`、4.5.8 `transition` 写出。参考解依赖 5.10.3.3：起始时刻被改写后只按最新值触发，起始时刻在过去则不触发。下表的"过期预约"指已被取消的资格，它原定的完成时刻到达时 `sig` 与 `rst_n` 都已重新为高；`base` 有 77.02、85.02、132.02 ns 三处，`retrigger-ties` 有 78.02 ns，`short-stable` 有 16.002、17.502、68.002 ns。
 
@@ -41,3 +41,12 @@ checker 只有一类失败：某个评分点的 `V(out)` 与理想电平相差�
 - `alt_event_flags`：接受的前提是起始时刻移到过去的定时器不再触发。
 
 旧版 EVAS 0.8.7 上 25 个候选都能运行，判决与上表逐项一致，结果见作者证据；旧版结果不改本表。只有标量状态、不用 `absdelay` 的正确实现：参考解、`alt_event_flags`、`alt_fast_output`、`alt_delayed_within_tr`。
+
+## 修正 r7a（2026-10-29）
+
+- `retrigger-ties` 的平局挪动已按用户决定退回原件。退回后 45.02/45.52 ns 恰在 0.5 ns 下界上，于是把 45.02 ns 的下降提前一个网格步到 44.995 ns，毛刺宽 0.525 ns。
+- 其余在合同下界上的 16 处都加了一个网格步的余量。详见 `SOURCE.md` 的“2026-10-29 修正 r7a”一节。上文列出的过期预约时刻都不变。
+- 被拒矩阵不变。旧版开发证据（EVAS 0.8.7，legacy/EVAS 提交 6cb6fa7a），待 Spectre 复跑：
+  - 参考解与 25 个候选在改后的四个私有用例上重跑，参考解另跑公开 `base`，共 105 次；
+  - 判决与 `expected.json` 逐项一致，只用网格行重判的结论相同。
+- Spectre 上要在改后的用例上重跑全部候选，作业清单见本轮记录。

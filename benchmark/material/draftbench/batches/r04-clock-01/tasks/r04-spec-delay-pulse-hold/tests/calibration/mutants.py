@@ -1,4 +1,9 @@
-"""Write targeted wrong and alternative-correct VA candidates for later calibration."""
+"""Write targeted wrong and alternative-correct VA candidates for later calibration.
+
+probe/ holds transport_reset_unchanged: whether its reset keeps the pending edges is not specified
+by LRM 2.4, so its verdict depends on the backend and it is not a calibration candidate
+(expected.json conditions and README.md; p0-fix-r9, decision sheet item 24).
+"""
 from pathlib import Path
 
 RESET = """    @(cross(V(rst) - vth, +1)) begin
@@ -161,8 +166,6 @@ def candidates():
         "unloaded_code0": swap(swap(gold, ACCEPT, "        if (V(rst) < vth) begin\n"),
                                RESET, RESET.replace("        loaded = 0;\n", "        loaded = 0;\n        code = 0;\n")),
         "load_during_reset": swap(gold, LOAD_HEAD, LOAD_HEAD.replace("if (V(rst) < vth) begin", "if (1) begin")),
-        # The in_clk blocks run first, so a load at the same instant applies only from the next pulse.
-        "edge_first": swap(swap(gold, block, ""), RISE_TIMER, block.split("\n", 2)[2] + RISE_TIMER),
         "load_on_falling_edge": swap(gold, LOAD_HEAD, LOAD_HEAD.replace("vth, +1", "vth, -1")),
         "code_at_input_edge": swap(gold, "pulse_delay = delay_min + delay_lsb * code;",
                                    f"pulse_delay = delay_min + delay_lsb * ({bits});"),
@@ -176,8 +179,6 @@ def candidates():
         # Centres the ramp on the edge time (50 % delay reading) instead of starting it there.
         "centered_transition": swap(swap(gold, "@(timer(t_rise))", "@(timer(t_rise - tr/2))"),
                                     "@(timer(t_fall))", "@(timer(t_fall - tr/2))"),
-        # Transport delay through transition(); a reset that leaves the target low cancels nothing.
-        "transport_reset_unchanged": transport(gold, "pulse_delay"),
         # The historical structure: transport transition and a per-edge delay.
         "historical_per_edge_transport": transport(gold, "delay_min + delay_lsb * code"),
     }
@@ -185,10 +186,18 @@ def candidates():
         "alt_fifo_queue": fifo(gold),
         "alt_fast_output": swap(gold, OUTPUT, "V(out_clk) <+ transition(out_high ? vdd : vss, 0, 0.2*tr, 0.2*tr);"),
         "alt_level_state": level_state(gold),
+        # The in_clk blocks run first. Every load comes at least 1 ps before or at least 20 ps after a rising
+        # in_clk crossing (p0-fix-r9), so the order of the two statements does not change the behavior.
+        "edge_first": swap(swap(gold, block, ""), RISE_TIMER, block.split("\n", 2)[2] + RISE_TIMER),
     }
-    for name, source in {**wrong, **correct}.items():
+    probe = {
+        # Transport delay through transition(); the reset writes the low target it already has and sets td
+        # to 0. LRM 2.4 leaves the pending edges unspecified then; see expected.json conditions.
+        "transport_reset_unchanged": transport(gold, "pulse_delay"),
+    }
+    for name, source in {**wrong, **correct, **probe}.items():
         assert source != gold, name
-    return wrong, correct
+    return wrong, correct, probe
 
 
 if __name__ == "__main__":
@@ -196,8 +205,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("output", type=Path)
     args = parser.parse_args()
-    wrong, correct = candidates()
-    for group, items in (("wrong", wrong), ("correct", correct)):
+    wrong, correct, probe = candidates()
+    for group, items in (("wrong", wrong), ("correct", correct), ("probe", probe)):
         (args.output / group).mkdir(parents=True, exist_ok=True)
         for name, source in items.items():
             (args.output / group / (name + ".va")).write_text(source)

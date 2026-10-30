@@ -36,7 +36,7 @@ Operating range:
 
 - `vfb` and `vref` stay between `vss` and `vdd`. Each may change at any time except within 1 ns of a rising `clk` crossing.
 - At every update event, `vfb` differs from the held soft reference by at least 2 mV, and `|vfb - vref|` differs from `pgood_tol` by at least 2 mV, so no comparison is a tie.
-- `clk`, `rst` and `enable` switch between 0 V and 0.9 V with transitions no longer than 200 ps, and `vth` lies strictly between those levels. Controls never rest at `vth`.
+- `clk`, `rst` and `enable` switch between 0 V and 0.9 V with transitions no longer than 200 ps, and `vth` lies strictly between those levels. Controls never rest at `vth`. A control that reaches `vth` always crosses it; it never touches `vth` and returns to the same side.
 - `clk` starts low. Successive rising `clk` crossings are at least 5 ns apart, and `clk` stays high and low for at least 2 ns each time.
 - Every `rst` and `enable` crossing is at least 1 ns away from every rising `clk` crossing.
 

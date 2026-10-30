@@ -15,7 +15,7 @@ Declare these overrideable parameters:
 - `taperture` = 200 ps. Delay from a rising clock crossing to its sample instant. Legal range 20 ps to 2 ns.
 - `valid_width` = 2 ns. Duration of the valid pulse. Legal range 0.5 ns to 10 ns.
 
-Rails. `V(vss)` is constant during a run and lies between -0.2 V and +0.2 V. `V(vdd) - V(vss)` stays between 0.8 V and 1.5 V. `vdd` may change during a run, but only while `valid` and `coarse` are both low, and it stays constant within 0.5 ns of every sample instant. The model keeps a held value `h`, measured from `V(vss)`.
+Rails. `V(vss)` is constant during a run and lies between -0.2 V and +0.2 V. `V(vdd) - V(vss)` stays between 0.8 V and 1.5 V. `vdd` may change during a run, but only while `valid` and `coarse` are both low, and not within 0.5 ns of a sample instant. A movement of less than 0.25 mV does not count as a change: within 0.5 ns of every sample instant, `vdd` stays less than 0.25 mV away from its value 0.5 ns before that instant, and while `valid` or `coarse` is high, it stays less than 0.25 mV away from its value at the latest sample instant. The model keeps a held value `h`, measured from `V(vss)`.
 
 Sampling. A trigger is a rising crossing of `V(clk) - V(vss)` through `vth` after t = 0. A trigger at time `t_k` schedules exactly one sample at the sample instant `c_k = t_k + taperture`. At `c_k`:
 

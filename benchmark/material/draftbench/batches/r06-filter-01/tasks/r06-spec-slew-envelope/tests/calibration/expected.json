@@ -10,7 +10,7 @@
  "semantics": "Verilog-A LRM 2.4 4.5.8 transition and 4.5.9 slew; slew ramp start relative to the event to be recorded on Spectre",
  "conditions": {
   "fixed_vth": "rejected only through the clk and rst crossing times: in vth-override every control edge takes 200 ps, so a 0.45 V threshold moves each rising crossing 77.8 ps early, 27.8 ps beyond the 50 ps event tolerance (111 mV on a 4e9 V/s rise, 27.8 mV on a 1e9 V/s fall); mode and rst are at a rail at every sample instant, so reading them at 0.45 V changes nothing",
-  "peak_on_output": "accepted in vth-override: with rise_rate 4e9 V/s every ramp ends long before the next sample, so the output equals the envelope whenever a peak-hold sample reads it"
+  "peak_on_output": "Spectre 21.1 algebraic loop: in peak hold the candidate sets env = V(out) when V(vin) is not above V(out), while the output is V(out) <+ slew(env, ...); once the output has reached its target the equation at that time point is V(out) = V(out), Spectre reports zero diagonals at out_flow, fails to converge and stops with SPECTRE-16192 (exit 1), the PSF ending at the error (P0PC rec-06: reset-and-start at 60 ns, vth-override at 10.18 ns). In vth-override rise_rate 4e9 V/s ends every ramp long before the next sample, so the first such sample already meets the loop. base completed (both such samples meet the output on the 0.8 V clamp) and stays in must_accept; rate-override, where the deciding sample lands mid-ramp, completed and rejects it; reset-and-start and vth-override carry no expectation. EVAS, under the same-instant equation rule (decision sheet item 22, D-R2-1 A), probably refuses such a candidate; legacy EVAS 0.8.7 has no loop and accepts it there; each backend is recorded as it is"
  },
  "candidates": [
   {
@@ -178,9 +178,7 @@
     "rate-override"
    ],
    "must_accept": [
-    "base",
-    "reset-and-start",
-    "vth-override"
+    "base"
    ],
    "author_synthetic_control": "peak-on-actual-output"
   },

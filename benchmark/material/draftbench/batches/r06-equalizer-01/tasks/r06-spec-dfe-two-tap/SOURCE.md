@@ -2,18 +2,18 @@
 
 ## 行为依据
 
-规划候选身份：`task_id` U17-S1，`unit_id` U17，`case_anchor` C355，来源 `src-ca9546843cba`，`primary_ref` C355，动作 S（spec-modeling），家族 R06（滤波、均衡与 RF），优先级 P0，难度 M，建设成本 M。登记见规划登记（`benchmark/material/draftbench/planning/history-candidates/register.json`）中的 U17-S1 条目，来源身份见同目录 sources.json（`benchmark/material/draftbench/planning/history-candidates/sources.json`），规划说明见候选说明（`benchmark/material/draftbench/planning/history-candidates/CANDIDATES.md`）。登记要求：
+规划候选身份：`task_id` U17-S1，`unit_id` U17，`case_anchor` C355，来源 `src-ca9546843cba`，`primary_ref` C355，动作 S（spec-modeling），家族 R06（滤波、均衡与 RF），优先级 P0，难度 M，建设成本 M。登记见[规划登记](../../../../planning/history-candidates/register.json)中的 U17-S1 条目，来源身份见同目录 [sources.json](../../../../planning/history-candidates/sources.json)，规划说明见[候选说明](../../../../planning/history-candidates/CANDIDATES.md#u17-s1)。登记要求：
 - reuse：两拍判决历史、反馈校正、`tap_lsb` 与切片输入观测；
 - author_work：补抽头码到有符号权重、判决编码、中性初态；校准新旧历史判决能区分的序列，减少固定文件拆分；
 - solver_work：实现反馈先于当前判决、历史在判决后更新的接收器，处理复位以及抽头改变后的第一拍；
 - acceptance：相同当前输入配不同历史判决，应产生规定的不同校正；检查错误判决传播和复位后历史清除；
 - spec_plan：首版固定抽头，不引入自适应和 CDR。
 
-R06 已有的 [r06-filter-01](../../../r06-filter-01/) 批次放滤波题，本题是均衡题，另开 `r06-equalizer-01` 批次（批次目录与 README 由主控写）。`source_group` 取新组名 `v4-354`：已建题包和 SOURCE_GROUPS 中原来都没有以 v4:354 为来源的组。
+R06 已有的 [r06-filter-01](../../../r06-filter-01/) 批次放滤波题，本题是均衡题，另开 `r06-equalizer-01` 批次（批次目录与 README 由Benchmark 维护方写）。`source_group` 取新组名 `v4-354`：已建题包和 SOURCE_GROUPS 中原来都没有以 v4:354 为来源的组。
 
 用户已确认的决定：
 - **判决编码与空历史（用户已确认，2026-10-28，选 A）**：决定卡 U17-dfe-history.md（`runs/t3-p0-pilot-20261027/decision-cards/U17-dfe-history.md`）。高、低判决编为 +1、−1；复位后还没有发生过的历史判决贡献 0，头两拍只用已有的有效历史；复位后 `fb_metric` 为 0。共同前提照写：两位抽头码按无符号 0 至 3 表示非负幅度，权重 `tap_lsb * code`；每拍先读当前抽头码和已有历史，算出反馈与切片输入，再判决，最后更新历史；两项 metric 锁存本拍实际用到的值。决定卡的纸面例（`tap_lsb = 20 mV`、k1 = 2、k2 = 1、`vcm = 0.45 V`、`vin = 0.46 V`）原样写进题面，也是公开用例 `base` 的第 9、12 次判决：历史（+1, −1）时反馈 +20 mV、切片输入 0.44 V、判低；历史（−1, +1）时反馈 −20 mV、切片输入 0.48 V、判高。终评能检出两类被排除的读法：把未发生的历史当成低判决（选项 B，原 gold 的做法）的 `empty_history_low` 和 0/1 编码（选项 C）的 `unipolar_history` 在九个用例中都被拒（合成控制；旧版结果见下文“待定项”）。把空历史当成高判决的 `empty_history_high`（v4:854 `neg_005` 的实际改动，u17-fix-r2 加入）同样在九个用例中都被拒。复位后头两拍的期望输出单独核对，见建模选择第 6 条。
-- **内部组织自由（用户已确认，见讨论记录）**：固定顶层端口和可观察行为，内部模块、状态和文件组织由求解者决定，不恢复旧题“四个文件、四个公开模块”的要求。记录在本线讨论记录 `local/research/benchmark-submission-20261025/README.md` 第 84、120、131、175 行和「### U17-S1：让历史判决真正影响下一次判决」一节（第 212 行起；不在本工作树，文件 sha256 `562a36df97370ff163d45d81200d104b4a228695982a99e5c037375770c97c19`）。第 177 行的实验设计方向（保持当前输入、改变过去判决）由 `history-pairs` 用例实现。记录里“DFE 借用 2 mV 是 worker 建议的校准起点，主控未采用”一句也已核对：本题的 2 mV 是建题者按首批同类题定的误差预算（第 10 条），不是沿用那条建议，待 Spectre 校准验证。本单没有发现记录与 brief 不一致的已定事项。
+- **内部组织自由（用户已确认，见讨论记录）**：固定顶层端口和可观察行为，内部模块、状态和文件组织由求解者决定，不恢复旧题“四个文件、四个公开模块”的要求。记录在本线讨论记录 `local/research/benchmark-submission-20261025/README.md` 第 84、120、131、175 行和「### U17-S1：让历史判决真正影响下一次判决」一节（第 212 行起；不在本工作树，文件 sha256 `562a36df97370ff163d45d81200d104b4a228695982a99e5c037375770c97c19`）。第 177 行的实验设计方向（保持当前输入、改变过去判决）由 `history-pairs` 用例实现。记录里“DFE 借用 2 mV 是 worker 建议的校准起点，Benchmark 维护方未采用”一句也已核对：本题的 2 mV 是建题者按首批同类题定的误差预算（第 10 条），不是沿用那条建议，待 Spectre 校准验证。本单没有发现记录与 brief 不一致的已定事项。
 - **评分起点（用户已确认，2026-10-28，F01 选 A）**：见建模选择第 9 条。
 
 主来源是仓库内的 [v4:354 题面](../../../../../historyref/v4/release/benchmarkv4-r53/tasks/354-dfe-receiver-2tap/public/instruction.md)，sha256 `56b1c7a01224c2e2448ea40b130718e7d905e29d09b41dbe3d445ac4a5e37454`，规划登记为 repository-contained。原题沿用的事实：
@@ -54,7 +54,7 @@ R06 已有的 [r06-filter-01](../../../r06-filter-01/) 批次放滤波题，本�
 - [Accellera Verilog-AMS LRM 2.4.0](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)（2014-05-30）：
   - §4.5.8 `transition()`：输出在过渡时间内线性过渡；过渡被打断时按完成规则继续（新目标落在当前值后方时以原目标为起点，否则保留原起点，按“从起点在过渡时间内走完”的斜率从当前值走向新目标），所以在传输延迟为 0、上升与下降时间相等、目标在两次事件之间不变时，打断后仍在过渡时间内到达（非零延迟、上升下降时间不等、排队的过渡另算，见建模选择第 9 条）；新排的过渡之后的待发过渡被删除；
   - §5.10.2 `initial_step`；§5.10.3.1 `cross()`；
-  - 每个方程至少要有一个容差（标准线引用的同一要求）。
+  - 每个方程至少要有一个容差（标准审核引用的同一要求）。
 - DFE 的反馈形式是通行做法：用已作出的判决（±1）乘抽头权重，从当前输入中减去后再切片。GitHub 检索（`gh search code`、`gh search repos`，2026-10-28）找到的公开 Verilog-A DFE 只有：Arcadia-1/behavioral-veriloga-eval 中 v4:354/1354/854 的各版本副本（即本题历史来源）；j95081456/RS_VA_EQ_Adaptation@434a2a86 的 `dfe.va`（没有 LICENSE，只阅读：它用 `2*V - offset` 把判决映射到 ±1，DFF 历史上电为低，正是决定卡选项 B 的做法）；mirekez/cpphdl@8b13e067 生成的 `OneGDFE.va`、`TenGDFE.va`（Apache-2.0，只看了检索列表，没有读取或复制）。arXiv 检索没有相关结果。参考解和新写的 44 个校准候选（`original_v4_354_gold` 以外的全部候选）是作者按新合同自写的，没有复制外部或历史代码。
 - `original_v4_354_gold` 单列：它不是作者写的，而是从仓库内已有的组内历史资产按原字节生成的本地对照。`mutants.py` 只在仓库内运行时读取 historyref 中 v4:354 的四个 gold 文件（`slicer.va` `1a828ec5…`、`feedback_filter.va` `45773bdd…`、`decision_latch.va` `aaa44b9b…`、`dfe_rx_top.va` `fab5139b…`，迁入快照 commit `7b5616dc`），只去掉 include 行，再原样拼接。题包里不存这段文本；在仓库外运行时找不到 historyref，`mutants.py` 不生成这个候选。
 - 这四个文件在公开仓库中有逐字节相同的副本，该仓库没有 LICENSE（见下一段）。按 [historyref 的使用约定](../../../../../historyref/README.md)，它们仅供课题组内部研究、不对外分发，并保持原字节。所以这个对照只用于组内校准，不是参考解或其他候选的来源，也不构成任何许可依据。
@@ -75,7 +75,7 @@ R06 已有的 [r06-filter-01](../../../r06-filter-01/) 批次放滤波题，本�
 1. 接口：模块名 `dfe_rx_top` 与十个位置端口照原题，全部为 electrical；交付 `/app/circuit.va` 单个文件，可以在文件内定义辅助模块。理由：讨论记录要求固定顶层端口；内部组织自由由用户确认，原题“四个文件、四个公开模块”的要求不恢复。Deliverable 写明不要求特定的模块划分、状态变量、算子或事件组织；starter 只有 include、模块与端口声明和 TODO。`context_level` 取 `single-module`：合同只规定一个公开模块。校准候选 `alt_modules`（反馈求和、切片寄存、顶层三个模块）应被接受，是内部组织自由的例子。
 2. 参数与合法域（原题只写 finite）：`vdd` 0.5–1.5 V，`vss` −0.5–0.5 V 且 `vdd − vss` 至少 0.4 V，`vcm` 与 `vth` 0.2–0.7 V，`tap_lsb` 5–50 mV，`tr` 10 ps–1 ns。理由：与 C176、U16、C109 的同类范围一致；`vth` 落在 0/0.9 V 控制电平之间并留出余量；`tap_lsb` 上限使最大反馈 6·`tap_lsb` = 0.3 V 不超过 `vin` 的 ±0.4 V 合法跨度。参考解用 `from` 写出这些范围。`param-override` 用例改写全部六个参数。
    - 终评端点用例（u17-fix-r1 加入，审核 U17R1-01；见第 12 条）：`param-endpoints-low` 取 `vdd` 0.5 V、`vss` 0.1 V、`vcm` 0.2 V、`vth` 0.2 V、`tap_lsb` 5 mV、`tr` 10 ps，除 `vss` 外都在下端，`vss` 0.1 V 与 `vdd` 0.5 V 组成最小摆幅 0.4 V；`param-endpoints-high` 取 `vdd` 1.5 V、`vss` 0.5 V、`vcm` 0.7 V、`vth` 0.7 V、`tap_lsb` 50 mV、`tr` 1 ns，全部在上端。
-   - `vss` 下端用例（u17-fix-r2 加入，r1 交主控的 H4；见第 12 条）：`min-pulse-vss-low` 取 `vss` −0.5 V（下端）与 `vdd` 1.5 V，摆幅 2.0 V 是合法的最大摆幅；其余参数取合法域内、已有用例没有组合过的值：`vcm` 0.55 V 高于 `vth` 0.3 V（已有用例 `vcm` 等于 `vth`，或如 `param-override` 低于 `vth`），`tap_lsb` 40 mV，`tr` 40 ps（介于 10 ps 与 100 ps 之间，已有用例没有）。
+   - `vss` 下端用例（u17-fix-r2 加入，r1 交Benchmark 维护方的 H4；见第 12 条）：`min-pulse-vss-low` 取 `vss` −0.5 V（下端）与 `vdd` 1.5 V，摆幅 2.0 V 是合法的最大摆幅；其余参数取合法域内、已有用例没有组合过的值：`vcm` 0.55 V 高于 `vth` 0.3 V（已有用例 `vcm` 等于 `vth`，或如 `param-override` 低于 `vth`），`tap_lsb` 40 mV，`tr` 40 ps（介于 10 ps 与 100 ps 之间，已有用例没有）。
    - 作者证据中的两个合成端点用例只核对 checker，不交给求解者的 VA：`endpoint-low` 的参数与 `param-endpoints-low` 相同（`vss = 0.1 V` 是最小摆幅组合，不是 `vss` 的下端）；`endpoint-high` 取 `vdd` 1.5 V、`vss` −0.5 V、`vcm` 0.7 V、`vth` 0.7 V、`tap_lsb` 50 mV、`tr` 1 ns。`vss` 的下端 −0.5 V 在终评里由 `min-pulse-vss-low` 覆盖（u17-fix-r2 之前只出现在合成 `endpoint-high` 里）。
 3. 历史与编码（决定卡 A）：两格历史 `h1`（最近一次）、`h2`（再前一次），高 +1、低 −1、空 0；t = 0 和每次复位后两格都空。题面明说“清零后的 `decision` 输出不是一次判决：它显示 `vss`，但背后的格是空的，贡献 0”，以免求解者把输出电平当成历史。
 4. 抽头码：`k1 = 2*b(tap1_1) + b(tap1_0)`，`k2 = 2*b(tap2_1) + b(tap2_0)`，`tap1_1`、`tap2_1` 是高位；tap 1 加权 `h1`，tap 2 加权 `h2`。理由：原 gold 的码读法与对应关系；原题没有写明对应关系（净化包列为缺口）。码 1/2 不对称，用来检出高低位颠倒（`tap_bits_swapped`）；k1 ≠ k2 且 h1 ≠ h2 时检出抽头次序颠倒（`tap_order_swapped`）；k2 ≠ 0 且第二格有判决时检出忽略第二抽头（`second_tap_ignored`）。
@@ -111,7 +111,7 @@ R06 已有的 [r06-filter-01](../../../r06-filter-01/) 批次放滤波题，本�
     - `long-tr`（`tr = 1 ns`，即最长合法过渡，50 ps 网格，3 ns 时钟，抽头码 2/1）：第 9 条的两次打断；一次反馈改变判决后的依赖判决；保持到结束、其间有一个时钟沿的复位。
     - `param-endpoints-low`（`vdd = 0.5 V`、`vss = 0.1 V`、`vcm = 0.2 V`、`vth = 0.2 V`、`tap_lsb = 5 mV`、`tr = 10 ps`，2.5 ps 网格即 `tr/4`，2.0025 ns 时钟即最短合法周期 2 ns 加一个 2.5 ps 网格步的设计余量（u17-fix-r3 之前恰为 2 ns），90 ps 控制边沿，26.5325 ns，10 614 个网格行）：除 `vss` 外的参数都在下端，`vss` 与 `vdd` 组成最小摆幅 0.4 V。事件在网格步长的 0.92 处，评分行在事件后 1.27·`tr`。上电即抽头码 1/2；5–20 mV 的反馈使 5 次判决与原始输入相反，同一输入在不同历史下判决不同（2 对）；两次判决之间换码为 3/1，换码后第一拍用新码和旧历史；一次在两个时钟沿之间上升、跨过一个时钟沿的复位，复位期间换码为 2/3，其后的头两拍。最小切片余量 8 mV。按 `max(tr, 100 ps)` 钳住过渡时间的实现在此例被拒（审核 U17R1-01 的反例）。
     - `param-endpoints-high`（`vdd = 1.5 V`、`vss = 0.5 V`、`vcm = 0.7 V`、`vth = 0.7 V`、`tap_lsb = 50 mV`、`tr = 1 ns`，50 ps 网格，3 ns 时钟，180 ps 控制边沿，37.55 ns）：全部参数在上端。事件在网格步长的 0.5 处，评分行在事件后 1.275·`tr`。上电即抽头码 2/1；最多 200 mV 的反馈使 6 次判决与原始输入相反，同一输入在不同历史下判决不同（2 对）；两次判决之间换码为 1/3，换码后第一拍的判决与按旧码判的不同；一次在两个时钟沿之间上升、跨过一个时钟沿的复位，复位期间换码为 3/2，其后的头两拍。复位在判决 1.5 ns 后上升，两个端点用例都没有打断。
-    - `min-pulse-vss-low`（`vdd = 1.5 V`、`vss = −0.5 V`、`vcm = 0.55 V`、`vth = 0.3 V`、`tap_lsb = 40 mV`、`tr = 40 ps`，10 ps 网格即 `tr/4`，29 ns，2 901 个网格行；u17-fix-r2 加入，覆盖 r1 交主控的 H4 两处端点）：
+    - `min-pulse-vss-low`（`vdd = 1.5 V`、`vss = −0.5 V`、`vcm = 0.55 V`、`vth = 0.3 V`、`tap_lsb = 40 mV`、`tr = 40 ps`，10 ps 网格即 `tr/4`，29 ns，2 901 个网格行；u17-fix-r2 加入，覆盖 r1 交Benchmark 维护方的 H4 两处端点）：
       - 覆盖的边界：`vss` 的下端 −0.5 V（与 `vdd` 1.5 V 组成合法的最大摆幅 2.0 V）；`clk` 的最短阈值脉宽，按最终网表的阈值穿越算，高电平一次（3.509 → 4.011 ns）、低电平一次（7.517 → 8.019 ns），都是 0.502 ns。同一用例还有一次 0.502 ns 的 `rst` 脉冲（23.719 → 24.221 ns）和一对相隔 2.010 ns 的 `clk` 上升穿越（3.509 → 5.519 ns）。原八例中最近的是 `param-override` 的 0.58 ns 高电平和 `param-endpoints-low` 的 0.86 ns 低电平（u17-fix-r3 后为 0.8625 ns）；u17-fix-r2 时 `reset-restart` 的 0.5 ns 复位脉冲与 `isi-channel`、`param-endpoints-low` 的 2 ns 周期恰在下界上（scan-minimums-package.json（`runs/t3-p0-build-20261027/u17-fix-r2/scan-minimums-package.json`）），u17-fix-r3 已把它们挪开（见“2026-10-29 修正 r3”一节）。
       - 设计余量：恰为下界的间隔按 U15 fix-r5 的裁定算平局（合法与否取决于保存样本与时刻的偏差），所以 0.5 ns 的三处各加 2 ps，2 ns 的一处加 10 ps，用精确有理数断言。下限：一个间隔的两端各由相邻两行线性插值得到，每端最多移动 Δv/s + Δt（s 是穿越处的斜率，本例控制边沿都是 90 ps 走 0.9 V，s = 10 mV/ps），checker 自带的相对余量只有 1e-6（0.5 ns 上 0.5 fs）。2 ps 的余量每端能吸收 1 ps，即 10 mV 的样本偏差（时刻无偏差时）或 1 ps 的时刻偏差；按 U15 fix-r5 对 Spectre 样本的假设（偏离 PWL 不超过 1 mV、时刻偏差不超过 1 fs），两端合计至多 0.202 ps，是余量的 10 %；旧版偏差 4.5e-7 V 对应 9e-5 ps。上限：2 ps 是 0.5 ns 的 0.4 %、网格步长的五分之一，远小于原用例中次近的 80 ps（高电平）与 360 ps（低电平；u17-fix-r3 后 362.5 ps），仍在测“最短脉宽附近”。2 ns 周期的两端都是改变输出的判决沿，要守 F01 的网格相位（两端都在 0.9·g），所以余量取一个网格步长 10 ps（2 ns 的 0.5 %）；按同一假设损失 0.202 ps，是余量的 2 %。
       - 合成控制核对了这两个方向：把每处余量反向缩到下界以下（0.498 ns、1.990 ns）时 checker 报台架违例、不判分；把 0.5 ns 三处两端穿越两侧的保存行向缩短方向偏 4.5e-7 V、1 mV、1 mV 加 1 fs、5 mV、9 mV 仍合法，偏 11 mV 越界；2 ns 一处的前端同时是短高电平的起点，只移后端，偏到 80 mV（约 8 ps）仍合法；同一处恰为 0.5 ns 或 2 ns 时，不加偏差合法、偏 1 mV 即越界，这就是平局（u17-fix-r2 的 synthetic-controls.json 的 `evidence_controls_new_case` 与 `margin_controls`）。
@@ -119,7 +119,7 @@ R06 已有的 [r06-filter-01](../../../r06-filter-01/) 批次放滤波题，本�
       - 激励：时钟用 PWL，以便同一用例里分别给出短高电平和短低电平；`clk`、`rst`、抽头码的边沿都是 90 ps，拐点不在网格上，但离每个 `clk`、`rst` 穿越至少 30 ps，穿越两侧的网格行都落在同一段斜坡上，所以插值是精确的，也不取决于 Spectre 是否把拐点设为时间点（`src_allbrkpts` 待定）；没有穿越落在网格行上；`vin` 的拐点在网格上，离 `clk` 上升穿越至少 0.9 ns。
       - 内容：上电即抽头码 3/1；40–120 mV 的反馈使 6 次判决与原始输入相反，同一输入在不同历史下判决不同（2 对）；两次判决之间换码为 1/2，换码后第一拍的判决与按旧码判的不同；一次在判决后 1 ns 上升、跨过一个时钟沿的复位，复位期间换码为 2/3，其后的头两拍；0.502 ns 的复位脉冲（判决后 0.7 ns 上升）及其后的头两拍。5 次判决的切片输入在 `vth` 与 `vcm` 之间，4 次在 0.45 V 与 `vcm` 之间。最小切片余量 20 mV。没有打断。
       - 被拒情况：u17-fix-r1 已有的 37 个错误 VA 候选在此例都应被拒，包括在原八例中只被一例拒绝的 `tr_floor_100p`（原为 `param-endpoints-low`；本例 `tr` 40 ps）和 `slicer_compares_with_vth`（原为 `param-override`；本例 `vcm ≠ vth`）；合成控制里只有不对应 VA 候选的 `interrupt-waits-for-ramp-end` 通过，因为本例没有打断。u17-fix-r2 新加的 `decision_floor_0v`（`decision` 钳到不低于 0 V）与 `clk_deglitch_0p6n`（低电平不足 0.6 ns 后的上升沿不判决）只在此例被拒，说明这两处端点确实进了终评。
-    - 网表按标准线的网表约定清单第 3 版（`runs/standard-line-20261028/netlist-conventions/LIST.md`，sha256 `6a6b17cddf813a8e7c7c4be3d47fed3bac5ab63b23fa207e0f49ff9a0f7713af`，只读）写：每个网表有 `simulatorOptions options reltol=1e-6 vabstol=1e-8 iabstol=1e-12`，`tran` 写 `stop`、`maxstep`、`strobeperiod`、`errpreset=moderate`、`strobeoutput=strobeonly`；时钟在前八例是 pulse 源，写全 `val0`、`val1`、`period`、`width`、`rise`、`fall`，平移时写 `delay`，在 `min-pulse-vss-low` 是 PWL；其余是从 t = 0 起、覆盖 `stop` 的 PWL；`save` 列出 checker 读的十个信号；“不必”一档的参数一律不写；`precision` 与 `src_allbrkpts` 不写进用例网表。容差取值以标准线给 D1 定的为起点（`D1-TOLERANCES.md`，sha256 `7dc99b4b…`）：信号在 1.5 V 以内时每个节点的允许误差约 1.5e-6 V，比 2 mV 判据小三个数量级；这是选值依据，不是误差保证，实际误差待 Spectre 校准验证。
+    - 网表按标准审核的网表约定清单第 3 版（`runs/standard-line-20261028/netlist-conventions/LIST.md`，sha256 `6a6b17cddf813a8e7c7c4be3d47fed3bac5ab63b23fa207e0f49ff9a0f7713af`，只读）写：每个网表有 `simulatorOptions options reltol=1e-6 vabstol=1e-8 iabstol=1e-12`，`tran` 写 `stop`、`maxstep`、`strobeperiod`、`errpreset=moderate`、`strobeoutput=strobeonly`；时钟在前八例是 pulse 源，写全 `val0`、`val1`、`period`、`width`、`rise`、`fall`，平移时写 `delay`，在 `min-pulse-vss-low` 是 PWL；其余是从 t = 0 起、覆盖 `stop` 的 PWL；`save` 列出 checker 读的十个信号；“不必”一档的参数一律不写；`precision` 与 `src_allbrkpts` 不写进用例网表。容差取值以标准审核给 D1 定的为起点（`D1-TOLERANCES.md`，sha256 `7dc99b4b…`）：信号在 1.5 V 以内时每个节点的允许误差约 1.5e-6 V，比 2 mV 判据小三个数量级；这是选值依据，不是误差保证，实际误差待 Spectre 校准验证。
     - checker 不依赖仿真器把输出行放在哪里：评分行就是 strobe 网格；穿越时刻按相邻行线性插值，每个事件边沿在穿越两侧的网格行之间都是同一段直线（边沿长度至少 1.8 个网格步，`isi-channel` 等 100 ps 边沿对 50 ps 网格；端点用例为 90 ps 边沿对 2.5 ps 网格、180 ps 边沿对 50 ps 网格；`min-pulse-vss-low` 为 90 ps 边沿对 10 ps 网格），插值是精确的；前八例 `vin` 与抽头码的 PWL 拐点都在网格上、离时钟沿至少 0.5 ns，`min-pulse-vss-low` 见上文。
 13. checker（[verify.py](tests/verify.py)）不读候选源码或参考解：从记录的输入按上面的规则递推期望值，按输出比较。
     - 台架义务出错时抛出异常（无判决，不记候选失败）：参数超域、分辨率、控制电平与起始余量、穿越交替与间距、`rst` 与抽头码离时钟沿的距离、时钟沿处 `rst` 与抽头码离 `vth` 不足 0.1 V（在过渡中）、`vin` 超域或在时钟沿附近移动、切片输入离 `vcm` 不足 5 mV、没有判决事件；
@@ -130,7 +130,7 @@ R06 已有的 [r06-filter-01](../../../r06-filter-01/) 批次放滤波题，本�
 14. 参考解（[circuit.va](solution/circuit.va)）按 LRM 与 Spectre 语义自然地写：`@(initial_step)` 和 `@(cross(V(rst) - vth, +1))` 设清零状态；`@(cross(V(clk) - vth, +1))` 中先判断 `V(rst)` 电平，再读抽头码、算反馈和切片输入、判决、移位；整数历史 +1/−1/0；三个输出都用延迟为 0 的 `transition()`。复位与采样拆成两个独立事件（样板第3a节）。参考解没有为任何 EVAS 版本改写。
     - 内部信号恰为零（第 38 项前提 1，r2.14）：`cross()` 只用在外部驱动的 `clk` 与 `rst` 上；空历史是整数 0，只参与算术；反馈恰为 0 时也只作为 `transition()` 的目标，没有任何事件检测它“离开零点”。
     - 旧版零点处理（r2.16）：已核对，不涉及。参考解和全部校准候选都只在外部驱动的 `clk`、`rst` 上用 `cross()`，这两个输入按合法域从不停在门限上、t = 0 时离门限至少 50 mV、到达门限必定穿过；没有在可能恰为零或恰在门限上的信号上检出“离开”的写法，旧版的通过不会被这种处理掩盖。
-15. 平局扫描（标准线定稿判据 `TIE-RULE.md`，现行 sha256 `a4cf0e73dfc91af72416bb42d273b9b578f6caa2dc6fa098153751dfd280ffa7`，含 2026-10-28 补的第 4 种情形），在生成时用精确有理数核对，结果在 build-cases-report.json 的 `ties`；两个端点用例和 `long-tr` 的实际终点扫描在 u17-fix-r1 的 build-endpoint-report.json，`min-pulse-vss-low` 的在 u17-fix-r2 的 build-margin-report.json。建题时的扫描只查事件时刻加 `tr` 的名义终点；u17-fix-r1 按完成规则算出每个输出的实际完成时刻，再查所有控制输入的穿越（`clk` 与 `rst` 的上升和下降、抽头码）：
+15. 平局扫描（标准审核定稿判据 `TIE-RULE.md`，现行 sha256 `a4cf0e73dfc91af72416bb42d273b9b578f6caa2dc6fa098153751dfd280ffa7`，含 2026-10-28 补的第 4 种情形），在生成时用精确有理数核对，结果在 build-cases-report.json 的 `ties`；两个端点用例和 `long-tr` 的实际终点扫描在 u17-fix-r1 的 build-endpoint-report.json，`min-pulse-vss-low` 的在 u17-fix-r2 的 build-margin-report.json。建题时的扫描只查事件时刻加 `tr` 的名义终点；u17-fix-r1 按完成规则算出每个输出的实际完成时刻，再查所有控制输入的穿越（`clk` 与 `rst` 的上升和下降、抽头码）：
     - 第 1 种（不同来源的事件精确同刻）：没有，合法域要求 `rst` 穿越离时钟沿至少 0.5 ns；
     - 第 2 种（事件恰在某个过渡结束时改写它的目标）：没有；改变输出的相邻事件最近相隔 0.6·`tr`（`long-tr`）；`param-endpoints-high` 至少 1.5·`tr`，`param-endpoints-low` 至少 100·`tr`，`min-pulse-vss-low` 至少 17.5·`tr`（0.7 ns），原五例至少 2.5·`tr`；
     - 第 3 种（过渡终点碰上不改写它的事件）：名义终点筛查在 `long-tr` 找到两处：7.645 ns 的 `rst` 下降穿越和同一时刻的 `clk` 下降穿越，恰在 6.645 ns 复位所启动的清零过渡按完整 `tr` 计的终点；25.645 ns 的 `clk` 下降穿越，恰在 24.645 ns 复位所启动的清零过渡的名义终点。这只是名义终点筛查的结果，不是实际终点碰撞的精确结论：按完成规则，三路清零实际在 7.245、7.245、7.5587 ns 已结束，第二次在 25.3783、25.5593 ns 结束，所有实际终点上都没有任何输入穿越。这些下降穿越都不是参考解的事件，也不改写任何过渡目标，不构成先后之争，定为第 3 类，按自然写法保留，不挪输入。两个端点用例和 `min-pulse-vss-low` 没有打断，实际终点就是事件加 `tr`，其上没有任何输入穿越；
@@ -149,7 +149,7 @@ R06 已有的 [r06-filter-01](../../../r06-filter-01/) 批次放滤波题，本�
 
 ## 2026-10-29 修正 r3（u17-fix-r3，第 (ii) 类）
 
-主控对 u17-fix-r2 交主控 H2 的裁定：原八例中有三例的间隔恰在合同下界上。按 U15 fix-r5 的裁定，这属于平局：台架合法与否取决于保存样本与时刻的偏差；按 1 mV 的样本偏差假设，这三例在 Spectre 上会被判台架违例、不评分。本轮按第 (ii) 类把这些间隔挪开下界、留出余量。只改了这三例的激励（`tests/cases.json` 中的三条记录），用例名、用途、参数覆盖、判决序列与评分意图都不变；其余六例逐字节不变；题面、参考解、checker、starter、公开用例与校准三件都没改。处理记录在 u17-fix-r3 的 disposition.md（`runs/t3-p0-build-20261027/u17-fix-r3/disposition.md`）。**未仿真。**
+Benchmark 维护方对 u17-fix-r2 交Benchmark 维护方 H2 的裁定：原八例中有三例的间隔恰在合同下界上。按 U15 fix-r5 的裁定，这属于平局：台架合法与否取决于保存样本与时刻的偏差；按 1 mV 的样本偏差假设，这三例在 Spectre 上会被判台架违例、不评分。本轮按第 (ii) 类把这些间隔挪开下界、留出余量。只改了这三例的激励（`tests/cases.json` 中的三条记录），用例名、用途、参数覆盖、判决序列与评分意图都不变；其余六例逐字节不变；题面、参考解、checker、starter、公开用例与校准三件都没改。处理记录在 u17-fix-r3 的 disposition.md（`runs/t3-p0-build-20261027/u17-fix-r3/disposition.md`）。**未仿真。**
 
 ### 改了什么
 
@@ -210,42 +210,42 @@ R06 已有的 [r06-filter-01](../../../r06-filter-01/) 批次放滤波题，本�
 4. `cross()` 的根恰在 PWL 折点上而事件里按电平比较：没有根落在折点上（见上文核对的平局一条）。另外，`clk` 事件里的电平比较读的是 `rst`、抽头码与 `vin`，它们在穿越时刻离门限至少 0.1 V，或在穿越前后 100 ps 内静止，穿越点读值与穿越后读值相同；`rst` 事件里没有电平比较。不依赖。
 5. 实例行的参数端点写法：九个用例里值等于参考解 `from` 端点的实例覆盖共 15 处，写法不同的 4 处：
    - 本轮改动范围内的 `param-endpoints-low` `tap_lsb=5m`（范围写 `5e-3`），已改为 `5e-3`；
-   - 本轮改动范围外的 `long-tr` `tr=1000p`（范围写 `1n`）、`param-endpoints-high` `tap_lsb=50m`（`50e-3`）与 `tr=1000p`（`1n`）。按 brief 其余六例逐字节不动，交主控。（p0u17-fix-r4 已改为与范围相同的写法，见“2026-10-29 修正 r4”一节第 1 条。）
+   - 本轮改动范围外的 `long-tr` `tr=1000p`（范围写 `1n`）、`param-endpoints-high` `tap_lsb=50m`（`50e-3`）与 `tr=1000p`（`1n`）。按 brief 其余六例逐字节不动，交Benchmark 维护方。（p0u17-fix-r4 已改为与范围相同的写法，见“2026-10-29 修正 r4”一节第 1 条。）
    这四对按单次舍入、按当前 EVAS 的两次舍入（#289）都得到与端点相同的 binary64，不会触发 `parameter_range`；Spectre 的解析待 FU-01(c) 实测。
 6. checker 判断“期望值是否改变”：`distinct()`（verify.py 第 172 行）用实数 `!=`，只有期望值真正改变的项才给该输出开 1.25·`tr` 的不评分窗。
    - `decision`（`vdd`、`vss`）与 `fb_metric`（`tap_lsb` 乘整数）的期望是精确值，同一名义值得到同一 binary64。
    - `slicer_in_dbg` 的期望是从保存行插值得到的 `vin` 减反馈。名义上相等的相邻期望（`history-pairs` 4 处、`isi-channel` 11 处）在 `vin` 样本有偏差时会被当成变化，多开不评分窗，只会放松评分。
    - 合成探针（checker-ne-probe.json（`runs/t3-p0-build-20261027/u17-fix-r3/checker-ne-probe.json`））让 `vin` 保存行带 1e-12 V 量级的偏差：这 15 处都多开了窗，53 个模型在九例上的判决都不变。失败区间数有 35 个模型与用例的组合变化：34 个在多开窗的两例，来自多开的窗；1 个是 `hardcoded-vth-0.45` 在 `param-endpoints-low` 的一个区间，那里切片输入恰好变化 2 mV，该模型在评分行的误差恰等于 2 mV 容差，1e-12 V 的偏差让它从失败变为通过，该模型在此例另有 32 个失败区间。
-   - 参考解不依赖它。按 brief 本轮不改 checker，交主控（样板建议改用明确门限，例如 1 nV）。（p0u17-fix-r4：审核 R4-02 要求改为推导出的门限；按 brief 的上下限推导没有空当，停下交主控，checker 未改，见“2026-10-29 修正 r4”一节第 2 条。）（p0u17-fix-r5 已按清单第 4.9 版第 20 条处理：题面写明 δ = 0.1 mV，checker 只对 `slicer_in_dbg` 用同一个 δ，见“2026-10-29 修正 r5”一节第 1 条。）
+   - 参考解不依赖它。按 brief 本轮不改 checker，交Benchmark 维护方（样板建议改用明确门限，例如 1 nV）。（p0u17-fix-r4：审核 R4-02 要求改为推导出的门限；按 brief 的上下限推导没有空当，停下交Benchmark 维护方，checker 未改，见“2026-10-29 修正 r4”一节第 2 条。）（p0u17-fix-r5 已按清单第 4.9 版第 20 条处理：题面写明 δ = 0.1 mV，checker 只对 `slicer_in_dbg` 用同一个 δ，见“2026-10-29 修正 r5”一节第 1 条。）
 
-结论：参考解与台架不依赖以上任何一条，没有需要停下的第 (ii) 类问题；第 5 条范围外的三处写法和第 6 条的 `!=` 交主控。
+结论：参考解与台架不依赖以上任何一条，没有需要停下的第 (ii) 类问题；第 5 条范围外的三处写法和第 6 条的 `!=` 交Benchmark 维护方。
 
 ## 2026-10-29 修正 r4（p0u17-fix-r4，第 (ii) 类）
 
-依据：P0 两题增量合审 r4（astra-review.json（`runs/t3-p0-build-20261027/review-p0u17-r4/astra-review.json`），sha256 `a15a8704…`）的 R4-05、R4-02 与审核者对 u17-fix-r3 交主控 H2、H3、H4 的意见，主控的 p0u17-fix-r4 brief，样板 r2.26，网表约定清单第 4.2 版（`71ddb16a…`），平局判据 TIE-RULE.md（`a4cf0e73…`）。改动文件改前、改后的 sha256，脚本、命令、退出码与结果见 p0u17-fix-r4 处置记录（`runs/t3-p0-build-20261027/p0u17-fix-r4/disposition.md`）。**未仿真**：本机没有 Spectre，本轮没有运行 Spectre 或模型；旧版结果是旧版开发证据（EVAS 0.8.7，legacy/EVAS 提交 6cb6fa7a），待 Spectre 复跑。题面、参考解、两份 checker、starter、`task.toml`、公开用例与校准三件都没有改；`tests/cases.json` 只改了两行。
+依据：P0 两题增量合审 r4（astra-review.json（`runs/t3-p0-build-20261027/review-p0u17-r4/astra-review.json`），sha256 `a15a8704…`）的 R4-05、R4-02 与审核者对 u17-fix-r3 交Benchmark 维护方 H2、H3、H4 的意见，Benchmark 维护方的 p0u17-fix-r4 brief，样板 r2.26，网表约定清单第 4.2 版（`71ddb16a…`），平局判据 TIE-RULE.md（`a4cf0e73…`）。改动文件改前、改后的 sha256，脚本、命令、退出码与结果见 p0u17-fix-r4 处置记录（`runs/t3-p0-build-20261027/p0u17-fix-r4/disposition.md`）。**未仿真**：本机没有 Spectre，本轮没有运行 Spectre 或模型；旧版结果是旧版开发证据（EVAS 0.8.7，legacy/EVAS 提交 6cb6fa7a），待 Spectre 复跑。题面、参考解、两份 checker、starter、`task.toml`、公开用例与校准三件都没有改；`tests/cases.json` 只改了两行。
 
-1. 参数端点的字面写法（审核 R4-05，即 r3 交主控的 H2）。
+1. 参数端点的字面写法（审核 R4-05，即 r3 交Benchmark 维护方的 H2）。
    - `long-tr` 实例行 `tr=1000p` → `tr=1n`；`param-endpoints-high` 实例行 `tap_lsb=50m` → `tap_lsb=50e-3`、`tr=1000p` → `tr=1n`，与参考解 `from [5e-3:50e-3]`、`from [10p:1n]` 的端点写法相同。用例 `params`、激励、判决与评分都不变。
    - 生成器同步（u17_literal_cases.py（`runs/t3-p0-build-20261027/p0u17-fix-r4/scripts/u17_literal_cases.py`））：用建题的 `long_tr()` 与 u17-fix-r1 的 `endpoints_high()`（字节副本）先逐字节重建两条旧记录，再经 u17-fix-r3 的 `SpelledCase`（端点覆盖按 `from` 范围的原文写）生成新记录，与题包的新字节逐字节相同；只有两条 `XDUT` 行不同。
    - 解析核对：按倍率精确解析后，九个用例里值等于范围端点的 15 处实例覆盖全部与范围同写法（改前不同的就是上面三处）；这三对在单次舍入（Spectre，FU-01b；EVAS 修好 #289 后）和当前 EVAS 的两次舍入下，都与端点是同一个 binary64。
    - 合成核对：u17-fix-r3 的 53 个模型在两例上，改前改后的判决、失败区间、最大误差与首个失败逐项相同，迟到可见性与覆盖统计也相同（控制按用例 `params` 生成，与实例行写法无关）。
    - 旧版 EVAS 0.8.7：参考解与 45 个候选在两例的新字节上 92 次运行，全部行与只用网格行的判决都与 `expected.json` 一致（92/92），参考解误差 0；判决与此前在旧写法上的运行（建题 41 次、u17-fix-r1 45 次、u17-fix-r2 6 次）逐项相同。此前的旧版运行保留旧写法的身份，不说明它们验证过新字节。
-2. checker 的“无变化”判定（审核 R4-02，即 r3 交主控的 H3）：**停下交主控，本轮没有改 checker**，两份副本仍逐字节相同。（p0u17-fix-r5 已按清单第 4.9 版第 20 条处理，见“2026-10-29 修正 r5”一节第 1 条。）
+2. checker 的“无变化”判定（审核 R4-02，即 r3 交Benchmark 维护方的 H3）：**停下交Benchmark 维护方，本轮没有改 checker**，两份副本仍逐字节相同。（p0u17-fix-r5 已按清单第 4.9 版第 20 条处理，见“2026-10-29 修正 r5”一节第 1 条。）
    - `distinct()`（`tests/verify.py` 第 172 行）同时用于 `decision`（`vdd`/`vss`）、`fb_metric`（`tap_lsb` 乘整数）与 `slicer_in_dbg`（`vin` 减反馈）。前两个名义相等时 binary64 相同，精确比较是对的；要门限的只有 `slicer_in_dbg`。
    - 门限的下限按 brief 是样本偏差（每个样本 1 mV、1 fs）在期望值上造成的最大差：两个名义相同的切片输入可差 2 mV；上限是合同里最小的合法名义变化：合同对相邻两次判决的切片输入之差没有下限，上限为 0；现台架 `param-endpoints-low` 里就有 2 mV 的合法名义变化。上下限之间没有空当，按 brief 停下。
-   - 题面怎么写开窗（逐字核对）：第 47 行“Every saved point is scored, except points less than `1.25*tr` after an event that changes that output's expected value.”，期望值“are calculated with the rules above from the recorded inputs”；第 37 行规定每次改变期望值的事件后输出在 `tr` 内到达新值，“The waveform inside that `tr` interval is not specified.”。题面对任何改变期望值的事件都承诺不评分窗，没有最小幅度；合同里存在任意小的合法变化，任何正的门限都会少开题面承诺的窗，成为隐藏的评分规则（主控转述的 R01-02 同类问题）。按主控 2026-10-29 的补充，停下报主控，不改题面。`decision`（变化至少 `vdd − vss` ≥ 0.4 V）与 `fb_metric`（至少 `tap_lsb` ≥ 5 mV）的最小合法变化是正的，门限在那里有空当，但精确比较已经对，不需要门限。
+   - 题面怎么写开窗（逐字核对）：第 47 行“Every saved point is scored, except points less than `1.25*tr` after an event that changes that output's expected value.”，期望值“are calculated with the rules above from the recorded inputs”；第 37 行规定每次改变期望值的事件后输出在 `tr` 内到达新值，“The waveform inside that `tr` interval is not specified.”。题面对任何改变期望值的事件都承诺不评分窗，没有最小幅度；合同里存在任意小的合法变化，任何正的门限都会少开题面承诺的窗，成为隐藏的评分规则（Benchmark 维护方转述的 R01-02 同类问题）。按Benchmark 维护方 2026-10-29 的补充，停下报Benchmark 维护方，不改题面。`decision`（变化至少 `vdd − vss` ≥ 0.4 V）与 `fb_metric`（至少 `tap_lsb` ≥ 5 mV）的最小合法变化是正的，门限在那里有空当，但精确比较已经对，不需要门限。
    - 最小合法变化控制（r402_min_change.py（`runs/t3-p0-build-20261027/p0u17-fix-r4/scripts/r402_min_change.py`））：`history-pairs` 44.045 ns 的判决与前一次切片输入相同，让 `vin` 在这次判决前后 0.5 ns 内加 δ（合法），切片输入变化 δ，输出在 `tr` 内到达新值，另一份在期限内多一个 10 mV 的偏移（题面允许）。现行 checker 对 δ = 0.5 nV、0.5 µV、1.5 mV、5 mV 都开窗、都通过；门限 1 nV、1 µV、3 mV 的变体在 δ 小于门限时不开窗，拒绝期限内带偏移的合法输出。
-   - 证据（scratch 里的变体 checker，不进题包）：现行 checker 放过三个定向尖峰控制（`slicer_in_dbg` 在事件后 5 ps 的一行加 10 mV：`isi-channel` 8.2 ns 只靠 binary64 算术；`history-pairs` 44.05 ns、`isi-channel` 6.15 ns 加审核者用的 k·1e-12 V 偏差）；门限 1 nV、1 µV 的变体都拒绝它们，正确波形在同样偏差下通过，53 个模型的被拒集合不变，k·1e-12 V 偏差多开的 15 个窗变为 0。门限 3 mV 的变体（大到能吸收 1 mV 偏差）则在 `param-endpoints-low` 误判合同波形与另外几个正确的替代模型：它把那次 2 mV 的名义变化当成不变。名义相等的相邻切片输入：`history-pairs` 4 处、`reset-restart` 1 处、`isi-channel` 15 处（其中 4 处在样本无偏差时 binary64 也不同）。可选做法与利弊在处置记录里，由主控定。
+   - 证据（scratch 里的变体 checker，不进题包）：现行 checker 放过三个定向尖峰控制（`slicer_in_dbg` 在事件后 5 ps 的一行加 10 mV：`isi-channel` 8.2 ns 只靠 binary64 算术；`history-pairs` 44.05 ns、`isi-channel` 6.15 ns 加审核者用的 k·1e-12 V 偏差）；门限 1 nV、1 µV 的变体都拒绝它们，正确波形在同样偏差下通过，53 个模型的被拒集合不变，k·1e-12 V 偏差多开的 15 个窗变为 0。门限 3 mV 的变体（大到能吸收 1 mV 偏差）则在 `param-endpoints-low` 误判合同波形与另外几个正确的替代模型：它把那次 2 mV 的名义变化当成不变。名义相等的相邻切片输入：`history-pairs` 4 处、`reset-restart` 1 处、`isi-channel` 15 处（其中 4 处在样本无偏差时 binary64 也不同）。可选做法与利弊在处置记录里，由Benchmark 维护方定。
 3. H4（`reset-restart` 的 2 ps）已核对：保留。`rst` 边沿 0.9 V/200 ps = 4.5 mV/ps，每端 1 mV、1 fs 时间隔至多缩短 2·(1 mV ÷ 4.5 mV/ps + 1 fs) = 0.4464 ps，是 2 ps 余量的 22 %；时刻无偏差时每端可吸收 4.5 mV；上限是一个网格步 100 ps。与审核者的推导（约 0.446 ps）相同。
-4. 下界重扫（u17_bounds.py（`runs/t3-p0-build-20261027/p0u17-fix-r4/scripts/u17_bounds.py`），按 1 mV、1 fs 的损失，并带 u17-fix-r3 的 `scan_minimums.py`）：九例改前、改后都没有离下界不到损失的间隔，恰在下界上的为 0；改前改后结果逐项相同，修正 r3 的结论（72 处 → 0 处）不因本轮改动而变。各类间隔余量对损失的最小倍数：`reset-restart` 的 `rst` 高电平 4.5 倍，`min-pulse-vss-low` 的最短脉宽 9.9 倍，`param-endpoints-low` 的时钟周期 12.4 倍。电压界：切片输入离 `vcm` 至少 7 mV（下界 5 mV，多出的 2 mV 大于 1 mV 的损失）；`vin` 静止判定（0.25 mV）在各样本互不相关的 1 mV 偏差下会误报，与 C109 同一类，交主控；逻辑电平的 1 mV 容差恰等于模型上限。（p0u17-fix-r5：两项都由主控与总协调定为保留，见“2026-10-29 修正 r5”一节第 2 条。）平局：本轮只改实例行写法，不移动任何事件；TIE-RULE.md 在本轮期间补的第 5 种（不同来源的两个事件只差 1 到 64 ulp，现行 sha256 `1fb0682f…`）对本题没有新增，合同让 `rst` 与抽头码离时钟沿至少 0.5 ns，修正 r3 按实际完成时刻的扫描也没有平局。
-5. 样板 r2.26 新条目在改动处的核对（主控 `list41_scan.py` 的 `check(text)`，清单第 4.2 版第 0.5 节）：两份改动的网表与其余九份都没有命中：跨行一律行尾反斜杠、LF 换行（本题网表都是单行语句，没有 CR）；没有同时写 `strobetimes` 与 `strobeperiod`；容差不为 0；没有“指数加比例符号”的数（`50e-3` 是指数写法、不带比例符号）。checker：完整性检查取最后一行、带容差（`tests/verify.py` 第 232 行），没有按“时间等于 stop”找行；评分逐行进行，不依赖输出行落在哪个时刻。合成核对：`long-tr` 的合同波形最后一行提前 6 ulp 仍通过，按两倍细的网格保存也通过。
+4. 下界重扫（u17_bounds.py（`runs/t3-p0-build-20261027/p0u17-fix-r4/scripts/u17_bounds.py`），按 1 mV、1 fs 的损失，并带 u17-fix-r3 的 `scan_minimums.py`）：九例改前、改后都没有离下界不到损失的间隔，恰在下界上的为 0；改前改后结果逐项相同，修正 r3 的结论（72 处 → 0 处）不因本轮改动而变。各类间隔余量对损失的最小倍数：`reset-restart` 的 `rst` 高电平 4.5 倍，`min-pulse-vss-low` 的最短脉宽 9.9 倍，`param-endpoints-low` 的时钟周期 12.4 倍。电压界：切片输入离 `vcm` 至少 7 mV（下界 5 mV，多出的 2 mV 大于 1 mV 的损失）；`vin` 静止判定（0.25 mV）在各样本互不相关的 1 mV 偏差下会误报，与 C109 同一类，交Benchmark 维护方；逻辑电平的 1 mV 容差恰等于模型上限。（p0u17-fix-r5：两项都由Benchmark 维护方与项目协调方定为保留，见“2026-10-29 修正 r5”一节第 2 条。）平局：本轮只改实例行写法，不移动任何事件；TIE-RULE.md 在本轮期间补的第 5 种（不同来源的两个事件只差 1 到 64 ulp，现行 sha256 `1fb0682f…`）对本题没有新增，合同让 `rst` 与抽头码离时钟沿至少 0.5 ns，修正 r3 按实际完成时刻的扫描也没有平局。
+5. 样板 r2.26 新条目在改动处的核对（Benchmark 维护方 `list41_scan.py` 的 `check(text)`，清单第 4.2 版第 0.5 节）：两份改动的网表与其余九份都没有命中：跨行一律行尾反斜杠、LF 换行（本题网表都是单行语句，没有 CR）；没有同时写 `strobetimes` 与 `strobeperiod`；容差不为 0；没有“指数加比例符号”的数（`50e-3` 是指数写法、不带比例符号）。checker：完整性检查取最后一行、带容差（`tests/verify.py` 第 232 行），没有按“时间等于 stop”找行；评分逐行进行，不依赖输出行落在哪个时刻。合成核对：`long-tr` 的合同波形最后一行提前 6 ulp 仍通过，按两倍细的网格保存也通过。
 6. 校准件不变：`expected.json`、`README.md`、`mutants.py` 都没有改（45 个候选与 u17-fix-r3 的输出逐字节相同；README 第 11 行写的是参数值，不涉及写法）。
 
 ## 2026-10-29 修正 r5（p0u17-fix-r5，第 (ii) 类）
 
-依据：主控的 p0u17-fix-r5 brief（`runs/t3-p0-build-20261027/briefs/p0u17-fix-r5.md`，sha256 `364bfcb7…`）与 05:42Z 的补充（同目录 `p0u17-fix-r5.steer-list410.md`，`94875695…`）；总协调 2026-10-29 的决定（两题照网表约定清单第 0.5 节第 20 条做，δ 取 0.1 mV）；网表约定清单第 4.9 版（`f05138e7…`）与第 4.10 版（`e99f4ddb…`）；样板 r2.33（`f70e0850…`），本轮期间升到 r2.35（`d090ca15…`）；平局判据 TIE-RULE.md（`418d542a…`）；SL-DEC-20261029-05（`JUDGMENT-W2-S7S12-G400-L0A.md` 第 5 节，brief 给的 `10378745…`，补充后 `2b6b7d8e…`）；`JUDGMENT-FU2b.md`（`5691c10e…`）第 3、7 节。改动文件改前、改后的 sha256，脚本、命令、退出码与结果见 p0u17-fix-r5 处置记录（`runs/t3-p0-build-20261027/p0u17-fix-r5/disposition.md`）。**未仿真**：本机没有 Spectre，本轮没有运行 Spectre 或模型；旧版结果是旧版开发证据（EVAS 0.8.7，legacy/EVAS 提交 6cb6fa7a），待 Spectre 复跑。本轮只改了题面一句、两份 checker 与本文件；参考解、starter、`task.toml`、用例与校准三件都没有改。
+依据：Benchmark 维护方的 p0u17-fix-r5 brief（`runs/t3-p0-build-20261027/briefs/p0u17-fix-r5.md`，sha256 `364bfcb7…`）与 05:42Z 的补充（同目录 `p0u17-fix-r5.steer-list410.md`，`94875695…`）；项目协调方 2026-10-29 的决定（两题照网表约定清单第 0.5 节第 20 条做，δ 取 0.1 mV）；网表约定清单第 4.9 版（`f05138e7…`）与第 4.10 版（`e99f4ddb…`）；样板 r2.33（`f70e0850…`），本轮期间升到 r2.35（`d090ca15…`）；平局判据 TIE-RULE.md（`418d542a…`）；SL-DEC-20261029-05（`JUDGMENT-W2-S7S12-G400-L0A.md` 第 5 节，brief 给的 `10378745…`，补充后 `2b6b7d8e…`）；`JUDGMENT-FU2b.md`（`5691c10e…`）第 3、7 节。改动文件改前、改后的 sha256，脚本、命令、退出码与结果见 p0u17-fix-r5 处置记录（`runs/t3-p0-build-20261027/p0u17-fix-r5/disposition.md`）。**未仿真**：本机没有 Spectre，本轮没有运行 Spectre 或模型；旧版结果是旧版开发证据（EVAS 0.8.7，legacy/EVAS 提交 6cb6fa7a），待 Spectre 复跑。本轮只改了题面一句、两份 checker 与本文件；参考解、starter、`task.toml`、用例与校准三件都没有改。
 
-1. `slicer_in_dbg` 的变化门限 δ = 0.1 mV（审核 R4-02，即 r3 交主控的 H3；清单第 0.5 节第 20 条）。
+1. `slicer_in_dbg` 的变化门限 δ = 0.1 mV（审核 R4-02，即 r3 交Benchmark 维护方的 H3；清单第 0.5 节第 20 条）。
    - 题面第 47 行，原文：“Every saved point is scored, except points less than `1.25*tr` after an event that changes that output's expected value. At each scored point …”；新文：“Every saved point is scored, except points less than `1.25*tr` after an event that changes that output's expected value by more than δ = 0.1 mV. A change of δ or less, such as a slicer input within δ of the previous one, does not count as a change here or in the output timing rule above: it opens no such interval, the expected value keeps its previous value, and the output is scored against that value as at any other point. At each scored point …”。这一行其余文字和题面其余部分不变；“here or in the output timing rule above”让第 37 行的输出时序规则按同一个 δ 读。
    - checker（`tests/verify.py`，公开副本逐字节相同）：新增 `DELTA = 1e-4`（第 39 行）；`distinct()` 加可选参数 `delta`（第 172–180 行），给了 `delta` 时按 `abs(a - b) > delta` 判变化，不给时照旧用 `!=`；只有 `slicer_in_dbg` 传 `DELTA`（第 266 行）；模块文档串同步写明。变化不超过 δ 时不保留该项，期望值保持原值，与题面新句一致。
    - 逐处：`decision`（`vdd`/`vss`）与 `fb_metric`（`tap_lsb` 乘整数）由参数与整数状态精确算出，名义相等时 binary64 逐位相同，名义不同至少差 0.4 V 与 `tap_lsb`（≥ 5 mV），远大于 δ，照旧精确比较，开出的窗与“变化超过 δ”逐个相同；`slicer_in_dbg` 是插值得到的 `vin` 减反馈，用 δ。`coverage()` 里“同一输入”用的 1 mV（第 212 行）只是统计，不评分。`crossings()` 的 `r[node] == level`（第 62 行）是穿越规则的定义，不在此列（见第 4 条）。
@@ -267,7 +267,7 @@ R06 已有的 [r06-filter-01](../../../r06-filter-01/) 批次放滤波题，本�
      改前的 checker 对四种 d 都开窗、都通过。d 恰为 δ 时，`vin − fb` 的 binary64 差比 δ 小 1 ulp 量级，checker 不开窗，与题面“δ or less”一致；若舍入落在 δ 之上，只会多开一个窗、放松评分。
    - 审核者的三个尖峰（修正 r4 第 3.3 节：`isi-channel` 8.2 ns 只靠 binary64 算术；`history-pairs` 44.05 ns 与 `isi-channel` 6.15 ns 加 k·1e-12 V 偏差）：新 checker 都拒绝（10 mV），改前都放过；正确波形在同样偏差下通过。k·1e-12 V 偏差多开的窗由 15 个变为 0，53 个模型的判决都不变。
    - 正确实现加 1 mV、1 fs 的样本偏差：九例的合同波形，`vin` 以外的每个保存值各偏至多 1 mV（伪随机），每行时刻偏 1 fs（首末两行不偏），`vin`（vsource 直接驱动、读值逐位精确）只偏至多 1e-12 V：九例都通过，最大误差 1.0 mV。
-2. 修正 r4 第 12 节在本题的几项，主控与总协调定为保留：
+2. 修正 r4 第 12 节在本题的几项，Benchmark 维护方与项目协调方定为保留：
    - `vin` 静止判定（判决沿前后 100 ps 内变化小于 0.25 mV）：vsource 直接驱动的节点读值逐位精确（FU-01d），1 mV 模型不适用，判定不改；
    - 余裕为 0 的电压界（控制输入 0–0.9 V 的 1 mV 容差）：1 mV 模型只是推余量用的保守模型，第 20 条的数值噪声下界（约 20 µV）远小于 1 mV，不改；
    - 相位锁定的间隔用整网格步（修正 r3 的 `isi-channel` 50 ps、`param-endpoints-low` 2.5 ps）：不改；
@@ -277,17 +277,17 @@ R06 已有的 [r06-filter-01](../../../r06-filter-01/) 批次放滤波题，本�
    - 平局第 5 种：本轮不移动任何事件；合法域让 `rst` 与抽头码离时钟沿至少 0.5 ns，修正 r3 按实际完成时刻的扫描没有平局，第 5 种没有新增。
    - cross 返回根（SL-DEC-20261029-05 及 2b6b7d8e 的补充，return_roots_r5.py（`runs/t3-p0-build-20261027/p0u17-fix-r5/scripts/return_roots_r5.py`））：参考解只在 `clk`、`rst` 上用 `cross(…, +1)`，没写 time_tol（缺省 1 s），只看 expr_tol。expr_tol 按最宽的读法至多 0.70 µV；九例中两信号相邻两根至少相隔 502 ps，两根之间 |expr| 的最大值至少 200 mV。每一对都必须报两次，判决的次数可以评分，没有落在框内的。
    - idt：参考解与 45 个候选都没有 `idt`。pulse：10 个 pulse 源（前八例、公开 `base` 与 `visible_test.scs` 的时钟）都写了 `rise`、`fall`。
-   - 整数操作数的 abs、min、max：主控粗扫 `intminmax-scan.json`（`95975f2d…`）在本题没有命中；参考解不用 abs、min、max。
-   - 主控 05:42Z 补充的两条：一次性 `timer()`：参考解与全部候选都没有 `timer()`；候选 `clk_deglitch_0p6n` 在 `cross()` 事件里读 `$abstime` 与上一次下降沿比较，不是 timer，离 0.6 ns 的比较边界至少 98 ps（`min-pulse-vss-low` 的 0.502 ns 低电平）。`transition()` 的 td：参考解为 0，候选的 td 都是常数（0 或 0.2·`tr`），没有输入不变、只改 td 的写法。
+   - 整数操作数的 abs、min、max：Benchmark 维护方粗扫 `intminmax-scan.json`（`95975f2d…`）在本题没有命中；参考解不用 abs、min、max。
+   - Benchmark 维护方 05:42Z 补充的两条：一次性 `timer()`：参考解与全部候选都没有 `timer()`；候选 `clk_deglitch_0p6n` 在 `cross()` 事件里读 `$abstime` 与上一次下降沿比较，不是 timer，离 0.6 ns 的比较边界至少 98 ps（`min-pulse-vss-low` 的 0.502 ns 低电平）。`transition()` 的 td：参考解为 0，候选的 td 都是常数（0 或 0.2·`tr`），没有输入不变、只改 td 的写法。
 4. 更正：修正 r3 一节“样板 r2.18–r2.21 新条目的核对”第 2 条说“本题台架没有穿越落在网格行上（生成器断言）”。这对 `clk`、`rst` 成立，对抽头码不成立：`base` 与 `history-pairs` 的抽头码边沿是 100 ps、拐点在 50 ps 网格上，斜坡中点 0.45 V 恰是 `vth`，落在网格行上（onlevel_rows.py（`runs/t3-p0-build-20261027/p0u17-fix-r5/scripts/onlevel_rows.py`））。`crossings()` 按规则把这一行当作穿越时刻；Spectre 若在这一行差 1 ulp，求得的穿越时刻也只差 1e-25 s 量级。抽头码只在离它至少 0.5 ns 的时钟沿上按电平读取，评分不受影响。原文不改。
 5. 判决有变化的候选与控制：
    - VA 校准候选（旧版开发证据）：存档的 416 次旧版波形用新 checker 重判（各按运行时的用例字节），与记录的判决 0 项变化（全部行与只用网格行），与 `expected.json` 0 项不一致（407 项有预期）。
    - 合成控制：53 个模型 × 9 例的被拒集合与预期相同，新旧 checker 都如此；端点模型、证据控制 17/17、`min-pulse-vss-low` 的控制 5/5、余量控制 28/28、修正 r3 的余量控制 26/26、迟到可见性，新旧 checker 逐项相同。
    - 判决改变的只有本轮加的对照，与设计一致：变化不超过 δ 而期限内有 10 mV 偏移的波形、审核者的三个尖峰，改前通过，现在被拒。
-6. Spectre 预校准：网表没有变；checker 改了 `slicer_in_dbg` 的变化判定，九个私有用例与公开 `base` 的评分都受影响。本题还没有当前参考解与台架的 Spectre 结果，参考解 10 个作业、45 个候选在九个私有用例上 405 个作业都应在包里，范围由主控定。
-7. 交主控：
+6. Spectre 预校准：网表没有变；checker 改了 `slicer_in_dbg` 的变化判定，九个私有用例与公开 `base` 的评分都受影响。本题还没有当前参考解与台架的 Spectre 结果，参考解 10 个作业、45 个候选在九个私有用例上 405 个作业都应在包里，范围由Benchmark 维护方定。
+7. 交Benchmark 维护方：
    - δ 的语义与 C109 相同（变化不超过 δ 时期望值保持原值），与 R01 三题（期望值更新、只是不开窗）不同；两种写法各自与题面一致，统一要改评分结构。
-   - `crossings()` 判“某行恰在门限上”仍用精确比较；上面第 4 条的抽头码行恰在门限上，用 0.1 mV 的带宽也得到同一个穿越时刻。是否按第 20 条改写，由主控定。
+   - `crossings()` 判“某行恰在门限上”仍用精确比较；上面第 4 条的抽头码行恰在门限上，用 0.1 mV 的带宽也得到同一个穿越时刻。是否按第 20 条改写，由Benchmark 维护方定。
 
 ## 待定项
 
@@ -302,7 +302,7 @@ R06 已有的 [r06-filter-01](../../../r06-filter-01/) 批次放滤波题，本�
   - 起始模型只声明接口，旧版在降阶时报 `no_continuous_linear_ir`；
   - 40 个校准候选在 6 个用例上的 240 次运行与 `expected.json` 全部一致：35 个错误模型在必须拒绝的用例全被拒，在其余用例通过；5 个正确替代与余量对照全部通过（误差 0.0 mV）。被拒误差最小的是 `slow_output_1p3tr`（17.3 mV，`param-override` 21.2 mV）、`tap_bits_swapped` 在 `reset-restart` 与 `taps_one_decision_old` 在 `base`（20 mV）；
   - 没有 `hierarchical_columns_all_zero` 或时间行去重诊断；按 r2.16 核对，这些通过没有被旧版的零点处理掩盖（第 14 条）；
-- EVAS 02dee32b 阶段 a–c：参考解在全部 7 次运行（6 个私有用例与公开 `base`）都停在阶段 c，首个诊断是已知的 `kernel.step_budget`（`source transition proof budget exhausted: slot 2`，NF-01）；起始模型在阶段 a 报 `module requires an analog block or child instances`。两个探针（scratch 中的副本，题包未改）：把 `base` 截到 12.5 ns（两次判决）时阶段 c 完成，checker 通过、误差 0.0 mV，说明失败来自运行长度的预算；三模块的 `alt_modules` 在阶段 b 报新诊断 `unsupported_event_context`（`ordinary integer alias requires an executable capture`，第 14 行：反馈求和模块在连续语句里给整数变量赋值），交主控转 EVAS。后续（u17-fix-r1 补记）：EVAS 线只做编译核对后确认，这条诊断属 EVAS 回退，由 [#243](https://github.com/BucketSran/vaEVAS/pull/243) 带来：#243 之前的 2a790344 能编译，之后的 d6b7543f 报错，把 k1–s2 改成 real 后两个版本都能编译。这条记在回退总 issue [#287](https://github.com/BucketSran/vaEVAS/issues/287) 的评论里。候选写法合法，不改。这些都是开发证据，不是 EVAS 能力验收或校准；
+- EVAS 02dee32b 阶段 a–c：参考解在全部 7 次运行（6 个私有用例与公开 `base`）都停在阶段 c，首个诊断是已知的 `kernel.step_budget`（`source transition proof budget exhausted: slot 2`，NF-01）；起始模型在阶段 a 报 `module requires an analog block or child instances`。两个探针（scratch 中的副本，题包未改）：把 `base` 截到 12.5 ns（两次判决）时阶段 c 完成，checker 通过、误差 0.0 mV，说明失败来自运行长度的预算；三模块的 `alt_modules` 在阶段 b 报新诊断 `unsupported_event_context`（`ordinary integer alias requires an executable capture`，第 14 行：反馈求和模块在连续语句里给整数变量赋值），交Benchmark 维护方转 EVAS。后续（u17-fix-r1 补记）：EVAS 线只做编译核对后确认，这条诊断属 EVAS 回退，由 [#243](https://github.com/BucketSran/vaEVAS/pull/243) 带来：#243 之前的 2a790344 能编译，之后的 d6b7543f 报错，把 k1–s2 改成 real 后两个版本都能编译。这条记在回退总 issue [#287](https://github.com/BucketSran/vaEVAS/issues/287) 的评论里。候选写法合法，不改。这些都是开发证据，不是 EVAS 能力验收或校准；
 - Docker 两个镜像实际构建一次并检查。
 
 u17-fix-r1（2026-10-29，处理独立审核 r1 的四条发现与打断意见）另做了下列检查，命令、退出码与结果见 disposition.json（`runs/t3-p0-build-20261027/u17-fix-r1/disposition.json`），仍未仿真：
@@ -313,7 +313,7 @@ u17-fix-r1（2026-10-29，处理独立审核 r1 的四条发现与打断意见�
   - 没有 `hierarchical_columns_all_zero` 或时间行去重诊断；按 r2.16 核对，新用例也只在外部驱动的 `clk`、`rst` 上用 `cross()`，这些通过没有被旧版的零点处理掩盖；
 - 包装检查、单题静态检查，Docker 两个镜像重新构建一次并检查。
 
-u17-fix-r2（2026-10-29，主控交办的 H4 与 H6：加 `min-pulse-vss-low`，补“空历史当高判决”的候选）另做了下列检查，命令、退出码与结果见 disposition.json（`runs/t3-p0-build-20261027/u17-fix-r2/disposition.json`），仍未仿真：
+u17-fix-r2（2026-10-29，Benchmark 维护方交办的 H4 与 H6：加 `min-pulse-vss-low`，补“空历史当高判决”的候选）另做了下列检查，命令、退出码与结果见 disposition.json（`runs/t3-p0-build-20261027/u17-fix-r2/disposition.json`），仍未仿真：
 - 新用例的构造核对与余量断言（第 12 条），原八例时间下界的精确扫描；
 - 合成控制（第 17 条），原八例逐项与 u17-fix-r1 相同；
 - 旧版 EVAS 0.8.7（旧版开发证据，EVAS 0.8.7，legacy/EVAS 提交 6cb6fa7a，待 Spectre 复跑），记录在 u17-fix-r2 的 legacy-evas.json（`runs/t3-p0-build-20261027/u17-fix-r2/legacy-evas.json`）：
@@ -329,7 +329,7 @@ u17-fix-r3（2026-10-29，第 (ii) 类：把 `reset-restart`、`isi-channel`、`
 - 样板 r2.18–r2.21 新条目的核对；
 - 包装检查、单题静态检查，Docker 两个镜像重新构建一次并检查。
 
-p0u17-fix-r4（2026-10-29，第 (ii) 类：两例实例行的端点写法；审核 R4-02 的门限停下交主控）另做了下列检查，命令、退出码与结果见 disposition.json（`runs/t3-p0-build-20261027/p0u17-fix-r4/disposition.json`），仍未仿真：
+p0u17-fix-r4（2026-10-29，第 (ii) 类：两例实例行的端点写法；审核 R4-02 的门限停下交Benchmark 维护方）另做了下列检查，命令、退出码与结果见 disposition.json（`runs/t3-p0-build-20261027/p0u17-fix-r4/disposition.json`），仍未仿真：
 - 两例的生成器重建、解析核对与合成核对，九例按 1 mV、1 fs 损失的下界重扫（“2026-10-29 修正 r4”一节）；
 - 旧版 EVAS 0.8.7（旧版开发证据，EVAS 0.8.7，legacy/EVAS 提交 6cb6fa7a，待 Spectre 复跑）：参考解与 45 个候选在两例的新字节上 92 次运行，全部行与只用网格行都与 `expected.json` 一致；
 - R4-02 的门限推导，以及 scratch 里变体 checker 的尖峰控制与全矩阵重判（不进题包）；
@@ -351,3 +351,83 @@ p0u17-fix-r5（2026-10-29，第 (ii) 类：`slicer_in_dbg` 的变化门限 δ = 
 - 作者校准：在 Spectre 上运行 [tests/calibration](tests/calibration/README.md) 的全部 45 个候选，按 `expected.json` 比对；
 - 用户确认上面两个“待用户确认”选择（第 7 条异步复位、第 8 条清零后 `slicer_in_dbg` 为 0 V）；
 - 记录 `results/reference.json` 与 `results/calibration.json`。
+
+## 2026-10-30 修正 v417
+
+依据：只读扫描 v417-bench-scan-r1 列的本题 1 处台架义务检查（U17-05，Benchmark 维护方已核实）；网表约定清单第 4.21 版（sha256 前 8 位 `7d511985`）第 0.5 节第 20 条，第 4.17–4.21 版新增的各点逐条核过（第 4 小节）；项目协调方 2026-10-30 的三项决定：做法甲的范围是起点、停留、碰到、最小偏离四项一起按网表激励定义判，时序守卫、范围与数值 δ 类检查不动；“碰到”在 14 道题里一律报台架错误；strobeonly 不算满足条件 3，要改的清单不变。另据 Benchmark 维护方 2026-10-30 对本轮第 1 次停下的决定（重判的写法与题面依据，第 5、7 小节）。改动文件改前、改后的 sha256，脚本、命令与结果见 `runs/t3-harbor30-20261027/v417-bench-fix-r1/disposition.md`（不入库）。本节的检查都**未仿真**：没有运行 Spectre、EVAS（含旧版）、模型或 Docker；合成控制是 Python 合成行；重判只读已交回的 Spectre 波形。前面各节原文不改。
+
+改动范围：两份 checker（`tests/verify.py` 与 `environment/starter/testbench/verify.py`，改后逐字节相同，sha256 `bb77c4e63ded93f53d9e82f5497460bc77031e4204d897d92103b63eff9279a1`，改前 `0a05ab67…`）与本文件。题面、参考解、用例网表、`tests/calibration/`、`v2_runtime.py`、`task.toml`、`cases.json` 都没有改；判分逻辑、时序守卫、范围检查与数值 δ 类检查不变。
+
+### 1. 改了什么（编号照扫描）
+
+- **U17-05**（`control_crossings` 第 104 行调用 `crossings`，第 62–64 行）：`clk`、`rst` 的保存行上相邻两行恰为 `vth`（停留）报台架错误 → 按定义判。同一函数也判四个抽头码 `tap1_1`、`tap1_0`、`tap2_1`、`tap2_0`，照扫描的改法随同改。`crossings()` 去掉这一句，穿越的定义不动。
+- 随同改（决定第 1 项，起点）：`control_crossings` 第 102–103 行 t = 0 那一行离 `vth` 不足 50 mV × `REL` 报错 → 按定义判，门槛不变。
+- 碰到：改前只当“不算穿越”，现在报台架错误（决定第 2 项）。
+
+### 2. 怎么判（做法甲）
+
+- 用哪份定义：checker 读所判用例自己的网表 `case["netlist"]`。它就是 `v2_runtime.py` 写成 `tb.scs` 交给仿真器、跑完再核 sha256 的那一份，被改动就记 evidence_error。私有用例取 `tests/cases.json`，公开检查取 `environment/starter/testbench/cases.json`；`visible_test.scs` 不经 checker 判，本轮用同一读法核过它也读得出。
+- 受查量：`clk`、`rst`、`tap1_1`、`tap1_0`、`tap2_1`、`tap2_0` 各自对 `vth`。`check_stimulus` 在 `control_crossings` 里逐个输入调用，放在原来起点检查的位置（电平范围检查之后、取穿越之前）。
+- 定义取值：受查量由它涉及的节点自地起串着的 vsource 得出，在 [0, stop]（stop 取网表 tran 行）上于各源的定义点之间是直线：PWL 用各点的时刻与值，pulse 用 val0、val1 与四个拐角（按周期重复），dc 源用 dc 值，sine 用 sinedc ± ampl 与起点值。本题受查量涉及的源：PWL 56 个、pulse 10 个。
+- 在门限上：定义点的值与门限按写出的十进制精确相等，或各自舍成 binary64 后相等，任一成立即算。节点由几个源叠成时，“精确和舍入一次”与“各源先舍成 binary64、自地起逐运算相加”两种值都算。
+- 判法（都是 `raise ValueError`，`v2_runtime.py` 记作 checker_error：该例不判分，不算候选失败）：
+  - 起点：t = 0 的定义值在门限上，报 “starts on …”；离 `vth` 不足 0.04999995 V（`START_MARGIN` × `REL`），报 “starts … closer than …”；
+  - 停留：相邻两个定义点都在门限上，报 “rests on …”；
+  - 碰到：一个定义点在门限上、前后两侧在同一侧，报 “touches … and returns to the same side”；stop 时刻恰到门限算到达方向的一次穿越，不报；
+  - 读不出：受查量涉及的节点上的全部 vsource 都要读得出，在差里抵消的源也不例外。数字只写字面量，可带一个比例符号；不写参数名、表达式、行尾注释、单位，也不写指数后接比例符号。pulse 写全六个参数，rise、fall 大于 0；PWL 时刻严格递增；sine 写 sinedc、ampl、freq，不带 delay、damp。读不出报 “cannot read the stimulus definition of …”；受查节点不由用例网表的 vsource 驱动，报 “… is not driven by a voltage source of the case netlist”；网表里有只差大小写的节点名也报台架错误（保存信号按小写配对，Spectre 区分大小写）。
+- 穿越：判分用的穿越仍由原来的 `crossings()` 从保存行取，穿越的定义不动，只去掉其中“相邻两行恰在门限上就抛出异常”一句。保存行恰在门限上（例如模块在同一输入、同一门限上求根时写下的根处行）不再引起台架错误。
+
+### 3. 余量（数值未改）
+
+- 起点：50 mV 乘 `REL`（1 − 1e-6）不变，报错门槛 0.04999995 V；按定义精确比较以后相对余量只是容让，数值未改。本题没有最小偏离检查。
+- 改不改这些数值由项目协调方另定，本轮不改。
+
+### 4. 清单第 4.17–4.21 版各点（第 6 条）
+
+| 点 | 本题 | 怎么处理 |
+| --- | --- | --- |
+| 做法甲（v4.17） | 适用 | 受查量（`clk`、`rst`、`tap1_1`、`tap1_0`、`tap2_1`、`tap2_0` 各自对 `vth`）的起点、停留、碰到按用例网表的 vsource 定义判，不读保存行（第 2 小节）。 |
+| “在门限上”的读法（v4.18、v4.20） | 适用 | 门限 `vth` 是用例参数，按写出的十进制与 binary64 两种比；门限不是表达式。合成控制另做了只在 binary64 下才在门限上的变体（第 6 小节）。 |
+| 和、差与叠放（v4.18、v4.20） | 不适用 | 受查量是单个节点对地；没有叠放源（本题网表里受查节点各由一个 vsource 直接对地驱动）。代码对叠放照两种舍入处理。 |
+| 读得出（v4.18、v4.20） | 适用 | 本题 11 份网表（私有 9、公开 `cases.json` 1、`visible_test.scs` 1）共 77 个 vsource，都读得出，与扫描第 1 节一致；受查量涉及的源 66 个（PWL 56 个、pulse 10 个），都读得出。读不出报台架错误，该例不判分。 |
+| 比较式的不同写法（v4.20） | 不适用 | 一种写法：checker 比 `V(x)` 与 `vth`，参考解在 `V(x) - vth` 上求根；binary64 下 `x - vth` 为 0 与 `x == vth` 等价，不另算。 |
+| 另一个受查量（v4.21） | 不适用（没有新增受查量） | 参考解 `dfe_rx_top` 在 `cross(V(rst) - vth, +1)`、`cross(V(clk) - vth, +1)` 上求根（抽头码按电平读），就是受查输入本身。没有台架模块：`cases.json` 不带 support 源码，公开目录没有 `.va`。候选的写法不在此列（合成控制 B 仍按各候选自己的事件插了根处行）。 |
+| 模块驱动的受查信号（v4.17–v4.20） | 不适用 | 受查信号都由用例网表的 vsource 直接驱动，11 份网表逐份核过，不由 vsource 驱动的 0 个；没有台架模块，也没有按候选输出生成的受查信号。 |
+| 条件 3 与 strobeonly（决定第 3 项） | 适用 | 本题 11 份网表都写 `strobeoutput=strobeonly`；strobeonly 不算满足条件 3，照改。 |
+| 碰到（决定第 2 项） | 适用 | 改前只当“不算穿越”，现在一律报台架错误。 |
+
+### 5. 题面依据（不改题面）
+
+- 起点、停留、碰到：instruction.md 第 41 行 “`clk`, `rst`, and the tap-code inputs switch between 0 V and 0.9 V, and each transition between these levels lasts at most 200 ps. They never rest at `vth`, and at t = 0 each is at least 50 mV away from `vth`. An input that reaches `vth` always crosses it; it never touches `vth` and returns to the same side.”
+- 读不出、不由 vsource 驱动：这两种台架错误都是本方网表的失败保护，候选改不了网表，也就触发不了；清单第 20 条写明该例不判分。题面第 49 行 “A zero that comes from the simulator, the bench, or other infrastructure does not by itself show that the submitted Verilog-A behavior is wrong.”
+
+### 6. 合成控制（未仿真）
+
+- 做法：合成 strobe 行。网表定义在每个 strobe 时刻精确取值、舍成 binary64；候选输出一律给 0 V（沿用扫描 `rowsim.py` 的做法），所以判分结果多为失败，只用来比改前、改后两版 checker 的整份判决与台架错误。导入的是本轮 scratch 下的 checker 副本，字节码关闭。
+- A 现有用例网表：11 份网表各两组行，一组只有 strobe 行，一组另在每个受查量的每个定义穿越处插一行恰在门限上的根处行（共 643 行）。22 次判决：新 checker 都不报台架错误，与改前的 checker 整份判决逐个相同（22/22）。
+- B 候选：扫描列出的 45 个候选（`tests/calibration/mutants.py` 在本轮 scratch 生成，不在题包里生成），按各自的 `cross()`、`above()` 事件映射到台架节点，在每份网表上插它们自己的根处行（66 组不同的行，共 13953 行）。改前、改后判决逐个相同，新 checker 不报台架错误（45/45）。
+- C 变体（在 `base` 上改 `rst` 的定义；每个变体事先写下预期），12/12 符合预期：
+  - `rst` 起点按十进制恰在门限上：报 “starts on”
+  - `rst` 起点只在 binary64 下恰在门限上：报 “starts on”
+  - `rst` 起点离门限 0.0498999 V：报 “closer than”
+  - `rst` 起点离门限 0.0500999 V：不报台架错误（照常判分）
+  - `rst` 在 3.32475e-08 s 处按十进制停在门限：报 “rests on”
+  - `rst` 在 3.32475e-08 s 处只在 binary64 下停在门限：报 “rests on”
+  - `rst` 在 3.32475e-08 s 处按十进制碰到门限：报 “touches”
+  - `rst` 在 3.32475e-08 s 处只在 binary64 下碰到门限：报 “touches”
+  - `rst` 的源有一个值写成参数名 `vlo`：报 “cannot read”
+  - `rst` 的源有一个值写成表达式 `0*1`：报 “cannot read”
+  - `rst` 的源有一个值带单位 `0V`：报 “cannot read”
+  - `rst` 不由 vsource 驱动：报 “is not driven”
+
+### 7. 已交回作业的重判（未仿真）
+
+- 范围：14 道题全部已交回的 Spectre 作业，以各包 `jobs.json` 的 meta.task 为准，只数正式打包目录（不数 scratch 下的试做包）：34 包 3852 个作业，判了 3848 个，未判 4 个（C266 的执行错误，没到 checker）。
+- 做法：每个作业用它发出时的快照判，用例取快照里的那份，只把 checker 换成新版，与原判逐个比；判决相同指 status、passed 与台架错误的有无都相同。P0PC 里有些作业跑的是后来改过的旧网表，只用来比两版 checker，不对现行题包评。快照里的旧 checker 重判，与预读记录的原判逐个相同（status、passed、整份判决 sha256），工具与环境没有问题。
+- 结论：本轮改动没有改变任何作业的判决（new 与改前 checker 3848/3848 相同）；与打包时的原判比，3708 相同，140 不同，来自 p0-fix-r9 已记录的激励与规则改动。
+- 不同的 140 个全是 U15（`r04-spec-delay-pulse-hold`）：spectre-P0PC-must-01-v1 10、spectre-P0PC-opt-01-v1 26、spectre-P0PC-rec-03-v1 84、spectre-P0PC-rec-04-v1 20。
+- 本题：spectre-P0PC-must-02-v1 20、spectre-P0PC-rec-09-v1 135、spectre-P0PC-rec-10-v1 135、spectre-P0PC-rec-11-v1 135，共 425 个。new 与改前 checker 整份判决 425/425 相同。与原判比 status、passed 与台架错误的有无 425/425 相同，整份判决 sha256 也相同。
+
+### 8. 前面各节的相关句子
+
+- 建模选择第 125、126 行（台架错误里的“控制电平与起始余量”，`crossings()` 的“触碰不算穿越，停在阈值上报错”）：起始余量、停留、碰到改按定义判，碰到报台架错误；电平范围检查仍按保存行，穿越时刻的取法不变。

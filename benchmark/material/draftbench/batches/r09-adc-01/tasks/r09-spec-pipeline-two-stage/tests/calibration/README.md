@@ -2,7 +2,7 @@
 
 Spectre 校准待做。`mutants.py` 从 `solution/circuit.va` 生成具体 VA 候选：`wrong/` 应被拒，`correct/` 应被同一 checker 在 `../cases.json` 的固定用例上接受。它们是作者校准样本，不属于终评材料，也不进入解题环境。在任意目录运行 `python3 -B mutants.py <空输出目录>`。`expected.json` 是同一张被拒矩阵的机器可读版本。
 
-checker 只有一类失败：某个评分点上 `code_3..code_0`、`valid_o` 或 `residue_dbg` 与期望值相差超过 2 mV。失败记录里的 `output_change`、`change_time` 和 `cause` 指出它属于哪一次输出变化，`cause` 写明该时钟沿发布的是第几个样本、它在哪个沿被采入，或是复位清零。`tr` 内的输出形状、容差边界和参数端点由作者证据中的 Python 合成轨迹覆盖。
+checker 只有一类失败：某个评分点上 `code_3..code_0`、`valid_o` 或 `residue_dbg` 与期望值相差超过 2 mV。失败记录里的 `output_change`、`change_time` 和 `cause` 指出它属于哪一次输出变化，`cause` 写明该时钟沿发布的是第几个样本、它在哪个沿被采入，或是复位清零。`tr` 内的输出形状、容差边界和参数端点由作者证据中的 Python 合成轨迹覆盖。修正 r7a 起，期望 `residue_dbg` 变化超过 δ 才算变化（δ = 0.25 mV：修正 r7a 定为 0.1 mV，修正 r8 改为 0.25 mV），δ 以内的变化不开不评分窗，期望值保持原值；码与 `valid_o` 照旧精确比较。台架义务不满足时 checker 抛出异常，记 checker_error，不判分；修正 r7a 加了一条：同一控制输入相邻两次穿越之间离 `vth` 不足 49 mV（合同写 50 mV）。这一条与控制输入的起点、停留、碰到都按用例网表的激励定义判（2026-10-30 修正 v417），碰到报台架错误。
 
 预期判决按 Verilog-A LRM 2.4 的 5.10.3.1 `cross`、5.10.3.3 `timer`、4.5.8 `transition` 与 4.2 `floor` 写出。参考解的 `cross` 时间容差设为 1 ps，派生候选沿用这一设置。合同要求每个 `clk` 上升穿越前后 100 ps 内 `vin` 变化小于 0.25 mV，`valid_i` 与 `rst` 的穿越离它至少 100 ps，所以事件定位误差在几 ps 内时判决不变。
 
@@ -61,3 +61,18 @@ checker 只有一类失败：某个评分点上 `code_3..code_0`、`valid_o` 或
 参考解没有待发事件：它的 `transition()` 延迟为 0，也没有定时器。上面两项待发事件只属于校准候选，与参考解分别判断。
 
 旧版 EVAS 0.8.7 上的运行结果记在作者证据中，不改变这张表。
+
+## 修正 r7a（2026-10-29）
+
+- `stream-irregular` 里 13 对恰为 4 ns 的相邻上升沿改为 4.05 ns；`reset-recovery` 的复位离发布沿 101.875 ps，原为恰好 100 ps。详见 `SOURCE.md` 的“2026-10-29 修正 r7a”一节。
+- 码序列与码边界余量都不变；被拒矩阵不变。
+- 旧版开发证据（EVAS 0.8.7，legacy/EVAS 提交 6cb6fa7a），待 Spectre 复跑：
+  - 参考解与 40 个候选在改后的两例上重跑，参考解另跑公开 `base`，共 83 次；
+  - 判决与 `expected.json` 逐项一致，只用网格行重判的结论相同。
+- `base`、`param-override` 与公开 `base` 的激励没改，已跑的 P0PC 结果（包 `spectre-P0PC-must-01-v1`，结果包 sha256 `56bb45dd…`）用新 checker 重判即可。
+
+## 修正 r8（2026-10-29）
+
+- `residue_dbg` 的变化门限 δ 由 0.1 mV 改为 0.25 mV，题面与两份 checker 同改。依据与算式见 `SOURCE.md` 的“2026-10-29 修正 r8”一节：按合同最宽参数，第 20 条的下界是 0.2008 mV。
+- 被拒矩阵与 `expected.json` 不变；`expected.json` 与 `mutants.py` 都没有写到 δ。
+- 判决不变（未仿真）：P0PC 已交回的本题 210 个作业、已存档的 166 次旧版波形（旧版开发证据，EVAS 0.8.7，legacy/EVAS 提交 6cb6fa7a，待 Spectre 复跑）用改前、改后两版 checker 重判，判决逐个相同；建题的合成模型判决也相同。

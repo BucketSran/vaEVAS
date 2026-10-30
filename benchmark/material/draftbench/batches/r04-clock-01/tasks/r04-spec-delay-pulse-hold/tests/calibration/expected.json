@@ -9,10 +9,11 @@
   "minimum-tr-pulses"
  ],
  "checker_failure": "hold: out_clk more than 2 mV from the expected level between edges (state: loaded, unloaded or reset); edge: an edge window leaves the vss..vdd band by more than 2 mV or reverses by more than 2 mV (overlapping windows of successive edges are one window whose samples must fit the edges in order, each edge monotone and moving only inside its own window)",
- "semantics": "Verilog-A LRM 2.4: transition() 4.5.8 (td is a transport delay; a newly scheduled transition deletes only pending transitions that would follow it), timer() 5.10.3.3, cross() 5.10.3.1, and the source order of event statements at one instant. Expectations only; every entry is pending until Spectre calibration",
+ "semantics": "Verilog-A LRM 2.4: transition() 4.5.8 (td is a transport delay; a newly scheduled transition deletes only pending transitions that would follow it), timer() 5.10.3.3, cross() 5.10.3.1. Since p0-fix-r9 no entry rests on the source order of event statements at one instant (every load comes at least 1 ps before or at least 20 ps after each rising in_clk crossing) or on the pending transitions after a change of td alone, which 2.4 does not specify (see conditions). Expectations only; every entry is pending until Spectre calibration",
  "conditions": {
-  "transport_reset_unchanged": "LRM 4.5.8 keeps the pending transitions, so long-delay-overlap and self-loading-burst accept it; a backend whose transition() replaces a pending change (legacy EVAS 0.8.7) rejects it there too",
-  "historical_per_edge_transport": "LRM 4.5.8 keeps the pending transitions, so self-loading-burst accepts it; a backend whose transition() replaces a pending change (legacy EVAS 0.8.7) rejects it there too"
+  "transport_reset_unchanged": "not a calibration candidate since p0-fix-r9 (decision sheet item 24 = A, decided by recommendation on the user's instruction of 2026-10-30, relayed by the project coordinator; the user can change it): a backend-dependent probe that mutants.py writes to probe/, with no must_reject or must_accept entry. Its reset writes the low target it already has and sets td to 0 while edges scheduled with the earlier td are pending. LRM 2.4 4.5.8 does not specify what happens to them. Under the LRM 2023 clarification (a transition is created only when the input changes; EVAS's convention) they stay pending and the probe fails contract-base, reset-and-initial, parameter-override and minimum-tr-pulses. Spectre 21.1 drops every pending edge at that reset, like a new zero-delay transition to vss, and the probe passes all six private cases (spectre-P0PC-rec-04-v1, results package sha256 51668e9de5337f0e..., pre-read) and the public contract-base (spectre-P0PC-opt-01-v1, results package sha256 18363753bc259a37..., pre-read). In long-delay-overlap and self-loading-burst the reset changes the target from high to low, so every reading passes it there; a backend whose transition() replaces a pending change (legacy EVAS 0.8.7) rejects it there too",
+  "historical_per_edge_transport": "its falling edge takes the delay of the code loaded when the falling crossing arrives (the historical per-edge rule), which LRM 2.4 and Spectre 21.1 reject alike: in contract-base the fall comes 135 ps early, in long-delay-overlap 212 ps late, and in parameter-override the earlier fall deletes the pending rise under 4.5.8, so the pulse is missing (Spectre 21.1 rejected it in all three, spectre-P0PC-rec-04-v1, results package sha256 51668e9de5337f0e..., pre-read; also the public contract-base, spectre-P0PC-opt-01-v1, 18363753bc259a37...). reset-and-initial and minimum-tr-pulses are not counted since p0-fix-r9 (decision sheet item 24 = A): there it differs from the reference only in the pending edges after a reset that writes the same low target and sets td to 0, which LRM 2.4 does not specify (see transport_reset_unchanged); Spectre 21.1 passed it in both. LRM 4.5.8 keeps the pending transitions, so self-loading-burst accepts it; a backend whose transition() replaces a pending change (legacy EVAS 0.8.7) rejects it there too",
+  "edge_first": "a correct candidate since p0-fix-r9 (decision sheet item 35): the reference with the load event statement moved after the in_clk statements, so it differs only for a load at the same instant as a rising in_clk crossing. Every load now comes at least 1 ps before or at least 20 ps after each rising crossing, and the loads that were at the same instant in contract-base, reset-and-initial, long-delay-overlap and self-loading-burst come 3 ps before it, so no legal stimulus separates it from the reference. Until p0-fix-r9 it was a wrong candidate rejected in those four cases through their same-instant loads (Spectre 21.1 rejected it there on the old netlists: spectre-P0PC-rec-03-v1, results package sha256 0ce565dbd403ca6c..., pre-read)"
  },
  "candidates": [
   {
@@ -165,15 +166,14 @@
   },
   {
    "name": "edge_first",
-   "group": "wrong",
-   "must_reject": [
+   "group": "correct",
+   "must_reject": [],
+   "must_accept": [
     "contract-base",
     "reset-and-initial",
     "long-delay-overlap",
-    "self-loading-burst"
-   ],
-   "must_accept": [
     "parameter-override",
+    "self-loading-burst",
     "minimum-tr-pulses"
    ],
    "author_synthetic_control": "edge_first"
@@ -327,29 +327,12 @@
    "author_synthetic_control": "centered_transition"
   },
   {
-   "name": "transport_reset_unchanged",
-   "group": "wrong",
-   "must_reject": [
-    "contract-base",
-    "reset-and-initial",
-    "parameter-override",
-    "minimum-tr-pulses"
-   ],
-   "must_accept": [
-    "long-delay-overlap",
-    "self-loading-burst"
-   ],
-   "author_synthetic_control": "transport_reset_unchanged"
-  },
-  {
    "name": "historical_per_edge_transport",
    "group": "wrong",
    "must_reject": [
     "contract-base",
-    "reset-and-initial",
     "long-delay-overlap",
-    "parameter-override",
-    "minimum-tr-pulses"
+    "parameter-override"
    ],
    "must_accept": [
     "self-loading-burst"

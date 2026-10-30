@@ -20,7 +20,7 @@ When a capture changes the held value, `vout` does not move before `c_k`. It the
 
 `VDD` and `VSS` do not affect the model. `vout` reproduces held values outside the interval from `VSS` to `VDD`. It does not clamp, shift, or scale the held value, including while either supply changes.
 
-Legal stimuli: `vin` is continuous and stays between -1 V and 2 V. `VDD` and `VSS` are arbitrary continuous voltages. `clk` starts at a level different from `vth` and passes through `vth` without stopping on it. Each trigger occurs more than `taperture` after the previous trigger, so no capture is pending when a trigger arrives and no trigger coincides with the previous aperture instant.
+Legal stimuli: `vin` is continuous and stays between -1 V and 2 V. `VDD` and `VSS` are arbitrary continuous voltages. `clk` starts at a level different from `vth` and never rests at `vth`. When `clk` reaches `vth`, it always crosses it; it never touches `vth` and returns to the same side. Between two successive crossings of `vth`, `clk` moves at least 50 mV away from `vth`. Each trigger occurs more than `taperture` after the previous trigger, so no capture is pending when a trigger arrives and no trigger coincides with the previous aperture instant.
 
 Acceptance uses `epsilon_v = 2 mV`, a capture-time tolerance `tau_s = 2 ps`, and an output-timing tolerance `tau_t = 5 ps`. Trigger times are the rising `vth` crossings of the observed `clk`. For capture `k`, the accepted held range `[lo_k, hi_k]` is the range of `vin` over `[c_k - tau_s, c_k + tau_s]`. For the initial value, the accepted range is the single value of `vin` at time 0.
 
