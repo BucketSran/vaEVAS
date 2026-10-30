@@ -3384,4 +3384,18 @@ mod activation_transfer_tests {
             // This structure no longer reallocates or rehashes all target keys at 1792.
         }
     }
+    #[test]
+    fn positive_remainder_must_fund_the_whole_identity_comparison() {
+        let limit = 20_000_000;
+        let w = Work::for_limit(limit);
+        let mut a = marked(&w);
+        let mut b = marked(&w);
+        let n = 1usize << 20;
+        w.debit(2, (n as u64) * 4 + 4096).unwrap();
+        a.identity = vec![1; n];
+        b.identity = vec![1; n];
+        w.debit(2, limit - w.spent() - (n as u64) * 2).unwrap();
+        assert_eq!(b.adopt_same_time(&a).unwrap_err().kind, "step_budget");
+        assert!(b.same_time.lock().unwrap().records.is_empty());
+    }
 }

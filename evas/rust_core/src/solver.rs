@@ -1750,6 +1750,7 @@ impl Circuit {
             all.join(", ")
         };
         let mut outside: Option<(OutsideClass, String)> = None;
+        let mut outside_rows = Vec::new();
         let mut cyclic = false;
         for (columns, is_cycle) in &components {
             if !is_cycle {
@@ -1783,10 +1784,19 @@ impl Circuit {
                     found = true;
                 }
             }
-            if found && outside.as_ref().is_none_or(|(old, _)| why < *old) {
-                outside = Some((why, origins(&rows)));
+            if found {
+                if outside.as_ref().is_none_or(|(old, _)| why < *old) {
+                    outside = Some((why, String::new()));
+                    outside_rows.clear();
+                    outside_rows.extend_from_slice(&rows);
+                } else if outside.as_ref().is_some_and(|(old, _)| why == *old) {
+                    outside_rows.extend_from_slice(&rows);
+                }
             }
         }
+        outside_rows.sort_unstable();
+        outside_rows.dedup();
+        let outside = outside.map(|(why, _)| (why, origins(&outside_rows)));
         if outside.is_some() || !grounded || !cyclic {
             return SameTimeStructure {
                 outside,
