@@ -6,6 +6,7 @@ use crate::interval::Interval as I;
 use crate::ir::Statement as S;
 use crate::procedure_operations::{Cell, Domain, Operation as O};
 use crate::procedure_values::{Fault, Graph, Id};
+use crate::same_time_root::PhysicalFrame;
 use std::sync::Arc;
 
 fn origin_copy(o: &ir::Origin, w: &Work) -> Result<ir::Origin, Error> {
@@ -97,10 +98,43 @@ pub(crate) struct Plan {
 }
 #[derive(Default)]
 struct SameTimeRecords {
-    records: std::collections::HashMap<Vec<u64>, Vec<(Id, f64)>>,
+    records: std::collections::HashMap<Vec<u64>, ActivationRecord>,
     // Keys taken over with values different from this Plan's own record;
     // they are read as missing.
     conflicting: std::collections::HashSet<Vec<u64>>,
+}
+type SharedPhysical = Arc<PhysicalFrame>;
+/// One certified activation. Program values are stored RN values; physical
+/// values remain exact enclosures until an operation or store rounds them.
+/// The physical vector is immutable and shared, never deep-cloned on adoption.
+#[derive(Clone)]
+struct ActivationRecord {
+    values: Vec<(Id, f64)>,
+    physical: SharedPhysical,
+    physical_cost: u64,
+}
+impl ActivationRecord {
+    fn copy_cost(&self) -> u64 {
+        (self.values.len() as u64)
+            .saturating_mul(32)
+            .saturating_add(self.physical_cost)
+            .saturating_add(128)
+    }
+    fn same(&self, other: &Self) -> bool {
+        self.values.len() == other.values.len()
+            && self
+                .values
+                .iter()
+                .zip(&other.values)
+                .all(|(a, b)| a.0 == b.0 && a.1.to_bits() == b.1.to_bits())
+            && self.physical == other.physical
+    }
+}
+#[derive(Default)]
+struct StoredActivation {
+    given: Vec<(Id, f64)>,
+    missing: Vec<Id>,
+    physical: Option<SharedPhysical>,
 }
 struct SameTimeMarks {
     ids: Vec<Id>,
@@ -981,6 +1015,7 @@ impl Plan {
         voltages: &[f64],
         before: &[f64],
         values: Vec<(Id, f64)>,
+        physical: PhysicalFrame,
     ) -> Result<(), Error> {
         let key = self.same_time_key(voltages, before, &self.work)?;
         self.work
@@ -989,8 +1024,25 @@ impl Plan {
             .same_time
             .lock()
             .map_err(|_| invalid("same-time rounding record is poisoned"))?;
+        // This certified solve is the sole entry that clears a tombstone.
+        let mut physical_cost = (physical.values.len() as u64)
+            .saturating_mul(128)
+            .saturating_add(physical.exact_reads.len() as u64);
+        for q in physical.values.iter().flatten() {
+            self.work.step()?;
+            for r in [&q.lo, &q.hi] {
+                physical_cost =
+                    physical_cost.saturating_add((r.numer().bits() + r.denom().bits()).div_ceil(8));
+            }
+        }
+        self.work.debit(2, physical_cost.saturating_add(64))?;
+        let record = ActivationRecord {
+            values,
+            physical: Arc::new(physical),
+            physical_cost,
+        };
         records.conflicting.remove(&key);
-        records.records.insert(key, values);
+        records.records.insert(key, record);
         Ok(())
     }
     /// The decision 22 roundings recorded for these voltages and states.
@@ -999,14 +1051,16 @@ impl Plan {
         voltages: &[f64],
         before: &[f64],
     ) -> Result<Option<Vec<(Id, f64)>>, Error> {
-        self.same_time_values(voltages, before, &self.work)
+        Ok(self
+            .same_time_values(voltages, before, &self.work)?
+            .map(|r| r.values))
     }
     fn same_time_values(
         &self,
         voltages: &[f64],
         before: &[f64],
         w: &Work,
-    ) -> Result<Option<Vec<(Id, f64)>>, Error> {
+    ) -> Result<Option<ActivationRecord>, Error> {
         let key = self.same_time_key(voltages, before, w)?;
         let records = self
             .same_time
@@ -1015,11 +1069,11 @@ impl Plan {
         if records.conflicting.contains(&key) {
             return Ok(None);
         }
-        let found = records.records.get(&key).cloned();
-        if let Some(values) = &found {
-            w.debit(2, (values.len() * 16 + 32) as u64)?;
+        let found = records.records.get(&key);
+        if let Some(record) = found {
+            w.debit(2, record.copy_cost())?;
         }
-        Ok(found)
+        Ok(found.cloned())
     }
     /// The decision 22 values a numeric read of `roots` uses (`stored`): the
     /// record of these inputs, and, when the roots read a marked value it does
@@ -1033,15 +1087,19 @@ impl Plan {
         nodes: &[f64],
         before: &[f64],
         w: &Work,
-    ) -> Result<(Vec<(Id, f64)>, Vec<Id>), Error> {
+    ) -> Result<StoredActivation, Error> {
         let Some(marks) = self
             .same_time_marks
             .get()
             .filter(|m| stored && !m.ids.is_empty())
         else {
-            return Ok((Vec::new(), Vec::new()));
+            return Ok(StoredActivation::default());
         };
-        let given = self.same_time_values(nodes, before, w)?.unwrap_or_default();
+        let record = self.same_time_values(nodes, before, w)?;
+        let (given, physical) = match record {
+            Some(r) => (r.values, Some(r.physical)),
+            None => (Vec::new(), None),
+        };
         w.debit(2, (marks.ids.len() * 16 + 32) as u64)?;
         let missing = marks
             .ids
@@ -1050,9 +1108,17 @@ impl Plan {
             .filter(|id| !given.iter().any(|(given, _)| given == id))
             .collect::<Vec<_>>();
         if missing.is_empty() || !self.reaches(roots, &missing, w)? {
-            return Ok((given, Vec::new()));
+            return Ok(StoredActivation {
+                given,
+                physical,
+                missing: Vec::new(),
+            });
         }
-        Ok((given, missing))
+        Ok(StoredActivation {
+            given,
+            missing,
+            physical,
+        })
     }
     /// Whether some root reads one of `targets` (itself or through operands).
     fn reaches(&self, roots: &[Id], targets: &[Id], w: &Work) -> Result<bool, Error> {
@@ -1082,43 +1148,92 @@ impl Plan {
         if Arc::ptr_eq(&self.same_time, &other.same_time) || self.identity != other.identity {
             return Ok(());
         }
-        let theirs = other
+        // Reserve traversal first, then every snapshot/copy/comparison/container
+        // cost before making a copy or mutating the destination. Failed retries
+        // spend the same sticky request account and leave the target intact.
+        self.work.debit(2, 64)?;
+        let source = other
             .same_time
             .lock()
-            .map_err(|_| invalid("same-time rounding record is poisoned"))?
+            .map_err(|_| invalid("same-time rounding record is poisoned"))?;
+        self.work.debit(
+            2,
+            ((source.records.capacity() + source.conflicting.capacity()) as u64)
+                .saturating_mul(32)
+                .saturating_add(64),
+        )?;
+        let marks = other.same_time_marks.get();
+        if let Some(m) = marks {
+            self.work.debit(
+                2,
+                ((m.ids.len() + m.reads.len()) as u64)
+                    .saturating_mul(16)
+                    .saturating_add(64),
+            )?;
+        }
+        for (key, record) in &source.records {
+            self.work.debit(
+                2,
+                (key.len() as u64)
+                    .saturating_mul(32)
+                    .saturating_add(record.copy_cost())
+                    .saturating_add(192),
+            )?;
+        }
+        for key in &source.conflicting {
+            self.work
+                .debit(2, (key.len() as u64).saturating_mul(32).saturating_add(192))?;
+        }
+        let theirs = source
             .records
             .iter()
-            .map(|(key, values)| (key.clone(), values.clone()))
+            .map(|(key, record)| (key.clone(), record.clone()))
             .collect::<Vec<_>>();
-        // Equal identity means the same graph, so the same marked values.
-        if self.same_time_marks.get().is_none() {
-            if let Some(marks) = other.same_time_marks.get() {
-                self.mark_same_time(marks.ids.clone(), marks.reads.clone())?;
-            }
-        }
+        let conflicts = source.conflicting.iter().cloned().collect::<Vec<_>>();
+        drop(source);
         let mut ours = self
             .same_time
             .lock()
             .map_err(|_| invalid("same-time rounding record is poisoned"))?;
-        for (key, values) in theirs {
-            self.work
-                .debit(2, ((key.len() + 2 * values.len()) * 16 + 64) as u64)?;
-            let same = |old: &Vec<(Id, f64)>| {
-                old.len() == values.len()
-                    && old
-                        .iter()
-                        .zip(&values)
-                        .all(|(a, b)| a.0 == b.0 && a.1.to_bits() == b.1.to_bits())
-            };
+        self.work.debit(
+            2,
+            (ours.records.capacity() as u64)
+                .saturating_mul(32)
+                .saturating_add(64),
+        )?;
+        // Destination comparisons can involve a larger old proof than the
+        // incoming one. Reserve those limbs before any target mutation too.
+        for (key, record) in &ours.records {
+            self.work.debit(
+                2,
+                (key.len() as u64)
+                    .saturating_mul(16)
+                    .saturating_add(record.copy_cost())
+                    .saturating_add(64),
+            )?;
+        }
+        if self.same_time_marks.get().is_none() {
+            if let Some(m) = marks {
+                let _ = self.same_time_marks.set(SameTimeMarks {
+                    ids: m.ids.clone(),
+                    reads: m.reads.clone(),
+                });
+            }
+        }
+        for key in conflicts {
+            ours.records.remove(&key);
+            ours.conflicting.insert(key);
+        }
+        for (key, record) in theirs {
             match ours.records.get(&key) {
-                Some(old) if same(old) => {}
+                Some(old) if old.same(&record) => {}
                 Some(_) => {
                     ours.records.remove(&key);
                     ours.conflicting.insert(key);
                 }
                 None if ours.conflicting.contains(&key) => {}
                 None => {
-                    ours.records.insert(key, values);
+                    ours.records.insert(key, record);
                 }
             }
         }
@@ -1150,7 +1265,7 @@ impl Plan {
             (states, state_bounds),
             (operators, operator_bounds),
             context,
-            (&[], &[]),
+            &StoredActivation::default(),
             w,
         )
     }
@@ -1165,7 +1280,7 @@ impl Plan {
         (states, state_bounds): (&[Option<f64>], &[I]),
         (operators, operator_bounds): (&[Option<f64>], &[I]),
         context: Option<&Context<'_>>,
-        (given, missing): (&[(Id, f64)], &[Id]),
+        stored: &StoredActivation,
         w: &Work,
     ) -> Result<Vec<Cell>, Error> {
         w.debit(2, ((roots.len() + self.effects.len()) * 16 + 64) as u64)?;
@@ -1191,11 +1306,28 @@ impl Plan {
             Vec::new()
         };
         all.extend_from_slice(roots);
+        let exact_count = if stored.physical.is_some() {
+            self.count
+        } else {
+            0
+        };
+        w.debit(
+            2,
+            (exact_count as u64).saturating_mul(160).saturating_add(64),
+        )?;
+        let mut exact_cells = vec![None; exact_count];
+        let mut physical_reads = vec![false; exact_count];
         let mut values = arena(self.graph.evaluate_indexed(
             &all,
             &mut |id, op, args| {
-                if let Some(&(_, value)) = given.iter().find(|(given, _)| *given == id) {
+                let deferred_sample = stored.physical.is_some()
+                    && matches!(op, O::Boundary(ir::RealBoundaryKind::Sample, _))
+                    && self.graph.node(id).is_some_and(|n| n.operands.iter().any(|&i| physical_reads[i]));
+                if let Some(&(_, value)) = stored.given.iter().find(|(given, _)| *given == id).filter(|_| !deferred_sample) {
                     w.step()?;
+                    if stored.physical.is_some() {
+                        exact_cells[id] = Some(crate::same_time_root::Q::point(crate::same_time_root::binary(value, w)?));
+                    }
                     return Ok(Cell {
                         source_domain: None,
                         nominal: Some(value),
@@ -1204,7 +1336,7 @@ impl Plan {
                         proof: None,
                     });
                 }
-                if missing.contains(&id) {
+                if stored.missing.contains(&id) {
                     return Err(Error::new(
                         "unsupported_transient",
                         format!(
@@ -1214,7 +1346,51 @@ impl Plan {
                         ),
                     ));
                 }
+                if let Some(physical) = &stored.physical {
+                    use crate::same_time_root as root;
+                    w.step()?;
+                    let node = self.graph.node(id).ok_or_else(|| invalid("missing procedure node"))?;
+                    let physical_read = matches!(op, O::Affine { terms, .. } if terms.iter().any(|t| physical.exact_reads.get(t.node).copied().unwrap_or(false)))
+                        || node.operands.iter().any(|&i| physical_reads[i]);
+                    if physical_read {
+                        let q = match op {
+                            O::Affine { constant, terms } => {
+                                w.debit(2, (terms.len() as u64).saturating_mul(32).saturating_add(64))?;
+                                let expression = ir::Expression::Affine { constant: *constant, terms: terms.to_vec() };
+                                root::activation_image(&expression, &physical.values, &physical.exact_reads, w)?
+                            }
+                            _ => {
+                                w.debit(2, (node.operands.len() as u64).saturating_mul(16).saturating_add(32))?;
+                                let operands = node.operands.iter().map(|&i| exact_cells[i].as_ref()).collect::<Option<Vec<_>>>();
+                                match operands { Some(args) => root::procedure_image(op, &args, w)?, None => None }
+                            }
+                        }.ok_or_else(|| Error::new("unsupported_transient",
+                            "same-time physical consumer has no exact certified operation image (capability limit)"))?;
+                        let lo = root::nearest(&q.lo, "same-time physical consumer", w)?;
+                        let hi = root::nearest(&q.hi, "same-time physical consumer", w)?;
+                        if lo.to_bits() != hi.to_bits() && lo != hi {
+                            return Err(Error::new("unsupported_transient",
+                                "same-time physical consumer has no certified rounding (capability limit)"));
+                        }
+                        let image = root::enclosure(&q, "same-time physical consumer", w)?;
+                        let proof = if q.is_point() { Some(Arc::new(root::copy_q(&q, w)?.lo)) } else { None };
+                        physical_reads[id] = match op {
+                            O::Real(..) => false,
+                            O::Boundary(kind, _) => matches!(kind, ir::RealBoundaryKind::Sample),
+                            _ => true,
+                        };
+                        exact_cells[id] = Some(q);
+                        return Ok(Cell { source_domain: None, nominal: Some(lo), image: Some(image),
+                            mathematical: proof.clone(), proof });
+                    }
+                }
                 let value = op.evaluate(args, &domain, w)?;
+                if stored.physical.is_some() {
+                    if let Some(q) = value.proof.as_ref().or(value.mathematical.as_ref()) {
+                        w.debit(2, (q.numer().bits() + q.denom().bits()).div_ceil(8).saturating_mul(4).saturating_add(128))?;
+                        exact_cells[id] = Some(crate::same_time_root::Q::point((**q).clone()));
+                    }
+                }
                 // Builder.add may postpone unknown electrical values. This final
                 // evaluation cannot discard an unresolved overwritten store merely
                 // because only effect roots retain it.
@@ -1291,7 +1467,7 @@ impl Plan {
             .collect::<Vec<_>>();
         // A same-time cycle's program values are the roundings its solve
         // recorded for these inputs (decision 22), never their execution.
-        let (given, missing) = self.stored_same_time(stored, roots, nodes, before, w)?;
+        let stored = self.stored_same_time(stored, roots, nodes, before, w)?;
         self.evaluate_with(
             execute_effects,
             roots,
@@ -1299,7 +1475,7 @@ impl Plan {
             (&states, &state_bounds),
             (&operators, &operator_bounds),
             context,
-            (&given, &missing),
+            &stored,
             w,
         )?
         .iter()
@@ -1350,7 +1526,7 @@ impl Plan {
             .map(Some)
             .collect::<Vec<_>>();
         // A reset that reads a same-time cycle reads its stored roundings.
-        let (given, missing) = self.stored_same_time(true, &ids, nodes, before, w)?;
+        let stored = self.stored_same_time(true, &ids, nodes, before, w)?;
         let values = self.evaluate_with(
             true,
             &ids,
@@ -1358,7 +1534,7 @@ impl Plan {
             (&states, before_bounds),
             (&ops, operator_bounds),
             context,
-            (&given, &missing),
+            &stored,
             w,
         )?;
         let mut values = values.iter();
@@ -2850,5 +3026,97 @@ mod same_time_record_tests {
             "{}",
             error.message
         );
+    }
+}
+
+#[cfg(test)]
+mod activation_transfer_tests {
+    use super::*;
+    fn marked(w: &Work) -> Plan {
+        let request: crate::ir::Request =
+            serde_json::from_str(include_str!("testdata/same_time_record.json")).unwrap();
+        let p = request.program;
+        let before = vec![I::ZERO; p.states.len()];
+        let mut nodes = vec![
+            I {
+                lo: f64::NEG_INFINITY,
+                hi: f64::INFINITY
+            };
+            p.nodes.len()
+        ];
+        nodes[0] = I::ZERO;
+        nodes[1] = I::ZERO;
+        let timer = p
+            .events
+            .iter()
+            .position(|e| matches!(e.trigger, crate::ir::EventTrigger::Timer { .. }))
+            .unwrap();
+        let plan = execute(&p, &[timer], &nodes, &before, None, w).unwrap();
+        plan.mark_same_time(vec![7], vec![1]).unwrap();
+        plan
+    }
+    #[test]
+    fn conflict_is_transitive_and_only_recertification_clears_it() {
+        let w = Work::default();
+        let a = marked(&w);
+        let b = marked(&w);
+        let c = marked(&w);
+        let nodes = [0., 0.];
+        let before = [0.];
+        a.record_same_time(
+            &nodes,
+            &before,
+            vec![(7, 2.0 / 3.0)],
+            PhysicalFrame::default(),
+        )
+        .unwrap();
+        b.record_same_time(
+            &nodes,
+            &before,
+            vec![(7, (2.0_f64 / 3.0).next_up())],
+            PhysicalFrame::default(),
+        )
+        .unwrap();
+        c.adopt_same_time(&a).unwrap();
+        a.adopt_same_time(&b).unwrap();
+        c.adopt_same_time(&a).unwrap();
+        assert!(c.same_time_record(&nodes, &before).unwrap().is_none());
+        c.adopt_same_time(&b).unwrap();
+        assert!(c.same_time_record(&nodes, &before).unwrap().is_none());
+        c.record_same_time(
+            &nodes,
+            &before,
+            vec![(7, 2.0 / 3.0)],
+            PhysicalFrame::default(),
+        )
+        .unwrap();
+        assert_eq!(
+            c.same_time_record(&nodes, &before).unwrap().unwrap()[0].1,
+            2.0 / 3.0
+        );
+    }
+    #[test]
+    fn exhausted_transfer_and_retries_leave_target_unchanged() {
+        let w = Work::for_limit(100_000_000);
+        let a = marked(&w);
+        let b = marked(&w);
+        for k in 0..16384 {
+            a.record_same_time(
+                &[0., k as f64],
+                &[0.],
+                vec![(7, k as f64)],
+                PhysicalFrame::default(),
+            )
+            .unwrap();
+        }
+        b.record_same_time(&[0., -1.], &[0.], vec![(7, -1.)], PhysicalFrame::default())
+            .unwrap();
+        w.debit(2, 100_000_000 - w.spent()).unwrap();
+        for _ in 0..3 {
+            assert_eq!(b.adopt_same_time(&a).unwrap_err().kind, "step_budget");
+            let guard = b.same_time.lock().unwrap();
+            assert_eq!(guard.records.len(), 1);
+            assert!(guard.conflicting.is_empty());
+        }
     }
 }

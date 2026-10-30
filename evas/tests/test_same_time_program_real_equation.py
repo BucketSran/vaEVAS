@@ -269,6 +269,68 @@ class SameTimeProgramRealEquation(unittest.TestCase):
         self.assertEqual([v[nodes.index('y')] for v in voltages], [0, 0, stored_p, after, after])
         self.assertEqual([v[nodes.index('w')] for v in voltages[2:]], [stored_p] * 3)
 
+    def test_same_activation_branch_and_program_operations_keep_distinct_rounding_boundaries(self):
+        # Independent exact roots q=2/7,y=10/7,z=1. A branch enters
+        # the program as RN(3/7). Each following program operation rounds.
+        # Reading q uses stored RN(2/7), never the exact physical q root.
+        cases = [('V(y,z)', Q(3, 7)), ('V(y)-1', Q(3, 7)),
+                 ('V(y)', Q(10, 7)), ('q-1', Q(float(Q(2, 7))) - 1),
+                 ('(V(y)-1)*3', 3 * Q(float(Q(3, 7))))]
+        for expression, exact in cases:
+            with self.subTest(expression=expression):
+                body = ('@(initial_step) begin q=0; p=0; end @(timer(0.5)) begin '
+                        f'q=1-0.5*V(y); p={expression}; '
+                        '$display("p=%.17g branch=%.17g",p,V(y,z)); end '
+                        'V(y)<+5*q; V(z)<+1; V(w)<+p;')
+                program, result = self.answer(body, 'real q,p; electrical z,w;')
+                rn = float(exact)
+                shown = dict(field.split('=') for field in
+                             result['transient']['display_records'][0]['text'].split())
+                self.assertEqual(float(shown['p']), rn)
+                self.assertEqual(float(shown['branch']), float(Q(3, 7)))
+                states = [name.split(':')[-1] for name in result['transient']['state_names']]
+                self.assertEqual([row[states.index('p')] for row in result['transient']['states'][2:]], [rn]*3)
+                w = next(i for i, name in enumerate(program.nodes) if name.split(':')[-1] == 'w')
+                self.assertEqual([row['voltages'][w] for row in result['solutions'][2:]], [rn]*3)
+
+    def test_unrelated_driven_sample_keeps_its_original_rounding_boundary(self):
+        # At t=1/2 the independent PWL source is exactly 4/3. It is not
+        # determined by the feedback cycle and must sample RN(4/3) first.
+        source = model('@(initial_step) begin q=0; p=0; end '
+                       '@(timer(0.5)) begin q=1-0.5*V(y,r); p=V(u,r)-1; end '
+                       'V(y,r)<+5*q; V(w,r)<+p;', 'real q,p; electrical w;')
+        p = compile_sources({'scope.va':source}, [instance()])
+        result = transient(p, {'u':[[0,0],[3,8]]}, [0,.5,1], stop=1, max_step=.25, kernel=KERNEL)
+        states = [name.split(':')[-1] for name in result['transient']['state_names']]
+        expected = float(Q(float(Q(4,3)))-1)
+        self.assertNotEqual(expected, float(Q(1,3)))
+        self.assertEqual(result['transient']['states'][-1][states.index('p')], expected)
+
+    def test_component_roots_need_complete_system_extension_proof(self):
+        # y=y^2 and (1-y)z=y has only (0,0): y=1 requires 0=1.
+        # No complete-system multiplicity proof is implemented for this pair.
+        message = self.refusal('q=V(y)*V(y); h=V(y)*V(z)+V(y); V(y)<+q; V(z)<+h;',
+                               'real q,h; electrical z;')
+        self.assertIn('component-root extension', message)
+        self.assertIn('capability limit', message)
+        self.assertNotIn('has more than one solution', message)
+
+    def test_overdetermined_feedback_layout_is_refused_before_numeric_certification(self):
+        source = ('`include "disciplines.vams"\n'
+                  'module pin(y); output y; electrical y; analog begin V(y)<+1; end endmodule\n'
+                  'module loop(u,y); input u; output y; electrical u,y; real q; '
+                  'analog begin q=0.5*V(y)+0.5; V(y)<+q; end endmodule')
+        for names in [('A', 'Z'), ('Z', 'A')]:
+            for reverse in [False, True]:
+                instances = [Instance(names[0], 'pin', {'y':'y'}),
+                             Instance(names[1], 'loop', {'u':'u','y':'y'})]
+                if reverse:
+                    instances.reverse()
+                with self.subTest(names=names, reverse=reverse):
+                    p = compile_sources({'layout.va':source}, instances)
+                    with self.assertRaisesRegex(KernelError, 'not each defined by one grounded relation.*capability limit'):
+                        transient(p, {'u':[[0,0],[1,0]]}, [0,1], stop=1, max_step=.25, kernel=KERNEL)
+
 
 if __name__ == '__main__':
     unittest.main()

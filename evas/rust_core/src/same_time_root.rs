@@ -58,6 +58,15 @@ impl Q {
     }
 }
 
+/// Physical proofs and the nodes determined by a same-time cycle. Only
+/// reads of those nodes defer a voltage-sample boundary to the enclosing
+/// program operation/store. Unrelated source samples keep their usual RN.
+#[derive(Default, PartialEq)]
+pub(crate) struct PhysicalFrame {
+    pub values: Vec<Option<crate::same_time_root::Q>>,
+    pub exact_reads: Vec<bool>,
+}
+
 /// One relation of a cycle without its rounding steps: its member equals
 /// `sign * sum(rhs)`.
 pub(crate) struct Relation {
@@ -909,9 +918,29 @@ pub(crate) fn rounded_image(
     values: &[Option<Q>],
     w: &Work,
 ) -> Result<Option<Q>, Error> {
+    scoped_image(e, values, None, w)
+}
+pub(crate) fn activation_image(
+    e: &Expression,
+    values: &[Option<Q>],
+    scope: &[bool],
+    w: &Work,
+) -> Result<Option<Q>, Error> {
+    if scope.is_empty() {
+        rounded_image(e, values, w)
+    } else {
+        scoped_image(e, values, Some(scope), w)
+    }
+}
+fn scoped_image(
+    e: &Expression,
+    values: &[Option<Q>],
+    scope: Option<&[bool]>,
+    w: &Work,
+) -> Result<Option<Q>, Error> {
     w.step()?;
     let pair = |l: &Expression, r: &Expression| -> Result<Option<(Q, Q)>, Error> {
-        Ok(rounded_image(l, values, w)?.zip(rounded_image(r, values, w)?))
+        Ok(scoped_image(l, values, scope, w)?.zip(scoped_image(r, values, scope, w)?))
     };
     let rounded = |q: Q| -> Result<Q, Error> {
         let lo = binary(nearest(&q.lo, "a rounded value", w)?, w)?;
@@ -946,14 +975,25 @@ pub(crate) fn rounded_image(
             Some((a, b)) if b.lo.is_positive() || b.hi.is_negative() => Some(q_div(&a, &b, w)?),
             _ => None,
         },
-        Expression::Power { base, exponent } => match rounded_image(base, values, w)? {
+        Expression::Power { base, exponent } => match scoped_image(base, values, scope, w)? {
             Some(a) => Some(q_pow(&a, *exponent, w)?),
             None => None,
         },
-        Expression::RealBoundary { value, .. } => match rounded_image(value, values, w)? {
-            Some(a) => Some(rounded(a)?),
-            None => None,
-        },
+        Expression::RealBoundary { value, kind, .. } => {
+            match scoped_image(value, values, scope, w)? {
+                Some(a)
+                    if matches!(kind, crate::ir::RealBoundaryKind::Sample)
+                        && scope.is_some_and(|scope| {
+                            matches!(value.as_ref(), Expression::Affine { terms, .. }
+                    if terms.iter().any(|t| scope.get(t.node).copied().unwrap_or(false)))
+                        }) =>
+                {
+                    Some(a)
+                }
+                Some(a) => Some(rounded(a)?),
+                None => None,
+            }
+        }
         Expression::RealBinary {
             operation,
             left,
@@ -975,6 +1015,56 @@ pub(crate) fn rounded_image(
         }
         _ => None,
     })
+}
+
+/// Copy only after reserving the rational limbs and container.
+pub(crate) fn copy_q(q: &Q, w: &Work) -> Result<Q, Error> {
+    pay(w, &[&q.lo, &q.hi])?;
+    Ok(q.clone())
+}
+
+/// Exact physical operands enter a program operation before that operation's
+/// RN boundary. Its result is then a stored binary value for the next op.
+/// Unsupported operations do not obtain a midpoint or rounded operand proxy.
+pub(crate) fn procedure_image(
+    op: &crate::procedure_operations::Operation,
+    operands: &[&Q],
+    w: &Work,
+) -> Result<Option<Q>, Error> {
+    use crate::procedure_operations::Operation as O;
+    let value = match op {
+        O::Add => q_add(operands[0], operands[1], w)?,
+        O::Multiply => q_mul(operands[0], operands[1], w)?,
+        O::Divide if operands[1].lo.is_positive() || operands[1].hi.is_negative() => {
+            q_div(operands[0], operands[1], w)?
+        }
+        O::Power(n) => q_pow(operands[0], *n, w)?,
+        O::Boundary(..) => copy_q(operands[0], w)?,
+        O::Real(operation, _) => {
+            use crate::ir::RealOperation as R;
+            match operation {
+                R::Add => q_add(operands[0], operands[1], w)?,
+                R::Subtract => q_sub(operands[0], operands[1], w)?,
+                R::Multiply => q_mul(operands[0], operands[1], w)?,
+                R::Divide if operands[1].lo.is_positive() || operands[1].hi.is_negative() => {
+                    q_div(operands[0], operands[1], w)?
+                }
+                _ => return Ok(None),
+            }
+        }
+        _ => return Ok(None),
+    };
+    if matches!(op, O::Boundary(kind, _) if !matches!(kind, crate::ir::RealBoundaryKind::Sample))
+        || matches!(op, O::Real(..))
+    {
+        let lo = nearest(&value.lo, "same-time program operation", w)?;
+        let hi = nearest(&value.hi, "same-time program operation", w)?;
+        if lo.to_bits() != hi.to_bits() && lo != hi {
+            return Ok(None);
+        }
+        return Ok(Some(Q::point(binary(lo, w)?)));
+    }
+    Ok(Some(value))
 }
 
 /// How many real solutions the exact equation of a same-time cycle has,

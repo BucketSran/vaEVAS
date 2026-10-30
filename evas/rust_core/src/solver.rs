@@ -50,6 +50,11 @@ struct DenseResidual {
     coefficients: Vec<f64>,
 }
 
+struct SameTimeSolution {
+    rounded: Vec<(usize, f64)>,
+    physical: crate::same_time_root::PhysicalFrame,
+}
+
 impl Circuit {
     pub(crate) fn retain_procedure_occurrence(&mut self, source: &Self) {
         self.procedure_occurrence = source
@@ -1191,11 +1196,12 @@ impl Circuit {
         let Order::Cyclic {
             components,
             definition,
-            ..
+            reads,
         } = self.substitution_order(work)?
         else {
             return Ok(None);
         };
+        let scope = self.physical_read_scope(&components, &reads, work)?;
         let Some(values) = self.with_inputs(inputs, vec![0.0; self.nodes.len()]) else {
             return Ok(None);
         };
@@ -1221,7 +1227,7 @@ impl Circuit {
                     let (index, sign) = definition[column];
                     let mut sum = Some(Q::point(num_rational::BigRational::from_integer(0.into())));
                     for rhs in &self.equations[index].original_rhs {
-                        sum = match (sum, root::rounded_image(rhs, &exact, work)?) {
+                        sum = match (sum, root::activation_image(rhs, &exact, &scope, work)?) {
                             (Some(a), Some(b)) => Some(root::sum(&a, &b, work)?),
                             _ => None,
                         };
@@ -1327,6 +1333,14 @@ impl Circuit {
                      has no solution"
                 ),
             )),
+            Solutions::Several if !self.single_same_time_component(work)? => Some(Error::new(
+                "unsupported_transient",
+                format!(
+                    "same-time feedback through a program real at {name}: certification of \
+                    component-root extension to the complete activation is not implemented \
+                    (capability limit)"
+                ),
+            )),
             Solutions::Several => Some(Error::new(
                 "unsupported_transient",
                 format!(
@@ -1354,6 +1368,63 @@ impl Circuit {
                 ),
             )),
         })
+    }
+
+    fn single_same_time_component(
+        &self,
+        work: &crate::transition_source_plan::Work,
+    ) -> Result<bool, Error> {
+        fn total(
+            e: &Expression,
+            work: &crate::transition_source_plan::Work,
+        ) -> Result<bool, Error> {
+            work.step()?;
+            Ok(match e {
+                Expression::Affine { .. } => true,
+                Expression::Add { left, right } | Expression::Multiply { left, right } => {
+                    total(left, work)? && total(right, work)?
+                }
+                Expression::Power { base, .. } | Expression::RealBoundary { value: base, .. } => {
+                    total(base, work)?
+                }
+                Expression::RealBinary {
+                    operation,
+                    left,
+                    right,
+                    ..
+                } if !matches!(operation, crate::ir::RealOperation::Divide) => {
+                    total(left, work)? && total(right, work)?
+                }
+                _ => false,
+            })
+        }
+        let Order::Cyclic {
+            components,
+            definition,
+            ..
+        } = self.substitution_order(work)?
+        else {
+            return Ok(false);
+        };
+        if components.iter().filter(|(_, cyclic)| *cyclic).count() != 1 {
+            return Ok(false);
+        }
+        // A grounded acyclic total definition extends every candidate uniquely.
+        // Additional cyclic blocks or partial operations need a global proof.
+        for (columns, cyclic) in components {
+            if cyclic {
+                continue;
+            }
+            for column in columns {
+                for rhs in &self.equations[definition[column].0].original_rhs {
+                    work.step()?;
+                    if !total(rhs, work)? {
+                        return Ok(false);
+                    }
+                }
+            }
+        }
+        Ok(true)
     }
 
     /// Whether a cycle's relations are jointly affine in its own unknowns.
@@ -1632,6 +1703,26 @@ impl Circuit {
                 None => Vec::new(),
             })
             .collect::<Vec<Vec<usize>>>();
+        let mut depends = depends;
+        if !grounded {
+            // An unmatched constraint can complete a feedback cycle. For an
+            // unsupported layout use the incidence of ALL original relations,
+            // rather than interpreting one maximum matching as the system.
+            for (row, ends) in terminals.iter().enumerate() {
+                for &end in ends {
+                    for &read in &read_columns[row] {
+                        if !depends[end].contains(&read) {
+                            depends[end].push(read);
+                        }
+                    }
+                    for &other in ends {
+                        if other != end && !depends[end].contains(&other) {
+                            depends[end].push(other);
+                        }
+                    }
+                }
+            }
+        }
         let Ok(components) = strong_components_with(&depends, &mut || Ok(())) else {
             return SameTimeStructure {
                 outside: Some((OutsideClass::Layout, String::new())),
@@ -1663,7 +1754,12 @@ impl Circuit {
                 .iter()
                 .filter_map(|&column| owner[column])
                 .collect::<Vec<_>>();
-            if !rows.iter().any(|&row| reads[row].rounded) {
+            let rounded_relation = rows.iter().any(|&row| reads[row].rounded)
+                || (!grounded
+                    && reads.iter().enumerate().any(|(row, read)| {
+                        read.rounded && candidates[row].iter().any(|c| columns.contains(c))
+                    }));
+            if !rounded_relation {
                 continue;
             }
             let mut why = OutsideClass::Layout;
@@ -1706,7 +1802,10 @@ impl Circuit {
             }
         }
         let mut values = Vec::new();
-        let mut key = vec![false; view.node_count];
+        let mut key = vec![true; view.node_count];
+        if !key.is_empty() {
+            key[0] = false;
+        }
         let mut visited = vec![false; n];
         let mut stack = Vec::new();
         for column in 0..n {
@@ -1795,6 +1894,34 @@ impl Circuit {
         }))
     }
 
+    fn physical_read_scope(
+        &self,
+        components: &[(Vec<usize>, bool)],
+        reads: &[Vec<usize>],
+        work: &crate::transition_source_plan::Work,
+    ) -> Result<Vec<bool>, Error> {
+        work.debit(
+            2,
+            ((self.nodes.len() + self.unknown.len()) as u64)
+                .saturating_mul(8)
+                .saturating_add(64),
+        )?;
+        let mut dependent = vec![false; self.unknown.len()];
+        let mut scope = vec![false; self.nodes.len()];
+        let count = self.procedure_view.as_ref().map_or(0, |v| v.node_count);
+        for (columns, cyclic) in components {
+            for &column in columns {
+                work.step()?;
+                dependent[column] = *cyclic || reads[column].iter().any(|&c| dependent[c]);
+                let node = self.unknown[column];
+                if node < count {
+                    scope[node] = dependent[column];
+                }
+            }
+        }
+        Ok(scope)
+    }
+
     /// Decision 22 (D-R2-1 option A, an ADR-006 clarification): (node, value)
     /// for every member of a same-time cycle through program reals, the value
     /// being the binary64 rounding of the exact root of the cycle's equation;
@@ -1812,7 +1939,7 @@ impl Circuit {
         &self,
         solution: &Solution,
         input_bounds: Option<&[I]>,
-    ) -> Result<Option<Vec<(usize, f64)>>, Error> {
+    ) -> Result<Option<SameTimeSolution>, Error> {
         use crate::same_time_root::{self as root, Cycle, Relation, Q};
         let Some(view) = &self.procedure_view else {
             return Ok(None);
@@ -1829,6 +1956,7 @@ impl Circuit {
         else {
             return Ok(None);
         };
+        let scope = self.physical_read_scope(&components, &reads, work)?;
         if !components.iter().any(|(_, cyclic)| *cyclic) {
             return Ok(None);
         }
@@ -1845,19 +1973,8 @@ impl Circuit {
                 .saturating_mul(96)
                 .saturating_add(64),
         )?;
-        // Only cycles and the values they read need an exact value.
-        let mut needed = vec![false; n];
-        for (columns, cyclic) in components.iter().rev() {
-            for &column in columns {
-                work.step()?;
-                if *cyclic || needed[column] {
-                    needed[column] = true;
-                    for &read in &reads[column] {
-                        needed[read] = true;
-                    }
-                }
-            }
-        }
+        // All later physical consumers belong to this activation. Compute
+        // their defining relations too, preserving each program RN boundary.
         let bounds = match input_bounds {
             Some(bounds)
                 if !self.procedure_parameters.is_empty()
@@ -1921,23 +2038,27 @@ impl Circuit {
         for (columns, cyclic) in &components {
             if !cyclic {
                 for &column in columns {
-                    if !needed[column] {
-                        continue;
-                    }
                     let (index, sign) = definition[column];
                     let node = self.unknown[column];
                     values[node] = self.substituted_value(index, sign, &values, work)?;
                     let mut sum = Some(Q::point(num_rational::BigRational::from_integer(0.into())));
                     for rhs in &self.equations[index].original_rhs {
-                        sum = match (sum, root::rounded_image(rhs, &exact, work)?) {
+                        sum = match (sum, root::activation_image(rhs, &exact, &scope, work)?) {
                             (Some(a), Some(b)) => Some(root::sum(&a, &b, work)?),
                             _ => None,
                         };
                     }
-                    exact[node] = Some(match sum {
-                        Some(value) => root::scaled(&value, sign, work)?,
-                        None => root::exact_interval(values[node], work)?,
-                    });
+                    exact[node] = match sum {
+                        Some(value) => Some(root::scaled(&value, sign, work)?),
+                        None => None,
+                    };
+                    if let Some(q) = &exact[node] {
+                        let lo = root::nearest(&q.lo, "same-time downstream value", work)?;
+                        let hi = root::nearest(&q.hi, "same-time downstream value", work)?;
+                        if lo.to_bits() == hi.to_bits() || lo == hi {
+                            result.push((node, lo));
+                        }
+                    }
                 }
                 continue;
             }
@@ -2037,7 +2158,16 @@ impl Circuit {
                 result.push((node, value));
             }
         }
-        Ok(Some(result))
+        exact.truncate(view.node_count);
+        let mut exact_reads = scope;
+        exact_reads.truncate(view.node_count);
+        Ok(Some(SameTimeSolution {
+            rounded: result,
+            physical: crate::same_time_root::PhysicalFrame {
+                values: exact,
+                exact_reads,
+            },
+        }))
     }
 
     /// Whether an RN cell can hold the decision 22 values of this system at
@@ -2129,7 +2259,7 @@ impl Circuit {
     fn store_same_time(
         &self,
         solution: &mut Solution,
-        rounded: &[(usize, f64)],
+        solved: SameTimeSolution,
     ) -> Result<(), Error> {
         let Some(view) = &self.procedure_view else {
             return Ok(());
@@ -2137,10 +2267,12 @@ impl Circuit {
         let work = &view.plan.work;
         work.debit(
             2,
-            (rounded.len() as u64).saturating_mul(32).saturating_add(32),
+            (solved.rounded.len() as u64)
+                .saturating_mul(32)
+                .saturating_add(32),
         )?;
         let mut values = Vec::new();
-        for &(node, value) in rounded {
+        for (node, value) in solved.rounded {
             solution.voltages[node] = value;
             if node >= view.node_count {
                 let id = view
@@ -2153,8 +2285,12 @@ impl Circuit {
                 values.push((id, value));
             }
         }
-        view.plan
-            .record_same_time(&solution.voltages[..view.node_count], &view.before, values)
+        view.plan.record_same_time(
+            &solution.voltages[..view.node_count],
+            &view.before,
+            values,
+            solved.physical,
+        )
     }
 
     /// The certificate of the stored values: every member of a same-time cycle
@@ -2192,7 +2328,7 @@ impl Circuit {
         let Some(rounded) = self.same_time_roundings(solution, Some(input_bounds))? else {
             return Ok(());
         };
-        for (node, value) in rounded {
+        for (node, value) in rounded.rounded {
             let stored = if node < view.node_count {
                 solution.voltages[node]
             } else {
@@ -2997,7 +3133,7 @@ impl Circuit {
                     solution.voltages = view.expand_executed(&solution.voltages)?;
                 }
                 if let Some(rounded) = self.same_time_roundings(&solution, None)? {
-                    self.store_same_time(&mut solution, &rounded)?;
+                    self.store_same_time(&mut solution, rounded)?;
                 }
             }
             solution.voltages.truncate(view.node_count);
@@ -3192,7 +3328,11 @@ impl Circuit {
             Some(None)
         };
         if let Some(rounded) = rounded {
-            for &(node, value) in rounded.iter().flatten() {
+            for &(node, value) in rounded
+                .as_ref()
+                .map(|r| r.rounded.as_slice())
+                .unwrap_or_default()
+            {
                 activation[node] = value;
             }
             match self.point_solution(inputs, activation) {
