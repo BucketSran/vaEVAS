@@ -127,7 +127,19 @@ impl ActivationRecord {
                 .iter()
                 .zip(&other.values)
                 .all(|(a, b)| a.0 == b.0 && a.1.to_bits() == b.1.to_bits())
-            && self.physical == other.physical
+            // Ratio::eq may divide and allocate for unequal denominators.
+            // Compare the stored proof representation directly, within the
+            // prepaid limb traversal. Different representations conservatively
+            // conflict; equality never invents a new mathematical proof.
+            && (Arc::ptr_eq(&self.physical, &other.physical)
+                || (self.physical.exact_reads == other.physical.exact_reads
+                    && self.physical.values.len() == other.physical.values.len()
+                    && self.physical.values.iter().zip(&other.physical.values).all(|(a,b)| match (a,b) {
+                        (None,None) => true,
+                        (Some(a),Some(b)) => [&a.lo,&a.hi].into_iter().zip([&b.lo,&b.hi])
+                            .all(|(a,b)| a.numer() == b.numer() && a.denom() == b.denom()),
+                        _ => false,
+                    })))
     }
 }
 #[derive(Default)]
@@ -1148,19 +1160,38 @@ impl Plan {
         if Arc::ptr_eq(&self.same_time, &other.same_time) || self.identity != other.identity {
             return Ok(());
         }
-        // Reserve traversal first, then every snapshot/copy/comparison/container
-        // cost before making a copy or mutating the destination. Failed retries
-        // spend the same sticky request account and leave the target intact.
+        if !self.work.same_owner(&other.work) {
+            return Err(invalid(
+                "same-time records have different request proof accounts",
+            ));
+        }
+        // Lock both owners in a fixed address order. Reserve the complete
+        // transfer before cloning keys/values or changing either marks or
+        // records. Borrow the immutable source directly; no snapshot is needed.
         self.work.debit(2, 64)?;
-        let source = other
-            .same_time
+        let self_first = Arc::as_ptr(&self.same_time) < Arc::as_ptr(&other.same_time);
+        let (first, second) = if self_first {
+            (&self.same_time, &other.same_time)
+        } else {
+            (&other.same_time, &self.same_time)
+        };
+        let first = first
             .lock()
             .map_err(|_| invalid("same-time rounding record is poisoned"))?;
+        let second = second
+            .lock()
+            .map_err(|_| invalid("same-time rounding record is poisoned"))?;
+        let (source, mut ours) = if self_first {
+            (second, first)
+        } else {
+            (first, second)
+        };
         self.work.debit(
             2,
-            ((source.records.capacity() + source.conflicting.capacity()) as u64)
+            ((source.records.capacity() + source.conflicting.capacity() + ours.records.capacity())
+                as u64)
                 .saturating_mul(32)
-                .saturating_add(64),
+                .saturating_add(128),
         )?;
         let marks = other.same_time_marks.get();
         if let Some(m) = marks {
@@ -1184,23 +1215,6 @@ impl Plan {
             self.work
                 .debit(2, (key.len() as u64).saturating_mul(32).saturating_add(192))?;
         }
-        let theirs = source
-            .records
-            .iter()
-            .map(|(key, record)| (key.clone(), record.clone()))
-            .collect::<Vec<_>>();
-        let conflicts = source.conflicting.iter().cloned().collect::<Vec<_>>();
-        drop(source);
-        let mut ours = self
-            .same_time
-            .lock()
-            .map_err(|_| invalid("same-time rounding record is poisoned"))?;
-        self.work.debit(
-            2,
-            (ours.records.capacity() as u64)
-                .saturating_mul(32)
-                .saturating_add(64),
-        )?;
         // Destination comparisons can involve a larger old proof than the
         // incoming one. Reserve those limbs before any target mutation too.
         for (key, record) in &ours.records {
@@ -1220,20 +1234,20 @@ impl Plan {
                 });
             }
         }
-        for key in conflicts {
-            ours.records.remove(&key);
-            ours.conflicting.insert(key);
+        for key in &source.conflicting {
+            ours.records.remove(key);
+            ours.conflicting.insert(key.clone());
         }
-        for (key, record) in theirs {
-            match ours.records.get(&key) {
-                Some(old) if old.same(&record) => {}
+        for (key, record) in &source.records {
+            match ours.records.get(key) {
+                Some(old) if old.same(record) => {}
                 Some(_) => {
-                    ours.records.remove(&key);
-                    ours.conflicting.insert(key);
+                    ours.records.remove(key);
+                    ours.conflicting.insert(key.clone());
                 }
-                None if ours.conflicting.contains(&key) => {}
+                None if ours.conflicting.contains(key) => {}
                 None => {
-                    ours.records.insert(key, record);
+                    ours.records.insert(key.clone(), record.clone());
                 }
             }
         }
@@ -1320,10 +1334,15 @@ impl Plan {
         let mut values = arena(self.graph.evaluate_indexed(
             &all,
             &mut |id, op, args| {
-                let deferred_sample = stored.physical.is_some()
-                    && matches!(op, O::Boundary(ir::RealBoundaryKind::Sample, _))
-                    && self.graph.node(id).is_some_and(|n| n.operands.iter().any(|&i| physical_reads[i]));
-                if let Some(&(_, value)) = stored.given.iter().find(|(given, _)| *given == id).filter(|_| !deferred_sample) {
+                let physical_operand = stored.physical.as_ref().is_some_and(|physical| match op {
+                    O::Affine { terms, .. } => terms.iter().any(|t| physical.exact_reads.get(t.node).copied().unwrap_or(false)),
+                    O::Add | O::Multiply | O::Divide | O::Power(_) | O::Boundary(ir::RealBoundaryKind::Sample, _) =>
+                        self.graph.node(id).is_some_and(|n| n.operands.iter().any(|&i| physical_reads[i])),
+                    _ => false,
+                });
+                // Expanded physical intermediates also have numeric projection
+                // records. They must never replace the physical proof operand.
+                if let Some(&(_, value)) = stored.given.iter().find(|(given, _)| *given == id).filter(|_| !physical_operand) {
                     w.step()?;
                     if stored.physical.is_some() {
                         exact_cells[id] = Some(crate::same_time_root::Q::point(crate::same_time_root::binary(value, w)?));

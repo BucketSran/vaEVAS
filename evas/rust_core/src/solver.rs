@@ -1282,7 +1282,7 @@ impl Circuit {
             for (k, &column) in columns.iter().enumerate() {
                 let node = self.unknown[column];
                 stored.push(match &found {
-                    Some(root_values) => Some(if node >= view.node_count {
+                    Some(root_values) => Some(if node >= view.node_count && !scope[node] {
                         Q::point(root::binary(
                             root::nearest(&root_values[k], &name, work)?,
                             work,
@@ -1900,6 +1900,7 @@ impl Circuit {
         reads: &[Vec<usize>],
         work: &crate::transition_source_plan::Work,
     ) -> Result<Vec<bool>, Error> {
+        use crate::procedure_operations::Operation as O;
         work.debit(
             2,
             ((self.nodes.len() + self.unknown.len()) as u64)
@@ -1908,15 +1909,31 @@ impl Circuit {
         )?;
         let mut dependent = vec![false; self.unknown.len()];
         let mut scope = vec![false; self.nodes.len()];
-        let count = self.procedure_view.as_ref().map_or(0, |v| v.node_count);
+        let Some(view) = &self.procedure_view else {
+            return Ok(scope);
+        };
         for (columns, cyclic) in components {
             for &column in columns {
                 work.step()?;
                 dependent[column] = *cyclic || reads[column].iter().any(|&c| dependent[c]);
                 let node = self.unknown[column];
-                if node < count {
-                    scope[node] = dependent[column];
-                }
+                let physical = node < view.node_count
+                    || view
+                        .ids
+                        .get(node - view.node_count)
+                        .and_then(|&id| view.plan.graph.node(id))
+                        .is_some_and(|n| {
+                            matches!(
+                                n.operation,
+                                O::Affine { .. }
+                                    | O::Add
+                                    | O::Multiply
+                                    | O::Divide
+                                    | O::Power(_)
+                                    | O::Boundary(crate::ir::RealBoundaryKind::Sample, _)
+                            )
+                        });
+                scope[node] = dependent[column] && physical;
             }
         }
         Ok(scope)
@@ -2150,7 +2167,7 @@ impl Circuit {
                     Some(all) => all[node],
                     None => root::enclosure(&enclosure, &name, work)?,
                 };
-                exact[node] = Some(if node >= view.node_count {
+                exact[node] = Some(if node >= view.node_count && !scope[node] {
                     Q::point(root::binary(value, work)?)
                 } else {
                     enclosure
