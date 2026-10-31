@@ -359,6 +359,58 @@
     {
       "actual_receipt": {
         "id": "source:83ac4eac3e5ad04a65d2099b",
+        "sha256": "8280bb6ffe28f404a256256a6db043138e0bc444fd6ffdbf975c3d9ea6a4d855",
+        "version": "756474314bec98b4b2c22a18daf915b4fbb96e8f6750123cbffac2c9286fa844"
+      },
+      "ci_entrypoint_ids": [
+        "30f31b04c379ade11bca2442a6a5dbb33b4ad474f56009f2c715e64f61331564"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": "python3 -B -m unittest discover -s evas/capabilities -p 'test_*.py' -v",
+      "dependencies": [
+        {
+          "id": "source:83ac4eac3e5ad04a65d2099b",
+          "sha256": "8280bb6ffe28f404a256256a6db043138e0bc444fd6ffdbf975c3d9ea6a4d855",
+          "version": "756474314bec98b4b2c22a18daf915b4fbb96e8f6750123cbffac2c9286fa844"
+        }
+      ],
+      "id": "entry:070ac966664a892c8b166583",
+      "kind": "entrypoint",
+      "namespace": "maintenance",
+      "pattern": "test_*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12.15"
+        ],
+        "entry_id": "30f31b04c379ade11bca2442a6a5dbb33b4ad474f56009f2c715e64f61331564",
+        "environment_overrides": {
+          "GIT_FIXTURE_RETAIN_DIR": "runs/git-fixture-isolation"
+        },
+        "job": "static-checks",
+        "job_if": "needs.selection.outputs.maintenance == 'true' || needs.selection.outputs.calibration == 'true'",
+        "line": 187,
+        "mode": "declared-ci-literal",
+        "namespace": "maintenance",
+        "pattern": "test_*.py",
+        "purpose": "role-not-semantic-qualification",
+        "start": "evas/capabilities",
+        "step": "Traceability and frozen validation identities",
+        "step_if": "needs.selection.outputs.maintenance == 'true'",
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "3516b9e13beabfff8f9e32972defd04485c2560e0eaafddf425964331f91a1ef",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "evas/capabilities",
+      "status": "active",
+      "version": "68dd1dc62c95bb8bd35286f3df45b14c99d74cb3d8b07ddd7f2c73d04628fb92",
+      "workflow_sha256": "4c719ea8ee122921eaec851a3f8959323b4703be47d0999a6c9cb9488241cb42"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:83ac4eac3e5ad04a65d2099b",
         "sha256": "81326a89622d146f2b5eff816aae00b161351e628a7ab3f38aff65ae4f997b52",
         "version": "bd261818711e705685d463e6a25d35c42beea50993d27934e4fbbdc3afccc03e"
       },
@@ -3061,6 +3113,38 @@
       "schema_version": 1,
       "status": "active",
       "version": "53aebd5ce0a0ff250c63521e3b50afd855224362637b5d90e3e94b94baef68bc"
+    },
+    {
+      "collector": "binary-listing",
+      "dependencies": [
+        {
+          "id": "source:dd8b4eb4612b272f0eb05592",
+          "sha256": "07cdfdf8f80d2999494dcd26983dac1e8fd96db113e843e4a641299f0528239d",
+          "version": "74e3cf369d6467a983e8d5c99092ca356505bfd7691e97f029a647436699e3f0"
+        }
+      ],
+      "id": "entry:31be033026c87fb6c21b9022",
+      "kind": "entrypoint",
+      "listing_profile": "linux-x86_64-regression-opt1-v1",
+      "listing_source": {
+        "id": "source:dd8b4eb4612b272f0eb05592",
+        "sha256": "07cdfdf8f80d2999494dcd26983dac1e8fd96db113e843e4a641299f0528239d",
+        "version": "74e3cf369d6467a983e8d5c99092ca356505bfd7691e97f029a647436699e3f0"
+      },
+      "namespace": "rust-tests",
+      "observer_sha256": "f1ade74617fa171c5048246986d52e772b0913ffce28713af6e2fa4af5904892",
+      "provenance_scope": "actual native listing, original observer; not upgraded to later helper execution",
+      "rust_target": {
+        "name": "evas_kernel",
+        "package": "evas-kernel",
+        "target_kind": [
+          "lib"
+        ],
+        "version": "0.25.0"
+      },
+      "schema_version": 1,
+      "status": "active",
+      "version": "bc40f72797836047936ae7facd7e76c113b7cdb8ef276c72bcc343d0100c9f9b"
     },
     {
       "collector": "binary-listing",
@@ -7682,6 +7766,85 @@
     {
       "actual_receipt": {
         "id": "source:03e7dee8012cdc353f2b823a",
+        "sha256": "2ceb5818a072bbc2f454c50eec5083f88c6fa023244e5f9cab2a2daa217f9efa",
+        "version": "f9678d73177f7bf13b27c1e7675b99fd60f58ea71cc3044250044e1b6c624861"
+      },
+      "ci_entrypoint_ids": [
+        "fb7af0ded8efd9d5a478003963c511080027d50da66df4b3689dd76077b0b560"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": null,
+      "dependencies": [
+        {
+          "id": "source:03e7dee8012cdc353f2b823a",
+          "sha256": "2ceb5818a072bbc2f454c50eec5083f88c6fa023244e5f9cab2a2daa217f9efa",
+          "version": "f9678d73177f7bf13b27c1e7675b99fd60f58ea71cc3044250044e1b6c624861"
+        }
+      ],
+      "id": "entry:67d0ba0c0b4c725797e8d721",
+      "kind": "entrypoint",
+      "namespace": "python-regression",
+      "pattern": "test*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12.15"
+        ],
+        "entry_id": "fb7af0ded8efd9d5a478003963c511080027d50da66df4b3689dd76077b0b560",
+        "environment_overrides": {
+          "CARGO_PROFILE_DEV_DEBUG_ASSERTIONS": "true",
+          "CARGO_PROFILE_DEV_OPT_LEVEL": "1",
+          "CARGO_PROFILE_DEV_OVERFLOW_CHECKS": "true",
+          "PYTHONPATH": "evas/src"
+        },
+        "job": "regression",
+        "line": null,
+        "mode": "primary-runner-argparse-discovery-only",
+        "namespace": "python-regression",
+        "origins": [
+          {
+            "command": "python3 -B scripts/run_regression.py --shard-count 4 --shard-index ${{ matrix.shard }} --weights scripts/regression-weights.json --input-identity runs/regression-identity.json --report runs/regression-evidence/report.json > runs/regression-evidence/stdout.txt 2> runs/regression-evidence/stderr.txt",
+            "declared_python_versions": [
+              "3.12.15"
+            ],
+            "environment_overrides": {
+              "CARGO_PROFILE_DEV_DEBUG_ASSERTIONS": "true",
+              "CARGO_PROFILE_DEV_OPT_LEVEL": "1",
+              "CARGO_PROFILE_DEV_OVERFLOW_CHECKS": "true",
+              "PYTHONPATH": "evas/src"
+            },
+            "executed": false,
+            "job": "regression",
+            "job_if": "needs.selection.outputs.regression == 'true'",
+            "kind": "other-python-script",
+            "line": 395,
+            "method_denominator": null,
+            "source": "scripts/run_regression.py",
+            "step": "Collect complete Python regression observations",
+            "step_if": "steps.reuse.outputs.verified != 'true'",
+            "workflow": ".github/workflows/numerical-assurance.yml"
+          }
+        ],
+        "pattern": "test*.py",
+        "purpose": "Full method construction; not selected scientific test execution.",
+        "source": "scripts/run_regression.py",
+        "source_sha256": "dc2ed03b722fd35e9a20f6eda424ac2ff39b3c22f2081a29c5f0777a9b148985",
+        "start": "evas/tests",
+        "step": "primary argparse collection",
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "c70424bdb0b6f405dabb82983f0bc106c508045e806dfddef909f92ecc29a16a",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "evas/tests",
+      "status": "active",
+      "version": "072ccbefe8b3ab95b307a1957fc8d6c427f094466fa38b46bd802dd60043aa86",
+      "workflow_sha256": "4c719ea8ee122921eaec851a3f8959323b4703be47d0999a6c9cb9488241cb42"
+    },
+    {
+      "actual_receipt": {
+        "id": "source:03e7dee8012cdc353f2b823a",
         "sha256": "f2f6968087c8b8d4889d7a12fe6176783f13d8f9ae3c82ee7837d10c50c330be",
         "version": "0997b65b555dfac5c87e8516adc03878ffaec454c4f09971f803e1a0a9f8dc1f"
       },
@@ -9784,6 +9947,38 @@
       "dependencies": [
         {
           "id": "source:dd8b4eb4612b272f0eb05592",
+          "sha256": "07cdfdf8f80d2999494dcd26983dac1e8fd96db113e843e4a641299f0528239d",
+          "version": "74e3cf369d6467a983e8d5c99092ca356505bfd7691e97f029a647436699e3f0"
+        }
+      ],
+      "id": "entry:875c284ae4c832b541413dbb",
+      "kind": "entrypoint",
+      "listing_profile": "linux-x86_64-regression-opt1-v1",
+      "listing_source": {
+        "id": "source:dd8b4eb4612b272f0eb05592",
+        "sha256": "07cdfdf8f80d2999494dcd26983dac1e8fd96db113e843e4a641299f0528239d",
+        "version": "74e3cf369d6467a983e8d5c99092ca356505bfd7691e97f029a647436699e3f0"
+      },
+      "namespace": "rust-tests",
+      "observer_sha256": "f1ade74617fa171c5048246986d52e772b0913ffce28713af6e2fa4af5904892",
+      "provenance_scope": "actual native listing, original observer; not upgraded to later helper execution",
+      "rust_target": {
+        "name": "history_consumer",
+        "package": "evas-kernel",
+        "target_kind": [
+          "test"
+        ],
+        "version": "0.25.0"
+      },
+      "schema_version": 1,
+      "status": "active",
+      "version": "6559038d2879610991ccf97ddd8cbf93e94867e2ef731344c0b06798bcb62a77"
+    },
+    {
+      "collector": "binary-listing",
+      "dependencies": [
+        {
+          "id": "source:dd8b4eb4612b272f0eb05592",
           "sha256": "4dfdae5a715daf0e83f1cb40bdfc7cd45222bdcb84dab7a22e062cd6c82e00c1",
           "version": "6363af9172e623f12169cf5a27a49a8ece1460c0330e2c038970aa3ce3fda11e"
         }
@@ -9974,6 +10169,38 @@
       "schema_version": 1,
       "status": "active",
       "version": "0f672280ecc37ae40cdbbe8a20b98ba0a4faaa429d6102b7764854ae51709a85"
+    },
+    {
+      "collector": "binary-listing",
+      "dependencies": [
+        {
+          "id": "source:dd8b4eb4612b272f0eb05592",
+          "sha256": "07cdfdf8f80d2999494dcd26983dac1e8fd96db113e843e4a641299f0528239d",
+          "version": "74e3cf369d6467a983e8d5c99092ca356505bfd7691e97f029a647436699e3f0"
+        }
+      ],
+      "id": "entry:8c3f459a1a336792a4a33ae8",
+      "kind": "entrypoint",
+      "listing_profile": "linux-x86_64-regression-opt1-v1",
+      "listing_source": {
+        "id": "source:dd8b4eb4612b272f0eb05592",
+        "sha256": "07cdfdf8f80d2999494dcd26983dac1e8fd96db113e843e4a641299f0528239d",
+        "version": "74e3cf369d6467a983e8d5c99092ca356505bfd7691e97f029a647436699e3f0"
+      },
+      "namespace": "rust-tests",
+      "observer_sha256": "f1ade74617fa171c5048246986d52e772b0913ffce28713af6e2fa4af5904892",
+      "provenance_scope": "actual native listing, original observer; not upgraded to later helper execution",
+      "rust_target": {
+        "name": "evas-kernel",
+        "package": "evas-kernel",
+        "target_kind": [
+          "bin"
+        ],
+        "version": "0.25.0"
+      },
+      "schema_version": 1,
+      "status": "active",
+      "version": "22e410c5fd7559eb491c82eb4e5cbe2a4ed0703bbc493737e125ed1493013e6a"
     },
     {
       "collector": "binary-listing",
@@ -12661,6 +12888,38 @@
       "schema_version": 1,
       "status": "active",
       "version": "0ddcce0f385b8791a74416ecbdccfb2465f8fd11fbacbf6d420cb38b356f8f50"
+    },
+    {
+      "collector": "binary-listing",
+      "dependencies": [
+        {
+          "id": "source:dd8b4eb4612b272f0eb05592",
+          "sha256": "07cdfdf8f80d2999494dcd26983dac1e8fd96db113e843e4a641299f0528239d",
+          "version": "74e3cf369d6467a983e8d5c99092ca356505bfd7691e97f029a647436699e3f0"
+        }
+      ],
+      "id": "entry:ad9c0c08e83601848bd17d89",
+      "kind": "entrypoint",
+      "listing_profile": "linux-x86_64-regression-opt1-v1",
+      "listing_source": {
+        "id": "source:dd8b4eb4612b272f0eb05592",
+        "sha256": "07cdfdf8f80d2999494dcd26983dac1e8fd96db113e843e4a641299f0528239d",
+        "version": "74e3cf369d6467a983e8d5c99092ca356505bfd7691e97f029a647436699e3f0"
+      },
+      "namespace": "rust-tests",
+      "observer_sha256": "f1ade74617fa171c5048246986d52e772b0913ffce28713af6e2fa4af5904892",
+      "provenance_scope": "actual native listing, original observer; not upgraded to later helper execution",
+      "rust_target": {
+        "name": "evas_ir",
+        "package": "evas-ir",
+        "target_kind": [
+          "lib"
+        ],
+        "version": "0.1.0"
+      },
+      "schema_version": 1,
+      "status": "active",
+      "version": "40a4c1451b8af9299ee569fdc6100d288ef1d29bc39c471cd97625a01ee847dc"
     },
     {
       "collector": "binary-listing",
@@ -17642,6 +17901,38 @@
       "schema_version": 1,
       "status": "active",
       "version": "8111460ea2acc3c2e987c27bb688b20a094f394aa267eadeb879bf8719cb8140"
+    },
+    {
+      "collector": "binary-listing",
+      "dependencies": [
+        {
+          "id": "source:dd8b4eb4612b272f0eb05592",
+          "sha256": "07cdfdf8f80d2999494dcd26983dac1e8fd96db113e843e4a641299f0528239d",
+          "version": "74e3cf369d6467a983e8d5c99092ca356505bfd7691e97f029a647436699e3f0"
+        }
+      ],
+      "id": "entry:f0df6da6a340ee8656bf7a13",
+      "kind": "entrypoint",
+      "listing_profile": "linux-x86_64-regression-opt1-v1",
+      "listing_source": {
+        "id": "source:dd8b4eb4612b272f0eb05592",
+        "sha256": "07cdfdf8f80d2999494dcd26983dac1e8fd96db113e843e4a641299f0528239d",
+        "version": "74e3cf369d6467a983e8d5c99092ca356505bfd7691e97f029a647436699e3f0"
+      },
+      "namespace": "rust-tests",
+      "observer_sha256": "f1ade74617fa171c5048246986d52e772b0913ffce28713af6e2fa4af5904892",
+      "provenance_scope": "actual native listing, original observer; not upgraded to later helper execution",
+      "rust_target": {
+        "name": "transport",
+        "package": "evas-ir",
+        "target_kind": [
+          "test"
+        ],
+        "version": "0.1.0"
+      },
+      "schema_version": 1,
+      "status": "active",
+      "version": "81c2b4c92b9897320b89169bf40535b856ecaa1d1020805df08e2e2fb6cf6218"
     },
     {
       "collector": "binary-listing",
