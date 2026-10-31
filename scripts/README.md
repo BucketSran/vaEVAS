@@ -369,6 +369,9 @@ python3 -B scripts/regression_gate.py compare runs/<task>/complete.json --repo .
 
 ### 新判据和采集器的可信 context 登记
 
+提速期间，测试改动改按 [ADR-013](../evas/docs/development/DECISIONS.md#adr-013) 第 3 条追加基线，
+本节的预授权顺序暂停使用；校验器保留。
+
 `regression_context_registration.py` 校验一个预先授权的追加事务。新 loader
 支持 `--registration-bundle <directory>`；该目录只提供不可信数据，不能指定代码
 或审批来源。`report.json` 保存新判据的完整实际报告（E1），另外九个固定
