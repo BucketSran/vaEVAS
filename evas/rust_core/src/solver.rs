@@ -255,6 +255,51 @@ fn read_columns(
     }
 }
 
+fn exact_zero(expr: &Expression) -> bool {
+    matches!(expr, Expression::Affine { constant, terms } if *constant == 0.0 && terms.is_empty())
+}
+
+// The columns a bound waveform expression reads by value: as `read_columns`,
+// without an affine term of coefficient 0 or a product with the constant 0.
+// Every program value is finite, so such a read cannot change the value; it
+// stays a structural read for ordering, but grants no deferred sampling.
+fn value_columns(
+    expr: &Expression,
+    columns: &[Option<usize>],
+    out: &mut Vec<usize>,
+    work: &crate::transition_source_plan::Work,
+) -> Result<(), Error> {
+    work.step()?;
+    match expr {
+        Expression::Affine { terms, .. } => {
+            work.debit(2, (terms.len() * 16) as u64)?;
+            out.extend(
+                terms
+                    .iter()
+                    .filter(|t| t.coefficient != 0.0)
+                    .filter_map(|t| columns[t.node]),
+            );
+        }
+        Expression::Multiply { left, right } if exact_zero(left) || exact_zero(right) => {}
+        Expression::RealBinary { left, right, .. }
+        | Expression::Add { left, right }
+        | Expression::Multiply { left, right }
+        | Expression::Divide { left, right } => {
+            value_columns(left, columns, out, work)?;
+            value_columns(right, columns, out, work)?;
+        }
+        Expression::RealBoundary { value, .. } => value_columns(value, columns, out, work)?,
+        Expression::Power { base, .. } => value_columns(base, columns, out, work)?,
+        Expression::EventMath { args, .. } => {
+            for arg in args {
+                value_columns(arg, columns, out, work)?;
+            }
+        }
+        _ => {}
+    }
+    Ok(())
+}
+
 /// What the same-time structure reads from one bound waveform expression,
 /// without values: every node it reads, whether it has a rounding step,
 /// whether `read_columns` can read it, and whether every operation has an
@@ -1936,7 +1981,11 @@ impl Circuit {
             let seeded = *cyclic && self.through_program_real(columns, definition);
             let mut inherited = false;
             for &column in columns {
-                for &read in &reads[column] {
+                let mut values = Vec::with_capacity(reads[column].len());
+                for rhs in &self.equations[definition[column].0].original_rhs {
+                    value_columns(rhs, &self.unknown_columns, &mut values, work)?;
+                }
+                for read in values {
                     work.step()?;
                     inherited |= dependent[read];
                 }

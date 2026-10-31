@@ -19,7 +19,9 @@ class SameTimeActivationScope(unittest.TestCase):
     def test_independent_physical_loop_keeps_its_program_sample(self):
         expected = float(Fraction.from_float(float(Fraction(4, 3))) - 1)
         self.assertEqual(struct.pack('>d', expected).hex(), '3fd5555555555554')
-        for physical in ('V(z)<+2-0.5*V(z);', 'V(z)<+4.0/3.0;'):
+        for physical in ('V(z)<+2-0.5*V(z);', 'V(z)<+4.0/3.0;',
+                         'V(z)<+2-0.5*V(z)+(0*q);', 'V(z)<+2-0.5*V(z)+q*0;',
+                         'V(z)<+2-0.5*V(z)+0*V(y);'):
             for times in ((0, .25, .5, .75, 1), (0, .125, .25, .5, .625, .75, 1)):
                 for feedback in ('1-0.5*V(y)', '1'):
                     for read in ('$display("p=%.17g",V(z)-1);',
