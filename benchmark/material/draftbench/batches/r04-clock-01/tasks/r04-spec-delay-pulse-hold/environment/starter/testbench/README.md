@@ -22,7 +22,7 @@ PWL source between 0 V and 0.9 V with 20 ps edges. It drives one `in_clk` pulse
 before the first load, a load whose code bits change while `load` is high, a
 load while a pulse is high, a 60 ps pulse with a 209 ps delay and a load while
 both of its output edges are pending, a rising input edge while the previous
-falling output edge is pending, and a load at the same instant as a rising
+falling output edge is pending, and a load 3 ps before a rising
 `in_clk` edge. It then resets while `out_clk` is high, sends a pulse without a
 new load, and resets while a rising output edge is pending whose scheduled time
 falls after the release. It is a representative case, not the complete final

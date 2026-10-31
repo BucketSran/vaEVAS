@@ -57,3 +57,9 @@ Spectre 校准尚未进行。`mutants.py` 由 `solution/circuit.va` 生成具体
 ## 旧版开发证据
 
 旧版开发证据（EVAS 0.8.7，legacy/EVAS 提交 6cb6fa7a），待 Spectre 复跑：除 `alt_delayed_clock` 外，20 个候选在 7 个用例上的 140 次判定都与矩阵一致，只用网格行重判结论不变。命令、退出码和逐例结果见 `runs/t3-p0-pilot-20261027/fix-r1/disposition.json`。旧版只给点值，不做可信证明，结果可能不准也不报错。
+
+## 修正 r7b（2026-10-29）的台架检查
+
+题面合法域补了两条：`clk` 到达 `vth` 必定穿过、不触碰后返回；相邻两次穿越之间离 `vth` 至少 50 mV。checker 对应加了台架检查：按用例网表的激励定义判（2026-10-30 修正 v417），`clk` 停在 `vth` 上或触碰后返回，或相邻两次穿越之间离 `vth` 的最大偏离不到 49 mV（50 mV 减去 1 mV 余量），都抛出异常，记作 checker_error，不判分，也不算候选失败。固定用例都满足这两条，上面的候选矩阵与 `expected.json` 不变。
+
+旧版开发证据（EVAS 0.8.7，legacy/EVAS 提交 6cb6fa7a），待 Spectre 复跑：建题与 fix-r1 存档的 163 条旧版波形用改后的 checker 重判（全部行与只用网格行，共 320 次），判决与改前逐个相同。网表本轮写入了标准审核定的容差行，旧版 EVAS 不理会这些参数。

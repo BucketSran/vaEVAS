@@ -57,3 +57,9 @@ Spectre 校准尚未进行。`mutants.py` 由 `solution/circuit.va` 生成具体
 ## 旧版 EVAS 不能运行的候选
 
 无。旧版开发证据（EVAS 0.8.7，legacy/EVAS 提交 6cb6fa7a），待 Spectre 复跑：31 个候选在 5 个用例上的 155 次判定中，151 次与矩阵一致，另 4 次是上面不设预期的 `late_arrival_1p3tr` 网格边界用例（旧版上都被拒）；只用网格行重判结论不变。命令、退出码和逐例结果见 `runs/t3-p0-pilot-20261027/fix-r1/disposition.json`。旧版只给点值，不做可信证明，结果可能不准也不报错。
+
+## 修正 r7b（2026-10-29）的台架检查
+
+题面合法域补一句：控制到达 `vth` 必定穿过、不触碰后返回。checker 对 `clk`、`rst`、`enable` 加了台架检查：按用例网表的激励定义判（2026-10-30 修正 v417），起点恰在 `vth` 上、停在 `vth` 上或触碰后返回都抛出异常，记作 checker_error，不判分，也不算候选失败。固定用例的控制都完整切换，上面的候选矩阵与 `expected.json` 不变。
+
+旧版开发证据（EVAS 0.8.7，legacy/EVAS 提交 6cb6fa7a），待 Spectre 复跑：存档的 165 条旧版波形用改后的 checker 重判（全部行与只用网格行，共 330 次），判决与改前逐个相同。网表本轮写入了标准审核定的容差行，`Vvref` 补了 `type=dc`；旧版 EVAS 不理会容差参数。

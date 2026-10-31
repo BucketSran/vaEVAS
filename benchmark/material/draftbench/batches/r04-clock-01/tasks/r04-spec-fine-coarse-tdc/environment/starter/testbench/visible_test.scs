@@ -10,5 +10,6 @@ Vrst (rst 0) vsource type=pwl wave=[0 0 280n 0]
 
 XDUT (start stop ref_clk rst code_7 code_6 code_5 code_4 code_3 code_2 code_1 code_0 valid overflow) fine_coarse_tdc
 
-tran tran stop=280n maxstep=50p strobeperiod=50p
+simulatorOptions options reltol=1e-6 vabstol=1e-8 iabstol=1e-12
+tran tran stop=280n maxstep=50p strobeperiod=50p errpreset=moderate strobeoutput=strobeonly
 save start stop ref_clk rst code_7 code_6 code_5 code_4 code_3 code_2 code_1 code_0 valid overflow

@@ -60,3 +60,9 @@ Spectre 校准尚未进行。`mutants.py` 由 `solution/circuit.va` 生成具体
 能直接运行的 5 个候选（`discrete_update_at_clock`、`fixed_tau_100n`、`zero_initial_state`、`reset_restarts_filter`、`filter_frozen_in_reset`）在 4 个用例上的 20 次判定都与矩阵一致。旧版开发证据（EVAS 0.8.7，legacy/EVAS 提交 6cb6fa7a），待 Spectre 复跑；命令、退出码和逐例结果见 `runs/t3-p0-pilot-20261027/fix-r1/disposition.json`。旧版只给点值，不做可信证明，结果可能不准也不报错。
 
 探针 `probe_step_recursion_25p` 单独记账，同样是旧版开发证据，待 Spectre 复跑：fix-r1 的旧版运行（源码与现在逐字节相同）在 4 个固定用例上都接受它。fix-r2 在临时题包上加了三个越格输入控制，不进本题用例：探针在两个三角波控制上被拒（10 ns 误差 47.6 mV；三次采样为 47.6、129.6、196.7 mV），在孤立阶跃控制上通过；常数系数参考探针三个都通过。命令与结果见 `runs/t3-p0-pilot-20261027/fix-r2/disposition.json`。
+
+## 修正 r7b（2026-10-29）的台架检查
+
+题面合法域补一句：控制到达 `vth` 必定穿过、不触碰后返回。checker 对 `clk`、`rst` 加了台架检查：按用例网表的激励定义判（2026-10-30 修正 v417），起点恰在 `vth` 上、停在 `vth` 上或触碰后返回都抛出异常，记作 checker_error，不判分，也不算候选失败。固定用例的控制都完整切换，上面的候选矩阵、探针记账与 `expected.json` 不变。
+
+旧版开发证据（EVAS 0.8.7，legacy/EVAS 提交 6cb6fa7a），待 Spectre 复跑：存档的 66 条旧版波形用改后的 checker 重判（全部行与只用网格行，共 130 次），判决与改前逐个相同。网表本轮写入了标准审核定的容差行，旧版 EVAS 不理会这些参数。

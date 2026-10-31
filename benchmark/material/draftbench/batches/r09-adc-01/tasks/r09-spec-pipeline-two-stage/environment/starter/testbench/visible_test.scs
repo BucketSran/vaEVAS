@@ -10,5 +10,6 @@ Vvalid (valid_i 0) vsource type=pwl wave=[0 0 4n 0 4.05n 0.5 4.1n 0.9 20n 0.9 20
 
 XDUT (vin clk rst valid_i code_3 code_2 code_1 code_0 valid_o residue_dbg) pipeline_adc_two_stage
 
-tran tran stop=402n maxstep=50p strobeperiod=50p
+simulatorOptions options reltol=1e-6 vabstol=1e-8 iabstol=1e-12
+tran tran stop=402n maxstep=50p strobeperiod=50p errpreset=moderate strobeoutput=strobeonly
 save vin clk rst valid_i code_3 code_2 code_1 code_0 valid_o residue_dbg

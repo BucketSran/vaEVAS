@@ -9,5 +9,6 @@ V_CLK (clk 0) vsource type=pwl wave=[0 0 1.99n 0 2.01n 0.9 2.49n 0.9 2.51n 0 3.9
 V_IN (vin 0) vsource type=pwl wave=[0 0.3 0.6n 0.3 0.8n 0.55 2.05n 0.55 2.13n 0.75 2.3n 0.75 2.4n 0.15 4.05n 0.15 4.35n 0.55 5n 0.55 5.5n 0.05 6.1n 0.05 6.15n 0.65 6.3n 0.65 6.38n 0.85 6.6n 0.85 6.8n 0.4 8n 0.4 8.5n 0.2 9.04n 0.2 9.12n 0.6 9.6n 0.6 10.4n 0.1 11n 0.1 11.5n 0.7 12n 0.7]
 XDUT (vdd vss clk vin vout) aperture_sample_hold
 
-tran tran stop=12n maxstep=2p strobeperiod=2p
+simulatorOptions options reltol=1e-6 vabstol=1e-8 iabstol=1e-12
+tran tran stop=12n maxstep=2p strobeperiod=2p errpreset=moderate strobeoutput=strobeonly
 save vdd vss clk vin vout

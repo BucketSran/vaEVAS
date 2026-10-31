@@ -2,7 +2,7 @@
 
 ## 行为依据
 
-规划候选身份：`task_id` C109-S1，`unit_id` C109，`case_anchor` C109，来源 `src-be0280f398f5`，`primary_ref` C109，动作 S（spec-modeling），家族 R09，优先级 P0，结构难度 H，建设成本 M。登记见规划登记（`benchmark/material/draftbench/planning/history-candidates/register.json`）中的 C109-S1 条目，来源身份见同目录 sources.json（`benchmark/material/draftbench/planning/history-candidates/sources.json`），规划说明见候选说明（`benchmark/material/draftbench/planning/history-candidates/CANDIDATES.md`）。登记要求：
+规划候选身份：`task_id` C109-S1，`unit_id` C109，`case_anchor` C109，来源 `src-be0280f398f5`，`primary_ref` C109，动作 S（spec-modeling），家族 R09，优先级 P0，结构难度 H，建设成本 M。登记见[规划登记](../../../../planning/history-candidates/register.json)中的 C109-S1 条目，来源身份见同目录 [sources.json](../../../../planning/history-candidates/sources.json)，规划说明见[候选说明](../../../../planning/history-candidates/CANDIDATES.md#c109-s1)。登记要求：
 - reuse：四位 SAR 试位、保持样本、CDAC 公式和 done 输出；
 - author_work：补忙时 start、同刻 start/clk/reset 及 `vss` 非零时的转换参考；固定监测口在试位前后的含义；
 - difference：真实模块间的转换反馈，不只是生成试位；
@@ -153,7 +153,7 @@
       - `zero-plateau-vss`：空闲时的复位脉冲，start 后一次 `x = vss` 的转换（码 0），完成后还有一个空闲时钟沿。顶层内部比较器两输入从 t = 0 起都是 `vss`，差值为 0，采样沿后直接走向负侧；`sample_dbg` 一直是 `vss`；
       - `zero-plateau-from-below`：0.60 V 的转换判完一位后被复位放弃，差值从负侧回到 0；随后一次 `x = vss` 的转换（码 0），差值再从零平台走向负侧；
       - `zero-plateau-from-above`：0.60 V 的转换（码 10）完成后 start，再在武装中、下一个时钟沿前 3 ns 复位，差值从正侧回到 0；随后再一次 0.60 V 的转换（码 10），差值从零平台走向正侧且 `x >= DAC(8)`。
-    前八例由 build_cases.py 生成，生成时断言台架义务，并用独立的合同模型核对每次转换的结果。零平台三例取自 Spectre 小探针 `spectre-P0probe-C109-v1` 的网表，只删去 save 语句里的三个内部名，其余逐字节不变，网表按标准线网表约定清单 v3 的“必须”一档写了容差、`errpreset` 与 `strobeoutput`（p0-fix-e 的 build_zero_plateau_cases.py（`runs/t3-p0-build-20261027/p0-fix-e/scripts/build_zero_plateau_cases.py`））。
+    前八例由 build_cases.py 生成，生成时断言台架义务，并用独立的合同模型核对每次转换的结果。零平台三例取自 Spectre 小探针 `spectre-P0probe-C109-v1` 的网表，只删去 save 语句里的三个内部名，其余逐字节不变，网表按标准审核网表约定清单 v3 的“必须”一档写了容差、`errpreset` 与 `strobeoutput`（p0-fix-e 的 build_zero_plateau_cases.py（`runs/t3-p0-build-20261027/p0-fix-e/scripts/build_zero_plateau_cases.py`））。
 11. checker（[verify.py](tests/verify.py)）不读候选源码或参考解：
     - 顶层用例按公开规则从记录的输入推出每次转换、每个输出的变化；模块用例分别推出四个模块的期望；t = 0 的初值必评；
     - 台架义务出错时抛出异常（无判决，不记候选失败）；
@@ -201,7 +201,7 @@ EVAS 结果只是开发证据，不是 EVAS 能力验收或校准。旧版只给
 - Spectre 上记录 `reset-recovery-long-tr` 中三次 `2*tr` 复位后首个时钟沿处 `sample_en` 的电平，确认参考解在复位恢复间隔下限处不再采样（p0u17-fix-r4 后三次复位在时钟沿前 `2*tr` 加 9.375 ps）；p0u17-fix-r5 起 start 脉冲 B 已退回原位，38.225 ns 处它启动的控制器过渡恰在复位上升穿越上结束，这处第 (i) 类平局一并记录（见“2026-10-29 修正 r5”一节第 0 条）；
 - Spectre 上复跑顶层内部比较差值恰为 0 的三种情形（p0-fix-c，审核 R2-04；推导见 p0-fix-c 一节第 3 条）：参考解从零出发（五个顶层用例的 t = 0）；复位回零后再离开（`base` 319.345–340.045 ns，`busy-reset` 153.845–171.045、195.845–213.045、258.845–325.045 ns，`vss-override` 173.704–189.0225 ns，`reset-recovery-long-tr` 93.725–130.225 ns、159.725 ns 到记录结束）；同侧返回（`reset-recovery-long-tr` 39.225–52.225 ns，正→0→正）。记录参考解比较器 `cross()` 在这些零点的事件、平台期间的 `cmp_o`，以及其后第一个判决沿的读数。（p0-fix-e 更新：换入前比较器的零点事件已由探针预读实测；换入后的参考解按电平判定，判决不依赖零点事件，这一项随下面的 D2 校准记录平台前后 `cmp` 的翻转即可。）
 - Spectre 上记录 `modules-override` 两处第 (i) 类平局（52.0225 ns、92.1225 ns）的事件（p0-fix-c 一节第 6 条；p0-fix-d 按定稿平局判据复核仍为第 (i) 类）。p0u17-fix-r4 为合法域平局把沿前的 start 挪早 25 ps、把沿后 start 之前的空闲时钟沿挪早 2.5 ps 后，52.0225 ns 的这一处不再存在；92.1225 ns 采样保持的过渡终点碰上另一实例 start（第 3 种情形）仍在，这一项只剩它；
-- C109 小探针 `spectre-P0probe-C109-v1`（p0-fix-d，审核 R3-01；本线自用，不进题包）：**已预读**（Spectre 21.1，结果包 `结果包（私有）`，sha256 `2c4e79eb…`；suite v1.5 的 verify_return 核对为 identity-verified，18 个作业 completed，证据 clean）。正式核收待 Spectre 线核对脚本的 r5 审核通过（2026-10-29 已正式核收，执行身份 `spectre-P0probe-C109-v1（结果包 sha256 2c4e79eb7fa60d24…）`，见“2026-10-29 修正 r4”一节的现状）。结论与记录路径见 p0-fix-e 一节第 1 条；网表、用例与清单在 spectre-probe（`runs/t3-p0-build-20261027/p0-fix-d/spectre-probe/README.md`）；
+- C109 小探针 `spectre-P0probe-C109-v1`（p0-fix-d，审核 R3-01；本线自用，不进题包）：**已预读**（Spectre 21.1，结果包 `结果包（私有）`，sha256 `2c4e79eb…`；suite v1.5 的 verify_return 核对为 identity-verified，18 个作业 completed，证据 clean）。正式核收待 Spectre 对照方核对脚本的 r5 审核通过（2026-10-29 已正式核收，执行身份 `spectre-P0probe-C109-v1（结果包 sha256 2c4e79eb7fa60d24…）`，见“2026-10-29 修正 r4”一节的现状）。结论与记录路径见 p0-fix-e 一节第 1 条；网表、用例与清单在 spectre-probe（`runs/t3-p0-build-20261027/p0-fix-d/spectre-probe/README.md`）；
 - 换入后的参考解（`solution/circuit.va`，sha256 `917b96e9…`）与新用例（零平台三例）在 D2 按新身份校准：参考解在十一个私有用例与两个公开用例上通过 checker；46 个校准候选按新的 `expected.json` 比对，其中 `comparator_cross_latch`、`comparator_initial_high` 在零平台三例上被拒取决于到达规则（探针预读已证实）。记录每例的 Spectre 用时（探针每例约 60 s，其中 Verilog-A 编译约 57 s）；
 - 样板第4a节的待发事件：参考解没有待发事件（`transition` 延迟为 0，也没有定时器），这一项对参考解不适用。Spectre 运行时仍记录：
   - `transition()` 被打断时的完成方式：控制器用例中 start 在时钟沿前 100 ps，`sample_en` 的上升过渡被采样沿打断（p0u17-fix-r4 后 `modules-default` 为沿前 150 ps，`tr = 200 ps` 时仍被打断；`modules-override` 为沿前 125 ps，长于 `tr = 100 ps`，不再被打断）；
@@ -226,7 +226,7 @@ EVAS 结果只是开发证据，不是 EVAS 能力验收或校准。旧版只给
 
 ## p0-fix-c 修正（2026-10-28）
 
-依据是 P0 铺开六题的增量复审 r2（astra-review.json（`runs/t3-p0-build-20261027/review-p0-r2/astra-review.json`））的 R2-01、R2-03、R2-04 的题包部分与 F02、F09 的剩余部分，主控 2026-10-28 对清单第 38 项的安排，以及 p0-fix-c 的精确有理数平局扫描。R2-04 的决定卡部分由主控改。改动文件改前、改后的 sha256，复现脚本、命令与结果见 p0-fix-c 处置记录（`runs/t3-p0-build-20261027/p0-fix-c/disposition.md`）。参考解与公开用例、公开台架都没有改。本节的检查都**未仿真**：没有运行 Spectre；旧版结果是旧版开发证据（EVAS 0.8.7，legacy/EVAS 提交 6cb6fa7a），待 Spectre 复跑。
+依据是 P0 铺开六题的增量复审 r2（astra-review.json（`runs/t3-p0-build-20261027/review-p0-r2/astra-review.json`））的 R2-01、R2-03、R2-04 的题包部分与 F02、F09 的剩余部分，Benchmark 维护方 2026-10-28 对清单第 38 项的安排，以及 p0-fix-c 的精确有理数平局扫描。R2-04 的决定卡部分由Benchmark 维护方改。改动文件改前、改后的 sha256，复现脚本、命令与结果见 p0-fix-c 处置记录（`runs/t3-p0-build-20261027/p0-fix-c/disposition.md`）。参考解与公开用例、公开台架都没有改。本节的检查都**未仿真**：没有运行 Spectre；旧版结果是旧版开发证据（EVAS 0.8.7，legacy/EVAS 提交 6cb6fa7a），待 Spectre 复跑。
 
 1. 终点事件（R2-01）。p0-fix-b 的写法丢掉记录末尾单个恰在阈值上的行，终点处到达的事件就没有不评分窗。在修正前的字节上复现：独立 DAC 从码 0 起步，`cb_3` 在最后一行（10 ns）从下方恰到 0.45 V，`cdac_o`、`cdac_dbg` 在这一行立即到 0.45 V，被拒 0.45 V；p0-fix-b 之前的写法接受它。现改为六题统一的穿越规则（第 11 条），这条输出通过，提前 1 ns 改变的输出仍被拒。终点事件照样受间隔约束：与另一位的穿越相隔 55 ps（既不同刻也不足 100 ps）时报台架错误，105 ps 时照常评分。公开、私有 checker 同时改，逐字节相同；`crossings()` 的函数文本六题相同。
 2. 【第 38 项，已按推荐写入；用户 2026-10-29 已确认，即决定单第 4 项的 A 收窄版】外部驱动的逻辑输入与比较器单测的输入差，到达门限时必定穿过。题面合法输入第一条在“at t = 0 each is at least 50 mV away from `vth`.”之后加一句：“Each of them that reaches `vth` always crosses it; it never touches `vth` and returns to the same side.”；比较器单测一条加“always crosses 0 when it reaches 0 (it never touches 0 and returns to the same sign)”。“不停在门限上”和起始余量原已写明，不重复；比较器输入差的起始余量仍是原有的 5 mV，没有改成 50 mV。checker 不变。这句不约束顶层内部的比较差值，见第 3 条。另一种读法（决定卡 B）：按 Spectre 的到达语义，把触碰算作一次事件，方向取到达方向，撤回 F02 修正并写进题面；这样按电平比较写的实现遇到触碰会被判错，六题 checker 都要改回并重新校准。读法 C：维持现状，题面不写，合法域对触碰沉默。
@@ -242,34 +242,34 @@ EVAS 结果只是开发证据，不是 EVAS 能力验收或校准。旧版只给
    - 新的分析记录 r2-03-cdac-reversed.json（`runs/t3-p0-build-20261027/p0-fix-c/evidence/r2-03-cdac-reversed.json`）：与旧版存档的 VA 波形（八个用例，另加 p0-fix-c 在挪动后的 `reset-recovery-long-tr` 上的新运行）逐行比较稳定评分行，修正后的控制最大差 2.2e-16 V（浮点舍入），p0-fix-b 的控制最大差 1.1 V。t = 0 与第一次码变后的值都与 VA 相同。
    - 所以 `expected.json` 去掉了该条目的 `author_synthetic_control_cases`，校准说明同步改写；VA 被拒矩阵和旧版原始证据都没有改。`sh_ignores_sample_en`、`sh_samples_in_reset` 的部分覆盖声明不变。
 5. `reset-recovery-long-tr` 的平局（p0-fix-c 精确有理数扫描）。武装中复位的那次 start 请求（B）在复位上升穿越前正好 `tr` = 1 ns：控制器由它启动的过渡（`sample_en` 上升、试位与码清零）正好在 38.225 ns 的复位上升穿越上结束，两者精确值只差 −22·2⁻⁸³ s；由此 DAC 的过渡终点又与内部 `sample_en` 的穿越同刻。用例要测的是复位恰在下一个时钟沿前 `2*tr`；start 离复位多远不是边界。
-   - 定类（主控 2026-10-28 定稿的口径）：两处都是第 (i) 类，迁就 EVAS，不是题目缺陷。checker 的期望只由记录的 `clk`、`rst`、`start` 穿越和 `vin` 算出（`tests/verify.py` 第 252–254 行取穿越，第 286–295 行由 `run_sar` 和理想 DAC 算期望）；38.225 ns 的复位改变 `sample_dbg` 的期望，但只取决于复位的穿越时刻，与它和控制器过渡终点谁先谁后无关。平局时刻落在码位 3、1 与 `done`（37.225 ns 起，到 38.475 ns）、`dac_dbg`（37.225 ns 起，到 39.725 ns）和 `sample_dbg`（38.225 ns 起，到 39.475 ns）的不评分窗内；38.725 ns 的内部同刻只涉及 `dac_dbg`，也在它的窗内。两种次序下参考解的波形相同。合成核对（tie-classification.json（`runs/t3-p0-build-20261027/p0-fix-c/evidence/tie-classification.json`））：在原用例上，合同波形通过；相关输出从平局时刻到窗口结束加 0.25 V 仍通过；窗口结束后加 0.25 V 被拒。
-   - p0-fix-d 按标准线定稿的平局判据（TIE-RULE）重新定类，结论仍是第 (i) 类，依据改为逐点核对两种次序：38.225 ns 的复位改写的是 `sample_en` 刚结束的上升斜坡的目标，方向相反，LRM 4.5.8 的中断规则下两种次序的波形相同；试位、码和 `done` 的目标不变，是过渡终点碰上不改写它的事件。上面按“平局时刻落在不评分窗里”的合成核对只看了期望变化的输出（审核 R3-02），由 p0-fix-d 一节第 1 条代替。
+   - 定类（Benchmark 维护方 2026-10-28 定稿的口径）：两处都是第 (i) 类，迁就 EVAS，不是题目缺陷。checker 的期望只由记录的 `clk`、`rst`、`start` 穿越和 `vin` 算出（`tests/verify.py` 第 252–254 行取穿越，第 286–295 行由 `run_sar` 和理想 DAC 算期望）；38.225 ns 的复位改变 `sample_dbg` 的期望，但只取决于复位的穿越时刻，与它和控制器过渡终点谁先谁后无关。平局时刻落在码位 3、1 与 `done`（37.225 ns 起，到 38.475 ns）、`dac_dbg`（37.225 ns 起，到 39.725 ns）和 `sample_dbg`（38.225 ns 起，到 39.475 ns）的不评分窗内；38.725 ns 的内部同刻只涉及 `dac_dbg`，也在它的窗内。两种次序下参考解的波形相同。合成核对（tie-classification.json（`runs/t3-p0-build-20261027/p0-fix-c/evidence/tie-classification.json`））：在原用例上，合同波形通过；相关输出从平局时刻到窗口结束加 0.25 V 仍通过；窗口结束后加 0.25 V 被拒。
+   - p0-fix-d 按标准审核定稿的平局判据（TIE-RULE）重新定类，结论仍是第 (i) 类，依据改为逐点核对两种次序：38.225 ns 的复位改写的是 `sample_en` 刚结束的上升斜坡的目标，方向相反，LRM 4.5.8 的中断规则下两种次序的波形相同；试位、码和 `done` 的目标不变，是过渡终点碰上不改写它的事件。上面按“平局时刻落在不评分窗里”的合成核对只看了期望变化的输出（审核 R3-02），由 p0-fix-d 一节第 1 条代替。
    - **第 (i) 类，待用户确认是否退回。** 退回时只恢复 start 脉冲 B 的六个角点时刻（上升穿越 36.975 → 37.225 ns，下降穿越 37.725 → 37.975 ns），保留之后加的全部用例与改动（p0-fix-e 的零平台三例，p0u17-fix-r4 的设计余量）。不要拿 `runs/t3-p0-build-20261027/p0-fix-c/orig/r09-spec-sar-adc-system/tests/cases.json` 整份覆盖：那份只有八例，会删掉零平台三例，也会撤掉 p0u17-fix-r4 的余量。退回脚本、对现行字节应用后的 sha256 与核对见“2026-10-29 修正 r4”一节第 3 条（p0u17-fix-r4 按审核 R4-03 改写本句；原句要求整份退回）。题面推荐 A 的 `instruction.md` 单文件退回是另一回事，见 p0-fix-e 一节第 3 条。2026-10-29 已按用户决定退回（决定单第 1 项），见“2026-10-29 修正 r5”一节第 0 条。
    - 改法：start 脉冲 B 整体提前一个 250 ps 网格步，上升穿越 36.975 ns、下降穿越 37.725 ns，网格相位不变。只挪上升沿会让过渡终点落在原来的下降穿越上，所以下降一起挪。复位、时钟和其余输入不变。生成脚本是 p0-fix-c 的 build_cases.py 副本，断言全部台架义务并用独立合同模型核对结果。
    - 核对：三次复位仍正好在时钟沿前 `2*tr`；转换结果仍为 10、5、15；迟到可见性仍为 46/46，1.3·tr 负例在 36.975 ns 这次变化上超出 17.3 mV，1.2·tr 窗内对照通过。（p0u17-fix-r4 后三次复位在时钟沿前 `2*tr` 加 9.375 ps，其余核对结果不变，见该节。）
 6. `modules-override` 的两处平局来自刻意测的边界，没有挪（p0u17-fix-r4 已按合法域平局的裁定挪开，见“2026-10-29 修正 r4”一节第 1 条）。控制器单测的 start 在时钟沿前、后正好 100 ps（合同下限），而本例 `tr = 100 ps`：
    - 52.0225 ns：51.9225 ns 的 start 请求启动的控制器输出过渡，正好在 52.0225 ns 的 `ct_clk`（同一时刻还有 `sh_clk`）上升穿越上结束，精确差 −69/8·2⁻⁸³ s；
    - 92.1225 ns：采样保持在 92.0225 ns 的时钟沿采样，它的输出过渡正好在 92.1225 ns 的 `ct_start` 上升穿越上结束，精确差 443/8·2⁻⁸³ s，这是两个独立实例之间的同刻。
-   按主控 2026-10-28 定稿的口径，两处都是第 (i) 类：每个实例的期望只由它自己的输入算出，平局时刻落在相关输出的不评分窗内（控制器各输出 51.9225 ns 起到 52.0475 ns，时钟沿使 `ct_en`、`ct_t3` 另开 52.0225 ns 起的窗；采样保持 92.0225 ns 起到 92.1475 ns，start 使控制器各输出另开 92.1225 ns 起的窗），合成核对同第 5 条。按口径不挪，也不用停下；这两个时间点列为 Spectre 记录项（见待办）。p0-fix-d 按定稿判据复核：52.0225 ns 的时钟沿改写 `ct_en`、`ct_t3` 刚结束的斜坡的目标，方向相反，两种次序波形相同；92.1225 ns 是采样保持的过渡终点碰上另一实例的 start，不是先后之争；仍是第 (i) 类，不挪（p0-fix-d 一节第 1 条）。
+   按Benchmark 维护方 2026-10-28 定稿的口径，两处都是第 (i) 类：每个实例的期望只由它自己的输入算出，平局时刻落在相关输出的不评分窗内（控制器各输出 51.9225 ns 起到 52.0475 ns，时钟沿使 `ct_en`、`ct_t3` 另开 52.0225 ns 起的窗；采样保持 92.0225 ns 起到 92.1475 ns，start 使控制器各输出另开 92.1225 ns 起的窗），合成核对同第 5 条。按口径不挪，也不用停下；这两个时间点列为 Spectre 记录项（见待办）。p0-fix-d 按定稿判据复核：52.0225 ns 的时钟沿改写 `ct_en`、`ct_t3` 刚结束的斜坡的目标，方向相反，两种次序波形相同；92.1225 ns 是采样保持的过渡终点碰上另一实例的 start，不是先后之争；仍是第 (i) 类，不挪（p0-fix-d 一节第 1 条）。
    事件与事件同刻的另做了扫描（event-pairs.json（`runs/t3-p0-build-20261027/p0-fix-c/evidence/event-pairs.json`），PWL 拐点不算事件）：同一模块内两个事件同刻的没有；其余是一方不是事件（如 `clk` 下降、`sample_en` 或 `ct_cmp` 的电平读取）、两个独立实例的事件同刻、合同要求同刻的 DAC 位，以及顶层内部同刻翻转的试位位（DAC 处理后的电平与次序无关，checker 按输入事件算 `dac_dbg`），都不是第 (ii) 类。
 7. 复核：
    - p0-fix-b 的 F02 对照 13 个在新 checker 上判决不变。
    - p0-fix-b 的合成控制副本：只换 checker 时与存档相比判决与误差 0 项变化；换上新用例后只有 `sample-cleared-at-start` 在 `reset-recovery-long-tr` 的误差由 465 mV 变为 600 mV（仍被拒）。p0-fix-c 的合成控制全部符合预期；与 p0-fix-b 存档相比，只有 `cdac-bit-order-reversed` 在五个顶层用例由通过变为被拒（第 4 条）。
    - 旧版 EVAS：参考解在全部私有与公开用例上通过（10/10，误差 0）；45 个校准候选在 `reset-recovery-long-tr` 上与被拒矩阵逐项一致（25 拒、20 接受）。
    - 建题以来的旧版存档波形（含 p0-fix-b 的 F03 探针）用新 checker 重判，判决与误差 0 项变化。
-8. 第 38 项的三个前提（主控 2026-10-28 定的口径，也作复审口径）：
+8. 第 38 项的三个前提（Benchmark 维护方 2026-10-28 定的口径，也作复审口径）：
    - 内部恰为零（p0-fix-d 按审核 R3-04 改写，原文删去了由旧版平台和有理数重建推出的 LRM 保证）：
      - 代数：码为 0 时 DAC 的目标值 `vss + (vref - vss)*0/16.0`（`solution/circuit.va` 第 34 行）乘以整数 0 得精确的 0，加到 `vss` 上仍是 `vss`，与采样保持在 `initial_step` 和 `rst` 上升时赋的 `held = vss`（第 74–75 行；p0-fix-e 换入后为第 75–76 行）精确相等。这一点成立。
-     - 节点：比较器读的是两个经 `transition()`、由求解器解出的 electrical 节点。它们的差在任何 LRM 允许的求值方式下是否都逐位为 0，没有证明：LRM 按容差判收敛，不保证两个目标值相同的贡献在节点上读出逐位相等；p0-fix-c 的精确有理数模型在过渡结束时直接取目标值，是把待证的性质当作了前提。**未满足，待 Spectre 核对**：小探针保存 `XDUT.held` 与 `XDUT.dac`，打包时加的 `precision="%.17g"` 能看出两者是否逐位相等。（p0-fix-e 补：Spectre 21.1 探针预读中，六个用例、两份参考解的全部平台行上 `XDUT.held − XDUT.dac` 逐位为 0，两列逐位相同；层次名照写取到。这是预读，正式核收待 Spectre 线 r5。）
+     - 节点：比较器读的是两个经 `transition()`、由求解器解出的 electrical 节点。它们的差在任何 LRM 允许的求值方式下是否都逐位为 0，没有证明：LRM 按容差判收敛，不保证两个目标值相同的贡献在节点上读出逐位相等；p0-fix-c 的精确有理数模型在过渡结束时直接取目标值，是把待证的性质当作了前提。**未满足，待 Spectre 核对**：小探针保存 `XDUT.held` 与 `XDUT.dac`，打包时加的 `precision="%.17g"` 能看出两者是否逐位相等。（p0-fix-e 补：Spectre 21.1 探针预读中，六个用例、两份参考解的全部平台行上 `XDUT.held − XDUT.dac` 逐位为 0，两列逐位相同；层次名照写取到。这是预读，正式核收待 Spectre 对照方 r5。）
      - 第 38 项前提 1 对本题的状态（p0-fix-e 更新）：Spectre 21.1 上平台差值逐位为 0（上一条），但 p0-fix-e 换入的修正版按电平判定，不再依赖这一点，符合执行细则。原写“**不成立（现有写法），改法待探针结果**”，说的是换入前的比较器：即使节点恰为零，`cross()` 型比较器在零平台上向负侧离开时，按到达规则也不触发，合法输入会判错（p0-fix-d 一节第 2 条），探针预读证实了判错。
-     - 执行细则（主控 2026-10-28 转标准线口径，也作复审口径）：内部信号恰为零时，参考解不得靠 `cross()` 去检出“离开零点”；要么用电平判定，要么在复位或初始时用电平判定设定状态。换入前的比较器（原件第 53–58 行）不符合；p0-fix-e 已换入按电平判定的修正版（现第 55–59 行），符合。
+     - 执行细则（Benchmark 维护方 2026-10-28 转标准审核口径，也作复审口径）：内部信号恰为零时，参考解不得靠 `cross()` 去检出“离开零点”；要么用电平判定，要么在复位或初始时用电平判定设定状态。换入前的比较器（原件第 53–58 行）不符合；p0-fix-e 已换入按电平判定的修正版（现第 55–59 行），符合。
      - 判决沿上的差值是 `x - DAC(T)`（`T` 至少为 1），合法域让它离 0 至少 3 mV；按电平判定的比较器在判决沿读到的就是这个差值的符号，与平台上差值是否逐位为 0 无关。
    - 相等规则写成输出行为：题面已按输出写明：比较器在 `V(sample_i) >= V(dac_i)` 时 `cmp_o` 为 1，相等时也是 1，t = 0 时同样按这条规则（`instruction.md` 第 23 行）；采样保持在 t = 0 和复位时为 `vss`（第 25 行）；控制器在 t = 0 和复位时空闲、`T = 0`、`R = 0`、`sample_en` 与 `done` 为低（第 30 行）；顶层在 `x >= DAC(T)` 时保留该位（第 38 行），`dac_dbg` 在复位和每次 start 之后为 `vss`（第 40 行）。换入前（p0-fix-e 之前）参考解的比较器在顶层内部恰为零的差值上用 `cross()`（原件第 54–56 行），依赖的是到达规则：到达 0 时按到达方向记一次事件，离开 0 不记，t = 0 的零由 `initial_step` 取 `>=`。这是 EVAS 自定的约定，与归档的 Spectre 记录一致。p0-fix-c 原写“可以接受”，p0-fix-d 按审核 R3-01 撤回：按这条规则，差值从零平台直接走向负侧时比较器不更新，合法输入会判错（例如零平台后第一次转换 `vin = vss`，得 15，合同为 0），见 p0-fix-d 一节第 2 条。也按这条规则，`reset-recovery-long-tr` 39.225–52.225 ns 从正侧到达 0 时比较器内部为 0（题面规则在相等时为 1）；这段没有判决，`cmp_o` 在顶层不被评分，第 3 条的推导表明全部判决沿与合同一致。p0-fix-e 换入按电平判定的比较器后，这些情形都按相等规则处理（相等时为 1），不再依赖到达规则；题面比较器一条的“事件”也按决定单第 13 项的推荐 A 改写（p0-fix-e 一节第 3 条）。
    - 末尾门限行：记录末尾单独一行恰在门限上时，按到达方向记一次事件（统一规则）。这与归档 Spectre 记录 [cross-boundaries-0.4.6.json](../../../../../../../experiments/backends/dvs2-spectre-validation/results/cross-boundaries-0.4.6.json) 中 `terminal_pos`、`terminal_neg` 在 stop 处到达时触发一次的观察一致，保留。
 
 ## p0-fix-d 修正（2026-10-28）
 
-依据是 P0 铺开六题的增量复审 r3（astra-review.json（`runs/t3-p0-build-20261027/review-p0-r3/astra-review.json`））的 R3-01 至 R3-04，主控 2026-10-28 的派发与补充：标准线定稿的平局判据（`runs/standard-line-20261028/rules/TIE-RULE.md`，sha256 `a4cf0e73…`，含第 4 种情形）、比较器的改法、本线的 Spectre 小探针。复现脚本、命令与结果，以及改动文件改前、改后的 sha256，见 p0-fix-d 处置记录（`runs/t3-p0-build-20261027/p0-fix-d/disposition.md`）。本轮只改了本文件：参考解、题面、用例、checker 和校准件都没有改。**未仿真**：没有运行 Spectre；旧版结果是旧版开发证据（EVAS 0.8.7，legacy/EVAS 提交 6cb6fa7a），待 Spectre 复跑。
+依据是 P0 铺开六题的增量复审 r3（astra-review.json（`runs/t3-p0-build-20261027/review-p0-r3/astra-review.json`））的 R3-01 至 R3-04，Benchmark 维护方 2026-10-28 的派发与补充：标准审核定稿的平局判据（`runs/standard-line-20261028/rules/TIE-RULE.md`，sha256 `a4cf0e73…`，含第 4 种情形）、比较器的改法、本线的 Spectre 小探针。复现脚本、命令与结果，以及改动文件改前、改后的 sha256，见 p0-fix-d 处置记录（`runs/t3-p0-build-20261027/p0-fix-d/disposition.md`）。本轮只改了本文件：参考解、题面、用例、checker 和校准件都没有改。**未仿真**：没有运行 Spectre；旧版结果是旧版开发证据（EVAS 0.8.7，legacy/EVAS 提交 6cb6fa7a），待 Spectre 复跑。
 
 1. 平局（审核 R3-02、R3-03），按定稿判据重扫、定类。
    - 扫描：精确有理数模型按参考解的完整事件链重建：控制器 → 试位位 → DAC 位事件 → DAC 斜坡，采样保持，内部差值到 0、过 0、离开 0，比较器事件 → `cmp` 斜坡 → 控制器在时钟沿读 `cmp`。`transition()` 被打断时按 LRM 4.5.8 的中断规则。网表数值按 binary64 读入，两种算法各扫一遍，此后精确运算。比较器按三种语义各扫一遍：甲，归档 Spectre 的到达规则；乙，只在变号时记事件；修正版的电平判定。修正 c 之前与现行的用例字节都扫。模型在八个用例上与旧版存档的参考解波形逐行相差不超过 2.5e-10 V。
@@ -295,38 +295,38 @@ EVAS 结果只是开发证据，不是 EVAS 能力验收或校准。旧版只给
      - 修正版在 17 个场景、两种语义下都给出合同码；现有用例没有这些情形，所以现有参考解在全部现有用例上通过。
    - 结论：按归档 Spectre 的到达规则，现有参考解对合法输入判错，这是参考解在评分后端上的问题，不是 EVAS 的问题。Spectre 在这一结构上的实际事件语义和两个节点是否逐位相等，由小探针实测（p0-fix-e 补：已预读，现有参考解按语义甲判错，平台上两节点逐位相等，见 p0-fix-e 一节第 1 条）。旧版 EVAS 0.8.7 上两种参考解在全部探针用例上都得合同码，层次化保存的内部节点读回全 0，不能代替 Spectre。
    - 修正版（ref-fixed/circuit.va（`runs/t3-p0-build-20261027/p0-fix-d/spectre-probe/ref-fixed/circuit.va`），与 `solution/` 同名同结构；p0-fix-d 时没有换入，p0-fix-e 已逐字节换入）：只改比较器，`cmp_o` 在每个时间点按电平 `V(sample_i) >= V(dac_i)` 给出，`cross()` 只在过零处放时间点；控制器、模块接口、题面和 checker 不变。理由：合同的模块划分里比较器就是“`V(sample_i) >= V(dac_i)` 时为 1”，控制器按读到的 `cmp` 定位；按电平判定后，每个判决沿读到的就是该沿差值的符号（合法域保证离 0 至少 3 mV），与差值是否从零出发、平台上是否逐位为 0、仿真器的零点语义都无关。合成控制：修正版在全部现有用例上的评分输出与现有参考解逐点相同；旧版 EVAS 上它通过全部私有与公开用例。
-   - 题面：改为电平判定不要求改合同。比较器一条写“事件是差值穿过 0”，又规定输出只在本模块列出的事件处变化；顶层内部差值离开零平台时，电平规则要 `cmp_o` 变化，而这不是穿越。建议的新文字与另一种读法列为待用户确认项，见 p0-fix-d 处置记录，由主控转总协调；本轮不改题面。（p0-fix-e：已按推荐 A 写入题面，见 p0-fix-e 一节第 3 条；用户 2026-10-29 已确认。）
+   - 题面：改为电平判定不要求改合同。比较器一条写“事件是差值穿过 0”，又规定输出只在本模块列出的事件处变化；顶层内部差值离开零平台时，电平规则要 `cmp_o` 变化，而这不是穿越。建议的新文字与另一种读法列为待用户确认项，见 p0-fix-d 处置记录，由Benchmark 维护方转项目协调方；本轮不改题面。（p0-fix-e：已按推荐 A 写入题面，见 p0-fix-e 一节第 3 条；用户 2026-10-29 已确认。）
    - 校准：换入修正版时，`mutants.py` 里依赖比较器原文的三个候选要改写（`comparator_polarity`、`comparator_initial_high`、`alt_gold_style_continuous`），其余 42 个候选文字只随比较器变化；p0-fix-d 的副本生成后，四个比较器候选在旧版 EVAS 上对八个私有用例的判决与 `expected.json` 逐项一致。现有比较器可作新的错误候选 `comparator_cross_latch`，它在现有用例上都通过，要靠新加的零平台用例（如探针的 `vin = vss`）拒绝，且被拒取决于后端的零点语义，`expected.json` 需加条件说明。
-   - 实测确认现有参考解判错时，主控另派一轮把修正版换进题包（第 (ii) 类题目修正），同步 `mutants.py`、`expected.json`，并加零平台用例；现有参考解若没错，修正版不采用。（这一轮就是 p0-fix-e，见 p0-fix-e 一节；上一条的校准改动也在其中。）
+   - 实测确认现有参考解判错时，Benchmark 维护方另派一轮把修正版换进题包（第 (ii) 类题目修正），同步 `mutants.py`、`expected.json`，并加零平台用例；现有参考解若没错，修正版不采用。（这一轮就是 p0-fix-e，见 p0-fix-e 一节；上一条的校准改动也在其中。）
 
 3. 内部恰为零（审核 R3-04）：见 p0-fix-c 一节第 8 条第一项的改写。代数上码 0 的目标值与 `vss` 精确相等；求解出的两个节点在任何 LRM 允许的求值方式下是否逐位为 0 没有证明，未满足，待 Spectre 核对。第 38 项前提 1 对本题的状态：不成立（现有写法），改法待探针结果。（p0-fix-e 更新：探针预读中两节点逐位相等；换入的修正版按电平判定，不再依赖这一点，见 p0-fix-c 一节第 8 条。）
 
 4. Spectre 小探针 `spectre-P0probe-C109-v1`（本线自用，不进题包）：六个用例，现有参考解与修正版各跑一遍。
    - 必做三例：`vin = vss`、`vss + 10 mV`（对照）、`vss - 10 mV`，都是复位后启动一次转换。
    - 补充三例：从负侧回到零平台后 `vin = vss`（区分语义甲、乙），从正侧回到零平台后 0.6 V，以及 `vss = 0.1 V` 的 `vin = vss`（看非零 `vss` 下两个节点是否逐位相等）。
-   - 网表按标准线网表约定清单的“必须”一档写容差、`errpreset`、`maxstep` 与 `strobeoutput`，`precision` 一行打包时再加；内部节点按 Spectre 的层次路径写 `XDUT.held`、`XDUT.dac`、`XDUT.cmp`。
+   - 网表按标准审核网表约定清单的“必须”一档写容差、`errpreset`、`maxstep` 与 `strobeoutput`，`precision` 一行打包时再加；内部节点按 Spectre 的层次路径写 `XDUT.held`、`XDUT.dac`、`XDUT.cmp`。
    - 每例在两种语义下的预期码和比较器输出时间线见探针目录的 `predictions.json`。
 
-## 主控补记（2026-10-28）
+## Benchmark 维护方补记（2026-10-28）
 
-本节由主控按总协调 2026-10-28 的要求写入，只改本文件。**未仿真**：没有运行 Spectre；旧版结果是旧版开发证据（EVAS 0.8.7，legacy/EVAS 提交 6cb6fa7a），待 Spectre 复跑。
+本节由Benchmark 维护方按项目协调方 2026-10-28 的要求写入，只改本文件。**未仿真**：没有运行 Spectre；旧版结果是旧版开发证据（EVAS 0.8.7，legacy/EVAS 提交 6cb6fa7a），待 Spectre 复跑。
 
 1. 旧版 EVAS 的通过不能当证据。现有参考解在旧版 EVAS 0.8.7 上通过全部用例（私有 8/8，连同公开 10/10，误差 0），在探针六例上也都得合同码。但旧版处理内部差值离开零平台的方式与归档 Spectre 的到达规则不同，效果相当于电平判定，正好掩盖了比较器 `cross()` 在零点上的问题：探针 `c109-probe-vss` 上旧版得 0，按到达规则应得 15（p0-fix-d 一节第 2 条）。所以本文件各处引用的旧版通过结果，只说明参考解在旧版上能运行、checker 能判分，不说明它在 Spectre 上正确；参考解对不对，以 Spectre 探针与 Spectre 校准为准。修正版按电平判定，不依赖零点语义，但它的旧版结果同样只是开发证据。
-2. 探针网表已由 Spectre 线核对（2026-10-28），按现状打包，不改。层次化保存名 `XDUT.held`、`XDUT.dac`、`XDUT.cmp` 的写法与 Verilog-A Reference 21.1 第 313–314 页一致（转述：内部节点用“实例名.节点名”）。结构化 Verilog-A 父模块内部的网能否取到，目前还没有 Spectre 记录，由批次 C 的对应项实测。取不到时，平台上两节点是否逐位相等先用顶层 `sample_dbg - dac_dbg` 判，并注明是代用量：`sample_dbg` 与 `held`、`dac_dbg` 与 `dac` 分别由参数相同的两个 `transition()` 驱动（`solution/circuit.va` 第 80–81 行、第 35–36 行）。
+2. 探针网表已由 Spectre 对照方核对（2026-10-28），按现状打包，不改。层次化保存名 `XDUT.held`、`XDUT.dac`、`XDUT.cmp` 的写法与 Verilog-A Reference 21.1 第 313–314 页一致（转述：内部节点用“实例名.节点名”）。结构化 Verilog-A 父模块内部的网能否取到，目前还没有 Spectre 记录，由批次 C 的对应项实测。取不到时，平台上两节点是否逐位相等先用顶层 `sample_dbg - dac_dbg` 判，并注明是代用量：`sample_dbg` 与 `held`、`dac_dbg` 与 `dac` 分别由参数相同的两个 `transition()` 驱动（`solution/circuit.va` 第 80–81 行、第 35–36 行）。
 
 ## 2026-10-29 修正（p0-fix-e，第 (ii) 类）
 
-依据是 Spectre 小探针的预读与主控 2026-10-29 的派发。改动文件改前、改后的 sha256，复现脚本、命令、退出码与结果见 p0-fix-e 处置记录（`runs/t3-p0-build-20261027/p0-fix-e/disposition.md`）。**未仿真**：本机没有 Spectre，本轮没有运行 Spectre 或模型；探针结果是 Spectre 21.1 预读（正式核收待 r5）；旧版结果是旧版开发证据（EVAS 0.8.7，legacy/EVAS 提交 6cb6fa7a），待 Spectre 复跑。
+依据是 Spectre 小探针的预读与Benchmark 维护方 2026-10-29 的派发。改动文件改前、改后的 sha256，复现脚本、命令、退出码与结果见 p0-fix-e 处置记录（`runs/t3-p0-build-20261027/p0-fix-e/disposition.md`）。**未仿真**：本机没有 Spectre，本轮没有运行 Spectre 或模型；探针结果是 Spectre 21.1 预读（正式核收待 r5）；旧版结果是旧版开发证据（EVAS 0.8.7，legacy/EVAS 提交 6cb6fa7a），待 Spectre 复跑。
 
-1. 依据：探针 `spectre-P0probe-C109-v1` 的 Spectre 21.1 预读，**预读，正式核收待 Spectre 线 r5**。
+1. 依据：探针 `spectre-P0probe-C109-v1` 的 Spectre 21.1 预读，**预读，正式核收待 Spectre 对照方 r5**。
    - 结果包 `结果包（私有）`，sha256 `2c4e79eb7fa60d245128a653bdcb757461e84f8c0f1ba366a29be3825b833665`。suite v1.5 的 verify_return 核对：identity-verified，18 个作业 completed，证据 clean。记录在 returns-preread-…（本地记录，未公开）：`verify-v1.5.json`，`score/score.json` 与 score.md（本地记录，未公开）。
    - 换入前的参考解：`vss`、`minus10mV`、`reset-from-below-vss`、`vss0p1-vss` 得码 15（合同 0），`reset-from-above-0p6` 第二次转换得 0（合同 10），checker 都判失败；`plus10mV` 得 0、通过。六例与语义甲（归档 Spectre 的到达规则）逐例一致，`XDUT.cmp` 的时间线也一致。
    - 修正版：六例都得合同码，checker 通过。
    - 平台上 `XDUT.held − XDUT.dac` 每行恰为 0；层次名照写取到；保底作业与主体作业的顶层波形逐行相同；没有 AHDL 定义域警告。
-   - 总协调的安排：确认判错，就按第 (ii) 类换入修正版，核收后再定稿。
+   - 项目协调方的安排：确认判错，就按第 (ii) 类换入修正版，核收后再定稿。
 2. 换了什么、为什么。
    - 参考解：`solution/circuit.va` 换成修正版，与 ref-fixed/circuit.va（`runs/t3-p0-build-20261027/p0-fix-d/spectre-probe/ref-fixed/circuit.va`） 逐字节相同（sha256 `917b96e972fdf5e600d3f5190668ee30f6a34c247776ec52ca58f58d6508eb04`），`solve.sh` 不变。只改比较器：`@(cross(V(sample_i) - V(dac_i), 0, 1p));` 只放时间点，`high = V(sample_i) >= V(dac_i);` 每个时间点求一次，输出照旧。理由见 p0-fix-d 一节第 2 条：合同里的比较器就是“`V(sample_i) >= V(dac_i)` 时为 1”，按电平判定后，每个判决沿读到的就是该沿差值的符号，与差值是否从零出发、仿真器的零点语义都无关。
-   - 行号：比较器上方的注释由一行变为三行、比较器本身少一行，所以比较器之后的行号加 1。前文各节引用的行号凡未注明的，指换入前的字节（原件在 `runs/t3-p0-build-20261027/p0-fix-e/orig/`）；例如主控补记第 2 条的第 80–81 行现为第 81–82 行，第 35–36 行不变。
+   - 行号：比较器上方的注释由一行变为三行、比较器本身少一行，所以比较器之后的行号加 1。前文各节引用的行号凡未注明的，指换入前的字节（原件在 `runs/t3-p0-build-20261027/p0-fix-e/orig/`）；例如Benchmark 维护方补记第 2 条的第 80–81 行现为第 81–82 行，第 35–36 行不变。
    - 校准候选：`tests/calibration/mutants.py` 照 p0-fix-d 的副本改写依赖比较器原文的三个候选（`comparator_polarity` 改为电平取反；`comparator_initial_high` 保留锁存写法、初值置 1；`alt_gold_style_continuous` 去掉比较器一段后同原来），新增错误候选 `comparator_cross_latch`，即换入前的比较器。生成的 46 个候选与 p0-fix-d 副本的输出逐字节相同。
    - 用例：`tests/cases.json` 末尾追加三个零平台私有用例，前八例逐字节不动：
 
@@ -355,20 +355,20 @@ EVAS 结果只是开发证据，不是 EVAS 能力验收或校准。旧版只给
    - 平局（TIE-RULE，含第 4 种）：零平台三例在两种 binary64 读法、三种比较器语义下都没有第 (ii) 类，不挪任何输入；参考解没有 `timer()`，也不读 `$abstime`。
    - 旧版 EVAS 0.8.7（旧版开发证据，legacy/EVAS 提交 6cb6fa7a，待 Spectre 复跑；`legacy_case.py`，标签 p0-fix-e）：参考解在十一个私有用例和两个公开用例上都通过，全部行与只用网格行都是 13/13；起始模型在两个公开用例上不能仿真（模块没有 analog 块），照实记录。46 个候选在十三个用例上共 598 次运行，与 `expected.json` 对照，全部行与只用网格行各 592 项一致、6 项不一致。不一致的 6 项全是 `comparator_cross_latch` 与 `comparator_initial_high` 在零平台三例上旧版通过，是旧版零点处理的掩盖（样板 r2.16 第 4 节第 4 条），不是矩阵或 checker 的问题；Spectre 预读已证实换入前的比较器在同样的激励上判错。没有只因旧版特有输出行而改变的判决。修正版的旧版通过不受这种掩盖影响，因为它按电平判定，但仍只是开发证据。
    - 结构与 Docker：`python3 -B scripts/benchmark_workbench.py --check --package <题包>` 退出码 0（implementation static checks passed）；两个镜像各实际构建一次（标签 p0-fix-e），七项检查全部通过，验证镜像里装入的参考解 sha256 为 `917b96e9…`。
-6. 运行时间（交主控）：探针每例在 Spectre 上约 60 s，其中 Verilog-A 编译约 57 s（每个用例在新的工作目录里重新编译）。按此估计，十一个私有用例约 11 分钟，超过 `task.toml` 的 `[verifier] timeout_sec = 600`；原八例约 8 分钟。运行时仍在 `pending`，本轮不改 `task.toml`。
+6. 运行时间（交Benchmark 维护方）：探针每例在 Spectre 上约 60 s，其中 Verilog-A 编译约 57 s（每个用例在新的工作目录里重新编译）。按此估计，十一个私有用例约 11 分钟，超过 `task.toml` 的 `[verifier] timeout_sec = 600`；原八例约 8 分钟。运行时仍在 `pending`，本轮不改 `task.toml`。
 
-## 主控补记（2026-10-29，验证超时）
-- 探针在 Spectre 21.1 上实测（预读，正式核收待 Spectre 线 r6）：18 个作业中位 60.6 s、最长 69.1 s，其中 Verilog-A 编译约 57 s，每个用例在新的工作目录里重新编译。
-- 十一个私有用例因此约 11–13 分钟，超过原来的验证超时 600 s。主控把 `task.toml` 的 `[verifier] timeout_sec` 从 600 改为 1800。只改运行时限，合同、用例与评分都不变。
+## Benchmark 维护方补记（2026-10-29，验证超时）
+- 探针在 Spectre 21.1 上实测（预读，正式核收待 Spectre 对照方 r6）：18 个作业中位 60.6 s、最长 69.1 s，其中 Verilog-A 编译约 57 s，每个用例在新的工作目录里重新编译。
+- 十一个私有用例因此约 11–13 分钟，超过原来的验证超时 600 s。Benchmark 维护方把 `task.toml` 的 `[verifier] timeout_sec` 从 600 改为 1800。只改运行时限，合同、用例与评分都不变。
 - 单例超时仍是 `tests/v2_runtime.py` 的缺省 120 s，是每例实测用时的 1.7 倍以上。
 - 让用例共用编译结果要改共用评分运行时，不在本题处理。
 - 改前原件在 runs/t3-p0-build-20261027/mainverify-p0-fix-e/orig/。
 
 ## 2026-10-29 修正 r4（p0u17-fix-r4，第 (ii) 类）
 
-依据：P0 两题增量合审 r4（astra-review.json（`runs/t3-p0-build-20261027/review-p0u17-r4/astra-review.json`），sha256 `a15a8704…`）的 R4-01、R4-02、R4-03，主控的 p0u17-fix-r4 brief，U15 fix-r5 的样本偏差裁定，样板 r2.26，网表约定清单第 4.2 版（`71ddb16a…`），平局判据 TIE-RULE.md（`a4cf0e73…`，另加平局规则 v2.1 的折点根与 pulse 角点）。改动文件改前、改后的 sha256，脚本、命令、退出码与结果见 p0u17-fix-r4 处置记录（`runs/t3-p0-build-20261027/p0u17-fix-r4/disposition.md`）。**未仿真**：本机没有 Spectre，本轮没有运行 Spectre 或模型；旧版结果是旧版开发证据（EVAS 0.8.7，legacy/EVAS 提交 6cb6fa7a），待 Spectre 复跑。题面、参考解、starter、`task.toml`、两份 checker 与 `mutants.py` 都没有改。
+依据：P0 两题增量合审 r4（astra-review.json（`runs/t3-p0-build-20261027/review-p0u17-r4/astra-review.json`），sha256 `a15a8704…`）的 R4-01、R4-02、R4-03，Benchmark 维护方的 p0u17-fix-r4 brief，U15 fix-r5 的样本偏差裁定，样板 r2.26，网表约定清单第 4.2 版（`71ddb16a…`），平局判据 TIE-RULE.md（`a4cf0e73…`，另加平局规则 v2.1 的折点根与 pulse 角点）。改动文件改前、改后的 sha256，脚本、命令、退出码与结果见 p0u17-fix-r4 处置记录（`runs/t3-p0-build-20261027/p0u17-fix-r4/disposition.md`）。**未仿真**：本机没有 Spectre，本轮没有运行 Spectre 或模型；旧版结果是旧版开发证据（EVAS 0.8.7，legacy/EVAS 提交 6cb6fa7a），待 Spectre 复跑。题面、参考解、starter、`task.toml`、两份 checker 与 `mutants.py` 都没有改。
 
-现状：Spectre 小探针 `spectre-P0probe-C109-v1` 的交回结果已于 2026-10-29 由 Spectre 线正式核收（suite v1.8，加 r8 两项未结 P1 的一次性核对；执行身份 `spectre-P0probe-C109-v1（结果包 sha256 2c4e79eb7fa60d24…）`，18 个作业，证据 clean；登记文件 `current/runs/spectre-returns-20261028/accepted/REGISTER.json`，sha256 `3764e9af088c11ff8379fcd9c9c4f37a5721eea732ca391351d6c09b8f82a4a0`）。预读用的是同一个结果包、同一执行身份，以前各节所说的预读结论由此定稿，那些段落的原文不改。
+现状：Spectre 小探针 `spectre-P0probe-C109-v1` 的交回结果已于 2026-10-29 由 Spectre 对照方正式核收（suite v1.8，加 r8 两项未结 P1 的一次性核对；执行身份 `spectre-P0probe-C109-v1（结果包 sha256 2c4e79eb7fa60d24…）`，18 个作业，证据 clean；登记文件 `current/runs/spectre-returns-20261028/accepted/REGISTER.json`，sha256 `3764e9af088c11ff8379fcd9c9c4f37a5721eea732ca391351d6c09b8f82a4a0`）。预读用的是同一个结果包、同一执行身份，以前各节所说的预读结论由此定稿，那些段落的原文不改。
 
 1. 合同下界上的合法性平局（审核 R4-01）。
    - 时序下界（`instruction.md` 第 47–49、53 行）：同一输入相邻穿越至少 100 ps；`clk` 相邻上升沿至少 4 ns；`rst`、`sample_en`、`cmp_i` 的穿越离 `clk` 上升沿至少 100 ps；start 的穿越离 `rst` 的穿越至少 100 ps；start 上升离 `clk` 上升至少 100 ps，顶层至少 `2*tr`；顶层复位恢复至少 `2*tr`；DAC 位或同刻穿越、或至少相隔 100 ps；比较器单测的差值相邻过零至少 1 ns。checker 遇到违例报台架错误，自带的余量只有相对 1e-6。
@@ -398,24 +398,24 @@ EVAS 结果只是开发证据，不是 EVAS 能力验收或校准。旧版只给
      - 转换结果与统计与挪动前相同；58 个合成控制的被拒集合与预期相同、前后不变（判决变化 0 项）；证据有效性控制 15/15；精确模型下参考解十一例都通过；
      - 平局：五个被挪用例在两种 binary64 读法、三种比较器语义下都没有第 (ii) 类；`modules-override` 52.0225 ns 的第 2、3 种情形消失，92.1225 ns 的第 3 种情形仍在；第 4 种不适用（参考解没有 `timer()`、`$abstime`）；没有根落在 PWL 折点上，本题不用 pulse 源。TIE-RULE.md 在本轮期间补了第 5 种（不同来源的两个事件只差 1 到 64 ulp，现行 sha256 `1fb0682f…`）：扫描把 10 zs 内的事件对都按两种次序求解过，本题时刻下 64 ulp 不超过 1.4e-20 s，10 zs 到 1 ps 之间最近的一对也相差 170 万 ulp 以上，第 5 种没有新增；
      - 旧版 EVAS 0.8.7：参考解与 46 个候选在五个私有用例、两个公开用例上 329 次运行，加起始模型 2 次（照旧 simulation_failed），全部行与只用网格行的判决都与 `expected.json` 一致，与 p0-fix-e 在挪动前字节上的运行逐项相同（331/331）；参考解最大误差 1.8e-12 V；1.3·`tr` 迟到负例只用网格行时被拒 17.3–23.1 mV，1.2·`tr` 窗内对照都通过；没有层次列全零、时间行去重或网格行改判。按样板第 4 节第 4 条核对零点掩盖：参考解按电平判定，不受影响；两个锁存候选在这五例按 `expected.json` 应被接受，它们的旧版通过不作 Spectre 证据。
-   - 1 mV、1 fs 的样本偏差模型下，下面三类合法性判定无法靠台架余量解决，本轮不改，交主控：DAC 位“同刻”（checker 取 1 fs，三个模块用例共 38 组同时变化的位在模型下可差 0.2 ps，会报台架错误）；`vin` 静止（0.25 mV，平的 `vin` 在各样本互不相关的 1 mV 偏差下可测得 2 mV 的变化）；恰等于模型上限、没有余裕的两处电压界（逻辑输入电平的 1 mV 容差，`sweep` 的 4 mV 码余量对 3 mV 下界）。（p0u17-fix-r5：DAC 位同刻改为写进题面的 1 ps；`vin` 静止与余裕为 0 的电压界由主控与总协调定为保留。见“2026-10-29 修正 r5”一节第 2、4 条。）
-2. checker 的“无变化”判定（审核 R4-02）：**停下交主控，本轮没有改 checker**，两份副本仍逐字节相同。（p0u17-fix-r5 已按清单第 4.9 版第 20 条处理：题面写明 δ = 0.1 mV，checker 用同一个 δ，见“2026-10-29 修正 r5”一节第 1 条。）
+   - 1 mV、1 fs 的样本偏差模型下，下面三类合法性判定无法靠台架余量解决，本轮不改，交Benchmark 维护方：DAC 位“同刻”（checker 取 1 fs，三个模块用例共 38 组同时变化的位在模型下可差 0.2 ps，会报台架错误）；`vin` 静止（0.25 mV，平的 `vin` 在各样本互不相关的 1 mV 偏差下可测得 2 mV 的变化）；恰等于模型上限、没有余裕的两处电压界（逻辑输入电平的 1 mV 容差，`sweep` 的 4 mV 码余量对 3 mV 下界）。（p0u17-fix-r5：DAC 位同刻改为写进题面的 1 ps；`vin` 静止与余裕为 0 的电压界由Benchmark 维护方与项目协调方定为保留。见“2026-10-29 修正 r5”一节第 2、4 条。）
+2. checker 的“无变化”判定（审核 R4-02）：**停下交Benchmark 维护方，本轮没有改 checker**，两份副本仍逐字节相同。（p0u17-fix-r5 已按清单第 4.9 版第 20 条处理：题面写明 δ = 0.1 mV，checker 用同一个 δ，见“2026-10-29 修正 r5”一节第 1 条。）
    - 用实数 `!=` 判“期望值是否改变”的地方：`tests/verify.py` 第 153 行（`run_sar` 的 `put`）、第 233 行（`distinct`）、第 369 行（`sample_hold` 分支）。`T`、`R`、`en`、`done` 与码是整数，`distinct` 只比较由整数码选出的 `vdd`/`vss` 电平，名义相等时 binary64 也相同，精确比较是对的（这些输出的最小合法变化是正的：DAC 码步 `(vref − vss)/16` ≥ 25 mV，逻辑电平 `vdd − vss` ≥ 0.5 V，门限在那里有空当，但不需要）；要门限的只有采样保持值（顶层 `sample_dbg`，模块 `sh_o`、`sh_dbg`）。
    - 门限的下限按 brief 是样本偏差在期望值上造成的最大差：两个名义相同的采样值每个偏 1 mV，可差 2 mV。上限是合同里最小的合法名义变化：合同对相邻两次采样值之差、对复位前样本离 `vss` 的距离都没有下限，任意小的名义变化都合法，上限为 0。上下限之间没有空当，按 brief 停下。
-   - 题面怎么写开窗（逐字核对）：第 55 行“Every saved point is scored, except points less than 1.25 times an output's deadline after an event that changes that output's expected value.”，期望值“are calculated with the rules above from the recorded inputs”；第 19 行规定每次改变期望值的事件后输出在期限内到达新值，“The waveform inside the deadline is not specified.”。题面对任何改变期望值的事件都承诺不评分窗，没有最小幅度。合同里又存在任意小的合法变化，所以任何正的门限都会少开题面承诺的窗，成为隐藏的评分规则（主控转述的 R01-02 同类问题）。按主控 2026-10-29 的补充，这一情况停下报主控，不改题面。
+   - 题面怎么写开窗（逐字核对）：第 55 行“Every saved point is scored, except points less than 1.25 times an output's deadline after an event that changes that output's expected value.”，期望值“are calculated with the rules above from the recorded inputs”；第 19 行规定每次改变期望值的事件后输出在期限内到达新值，“The waveform inside the deadline is not specified.”。题面对任何改变期望值的事件都承诺不评分窗，没有最小幅度。合同里又存在任意小的合法变化，所以任何正的门限都会少开题面承诺的窗，成为隐藏的评分规则（Benchmark 维护方转述的 R01-02 同类问题）。按Benchmark 维护方 2026-10-29 的补充，这一情况停下报Benchmark 维护方，不改题面。
    - 最小合法变化控制（r402_min_change.py（`runs/t3-p0-build-20261027/p0u17-fix-r4/scripts/r402_min_change.py`））：`zero-plateau-vss` 中让采样值比 `vss` 高 δ（`vin` 各行加 δ，合法），输出在 `tr` 内到达 `vss` + δ，另一份在期限内多一个 10 mV 的偏移（题面允许）。现行 checker 对 δ = 0.5 nV、0.5 µV、1.5 mV、5 mV 都开窗、都通过；门限 1 nV、1 µV、3 mV 的变体在 δ 小于门限时不开窗，拒绝期限内带偏移的合法输出。
-   - 证据（scratch 里的变体 checker，不进题包）：现行 checker 放过审核者的定向尖峰控制（`zero-plateau-vss`，`vin` 各行加 1e-12 V，12.05 ns 一行的 `sample_dbg` 加 10 mV）；门限 1 nV、1 µV、3 mV 的三个变体都拒绝它，正确波形在同样偏差下通过；三个变体在 58 个合成控制、精确模型与已核收 Spectre 结果包的重判上判决都不变（修正版四个作业通过，换入前参考解四个作业失败）。现台架里采样保持值最小的非零名义变化是 18.04 mV（`modules-override`）。可选做法与利弊在处置记录里，由主控定。
+   - 证据（scratch 里的变体 checker，不进题包）：现行 checker 放过审核者的定向尖峰控制（`zero-plateau-vss`，`vin` 各行加 1e-12 V，12.05 ns 一行的 `sample_dbg` 加 10 mV）；门限 1 nV、1 µV、3 mV 的三个变体都拒绝它，正确波形在同样偏差下通过；三个变体在 58 个合成控制、精确模型与已核收 Spectre 结果包的重判上判决都不变（修正版四个作业通过，换入前参考解四个作业失败）。现台架里采样保持值最小的非零名义变化是 18.04 mV（`modules-override`）。可选做法与利弊在处置记录里，由Benchmark 维护方定。
 3. 平局退回说明（审核 R4-03）：p0-fix-c 一节第 5 条已改写为只退回 start 脉冲 B。退回脚本 revert_start_b.py（`runs/t3-p0-build-20261027/p0u17-fix-r4/scripts/revert_start_b.py`），不应用。对现行最终字节（`tests/cases.json` sha256 `6e28af0801c0344cdbdee3b3a5e8ee080cdb398f25a4fad3879a2f2e5fad4e6d`）应用后得到的 `tests/cases.json` sha256 为 `c52a5942cd2fdf7f617a95b76859a7ef3f84439bfbb006b2df042c36ae7a58d2`。核对：只有 `reset-recovery-long-tr` 中 `Vstart` 一行的六个时刻不同，这一行与 p0-fix-c 原件逐字节相同；其余十例，以及该例的其余字段（本轮的余量、清单补行、用途），都与现行字节相同；全部下界仍有余量；F01 迟到可见性 46/46，合成控制与精确模型都符合预期；平局扫描重新出现 38.225 ns 的第 2、3 种情形，仍为第 (i) 类，没有第 (ii) 类。题面推荐 A 的 `instruction.md` 单文件退回是另一回事（p0-fix-e 一节第 3 条，备份 sha256 `0ff86ae5…` 已核过），两者互不影响。2026-10-29 已按用户决定退回（决定单第 1 项），见“2026-10-29 修正 r5”一节第 0 条。
-4. 样板 r2.26 新条目在改动处的核对（主控 `list41_scan.py` 的 `check(text)`，按清单第 4.2 版第 0.5 节）：改动的八份网表与其余六份都没有命中：跨行一律行尾反斜杠、LF 换行（本题网表都是单行语句，没有 CR）；没有同时写 `strobetimes` 与 `strobeperiod`（只用 `strobeperiod`）；容差不为 0；没有“指数加比例符号”的数。checker：完整性检查取最后一行、带容差（`tests/verify.py` 第 414 行，`abs(ts[-1] - case['stop']) > max(1e-15, case['stop'] * 1e-6)`），没有按“时间等于 stop”找行；评分逐行进行，穿越按相邻行插值，不依赖输出行落在哪个时刻。合成核对：`reset-recovery-long-tr` 的合同波形最后一行提前 6 ulp 仍通过，按两倍细的网格保存也通过。
+4. 样板 r2.26 新条目在改动处的核对（Benchmark 维护方 `list41_scan.py` 的 `check(text)`，按清单第 4.2 版第 0.5 节）：改动的八份网表与其余六份都没有命中：跨行一律行尾反斜杠、LF 换行（本题网表都是单行语句，没有 CR）；没有同时写 `strobetimes` 与 `strobeperiod`（只用 `strobeperiod`）；容差不为 0；没有“指数加比例符号”的数。checker：完整性检查取最后一行、带容差（`tests/verify.py` 第 414 行，`abs(ts[-1] - case['stop']) > max(1e-15, case['stop'] * 1e-6)`），没有按“时间等于 stop”找行；评分逐行进行，穿越按相邻行插值，不依赖输出行落在哪个时刻。合成核对：`reset-recovery-long-tr` 的合同波形最后一行提前 6 ulp 仍通过，按两倍细的网格保存也通过。
 5. 校准件：`mutants.py` 不变（46 个候选与 p0-fix-e 的输出逐字节相同）；`expected.json` 的被拒矩阵不变，`conditions` 里 `sample_en_cleared_at_next_edge`、`reset_recovery` 两条把“恰为 `2*tr`”改为“`2*tr` 加 9.375 ps 的设计余量”；校准 README 同步改两句。
 
 ## 2026-10-29 修正 r5（p0u17-fix-r5，第 (ii) 类）
 
-依据：主控的 p0u17-fix-r5 brief（`runs/t3-p0-build-20261027/briefs/p0u17-fix-r5.md`，sha256 `364bfcb7…`）与 05:42Z 的补充（同目录 `p0u17-fix-r5.steer-list410.md`，`94875695…`）；用户 2026-10-29 对决定单的答复（第 1 项退回原件，第 4 项触碰门限按 A 收窄版，第 13 项比较器事件按 A）；总协调同日的决定（两题照网表约定清单第 0.5 节第 20 条做，δ 取 0.1 mV，DAC 位同刻取有界值 1 ps，C109 全部用例补容差）；网表约定清单第 4.9 版（`f05138e7…`）与第 4.10 版（`e99f4ddb…`）；样板 r2.33（`f70e0850…`），本轮期间升到 r2.35（`d090ca15…`）；平局判据 TIE-RULE.md（`418d542a…`）；SL-DEC-20261029-05（`JUDGMENT-W2-S7S12-G400-L0A.md` 第 5 节，brief 给的 `10378745…`，补充后 `2b6b7d8e…`）；`JUDGMENT-FU2b.md`（`5691c10e…`）第 3、7 节。改动文件改前、改后的 sha256，脚本、命令、退出码与结果见 p0u17-fix-r5 处置记录（`runs/t3-p0-build-20261027/p0u17-fix-r5/disposition.md`）。**未仿真**：本机没有 Spectre，本轮没有运行 Spectre 或模型；旧版结果是旧版开发证据（EVAS 0.8.7，legacy/EVAS 提交 6cb6fa7a），待 Spectre 复跑；C109 探针结果 2026-10-29 已正式核收（执行身份 `spectre-P0probe-C109-v1（结果包 sha256 2c4e79eb7fa60d24…）`）。参考解、starter 的 `circuit.va`、`task.toml` 与 `mutants.py` 都没有改。
+依据：Benchmark 维护方的 p0u17-fix-r5 brief（`runs/t3-p0-build-20261027/briefs/p0u17-fix-r5.md`，sha256 `364bfcb7…`）与 05:42Z 的补充（同目录 `p0u17-fix-r5.steer-list410.md`，`94875695…`）；用户 2026-10-29 对决定单的答复（第 1 项退回原件，第 4 项触碰门限按 A 收窄版，第 13 项比较器事件按 A）；项目协调方同日的决定（两题照网表约定清单第 0.5 节第 20 条做，δ 取 0.1 mV，DAC 位同刻取有界值 1 ps，C109 全部用例补容差）；网表约定清单第 4.9 版（`f05138e7…`）与第 4.10 版（`e99f4ddb…`）；样板 r2.33（`f70e0850…`），本轮期间升到 r2.35（`d090ca15…`）；平局判据 TIE-RULE.md（`418d542a…`）；SL-DEC-20261029-05（`JUDGMENT-W2-S7S12-G400-L0A.md` 第 5 节，brief 给的 `10378745…`，补充后 `2b6b7d8e…`）；`JUDGMENT-FU2b.md`（`5691c10e…`）第 3、7 节。改动文件改前、改后的 sha256，脚本、命令、退出码与结果见 p0u17-fix-r5 处置记录（`runs/t3-p0-build-20261027/p0u17-fix-r5/disposition.md`）。**未仿真**：本机没有 Spectre，本轮没有运行 Spectre 或模型；旧版结果是旧版开发证据（EVAS 0.8.7，legacy/EVAS 提交 6cb6fa7a），待 Spectre 复跑；C109 探针结果 2026-10-29 已正式核收（执行身份 `spectre-P0probe-C109-v1（结果包 sha256 2c4e79eb7fa60d24…）`）。参考解、starter 的 `circuit.va`、`task.toml` 与 `mutants.py` 都没有改。
 
 0. 退回第 (i) 类平局挪动（决定单第 1 项，用户 2026-10-29 按推荐定“退回原件”）。
    - 对象：`reset-recovery-long-tr` 中 start 脉冲 B 的六个角点时刻（`Vstart` 一行）。p0-fix-c 为避开 38.225 ns 的平局把它提前了 250 ps，按平局判据属第 (i) 类。退回后上升穿越 37.225 ns、下降穿越 37.975 ns（退回前为 36.975、37.725 ns）。
-   - 做法：用修正 r4 备好的退回脚本（字节副本 revert_start_b.py（`runs/t3-p0-build-20261027/p0u17-fix-r5/scripts/revert_start_b.py`），sha256 `1ca4ea3d…`，与修正 r4 的原件相同）。输入为现行 `tests/cases.json`（`6e28af08…`），输出 `c52a5942cd2fdf7f617a95b76859a7ef3f84439bfbb006b2df042c36ae7a58d2`，都与预期相同。只有该例 `Vstart` 一行的六个时刻不同，这一行与 p0-fix-c 原件逐字节相同；该例的其余字段（修正 r4 的空闲沿余量、清单补行、用途）与其余十例都不变。写入题包用本轮带 `--check` 的 `c109_cases_r5.py`，反向编辑复现改前字节。退回记录在 revert.json（`runs/t3-p0-build-20261027/p0u17-fix-r5/revert/revert.json`），供主控转总协调，由 EVAS 更新 #270、#276 的公开说明。
+   - 做法：用修正 r4 备好的退回脚本（字节副本 revert_start_b.py（`runs/t3-p0-build-20261027/p0u17-fix-r5/scripts/revert_start_b.py`），sha256 `1ca4ea3d…`，与修正 r4 的原件相同）。输入为现行 `tests/cases.json`（`6e28af08…`），输出 `c52a5942cd2fdf7f617a95b76859a7ef3f84439bfbb006b2df042c36ae7a58d2`，都与预期相同。只有该例 `Vstart` 一行的六个时刻不同，这一行与 p0-fix-c 原件逐字节相同；该例的其余字段（修正 r4 的空闲沿余量、清单补行、用途）与其余十例都不变。写入题包用本轮带 `--check` 的 `c109_cases_r5.py`，反向编辑复现改前字节。退回记录在 revert.json（`runs/t3-p0-build-20261027/p0u17-fix-r5/revert/revert.json`），供Benchmark 维护方转项目协调方，由 EVAS 更新 #270、#276 的公开说明。
    - 核对（未仿真，照修正 r4 第 3 条的三项）：
      - 下界重扫：时序间隔离下界不到损失的 0 处，恰在下界上的 0 处；
      - F01：迟到可见性 46/46，首个评分行仍在 1.275·`tr`（`dac_dbg` 1.2625 倍期限），没有自己评分点的变化 0 次；58 个合成控制被拒集合与预期相同，判决变化 0；
@@ -461,9 +461,9 @@ EVAS 结果只是开发证据，不是 EVAS 能力验收或校准。旧版只给
    - 旧版 EVAS 0.8.7：参考解与 46 个候选在三例 141 次，全部行与只用网格行的判决都与 `expected.json` 一致；保存行与 p0-fix-e 在改前网表上的存档逐行相同（旧版接受这些容差但不使用）。
    - 三例的网表变了，参考解与校准候选要在 Spectre 上重跑，预校准包包含它们。
 4. 同步。
-   - 校准件：`tests/calibration/README.md` 与 `expected.json` 里 `comparator_cross_latch` 一条的探针状态，由“预读，正式核收待 Spectre 线 r5”改为“2026-10-29 已正式核收”，写明执行身份。被拒矩阵与候选不变。
+   - 校准件：`tests/calibration/README.md` 与 `expected.json` 里 `comparator_cross_latch` 一条的探针状态，由“预读，正式核收待 Spectre 对照方 r5”改为“2026-10-29 已正式核收”，写明执行身份。被拒矩阵与候选不变。
    - 第 38、41 项：建模选择第 7 条、待办、p0-fix-c 一节第 2 条、p0-fix-d 一节第 2 条与 p0-fix-e 一节第 3 条的“待用户确认”改为“用户 2026-10-29 已确认”（第 38 项 A 收窄版，第 41 项 A）。题面早已按推荐写入，不再改。
-   - 修正 r4 第 12 节其余几项，主控与总协调定为保留：
+   - 修正 r4 第 12 节其余几项，Benchmark 维护方与项目协调方定为保留：
      - `vin` 静止判定（采样沿前后 100 ps 内变化小于 0.25 mV）：vsource 直接驱动的节点读值逐位精确（FU-01d），1 mV 模型不适用，判定不改；
      - 余裕为 0 的电压界（逻辑输入 0–0.9 V 的 1 mV 容差，`sweep` 的 4 mV 码余量对 3 mV 下界）：1 mV 模型只是推余量用的保守模型，第 20 条的数值噪声下界（约 20 µV）远小于 1 mV，不改；
      - 相位锁定的间隔用整网格步（`modules-default` 沿前 start 150 ps、`modules-override` 125 ps）：不改；
@@ -474,33 +474,33 @@ EVAS 结果只是开发证据，不是 EVAS 能力验收或校准。旧版只给
    - 平局第 5 种：本轮改动的四例重扫（修正 r4 的 `c109_tie_r4.py`，现行 TIE-RULE）：10 zs 内的事件对都按两种次序求解（本题时刻下 64 ulp 不超过 4.2e-22 s）；10 zs 到 1 ps 之间只有 `modules-initial` 的 3 对：20.045 ns 比较器单测的过零（6 位小数的中间电平）比三位 DAC 输入晚 0.45 fs，两个实例互不相连，期望与次序无关；第 (ii) 类 0。
    - cross 返回根（SL-DEC-20261029-05 及 2b6b7d8e 的补充，return_roots_r5.py（`runs/t3-p0-build-20261027/p0u17-fix-r5/scripts/return_roots_r5.py`））：参考解的 `cross()` 都写了 time_tol = 1 ps。由台架驱动的表达式（顶层 `rst`、`clk`、`start`，模块的 `cb_k`、`sh_rst`、`sh_clk`、`ct_rst`、`ct_clk`、`ct_start`，比较器单测的差值）在全部用例中，相邻两根至少相隔约 500 ps（最小 499.99997 ps，`modules-override` 的 `ct_start`），两根之间 |expr| 的最大值至少 3 mV（比较器单测的差值；逻辑输入至少 100 mV，`vss-override` 只到 0.4 V 的脉冲对 0.3 V 门限）；expr_tol 按最宽的读法（reltol 取 options 与瞬态值中较大的 1e-6，信号最大值取全程 |expr| 的最大值）至多 0.65 µV。每一对都必须报两次，计数可以评分，没有落在框内的。顶层内部的 DAC 位输入是控制器的试位输出：八个顶层用例里没有一次试位斜坡在中途被改写（trial_retarget_scan.py（`runs/t3-p0-build-20261027/p0u17-fix-r5/scripts/trial_retarget_scan.py`）），两次穿越之间位都走到轨，同样必须报两次。顶层比较器的 `cross()` 只放时间点，输出按电平给出，计数不评分。
    - idt：参考解与 46 个候选都没有 `idt`。pulse：本题台架只用 PWL，没有 pulse 源。
-   - 整数操作数的 abs、min、max：主控粗扫 `intminmax-scan.json`（`95975f2d…`）在本题没有命中；参考解不用 abs、min、max。
-   - 主控 05:42Z 补充的两条：一次性 `timer()`：参考解与全部候选都没有 `timer()`，也不读 `$abstime`；`transition()` 的 td：参考解为 0，候选的 td 都是常数（0 或 0.2·`tr`），没有输入不变、只改 td 的写法。
+   - 整数操作数的 abs、min、max：Benchmark 维护方粗扫 `intminmax-scan.json`（`95975f2d…`）在本题没有命中；参考解不用 abs、min、max。
+   - Benchmark 维护方 05:42Z 补充的两条：一次性 `timer()`：参考解与全部候选都没有 `timer()`，也不读 `$abstime`；`transition()` 的 td：参考解为 0，候选的 td 都是常数（0 或 0.2·`tr`），没有输入不变、只改 td 的写法。
 6. 判决有变化的候选与控制。
    - VA 校准候选（旧版开发证据）：本轮 188 次运行与 `expected.json` 0 项不一致。存档的 611 次旧版波形用新 checker 重判（各按运行时的用例字节；423 次在现网表上，188 次在本轮改前的四例上），与记录的判决 0 项变化（全部行与只用网格行），新旧 checker 的判决逐项相同；与 `expected.json` 不一致的 6 项，仍是 p0-fix-e 起记录的零点掩盖（`comparator_cross_latch`、`comparator_initial_high` 在零平台三例的旧版通过）。
    - 合成控制：58 个模型 × 11 例的被拒集合与预期相同，新旧 checker 都如此；端点模型、F01 迟到可见性、证据有效性控制 15/15、精确模型（参考解十一例都通过；锁存候选在语义甲下零平台三例被拒，语义乙下只有 `zero-plateau-vss`），新旧 checker 逐项相同。
    - 判决改变的只有本轮加的对照，与设计一致：变化不超过 δ 而期限内有 10 mV 偏移的波形（改前通过，现在被拒）；审核者的尖峰（改前放过，现在被拒）；DAC 位相差 0.202–0.5 ps 与样本偏差控制（改前报台架错误，现在判分并通过）。
    - 已核收的探针结果包用新 checker 重判：修正版 4 个作业通过，换入前的 4 个作业失败，与改前相同。
-7. Spectre 预校准：网表变了的 `reset-recovery-long-tr`、`busy-reset`、`vss-override`、`modules-initial` 四例，参考解与 46 个候选（188 个作业）必须重跑。checker 改了 `sample_dbg`、`sh_o`、`sh_dbg` 的变化判定与 DAC 同刻，其余七例与两个公开用例的评分也受影响；现有的 Spectre 结果只有零平台三例的探针（已用新 checker 重判），所以全部十一例与两个公开用例都应在包里，参考解 13 个作业、候选在十一个私有用例上 506 个作业。包的范围由主控定。
-8. 交主控（本轮不改）：
-   - 合法域允许 `rst` 在时钟沿后 100 ps 上升，`tr` 大于 100 ps 时，复位可以在控制器的试位斜坡中途改写目标。若改写恰在某位斜坡到达 `vth` 的一刻，这一位只触到 `vth` 又返回：按合同 DAC 的码不变，而参考解的 DAC 用 `cross()` 锁存位值，按到达规则会在到达时置位、离开时不复位。这是第 38 项前提 1 同类的内部恰在门限上的情形，只在时刻精确重合时出现。现有八个顶层用例里没有中途改写，评分不受影响；终评若改激励，有可能碰到。是否收窄合法域（例如复位离此前的时钟沿至少 `tr`）或改 DAC 写法，由主控定。（总协调 2026-10-29 定收窄合法域，c109-fix-r6 已做，见“2026-10-29 修正 r6”一节第 1 条。）
+7. Spectre 预校准：网表变了的 `reset-recovery-long-tr`、`busy-reset`、`vss-override`、`modules-initial` 四例，参考解与 46 个候选（188 个作业）必须重跑。checker 改了 `sample_dbg`、`sh_o`、`sh_dbg` 的变化判定与 DAC 同刻，其余七例与两个公开用例的评分也受影响；现有的 Spectre 结果只有零平台三例的探针（已用新 checker 重判），所以全部十一例与两个公开用例都应在包里，参考解 13 个作业、候选在十一个私有用例上 506 个作业。包的范围由Benchmark 维护方定。
+8. 交Benchmark 维护方（本轮不改）：
+   - 合法域允许 `rst` 在时钟沿后 100 ps 上升，`tr` 大于 100 ps 时，复位可以在控制器的试位斜坡中途改写目标。若改写恰在某位斜坡到达 `vth` 的一刻，这一位只触到 `vth` 又返回：按合同 DAC 的码不变，而参考解的 DAC 用 `cross()` 锁存位值，按到达规则会在到达时置位、离开时不复位。这是第 38 项前提 1 同类的内部恰在门限上的情形，只在时刻精确重合时出现。现有八个顶层用例里没有中途改写，评分不受影响；终评若改激励，有可能碰到。是否收窄合法域（例如复位离此前的时钟沿至少 `tr`）或改 DAC 写法，由Benchmark 维护方定。（项目协调方 2026-10-29 定收窄合法域，c109-fix-r6 已做，见“2026-10-29 修正 r6”一节第 1 条。）
    - δ 的语义：本题与 U17 在变化不超过 δ 时让期望值保持原值（brief 要求只改“无变化”判定）；R01 三题的 checker 在这种变化时更新期望值、只是不开窗。两种写法各自与题面一致，但不统一；要统一须改变化列表与评分函数的结构。
-   - `crossings()` 判“某行恰在门限上”仍用精确比较。本题台架输入的网格行离门限至少 0.22 mV（比较器单测的差值），用 0.1 mV 的带宽也得到同样的穿越。是否按第 20 条改写，由主控定。
-   - 1 ps 对 1 mV 模型的倍数是 4.95，不是 10。若主控要求按 1 mV 模型取 10 倍，下界为 2.02 ps，可改取例如 5 ps（上界 50 ps），2 ps 的对照相应改为例如 10 ps。（总协调 2026-10-29 定 5 ps，c109-fix-r6 已改，见“2026-10-29 修正 r6”一节第 2 条。）
-   - 并组以一组里最早的穿越为准。相邻两次都不超过 1 ps、首尾超过 1 ps 的一串穿越（题面不合法）不会报台架错误，会被并成两组。这在改前（1 fs）就存在，现台架没有这种情形。（总协调 2026-10-29 定改为台架错误，c109-fix-r6 已加检查，见“2026-10-29 修正 r6”一节第 3 条。）
+   - `crossings()` 判“某行恰在门限上”仍用精确比较。本题台架输入的网格行离门限至少 0.22 mV（比较器单测的差值），用 0.1 mV 的带宽也得到同样的穿越。是否按第 20 条改写，由Benchmark 维护方定。
+   - 1 ps 对 1 mV 模型的倍数是 4.95，不是 10。若Benchmark 维护方要求按 1 mV 模型取 10 倍，下界为 2.02 ps，可改取例如 5 ps（上界 50 ps），2 ps 的对照相应改为例如 10 ps。（项目协调方 2026-10-29 定 5 ps，c109-fix-r6 已改，见“2026-10-29 修正 r6”一节第 2 条。）
+   - 并组以一组里最早的穿越为准。相邻两次都不超过 1 ps、首尾超过 1 ps 的一串穿越（题面不合法）不会报台架错误，会被并成两组。这在改前（1 fs）就存在，现台架没有这种情形。（项目协调方 2026-10-29 定改为台架错误，c109-fix-r6 已加检查，见“2026-10-29 修正 r6”一节第 3 条。）
 
 ## 2026-10-29 修正 r6（c109-fix-r6，第 (ii) 类与台架义务）
 
-依据：主控的 c109-fix-r6 brief，三项由总协调 2026-10-29 按主控意见定（合法域收窄、DAC 位同刻门限 5 ps、DAC 并组的台架检查）；主控同日的补充（已定项的状态行）；第 1 项另据决定单第 4 项的 A 收窄版与平局规则的同一原则（避开只在时刻精确重合时才出现的内部触碰）；网表约定清单第 4.10 版（`e99f4ddb…`）第 0.5 节第 20 条；样板 r2.37（`f180bd09…`）第 2、3 节；平局判据 TIE-RULE.md（`418d542a…`）。改动文件改前、改后的 sha256，脚本、命令、退出码与结果见 c109-fix-r6 处置记录（`runs/t3-p0-build-20261027/c109-fix-r6/disposition.md`）。**未仿真**：本机没有 Spectre，本轮没有运行 Spectre 或模型；旧版结果是旧版开发证据（EVAS 0.8.7，legacy/EVAS 提交 6cb6fa7a），待 Spectre 复跑；C109 探针结果 2026-10-29 已正式核收（执行身份 `spectre-P0probe-C109-v1（结果包 sha256 2c4e79eb7fa60d24…）`）。参考解、starter 的 `circuit.va`、`task.toml`、`cases.json` 与公开副本、公开 `.scs`、`mutants.py` 都没有改。
+依据：Benchmark 维护方的 c109-fix-r6 brief，三项由项目协调方 2026-10-29 按Benchmark 维护方意见定（合法域收窄、DAC 位同刻门限 5 ps、DAC 并组的台架检查）；Benchmark 维护方同日的补充（已定项的状态行）；第 1 项另据决定单第 4 项的 A 收窄版与平局规则的同一原则（避开只在时刻精确重合时才出现的内部触碰）；网表约定清单第 4.10 版（`e99f4ddb…`）第 0.5 节第 20 条；样板 r2.37（`f180bd09…`）第 2、3 节；平局判据 TIE-RULE.md（`418d542a…`）。改动文件改前、改后的 sha256，脚本、命令、退出码与结果见 c109-fix-r6 处置记录（`runs/t3-p0-build-20261027/c109-fix-r6/disposition.md`）。**未仿真**：本机没有 Spectre，本轮没有运行 Spectre 或模型；旧版结果是旧版开发证据（EVAS 0.8.7，legacy/EVAS 提交 6cb6fa7a），待 Spectre 复跑；C109 探针结果 2026-10-29 已正式核收（执行身份 `spectre-P0probe-C109-v1（结果包 sha256 2c4e79eb7fa60d24…）`）。参考解、starter 的 `circuit.va`、`task.toml`、`cases.json` 与公开副本、公开 `.scs`、`mutants.py` 都没有改。
 
-0. 已定项的状态（主控补充）。
-   - 总协调给出的对应：待确认清单第 35–37 项（建模选择第 3、4、5 条：忙时 start、同刻与复位规则、监测口与输出的含义）属决定单第 6 项；第 39 项（第 14 条：顶层复位恢复间隔 `2*tr`）属决定单第 5 项。用户 2026-10-29 都按推荐定。
+0. 已定项的状态（Benchmark 维护方补充）。
+   - 项目协调方给出的对应：待确认清单第 35–37 项（建模选择第 3、4、5 条：忙时 start、同刻与复位规则、监测口与输出的含义）属决定单第 6 项；第 39 项（第 14 条：顶层复位恢复间隔 `2*tr`）属决定单第 5 项。用户 2026-10-29 都按推荐定。
    - 改了的状态行（理由原文不动）：建模选择的引言加一句；第 3、4、5、14 条的“待用户确认 1–4”改为“已定（用户 2026-10-29，决定单第 N 项）”，并注明原标与清单编号；第 14 条“若用户选另一种读法”一句末尾注明这一改法不再适用；待办里“用户确认上面四个……”一条；p0-fix-b 一节的 F03 一条。校准 README 两处与 `expected.json` 的 `conditions.reset_recovery` 也写着第 39 项待确认，同步改为已定（第 4 条）。第 38、41 项上一轮已改，不动。逐处的原文与新文见处置记录。
 1. 合法域收窄：顶层用例中 `rst` 的上升穿越离此前的 `clk` 上升穿越至少 `tr`。
    - 起因：修正 r5 一节第 8 条第 1 点。原合法域只要求 `rst` 的穿越离 `clk` 上升穿越至少 100 ps；`tr` 大于 100 ps 时，复位可以在控制器的试位斜坡中途改写目标。改写若恰在某位到达 `vth` 的一刻，这一位只触到 `vth` 又返回：按合同 DAC 的码不变，参考解 DAC 的 `cross()` 锁存按到达规则却会在到达时置位、离开时不复位，`dac_dbg` 出错。
    - 依据：决定单第 4 项的 A 收窄版与平局规则的同一原则。只在时刻精确重合时才出现的内部触碰，由合法域避开，不靠模拟器的事件语义；参考解的 DAC 不改。
    - 题面：`instruction.md` 在复位恢复一条之后新加一条（第 50 行）：“When the top module is tested, every rising crossing of `rst` is at least `tr` after the preceding rising `clk` crossing. A reset therefore changes the controller's outputs, including the trial code that drives the DAC, only after they have reached the levels set at that clock edge.”
-   - 只约束上升穿越。`rst` 的下降穿越不改变任何状态（题面第 30 行），触碰只来自复位改写试位目标。若约束全部穿越，现有用例 `reset-recovery-long-tr` 就不合法：118.725 ns 的下降穿越离此前 118.225 ns 的 `clk` 上升穿越只有 500 ps（0.5·`tr`；这次复位覆盖该沿，沿上 `rst` 为高，该沿本来就不起作用）。brief 不许改用例，按 brief 的允许只约束上升穿越，已报主控。
+   - 只约束上升穿越。`rst` 的下降穿越不改变任何状态（题面第 30 行），触碰只来自复位改写试位目标。若约束全部穿越，现有用例 `reset-recovery-long-tr` 就不合法：118.725 ns 的下降穿越离此前 118.225 ns 的 `clk` 上升穿越只有 500 ps（0.5·`tr`；这次复位覆盖该沿，沿上 `rst` 为高，该沿本来就不起作用）。brief 不许改用例，按 brief 的允许只约束上升穿越，已报Benchmark 维护方。
    - 为什么这一条就够：顶层的试位码 `T` 只在时钟沿、start 请求和 `rst` 上升三种事件改变。时钟沿与其后的 start 至少相隔 `2*tr`，相邻时钟沿至少 4 ns，`rst` 上升之后被放行的时钟沿至少 `2*tr`，start 与 `rst` 上升都把 `T` 设为 0、彼此不改写目标；新加的一条补上“时钟沿之后的 `rst` 上升”。于是试位斜坡不会在走完之前被改写；恰为 `tr` 时改写落在斜坡终点（平局规则第 2 种情形），这时位在轨上。
    - checker（`tests/verify.py` 第 271–276 行，公开副本逐字节相同）：对每次 `rst` 上升穿越找此前最近的 `clk` 上升穿越，相差不足 `tr` 时报台架错误 “a rising rst crossing within tr after the preceding rising clk crossing”。写法与其他合法输入检查相同（`ValueError`，相对余量 `REL`）。
    - 现有用例：精确有理数重扫，十一个私有与两个公开用例 0 处触发，最小为 4·`tr`（`reset-recovery-long-tr`，38.225 ns 离 34.225 ns）；按 1 mV、1 fs 模型也都有余量。
@@ -534,9 +534,101 @@ EVAS 结果只是开发证据，不是 EVAS 能力验收或校准。旧版只给
    - 合成控制与精确模型：58 个合成模型在十一例上的被拒集合、精确参考解、审核者的尖峰、δ 的对照、1 mV 与 1 fs 的偏差控制、端点模型、F01 迟到可见性、证据有效性控制 15/15，新旧 checker 逐项相同。
    - 已核收探针结果包用新 checker 重判：修正版 4 个作业通过，换入前 4 个作业失败，与改前相同。
    - 按设计改判的只有对照：修正 r5 的 +2 ps 对照由台架错误变为按同时处理并通过；本轮新加的 +5 ps 对照通过、+10 ps 报台架错误；附加台架复位提前到 0.75·`tr`、0.5·`tr` 的两份由通过变为台架错误；两串位穿越的台架错误由 “neither simultaneous …” 变为 “spread over more than 5 ps”。
-6. Spectre 预校准：在修正 r5 一节第 7 条的范围（参考解 13 个作业，候选在十一个私有用例上 506 个作业）之外，加附加台架的一个参考解作业，共 520 个。本轮 checker 只加台架义务检查，现有用例的结果按新 checker 重判即可。每个作业约 60 s，大部分是 Verilog-A 编译；附加台架有 417 个 strobe 行。包的范围由主控定。
-7. 交主控（本轮按下面的读法做了，主控可改）：
+6. Spectre 预校准：在修正 r5 一节第 7 条的范围（参考解 13 个作业，候选在十一个私有用例上 506 个作业）之外，加附加台架的一个参考解作业，共 520 个。本轮 checker 只加台架义务检查，现有用例的结果按新 checker 重判即可。每个作业约 60 s，大部分是 Verilog-A 编译；附加台架有 417 个 strobe 行。包的范围由Benchmark 维护方定。
+7. 交Benchmark 维护方（本轮按下面的读法做了，Benchmark 维护方可改）：
    - 第 1 项只约束上升穿越（理由见第 1 条）。
    - 第 2 项的比较带 `REL` 余量，不只是改常量（理由见第 2 条）。
-   - 校准 README 与 `expected.json` 的第 39 项状态随 SOURCE 一起改（第 4 条）；主控若只要改 SOURCE，这两个文件退回修正 r5 的字节即可，判决不受影响。
+   - 校准 README 与 `expected.json` 的第 39 项状态随 SOURCE 一起改（第 4 条）；Benchmark 维护方若只要改 SOURCE，这两个文件退回修正 r5 的字节即可，判决不受影响。
    - 附加台架是恰在边界上的对照，余量为 0，靠 checker 的相对余量吸收舍入（`tr = 1 ns` 时 1 fs）。清单第 0.5 节第 7 条在扫描 A 的 290 个作业里测到最后一行时刻偏差至多 3.0e-17 s；保存行偏这个量级时，这一台架的穿越移动不到 1e-17 s，远小于 1 fs。Spectre 上若这一作业报复位间隔的台架错误，先查保存行的时刻。
+
+## 2026-10-30 修正 v417
+
+依据：只读扫描 v417-bench-scan-r1 列的本题 2 处台架义务检查（C109-05、C109-14，Benchmark 维护方已核实）；网表约定清单第 4.21 版（sha256 前 8 位 `7d511985`）第 0.5 节第 20 条，第 4.17–4.21 版新增的各点逐条核过（第 4 小节）；项目协调方 2026-10-30 的三项决定：做法甲的范围是起点、停留、碰到、最小偏离四项一起按网表激励定义判，时序守卫、范围与数值 δ 类检查不动；“碰到”在 14 道题里一律报台架错误；strobeonly 不算满足条件 3，要改的清单不变。另据 Benchmark 维护方 2026-10-30 对本轮第 1 次停下的决定（重判的写法与题面依据，第 5、7 小节）。改动文件改前、改后的 sha256，脚本、命令与结果见 `runs/t3-harbor30-20261027/v417-bench-fix-r1/disposition.md`（不入库）。本节的检查都**未仿真**：没有运行 Spectre、EVAS（含旧版）、模型或 Docker；合成控制是 Python 合成行；重判只读已交回的 Spectre 波形。前面各节原文不改。
+
+改动范围：两份 checker（`tests/verify.py` 与 `environment/starter/testbench/verify.py`，改后逐字节相同，sha256 `b936e175afb8138bf73767d4053e06fffab41cdfccad42cbf728d6b51965f782`，改前 `4a1f18ab…`）与本文件。题面、参考解、用例网表、`tests/calibration/`、`v2_runtime.py`、`task.toml`、`cases.json` 都没有改；判分逻辑、时序守卫、范围检查与数值 δ 类检查不变。
+
+### 1. 改了什么（编号照扫描）
+
+- **C109-05**（`check_logic_inputs` 第 112 行调用 `crossings`，第 70–72 行）：逻辑输入的保存行上相邻两行恰为 `vth`（停留）报台架错误 → 按定义判。顶层用例查 `clk`、`rst`、`start`；模块用例查 `cb_3`…`cb_0`、`sh_clk`、`sh_rst`、`sh_en`、`ct_clk`、`ct_rst`、`ct_start`、`ct_cmp`（用例里有哪个模块查哪组）。
+- **C109-14**（`evaluate_modules` 第 352 行调用 `crossings`，第 70–72 行）：比较器单测的 `cmp_s − cmp_d` 在保存行上相邻两行恰为 0（停留）报台架错误 → 按 `cmp_s`、`cmp_d` 的定义判。
+- `crossings()` 去掉“相邻两行恰在门限上就抛出异常”一句，穿越的定义不动。
+- 随同改（决定第 1 项，起点）：`check_logic_inputs` 第 110–111 行逻辑输入在 t = 0 离 `vth` 不足 50 mV × `REL`，`evaluate_modules` 第 350–351 行比较器差值在 t = 0 离 0 不足 5 mV × `REL`。两项都按定义判，门槛不变。
+- 碰到：改前只当“不算穿越”，现在报台架错误（决定第 2 项），逻辑输入与比较器差值都是。
+- 顶层内部的比较差值仍不查：它由被测模块产生，不是台架输入（建模选择第 162 行，不变）。
+
+### 2. 怎么判（做法甲）
+
+- 用哪份定义：checker 读所判用例自己的网表 `case["netlist"]`。它就是 `v2_runtime.py` 写成 `tb.scs` 交给仿真器、跑完再核 sha256 的那一份，被改动就记 evidence_error。私有用例取 `tests/cases.json`，公开检查取 `environment/starter/testbench/cases.json`；`visible_test.scs` 不经 checker 判，本轮用同一读法核过它也读得出。
+- 受查量：逻辑输入各自对 `vth`；比较器单测的 `V(cmp_s, cmp_d)` 对 0。`check_stimulus` 放在原来起点检查的位置：逻辑输入在 `check_logic_inputs` 里逐个调用（电平范围检查之后、取穿越之前），比较器差值在 `evaluate_modules` 里取差值穿越之前。
+- 定义取值：受查量由它涉及的节点自地起串着的 vsource 得出，在 [0, stop]（stop 取网表 tran 行）上于各源的定义点之间是直线：PWL 用各点的时刻与值，pulse 用 val0、val1 与四个拐角（按周期重复），dc 源用 dc 值，sine 用 sinedc ± ampl 与起点值。本题受查量涉及的源：PWL 75 个。
+- 在门限上：定义点的值与门限按写出的十进制精确相等，或各自舍成 binary64 后相等，任一成立即算。比较器差值另按 `cmp_s`、`cmp_d` 各舍成 binary64、逐运算相减后与 0 比（checker、参考解与题面都是这一种写法）。节点由几个源叠成时，“精确和舍入一次”与“各源先舍成 binary64、自地起逐运算相加”两种值都算。
+- 判法（都是 `raise ValueError`，`v2_runtime.py` 记作 checker_error：该例不判分，不算候选失败）：
+  - 起点：t = 0 的定义值在门限上，报 “starts on …”；逻辑输入离 `vth` 不足 0.04999995 V（50 mV × `REL`）、比较器差值离 0 不足 0.004999995 V（5 mV × `REL`），报 “starts … closer than …”；
+  - 停留：相邻两个定义点都在门限上，报 “rests on …”；
+  - 碰到：一个定义点在门限上、前后两侧在同一侧，报 “touches … and returns to the same side”；stop 时刻恰到门限算到达方向的一次穿越，不报；
+  - 读不出：受查量涉及的节点上的全部 vsource 都要读得出，在差里抵消的源也不例外。数字只写字面量，可带一个比例符号；不写参数名、表达式、行尾注释、单位，也不写指数后接比例符号。pulse 写全六个参数，rise、fall 大于 0；PWL 时刻严格递增；sine 写 sinedc、ampl、freq，不带 delay、damp。读不出报 “cannot read the stimulus definition of …”；受查节点不由用例网表的 vsource 驱动，报 “… is not driven by a voltage source of the case netlist”；网表里有只差大小写的节点名也报台架错误（保存信号按小写配对，Spectre 区分大小写）。
+- 穿越：判分用的穿越仍由原来的 `crossings()` 从保存行取，穿越的定义不动，只去掉其中“相邻两行恰在门限上就抛出异常”一句。保存行恰在门限上（例如模块在同一输入、同一门限上求根时写下的根处行）不再引起台架错误。
+
+### 3. 余量（数值未改）
+
+- 起点：逻辑输入 50 mV 乘 `REL`（1 − 1e-6）、比较器差值 5 mV 乘 `REL` 都不变，报错门槛 0.04999995 V 与 0.004999995 V；按定义精确比较以后相对余量只是容让，数值未改。本题没有最小偏离检查（比较器差值按设计最小只离 0 约 3 mV，题面没有这一条）。
+- 改不改这些数值由项目协调方另定，本轮不改。
+
+### 4. 清单第 4.17–4.21 版各点（第 6 条）
+
+| 点 | 本题 | 怎么处理 |
+| --- | --- | --- |
+| 做法甲（v4.17） | 适用 | 受查量（逻辑输入各自对 `vth`；比较器单测的 `V(cmp_s, cmp_d)` 对 0）的起点、停留、碰到按用例网表的 vsource 定义判，不读保存行（第 2 小节）。 |
+| “在门限上”的读法（v4.18、v4.20） | 适用 | 逻辑输入的门限 `vth` 是用例参数，比较器差值的门限是 0；都按写出的十进制与 binary64 两种比，门限不是表达式。合成控制另做了只在 binary64 下、只在逐运算读法下才在门限上的变体（第 6 小节）。 |
+| 和、差与叠放（v4.18、v4.20） | 适用 | 比较器差值 `V(cmp_s, cmp_d)` 按三种读法算：精确值、binary64，以及 `cmp_s`、`cmp_d` 各舍成 binary64 后逐运算相减。抵消的源 `cmp_d` 也要读得出。叠放 0 处：受查节点各由一个 vsource 直接对地驱动；代码对叠放照两种舍入处理。逻辑输入是单个节点。 |
+| 读得出（v4.18、v4.20） | 适用 | 本题 14 份网表（私有 11、公开 `cases.json` 2、`visible_test.scs` 1）共 88 个 vsource，都读得出，与扫描第 1 节一致；受查量涉及的源 75 个（PWL 75 个，含差里抵消的 `cmp_d` 源），都读得出。读不出报台架错误，该例不判分。 |
+| 比较式的不同写法（v4.20） | 适用 | 比较器差值一种写法：checker `cmp_s - cmp_d`、参考解 `cross(V(sample_i) - V(dac_i), 0, 1p)`、题面 “`V(sample_i) - V(dac_i)`” 都是 x − a 对 0。逻辑输入同单节点：binary64 下 `x - vth` 为 0 与 `x == vth` 等价，不另算。 |
+| 另一个受查量（v4.21） | 不适用（没有新增受查量） | 参考解的 `sample_hold`、`sar_controller` 在 `V(clk)`、`V(rst)`、`V(start)` 减 `vth` 上求根，`binary_weighted_cdac` 在各位 `V(bit_k) - vth` 上求根，`sar_comparator` 在 `V(sample_i) - V(dac_i)` 上过 0 求根。模块用例里这些端口由 `sh_*`、`ct_*`、`cb_*`、`cmp_s`、`cmp_d` 驱动，就是受查量本身（比较器的差就是 `V(cmp_s, cmp_d)`）；顶层里它们接被测模块产生的内部节点，不是台架输入。没有台架模块：`cases.json` 不带 support 源码，公开目录没有 `.va`。候选的写法不在此列（合成控制 B 仍按各候选自己的事件插了根处行）。 |
+| 模块驱动的受查信号（v4.17–v4.20） | 不适用 | 受查信号都由用例网表的 vsource 直接驱动，14 份网表逐份核过，不由 vsource 驱动的 0 个；没有台架模块，也没有按候选输出生成的受查信号。 |
+| 条件 3 与 strobeonly（决定第 3 项） | 适用 | 本题 14 份网表都写 `strobeoutput=strobeonly`；strobeonly 不算满足条件 3，照改。 |
+| 碰到（决定第 2 项） | 适用 | 改前只当“不算穿越”，现在一律报台架错误。 |
+
+### 5. 题面依据（不改题面）
+
+- 起点、停留、碰到：instruction.md 第 46 行 “They never rest at `vth`, and at t = 0 each is at least 50 mV away from `vth`. Each of them that reaches `vth` always crosses it; it never touches `vth` and returns to the same side.”
+- 比较器差值：第 54 行 “In tests of the comparator, `V(sample_i) - V(dac_i)` never rests at 0, always crosses 0 when it reaches 0 (it never touches 0 and returns to the same sign), is at least 5 mV away from 0 at t = 0, and its successive zero crossings are at least 1 ns apart.”
+- 读不出、不由 vsource 驱动：这两种台架错误都是本方网表的失败保护，候选改不了网表，也就触发不了；清单第 20 条写明该例不判分。题面第 58 行 “A zero that comes from the simulator, the bench, or other infrastructure does not by itself show that the submitted Verilog-A behavior is wrong.”
+
+### 6. 合成控制（未仿真）
+
+- 做法：合成 strobe 行。网表定义在每个 strobe 时刻精确取值、舍成 binary64；候选输出一律给 0 V（沿用扫描 `rowsim.py` 的做法），所以判分结果多为失败，只用来比改前、改后两版 checker 的整份判决与台架错误。导入的是本轮 scratch 下的 checker 副本，字节码关闭。
+- A 现有用例网表：14 份网表各两组行，一组只有 strobe 行，一组另在每个受查量的每个定义穿越处插一行恰在门限上的根处行（共 1698 行）。28 次判决：新 checker 都不报台架错误，与改前的 checker 整份判决逐个相同（28/28）。
+- B 候选：扫描列出的 46 个候选（`tests/calibration/mutants.py` 在本轮 scratch 生成，不在题包里生成），按各自的 `cross()`、`above()` 事件映射到台架节点，在每份网表上插它们自己的根处行（101 组不同的行，共 41373 行）；1 个候选（`wrong/comparator_reads_live_vin.va`）的 `cross(V(sample_i) - V(dac_i), 0, 1p)` 一端接台架节点、另一端是候选自己的内部节点，不是受查量，不生成根处行。改前、改后判决逐个相同，新 checker 不报台架错误（46/46）。
+- C 变体（在 `base` 上改 `rst` 的定义；比较器的变体在 `modules-default` 上改 `cmp_s`、`cmp_d`；每个变体事先写下预期），20/20 符合预期：
+  - `rst` 起点按十进制恰在门限上：报 “starts on”
+  - `rst` 起点只在 binary64 下恰在门限上：报 “starts on”
+  - `rst` 起点离门限 0.0498999 V：报 “closer than”
+  - `rst` 起点离门限 0.0500999 V：不报台架错误（照常判分）
+  - `rst` 在 1.6755e-07 s 处按十进制停在门限：报 “rests on”
+  - `rst` 在 1.6755e-07 s 处只在 binary64 下停在门限：报 “rests on”
+  - `rst` 在 1.6755e-07 s 处按十进制碰到门限：报 “touches”
+  - `rst` 在 1.6755e-07 s 处只在 binary64 下碰到门限：报 “touches”
+  - `rst` 的源有一个值写成参数名 `vlo`：报 “cannot read”
+  - `rst` 的源有一个值写成表达式 `0.9*1`：报 “cannot read”
+  - `rst` 的源有一个值带单位 `0.9V`：报 “cannot read”
+  - `rst` 不由 vsource 驱动：报 “is not driven”
+  - 比较器差值起点按十进制恰为 0：报 “starts on”
+  - 比较器差值起点只在逐运算读法下恰为 0：报 “starts on”
+  - 比较器差值起点离 0 有 0.00489999 V：报 “closer than”
+  - 比较器差值起点离 0 有 0.0051 V：不报台架错误（照常判分）
+  - 比较器差值在 2.0505e-07 s 处按十进制停在 0：报 “rests on”
+  - 比较器差值在 2.0505e-07 s 处只在逐运算读法下停在 0：报 “rests on”
+  - 比较器差值在 2.0505e-07 s 处按十进制碰到 0：报 “touches”
+  - 差里抵消的源 `cmp_d` 有一个值带单位 `0.2V`：报 “cannot read”
+
+### 7. 已交回作业的重判（未仿真）
+
+- 范围：14 道题全部已交回的 Spectre 作业，以各包 `jobs.json` 的 meta.task 为准，只数正式打包目录（不数 scratch 下的试做包）：34 包 3852 个作业，判了 3848 个，未判 4 个（C266 的执行错误，没到 checker）。
+- 做法：每个作业用它发出时的快照判，用例取快照里的那份，只把 checker 换成新版，与原判逐个比；判决相同指 status、passed 与台架错误的有无都相同。P0PC 里有些作业跑的是后来改过的旧网表，只用来比两版 checker，不对现行题包评。快照里的旧 checker 重判，与预读记录的原判逐个相同（status、passed、整份判决 sha256），工具与环境没有问题。
+- 结论：本轮改动没有改变任何作业的判决（new 与改前 checker 3848/3848 相同）；与打包时的原判比，3708 相同，140 不同，来自 p0-fix-r9 已记录的激励与规则改动。
+- 不同的 140 个全是 U15（`r04-spec-delay-pulse-hold`）：spectre-P0PC-must-01-v1 10、spectre-P0PC-opt-01-v1 26、spectre-P0PC-rec-03-v1 84、spectre-P0PC-rec-04-v1 20。
+- 本题：spectre-P0PC-must-03-v1 27、spectre-P0PC-rec-12-v1 132、spectre-P0PC-rec-13-v1 132、spectre-P0PC-rec-14-v1 121、spectre-P0PC-rec-15-v1 121，共 533 个。new 与改前 checker 整份判决 533/533 相同。与原判比 status、passed 与台架错误的有无 533/533 相同，整份判决 sha256 也相同。
+
+### 8. 前面各节的相关句子
+
+- 建模选择第 11 条第 161 行（穿越提取里“连续两点停在阈值上…抛出异常、不判分”与“起始余量不足本来就是台架错误”）：起点、停留、碰到改按定义判，碰到报台架错误；穿越时刻的取法不变。第 162 行（只查外部驱动的台架节点）仍成立。

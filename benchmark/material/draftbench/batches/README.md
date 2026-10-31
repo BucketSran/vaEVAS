@@ -16,7 +16,7 @@
 | [r08-comparator-01](r08-comparator-01/README.md) | 1 | P0：C176-S1 已建（implementation，未仿真） |
 | [r09-adc-01](r09-adc-01/README.md) | 2 | P0：C105-S1、C109-S1 已建（implementation，未仿真） |
 | [r06-equalizer-01](r06-equalizer-01/README.md) | 1 | P0：U17-S1 已建（implementation，未仿真） |
-| [r01-sampling-03](r01-sampling-03/README.md) | 3 | P1（R01 族）：C061-S1、C057-S1、C067-S1 已建（均 implementation，未仿真）；独立审核 r1 的发现已在修正 r1 处理；修正 r2 补 C061 合法域一句与台架检查，同步决定单第 20、21、25–33 项的状态，待复审 |
+| [r01-sampling-03](r01-sampling-03/README.md) | 3 | P1（R01 族）：C061-S1、C057-S1、C067-S1 已建（均 implementation，未仿真）；独立审核 r1 的发现已在修正 r1 处理；修正 r2 补 C061 合法域一句与台架检查，同步决定单第 20、21、25–33 项的状态；修正 r3 写明 C067“vdd 不变”的门限，并按样板第 4c 节改三题的验证总时限，待复审 |
 
 旧的 41 个题包已归入[历史题包](../../historyref/tasks/README.md)，不在这 58 个草稿的分母内。PR255 规划池新建的 P0、P1 题包也不计入这 58 个。
 正式题集当前为空。批次名只表示建设范围，不表示审核认可；旧 v2/v3 题号保持不变。
