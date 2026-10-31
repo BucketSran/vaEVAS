@@ -8002,6 +8002,85 @@
     },
     {
       "actual_receipt": {
+        "id": "source:03e7dee8012cdc353f2b823a",
+        "sha256": "f724622c44967a5fe983900fd32f162fd9a62fc2bb2c1144e3b1dfa0d5a6d637",
+        "version": "da9fa91c3b0cf7f4d84f7c00eca04d4ac1cbeafd94e5f7be2b54bb5c52c41895"
+      },
+      "ci_entrypoint_ids": [
+        "fb7af0ded8efd9d5a478003963c511080027d50da66df4b3689dd76077b0b560"
+      ],
+      "collector": "unittest",
+      "collector_sha256": "aceb2da69e710a9fe7bf8e012e684e11792fdf232e2ceabbe19a625c4e392f17",
+      "command": null,
+      "dependencies": [
+        {
+          "id": "source:03e7dee8012cdc353f2b823a",
+          "sha256": "f724622c44967a5fe983900fd32f162fd9a62fc2bb2c1144e3b1dfa0d5a6d637",
+          "version": "da9fa91c3b0cf7f4d84f7c00eca04d4ac1cbeafd94e5f7be2b54bb5c52c41895"
+        }
+      ],
+      "id": "entry:67d0ba0c0b4c725797e8d721",
+      "kind": "entrypoint",
+      "namespace": "python-regression",
+      "pattern": "test*.py",
+      "provenance": {
+        "collector": "unittest",
+        "declared_python_versions": [
+          "3.12.15"
+        ],
+        "entry_id": "fb7af0ded8efd9d5a478003963c511080027d50da66df4b3689dd76077b0b560",
+        "environment_overrides": {
+          "CARGO_PROFILE_DEV_DEBUG_ASSERTIONS": "true",
+          "CARGO_PROFILE_DEV_OPT_LEVEL": "1",
+          "CARGO_PROFILE_DEV_OVERFLOW_CHECKS": "true",
+          "PYTHONPATH": "evas/src"
+        },
+        "job": "regression",
+        "line": null,
+        "mode": "primary-runner-argparse-discovery-only",
+        "namespace": "python-regression",
+        "origins": [
+          {
+            "command": "python3 -B scripts/run_regression.py --shard-count 4 --shard-index ${{ matrix.shard }} --weights scripts/regression-weights.json --input-identity runs/regression-identity.json --report runs/regression-evidence/report.json > runs/regression-evidence/stdout.txt 2> runs/regression-evidence/stderr.txt",
+            "declared_python_versions": [
+              "3.12.15"
+            ],
+            "environment_overrides": {
+              "CARGO_PROFILE_DEV_DEBUG_ASSERTIONS": "true",
+              "CARGO_PROFILE_DEV_OPT_LEVEL": "1",
+              "CARGO_PROFILE_DEV_OVERFLOW_CHECKS": "true",
+              "PYTHONPATH": "evas/src"
+            },
+            "executed": false,
+            "job": "regression",
+            "job_if": "needs.selection.outputs.regression == 'true'",
+            "kind": "other-python-script",
+            "line": 395,
+            "method_denominator": null,
+            "source": "scripts/run_regression.py",
+            "step": "Collect complete Python regression observations",
+            "step_if": "steps.reuse.outputs.verified != 'true'",
+            "workflow": ".github/workflows/numerical-assurance.yml"
+          }
+        ],
+        "pattern": "test*.py",
+        "purpose": "Full method construction; not selected scientific test execution.",
+        "source": "scripts/run_regression.py",
+        "source_sha256": "dc2ed03b722fd35e9a20f6eda424ac2ff39b3c22f2081a29c5f0777a9b148985",
+        "start": "evas/tests",
+        "step": "primary argparse collection",
+        "workflow": ".github/workflows/numerical-assurance.yml"
+      },
+      "receipt_canonical_sha256": "3dba25d51d4a1544e7909bfaffea471650a71e3cad070d01f33b6fef0931d035",
+      "receipt_pointer": "/receipt",
+      "schema_version": 1,
+      "start": "evas/tests",
+      "status": "active",
+      "version": "7737e16637e644a9f743d19362411aebd4219a58b40bb9c16c16a6a9fda94e28",
+      "workflow_sha256": "4c719ea8ee122921eaec851a3f8959323b4703be47d0999a6c9cb9488241cb42"
+    },
+    {
+      "actual_receipt": {
         "id": "source:1b7612b3a83e4b7b281131f0",
         "sha256": "cd82a93e2340936ae8a9e93519b5648ce7e9ca234ff96d1bca736c8e718bb72a",
         "version": "b8f3720429c6c352f6332018caf67c1fe9f85fb3241d0b8b46af80314ab8760a"
