@@ -1,13 +1,11 @@
 """Source-driven quotient output contracts with independent answers."""
 GUARDS = ['LANG', 'LIN', 'ANALOG']
 
-from pathlib import Path
 import json
 import subprocess
 import unittest
 from evas import Instance, KernelError, compile_sources, transient
-
-KERNEL = Path(__file__).resolve().parents[1] / 'rust_core/target/debug/evas-kernel'
+from test_affine import KERNEL
 
 
 def program(rhs='V(a)/V(b)', events=False):
@@ -31,10 +29,12 @@ class InputRationalClosure(unittest.TestCase):
         y=response['nodes'].index('y')
         self.assertEqual([r['voltages'][y] for r in response['solutions']], [0,0.25,0.75])
 
-    def test_input_quotient_with_independent_timer_stays_unsupported(self):
-        with self.assertRaises(KernelError):
-            transient(program(events=True), {'a':[[0,1],[1,3]],'b':[[0,4],[1,4]]},
-                      [0,0.75,1],stop=1,max_step=0.25,kernel=KERNEL)
+    def test_input_quotient_with_independent_timer_adds_the_timer_state(self):
+        # a/b + q: 1/4 + 0, 2.5/4 + 1 after the 0.5 s timer, 3/4 + 1; every value is exact in binary64.
+        response = transient(program(events=True), {'a':[[0,1],[1,3]],'b':[[0,4],[1,4]]},
+                             [0,0.75,1],stop=1,max_step=0.25,kernel=KERNEL)
+        y=response['nodes'].index('y')
+        self.assertEqual([r['voltages'][y] for r in response['solutions']], [0.25,1.625,1.75])
 
     def test_zero_and_crossing_denominator_refuse(self):
         for points in ([[0,0],[1,0]], [[0,1],[1,-1]]):
