@@ -3,6 +3,7 @@ import unittest
 
 from evas import CompileError, Instance, compile_sources
 
+GUARDS = ['LANG']
 
 def compile_body(body):
     source = ('`include "disciplines.vams"\n'

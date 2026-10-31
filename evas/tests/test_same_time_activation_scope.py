@@ -7,6 +7,8 @@ import unittest
 from evas import CompileError, Instance, KernelError, compile_sources, transient
 from test_affine import KERNEL
 
+GUARDS = ["EVENT-ORDER", "ANALOG"]
+
 
 def execute(source, instances=None, times=(0, .25, .5, .75, 1)):
     program = compile_sources({'scope.va': source}, instances or [
