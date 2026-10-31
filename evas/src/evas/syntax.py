@@ -28,7 +28,7 @@ class Token:
 _TOKEN = re.compile(
     r"(?P<space>\s+)|(?P<comment>//[^\n]*|/\*[\s\S]*?\*/)"
     r'|(?P<include>`include[ \t]+"[^"\n]+")'
-    r"|(?P<macro>`M_PI\b)|(?P<system>\$abstime\b)|(?P<math>\$(?:floor|tanh)\b)|(?P<task>\$(?:bound_step|display|strobe)\b)"
+    r"|(?P<macro>`M_PI\b)|(?P<system>\$abstime\b)|(?P<math>\$(?:floor|tanh|rtoi)\b)|(?P<task>\$(?:bound_step|display|strobe)\b)"
     r'|(?P<directive>`[A-Za-z_][A-Za-z_0-9]*)|(?P<string>"[^"\n]*")'
     r"|(?P<number>(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?[TGMkKmunpfa]?)"
     r"|(?P<name>[A-Za-z_][A-Za-z_0-9]*)|(?P<symbol><\+|<<<|>>>|<<|>>|<=|>=|==|!=|&&|\|\||\(\*|\*\)|'\{|[\[\]:<>(){}+*/%;,=@#.?!&|^~\-])"
@@ -434,6 +434,17 @@ class Parser:
             argument = self.expression()
             self.take(")")
             left = Expr("floor", None, (argument,), token, result_type="real")
+        elif token.text == "$rtoi":
+            # LRM 9.11 truncates toward zero: x >= 0 ? floor(x) : -floor(-x).
+            self.take("(")
+            argument = self.expression()
+            self.take(")")
+            zero = Expr("number", 0., (), token)
+            negated = Expr("unary-", None, (argument,), token)
+            left = Expr("ternary", None, (Expr(">=", None, (argument, zero), token),
+                                          Expr("floor", None, (argument,), token, result_type="real"),
+                                          Expr("unary-", None, (Expr("floor", None, (negated,), token, result_type="real"),), token)),
+                        token)
         elif token.text == "pow":
             self.take("(")
             base = self.expression()
@@ -809,7 +820,10 @@ class Parser:
 
     def analog_block(self):
         self.take("analog")
-        self.take("begin")
+        # LRM 5.2: `analog analog_statement`; a lone statement is a block of one.
+        single = self.token.text != "begin"
+        if not single:
+            self.take("begin")
         analog, initial, events = [], [], []
         self.procedure_body = []
         initial_segments = []
@@ -817,7 +831,9 @@ class Parser:
         self.local_array_alias_scopes = {}
         available = set()
         available_array = []
-        while self.token.text != "end":
+        remaining = 1
+        while self.token.text != "end" if not single else remaining:
+            remaining = 0
             if self.token.text == "@":
                 token = self.take("@")
                 self.take("(")
@@ -859,7 +875,8 @@ class Parser:
                              if isinstance(s, Assignment) and s.index is None)
             available_array.extend(s for s in statements
                                    if isinstance(s, Assignment) and s.index is not None)
-        self.take("end")
+        if not single:
+            self.take("end")
         def contributes(statements):
             return any(isinstance(s, ContributionStatement) or isinstance(s, Conditional)
                        and (contributes(s.then_body) or contributes(s.else_body))
