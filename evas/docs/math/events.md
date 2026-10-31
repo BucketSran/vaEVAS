@@ -37,6 +37,13 @@
 非线性积分器在每个内部接受段起点认证活动条件和请求值，以请求区间下界限制实际积分段；
 动态请求也不能只增加外层控制器计数。内部积分同样应用可能激活的请求；
 非法条件、未认证的请求数值、非有限值或负值明确拒绝。
+IR33 的源序过程为连续网络准备私有历史网格时，在完整输入时域上执行过程以取各请求的最小可能值；
+若某个输入谓词在该时域上跨越阈值而无法判定（例如 `if(V(enable)<0.75)` 与 `idt`、`$bound_step` 同在），
+不因此拒绝：每个只读驱动输入与常数的请求按可能激活处理，取其值包围的下界；
+读取其他量或没有有限非负包围的请求仍拒绝（NF-12b，`continuous_step_simplify.rs`）。
+接受帧仍按实际发生求值请求，加或去掉一行 `$bound_step` 不改变准入与波形。
+独立答案见 [步长请求不变性](../../tests/test_bound_step_request_invariance.py)
+（requirement:bound-step-request-invariance v2）。
 隐式 DAE 仍只接受正的无条件常数请求，其他请求在该路径返回 `unsupported_bound_step`。
 已支持的线性解析历史由接受帧上的动态请求限制推进，不改变解析公式。
 这不是一般动态模型的完整 `$bound_step` 支持。
@@ -1016,6 +1023,7 @@ Rust `owner_contract_tests` 覆盖错误绑定、同 Admission 失败后重试�
   返回 `event_conflict`，不按声明顺序、源码位置或事件类型决定胜负。
   事件块可读取其他未在本批次写入的状态，使用事件前已接受值。若选中的另一个块
   在本批次写入被读取状态，则明确拒绝，不按声明顺序推测读取值；结构相消与下溢不消除依赖。
+  同刻不同来源事件的先后，暂定按源码顺序执行，待 #283 批次 C 第 9a 项确认。
   读依赖包括赋值、已证明选择的条件与 `$display` 参数；无法定符号但证明两臂等价时，两臂的读取和子条件均计入。参数内部的三目表达式保留两条值臂的结构依赖。
   例如同刻一个块写 `q`，另一个块执行 `$display("%g",q)`，也须拒绝。
   未选中的事件分支不产生显示读冲突。同块语句依次看到自己的更新。
@@ -1164,6 +1172,17 @@ IR24 候选允许事件赋值由本实例的保持状态和实际 driven 电压�
 `td=td0+tau*ln(V(vdd)/d)` 在先把 d 夹到正下限后可求值。`exp`、`cos`、`tanh` 等其他函数在物理事件中仍拒绝。
 不确定源目前只在固定 timer 加代数消费者时进入该规则；`cross` 或 `transition` 消费者由
 `unsupported_source_uncertainty` 先行拒绝。回归见 [采样定义域](../../tests/test_group_math_sampled_domain.py)。
+
+IR33 把事件算术包在 `real_binary` 中，把采样与赋值值包在 `real_boundary`（sample、store）中。
+它们只舍入数值，不改变事件体施加的运算。上述准入扫描（`causal_event.rs::classify`）与显示里的源 floor
+资格检查（`event_floor.rs::display_operand`）都读穿这两种节点，#243 之前准入的程序重新准入，
+拒绝集合不变：判定谓词与显示中的 `sqrt`/`ln`、只按 2 的幂缩放参数的 floor 显示仍报原诊断。
+过程事件的显示参数是 Plan 的效应根，资格扫描记入过程预算。定义域错误同时给出 IR33 的类别与具体规则，
+例如 `pure procedure mathematics outside its domain: event sqrt requires nonnegative input`。
+不确定源的样本经舍入边界进入这类数学时，同刻证书遇到不可微的舍入而返回
+`waveform_accuracy: nonfinite interval Jacobian`；这是证书的另一缺口，不属本节准入规则。
+回归见 [显示中的源 floor](../../tests/test_event_observer_math_display.py)
+（NF-11，requirement:event-observer-math-isolation v3）。
 
 有限实数除法也使用这条事件标量路径。例如先写`span=V(vdd,vss)`，按源码条件设置正下限，
 再计算`x=clip01((V(in)-V(vss))/span)`，后续递推必须读取本次更新后的span和x。
@@ -1346,7 +1365,8 @@ enable 为有限实例常数，0 禁用，非零启用；禁用不跳过模型�
 保持状态 timer 仍要求正容差；负容差拒绝。
 独立正负控制见[零容差 timer](../../tests/test_zero_timer.py)。这是 EVAS 的数值合同，不宣称复现 Spectre 的内部时钟算法。
 
-同刻 timer 与 cross 共享事件前状态，并联立求解事件后的电压；整数赋值顺序和批次写者冲突规则与 cross 一致。
+同刻 timer 与 cross 按源码顺序执行，后执行的块读取先执行块的写入，并联立求解事件后的电压；
+整数赋值顺序和批次写者冲突规则与 cross 一致。同一精确时刻不同来源的事件算同一次发生，按源码顺序执行：EVAS 暂定约定，语言未规定，待 #283 批次 C 第 9 项的 Spectre 结果确认。
 
 非空 strobe 请求对起点、周期均为精确单值的 timer 使用更窄的包围，包含精确保持参数。`exact_time.rs::Clock::bounds`
 用 FMA 提出最近舍入值，再以精确有理数符号比较决定它在 `t_k` 的哪一侧。
@@ -1463,16 +1483,22 @@ PWL 根另有精确零点证书：当端点 guard 和到候选时刻的两侧时
 集合跨越多个值时，后续条件、timer 和历史继续使用完整包围，不能只看名义值。
 例如 `[1-2^-55, 1+2^-55]` 全部舍入为 1，可以取得单值证明；跨越舍入格边界的真实采样域仍须保留多值。
 
-程序条件在采样和各步运算完成舍入后判断。物理 cross 的根后方向证明不能越过这些舍入边界继续使用。
-例如 `u=3t` 在 `cross(u-1,+1)` 的根为 `1/3`；对充分小的正数 `e`，`RN(1+3e)` 仍为 1，
-所以程序条件 `V(u)>1` 为假。下文 IR32 的未舍入条件右极限解释不能替代这项 IR33 规则。
+程序条件在采样和各步运算完成舍入后判断。[ADR-006](../development/DECISIONS.md#adr-006) 只规定程序 real
+的逐次舍入，不覆盖在 cross 根处差值恰为零的比较：这类比较按 [ADR-003](../development/DECISIONS.md#adr-003)
+读根后右极限 `te=tau+`，规则与证书见本文件[根后右极限](#cross-right-limit)一节，IR33 的源序过程执行同样适用
+（`procedure_right_limit.rs`，#281，requirement:cross-event-body-right-limit v2）。这一点将由 #283 批次 C
+第 2 项用 Spectre 再确认。
 固定 timer 读取 PWL 时也先采样为 binary64，再比较；舍入前插值与阈值的微小差异不能恢复成程序值的差异。
 源幅度或真实根的不确定性仍必须先形成完整输入域；只有完整舍入像允许的结论才能用于选支。
 
 过程按展开后的语句序号执行。假定同一逻辑事件同时触发 A 和 B，源码为
 `A: a=a+1; snap=a; B: q=10*snap+a;`，初值 `a=1`，则 B 读取 `snap=2, a=2`，得到 `q=22`。
 若把 `snap=a` 放在 A 之前，B 读取绑定时的 `snap=1`，得到 `q=12`。
-这个绑定不进入 cross 或 timer 的监测表达式、方向、容差和 timer 参数。那些位置仍要有既有输入别名或常量别名证明；否则按 `unsupported_local_event` 拒绝。`triangle=idt(1,0); @(cross(triangle-0.5,+1))` 继续拒绝，原 VCO 不因过程绑定或普通局部量槽而通过。
+这个绑定不进入 cross 或 timer 的监测表达式、方向、容差和 timer 参数。那些位置仍要有既有输入别名或常量别名证明；否则按 `unsupported_local_event` 拒绝。
+内核在请求入口把常量别名代入 cross 监测表达式：该绑定在同一过程中只有一处无条件的顶层定义，值为闭合的 binary64 常数，
+且位于该事件门之前（如 `th=0.5*vh`）。输入别名（例如 `a=2*V(u)+0.25; @(cross(a-1.25,+1))`）进入监测表达式
+在 #243 之后尚未恢复，属已知缺口；这类及其余在监测表达式中没有过程帧的过程绑定值按 `unsupported_operator`
+点名该绑定拒绝，不返回 `invalid_ir`（H1，`canonical.rs`）。`triangle=idt(1,0); @(cross(triangle-0.5,+1))` 继续拒绝，原 VCO 不因过程绑定或普通局部量槽而通过。
 每个 OR 事件体在该次发生中最多执行一次。事件表的容器顺序、源码行号及浮点时间都不能替代过程身份和展开序号。
 
 所有分支都先检查名称、类型、引用范围和来源身份；执行时只求值实际选中的程序分支。
@@ -1662,6 +1688,7 @@ LRM 2.4 §4.2、§5.3 的 analog 变量在两次求值之间保留取值：本�
 读写 H 或 U 输入的回调先重建穿越前取值，再按源码位置执行 U 与原回调体，并在末尾再执行一次 U。
 共享原子零集的单叶 cross 回调接管该方向的提交。每个改写后的块以 `h=h` 结尾，
 任何两个这样的块落入同一候选批次都由既有同刻写者检查返回 `event_conflict`，不按源码顺序猜测。
+同刻不同来源事件的先后，暂定按源码顺序执行，待 #283 批次 C 第 9a 项确认。
 触发器读取的 H 须在离开零点一侧时不被写入，才保证槽值即当前值。
 
 右侧读电压的跟踪保持（需要任意节点的左极限）、读取上一值的非幂等更新（`q=q+1`、峰值检测）、
@@ -1774,6 +1801,7 @@ LRM 2.4 §4.2、§5.3 的 analog 变量在两次求值之间保留取值：本�
 每次 `settlement::prepare` 先选择条件路径，再调用 `check_selection_writers(selection)`；
 只有实际选中的赋值参与冲突判断。不同批次触发的上升/下降迟滞块可以共同维护同一 `q`。
 同一批次中两个不同事件块写同一 state 时返回 `event_conflict`，即使写入值相同，也不按源码顺序仲裁。
+同刻不同来源事件的先后，暂定按源码顺序执行，待 #283 批次 C 第 9a 项确认。
 失败候选不提交 state、state bounds、算子历史、事件游标或记录。
 
 独立冲突与互斥批次回归见 [test_event_writers.py](../../tests/test_event_writers.py)，
@@ -1816,8 +1844,9 @@ LRM 2.4 §4.2、§5.3 的 analog 变量在两次求值之间保留取值：本�
   条件差值 d 与 guard 有精确同零集 `d=k*g` 时，d 在 tau+ 的符号为 `sign(k)*s`。
   物理源曲线与付费读取记录同一证书；在 stop 处到达的根没有一侧。
 - 其他无状态条件：在根盒上被证明恰为 `[0,0]` 时，用接受历史在 `[lo, next_up(hi)]`
-  上的导数包围；严格同号取该符号，恰为 `[0,0]` 即已证平台。同刻 timer 可能在 tau+ 之前改写
-  transition 等历史，含 timer 的混合批次只用不含算子列的条件。付费历史上下文只安装叶子一侧。
+  上的导数包围；严格同号取该符号，恰为 `[0,0]` 即已证平台。同一次发生中按源码顺序执行的其他块
+  （例如同刻 timer）可能改写 transition 等历史，含 timer 的混合批次只用不含算子列的条件。
+  付费历史上下文只安装叶子一侧。
 - 右窗口：批次根盒 `[lo, hi]` 的右窗口 `W=[lo, next_up(hi)]` 含每个根 tau 的 `(tau, tau+e]`；
   根可能落在 stop 时没有 W。事件体沿已选路径，用驱动输入在 W 上的包围重放赋值；
   全为 cross 的非付费批次还读取接受历史在 W 上的包围，混合批次与付费上下文不读历史。
@@ -1833,7 +1862,8 @@ LRM 2.4 §4.2、§5.3 的 analog 变量在两次求值之间保留取值：本�
   循环条件使用同一规则。
 
 由 timer 叶子触发的事件体（含与 cross 同刻触发的 OR）在该精确时刻执行，触发 guard 证明 `g(t)=0`，
-点时刻比较保持原语义；同批的无关 timer 不改变 cross 事件体的读取。
+点时刻比较保持原语义；同批的无关 timer 不改变 cross 事件体对输入的根后读取，状态读取按源码顺序。
+同一精确时刻不同来源的事件算同一次发生，按源码顺序执行：EVAS 暂定约定，语言未规定，待 #283 批次 C 第 9 项的 Spectre 结果确认。
 求导与右窗口证书的预算、资源与 IR 错误照常报告，不当作缺少证书；付费上下文的右窗口读数记入同一账本。
 已知限制：赋值的值仍取 tau 处根盒包围，对连续量即右极限；floor、取整等不连续运算的参数
 在 tau 恰落在断点上时，被赋的值仍是 tau 处的值，上述证书只保护恰为零的比较。
@@ -1841,9 +1871,22 @@ LRM 2.4 §4.2、§5.3 的 analog 变量在两次求值之间保留取值：本�
 例如 `u` 上升、`w` 同刻下降过 0.5 时，`cross(u-0.5) or cross(w-0.5)` 内
 `u>0.5` 为真、`w>0.5` 为假；`w` 恒为 0.5 时 `w>0.5` 仍为假、`w>=0.5` 为真。
 `u` 的 PWL 在 0.5 处另有节点时结论不变；`u` 在 0.5 触顶回落时 `u>=0.5` 为假。
-独立答案见 [test_cross_right_limit.py](../../tests/test_cross_right_limit.py)。
+独立答案见 [test_cross_right_limit.py](../../tests/test_cross_right_limit.py)
+与 [test_cross_body_right_limit_cases.py](../../tests/test_cross_body_right_limit_cases.py)。
 入口为 `event_conditions.rs::PostRootSides`、`event_conditions.rs::Conditions::dependence`、
 `pwl.rs::Root::post_root_side`、`transient.rs::post_root_scope` 与 `transient.rs::right_window`。
+
+IR33 的事件体由源序过程执行，同一规则在 `procedure_right_limit.rs::decide` 中判定（#281）。
+比较在 tau 恰为零时依次找证书：与实际触发叶 guard 精确同零集（线性形式按精确有理数比较，
+读穿 RN 边界，舍入不决定根后一侧）；只读驱动输入、不读状态的差值，用批次安装的输入导数包围
+（区间同上，付费上下文不安装）；所读节点与历史在 W 上都不动即平台；否则用 W 上的包围判定。
+W 按节点给出：驱动输入，以及经同一前事件节点提供者求得的独立节点（只读正边沿 transition 历史，
+不依赖本批写入的状态；历史只在未付费的全 cross 批次读取）。本次执行中先赋值后读取的状态是锁存读，
+不提供同零集或导数证书。三元式、if/else、循环条件同此规则；没有证书时，只有两臂语句在去掉源位置后
+完全相同且不含 `$display` 才继续。窗口入口为 `transient.rs::procedure_window` 与
+`PostRootSides::with_input_slopes`。零点触碰、零平台和 stop 处到达的触发规则是 EVAS 的约定
+（本文“精确零点归到达段所有”一段），timer 的精确点时刻是 EVAS 在 LRM 时间容差内的选择，
+二者都不是 LRM 的强制要求。
 这只约束事件体读取；普通贡献式的 Select 是 tau 处的连续时间表达式，
 仍按原 `g(tau)=0` 判定，避免代表时刻电压验收与事件体选择不一致。
 其余条件先在可行输入盒内证明选择；若有限误差盒无法决定选择，只有两臂行为完全相同时才可继续，规则见下文。其他情况拒绝，点时刻 timer 保持原观察语义。

@@ -97,8 +97,44 @@ pub(super) fn program(context: &Context, parameters: &[I]) -> Result<Program, Er
             // This private history mesh may conservatively use the smallest
             // source-captured value over its complete source horizon. The
             // accepted controller still evaluates the actual occurrence frame.
-            let plan = crate::procedure::execute(original, &[], &nodes, parameters, None, w)?;
-            let images = plan.history_bound_images(&nodes, parameters, w)?;
+            let images = match crate::procedure::execute(original, &[], &nodes, parameters, None, w)
+            {
+                Ok(plan) => plan.history_bound_images(&nodes, parameters, w)?,
+                // An input predicate may straddle its threshold over the
+                // complete horizon (NF-12b). $bound_step only caps the next
+                // step (LRM 9.17.2), so this mesh treats every request as
+                // possibly active at the lower end of its value enclosure. A
+                // request that reads more than driven inputs and constants, or
+                // has no finite nonnegative enclosure, keeps the refusal.
+                Err(error) if error.kind == "event_condition" => {
+                    let mut images = Vec::with_capacity(original.step_bounds.len());
+                    for bound in &original.step_bounds {
+                        w.step()?;
+                        let owner = &bound.origin.instance;
+                        let mut direct = true;
+                        for e in [&bound.active, &bound.value] {
+                            let (n, _, o) = crate::continuous::source_dependency_edges(
+                                e,
+                                original,
+                                owner,
+                                Some(w),
+                            )?;
+                            direct &=
+                                o.is_empty() && n.iter().all(|n| *n == 0 || driven.contains(n));
+                        }
+                        let active = enclose(&bound.active, &nodes, parameters);
+                        let value =
+                            enclose(&bound.value, &nodes, parameters).filter(|v| v.lo >= 0.);
+                        match (direct, active, value) {
+                            (true, Some(active), _) if active.zero() => images.push(None),
+                            (true, _, Some(value)) => images.push(Some(value)),
+                            _ => return Err(error),
+                        }
+                    }
+                    images
+                }
+                Err(error) => return Err(error),
+            };
             for (bound, image) in result.step_bounds.iter_mut().zip(images) {
                 w.step()?;
                 bound.active = Expression::Affine {

@@ -3018,7 +3018,7 @@ class InstanceCompiler:
                         integer_target=self.model.variables.get(name) == "integer",
                         validate_integer=self.validate_integer_value)
                     self.checked_ir(result[name], origin)
-            else:
+            elif isinstance(statement, SyntaxAssignment):
                 if statement.name not in self.ordinary_alias_variables:
                     raise CompileError(f"{self.model.source}:{statement.token.line}: ordinary analog assignment target must be a local variable")
                 if conditional and self.contains_history_call(statement.rhs):
@@ -3082,6 +3082,10 @@ class InstanceCompiler:
                                 raise CompileError("ordinary integer alias requires an executable capture",
                                                    code="unsupported_event_context", token=statement.token,
                                                    instance=self.instance.name)
+            else:
+                raise CompileError("ordinary procedure step requires executable capture support",
+                                   code="unsupported_event_context", token=statement.token,
+                                   instance=self.instance.name)
         return result, emitted
 
     def emit_contributions(self, analog_contributions):

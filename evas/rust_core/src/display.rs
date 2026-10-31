@@ -131,11 +131,13 @@ pub(crate) fn bind(
     states: &[f64],
 ) -> Result<Expression, Error> {
     Ok(match expr {
+        Expression::RealLocal { binding } => {
+            return Err(crate::real_expression::unbound_local(*binding, program))
+        }
         Expression::RealCall { .. }
         | Expression::UnsupportedSystemCall { .. }
         | Expression::RealBinary { .. }
-        | Expression::RealBoundary { .. }
-        | Expression::RealLocal { .. } => bind(
+        | Expression::RealBoundary { .. } => bind(
             &crate::real_expression::materialized(expr)?,
             program,
             owner,

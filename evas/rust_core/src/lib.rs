@@ -4,6 +4,7 @@ mod affine_bounds;
 mod analog;
 mod assembly;
 mod batch;
+mod canonical;
 mod causal_event;
 mod causal_voltage;
 mod continuous;
@@ -42,6 +43,7 @@ mod procedure_operations;
 mod procedure_values;
 mod real_expression;
 mod real_rounding;
+mod same_time_root;
 mod source_domain;
 mod source_uncertainty;
 
@@ -91,6 +93,7 @@ pub fn run_with_threads(mut request: Request, static_threads: usize) -> Result<R
     ir::check_schema_version(u64::from(request.program.schema_version))?;
     event_control::validate(&request.program)?;
     step_bounds::Bounds::new(&request.program)?;
+    canonical::request_program(&mut request.program);
     if let Some(config) = &request.transient {
         if let Some(errors) = &config.pwl_errors_v {
             if errors.len() != request.driven.len()
@@ -237,6 +240,12 @@ pub fn run_with_threads(mut request: Request, static_threads: usize) -> Result<R
                 error
             })?;
             let selection = model.observation_selection(&bounds, &[], &[], &[], &[])?;
+            // Decision 22: the observation certifies this solution with the
+            // same-time roundings its solve stored.
+            if let (Some(plan), Some(view)) = (selection.plan.as_deref(), circuit.procedure_view())
+            {
+                plan.adopt_same_time(&view.plan)?;
+            }
             let (_, nodes) = model.certify_observation(
                 &selection,
                 &bounds,

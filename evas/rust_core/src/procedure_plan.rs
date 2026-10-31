@@ -6,6 +6,7 @@ use crate::interval::Interval as I;
 use crate::ir::Statement as S;
 use crate::procedure_operations::{Cell, Domain, Operation as O};
 use crate::procedure_values::{Fault, Graph, Id};
+use crate::same_time_root::PhysicalFrame;
 use std::sync::Arc;
 
 fn origin_copy(o: &ir::Origin, w: &Work) -> Result<ir::Origin, Error> {
@@ -33,12 +34,16 @@ fn arena<T>(result: Result<T, Fault<Error>>) -> Result<T, Error> {
 mod control;
 #[path = "procedure_history.rs"]
 mod history;
+#[path = "procedure_right_limit.rs"]
+mod right_limit;
 #[derive(Clone)]
 pub(crate) struct Guard {
     pub relation: ir::Relation,
     pub left: Id,
     pub right: Id,
     value: bool,
+    // Decided at the right limit tau+ of a cross-fired body.
+    post_root: bool,
 }
 #[derive(Clone)]
 struct Selector {
@@ -76,14 +81,159 @@ pub(crate) struct Plan {
     branched: bool,
     cell: Arc<std::sync::OnceLock<Arc<crate::procedure_cell::Certificate>>>,
     observation: Arc<std::sync::OnceLock<Vec<f64>>>,
+    // Decision 22: the roundings of program values on a same-time cycle,
+    // recorded by the activation solves of this Plan, or taken over from a
+    // later closure solve of the same activation, keyed by what they read:
+    // the voltages of the marked nodes and the states before. Numeric values
+    // read them for exactly these inputs; a marked value without its record
+    // is refused, never executed.
+    same_time: Arc<std::sync::Mutex<SameTimeRecords>>,
+    // The procedure values on same-time cycles of this Plan's circuit and the
+    // physical nodes their roundings read, from the circuit's structure.
+    same_time_marks: Arc<std::sync::OnceLock<SameTimeMarks>>,
+    // Exact driven source values of an observation, by node, for the exact
+    // equation of a same-time cycle.
+    exact_driven: Arc<std::sync::OnceLock<Vec<Option<num_rational::BigRational>>>>,
     identity: Vec<u8>,
 }
-impl PartialEq for Plan {
-    fn eq(&self, other: &Self) -> bool {
-        self.identity == other.identity
+#[derive(Default)]
+struct SameTimeRecords {
+    records: std::collections::BTreeMap<Vec<u64>, ActivationRecord>,
+    // Keys taken over with values different from this Plan's own record;
+    // they are read as missing.
+    conflicting: std::collections::BTreeSet<Vec<u64>>,
+}
+impl SameTimeRecords {
+    /// Upper bound on B-tree levels. The pinned Rust B-tree has at least six
+    /// children per non-root internal node. The extra level covers root splits.
+    fn levels(len: usize) -> u64 {
+        let mut size = len;
+        let mut levels = 2u64;
+        while size >= 6 {
+            size /= 6;
+            levels += 1;
+        }
+        levels
+    }
+    /// One tree access compares at most eleven keys per level. A u64 word
+    /// comparison is one work unit. The 16 units per level fund moving fixed
+    /// key/value handles and allocating/splitting a node; this is a work bound,
+    /// not a claim that work units equal malloc bytes. No old key is rehashed.
+    fn reserve_key(&self, words: usize, map_ops: u64, set_ops: u64, w: &Work) -> Result<(), Error> {
+        self.reserve_key_for(words, map_ops, set_ops, 0, w)
+    }
+    fn reserve_key_for(
+        &self,
+        words: usize,
+        map_ops: u64,
+        set_ops: u64,
+        growth: usize,
+        w: &Work,
+    ) -> Result<(), Error> {
+        let levels = Self::levels(self.records.len().saturating_add(growth))
+            .saturating_mul(map_ops)
+            .saturating_add(
+                Self::levels(self.conflicting.len().saturating_add(growth)).saturating_mul(set_ops),
+            );
+        w.debit(
+            2,
+            (words as u64)
+                .saturating_mul(11)
+                .saturating_add(16)
+                .saturating_mul(levels)
+                .saturating_add(64),
+        )
+    }
+    /// Reserve the whole transfer before changing marks, entries or tombstones.
+    /// Entry-count metadata funds the iterator walk before it begins. Every
+    /// source key then buys its bounded target lookup and tree mutation. Q limb
+    /// traversal/copy/destruction uses the immutable record's O(1) cost summary.
+    fn reserve_adoption(&self, source: &Self, mark_cost: u64, w: &Work) -> Result<(), Error> {
+        w.debit(
+            2,
+            (source.records.len() as u64)
+                .saturating_add(source.conflicting.len() as u64)
+                .saturating_mul(64)
+                .saturating_add(mark_cost)
+                .saturating_add(128),
+        )?;
+        let growth = source
+            .records
+            .len()
+            .saturating_add(source.conflicting.len());
+        for key in &source.conflicting {
+            self.reserve_key_for(key.len(), 1, 1, growth, w)?;
+            w.debit(2, (key.len() as u64).saturating_mul(16).saturating_add(64))?;
+            if let Some(old) = self.records.get(key) {
+                w.debit(2, old.copy_cost())?;
+            }
+        }
+        for (key, record) in &source.records {
+            self.reserve_key_for(key.len(), 3, 2, growth, w)?;
+            w.debit(
+                2,
+                (key.len() as u64)
+                    .saturating_mul(16)
+                    .saturating_add(record.copy_cost())
+                    .saturating_add(64),
+            )?;
+            // The lookup itself was paid above, before accessing the old entry.
+            if let Some(old) = self.records.get(key) {
+                w.debit(2, old.copy_cost())?;
+            }
+        }
+        Ok(())
     }
 }
-impl Eq for Plan {}
+type SharedPhysical = Arc<PhysicalFrame>;
+/// One certified activation. Program values are stored RN values; physical
+/// values remain exact enclosures until an operation or store rounds them.
+/// The physical vector is immutable and shared, never deep-cloned on adoption.
+#[derive(Clone)]
+struct ActivationRecord {
+    values: Vec<(Id, f64)>,
+    physical: SharedPhysical,
+    physical_cost: u64,
+}
+impl ActivationRecord {
+    fn copy_cost(&self) -> u64 {
+        (self.values.len() as u64)
+            .saturating_mul(32)
+            .saturating_add(self.physical_cost)
+            .saturating_add(128)
+    }
+    fn same(&self, other: &Self) -> bool {
+        self.values.len() == other.values.len()
+            && self
+                .values
+                .iter()
+                .zip(&other.values)
+                .all(|(a, b)| a.0 == b.0 && a.1.to_bits() == b.1.to_bits())
+            // Ratio::eq may divide and allocate for unequal denominators.
+            // Compare the stored proof representation directly, within the
+            // prepaid limb traversal. Different representations conservatively
+            // conflict; equality never invents a new mathematical proof.
+            && (Arc::ptr_eq(&self.physical, &other.physical)
+                || (self.physical.exact_reads == other.physical.exact_reads
+                    && self.physical.values.len() == other.physical.values.len()
+                    && self.physical.values.iter().zip(&other.physical.values).all(|(a,b)| match (a,b) {
+                        (None,None) => true,
+                        (Some(a),Some(b)) => [&a.lo,&a.hi].into_iter().zip([&b.lo,&b.hi])
+                            .all(|(a,b)| a.numer() == b.numer() && a.denom() == b.denom()),
+                        _ => false,
+                    })))
+    }
+}
+#[derive(Default)]
+struct StoredActivation {
+    given: Vec<(Id, f64)>,
+    missing: Vec<Id>,
+    physical: Option<SharedPhysical>,
+}
+struct SameTimeMarks {
+    ids: Vec<Id>,
+    reads: Vec<usize>,
+}
 
 struct Builder<'a> {
     p: &'a Program,
@@ -92,6 +242,12 @@ struct Builder<'a> {
     graph: Graph<O>,
     values: Vec<Cell>,
     physical_values: Vec<bool>,
+    // Values that read a node without an input bound (a solved voltage).
+    solved_values: Vec<bool>,
+    // Depth of statements and values selected by a condition of this activation.
+    selected: usize,
+    // Values stored by an assignment of this activation (latched reads).
+    stored: Vec<bool>,
     states: Vec<Id>,
     initial: Vec<Id>,
     bindings: Vec<Option<Id>>,
@@ -117,6 +273,9 @@ impl Builder<'_> {
         self.w.debit(2, (operands.len() * 32 + 72) as u64)?;
         let physical = matches!(&operation,O::Affine{terms,..} if terms.iter().any(|t|t.node!=0&&t.coefficient!=0.))
             || operands.iter().any(|&id| self.physical_values[id]);
+        let solved = matches!(&operation,O::Affine{terms,..} if terms.iter().any(|t|t.node!=0&&t.coefficient!=0.
+                &&self.domain.node_bounds.get(t.node).is_none_or(|b|!b.finite())))
+            || operands.iter().any(|&id| self.solved_values[id]);
         let args = operands
             .iter()
             .map(|&id| {
@@ -141,6 +300,8 @@ impl Builder<'_> {
         }
         self.w.debit(2, 16)?;
         self.physical_values.push(physical);
+        self.solved_values.push(solved);
+        self.stored.push(false);
         self.values.push(value);
         Ok(id)
     }
@@ -300,6 +461,14 @@ impl Builder<'_> {
             }
             E::Power { base, exponent } => {
                 let a = self.resolve(base)?;
+                // A selected polynomial of a solved voltage stays outside the
+                // condition contract of an ordinary analog activation.
+                if self.selected > 0 && self.event == usize::MAX && self.solved_values[a] {
+                    return Err(Error::new(
+                        "unsupported_transient",
+                        "polynomial transient equations are not supported: a power of a solved voltage is selected by an analog condition",
+                    ));
+                }
                 self.add(O::Power(*exponent), vec![a])
             }
             E::Select {
@@ -310,11 +479,11 @@ impl Builder<'_> {
                 else_value,
                 origin,
             } => {
-                if self.condition(*relation, left, right, origin)? {
-                    self.resolve(then_value)
-                } else {
-                    self.resolve(else_value)
-                }
+                let yes = self.condition(*relation, left, right, origin)?;
+                self.selected += 1;
+                let value = self.resolve(if yes { then_value } else { else_value });
+                self.selected -= 1;
+                value
             }
             E::ArrayRead {
                 states,
@@ -449,15 +618,35 @@ impl Builder<'_> {
         right: &E,
         origin: &ir::Origin,
     ) -> Result<bool, Error> {
+        self.decide(relation, left, right, origin)?
+    }
+    /// Ok(Err): a comparison of a body that reads at tau+ is exactly zero at
+    /// its crossing root and has no post-root certificate (right_limit).
+    fn decide(
+        &mut self,
+        relation: ir::Relation,
+        left: &E,
+        right: &E,
+        origin: &ir::Origin,
+    ) -> Result<Result<bool, Error>, Error> {
         let left = self.resolve(left)?;
         let right = self.resolve(right)?;
         self.effect(left)?;
         self.effect(right)?;
         let a = &self.values[left];
         let b = &self.values[right];
-        let value = if let Some(value) = control::compare(relation, a, b, self.w)? {
-            value
+        let compared = control::compare(relation, a, b, self.w)?;
+        let post = self.event != usize::MAX && crate::event_conditions::post_root_reads(self.event);
+        let decided = if post {
+            match right_limit::decide(self, relation, left, right, compared, origin)? {
+                right_limit::Outcome::Decided(value, post_root) => Some((value, post_root)),
+                right_limit::Outcome::Unsided(error) => return Ok(Err(error)),
+                right_limit::Outcome::Undecided => None,
+            }
         } else {
+            compared.map(|value| (value, false))
+        };
+        let Some((value, post_root)) = decided else {
             self.w.debit(
                 2,
                 (origin.source.len() + origin.instance.len())
@@ -472,9 +661,10 @@ impl Builder<'_> {
             left,
             right,
             value,
+            post_root,
         });
         self.decisions.push(value);
-        Ok(value)
+        Ok(Ok(value))
     }
     fn capture_operator(&mut self, index: usize) -> Result<(), Error> {
         self.w.step()?;
@@ -552,6 +742,7 @@ impl Builder<'_> {
                         p.events.get(self.event).map(|e| &e.origin),
                     )?;
                     self.effect(value)?;
+                    self.stored[value] = true;
                     self.states[a.state] = value;
                     if self.event != usize::MAX {
                         self.actions.last_mut().unwrap().1.push(*index);
@@ -581,6 +772,7 @@ impl Builder<'_> {
                     let rhs = self.resolve(rhs)?;
                     let rhs = self.checked_store(states[slot], rhs, Some(origin))?;
                     self.effect(rhs)?;
+                    self.stored[rhs] = true;
                     self.states[states[slot]] = rhs;
                     if self.event != usize::MAX {
                         self.actions.last_mut().unwrap().1.push(*index + slot);
@@ -614,15 +806,29 @@ impl Builder<'_> {
                     else_body,
                     origin,
                 } => {
-                    let yes = self.condition(*relation, left, right, origin)?;
+                    let yes = match self.decide(*relation, left, right, origin)? {
+                        Ok(yes) => yes,
+                        // Without a tau+ certificate only identical arms continue.
+                        Err(error) => {
+                            if !right_limit::same_arms(then_body, else_body, self.w)? {
+                                return Err(error);
+                            }
+                            self.w.debit(2, 16)?;
+                            self.decisions.extend([false, true]);
+                            crate::diagnostics::counter("event_equivalent_branch_proofs", 1);
+                            true
+                        }
+                    };
                     let start = *index;
                     let yes_count = count(then_body, self.w)?;
+                    self.selected += 1;
                     if yes {
                         self.statements(then_body, index)?;
                     } else {
                         *index = start + yes_count;
                         self.statements(else_body, index)?;
                     }
+                    self.selected -= 1;
                     *index = start + yes_count + count(else_body, self.w)?;
                 }
                 S::Loop {
@@ -710,8 +916,11 @@ impl Builder<'_> {
                     origin,
                 }) => {
                     match self.condition(*relation, left, right, origin) {
-                        Ok(true) => self.steps(then_body)?,
-                        Ok(false) => self.steps(else_body)?,
+                        Ok(yes) => {
+                            self.selected += 1;
+                            self.steps(if yes { then_body } else { else_body })?;
+                            self.selected -= 1;
+                        }
                         Err(error)
                             if error.kind == "event_condition"
                                 && mesh_only(then_body, self.w)?
@@ -862,6 +1071,403 @@ impl Plan {
     pub(crate) fn has_observation(&self) -> bool {
         self.observation.get().is_some()
     }
+    /// A sufficient total-domain proof for every active source-position node.
+    /// Builder emits only selected branches, but retains overwritten effects,
+    /// unused RealBind values, displays, updates and condition operands here.
+    /// A guard depending on candidate voltages needs a global branch proof.
+    pub(crate) fn total_activation_domain(
+        &self,
+        unknown_columns: &[Option<usize>],
+        w: &Work,
+    ) -> Result<bool, Error> {
+        w.debit(2, (self.count as u64).saturating_mul(8).saturating_add(64))?;
+        let mut voltage = vec![false; self.count];
+        for id in 0..self.count {
+            w.step()?;
+            let node = self
+                .graph
+                .node(id)
+                .ok_or_else(|| invalid("missing activation node"))?;
+            w.debit(
+                2,
+                (node.operands.len() as u64)
+                    .saturating_mul(16)
+                    .saturating_add(32),
+            )?;
+            let live = match &node.operation {
+                O::Affine { terms, .. } => {
+                    w.debit(
+                        2,
+                        (terms.len() as u64).saturating_mul(16).saturating_add(32),
+                    )?;
+                    // Driven inputs are fixed for every root candidate. They
+                    // may occur in a certified selected condition (EC5 extras).
+                    terms.iter().any(|t| {
+                        t.node != 0
+                            && t.coefficient != 0.
+                            && unknown_columns.get(t.node).is_none_or(Option::is_some)
+                    })
+                }
+                _ => node.operands.iter().any(|&i| voltage[i]),
+            };
+            voltage[id] = live;
+            let total = match &node.operation {
+                O::Literal(_)
+                | O::Affine { .. }
+                | O::State(_)
+                | O::Operator(_)
+                | O::Add
+                | O::Multiply
+                | O::Power(_)
+                | O::Boundary(..) => true,
+                O::Real(op, _) if !matches!(op, ir::RealOperation::Divide) => true,
+                O::Divide | O::Real(ir::RealOperation::Divide, _) => {
+                    node.operands.get(1).is_some_and(|&i| {
+                        !voltage[i]
+                            && self.captured[i]
+                                .image
+                                .is_some_and(|b| b.lo > 0. || b.hi < 0.)
+                    })
+                }
+                // Candidate-independent partial operations were certified while
+                // constructing this active path. No candidate can change them.
+                _ => !live && self.captured[id].image.is_some(),
+            };
+            if !total {
+                return Ok(false);
+            }
+        }
+        for guard in &self.guards {
+            w.step()?;
+            if voltage[guard.left] || voltage[guard.right] {
+                return Ok(false);
+            }
+        }
+        for selector in &self.selectors {
+            w.step()?;
+            if voltage[selector.index] {
+                return Ok(false);
+            }
+        }
+        Ok(true)
+    }
+    /// Mark the procedure values on same-time cycles of this Plan's circuit
+    /// and the physical nodes their roundings read (decision 22), once.
+    pub(crate) fn mark_same_time(&self, ids: Vec<Id>, reads: Vec<usize>) -> Result<(), Error> {
+        self.work
+            .debit(2, ((ids.len() + reads.len()) * 8 + 64) as u64)?;
+        let _ = self.same_time_marks.set(SameTimeMarks { ids, reads });
+        Ok(())
+    }
+    /// The record key of these inputs: the bits of the marked voltages
+    /// (ground excluded) and of the states before.
+    fn same_time_key(&self, voltages: &[f64], before: &[f64], w: &Work) -> Result<Vec<u64>, Error> {
+        self.work.debit(2, 0)?;
+        if !self.work.same_owner(w) {
+            return Err(invalid(
+                "same-time key has a different request proof account",
+            ));
+        }
+        let reads = self.same_time_marks.get().map(|m| m.reads.as_slice());
+        let length = reads.map_or(voltages.len(), <[usize]>::len) + before.len();
+        w.debit(2, (length * 16 + 32) as u64)?;
+        // Reserve the complete key once. Collecting reads first and then
+        // appending states could allocate a second, larger buffer.
+        let mut key = Vec::with_capacity(length);
+        match reads {
+            Some(reads) => key.extend(
+                reads
+                    .iter()
+                    .map(|&node| voltages.get(node).map_or(u64::MAX, |v| v.to_bits())),
+            ),
+            None => key.extend(voltages.iter().skip(1).map(|v| v.to_bits())),
+        }
+        key.extend(before.iter().map(|v| v.to_bits()));
+        Ok(key)
+    }
+    /// Record the decision 22 roundings an activation solve found for these
+    /// voltages and states, replacing an earlier record of the same inputs.
+    /// Records are kept for the life of the Plan; each is paid.
+    pub(crate) fn record_same_time(
+        &self,
+        voltages: &[f64],
+        before: &[f64],
+        values: Vec<(Id, f64)>,
+        physical: PhysicalFrame,
+    ) -> Result<(), Error> {
+        let key = self.same_time_key(voltages, before, &self.work)?;
+        let mut records = self
+            .same_time
+            .lock()
+            .map_err(|_| invalid("same-time rounding record is poisoned"))?;
+        // Buy the cost calculation before traversing variable-sized proof slots.
+        self.work.debit(
+            2,
+            (physical.values.len() as u64)
+                .saturating_mul(128)
+                .saturating_add(physical.exact_reads.len() as u64)
+                .saturating_add(16),
+        )?;
+        // This certified solve is the sole entry that clears a tombstone.
+        let mut physical_cost = (physical.values.len() as u64)
+            .saturating_mul(128)
+            .saturating_add(physical.exact_reads.len() as u64);
+        for q in physical.values.iter().flatten() {
+            self.work.step()?;
+            for r in [&q.lo, &q.hi] {
+                physical_cost =
+                    physical_cost.saturating_add((r.numer().bits() + r.denom().bits()).div_ceil(8));
+            }
+        }
+        records.reserve_key(key.len(), 1, 1, &self.work)?;
+        self.work.debit(2, physical_cost.saturating_add(64))?;
+        let record = ActivationRecord {
+            values,
+            physical: Arc::new(physical),
+            physical_cost,
+        };
+        let SameTimeRecords {
+            records,
+            conflicting,
+        } = &mut *records;
+        match records.entry(key) {
+            std::collections::btree_map::Entry::Occupied(mut entry) => {
+                self.work.debit(2, entry.get().copy_cost())?;
+                conflicting.remove(entry.key());
+                entry.insert(record);
+            }
+            std::collections::btree_map::Entry::Vacant(entry) => {
+                conflicting.remove(entry.key());
+                entry.insert(record);
+            }
+        }
+        Ok(())
+    }
+    /// The decision 22 roundings recorded for these voltages and states.
+    pub(crate) fn same_time_record(
+        &self,
+        voltages: &[f64],
+        before: &[f64],
+    ) -> Result<Option<Vec<(Id, f64)>>, Error> {
+        Ok(self
+            .same_time_values(voltages, before, &self.work)?
+            .map(|r| r.values))
+    }
+    fn same_time_values(
+        &self,
+        voltages: &[f64],
+        before: &[f64],
+        w: &Work,
+    ) -> Result<Option<ActivationRecord>, Error> {
+        let key = self.same_time_key(voltages, before, w)?;
+        let records = self
+            .same_time
+            .lock()
+            .map_err(|_| invalid("same-time rounding record is poisoned"))?;
+        records.reserve_key(key.len(), 1, 1, w)?;
+        if records.conflicting.contains(&key) {
+            return Ok(None);
+        }
+        let found = records.records.get(&key);
+        if let Some(record) = found {
+            w.debit(2, record.copy_cost())?;
+        }
+        Ok(found.cloned())
+    }
+    /// The decision 22 values a numeric read of `roots` uses (`stored`): the
+    /// record of these inputs, and, when the roots read a marked value it does
+    /// not hold, the marked values to refuse. An unmarked Plan, or an executed
+    /// read, uses neither. Effect roots without a record are checked with
+    /// executed values; they are never published.
+    fn stored_same_time(
+        &self,
+        stored: bool,
+        roots: &[Id],
+        nodes: &[f64],
+        before: &[f64],
+        w: &Work,
+    ) -> Result<StoredActivation, Error> {
+        let Some(marks) = self
+            .same_time_marks
+            .get()
+            .filter(|m| stored && !m.ids.is_empty())
+        else {
+            return Ok(StoredActivation::default());
+        };
+        let record = self.same_time_values(nodes, before, w)?;
+        let (given, physical) = match record {
+            Some(r) => (r.values, Some(r.physical)),
+            None => (Vec::new(), None),
+        };
+        w.debit(
+            2,
+            (marks.ids.len() as u64)
+                .saturating_mul((given.len() as u64).saturating_add(1))
+                .saturating_mul(16)
+                .saturating_add(32),
+        )?;
+        let missing = marks
+            .ids
+            .iter()
+            .copied()
+            .filter(|id| !given.iter().any(|(given, _)| given == id))
+            .collect::<Vec<_>>();
+        if missing.is_empty() || !self.reaches(roots, &missing, w)? {
+            return Ok(StoredActivation {
+                given,
+                physical,
+                missing: Vec::new(),
+            });
+        }
+        Ok(StoredActivation {
+            given,
+            missing,
+            physical,
+        })
+    }
+    /// Whether some root reads one of `targets` (itself or through operands).
+    fn reaches(&self, roots: &[Id], targets: &[Id], w: &Work) -> Result<bool, Error> {
+        self.work.debit(2, 0)?;
+        if !self.work.same_owner(w) {
+            return Err(invalid(
+                "same-time reachability has a different request proof account",
+            ));
+        }
+        // Buy both bitmap construction and all source-list reads first. A
+        // target membership check in the traversal is then O(1), never a scan
+        // of every marked target for each graph node.
+        w.debit(
+            2,
+            (self.count as u64)
+                .saturating_mul(16)
+                .saturating_add((roots.len() as u64).saturating_mul(32))
+                .saturating_add((targets.len() as u64).saturating_mul(16))
+                .saturating_add(64),
+        )?;
+        let mut seen = vec![false; self.count];
+        let mut wanted = vec![false; self.count];
+        for &target in targets {
+            if let Some(slot) = wanted.get_mut(target) {
+                *slot = true;
+            }
+        }
+        let mut stack = roots.to_vec();
+        while let Some(id) = stack.pop() {
+            w.step()?;
+            if id >= self.count || std::mem::replace(&mut seen[id], true) {
+                continue;
+            }
+            if wanted[id] {
+                return Ok(true);
+            }
+            if let Some(node) = self.graph.node(id) {
+                w.debit(
+                    2,
+                    (node.operands.len() as u64)
+                        .saturating_mul(32)
+                        .saturating_add(64),
+                )?;
+                stack.extend_from_slice(&node.operands);
+            }
+        }
+        Ok(false)
+    }
+    /// Compare complete activation identities only on the original request ledger.
+    /// The entry guard and owner checks precede even the pointer fast path.
+    /// Both byte lengths are O(1) metadata; twice their sum bounds byte reads.
+    pub(crate) fn same_activation(&self, other: &Plan, w: &Work) -> Result<bool, Error> {
+        w.debit(2, 64)?;
+        self.work.debit(2, 0)?;
+        other.work.debit(2, 0)?;
+        if !self.work.same_owner(w) || !other.work.same_owner(w) {
+            return Err(invalid(
+                "activation comparison has different request proof accounts",
+            ));
+        }
+        if std::ptr::eq(self, other) {
+            return Ok(true);
+        }
+        w.debit(
+            2,
+            (self.identity.len() as u64)
+                .saturating_add(other.identity.len() as u64)
+                .saturating_mul(2)
+                .saturating_add(64),
+        )?;
+        Ok(self.identity == other.identity)
+    }
+    /// Decision 22: take over the same-time roundings that a later solve of the
+    /// same activation path (equal identity: a closure iteration of the same
+    /// event) recorded, so this Plan's readers at that solve's voltages read
+    /// them. A key this Plan recorded with different values is then read as
+    /// missing.
+    pub(crate) fn adopt_same_time(&self, other: &Plan) -> Result<(), Error> {
+        if !self.same_activation(other, &self.work)? {
+            return Ok(());
+        }
+        if Arc::ptr_eq(&self.same_time, &other.same_time) {
+            return Ok(());
+        }
+        // Lock both owners in a fixed address order. Reserve the complete
+        // transfer before cloning keys/values or changing either marks or
+        // records. Borrow the immutable source directly; no snapshot is needed.
+        self.work.debit(2, 64)?;
+        let self_first = Arc::as_ptr(&self.same_time) < Arc::as_ptr(&other.same_time);
+        let (first, second) = if self_first {
+            (&self.same_time, &other.same_time)
+        } else {
+            (&other.same_time, &self.same_time)
+        };
+        let first = first
+            .lock()
+            .map_err(|_| invalid("same-time rounding record is poisoned"))?;
+        let second = second
+            .lock()
+            .map_err(|_| invalid("same-time rounding record is poisoned"))?;
+        let (source, mut ours) = if self_first {
+            (second, first)
+        } else {
+            (first, second)
+        };
+        let marks = other.same_time_marks.get();
+        let mark_cost = marks.map_or(0, |m| {
+            (m.ids.len() as u64)
+                .saturating_add(m.reads.len() as u64)
+                .saturating_mul(16)
+                .saturating_add(64)
+        });
+        ours.reserve_adoption(&source, mark_cost, &self.work)?;
+        if self.same_time_marks.get().is_none() {
+            if let Some(m) = marks {
+                let _ = self.same_time_marks.set(SameTimeMarks {
+                    ids: m.ids.clone(),
+                    reads: m.reads.clone(),
+                });
+            }
+        }
+        for key in &source.conflicting {
+            ours.records.remove(key);
+            ours.conflicting.insert(key.clone());
+        }
+        for (key, record) in &source.records {
+            match ours.records.get(key) {
+                Some(old) if old.same(record) => {}
+                Some(_) => {
+                    ours.records.remove(key);
+                    ours.conflicting.insert(key.clone());
+                }
+                None if ours.conflicting.contains(key) => {}
+                None => {
+                    ours.records.insert(key.clone(), record.clone());
+                }
+            }
+        }
+        Ok(())
+    }
+    /// Exact driven source values of this observation, by node.
+    pub(crate) fn set_exact_driven(&self, values: Vec<Option<num_rational::BigRational>>) {
+        let _ = self.exact_driven.set(values);
+    }
     // Keep nominal/full boxes, source frame, and original Work explicit.
     #[allow(clippy::too_many_arguments)]
     fn evaluate(
@@ -875,6 +1481,31 @@ impl Plan {
         operators: &[Option<f64>],
         operator_bounds: &[I],
         context: Option<&Context<'_>>,
+        w: &Work,
+    ) -> Result<Vec<Cell>, Error> {
+        self.evaluate_with(
+            execute_effects,
+            roots,
+            (nodes, node_bounds),
+            (states, state_bounds),
+            (operators, operator_bounds),
+            context,
+            &StoredActivation::default(),
+            w,
+        )
+    }
+    // `evaluate` with the decision 22 rounding of some values given and the
+    // marked values without a record (`missing`) refused.
+    #[allow(clippy::too_many_arguments)]
+    fn evaluate_with(
+        &self,
+        execute_effects: bool,
+        roots: &[Id],
+        (nodes, node_bounds): (&[Option<f64>], &[I]),
+        (states, state_bounds): (&[Option<f64>], &[I]),
+        (operators, operator_bounds): (&[Option<f64>], &[I]),
+        context: Option<&Context<'_>>,
+        stored: &StoredActivation,
         w: &Work,
     ) -> Result<Vec<Cell>, Error> {
         w.debit(2, ((roots.len() + self.effects.len()) * 16 + 64) as u64)?;
@@ -900,10 +1531,96 @@ impl Plan {
             Vec::new()
         };
         all.extend_from_slice(roots);
-        let mut values = arena(self.graph.evaluate(
+        let exact_count = if stored.physical.is_some() {
+            self.count
+        } else {
+            0
+        };
+        w.debit(
+            2,
+            (exact_count as u64).saturating_mul(160).saturating_add(64),
+        )?;
+        let mut exact_cells = vec![None; exact_count];
+        let mut physical_reads = vec![false; exact_count];
+        let mut values = arena(self.graph.evaluate_indexed(
             &all,
-            &mut |op, args| {
+            &mut |id, op, args| {
+                let physical_operand = stored.physical.as_ref().is_some_and(|physical| match op {
+                    O::Affine { terms, .. } => terms.iter().any(|t| physical.exact_reads.get(t.node).copied().unwrap_or(false)),
+                    O::Add | O::Multiply | O::Divide | O::Power(_) | O::Boundary(ir::RealBoundaryKind::Sample, _) =>
+                        self.graph.node(id).is_some_and(|n| n.operands.iter().any(|&i| physical_reads[i])),
+                    _ => false,
+                });
+                // Expanded physical intermediates also have numeric projection
+                // records. They must never replace the physical proof operand.
+                if let Some(&(_, value)) = stored.given.iter().find(|(given, _)| *given == id).filter(|_| !physical_operand) {
+                    w.step()?;
+                    if stored.physical.is_some() {
+                        exact_cells[id] = Some(crate::same_time_root::Q::point(crate::same_time_root::binary(value, w)?));
+                    }
+                    return Ok(Cell {
+                        source_domain: None,
+                        nominal: Some(value),
+                        image: Some(I::point(value)),
+                        mathematical: None,
+                        proof: None,
+                    });
+                }
+                if stored.missing.contains(&id) {
+                    return Err(Error::new(
+                        "unsupported_transient",
+                        format!(
+                            "procedure value {id} on a same-time cycle through a program real has no \
+                             stored rounding for these voltages and states: reading it where its \
+                             activation was not solved is not implemented (capability limit)"
+                        ),
+                    ));
+                }
+                if let Some(physical) = &stored.physical {
+                    use crate::same_time_root as root;
+                    w.step()?;
+                    let node = self.graph.node(id).ok_or_else(|| invalid("missing procedure node"))?;
+                    let physical_read = matches!(op, O::Affine { terms, .. } if terms.iter().any(|t| physical.exact_reads.get(t.node).copied().unwrap_or(false)))
+                        || node.operands.iter().any(|&i| physical_reads[i]);
+                    if physical_read {
+                        let q = match op {
+                            O::Affine { constant, terms } => {
+                                w.debit(2, (terms.len() as u64).saturating_mul(32).saturating_add(64))?;
+                                let expression = ir::Expression::Affine { constant: *constant, terms: terms.to_vec() };
+                                root::activation_image(&expression, &physical.values, &physical.exact_reads, w)?
+                            }
+                            _ => {
+                                w.debit(2, (node.operands.len() as u64).saturating_mul(16).saturating_add(32))?;
+                                let operands = node.operands.iter().map(|&i| exact_cells[i].as_ref()).collect::<Option<Vec<_>>>();
+                                match operands { Some(args) => root::procedure_image(op, &args, w)?, None => None }
+                            }
+                        }.ok_or_else(|| Error::new("unsupported_transient",
+                            "same-time physical consumer has no exact certified operation image (capability limit)"))?;
+                        let lo = root::nearest(&q.lo, "same-time physical consumer", w)?;
+                        let hi = root::nearest(&q.hi, "same-time physical consumer", w)?;
+                        if lo.to_bits() != hi.to_bits() && lo != hi {
+                            return Err(Error::new("unsupported_transient",
+                                "same-time physical consumer has no certified rounding (capability limit)"));
+                        }
+                        let image = root::enclosure(&q, "same-time physical consumer", w)?;
+                        let proof = if q.is_point() { Some(Arc::new(root::copy_q(&q, w)?.lo)) } else { None };
+                        physical_reads[id] = match op {
+                            O::Real(..) => false,
+                            O::Boundary(kind, _) => matches!(kind, ir::RealBoundaryKind::Sample),
+                            _ => true,
+                        };
+                        exact_cells[id] = Some(q);
+                        return Ok(Cell { source_domain: None, nominal: Some(lo), image: Some(image),
+                            mathematical: proof.clone(), proof });
+                    }
+                }
                 let value = op.evaluate(args, &domain, w)?;
+                if stored.physical.is_some() {
+                    if let Some(q) = value.proof.as_ref().or(value.mathematical.as_ref()) {
+                        w.debit(2, (q.numer().bits() + q.denom().bits()).div_ceil(8).saturating_mul(4).saturating_add(128))?;
+                        exact_cells[id] = Some(crate::same_time_root::Q::point((**q).clone()));
+                    }
+                }
                 // Builder.add may postpone unknown electrical values. This final
                 // evaluation cannot discard an unresolved overwritten store merely
                 // because only effect roots retain it.
@@ -932,11 +1649,24 @@ impl Plan {
         context: Option<&Context<'_>>,
         w: &Work,
     ) -> Result<Vec<f64>, Error> {
-        self.numeric_selected(true, roots, nodes, before, context, w)
+        self.numeric_selected(true, true, roots, nodes, before, context, w)
     }
+    /// `numeric_values` executed: the activation's own values at these
+    /// voltages, for a solve that has not stored its decision 22 roundings.
+    pub(crate) fn executed_values(
+        &self,
+        roots: &[Id],
+        nodes: &[f64],
+        before: &[f64],
+        w: &Work,
+    ) -> Result<Vec<f64>, Error> {
+        self.numeric_selected(true, false, roots, nodes, before, None, w)
+    }
+    #[allow(clippy::too_many_arguments)]
     fn numeric_selected(
         &self,
         execute_effects: bool,
+        stored: bool,
         roots: &[Id],
         nodes: &[f64],
         before: &[f64],
@@ -965,16 +1695,17 @@ impl Plan {
                 })
             })
             .collect::<Vec<_>>();
-        self.evaluate(
+        // A same-time cycle's program values are the roundings its solve
+        // recorded for these inputs (decision 22), never their execution.
+        let stored = self.stored_same_time(stored, roots, nodes, before, w)?;
+        self.evaluate_with(
             execute_effects,
             roots,
-            &points,
-            &bounds,
-            &states,
-            &state_bounds,
-            &operators,
-            &operator_bounds,
+            (&points, &bounds),
+            (&states, &state_bounds),
+            (&operators, &operator_bounds),
             context,
+            &stored,
             w,
         )?
         .iter()
@@ -1024,16 +1755,16 @@ impl Plan {
             .copied()
             .map(Some)
             .collect::<Vec<_>>();
-        let values = self.evaluate(
+        // A reset that reads a same-time cycle reads its stored roundings.
+        let stored = self.stored_same_time(true, &ids, nodes, before, w)?;
+        let values = self.evaluate_with(
             true,
             &ids,
-            &points,
-            node_bounds,
-            &states,
-            before_bounds,
-            &ops,
-            operator_bounds,
+            (&points, node_bounds),
+            (&states, before_bounds),
+            (&ops, operator_bounds),
             context,
+            &stored,
             w,
         )?;
         let mut values = values.iter();
@@ -1302,6 +2033,9 @@ pub(crate) fn execute(
         graph: Graph::new(),
         values: Vec::new(),
         physical_values: Vec::new(),
+        solved_values: Vec::new(),
+        selected: 0,
+        stored: Vec::new(),
         states: Vec::new(),
         initial: Vec::new(),
         bindings: vec![None; p.real_bindings.len()],
@@ -1350,12 +2084,29 @@ pub(crate) fn execute(
             }
         }
     }
+    // Fixed-width identity encoding has an O(1) size bound before any walk or
+    // allocation. Length prefixes distinguish the three ordered sequences.
+    let identity_len = updates
+        .len()
+        .saturating_add(builder.effects.len())
+        .saturating_mul(8)
+        .saturating_add(builder.decisions.len())
+        .saturating_add(24);
     w.debit(
         2,
-        ((updates.len() + builder.effects.len() + builder.decisions.len()) * 16 + 64) as u64,
+        (identity_len as u64).saturating_mul(2).saturating_add(64),
     )?;
-    let identity = serde_json::to_vec(&(&updates, &builder.effects, &builder.decisions))
-        .map_err(|e| invalid(&e.to_string()))?;
+    let mut identity = Vec::with_capacity(identity_len);
+    identity.extend_from_slice(&(updates.len() as u64).to_le_bytes());
+    for &id in &updates {
+        identity.extend_from_slice(&(id as u64).to_le_bytes());
+    }
+    identity.extend_from_slice(&(builder.effects.len() as u64).to_le_bytes());
+    for &id in &builder.effects {
+        identity.extend_from_slice(&(id as u64).to_le_bytes());
+    }
+    identity.extend_from_slice(&(builder.decisions.len() as u64).to_le_bytes());
+    identity.extend(builder.decisions.iter().map(|&v| u8::from(v)));
     let count = builder.values.len();
     w.debit(2, (count * 16 + 32) as u64)?;
     let mut foldable = Vec::with_capacity(count);
@@ -1421,6 +2172,9 @@ pub(crate) fn execute(
         branched,
         cell: Arc::new(std::sync::OnceLock::new()),
         observation: Arc::new(std::sync::OnceLock::new()),
+        same_time: Arc::new(std::sync::Mutex::new(SameTimeRecords::default())),
+        same_time_marks: Arc::new(std::sync::OnceLock::new()),
+        exact_driven: Arc::new(std::sync::OnceLock::new()),
         identity,
     })
 }
@@ -1490,6 +2244,18 @@ impl CircuitView {
         }
         Ok(false)
     }
+    /// The exact source value of a driven node at this activation, if known.
+    pub(crate) fn exact_input(&self, node: usize) -> Option<num_rational::BigRational> {
+        if node >= self.node_count {
+            return None;
+        }
+        if let Some(Some(value)) = self.plan.exact_driven.get().and_then(|v| v.get(node)) {
+            return Some(value.clone());
+        }
+        self.plan.base.floor_node(node).cloned()
+    }
+    /// The voltages with the activation's procedure values: on a same-time
+    /// cycle the roundings the solve stored for them (decision 22).
     pub(crate) fn expand(&self, voltages: &[f64]) -> Result<Vec<f64>, Error> {
         let w = &self.plan.work;
         w.debit(2, ((self.node_count + self.plan.count) * 16 + 64) as u64)?;
@@ -1497,6 +2263,18 @@ impl CircuitView {
         values.extend(
             self.plan
                 .numeric_values(&self.ids, &values, &self.before, None, w)?,
+        );
+        Ok(values)
+    }
+    /// `expand` with every procedure value executed, for a solve's own
+    /// iterates before it stores its roundings.
+    pub(crate) fn expand_executed(&self, voltages: &[f64]) -> Result<Vec<f64>, Error> {
+        let w = &self.plan.work;
+        w.debit(2, ((self.node_count + self.plan.count) * 16 + 64) as u64)?;
+        let mut values = voltages[..self.node_count].to_vec();
+        values.extend(
+            self.plan
+                .executed_values(&self.ids, &values, &self.before, w)?,
         );
         Ok(values)
     }
@@ -1870,6 +2648,25 @@ impl Plan {
             ids: layout.ids,
             physical_program,
         }));
+        // Decision 22: the procedure values on same-time cycles of this
+        // circuit and the nodes their roundings read key this Plan's records.
+        let structure = circuit.same_time_structure();
+        if !structure.values.is_empty() {
+            let view = circuit
+                .procedure_view()
+                .ok_or_else(|| invalid("procedure circuit lost its view"))?;
+            let ids = structure
+                .values
+                .iter()
+                .map(|&node| {
+                    view.ids
+                        .get(node.wrapping_sub(view.node_count))
+                        .copied()
+                        .ok_or_else(|| invalid("same-time value has no procedure value"))
+                })
+                .collect::<Result<Vec<_>, Error>>()?;
+            self.mark_same_time(ids, structure.reads.clone())?;
+        }
         Ok(circuit)
     }
     // Keep nominal/full boxes, source frame, and original Work explicit.
@@ -2020,6 +2817,20 @@ impl Plan {
             .map(Cell::bound)
             .collect::<Result<Vec<_>, _>>()?;
         circuit.set_procedure_parameter_bounds(&parameter_bounds)?;
+        // Decision 22: the program values of a same-time cycle are certified
+        // only where the activation's solve stored them.
+        if self
+            .same_time_marks
+            .get()
+            .is_some_and(|m| !m.ids.is_empty())
+            && self.same_time_values(voltages, &before, w)?.is_none()
+        {
+            return Err(Error::new(
+                "waveform_accuracy",
+                "cannot certify same-time program values: their activation stored no rounding for \
+                 these voltages and states",
+            ));
+        }
         let mut values = voltages[..p.nodes.len()].to_vec();
         values.extend(self.numeric_values(&layout.ids, &values, &before, context, w)?);
         let solution = ir::Solution {
@@ -2072,7 +2883,10 @@ impl Plan {
                 let budget = tolerances.absolute
                     + tolerances.relative * point.abs().max(bound.lo.abs()).max(bound.hi.abs());
                 if !bound.finite() || point - bound.lo > budget || bound.hi - point > budget {
-                    return Err(Error::new("waveform_accuracy",format!("procedure affine image [{:e},{:e}] excludes native {:e} within original voltage budget; {} fired gates",bound.lo,bound.hi,point,self.actions.len())));
+                    // Name the node whose same-time value the image cannot bound.
+                    let name = &layout.program.nodes[node];
+                    w.debit(2, (name.len() + 256) as u64)?;
+                    return Err(Error::new("waveform_accuracy",format!("same-time forward error at {name} is not certified: procedure affine image [{:e},{:e}] excludes native {:e} within original voltage budget {budget:e}; {} fired gates",bound.lo,bound.hi,point,self.actions.len())));
                 }
             }
             projected
@@ -2275,8 +3089,8 @@ mod immutable_plan_owner_tests {
         let (p, first, before) = fixture(0.1, &w);
         let (_, same_number, other_before) = fixture(0.1, &w);
         let (_, changed, changed_before) = fixture(0.2, &w);
-        assert!(first.as_ref() == same_number.as_ref());
-        assert!(first.as_ref() == changed.as_ref());
+        assert!(first.same_activation(&same_number, &w).unwrap());
+        assert!(first.same_activation(&changed, &w).unwrap());
         for (plan, current) in [
             (&first, &before),
             (&same_number, &other_before),
@@ -2363,6 +3177,379 @@ mod immutable_plan_owner_tests {
             );
             assert_eq!(w.spent(), spent);
             assert_eq!(Arc::strong_count(&plan), strong);
+        }
+    }
+}
+
+#[cfg(test)]
+mod same_time_record_tests {
+    use super::*;
+    use crate::ir::{EventTrigger, Request, Solution, Tolerances};
+
+    // @(timer(0.5)) q = -0.5*V(y) + V(u) + 1 with V(y) <+ q: the same-time
+    // equation y = -y/2 + u + 1 has the root 2(u + 1)/3, so decision 22 stores
+    // RN(2/3) at u = 0 (testdata/same_time_record.va).
+    fn fixture(w: &Work) -> (Program, Arc<Plan>, Vec<f64>) {
+        let request: Request =
+            serde_json::from_str(include_str!("testdata/same_time_record.json")).unwrap();
+        let p = request.program;
+        let before = vec![0.; p.states.len()];
+        let old = before.iter().map(|&v| I::point(v)).collect::<Vec<_>>();
+        let mut nodes = vec![
+            I {
+                lo: f64::NEG_INFINITY,
+                hi: f64::INFINITY
+            };
+            p.nodes.len()
+        ];
+        nodes[0] = I::ZERO;
+        nodes[1] = I { lo: 0., hi: 16. };
+        let timer = p
+            .events
+            .iter()
+            .position(|e| matches!(e.trigger, EventTrigger::Timer { .. }))
+            .unwrap();
+        let plan = execute(&p, &[timer], &nodes, &old, None, w).unwrap();
+        (p, Arc::new(plan), before)
+    }
+
+    #[test]
+    fn stored_roundings_outlive_later_solves_and_ignore_the_ground_zero_sign() {
+        let w = Work::default();
+        let (p, plan, before) = fixture(&w);
+        let c = plan
+            .circuit(&p, &["u".into()], &before, &[], Tolerances::default(), &w)
+            .unwrap();
+        let first = c.solve(&[0.]).unwrap();
+        let rn = 2.0_f64 / 3.0;
+        assert_eq!(first.voltages[2].to_bits(), rn.to_bits());
+        // More solves of the same activation than the eight records it kept
+        // before (review r1 R2-R1): the first record is still read.
+        for u in 1..=12 {
+            c.solve(&[f64::from(u)]).unwrap();
+        }
+        let q = |nodes: &[f64]| {
+            plan.numeric_states(&p, nodes, &before, None, &w)
+                .map(|s| s[0])
+        };
+        assert_eq!(q(&first.voltages).unwrap().to_bits(), rn.to_bits());
+        // The sign of the ground zero is not an input of the record.
+        let mut negative_ground = first.voltages.clone();
+        negative_ground[0] = -0.0;
+        assert_eq!(q(&negative_ground).unwrap().to_bits(), rn.to_bits());
+    }
+
+    #[test]
+    fn a_missing_stored_rounding_is_refused_never_executed() {
+        let w = Work::default();
+        let (p, plan, before) = fixture(&w);
+        let c = plan
+            .circuit(&p, &["u".into()], &before, &[], Tolerances::default(), &w)
+            .unwrap();
+        let first = c.solve(&[0.]).unwrap();
+        // Voltages this activation was never solved at have no record: the
+        // executed value of the rounded map is not read in its place.
+        let mut other = first.voltages.clone();
+        other[2] = 0.5;
+        let error = plan
+            .numeric_states(&p, &other, &before, None, &w)
+            .unwrap_err();
+        assert_eq!(error.kind, "unsupported_transient");
+        assert!(
+            error.message.contains("has no stored rounding"),
+            "{}",
+            error.message
+        );
+        // Nor is the certificate of such a point given by execution: it is
+        // refused as a certificate.
+        let unsolved = Solution {
+            voltages: other,
+            ..first.clone()
+        };
+        let error = c.waveform_bounds(&unsolved, &[I::point(0.)]).unwrap_err();
+        assert_eq!(error.kind, "waveform_accuracy");
+        assert!(
+            error.message.contains("stored no rounding"),
+            "{}",
+            error.message
+        );
+    }
+}
+
+#[cfg(test)]
+mod activation_transfer_tests {
+    use super::*;
+    fn marked(w: &Work) -> Plan {
+        let request: crate::ir::Request =
+            serde_json::from_str(include_str!("testdata/same_time_record.json")).unwrap();
+        let p = request.program;
+        let before = vec![I::ZERO; p.states.len()];
+        let mut nodes = vec![
+            I {
+                lo: f64::NEG_INFINITY,
+                hi: f64::INFINITY
+            };
+            p.nodes.len()
+        ];
+        nodes[0] = I::ZERO;
+        nodes[1] = I::ZERO;
+        let timer = p
+            .events
+            .iter()
+            .position(|e| matches!(e.trigger, crate::ir::EventTrigger::Timer { .. }))
+            .unwrap();
+        let plan = execute(&p, &[timer], &nodes, &before, None, w).unwrap();
+        plan.mark_same_time(vec![7], vec![1]).unwrap();
+        plan
+    }
+    #[test]
+    fn conflict_is_transitive_and_only_recertification_clears_it() {
+        let w = Work::default();
+        let a = marked(&w);
+        let b = marked(&w);
+        let c = marked(&w);
+        let nodes = [0., 0.];
+        let before = [0.];
+        a.record_same_time(
+            &nodes,
+            &before,
+            vec![(7, 2.0 / 3.0)],
+            PhysicalFrame::default(),
+        )
+        .unwrap();
+        b.record_same_time(
+            &nodes,
+            &before,
+            vec![(7, (2.0_f64 / 3.0).next_up())],
+            PhysicalFrame::default(),
+        )
+        .unwrap();
+        c.adopt_same_time(&a).unwrap();
+        a.adopt_same_time(&b).unwrap();
+        c.adopt_same_time(&a).unwrap();
+        assert!(c.same_time_record(&nodes, &before).unwrap().is_none());
+        c.adopt_same_time(&b).unwrap();
+        assert!(c.same_time_record(&nodes, &before).unwrap().is_none());
+        c.record_same_time(
+            &nodes,
+            &before,
+            vec![(7, 2.0 / 3.0)],
+            PhysicalFrame::default(),
+        )
+        .unwrap();
+        assert_eq!(
+            c.same_time_record(&nodes, &before).unwrap().unwrap()[0].1,
+            2.0 / 3.0
+        );
+    }
+    #[test]
+    fn exhausted_transfer_and_retries_leave_target_unchanged() {
+        let w = Work::for_limit(100_000_000);
+        let a = marked(&w);
+        let b = marked(&w);
+        for k in 0..16384 {
+            a.record_same_time(
+                &[0., k as f64],
+                &[0.],
+                vec![(7, k as f64)],
+                PhysicalFrame::default(),
+            )
+            .unwrap();
+        }
+        b.record_same_time(&[0., -1.], &[0.], vec![(7, -1.)], PhysicalFrame::default())
+            .unwrap();
+        w.debit(2, 100_000_000 - w.spent()).unwrap();
+        for _ in 0..3 {
+            assert_eq!(b.adopt_same_time(&a).unwrap_err().kind, "step_budget");
+            let guard = b.same_time.lock().unwrap();
+            assert_eq!(guard.records.len(), 1);
+            assert!(guard.conflicting.is_empty());
+        }
+    }
+    #[test]
+    fn exhausted_identity_lengths_and_equal_buffers_are_guarded() {
+        for n in [0, 1, 1024, 1 << 20] {
+            let limit = 20_000_000;
+            let w = Work::for_limit(limit);
+            let mut a = marked(&w);
+            let mut b = marked(&w);
+            w.debit(2, 4 * n as u64 + 4096).unwrap();
+            a.identity = vec![1; n];
+            b.identity = vec![1; n];
+            w.debit(2, limit - w.spent()).unwrap();
+            for _ in 0..3 {
+                let spent = w.spent();
+                assert_eq!(b.adopt_same_time(&a).unwrap_err().kind, "step_budget");
+                assert_eq!(w.spent() - spent, 64);
+            }
+        }
+    }
+    #[test]
+    fn positive_low_remainder_transfer_is_atomic_with_many_tombstones() {
+        const LIMIT: u64 = 1_000_000_000;
+        for remaining in [0, 1, 8192] {
+            let w = Work::for_limit(LIMIT);
+            let a = marked(&w);
+            let b = marked(&w);
+            for k in 0..1792 {
+                let x = marked(&w);
+                let y = marked(&w);
+                let key = [0., k as f64];
+                x.record_same_time(&key, &[], vec![(7, 0.)], PhysicalFrame::default())
+                    .unwrap();
+                y.record_same_time(&key, &[], vec![(7, 1.)], PhysicalFrame::default())
+                    .unwrap();
+                x.adopt_same_time(&y).unwrap();
+                a.adopt_same_time(&x).unwrap();
+            }
+            let x = marked(&w);
+            let key = [0., 1792.];
+            b.record_same_time(&key, &[], vec![(7, 0.)], PhysicalFrame::default())
+                .unwrap();
+            x.record_same_time(&key, &[], vec![(7, 1.)], PhysicalFrame::default())
+                .unwrap();
+            b.adopt_same_time(&x).unwrap();
+            let before = {
+                let g = a.same_time.lock().unwrap();
+                (g.records.len(), g.conflicting.clone())
+            };
+            w.debit(2, LIMIT - w.spent() - remaining).unwrap();
+            let result = a.adopt_same_time(&b);
+            if result.is_err() {
+                let g = a.same_time.lock().unwrap();
+                assert_eq!(g.records.len(), before.0);
+                assert_eq!(g.conflicting, before.1);
+            } else {
+                let g = a.same_time.lock().unwrap();
+                assert_eq!(g.conflicting.len(), 1793);
+            }
+            // This structure no longer reallocates or rehashes all target keys at 1792.
+        }
+    }
+    #[test]
+    fn positive_remainder_must_fund_the_whole_identity_comparison() {
+        let limit = 20_000_000;
+        let w = Work::for_limit(limit);
+        let mut a = marked(&w);
+        let mut b = marked(&w);
+        let n = 1usize << 20;
+        w.debit(2, (n as u64) * 4 + 4096).unwrap();
+        a.identity = vec![1; n];
+        b.identity = vec![1; n];
+        w.debit(2, limit - w.spent() - (n as u64) * 2).unwrap();
+        assert_eq!(b.adopt_same_time(&a).unwrap_err().kind, "step_budget");
+        assert!(b.same_time.lock().unwrap().records.is_empty());
+    }
+    #[test]
+    fn outer_identity_comparison_uses_original_owner_before_payload_or_fast_path() {
+        const LIMIT: u64 = 20_000_000;
+        for unequal in [false, true] {
+            let w = Work::for_limit(LIMIT);
+            let mut a = marked(&w);
+            let mut b = marked(&w);
+            let n = 1 << 20;
+            w.debit(2, 4 * n as u64 + 4096).unwrap();
+            a.identity = vec![1; n];
+            b.identity = vec![1; n];
+            if unequal {
+                b.identity[n - 1] = 2;
+            }
+            let marks = b.same_time_marks.get().unwrap().ids.clone();
+            w.debit(2, LIMIT - w.spent() - 8192).unwrap();
+            for _ in 0..3 {
+                assert_eq!(a.same_activation(&b, &w).unwrap_err().kind, "step_budget");
+                assert_eq!(b.same_activation(&b, &w).unwrap_err().kind, "step_budget");
+                assert_eq!(b.same_time_marks.get().unwrap().ids, marks);
+                assert!(b.same_time.lock().unwrap().records.is_empty());
+                assert!(b.same_time.lock().unwrap().conflicting.is_empty());
+            }
+        }
+    }
+
+    #[test]
+    fn outer_identity_preserves_equal_unequal_and_owner_semantics() {
+        let w = Work::default();
+        let a = marked(&w);
+        let mut b = marked(&w);
+        assert!(a.same_activation(&a, &w).unwrap());
+        assert!(a.same_activation(&b, &w).unwrap());
+        b.identity.push(9);
+        assert!(!a.same_activation(&b, &w).unwrap());
+        let other = Work::default();
+        assert!(a.same_activation(&a, &other).is_err());
+        let c = marked(&other);
+        assert!(a.same_activation(&c, &w).is_err());
+    }
+
+    #[test]
+    fn selection_plan_presence_and_nested_identity_use_the_same_owner() {
+        use crate::event_conditions::Selection;
+        let w = Work::default();
+        let a = Selection {
+            plan: Some(Arc::new(marked(&w))),
+            ..Selection::default()
+        };
+        let b = Selection {
+            plan: Some(Arc::new(marked(&w))),
+            ..Selection::default()
+        };
+        assert!(a.same_path(&b, &w).unwrap());
+        assert!(!a.same_path(&Selection::default(), &w).unwrap());
+        let other = Work::default();
+        let c = Selection {
+            plan: Some(Arc::new(marked(&other))),
+            ..Selection::default()
+        };
+        assert!(a.same_path(&c, &w).is_err());
+        assert!(a.same_path(&Selection::default(), &other).is_err());
+    }
+    #[test]
+    fn nested_selection_identity_reserves_before_cached_or_replay_comparison() {
+        use crate::event_conditions::Selection;
+        const LIMIT: u64 = 20_000_000;
+        for unequal in [false, true] {
+            let w = Work::for_limit(LIMIT);
+            let mut a = marked(&w);
+            let mut b = marked(&w);
+            let n = 1 << 20;
+            w.debit(2, 4 * n as u64 + 4096).unwrap();
+            a.identity = vec![1; n];
+            b.identity = vec![1; n];
+            if unequal {
+                b.identity[n - 1] = 2;
+            }
+            let cached = Some(Selection {
+                plan: Some(Arc::new(a)),
+                ..Selection::default()
+            });
+            let replay = Selection {
+                plan: Some(Arc::new(b)),
+                ..Selection::default()
+            };
+            let path = cached.as_ref().unwrap();
+            let cached_plan = path.plan.as_ref().unwrap();
+            let plan_ptr = Arc::as_ptr(cached_plan);
+            let marks_ptr = cached_plan.same_time_marks.get().unwrap().ids.as_ptr();
+            w.debit(2, LIMIT - w.spent() - 8192).unwrap();
+            for _ in 0..3 {
+                assert_eq!(path.same_path(&replay, &w).unwrap_err().kind, "step_budget");
+                assert_eq!(Arc::as_ptr(path.plan.as_ref().unwrap()), plan_ptr);
+                assert_eq!(
+                    cached_plan.same_time_marks.get().unwrap().ids.as_ptr(),
+                    marks_ptr
+                );
+                assert!(cached_plan.same_time.lock().unwrap().records.is_empty());
+                assert!(cached_plan.same_time.lock().unwrap().conflicting.is_empty());
+                assert!(replay
+                    .plan
+                    .as_ref()
+                    .unwrap()
+                    .same_time
+                    .lock()
+                    .unwrap()
+                    .records
+                    .is_empty());
+            }
         }
     }
 }

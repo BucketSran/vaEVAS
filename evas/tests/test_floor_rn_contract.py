@@ -190,11 +190,13 @@ class FloorRNOracle(unittest.TestCase):
 
     def test_actual_exact_root_sample(self):
         # A unique source root is 1/2; w=1-t gives the exact same mathematical
-        # value 1/2 there. The event's right window is not a new body time.
+        # value 1/2 there, so q=floor(2*w)=1 at tau. A falling w enters bin 0
+        # just after tau, where q<1 holds: the body reads tau+ and refuses rather
+        # than guess (events.md cross-right-limit).
         with floor_contract(self,'right'):
             program=root_program()
-            result=transient(program,dict(u=UP,w=DOWN),[0,.25,.75,1],stop=1,max_step=2,kernel=KERNEL)
-            self.assertEqual([r['after'] for r in result['transient']['events']],[[0,0],[1,3]])
+            with self.assertRaisesRegex(KernelError,'event_condition'):
+                transient(program,dict(u=UP,w=DOWN),[0,.25,.75,1],stop=1,max_step=2,kernel=KERNEL)
 
     def test_actual_true_cross_cell_band_requires_a_numerical_refusal(self):
         with floor_contract(self,'right'):

@@ -56,7 +56,7 @@ fn linear(bits: u64) -> u64 {
 // Covers temporary storage, schoolbook multiply/divide and Euclidean
 // normalization/continued-fraction comparison inside one Ratio helper. The
 // bound uses the maximum temporary width, not merely the returned value size.
-fn rational_fee(bits: u64) -> u64 {
+pub(crate) fn rational_fee(bits: u64) -> u64 {
     let n = words(bits);
     64_u64.saturating_add(16_u64.saturating_mul(n.saturating_mul(n).saturating_mul(n)))
 }

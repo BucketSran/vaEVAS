@@ -344,6 +344,28 @@ pub(crate) fn call_children(
     calls::children(e, f)
 }
 
+/// Whether an event body can compare anything: an if, a loop, a selection or
+/// a call. Bounded by the validated body; nothing is evaluated.
+pub(crate) fn body_controls(body: &[ir::Statement]) -> bool {
+    fn expression(e: &E) -> bool {
+        if matches!(e, E::Select { .. } | E::RealCall { .. }) {
+            return true;
+        }
+        let mut found = false;
+        let _ = calls::children(e, &mut |child| {
+            found |= expression(child);
+            Ok(())
+        });
+        found
+    }
+    body.iter().any(|statement| match statement {
+        ir::Statement::If { .. } | ir::Statement::Loop { .. } => true,
+        ir::Statement::Assign(a) => expression(&a.rhs),
+        ir::Statement::ArrayWrite { index, rhs, .. } => expression(index) || expression(rhs),
+        ir::Statement::Display { args, .. } => args.iter().any(expression),
+    })
+}
+
 /// One immutable validated source graph and the same request ledger, shared by
 /// active/passive condition views rather than deep-copying the model twice.
 pub(crate) struct Prepared {

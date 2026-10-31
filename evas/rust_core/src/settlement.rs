@@ -389,13 +389,16 @@ fn prepare_impl(
     });
     // Replay the same input/root certificate. A small equation residual
     // cannot certify a branch chosen from rounded representative inputs.
-    if model.conditions.select_with_proofs(
-        events_and_roots.0,
-        input_bounds,
-        events_and_roots.1,
-        before_bounds,
-        proofs,
-    )? != selection
+    if !model
+        .conditions
+        .select_with_proofs(
+            events_and_roots.0,
+            input_bounds,
+            events_and_roots.1,
+            before_bounds,
+            proofs,
+        )?
+        .same_path(&selection, crate::real_expression::work(model))?
     {
         return Err(Error::new(
             "event_consistency",

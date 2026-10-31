@@ -15,9 +15,9 @@ class EventWindowSamplingContracts(unittest.TestCase):
     def test_matching_fired_guard_proves_equality_at_the_actual_root(self):
         from fractions import Fraction as Q
         root = (Q(.5)-Q(.2))/(Q(.8)-Q(.2))
-        # The root samples exactly binary64 .5. RN preserves equality, so
-        # both non-strict tests hold and both strict tests are false.
-        for relation, expected_state in [('>=', 2), ('<=', 2), ('>', 3), ('<', 3)]:
+        # LRM 2.4 5.10.3.1: the event occurs after the rising crossing, so
+        # the matching guard proves u>0.5 just after tau (see cross-right-limit).
+        for relation, expected_state in [('>=', 2), ('<=', 3), ('>', 2), ('<', 3)]:
             program = compile_model(
                 "@(initial_step) q=0; @(cross(V(u,r)-0.5,1,1e-9,1e-8)) "
                 f"if (V(u,r){relation}0.5) q=2; else q=3; V(y,r)<+idt(q*q,0);",

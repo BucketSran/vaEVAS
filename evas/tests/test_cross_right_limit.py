@@ -24,7 +24,23 @@ KNOT_UP = [[0, 0], [.5, .5], [1, 1]]
 KNOT_DOWN = [[0, 1], [.5, .5], [1, 0]]
 
 
-def events(text, u=UP, w=None, *, return_program=False, **tolerances):
+def body_records(result):
+    """Event records after the IR33 initial_step batch.
+
+    IR33 records the initial_step bodies first, at t=0. Expectations written
+    for the later events read this view; the initial records are checked to be
+    exactly that leading prefix, never silently dropped.
+    """
+    records = result['transient']['events']
+    count = 0
+    while count < len(records) and records[count]['kind'] == 'initial_step':
+        assert records[count]['time'] == 0, records[count]
+        count += 1
+    assert all(r['kind'] != 'initial_step' for r in records[count:]), 'initial records form the leading batch'
+    return records[count:]
+
+
+def events(text, u=UP, w=None, *, return_program=False, initial=False, **tolerances):
     ports, directions = ('u,w,y,r', 'input u,w; output y; inout r;') if w else ('u,y,r', 'input u; output y; inout r;')
     text = model(text, 'real q, p;', ports=ports, directions=directions)
     connections = dict(u='u', y='y', r='0', **({'w': 'w'} if w else {}))
@@ -34,7 +50,8 @@ def events(text, u=UP, w=None, *, return_program=False, **tolerances):
     if return_program:
         return program, result
     names = result['transient']['state_names']
-    return [dict(zip(names, e['after'])) for e in result['transient']['events']]
+    records = result['transient']['events'] if initial else body_records(result)
+    return [dict(zip(names, e['after'])) for e in records]
 
 
 def run(body, *, trigger, u=UP, w=None, **tolerances):
@@ -42,13 +59,14 @@ def run(body, *, trigger, u=UP, w=None, **tolerances):
     return [e['dut:q'] for e in events(text, u, w, **tolerances)]
 
 
-def check_rounded_rising_cross(result, program):
-    # The original UP source has exact tau=.5 and RN(u(tau))=.5.
+def check_rising_cross(result, program):
+    # The UP source has exact tau=.5 and RN(u(tau))=.5. The body reads tau+,
+    # where u>0.5, so q=2: the sample's rounding does not decide the side.
     from initial_record_contract import check_initial_record_batch
     view = check_initial_record_batch(result, program, [0., 0.], [0., 0.], 1)
     assert result['transient']['state_names'] == ['dut:q', 'dut:p']
     assert result['transient']['times'] == [0., .25, .75, 1.]
-    assert result['transient']['states'] == [[0.,0.], [0.,0.], [3.,0.], [3.,0.]]
+    assert result['transient']['states'] == [[0.,0.], [0.,0.], [2.,0.], [2.,0.]]
     assert len(result['solutions']) == 4
     records = view['transient']['events']
     assert len(records) == 1
@@ -64,14 +82,15 @@ def check_rounded_rising_cross(result, program):
     assert record['time'] == .5 and record.get('observation_time_bounds', [.5,.5]) == [.5,.5]
     assert record['guard_value'] == 0.
     assert not record.get('fired_triggers')
-    assert record['before'] == [0.,0.] and record['after'] == [3.,0.]
+    assert record['before'] == [0.,0.] and record['after'] == [2.,0.]
 
 class CrossRightLimit(unittest.TestCase):
     def test_fired_guard_predicate_sees_crossing_side(self):
-        # At the proved root tau=0.5, the sampled binary64 value is 0.5.
+        # Rising u crosses 0.5 at tau=0.5; just after, u>0.5.
+        self.assertEqual(run('if (V(u,r)>0.5) q=2; else q=3;', trigger='cross(V(u,r)-0.5,0)'), [2])
         text = '@(initial_step) begin q=0; p=0; end @(cross(V(u,r)-0.5,0)) begin if (V(u,r)>0.5) q=2; else q=3; end V(y,r)<+q;'
         program, result = events(text, return_program=True)
-        check_rounded_rising_cross(result, program)
+        check_rising_cross(result, program)
         # Falling u: just after, u<0.5.
         self.assertEqual(run('if (V(u,r)>0.5) q=2; else q=3;', trigger='cross(V(u,r)-0.5,0)', u=DOWN), [3])
         self.assertEqual(run('if (V(u,r)<0.5) q=2; else q=3;', trigger='cross(V(u,r)-0.5,0)', u=DOWN), [2])
@@ -169,10 +188,14 @@ class CrossRightLimit(unittest.TestCase):
         self.assertEqual(run('if (0.5-V(u,r)<=0) q=2; else q=3;', trigger=cross, u=DOWN), [3])
 
 
-def sampled(body, *, w, trigger='cross(V(u,r)-0.5,1)', u=UP):
-    """Body reads p after one rising crossing of u at tau=0.5 with input w."""
+def sampled(body, *, w, trigger='cross(V(u,r)-0.5,1)', u=UP, initial=True):
+    """Body reads p after one rising crossing of u at tau=0.5 with input w.
+
+    The floor expectations carry the IR33 initial_step record (their RN
+    contract checks every t=0 record); initial=False reads the later events.
+    """
     text = f'@(initial_step) begin q=0; p=0; end @({trigger}) begin {body} end V(y,r)<+p;'
-    return [e['dut:p'] for e in events(text, u, w)]
+    return [e['dut:p'] for e in events(text, u, w, initial=initial)]
 
 
 class CrossRightWindow(unittest.TestCase):
@@ -194,22 +217,23 @@ class CrossRightWindow(unittest.TestCase):
 
     def test_floor_argument_on_an_integer_needs_its_bin_after_tau(self):
         with floor_contract(self, 'right'):
-            # The actual source root is tau=1/2 and w(tau)=1/2 in both
-            # exact ramps. Sample/RN(2*w)=1, then q is a held value. W used
-            # for isolation/direction does not reexecute this assignment at tau+.
+            # 2*w is exactly 1 at tau. A falling w enters floor bin 0 just after
+            # tau, where q<1 holds, but the root value is 1: refuse rather than guess.
             floor = 'q=floor(2*V(w,r)); '
-            self.assertEqual(sampled(floor + 'if (q<1) p=2; else p=3;', w=DOWN), [0, 3])
+            with self.assertRaisesRegex(KernelError, 'event_condition'):
+                sampled(floor + 'if (q<1) p=2; else p=3;', w=DOWN)
+            # A rising w stays in bin 1 over the whole window: q<1 is false.
             self.assertEqual(sampled(floor + 'if (q<1) p=2; else p=3;', w=UP), [0, 3])
 
     def test_latched_input_cancels_exactly(self):
         # q=V(w) at te, so V(w)-q is identically zero although w moves.
-        self.assertEqual(sampled('q=V(w,r); if (V(w,r)-q>0) p=2; else p=3;', w=UP), [3])
-        self.assertEqual(sampled('q=V(w,r); if (V(w,r)-q>=0) p=2; else p=3;', w=UP), [2])
+        self.assertEqual(sampled('q=V(w,r); if (V(w,r)-q>0) p=2; else p=3;', w=UP, initial=False), [3])
+        self.assertEqual(sampled('q=V(w,r); if (V(w,r)-q>=0) p=2; else p=3;', w=UP, initial=False), [2])
         # u rises and w falls: u-q>0 just after tau, but the window enclosure
         # [0, 2e] only proves u-q>=0. The strict comparison is refused.
         with self.assertRaisesRegex(KernelError, 'event_condition'):
-            sampled('q=V(w,r); if (V(u,r)-q>0) p=2; else p=3;', w=DOWN)
-        self.assertEqual(sampled('q=V(w,r); if (V(u,r)-q>=0) p=2; else p=3;', w=DOWN), [2])
+            sampled('q=V(w,r); if (V(u,r)-q>0) p=2; else p=3;', w=DOWN, initial=False)
+        self.assertEqual(sampled('q=V(w,r); if (V(u,r)-q>=0) p=2; else p=3;', w=DOWN, initial=False), [2])
 
     def test_constant_inputs_keep_an_exact_root_tie(self):
         # u rises through 0.5 twice. With w flat at 0.7, the second edge
@@ -218,10 +242,10 @@ class CrossRightWindow(unittest.TestCase):
         twice = [[0, 0], [.25, 1], [.5, 0], [.75, 1], [1, 0]]
         flat = [[0, .7], [1, .7]]
         body = 'if (V(w,r)-0.3-q<0) p=p+2; else p=p+3; q=V(w,r)-0.3;'
-        self.assertEqual(sampled(body, w=flat, u=twice), [3, 6])
+        self.assertEqual(sampled(body, w=flat, u=twice, initial=False), [3, 6])
         # Moving w changes 0.7-0.3 between the edges; no tie arises.
         ramp = [[0, .7], [1, .8]]
-        self.assertEqual(sampled(body, w=ramp, u=twice), [3, 6])
+        self.assertEqual(sampled(body, w=ramp, u=twice, initial=False), [3, 6])
 
     def test_settled_history_is_a_plateau_but_a_moving_one_is_not(self):
         def history(body, timer, edge):
@@ -232,7 +256,7 @@ class CrossRightWindow(unittest.TestCase):
             program = compile_sources({'right.va': text}, [instance(connections=dict(u='u', y='y', w='w', r='0'))])
             result = transient(program, {'u': UP}, [0, .25, .75, 1], stop=1, max_step=2, kernel=KERNEL)
             names = result['transient']['state_names']
-            return [dict(zip(names, e['after']))['dut:p'] for e in result['transient']['events']]
+            return [dict(zip(names, e['after']))['dut:p'] for e in body_records(result)]
         # transition(q) reached 0.5 long before tau and stays there.
         settled = (0.5, '1n')
         self.assertEqual(history('if (V(y,r)>0.5) p=2; else p=3;', 0.1, settled), [0, 3])

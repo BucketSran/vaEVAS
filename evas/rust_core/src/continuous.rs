@@ -812,9 +812,12 @@ impl AlgebraicSystem {
         loop {
             let before = active_nodes.len();
             for contribution in &program.contributions {
-                let row = affine_bounds::affine(&contribution.rhs, program)?;
                 let active_lhs = active_nodes.contains(&contribution.positive)
                     || active_nodes.contains(&contribution.negative);
+                if outside_network(contribution, active_lhs)? {
+                    continue;
+                }
+                let row = affine_bounds::affine(&contribution.rhs, program)?;
                 if row_refs_network(&row, program, &network_outputs)
                     || active_lhs
                     || row_refs_nodes(&row, &active_nodes)
@@ -841,6 +844,11 @@ impl AlgebraicSystem {
         let width = state_count + source_count + source_count + 1;
         let mut grouped = BTreeMap::<BranchIdentity, Vec<I>>::new();
         for contribution in &program.contributions {
+            let active_lhs = active_nodes.contains(&contribution.positive)
+                || active_nodes.contains(&contribution.negative);
+            if outside_network(contribution, active_lhs)? {
+                continue;
+            }
             let rhs = affine_bounds::affine(&contribution.rhs, program)?;
             let relevant = active_nodes.contains(&contribution.positive)
                 || active_nodes.contains(&contribution.negative)
@@ -1003,6 +1011,9 @@ fn select_network_operators(
         // exception is the same finite source-affine/single-transition family
         // proved for dedicated live filters, checked per original expression.
         for contribution in &program.contributions {
+            if outside_network(contribution, false)? {
+                continue;
+            }
             if let Err(error) = structural_affine(&contribution.rhs, program, &contribution.origin)
             {
                 if !crate::operators::transition_filter::live_contribution(
@@ -1056,9 +1067,12 @@ fn close_selected_through_voltage_relations(
         let before = active_nodes.len();
         let network_outputs = selected.clone();
         for contribution in &program.contributions {
-            let deps = structural_affine(&contribution.rhs, program, &contribution.origin)?;
             let active_lhs = active_nodes.contains(&contribution.positive)
                 || active_nodes.contains(&contribution.negative);
+            if outside_network(contribution, active_lhs)? {
+                continue;
+            }
+            let deps = structural_affine(&contribution.rhs, program, &contribution.origin)?;
             if active_lhs
                 || deps
                     .node_dependencies
@@ -1094,6 +1108,27 @@ fn close_selected_through_voltage_relations(
         }
     }
     Ok(())
+}
+
+/// A contribution that reads a procedure-bound value (IR33 real local, call or
+/// rounded arithmetic) has no affine row. While no continuous operator input
+/// or root reads its branch it is a readout: the complete circuit evaluates it
+/// in its procedure frame at every observation. A network that needs the
+/// branch refuses it by name (H1).
+fn outside_network(
+    contribution: &crate::ir::Contribution,
+    active_lhs: bool,
+) -> Result<bool, Error> {
+    if !crate::real_expression::needs_frame(&contribution.rhs) {
+        return Ok(false);
+    }
+    if active_lhs {
+        return Err(unsupported(
+            &contribution.origin,
+            "continuous network cannot solve a branch that reads a procedure-bound real value",
+        ));
+    }
+    Ok(true)
 }
 
 fn continuous_operator_input(spec: &OperatorSpec) -> Option<(&Expression, &Origin)> {

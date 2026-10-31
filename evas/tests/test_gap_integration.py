@@ -154,13 +154,14 @@ class GapIntegration(unittest.TestCase):
                 _, actual = rows(program, {"u":[[0,1],[3,2]]}, [1,3], max_step=3)
                 for row, u in zip(actual, (Fraction(4,3), Fraction(2))):
                     self.assertAlmostEqual(row["y"], cubic_root(float(u), .25, 1), delta=1e-10)
-                # Adding irrelevant source statements must not bypass the
-                # original PWL error certificate on the polynomial path.
+                # SL-SO-20261030-003 (EC-5): irrelevant statements do not alter
+                # the global multiple-root check, which precedes numerical certification.
                 high_gain = model("tmp=1e16*(V(u,r)-1)+1e-60*pow(V(y,r),3); " +
                                   extra + " V(y,r)<+tmp;", "real tmp,unused;")
                 candidate = compile_sources({"poly-gain.va": high_gain},
                                             [Instance("dut","m",dict(u="u",y="y",r="0"))])
-                with self.assertRaisesRegex(KernelError, "waveform_accuracy"):
+                # SL-SO-20261030-003 (EC-5)
+                with self.assertRaisesRegex(KernelError, r'unsupported_transient: same-time feedback through a program real at poly-gain\.va:2:[0-9]+ \(dut\): its exact equation has more than one solution'):
                     transient(candidate, {"u":[[0,1],[3,2]]}, [1,3], stop=3, max_step=3,
                               kernel=KERNEL, vabstol=1e-12, reltol=0)
 

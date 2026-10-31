@@ -893,6 +893,15 @@ G=2^30、d1=.1、d2=.2、x=t/3 的冻结 1e-10 和 1e-6 预算均拒绝，后者
 电压贡献中的比例系数由模型提供。参数绑定后每个展开实例的调用点有独立 operator 索引，
 多个调用点即使贡献同一支路也不共享初值或历史。
 
+IR33 的过程 real（例如先夹限的 `freq`）可作积分输入，积分结果也可先存入过程 real 再贡献（H1，#270 R3-N2）。
+请求进入内核时，闭合常数为零的 assert 先去掉：按表 4-18，assert 从不为非零时 `idt(x,ic,0)` 即 `idt(x,ic)`，
+两者的值与证书相同（`canonical.rs`）。状态 assert 的复位依赖审计沿过程绑定的全部源定义及其控制谓词
+（`reset_dependencies.rs` 使用 `source_dependency_edges`）；连续网络不求解只读取过程绑定值的读出支路，
+由完整电路在其过程帧内于每个观察点求值与验收；网络确实需要这类支路时以 `unsupported_operator`
+按支路来源拒绝。过程绑定值在没有过程帧的消费者中一律给出点名的类型化拒绝，不返回 `invalid_ir`。
+独立答案见 [过程帧中的 idt 与阈值](../../tests/test_idt_reset_procedure_frame.py)
+（requirement:idt-reset-argument-procedure-frame v6）。
+
 ### 分段解析答案与误差参考
 
 源语义拐点的并集将输入分为仿射段。在 `[t₀,t₁]` 上令 `d=t₁-t₀`、

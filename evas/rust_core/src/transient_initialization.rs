@@ -1226,13 +1226,10 @@ fn prepare_stage(
         });
     if replay_states != states
         || !same_displays
-        || model.conditions.select_with_proofs(
-            blocks,
-            &inputs,
-            ids,
-            before_bounds,
-            context.as_ref(),
-        )? != selection
+        || !model
+            .conditions
+            .select_with_proofs(blocks, &inputs, ids, before_bounds, context.as_ref())?
+            .same_path(&selection, crate::real_expression::work(model))?
     {
         return Err(Error::new(
             "event_consistency",

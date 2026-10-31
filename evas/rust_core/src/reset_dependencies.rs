@@ -12,7 +12,23 @@ pub(crate) fn check(
     actions: &[Vec<(usize, AffineState)>],
     groups: &[Vec<usize>],
     assembled: &AssembledCircuit,
+    work: Option<&crate::transition_source_plan::Work>,
 ) -> Result<(), Error> {
+    // A procedure-bound integrand or assert (IR33 real local or rounded
+    // arithmetic) depends on every source definition of its bindings,
+    // including their control predicates; follow them on the request owner.
+    // Without procedures there is no frame and the direct edges stay.
+    let framed = |expr: &crate::ir::Expression| match work {
+        Some(work) => crate::history_input::required_frame(expr, work),
+        None => Ok(false),
+    };
+    let dependencies = |expr: &crate::ir::Expression, owner: &str| {
+        if framed(expr)? {
+            crate::continuous::source_dependency_edges(expr, program, owner, work)
+        } else {
+            crate::continuous::integral_dependency_edges(expr, program, owner)
+        }
+    };
     let direct_filters: Vec<_> = program
         .operators
         .iter()
@@ -106,20 +122,16 @@ pub(crate) fn check(
         } = spec
         {
             expressions.push(reset);
-            let expression = affine(reset, program, &spec.origin().instance)?;
-            resets.push((
-                operators + index,
-                expression.state_dependencies,
-                spec.origin(),
-            ));
+            let state_dependencies = if framed(reset)? {
+                dependencies(reset, &spec.origin().instance)?.1
+            } else {
+                affine(reset, program, &spec.origin().instance)?.state_dependencies
+            };
+            resets.push((operators + index, state_dependencies, spec.origin()));
         }
         for (expression_index, expr) in expressions.into_iter().enumerate() {
             let (nodes, state_dependencies, operator_dependencies) =
-                crate::continuous::integral_dependency_edges(
-                    expr,
-                    program,
-                    &spec.origin().instance,
-                )?;
+                dependencies(expr, &spec.origin().instance)?;
             let dependencies: Vec<_> = nodes
                 .into_iter()
                 .chain(state_dependencies.into_iter().map(|state| states + state))

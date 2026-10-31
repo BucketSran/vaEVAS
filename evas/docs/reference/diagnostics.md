@@ -72,8 +72,10 @@ CLI 在 stderr 输出同样的 JSON 并返回 2；命令参数错误也采用此
 
 本 E1 切片把已审计的 token、宏/函数、genvar、层级与数组预算来源映射到已有
 `resource_budget`；递归/未确定原因继续 unknown。内核 `nonconvergence` 为 numerical，
-`nonfinite_arithmetic` 为 numerical，`state_range` 为 unsupported，`worker_failure` 为 internal。
-数值溢出不证明模型错误或内核缺陷；state_range 表示整数状态超出实现的 32 位边界。
+`nonfinite_arithmetic` 为 numerical，`worker_failure` 为 internal。整数状态或整数运算超出实现的
+signed 32 位边界时，内核报 `integer_range`（IR33 过程执行与整数原语；`errors.py` 尚未为它登记类别，
+诊断类别为 unknown）；旧路径 `events.rs::check_state` 仍报登记为 unsupported 的 `state_range`。
+数值溢出不证明模型错误或内核缺陷；integer_range 表示整数值超出实现的 32 位边界。
 `event_budget` 为 resource，`input_io`、`diagnostic_io`、`worker_start` 为 infrastructure。
 来源、实际触发、全源码观察与消费者兼容见[来源登记](../development/diagnostic-sources.md)。
 完整机器清单覆盖已审计工厂/包装/转换；不表示所有出口都实际触发，也没有交付外部 benchmark 消费适配。

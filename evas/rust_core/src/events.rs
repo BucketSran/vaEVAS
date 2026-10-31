@@ -205,11 +205,13 @@ pub(crate) fn affine(
         has_variables: false,
     };
     match expr {
+        Expression::RealLocal { binding } => {
+            return Err(crate::real_expression::unbound_local(*binding, program))
+        }
         Expression::RealCall { .. }
         | Expression::UnsupportedSystemCall { .. }
         | Expression::RealBinary { .. }
-        | Expression::RealBoundary { .. }
-        | Expression::RealLocal { .. } => {
+        | Expression::RealBoundary { .. } => {
             return affine(&crate::real_expression::materialized(expr)?, program, owner)
         }
         Expression::Forcing { .. } => {
@@ -1035,7 +1037,13 @@ impl EventModel {
                 &program,
                 &event.origin.instance,
                 passive_events[index],
-                original_role_work,
+                // A procedure-backed display argument is a Plan effect root:
+                // its qualification walk runs on the procedure owner (NF-11).
+                if event.procedure_id.is_some() {
+                    original_role_work.or(real_work.as_ref())
+                } else {
+                    original_role_work
+                },
             )?;
         }
         let mut actions = Vec::new();
@@ -1489,13 +1497,13 @@ impl EventModel {
             .any(|(a, b)| a.rhs != b.rhs);
         // Linear operator outputs remain live forcing. A sampled coefficient
         // may reuse its map only with the same full interval endpoint bits.
-        let cached = self
-            .certificate
-            .borrow()
-            .as_ref()
-            .is_some_and(|(path, bounds)| {
-                path == selection && bounds.matches_operator_bindings(operators)
-            });
+        let cached = match self.certificate.borrow().as_ref() {
+            Some((path, bounds)) => {
+                path.same_path(selection, crate::real_expression::work(self))?
+                    && bounds.matches_operator_bindings(operators)
+            }
+            None => false,
+        };
         if resolved {
             let bounds = Bounds::for_program_with_operators(self, selection, &selected, operators)?;
             let result =
@@ -1528,7 +1536,10 @@ impl EventModel {
             } else {
                 Bounds::for_program_with_operators(self, selection, &selected, operators)?
             };
-            *cache = Some((selection.clone(), bounds));
+            *cache = Some((
+                selection.try_clone_path(crate::real_expression::work(self))?,
+                bounds,
+            ));
         } else {
             crate::diagnostics::counter("certificate_cache_hits", 1);
         }
@@ -1649,13 +1660,13 @@ impl EventModel {
             .any(|(a, b)| a.rhs != b.rhs);
         // Linear operator outputs remain live forcing. A sampled coefficient
         // may reuse its map only with the same full interval endpoint bits.
-        let cached = self
-            .certificate
-            .borrow()
-            .as_ref()
-            .is_some_and(|(path, bounds)| {
-                path == selection && bounds.matches_operator_bindings(operators)
-            });
+        let cached = match self.certificate.borrow().as_ref() {
+            Some((path, bounds)) => {
+                path.same_path(selection, crate::real_expression::work(self))?
+                    && bounds.matches_operator_bindings(operators)
+            }
+            None => false,
+        };
         if resolved {
             let bounds = Bounds::for_program_with_operators(self, selection, &selected, operators)?;
             let result = bounds.check_states(self, inputs, before, operators, voltages, states)?;
@@ -1687,7 +1698,10 @@ impl EventModel {
             } else {
                 Bounds::for_program_with_operators(self, selection, &selected, operators)?
             };
-            *cache = Some((selection.clone(), bounds));
+            *cache = Some((
+                selection.try_clone_path(crate::real_expression::work(self))?,
+                bounds,
+            ));
         } else {
             crate::diagnostics::counter("certificate_cache_hits", 1);
         }
@@ -2325,6 +2339,9 @@ impl EventModel {
                         None => false,
                     };
                 if !pending {
+                    if let Some((trajectory, time, _, _)) = observation {
+                        self.bind_exact_sources(&circuit, inputs, trajectory, time)?;
+                    }
                     return Ok(circuit);
                 }
             }
@@ -2348,6 +2365,58 @@ impl EventModel {
         .try_with_operators(bounds)?;
         context.set_candidate_frame(states, operators, &[], false)?;
         build(&context)
+    }
+
+    /// The exact source value of each driven node at an observation time,
+    /// installed in the Plan of a circuit with a same-time cycle through
+    /// program reals: its exact equation reads them (decision 22).
+    fn bind_exact_sources(
+        &self,
+        circuit: &Circuit,
+        inputs: &[I],
+        trajectory: &crate::pwl::Trajectory,
+        time: f64,
+    ) -> Result<(), Error> {
+        let Some(view) = circuit.procedure_view() else {
+            return Ok(());
+        };
+        if !circuit.has_same_time_cycle()? {
+            return Ok(());
+        }
+        let Some(root) = crate::exact_source::RootTime::point(time) else {
+            return Ok(());
+        };
+        let work = crate::real_expression::work(self);
+        work.debit(
+            2,
+            ((self.program.nodes.len() + self.driven.len()) * 64 + 64) as u64,
+        )?;
+        let mut exact = vec![None; self.program.nodes.len()];
+        for (k, (name, bound)) in self.driven.iter().zip(inputs).enumerate() {
+            work.debit(2, 200_000)?;
+            let Some(value) = trajectory
+                .exact_sources
+                .get(k)
+                .and_then(Option::as_ref)
+                .and_then(|curve| curve.at_root(&root))
+            else {
+                continue;
+            };
+            if !crate::exact_source::enclosure(&value)
+                .is_some_and(|e| bound.lo <= e.lo && e.hi <= bound.hi)
+            {
+                continue;
+            }
+            for (node, candidate) in self.program.nodes.iter().enumerate() {
+                work.debit(2, (candidate.len() + name.len() + 1) as u64)?;
+                if candidate == name {
+                    exact[node] = Some(value);
+                    break;
+                }
+            }
+        }
+        view.plan.set_exact_driven(exact);
+        Ok(())
     }
 
     pub(crate) fn circuit_at(
@@ -2893,6 +2962,9 @@ impl EventModel {
             &self.actions,
             &groups,
             &assembled,
+            // Construction already bound the owner of a program with
+            // procedures; any other program leaves its lazy owner to the caller.
+            (!self.program.procedures.is_empty()).then(|| crate::real_expression::work(self)),
         )
     }
 

@@ -48,9 +48,9 @@ class SourceFloorEvent(unittest.TestCase):
     def test_certified_bin_controls_source_order_branch_and_display(self):
         p = program('q=floor((V(u,r)/0.9)*15+0.5); $display("floor=%d",q);$display("direct=%g",floor((V(u,r)/0.9)*15+0.5)); if(q<1)q=7;else q=8;')
         r = run(p, .03)
-        self.assertEqual(final(r), 7)
-        self.assertIn('floor=0', json.dumps(r))
-        self.assertIn('direct=0', json.dumps(r))
+        self.assertEqual(final(r), 8)
+        self.assertIn('floor=1', json.dumps(r))
+        self.assertIn('direct=1', json.dumps(r))
 
     def test_divide_exact_cut_negative_and_real_floor_result_type(self):
         with floor_contract(self, 'source'):

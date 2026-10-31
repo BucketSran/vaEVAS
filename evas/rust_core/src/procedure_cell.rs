@@ -793,7 +793,11 @@ mod tests {
             ),
             (
                 include_str!("testdata/rn_cell_coupled17.json"),
-                vec![-0.09523809523809534, 1.619047619047619],
+                // SL-SO-20261030-001 (EC-2): RN(-2/21) and RN(34/21), the
+                // roundings of the exact root (decision 22). EVAS system
+                // k = 17 counts from 0: case 18, counted from 1, in the card
+                // history and r2_method_sample_answers_v3.
+                vec![-0.09523809523809523, 1.619047619047619], // SL-SO-20261030-001 (EC-2)
             ),
             (
                 include_str!("testdata/rn_cell_coupled18.json"),
@@ -869,12 +873,16 @@ mod tests {
         assert_eq!(owner.spent(), spent);
     }
     #[test]
-    fn rn_cell_negative_gain_binary_two_cycle_has_no_certified_root() {
-        let error = crate::run(
+    // SL-SO-20261030-001 (EC-1): the rounded map's two-cycle stores RN of the
+    // exact roots 2/3 and 4/3 of s = -s/2 + n (decision 22).
+    fn rn_cell_negative_gain_binary_two_cycle_stores_rn_of_its_exact_root() {
+        // SL-SO-20261030-001 (EC-1): answered, no longer refused.
+        let response = crate::run(
             serde_json::from_str(include_str!("testdata/rn_cell_no_float_root.json")).unwrap(),
         )
-        .err()
         .unwrap();
-        assert_eq!(error.kind, "waveform_accuracy");
+        let states = serde_json::to_value(response).unwrap()["transient"]["states"].clone(); // SL-SO-20261030-001 (EC-1)
+        assert_eq!(states[1], serde_json::json!([1.0, 0.6666666666666666])); // SL-SO-20261030-001 (EC-1)
+        assert_eq!(states[2], serde_json::json!([2.0, 1.3333333333333333])); // SL-SO-20261030-001 (EC-1)
     }
 }

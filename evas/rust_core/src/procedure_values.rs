@@ -103,6 +103,27 @@ impl<T> Graph<T> {
         C: FnMut(&V) -> Result<V, E>,
         D: FnMut(u64) -> Result<(), E>,
     {
+        self.evaluate_indexed(
+            roots,
+            &mut |_, node: &T, inputs: &[V]| operation(node, inputs),
+            clone_value,
+            debit,
+        )
+    }
+
+    /// `evaluate` with the ID of each evaluated node passed to its callback.
+    pub(crate) fn evaluate_indexed<V, E, F, C, D>(
+        &self,
+        roots: &[Id],
+        operation: &mut F,
+        clone_value: &mut C,
+        debit: &mut D,
+    ) -> Result<Vec<V>, Fault<E>>
+    where
+        F: FnMut(Id, &T, &[V]) -> Result<V, E>,
+        C: FnMut(&V) -> Result<V, E>,
+        D: FnMut(u64) -> Result<(), E>,
+    {
         pay(
             debit,
             16_u64.saturating_add((roots.len() as u64).saturating_mul(8)),
@@ -159,7 +180,7 @@ impl<T> Graph<T> {
                 let input = memo[operand].as_ref().ok_or(Fault::InvalidId)?;
                 inputs.push(clone_value(input).map_err(Fault::Quota)?);
             }
-            memo[id] = Some(operation(&node.operation, &inputs).map_err(Fault::Evaluate)?);
+            memo[id] = Some(operation(id, &node.operation, &inputs).map_err(Fault::Evaluate)?);
         }
         pay(debit, storage::<V>(roots.len()))?;
         let mut output = Vec::with_capacity(roots.len());

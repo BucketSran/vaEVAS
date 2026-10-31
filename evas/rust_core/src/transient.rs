@@ -998,6 +998,18 @@ fn prepare_root_window_selected_phase(
         }
         observation = (values, bounds);
         prepared = settle(&observation.0, &observation.1, false)?;
+        // Decision 22: readers of this event's selection at the latest closed
+        // solution read the same-time roundings that solve stored (the event
+        // circuit is kept as the occurrence of the ordinary one after it).
+        if let (Some(plan), Some(view)) = (
+            physical_selection.plan.as_deref(),
+            prepared
+                .circuit
+                .procedure_occurrence()
+                .or_else(|| prepared.circuit.procedure_view()),
+        ) {
+            plan.adopt_same_time(&view.plan)?;
+        }
     }
     if !closed {
         return Err(Error::new(
@@ -1807,6 +1819,9 @@ fn certificate_gap(error: &Error) -> bool {
 /// window when no body reads at tau+ or a root may lie at stop. Histories are
 /// read only when `operators` is given (an unpaid all-cross batch: a same-time
 /// timer may change a history before tau+) and only for read columns.
+/// Source-order procedure bodies have no compiled read columns; they read W by
+/// node, and the continuous transition histories that the pre-event node
+/// provider admits are read when such a body can compare anything.
 pub(super) fn right_window(
     model: &EventModel,
     trajectory: &Trajectory,
@@ -1843,7 +1858,18 @@ pub(super) fn right_window(
     };
     let mut values = vec![None; model.program.operators.len()];
     if let Some(operators) = operators.filter(|_| calendar_proof_work(model).is_none()) {
-        for index in model.conditions.window_operators(events) {
+        let mut read = model.conditions.window_operators(events);
+        if procedure_controls(model, events) {
+            for (index, spec) in model.program.operators.iter().enumerate() {
+                if matches!(spec, crate::ir::OperatorSpec::Transition { rise, fall, .. }
+                        if *rise > 0. && *fall > 0.)
+                    && !read.contains(&index)
+                {
+                    read.push(index);
+                }
+            }
+        }
+        for index in read {
             match operators.range(index, window) {
                 Ok((value, _)) => values[index] = Some(value),
                 Err(error) if certificate_gap(&error) => {}
@@ -1851,10 +1877,70 @@ pub(super) fn right_window(
             }
         }
     }
+    let procedure = if model.program.procedures.is_empty() {
+        None
+    } else {
+        Some(procedure_window(model, scheduled, &inputs)?)
+    };
     Ok(Some(crate::event_conditions::RightWindow {
         inputs,
         operators: values,
+        procedure,
     }))
+}
+
+/// Whether an unpaid source-order body of the batch can compare anything:
+/// only then does it need history windows and input derivatives.
+fn procedure_controls(model: &EventModel, events: &[usize]) -> bool {
+    !model.program.procedures.is_empty()
+        && calendar_proof_work(model).is_none()
+        && events
+            .iter()
+            .any(|&e| crate::procedure::body_controls(&model.program.events[e].body))
+}
+
+/// Ground and driven inputs over W by node; other nodes are bounded lazily.
+fn procedure_window(
+    model: &EventModel,
+    scheduled: &[ScheduledEvent],
+    inputs: &[I],
+) -> Result<crate::event_conditions::ProcedureWindow, Error> {
+    let p = &model.program;
+    if let Some(work) = calendar_proof_work(model) {
+        // A paid context charges these window copies to its calendar ledger.
+        work.debit(
+            2,
+            ((p.nodes.len() + scheduled.len()) * 16 + model.driven.len() * p.nodes.len() + 64)
+                as u64,
+        )?;
+    }
+    let mut nodes = vec![
+        I {
+            lo: f64::NEG_INFINITY,
+            hi: f64::INFINITY,
+        };
+        p.nodes.len()
+    ];
+    if let Some(ground) = nodes.first_mut() {
+        *ground = I::ZERO;
+    }
+    for (name, &value) in model.driven.iter().zip(inputs) {
+        if let Some(node) = p.nodes.iter().position(|n| n == name) {
+            nodes[node] = value;
+        }
+    }
+    let mut fired = Vec::with_capacity(scheduled.len());
+    for e in scheduled {
+        let body = model.triggers[e.event].event;
+        if !fired.contains(&body) {
+            fired.push(body);
+        }
+    }
+    Ok(crate::event_conditions::ProcedureWindow {
+        nodes,
+        driven: model.driven.clone(),
+        fired,
+    })
 }
 
 /// Right-limit observation facts for one calendar batch (LRM 2.4 5.10.3.1:
@@ -1990,9 +2076,32 @@ fn post_root_scope(
             }
         }
     }
-    Ok(crate::event_conditions::PostRootSides::install(
-        sides, slopes, events, window,
-    ))
+    // Source-order bodies take input derivatives by node; their stateless
+    // input-only differences get the same derivative certificate.
+    let mut input_slopes = None;
+    if lo < hi && procedure_controls(model, &events) {
+        match trajectory.range(I { lo, hi }) {
+            Ok((_, derivatives)) => {
+                let mut by_node = vec![None; model.program.nodes.len()];
+                for (name, slope) in model.driven.iter().zip(derivatives) {
+                    if let Some(node) = model.program.nodes.iter().position(|n| n == name) {
+                        by_node[node] = Some(slope);
+                    }
+                }
+                input_slopes = Some(crate::event_conditions::InputSlopes {
+                    by_node,
+                    driven: model.driven.clone(),
+                });
+            }
+            Err(error) if gap(&error) => {}
+            Err(error) => return Err(error),
+        }
+    }
+    let scope = crate::event_conditions::PostRootSides::install(sides, slopes, events, window);
+    Ok(match input_slopes {
+        Some(slopes) => scope.with_input_slopes(slopes),
+        None => scope,
+    })
 }
 
 #[cfg(test)]
@@ -2715,14 +2824,23 @@ pub(crate) fn run_inner(mut request: Request) -> Result<Response, Error> {
             )?;
         }
     }
+    let observation = model.observation_selection(
+        &inputs,
+        &accepted.states,
+        &accepted.state_bounds,
+        &accepted.operators.values(0.0)?,
+        &accepted.operators.bounds(0.0)?,
+    )?;
+    // Decision 22: the observation certifies the accepted solution with the
+    // same-time roundings its solve stored.
+    if let (Some(plan), Some(view)) = (
+        observation.plan.as_deref(),
+        accepted.circuit.procedure_view(),
+    ) {
+        plan.adopt_same_time(&view.plan)?;
+    }
     let (state_bounds, node_bounds) = model.certify_observation(
-        &model.observation_selection(
-            &inputs,
-            &accepted.states,
-            &accepted.state_bounds,
-            &accepted.operators.values(0.0)?,
-            &accepted.operators.bounds(0.0)?,
-        )?,
+        &observation,
         &inputs,
         &accepted.state_bounds,
         &accepted.operators.bounds(0.0)?,
@@ -4690,7 +4808,11 @@ mod activation_selection_tests {
         assert_eq!(selection.actions, vec![(0, vec![3, 5]), (2, vec![11, 13])]);
         assert_eq!(actions, original.actions);
         selection.actions = actions;
-        assert!(selection == original);
+        assert_eq!(selection.actions, original.actions);
+        assert!(selection.ordered_steps == original.ordered_steps);
+        assert_eq!(selection.decisions, original.decisions);
+        assert_eq!(selection.procedure_groups, original.procedure_groups);
+        assert!(selection.plan.is_none() && original.plan.is_none());
         let owner = crate::transition_source_plan::Work::limited([128, 8192, 1]);
         // Natural traversal exceeds the same owner before replacing any action storage.
         assert_eq!(
@@ -4710,7 +4832,11 @@ mod activation_selection_tests {
                 "step_budget"
             );
             assert_eq!(owner.spent(), spent);
-            assert!(selection == original);
+            assert_eq!(selection.actions, original.actions);
+            assert!(selection.ordered_steps == original.ordered_steps);
+            assert_eq!(selection.decisions, original.decisions);
+            assert_eq!(selection.procedure_groups, original.procedure_groups);
+            assert!(selection.plan.is_none() && original.plan.is_none());
         }
     }
 }
